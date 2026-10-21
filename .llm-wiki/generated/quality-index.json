@@ -9,8 +9,8 @@
     "wikiToolFiles": 221,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1011,
-    "criticalSymbolsWithTestReferences": 972,
-    "criticalSymbolsWithoutTestReferences": 39,
+    "criticalSymbolsWithTestReferences": 973,
+    "criticalSymbolsWithoutTestReferences": 38,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -47005,8 +47005,8 @@
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "Modules/Users/Application/Commands/RemoveUserPremiumRole/RemoveUserPremiumRoleCommandHandler.cs",
@@ -55795,8 +55795,9 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommandHandler.cs",
       "line": 10,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersFeatureTests.DesiredGoalIdempotency.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -56057,9 +56058,11 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommandHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -57311,8 +57314,9 @@
       "role": "CommandHandler",
       "path": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
         "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57642,9 +57646,10 @@
       "role": "Controller",
       "path": "Modules/Ai/Presentation/Controllers/AiFoodController.cs",
       "line": 25,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
@@ -59665,8 +59670,9 @@
       "role": "QueryHandler",
       "path": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
+        "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
         "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderBudgetTests.cs",
         "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderReferenceTests.cs",
         "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaQueryHandlerTests.cs",
@@ -59771,10 +59777,11 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Email/Queries/GetEmailTemplates/GetEmailTemplatesQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/EmailTemplateQueryContractTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59955,9 +59962,10 @@
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
       "line": 19,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs",
+        "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -60868,9 +60876,10 @@
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -60970,8 +60979,9 @@
       "role": "QueryHandler",
       "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "line": 22,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
         "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs",
         "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
@@ -60984,8 +60994,9 @@
       "role": "QueryHandler",
       "path": "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
         "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoalFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -61021,9 +61032,10 @@
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

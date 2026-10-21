@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1355,
     "ambiguousContracts": 29,
-    "consumerEdges": 10746,
+    "consumerEdges": 10786,
     "productionConsumerEdges": 6047,
-    "testConsumerEdges": 4699,
+    "testConsumerEdges": 4739,
     "consumedContracts": 1355,
     "unconsumedContracts": 0
   },
@@ -35244,7 +35244,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 8
     },
     {
       "contract": "CreateRecipeCommand",
@@ -41631,7 +41631,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExportCatalogRecipesQueryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ExportCycleQuery",
@@ -48045,6 +48045,19 @@
         "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDailyMicronutrientsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderBudgetTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -48672,6 +48685,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
       "isTest": true,
       "referenceCount": 8
+    },
+    {
+      "contract": "GetEmailTemplatesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Contracts/Email/Queries/GetEmailTemplates/GetEmailTemplatesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/EmailTemplateQueryContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetEmailTemplatesQuery",
@@ -49894,6 +49920,19 @@
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
+    },
+    {
+      "contract": "GetGamificationQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetGamificationQuery",
@@ -56280,6 +56319,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetWaistGoalHistoryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetWaistHistoryPageSummaryHttpQuery",
       "roles": [
         "Query"
@@ -56977,6 +57029,19 @@
         "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWeeklyCheckInQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 15
@@ -57096,6 +57161,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Presentation/Mappings/WeeklyGoalHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWeeklyGoalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -57342,6 +57420,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetWeightGoalHistoryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -58169,6 +58260,19 @@
         "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAchievementAwardService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Common/IAchievementAwardService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -58627,6 +58731,19 @@
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IAchievementMetricReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application.Abstractions/Achievements/Common/IAchievementMetricReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAchievementMetricReader",
@@ -72794,6 +72911,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/CreateHydrationFromOperationTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -73145,6 +73275,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -73288,9 +73431,35 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -78374,6 +78543,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "IEmailTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/EmailTemplateQueryContractTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IEmailTemplateReadModelRepository",
@@ -84806,9 +84988,35 @@
         "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IIdempotencyStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/IdempotencyFilterTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IIdempotencyStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/IdempotencyRetentionOptionsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IIdempotentAtomicCommand",
@@ -89855,6 +90063,19 @@
       "referenceCount": 3
     },
     {
+      "contract": "IMealNutritionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Services/IMealNutritionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Nutrition/MealNutritionInputCopyTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IMealNutritionStatisticsReadService",
       "roles": [
         "Service"
@@ -89996,6 +90217,19 @@
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IMealNutritionStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Contracts/Common/IMealNutritionStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IMealNutritionStatisticsReadService",
@@ -94194,7 +94428,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 9
     },
     {
       "contract": "ImportCatalogRecipeCommand",
@@ -94429,6 +94663,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "ImportRecipeVideoCommand",
@@ -95430,6 +95677,19 @@
       "consumerPath": "Modules/Users/Application/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "InitializePendingBodyGoalsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/InitializePendingBodyGoals/InitializePendingBodyGoalsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "InitializePendingBodyGoalsCommand",
@@ -107310,7 +107570,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 13
     },
     {
       "contract": "IRecipeCommentReadModelRepository",
@@ -108454,7 +108714,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/ExportCatalogRecipesQueryTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IRecipeOverviewReadService",
@@ -118709,6 +118969,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -119255,6 +119528,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -119673,7 +119959,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CatalogRecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 17
     },
     {
       "contract": "ISender",
@@ -119905,6 +120191,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 32
@@ -119921,6 +120220,19 @@
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ISender",
@@ -124065,6 +124377,19 @@
         "Modules/Usda/Application.Abstractions/Common/IUsdaFoodReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUsdaFoodReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application.Abstractions/Common/IUsdaFoodReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderBudgetTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -124455,6 +124780,19 @@
         "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -124575,6 +124913,19 @@
       "consumerPath": "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaMealNutritionReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUsdaMealNutritionReadService",
@@ -126119,6 +126470,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserCleanupService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -126499,6 +126863,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 5
+    },
+    {
+      "contract": "IUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Common/IUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserContextService",
@@ -127549,6 +127926,19 @@
         "Modules/Users/Contracts/Common/IUserGamificationProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserGamificationProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserGamificationProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UsersDependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -128410,6 +128800,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserCredentialVerificationServiceTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IUserLookupRepository",
@@ -132606,6 +133009,19 @@
         "Modules/Users/Contracts/Common/IUserWeeklyCheckInProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserWeeklyCheckInProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserWeeklyCheckInProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -132817,6 +133233,19 @@
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
       "isTest": true,
       "referenceCount": 10
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IUserWriteRepository",
@@ -135037,6 +135466,19 @@
         "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWeeklyGoalRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/SendWeeklyGoalRemindersCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 10
@@ -135118,6 +135560,19 @@
       "consumerPath": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWeeklyGoalTransactionRunner",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application.Abstractions/Common/IWeeklyGoalTransactionRunner.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IWeeklyGoalTransactionRunner",
@@ -143686,6 +144141,19 @@
         "Modules/Users/Contracts/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserHistoryAndInitializationBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PurgeOwnedFixtureUsersCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/Development/OwnedFixtureCleanupTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -146317,6 +146785,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "RecipeImportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Requests/RecipeImportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "RecipeImportHttpResponse",
       "roles": [
         "Response"
@@ -146377,6 +146858,19 @@
         "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RecipeImportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeVideoImportTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -146405,6 +146899,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/RecipeImportHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RecipeImportIngredientHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Presentation/Responses/RecipeImportIngredientHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/RecipeTextImportTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -160619,6 +161126,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Presentation/Mappings/WeeklyGoalHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpsertWeeklyGoalCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/InvalidCalendarZoneTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

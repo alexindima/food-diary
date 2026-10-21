@@ -75,6 +75,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementTargetTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationCalculatorTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/AchievementDefinitionAtomicityTests.cs`
@@ -83,6 +84,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/AchievementDefinitionTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/UserAchievementTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/GamificationIdConversionTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/IdentifierCopyContractTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs`
 - [presentation] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Presentation.Tests/GamificationHttpMappingsTests.cs`

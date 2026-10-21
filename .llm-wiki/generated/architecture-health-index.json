@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 39,
+    "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5610,16 +5610,6 @@
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvices/ImportAdminDailyAdvicesCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "PurgeOwnedFixtureUsersCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Users/Application/Commands/PurgeOwnedFixtureUsers/PurgeOwnedFixtureUsersCommandHandler.cs",
-      "line": 6,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

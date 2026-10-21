@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Recipes.Application.Queries.ExportCatalogRecipes;
+using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Contracts.Common;
 using FoodDiary.Modules.Recipes.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -38,6 +39,53 @@ public sealed class ExportCatalogRecipesQueryTests {
         Result<IReadOnlyList<CatalogRecipeModel>> result = await new ExportCatalogRecipesQueryHandler(read).Handle(new ExportCatalogRecipesQuery(), CancellationToken.None);
 
         ResultAssert.Failure(result);
+        Assert.Single(read.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task Export_PreservesStepTextIngredientsAndImageUrlsWithoutEnvironmentSpecificAssetIds() {
+        var recipe = Recipe.Create(UserId.New(), "Soup", 2, description: "Catalog recipe", prepTime: 5, cookTime: 20);
+        recipe.AddStep(1, "Season", "Finish", "https://example.test/step.webp").AddTextIngredient("Salt", "a pinch");
+        RecipeOverviewReadItem overview = TestRecipeOverview.From(recipe, UserId.Empty);
+        RecipeOverviewStepReadItem step = Assert.Single(overview.Steps);
+        RecipeOverviewIngredientReadItem ingredient = Assert.Single(step.Ingredients);
+        overview = overview with {
+            Language = "ru",
+            LanguageConfirmed = true,
+            Steps = [step with {
+                ImageAssetId = Guid.NewGuid(),
+                Ingredients = [ingredient with { TextName = "Salt", AmountText = "a pinch" }],
+            }],
+        };
+        IRecipeOverviewReadService read = Substitute.For<IRecipeOverviewReadService>();
+        using var cancellation = new CancellationTokenSource();
+        read.GetPagedAsync(UserId.Empty, includePublic: true, 1, 100, Arg.Any<RecipeQueryFilters>(), cancellationToken: cancellation.Token)
+            .Returns(((IReadOnlyList<RecipeOverviewReadItem>)[overview], 1));
+
+        IReadOnlyList<CatalogRecipeModel> result = ResultAssert.Success(await new ExportCatalogRecipesQueryHandler(read)
+            .Handle(new ExportCatalogRecipesQuery(), cancellation.Token));
+
+        CatalogRecipeModel exported = Assert.Single(result);
+        RecipeStepInput exportedStep = Assert.Single(exported.Steps);
+        RecipeIngredientInput exportedIngredient = Assert.Single(exportedStep.Ingredients);
+        Assert.Multiple(
+            () => Assert.Equal(recipe.Id.Value, exported.Id),
+            () => Assert.Equal("Soup", exported.Name),
+            () => Assert.Equal("Catalog recipe", exported.Description),
+            () => Assert.Equal(2, exported.Servings),
+            () => Assert.Equal(5, exported.PrepTime),
+            () => Assert.Equal(20, exported.CookTime),
+            () => Assert.Equal("ru", exported.Language),
+            () => Assert.True(exported.LanguageConfirmed),
+            () => Assert.Equal(1, exportedStep.Order),
+            () => Assert.Equal("Finish", exportedStep.Title),
+            () => Assert.Equal("Season", exportedStep.Description),
+            () => Assert.Equal("https://example.test/step.webp", exportedStep.ImageUrl),
+            () => Assert.Null(exportedStep.ImageAssetId),
+            () => Assert.Equal("Salt", exportedIngredient.TextName),
+            () => Assert.Equal("a pinch", exportedIngredient.AmountText),
+            () => Assert.Null(exportedIngredient.ProductId),
+            () => Assert.Null(exportedIngredient.NestedRecipeId));
         Assert.Single(read.ReceivedCalls());
     }
 }

@@ -63,6 +63,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/IdentifierCopyContractTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/RecentItemInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/RecentItemReferenceTests.cs`
 - [behavioral-or-text-match] `Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/RecentItemsIdConversionTests.cs`

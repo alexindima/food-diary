@@ -76,14 +76,14 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "080debf80217dc81ebea594f3c63112dedf6073e85de3359120d0bd160ab5527",
-          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
+          "sha256": "8fe8783142c8915fc38145d8513786506c08610209059b84cfe5838c5dd5568b",
+          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
         }
       ],
-      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
+      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
-      "reviewedAtUtc": "2026-10-21T17:25:01.2380008Z"
+      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
+      "reviewedAtUtc": "2026-10-21T18:40:56.7089811Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -238,19 +238,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6ebcca455abd41d50337c46cb87f025fe1d1f7382fec3df699b44c42ecf37fa0",
-          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
+          "sha256": "73e14c3730754584cfef3cdf54dbf19f4f2712a36d4a803e468bf8b1daf49b1b",
+          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "080debf80217dc81ebea594f3c63112dedf6073e85de3359120d0bd160ab5527",
-          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
+          "sha256": "8fe8783142c8915fc38145d8513786506c08610209059b84cfe5838c5dd5568b",
+          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
         }
       ],
-      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
+      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
-      "reviewedAtUtc": "2026-10-21T17:25:01.5300178Z"
+      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
+      "reviewedAtUtc": "2026-10-21T18:40:57.0008024Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1328,8 +1328,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f740c80757d5a0651d94980a3e36c06ac5cf20236c50e9fc6daa7f4649fc2a5c",
-          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
+          "sha256": "20d379bd26a5701aa1480a0c3e6c475f775c72299a744f7c5d1edf5f5f5c5cb8",
+          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1337,10 +1337,10 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         }
       ],
-      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
+      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
-      "reviewedAtUtc": "2026-10-21T17:25:01.8452663Z"
+      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
+      "reviewedAtUtc": "2026-10-21T18:40:57.3809905Z"
     },
     {
       "pageId": "workflow.review-diff",

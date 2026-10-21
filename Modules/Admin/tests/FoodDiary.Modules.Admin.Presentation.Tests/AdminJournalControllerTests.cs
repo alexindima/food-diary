@@ -76,6 +76,8 @@ public sealed class AdminJournalControllerTests {
         AdminBugJournalEntryHttpResponse finding = Assert.Single(response.Items);
         Assert.Null(finding.SourceMessageId);
         Assert.Equal("logs", finding.Source);
+        Assert.Equal("Descriptive finding", finding.Title);
+        Assert.Equal("Short evidence for review", finding.ShortSummary);
         Assert.Equal(run.Id, finding.AuditRunId);
         Assert.Equal(run.FromUtc, finding.AuditFromUtc);
         Assert.Equal(run.ToUtc, finding.AuditToUtc);

@@ -108,6 +108,85 @@ public sealed class CatalogRecipeImportTests {
         Assert.Equal("invalid", result.Status);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task EmptyCatalogIdentity_IsRejectedBeforeLookupOrCreation(bool preview) {
+        IRecipeCatalogIdReadService repository = Substitute.For<IRecipeCatalogIdReadService>();
+        ISender sender = Substitute.For<ISender>();
+        var handler = new ImportCatalogRecipeCommandHandler(repository, new CreateRecipeCommandValidator(), sender);
+
+        CatalogRecipeImportResult result = ResultAssert.Success(await handler.Handle(
+            new ImportCatalogRecipeCommand(Guid.NewGuid(), ValidRecipe() with { Id = Guid.Empty }, preview), CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(Guid.Empty, result.Id),
+            () => Assert.Equal("invalid", result.Status),
+            () => Assert.Equal(new[] { "Id must not be empty." }, result.Errors),
+            () => Assert.Empty(repository.ReceivedCalls()),
+            () => Assert.Empty(sender.ReceivedCalls()));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task InvalidCreateValues_ReportFieldErrorsAndNeverDispatchCreation(bool preview) {
+        CatalogRecipeModel item = ValidRecipe() with { Name = string.Empty, Servings = 0 };
+        using var cancellation = new CancellationTokenSource();
+        IRecipeCatalogIdReadService repository = Substitute.For<IRecipeCatalogIdReadService>();
+        ISender sender = Substitute.For<ISender>();
+        var handler = new ImportCatalogRecipeCommandHandler(repository, new CreateRecipeCommandValidator(), sender);
+
+        CatalogRecipeImportResult result = ResultAssert.Success(await handler.Handle(
+            new ImportCatalogRecipeCommand(Guid.NewGuid(), item, preview), cancellation.Token));
+
+        Assert.Multiple(
+            () => Assert.Equal(item.Id, result.Id),
+            () => Assert.Equal("invalid", result.Status),
+            () => Assert.Equal(new[] { "Name: Name is required", "Servings: Servings must be greater than zero" }, result.Errors),
+            () => Assert.Empty(sender.ReceivedCalls()));
+        await repository.Received(1).CatalogIdIsPublicAsync(item.Id, cancellation.Token);
+    }
+
+    [Fact]
+    public async Task FailedCreation_ReturnsTheOwnerErrorWithoutReportingAnImportOrRetrying() {
+        CatalogRecipeModel item = ValidRecipe();
+        var ownerId = Guid.NewGuid();
+        using var cancellation = new CancellationTokenSource();
+        var error = new Error("Recipes.CreationRejected", "The recipe cannot be created.");
+        IRecipeCatalogIdReadService repository = Substitute.For<IRecipeCatalogIdReadService>();
+        ISender sender = Substitute.For<ISender>();
+        sender.Send(Arg.Any<CreateRecipeCommand>(), cancellation.Token).Returns(Result.Failure<RecipeModel>(error));
+        var handler = new ImportCatalogRecipeCommandHandler(repository, new CreateRecipeCommandValidator(), sender);
+
+        Error result = ResultAssert.Failure(await handler.Handle(
+            new ImportCatalogRecipeCommand(ownerId, item, Preview: false), cancellation.Token));
+
+        Assert.Same(error, result);
+        await sender.Received(1).Send(Arg.Is<CreateRecipeCommand>(command => command.CatalogImportId == item.Id && command.UserId == ownerId), cancellation.Token);
+        Assert.Single(sender.ReceivedCalls());
+        await repository.Received(1).CatalogIdIsPublicAsync(item.Id, cancellation.Token);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task MissingIngredientCollectionsOrEntries_ReturnAnInvalidReportBeforeCreation(bool missingCollection) {
+        CatalogRecipeModel item = ValidRecipe();
+        item = item with { Steps = [item.Steps[0] with { Ingredients = missingCollection ? null! : [null!] }] };
+        ISender sender = Substitute.For<ISender>();
+        var handler = new ImportCatalogRecipeCommandHandler(Substitute.For<IRecipeCatalogIdReadService>(), new CreateRecipeCommandValidator(), sender);
+
+        CatalogRecipeImportResult result = ResultAssert.Success(await handler.Handle(
+            new ImportCatalogRecipeCommand(Guid.NewGuid(), item, Preview: false), CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(item.Id, result.Id),
+            () => Assert.Equal("invalid", result.Status),
+            () => Assert.Equal(new[] { "Steps and ingredients must not be null." }, result.Errors),
+            () => Assert.Empty(sender.ReceivedCalls()));
+    }
+
     private static CatalogRecipeModel ValidRecipe() => new(
         Guid.NewGuid(), "Каша", Description: null, "breakfast", ImageUrl: null, PrepTime: null, CookTime: null,
         Servings: 1, "ru", LanguageConfirmed: true, CalculateNutritionAutomatically: true,

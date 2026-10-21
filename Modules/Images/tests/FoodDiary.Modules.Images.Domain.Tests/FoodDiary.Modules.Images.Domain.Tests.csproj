@@ -7,6 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <Using Include="Xunit" />

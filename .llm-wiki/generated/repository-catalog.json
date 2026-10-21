@@ -1833,6 +1833,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Ai/Application.Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
           "Modules/Ai/Contracts/FoodDiary.Modules.Ai.Contracts.csproj",
@@ -6883,6 +6884,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],

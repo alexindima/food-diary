@@ -74,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeLikes/RecipeLikesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/TestRecipeOverview.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Domain.Tests/IdentifierCopyContractTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Domain.Tests/RecipeCommentInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Domain.Tests/RecipeCommunityIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Domain.Tests/RecipeLikeValidationTests.cs`

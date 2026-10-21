@@ -23,6 +23,7 @@
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />

@@ -2,12 +2,32 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
+using FoodDiary.Testing.Assertions;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
+[Collection("Recipe media")]
 public sealed class RecipeYouTubeVideoSourceTests {
+    [Theory]
+    [InlineData("https://www.youtube.com/watch?v=ncD_3gaRKbM")]
+    [InlineData("https://youtu.be/ncD_3gaRKbM")]
+    public async Task VideoProcessor_UsesTheYouTubeDownloaderAndRejectsItsInvalidContainer(string url) {
+        using var handler = new YouTubeFixtureHandler();
+        using var http = new HttpClient(handler);
+        var processor = new RecipeVideoProcessor(http, Options.Create(new RecipeVideoOptions { FfmpegPath = "unused-fixture-processor" }),
+            NullLogger<RecipeVideoProcessor>.Instance, new RecipeYouTubeVideoSource(http));
+
+        ResultAssert.Failure(await processor.ExtractAudioAsync(video: null, url, CancellationToken.None), "Ai.InvalidRecipeVideo");
+
+        Assert.Equal("ncD_3gaRKbM", handler.VideoId);
+        Assert.True(handler.MediaRequests > 0);
+    }
+
     [Theory]
     [InlineData("https://www.youtube.com/shorts/yNgjOzU3QaU", "yNgjOzU3QaU")]
     [InlineData("https://www.youtube.com/watch?v=ncD_3gaRKbM", "ncD_3gaRKbM")]
@@ -128,6 +148,34 @@ public sealed class RecipeYouTubeVideoSourceTests {
             new Uri("https://youtu.be/yNgjOzU3QaU"), Stream.Null, cancellation.Token));
     }
 
+    [Fact]
+    public async Task UnplayableVideo_NormalizesProviderDiagnosticsBeforeReturningAnError() {
+        using var handler = new YouTubeFixtureHandler { PlayerStatus = "UNPLAYABLE" };
+        using var http = new HttpClient(handler);
+
+        HttpRequestException result = await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
+            new Uri("https://youtu.be/yNgjOzU3QaU"), Stream.Null, CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal("YouTube video audio is unavailable.", result.Message),
+            () => Assert.Null(result.InnerException),
+            () => Assert.Equal(0, handler.MediaRequests),
+            () => Assert.NotEmpty(handler.Requests));
+    }
+
+    [Fact]
+    public async Task UnsupportedAudioContainer_IsRejectedWithoutWritingAudio() {
+        using var handler = new YouTubeFixtureHandler { AudioMimeType = "audio/ogg; codecs=\"opus\"" };
+        using var http = new HttpClient(handler);
+        await using var destination = new MemoryStream();
+
+        HttpRequestException result = await Assert.ThrowsAsync<HttpRequestException>(() => new RecipeYouTubeVideoSource(http).DownloadAsync(
+            new Uri("https://youtu.be/yNgjOzU3QaU"), destination, CancellationToken.None));
+
+        Assert.Equal("No supported YouTube audio stream is available.", result.Message);
+        Assert.Equal(0, destination.Length);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class YouTubeFixtureHandler : HttpMessageHandler {
         public byte[] Audio { get; } = [.. Enumerable.Range(0, 32).Select(value => (byte)value)];
@@ -139,6 +187,8 @@ public sealed class RecipeYouTubeVideoSourceTests {
         public bool OversizedMetadata { get; init; }
         public bool Unavailable { get; init; }
         public string? RedirectTarget { get; init; }
+        public string PlayerStatus { get; init; } = "OK";
+        public string AudioMimeType { get; init; } = "audio/mp4; codecs=\"mp4a.40.2\"";
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
@@ -165,12 +215,12 @@ public sealed class RecipeYouTubeVideoSourceTests {
                 VideoId = payload.RootElement.GetProperty("videoId").GetString();
             }
             string player = JsonSerializer.Serialize(new {
-                playabilityStatus = new { status = "OK" },
+                playabilityStatus = new { status = PlayerStatus, reason = "Fixture provider diagnostics containing a private source URL." },
                 videoDetails = new { videoId = VideoId, title = "Fixture recipe", author = "Fixture cook", channelId = "UC0000000000000000000000", lengthSeconds = Duration.ToString(CultureInfo.InvariantCulture) },
                 microformat = new { playerMicroformatRenderer = new { uploadDate = "2026-01-01" } },
                 streamingData = new {
                     adaptiveFormats = new[] { new {
-                    itag = 140, url = "https://media.googlevideo.com/audio?fixture=1", mimeType = "audio/mp4; codecs=\"mp4a.40.2\"",
+                    itag = 140, url = "https://media.googlevideo.com/audio?fixture=1", mimeType = AudioMimeType,
                     bitrate = 64000, contentLength = DeclaredAudioSize.ToString(CultureInfo.InvariantCulture),
                 }, },
                 },

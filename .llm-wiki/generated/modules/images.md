@@ -89,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ImagesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ProcessOwnedImageDeletionsCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/IdentifierCopyContractTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/ImageAssetInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/ImageAssetNormalizationTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/ImageAssetPersistenceShapeTests.cs`
