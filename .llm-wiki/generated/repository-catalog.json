@@ -12686,7 +12686,9 @@
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
-          "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj"
+          "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
+          "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
           {

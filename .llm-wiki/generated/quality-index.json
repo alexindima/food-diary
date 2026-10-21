@@ -9,8 +9,8 @@
     "wikiToolFiles": 221,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1011,
-    "criticalSymbolsWithTestReferences": 963,
-    "criticalSymbolsWithoutTestReferences": 48,
+    "criticalSymbolsWithTestReferences": 968,
+    "criticalSymbolsWithoutTestReferences": 43,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -23925,16 +23925,16 @@
       "nonBlankLines": 21,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.92
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.92
     },
     {
       "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
       "nonBlankLines": 11,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.72
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
     },
     {
       "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs",
@@ -23949,16 +23949,16 @@
       "nonBlankLines": 17,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.84
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
     },
     {
       "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
       "nonBlankLines": 11,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.72
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
     },
     {
       "path": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
@@ -37677,8 +37677,8 @@
       "nonBlankLines": 19,
       "decisionPoints": 7,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 17.88
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.88
     },
     {
       "path": "Modules/Images/Application/DependencyInjection.cs",
@@ -55747,9 +55747,11 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -55757,9 +55759,11 @@
       "role": "CommandHandler",
       "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -56026,9 +56030,11 @@
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommandHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ProcessOwnedImageDeletionsCommandHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -58832,8 +58838,9 @@
       "role": "Handler",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeYouTubeHttpHandler.cs",
       "line": 4,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeYouTubeHttpHandlerTests.cs",
         "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeYouTubeVideoSourceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -63360,9 +63367,11 @@
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -63370,9 +63379,11 @@
       "role": "Validator",
       "path": "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommandValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

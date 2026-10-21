@@ -15,6 +15,35 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 [Collection("OpenAI provider")]
 public sealed class RecipeImportProviderTests {
+    [Fact]
+    public async Task MissingProviderConfiguration_RejectsBudgetAndImportBeforeSending() {
+        using var handler = new ProviderHandler("{}");
+        using var http = new HttpClient(handler);
+        var client = new OpenAiFoodClient(http, Options.Create(new OpenAiOptions { ApiKey = string.Empty }), NullLogger<OpenAiFoodClient>.Instance);
+
+        ResultAssert.Failure(await client.GetRecipeImportTokenBudgetAsync("Recipe", "en", CancellationToken.None), "Ai.OpenAiFailed");
+        ResultAssert.Failure(await client.ImportRecipeAsync("Recipe", "en", CancellationToken.None), "Ai.OpenAiFailed");
+        Assert.Null(handler.Body);
+    }
+
+    [Fact]
+    public async Task ProviderFailures_AreReturnedForBothBudgetAndImport() {
+        using var handler = new ProviderHandler("{}") { Status = HttpStatusCode.BadRequest };
+        using var http = new HttpClient(handler);
+        OpenAiFoodClient client = CreateClient(http);
+
+        ResultAssert.Failure(await client.GetRecipeImportTokenBudgetAsync("Recipe", "en", CancellationToken.None), "Ai.OpenAiFailed");
+        ResultAssert.Failure(await client.ImportRecipeAsync("Recipe", "en", CancellationToken.None), "Ai.OpenAiFailed");
+    }
+
+    [Fact]
+    public async Task InvalidRecipeJson_ReturnsAControlledFailure() {
+        using var handler = new ProviderHandler("not recipe JSON");
+        using var http = new HttpClient(handler);
+
+        ResultAssert.Failure(await CreateClient(http).ImportRecipeAsync("Recipe", "en", CancellationToken.None), "Ai.InvalidResponse");
+    }
+
     [Theory]
     [InlineData("ru")]
     [InlineData("en")]
@@ -212,10 +241,14 @@ public sealed class RecipeImportProviderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ProviderHandler(string draft) : HttpMessageHandler {
+        public HttpStatusCode Status { get; init; } = HttpStatusCode.OK;
         public string? Body { get; private set; }
         public string? CountBody { get; private set; }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             Body = await request.Content!.ReadAsStringAsync(cancellationToken);
+            if (Status != HttpStatusCode.OK) {
+                return new HttpResponseMessage(Status) { Content = new StringContent("{\"error\":{\"message\":\"Rejected\"}}", Encoding.UTF8, "application/json") };
+            }
             if (string.Equals(request.RequestUri?.AbsolutePath, "/v1/responses/input_tokens", StringComparison.Ordinal)) {
                 CountBody = Body;
                 using var payload = JsonDocument.Parse(Body);

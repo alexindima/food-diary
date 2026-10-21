@@ -18,6 +18,69 @@ public sealed class RecipeImportTests {
     private readonly IUserAiProfileReadService _profiles = Substitute.For<IUserAiProfileReadService>();
     private readonly UserId _userId = UserId.New();
 
+    [Theory]
+    [InlineData("not a URL")]
+    [InlineData("http://example.org/recipe")]
+    [InlineData("https://user@example.org/recipe")]
+    [InlineData("https://example.org:8080/recipe")]
+    public async Task Import_WithUnsafeSource_DoesNotReadOrSpendQuota(string url) {
+        OpenAiFoodService service = CreateService();
+
+        ResultAssert.Failure(await service.ImportRecipeAsync(url, "Recipe text", _userId, RequestId, CancellationToken.None), "Ai.InvalidRecipeUrl");
+        Assert.Multiple(() => Assert.Empty(_source.ReceivedCalls()), () => Assert.Empty(_client.ReceivedCalls()), () => Assert.Empty(_quota.ReceivedCalls()));
+    }
+
+    [Fact]
+    public async Task Import_WithReadableSource_UsesTheReaderTextAndCanonicalUrl() {
+        OpenAiFoodService service = CreateService();
+        _source.ReadAsync("https://example.org/original", Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new RecipeSource("Ingredients and instructions", "https://example.org/final")));
+
+        RecipeImportDraftModel result = ResultAssert.Success(await service.ImportRecipeAsync("https://example.org/original", text: null, _userId, RequestId, CancellationToken.None));
+
+        Assert.Equal("https://example.org/final", result.SourceUrl);
+        await _client.Received(1).ImportRecipeAsync("Ingredients and instructions", "ru", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Import_WithoutAnySource_ReturnsAControlledFailure() {
+        OpenAiFoodService service = CreateService();
+
+        ResultAssert.Failure(await service.ImportRecipeAsync(sourceUrl: null, text: null, _userId, RequestId, CancellationToken.None), "Ai.RecipeSourceUnavailable");
+        Assert.Multiple(() => Assert.Empty(_source.ReceivedCalls()), () => Assert.Empty(_client.ReceivedCalls()), () => Assert.Empty(_quota.ReceivedCalls()));
+    }
+
+    [Fact]
+    public async Task Import_WithBudgetFailure_DoesNotReserveOrInvokeTheProvider() {
+        OpenAiFoodService service = CreateService();
+        _client.GetRecipeImportTokenBudgetAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("Budget unavailable")));
+
+        ResultAssert.Failure(await service.ImportRecipeAsync(sourceUrl: null, "Recipe text", _userId, RequestId, CancellationToken.None), "Ai.OpenAiFailed");
+        Assert.Empty(_quota.ReceivedCalls());
+        await _client.DidNotReceive().ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Import_WithProviderFailure_PropagatesTheErrorWithoutReconcilingUnobservedUsage() {
+        OpenAiFoodService service = CreateService();
+        _client.ImportRecipeAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(AiErrors.OpenAiFailed("Provider unavailable")));
+
+        ResultAssert.Failure(await service.ImportRecipeAsync(sourceUrl: null, "Recipe text", _userId, RequestId, CancellationToken.None), "Ai.OpenAiFailed");
+        await _quota.DidNotReceive().ReconcileAsync(Arg.Any<string>(), Arg.Any<AiQuotaUsage>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Import_WithInternalCancellation_ReturnsADeadlineFailure() {
+        OpenAiFoodService service = CreateService();
+        _source.ReadAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<Result<RecipeSource>>(new OperationCanceledException()));
+
+        ResultAssert.Failure(await service.ImportRecipeAsync("https://example.org/recipe", text: null, _userId, RequestId, CancellationToken.None), "Ai.OpenAiFailed");
+        Assert.Empty(_quota.ReceivedCalls());
+    }
+
     [Fact]
     public async Task Import_WhenConsentMissing_DoesNotLoadSourceOrCallProvider() {
         OpenAiFoodService service = CreateService(consent: false);

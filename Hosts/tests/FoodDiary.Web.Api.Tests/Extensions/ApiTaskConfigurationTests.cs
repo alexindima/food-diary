@@ -1,11 +1,77 @@
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 
 namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class ApiTaskConfigurationTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void OutboundGuardRegistration_DisablesRedirectsAfterTheInnerFilterAndRunsBeforeOtherHandlers(bool useSockets) {
+        var services = new ServiceCollection();
+        services.AddHttpClient();
+        Assert.Same(services, services.AddTaskOutboundGuard());
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IHttpMessageHandlerBuilderFilter filter = provider.GetRequiredService<IHttpMessageHandlerBuilderFilter>();
+        HttpMessageHandlerBuilder builder = provider.GetRequiredService<HttpMessageHandlerBuilder>();
+        using HttpMessageHandler transport = useSockets ? new SocketsHttpHandler() : new HttpClientHandler();
+        using var existing = new TaskOutboundHttpHandler();
+        bool innerCalled = false;
+
+        filter.Configure(next => {
+            innerCalled = true;
+            next.PrimaryHandler = transport;
+            next.AdditionalHandlers.Add(existing);
+        })(builder);
+
+        Assert.Multiple(
+            () => Assert.True(innerCalled),
+            () => Assert.Same(transport, builder.PrimaryHandler),
+            () => Assert.IsType<TaskOutboundHttpHandler>(builder.AdditionalHandlers[0]),
+            () => Assert.Same(existing, builder.AdditionalHandlers[1]));
+        if (transport is SocketsHttpHandler sockets) {
+            Assert.False(sockets.AllowAutoRedirect);
+        } else {
+            Assert.False(((HttpClientHandler)transport).AllowAutoRedirect);
+        }
+        builder.AdditionalHandlers[0].Dispose();
+    }
+
+    [Fact]
+    public void OutboundGuardRegistration_RejectsATransportThatCannotDisableRedirects() {
+        var services = new ServiceCollection();
+        services.AddHttpClient();
+        services.AddTaskOutboundGuard();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IHttpMessageHandlerBuilderFilter filter = provider.GetRequiredService<IHttpMessageHandlerBuilderFilter>();
+        HttpMessageHandlerBuilder builder = provider.GetRequiredService<HttpMessageHandlerBuilder>();
+        using var transport = new RecordingHandler();
+
+        Assert.Throws<InvalidOperationException>(() => filter.Configure(next => next.PrimaryHandler = transport)(builder));
+        Assert.Empty(builder.AdditionalHandlers);
+    }
+
+    [Theory]
+    [InlineData("relative-task.json")]
+    [InlineData("missing-absolute")]
+    public void TaskConfiguration_RejectsMissingOrRelativePathsWithoutRemovingExistingProviders(string path) {
+        if (string.Equals(path, "missing-absolute", StringComparison.Ordinal)) {
+            path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"), "task.json");
+        }
+        IConfigurationBuilder configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["Marker"] = "original",
+        });
+        IHostEnvironment environment = Substitute.For<IHostEnvironment>();
+        environment.EnvironmentName.Returns(Environments.Development);
+
+        Assert.Throws<InvalidOperationException>(() => configuration.AddTaskConfiguration(environment, path));
+        Assert.Equal("original", configuration.Build()["Marker"]);
+    }
+
     [Theory]
     [InlineData("https://provider.invalid/request")]
     [InlineData("http://localhost.provider.invalid/request")]

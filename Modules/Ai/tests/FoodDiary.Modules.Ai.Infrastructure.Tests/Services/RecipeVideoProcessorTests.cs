@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
+[Collection("Recipe media")]
 public sealed class RecipeVideoProcessorTests {
     [Theory]
     [InlineData("<meta content='https://example.org/v.mp4?a=1&amp;b=2' property='og:video'>", "https://example.org/v.mp4?a=1&b=2")]

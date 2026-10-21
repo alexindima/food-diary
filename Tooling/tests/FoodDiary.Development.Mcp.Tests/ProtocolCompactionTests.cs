@@ -4,6 +4,21 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProtocolCompactionTests {
+    [Theory]
+    [InlineData("absent", "not-assessed")]
+    [InlineData("unavailable", "unavailable")]
+    [InlineData("partial", "partial")]
+    [InlineData("ready", "bounded-evidence")]
+    public void FlowCoverageAssessment_DistinguishesUnavailablePartialAndBoundedEvidence(string state, string expected) {
+        DevelopmentFlowScope? flow = string.Equals(state, "absent", StringComparison.Ordinal) ? null
+            : new DevelopmentFlowScope(!string.Equals(state, "unavailable", StringComparison.Ordinal), [], [],
+                string.Equals(state, "partial", StringComparison.Ordinal) ? ["worker"] : [], Truncated: false, DurationMilliseconds: 0);
+        var context = new DevelopmentContext("snapshot", "head", ChangeContext: null, BackendTrace: null,
+            TestPlan: null, PartialSuccess: false, [], [], ScopeMismatch: false, [], CrossLayerScope: false, FlowScope: flow);
+
+        Assert.Equal(expected, context.FlowCoverageAssessment);
+    }
+
     [Fact]
     public void TraceCompaction_PreservesSemanticHandlerAndHttpEvidence() {
         WikiCommandResult trace = CreateResult("trace", new {

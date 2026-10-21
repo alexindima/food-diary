@@ -76,14 +76,14 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0f990de86a636c6277f1601b23c69822ad565d27e64d1a595c55cc1a026ed3bd",
-          "reviewReason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references."
+          "sha256": "18dddb45ff7ce8c1586067c65080a6570c1ff9969ff10c435a6766d5b1a960ae",
+          "reviewReason": "Reviewed the test-only dependency change against the architecture page and the executable project matrix: Infrastructure.Tests now directly references the owning Results contract and FoodDiary.Testing helpers that its new receipt tests consume. The exact reference allowlist matches the project, and the dependency-matrix checks pass. Production dependency direction, module ownership and runtime composition are unchanged."
         }
       ],
-      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
+      "reason": "Reviewed the test-only dependency change against the architecture page and the executable project matrix: Infrastructure.Tests now directly references the owning Results contract and FoodDiary.Testing helpers that its new receipt tests consume. The exact reference allowlist matches the project, and the dependency-matrix checks pass. Production dependency direction, module ownership and runtime composition are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T22:50:45.4868547Z"
+      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
+      "reviewedAtUtc": "2026-10-21T13:19:29.3726402Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -237,15 +237,20 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "cfebc2ed0810ebeadd0d738b91195f7eff0010803475b0e52c120b3b8f07ebc6",
+          "reviewReason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0f990de86a636c6277f1601b23c69822ad565d27e64d1a595c55cc1a026ed3bd",
-          "reviewReason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references."
+          "sha256": "18dddb45ff7ce8c1586067c65080a6570c1ff9969ff10c435a6766d5b1a960ae",
+          "reviewReason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed."
         }
       ],
-      "reason": "Reviewed final PWA recovery and diagnostics delta: the recovery singleton owns a document-lifetime signal, AppUpdateService coordinates guarded reload, and telemetry reuses FrontendObservabilityService and generated Logging transport. No backend projects, migrations, module references or aggregate writes changed. Dependency and state-ownership gates passed in frontend verify.",
+      "reason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:55:42.6152982Z"
+      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
+      "reviewedAtUtc": "2026-10-21T13:19:30.0237033Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -317,12 +322,17 @@
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
           "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
+          "sha256": "2671d148ca748550c399985eb6eece0d70de83fabf3d6c01c256c6e3a38e70e0",
+          "reviewReason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged."
         }
       ],
-      "reason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged.",
+      "reason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:50:17.531365Z"
+      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
+      "reviewedAtUtc": "2026-10-21T12:43:02.4269634Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1318,8 +1328,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "dd49ce25ff3ba0d6e447eec3687e1b1ffaaa8e7668e8722f9bff4492aed12caa",
-          "reviewReason": "Read current query-context workflow. Repository catalog was regenerated to include current tour/spec/report sources; graph lookup remains compiled navigation and source verification is still required. No query engine, CLI contract or retrieval policy changed."
+          "sha256": "67d46df44fd484615f57a99ce6c687ba4ec070926f88d38f06e452a18b8f7115",
+          "reviewReason": "Reviewed the generated repository catalog changes against the query-context workflow: the catalog now records two direct test-library references consumed by Infrastructure.Tests. Query engines, scope rules, schema and ranking behavior are unchanged. The affected evaluation smoke has passed with the updated catalog, and the added MCP flow and batch regression cases pass."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1327,10 +1337,10 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         }
       ],
-      "reason": "Read current query-context workflow. Repository catalog was regenerated to include current tour/spec/report sources; graph lookup remains compiled navigation and source verification is still required. No query engine, CLI contract or retrieval policy changed.",
+      "reason": "Reviewed the generated repository catalog changes against the query-context workflow: the catalog now records two direct test-library references consumed by Infrastructure.Tests. Query engines, scope rules, schema and ranking behavior are unchanged. The affected evaluation smoke has passed with the updated catalog, and the added MCP flow and batch regression cases pass.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:54:09.5476914Z"
+      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
+      "reviewedAtUtc": "2026-10-21T13:21:22.7435582Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -5,6 +5,42 @@ using Microsoft.Data.Sqlite;
 namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SearchBatchAsync_CorruptProjectionPreservesPerQueryFailuresAndReleasesTheFile(bool invalidFile) {
+        SqliteConnection.ClearAllPools();
+        if (invalidFile) {
+            await File.WriteAllTextAsync(_databasePath, "not a SQLite database");
+        } else {
+            ExecuteBatchFixtureSql("DROP TABLE metadata;");
+        }
+
+        IReadOnlyList<WikiContextSearchResult> results = await new SqliteContextSearchReader(_fixtureRoot).SearchBatchAsync(
+            [("telemetry logs", 10, "Any"), ("USDA foods", 10, "Backend")], CancellationToken.None, "fixture-change-set");
+
+        Assert.Equal(2, results.Count);
+        Assert.All(results, result => Assert.Multiple(
+            () => Assert.False(result.Ready),
+            () => Assert.StartsWith("sqlite-error-", result.UnavailableReason, StringComparison.Ordinal),
+            () => Assert.Empty(result.Candidates)));
+        SqliteConnection.ClearAllPools();
+        string moved = _databasePath + ".released";
+        File.Move(_databasePath, moved);
+        File.Move(moved, _databasePath);
+    }
+
+    [Fact]
+    public async Task SearchBatchAsync_RejectsInvalidRequestsBeforeOpeningTheDatabase() {
+        var reader = new SqliteContextSearchReader(_fixtureRoot);
+        await Assert.ThrowsAsync<ArgumentNullException>(() => reader.SearchBatchAsync(requests: null!, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => reader.SearchBatchAsync([(" ", 10, "Any")], CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => reader.SearchBatchAsync([("stock", 0, "Any")], CancellationToken.None));
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => reader.SearchBatchAsync([], cancellation.Token));
+    }
+
     [Fact]
     public async Task SearchBatchAsync_MatchesOrderedIndividualSearches() {
         (string Query, int Limit, string ChangeType)[] requests = [

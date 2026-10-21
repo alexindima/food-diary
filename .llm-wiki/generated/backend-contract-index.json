@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1355,
     "ambiguousContracts": 29,
-    "consumerEdges": 10661,
+    "consumerEdges": 10684,
     "productionConsumerEdges": 6047,
-    "testConsumerEdges": 4614,
+    "testConsumerEdges": 4637,
     "consumedContracts": 1355,
     "unconsumedContracts": 0
   },
@@ -28010,6 +28010,20 @@
         "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthAndProductsFlowTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -31938,6 +31952,20 @@
       "referenceCount": 1
     },
     {
+      "contract": "ConfirmImageUploadHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ConfirmImageUploadHttpResponse.cs",
+        "Modules/Images/Presentation/Responses/ConfirmImageUploadHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ConfirmPasswordResetCommand",
       "roles": [
         "Command"
@@ -33824,6 +33852,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Presentation/Mappings/HydrationHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateHydrationEntryHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/CreateHydrationEntryHttpRequest.cs",
+        "Modules/Hydration/Presentation/Requests/CreateHydrationEntryHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -42814,6 +42856,20 @@
         "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodNutritionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -42872,6 +42928,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/FoodNutritionHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodNutritionItemHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodNutritionItemHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodNutritionItemHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -42968,6 +43038,20 @@
         "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionImageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionImageHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionImageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/FoodRecognitionListControllerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -43026,6 +43110,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Mappings/FoodRecognitionHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodRecognitionJobHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodRecognitionJobHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -43214,6 +43312,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/FoodRecognitionJobHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "FoodVisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/FoodVisionHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -57726,6 +57838,20 @@
         "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "HydrationEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
+        "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -60528,7 +60654,7 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 6
     },
     {
       "contract": "IAtomicCommandExecutor",
@@ -60594,6 +60720,19 @@
       "consumerPath": "Shared/FoodDiary.Persistence.Runtime/PersistenceRuntimeRegistration.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAtomicCommandReceiptMaintenance",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IAtomicCommandReceiptMaintenance.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/AtomicCommandReceiptCleanupJobTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAttentionSignalMetricsReadService",
@@ -61361,6 +61500,19 @@
       "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/AuditRuns/AuditRunsController.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAuditRunStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IAuditRunStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/AuditRetentionWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAuditRunStore",
@@ -66352,7 +66504,7 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ICommand",
@@ -72060,6 +72212,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -84464,6 +84629,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "IIdempotentAtomicCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IIdempotentAtomicCommand.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IImageAssetAccessService",
       "roles": [
         "Service"
@@ -86253,6 +86431,19 @@
         "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ProcessOwnedImageDeletionsCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IImageObjectDeletionOutboxProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application.Abstractions/Common/IImageObjectDeletionOutboxProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedDeliveryContextsIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -86932,6 +87123,19 @@
       "consumerPath": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IJobExecutionStateTracker",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.JobManager/Services/IJobExecutionStateTracker.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/AtomicCommandReceiptCleanupJobTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IJwtTokenGenerator",
@@ -93824,6 +94028,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ImportRecipeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipe/ImportRecipeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
       "contract": "ImportRecipeVideoCommand",
       "roles": [
         "Command"
@@ -93861,6 +94078,19 @@
       "consumerPath": "Modules/Ai/Presentation/Recipes/Mappings/RecipeImportHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ImportRecipeVideoCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ImportRecipeVideo/ImportRecipeVideoCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "ImportRecipeVideoCommand",
@@ -98121,6 +98351,19 @@
         "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IOpenAiFoodService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IOpenAiFoodService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecognitionImageHandlerTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -100229,7 +100472,7 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 6
     },
     {
       "contract": "IPostCommitActionQueue",
@@ -123148,7 +123391,7 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 7
     },
     {
       "contract": "IUnitOfWork",
@@ -131039,6 +131282,19 @@
       "consumerArea": "Shared",
       "consumerPath": "Shared/FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Application.Runtime.Tests/Behaviors/AtomicCommandBehaviorTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -139632,7 +139888,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeImportTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -139645,7 +139901,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/RecipeVideoImportTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -142204,6 +142460,19 @@
         "Modules/Images/Service.Contracts/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/ProcessOwnedImageDeletionsCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "ProcessOwnedImageDeletionsCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Commands/ProcessOwnedImageDeletions/ProcessOwnedImageDeletionsCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/ModuleAggregateIsolationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -142417,6 +142686,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Responses/FoodVisionHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ProductLabelHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ProductLabelHttpResponse.cs",
+        "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -152790,6 +153073,20 @@
         "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "StartFoodRecognitionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/StartFoodRecognitionHttpRequest.cs",
+        "Modules/Ai/Presentation/Requests/StartFoodRecognitionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -160029,6 +160326,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Responses/ProfileOverviewHttpResponse.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/UserHttpResponse.cs",
+        "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Telegram.Bot.Tests/BotWireModelTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

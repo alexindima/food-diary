@@ -54,8 +54,10 @@ public sealed class CommandScopeFailureTests {
         actions.Received(1).Discard();
     }
 
-    [Fact]
-    public async Task IgnoredNestedFailure_PreventsTheOuterCommit() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task IgnoredNestedFailure_PreventsTheOuterCommit(bool throws) {
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
         IPostCommitActionQueue actions = Substitute.For<IPostCommitActionQueue>();
@@ -63,7 +65,13 @@ public sealed class CommandScopeFailureTests {
         var outer = new CommandTransactionBehavior<ProbeCommand, Result>(unitOfWork, actions, executionScope: scope);
         var nested = new CommandTransactionBehavior<ProbeCommand, Result>(unitOfWork, actions, executionScope: scope);
         await Assert.ThrowsAsync<InvalidOperationException>(() => outer.Handle(new ProbeCommand(), async token => {
-            await nested.Handle(new ProbeCommand(), _ => Task.FromResult(Result.Failure(new Error("Probe.Failed", "Failed"))), token);
+            try {
+                await nested.Handle(new ProbeCommand(), _ => throws
+                    ? throw new InvalidOperationException("nested failure")
+                    : Task.FromResult(Result.Failure(new Error("Probe.Failed", "Failed"))), token);
+            } catch (InvalidOperationException) when (throws) {
+                // Even a handled nested exception must prevent an outer commit.
+            }
             return Result.Success();
         }, CancellationToken.None));
         unitOfWork.Received(1).DiscardChanges();

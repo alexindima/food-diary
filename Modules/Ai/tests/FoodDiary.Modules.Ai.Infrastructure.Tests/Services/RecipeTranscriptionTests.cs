@@ -13,6 +13,38 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [Collection("OpenAI provider")]
 public sealed class RecipeTranscriptionTests {
     [Fact]
+    public async Task MissingConfiguration_IsRejectedBeforeTranscribing() {
+        using var handler = new AudioHandler(HttpStatusCode.OK, "{}");
+        using var http = new HttpClient(handler);
+        var client = new OpenAiFoodClient(http, Options.Create(new OpenAiOptions { ApiKey = string.Empty }), NullLogger<OpenAiFoodClient>.Instance);
+
+        ResultAssert.Failure(await client.TranscribeRecipeAudioAsync(new RecipeAudio([1], 1, SourceUrl: null), CancellationToken.None), "Ai.OpenAiFailed");
+        Assert.Equal(0, handler.Calls);
+    }
+
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(10485761, 1)]
+    [InlineData(1, 0)]
+    [InlineData(1, 301)]
+    public async Task InvalidAudio_IsRejectedBeforeSending(int length, double duration) {
+        using var handler = new AudioHandler(HttpStatusCode.OK, "{}");
+        using var http = new HttpClient(handler);
+
+        ResultAssert.Failure(await CreateClient(http).TranscribeRecipeAudioAsync(new RecipeAudio(new byte[length], duration, SourceUrl: null), CancellationToken.None), "Ai.InvalidRecipeVideo");
+        Assert.Equal(0, handler.Calls);
+    }
+
+    [Fact]
+    public async Task InternalCancellation_ReturnsDeadlineFailureWithoutRetrying() {
+        using var handler = new CanceledAudioHandler();
+        using var http = new HttpClient(handler);
+
+        ResultAssert.Failure(await CreateClient(http).TranscribeRecipeAudioAsync(new RecipeAudio([1], 1, SourceUrl: null), CancellationToken.None), "Ai.OpenAiFailed");
+        Assert.Equal(1, handler.Calls);
+    }
+
+    [Fact]
     public async Task Transcription_SendsOnlyWavAndModel_AndAcceptsDurationUsage() {
         using var handler = new AudioHandler(HttpStatusCode.OK, "{\"text\":\"180g yoghurt\",\"usage\":{\"type\":\"duration\",\"seconds\":1}}");
         using var http = new HttpClient(handler);
@@ -47,6 +79,15 @@ public sealed class RecipeTranscriptionTests {
     }
 
     private static OpenAiFoodClient CreateClient(HttpClient http) => new(http, Options.Create(new OpenAiOptions { ApiKey = "unit-test-key" }), NullLogger<OpenAiFoodClient>.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CanceledAudioHandler : HttpMessageHandler {
+        public int Calls { get; private set; }
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            Calls++;
+            return Task.FromException<HttpResponseMessage>(new OperationCanceledException());
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class AudioHandler(HttpStatusCode status, string response) : HttpMessageHandler {

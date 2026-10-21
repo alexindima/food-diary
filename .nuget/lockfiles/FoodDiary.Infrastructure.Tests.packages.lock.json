@@ -3322,6 +3322,14 @@
       "fooddiary.results": {
         "type": "Project"
       },
+      "fooddiary.testing": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )",
+          "xunit": "[2.9.3, )"
+        }
+      },
       "AWSSDK.S3": {
         "type": "CentralTransitive",
         "requested": "[4.0.102.4, )",
