@@ -33,6 +33,7 @@ public sealed class BillingPaymentAmountBoundaryTests {
         BillingPayment payment = CreatePayment(amount: 12.34m, currency: " usd ");
 
         Assert.Equal("USD", payment.Currency);
+        Assert.Equal(payment.Id, payment.TypedId.Value);
         Assert.Equal(12.345m, CreatePayment(amount: 12.345m).Amount);
         Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(amount: 12.3456m));
         Assert.Throws<ArgumentOutOfRangeException>(() => CreatePayment(amount: 10_000_000_000_000_000m));

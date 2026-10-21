@@ -8,6 +8,29 @@ namespace FoodDiary.Modules.Fasting.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FastingSettingsTests {
     [Fact]
+    public void TypedCyclicSettings_PreserveTheCalendarAnchorAndBothCycleLengths() {
+        var anchor = new DateTime(2026, 10, 21, 17, 30, 0, DateTimeKind.Utc);
+        var window = DailyFastingWindow.FromHours(16, 8);
+        var day = FastingCycleDay.FromDateTimeEncoding(anchor);
+
+        var settings = CyclicFastingSettings.Create(2, 3, window, day);
+        var plan = FastingPlan.CreateWithSettings(UserId.New(), settings, anchor, "  Cycle  ");
+
+        Assert.Multiple(
+            () => Assert.Equal(FastingPlanType.Cyclic, plan.Type),
+            () => Assert.Equal(2, plan.CyclicFastDays),
+            () => Assert.Equal(3, plan.CyclicEatDays),
+            () => Assert.Equal(16, plan.CyclicEatDayFastHours),
+            () => Assert.Equal(8, plan.CyclicEatDayEatingWindowHours),
+            () => Assert.Equal(new DateTime(2026, 10, 21, 0, 0, 0, DateTimeKind.Utc), plan.CyclicAnchorDateUtc),
+            () => Assert.Equal(anchor, plan.StartedAtUtc),
+            () => Assert.Equal("Cycle", plan.Title),
+            () => Assert.Same(window, settings.EatingDayWindow));
+        Assert.Throws<ArgumentNullException>("eatingDayWindow", () => CyclicFastingSettings.Create(2, 3, null!, day));
+        Assert.Throws<ArgumentNullException>("settings", () => FastingPlan.CreateWithSettings(UserId.New(), null!, anchor));
+    }
+
+    [Fact]
     public void ModeSettings_MapOnlyTheirOwnStorageFields() {
         DateTime now = new(2026, 10, 8, 12, 0, 0, DateTimeKind.Utc);
         var intermittent = FastingPlan.CreateWithSettings(UserId.New(), IntermittentFastingSettings.Create(FastingProtocol.Fast16Eat8, 16, 8), now);

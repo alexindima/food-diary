@@ -171,6 +171,26 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
+    public async Task CreateRecommendation_WithAnAcceptedRelationshipButNoSharedCategories_DoesNotWrite() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invitations = new InMemoryInvitationRepository();
+        invitations.Seed(CreateAcceptedInvitation(clientId, dietologistId, new DietologistPermissions(
+            ShareMeals: false, ShareStatistics: false, ShareWeight: false, ShareWaist: false,
+            ShareGoals: false, ShareHydration: false, ShareProfile: false, ShareFasting: false)));
+        var users = new InMemoryUserRepository();
+        users.Seed(CreateUser(dietologistId, "dietologist@example.test"));
+        var recommendations = new InMemoryRecommendationRepository();
+        CreateRecommendationCommandHandler handler = CreateRecommendationHandler(invitations, recommendations, users);
+
+        Error error = ResultAssert.Failure(await handler.Handle(
+            new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Private recommendation"), CancellationToken.None));
+
+        Assert.Equal(ErrorKind.Forbidden, error.Kind);
+        Assert.Empty(recommendations.Added);
+    }
+
+    [Fact]
     public async Task MarkRecommendationRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkRecommendationReadCommandHandler(
             new InMemoryRecommendationRepository(), new InMemoryUserRepository());

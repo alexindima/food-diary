@@ -76,14 +76,14 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "f59d805b52e5779ac06a5cafc30682651698fadfe4af5f412b30c0e2ac2558f7",
-          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
+          "sha256": "080debf80217dc81ebea594f3c63112dedf6073e85de3359120d0bd160ab5527",
+          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
         }
       ],
-      "reason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff.",
+      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
       "baseRef": "HEAD",
-      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
-      "reviewedAtUtc": "2026-10-21T16:04:12.3468244Z"
+      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
+      "reviewedAtUtc": "2026-10-21T17:25:01.2380008Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -238,19 +238,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "fb42e58f67c0ac64772749ef81b02bce4b78317ef3b9417a4eec66f3b396e791",
-          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
+          "sha256": "6ebcca455abd41d50337c46cb87f025fe1d1f7382fec3df699b44c42ecf37fa0",
+          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "f59d805b52e5779ac06a5cafc30682651698fadfe4af5f412b30c0e2ac2558f7",
-          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
+          "sha256": "080debf80217dc81ebea594f3c63112dedf6073e85de3359120d0bd160ab5527",
+          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
         }
       ],
-      "reason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff.",
+      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
       "baseRef": "HEAD",
-      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
-      "reviewedAtUtc": "2026-10-21T16:04:12.5500029Z"
+      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
+      "reviewedAtUtc": "2026-10-21T17:25:01.5300178Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1328,8 +1328,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "416da4450d333896ddb6cde8a893645477d393136cb05e17e06dfd5a8fd0b85b",
-          "reviewReason": "Reviewed the regenerated repository catalog for the Users and MealPlanning test project references. Each added owner contract is consumed by regression tests. Query contracts, ranking, scope bounds, cache behavior and production module topology are unchanged; the current navigation guidance remains accurate."
+          "sha256": "f740c80757d5a0651d94980a3e36c06ac5cf20236c50e9fc6daa7f4649fc2a5c",
+          "reviewReason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1337,10 +1337,10 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         }
       ],
-      "reason": "Reviewed the regenerated repository catalog for the Users and MealPlanning test project references. Each added owner contract is consumed by regression tests. Query contracts, ranking, scope bounds, cache behavior and production module topology are unchanged; the current navigation guidance remains accurate.",
+      "reason": "Reviewed added owner-level unit and PostgreSQL regression tests and their exact direct references. ProjectDependencyMatrixTests changes only test-project allowlists; production dependencies, persistence ownership, HTTP contracts and runtime behavior are unchanged. The current architecture pages and context-navigation workflow remain accurate. The complete architecture suite passes 2274 tests; changed owner suites and six focused commit-outcome integration cases pass with no skips.",
       "baseRef": "HEAD",
-      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
-      "reviewedAtUtc": "2026-10-21T16:04:04.0681614Z"
+      "gitHead": "5d73dab6340783ddda47a19c2e2309adbf31f5a8",
+      "reviewedAtUtc": "2026-10-21T17:25:01.8452663Z"
     },
     {
       "pageId": "workflow.review-diff",

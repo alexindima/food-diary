@@ -5,6 +5,29 @@ namespace FoodDiary.Modules.Fasting.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class FastingIdContractTests {
     [Fact]
+    public void ReplacementIds_LeaveEveryPublishedOriginalUnchanged() {
+        var value = Guid.Parse("12345678-1234-5678-9abc-def012345678");
+        var replacement = Guid.Parse("87654321-4321-8765-cba9-876543210fed");
+        var checkIn = new FastingCheckInId(value);
+        var occurrence = new FastingOccurrenceId(value);
+        var plan = new FastingPlanId(value);
+        var session = new FastingSessionId(value);
+        var telemetry = new FastingTelemetryEventId(value);
+
+        Assert.Multiple(
+            () => Assert.Equal(replacement, (checkIn with { Value = replacement }).Value),
+            () => Assert.Equal(replacement, (occurrence with { Value = replacement }).Value),
+            () => Assert.Equal(replacement, (plan with { Value = replacement }).Value),
+            () => Assert.Equal(replacement, (session with { Value = replacement }).Value),
+            () => Assert.Equal(replacement, (telemetry with { Value = replacement }).Value),
+            () => Assert.Equal(value, checkIn.Value),
+            () => Assert.Equal(value, occurrence.Value),
+            () => Assert.Equal(value, plan.Value),
+            () => Assert.Equal(value, session.Value),
+            () => Assert.Equal(value, telemetry.Value));
+    }
+
+    [Fact]
     public void FastingCheckInId_ImplementsGuidValueObjectContract() {
         AssertContract(
             static value => (FastingCheckInId)value,

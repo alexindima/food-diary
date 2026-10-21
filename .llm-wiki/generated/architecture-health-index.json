@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 40,
+    "criticalSymbolsWithoutTestReferences": 39,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5649,16 +5649,6 @@
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
-      "line": 20,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "AdminMealPlansController",
-      "role": "Controller",
-      "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
       "line": 20,
       "testReferenceCount": 0,
       "testReferences": [],

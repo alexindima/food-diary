@@ -9,8 +9,8 @@
     "wikiToolFiles": 221,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1011,
-    "criticalSymbolsWithTestReferences": 971,
-    "criticalSymbolsWithoutTestReferences": 40,
+    "criticalSymbolsWithTestReferences": 972,
+    "criticalSymbolsWithoutTestReferences": 39,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -39989,8 +39989,8 @@
       "nonBlankLines": 44,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.88
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.88
     },
     {
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
@@ -57077,9 +57077,10 @@
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.MeasurementUpdateTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57425,8 +57426,9 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/AdminCatalogProductsController.cs",
       "line": 19,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/AdminCatalogProductsControllerTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CollectionEndpointPaginationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57526,9 +57528,11 @@
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/AdminMealPlansController.cs",
       "line": 20,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/AdminMealPlansControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -58344,8 +58348,9 @@
       "role": "Controller",
       "path": "Modules/MealPlanning/Presentation/MealPlans/Controllers/MealPlansController.cs",
       "line": 19,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/AdminMealPlansControllerTests.cs",
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Presentation.Tests/MealPlanDeleteControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs"
@@ -58454,9 +58459,11 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/ProductsController.cs",
       "line": 16,
-      "testReferenceCount": 6,
+      "testReferenceCount": 8,
       "testReferences": [
         "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/AdminCatalogProductsControllerTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/PublicProductsControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
@@ -58471,8 +58478,9 @@
       "role": "Controller",
       "path": "Modules/Products/Presentation/Controllers/PublicProductsController.cs",
       "line": 16,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/PublicProductsControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -63697,9 +63705,10 @@
       "role": "Validator",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
       "line": 7,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.GalleryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.MeasurementUpdateTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",

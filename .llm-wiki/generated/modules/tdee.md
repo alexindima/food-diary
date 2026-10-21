@@ -57,6 +57,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/CalculationWeightBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeCalculatorTests.cs`
 - [behavioral-or-text-match] `Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/TdeeFeatureTests.cs`

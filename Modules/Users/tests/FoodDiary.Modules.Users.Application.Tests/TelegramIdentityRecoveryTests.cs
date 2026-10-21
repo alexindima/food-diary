@@ -4,12 +4,55 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Application.Common;
 using FoodDiary.Modules.Users.Application.Services;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Users.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramIdentityRecoveryTests {
+    [Fact]
+    public async Task RelinkingAfterMailboxConfirmation_UpgradesRecoveryTrustOnceWithoutChangingTheIdentityOrSecurityVersion() {
+        var user = User.Create("recovery-relink@example.test", "hash");
+        user.LinkTelegram(123);
+        Assert.False(user.TelegramLinkVerifiedForRecovery);
+        user.CompleteEmailVerification();
+        long securityVersion = user.SecurityVersion;
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        using var cancellation = new CancellationTokenSource();
+        lookup.GetByIdAsync(user.Id, cancellation.Token).Returns(user);
+        var service = new UserAuthenticationIdentityService(lookup, writer, Substitute.For<IUserGoogleIdentityRepository>(), Substitute.For<IPasswordHasher>());
+
+        UserModel first = ResultAssert.Success(await service.LinkTelegramAsync(user.Id, 123, cancellation.Token));
+        UserModel repeated = ResultAssert.Success(await service.LinkTelegramAsync(user.Id, 123, cancellation.Token));
+
+        Assert.Multiple(
+            () => Assert.True(user.TelegramLinkVerifiedForRecovery),
+            () => Assert.Equal(123, user.TelegramUserId),
+            () => Assert.Equal(securityVersion, user.SecurityVersion),
+            () => Assert.True(first.HasTelegramIdentity),
+            () => Assert.Equal(first, repeated));
+        await writer.Received(1).UpdateAsync(user, cancellation.Token);
+        await lookup.DidNotReceive().GetByTelegramUserIdIncludingDeletedAsync(Arg.Any<long>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task LinkTelegram_MissingUserCannotClaimAnIdentityOrWrite() {
+        var user = UserId.New();
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        using var cancellation = new CancellationTokenSource();
+        var service = new UserAuthenticationIdentityService(lookup, writer, Substitute.For<IUserGoogleIdentityRepository>(), Substitute.For<IPasswordHasher>());
+
+        Error error = ResultAssert.Failure(await service.LinkTelegramAsync(user, 123, cancellation.Token));
+
+        Assert.Equal("Authentication.InvalidToken", error.Code);
+        Assert.Empty(writer.ReceivedCalls());
+        await lookup.Received(1).GetByIdAsync(user, cancellation.Token);
+        Assert.Single(lookup.ReceivedCalls());
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
