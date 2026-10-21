@@ -162,6 +162,9 @@ $combinedAdaptiveGroups = @(Get-Groups @(
     '.llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1'
     '.llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1'
 ))
+foreach ($tool in @('LlmWikiBehaviorSpecification', 'LlmWikiSubstantiveReview', 'Get-LlmWikiPhaseStatus', 'Test-LlmWikiBehaviorWorkflow', 'LlmWikiAssessmentRunner', 'Test-LlmWikiFeedbackReliability')) {
+    if (@(Get-Groups ".llm-wiki/tools/$tool.ps1") -notcontains 'governed-delivery') { throw "Behavior workflow regression is not selected for $tool." }
+}
 if ($combinedAdaptiveGroups -notcontains 'adaptive-evals' -or
     $combinedAdaptiveGroups -contains 'adaptive-routing' -or
     $combinedAdaptiveGroups -contains 'adaptive-experience') {

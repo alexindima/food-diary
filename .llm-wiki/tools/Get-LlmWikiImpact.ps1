@@ -146,11 +146,12 @@ foreach ($page in $pages) {
     }
 
     $pageChanged = $changedPathSet.ContainsKey($page.Path)
+    $requiredSources = @($changedSources | Where-Object { -not $coordinateOnlySources.ContainsKey($_) -or -not $coordinateOnlySources[$_] })
     $reviewReceipt = @($sourceReviews | Where-Object pageId -eq $page.Id | Where-Object {
         $candidateReview = $_
         $candidateReview.pagePath -eq $page.Path -and
         $candidateReview.pageSha256 -eq (Get-ContentHash $page.Path) -and
-        @($changedSources | Where-Object {
+        @($requiredSources | Where-Object {
             $sourcePath = $_
             @($candidateReview.sources | Where-Object {
                 $_.path -eq $sourcePath -and $_.sha256 -eq (Get-ContentHash $sourcePath)
@@ -159,6 +160,13 @@ foreach ($page in $pages) {
     } | Select-Object -First 1)
     $coordinatesOnly = @($changedSources | Where-Object { -not $coordinateOnlySources.ContainsKey($_) -or -not $coordinateOnlySources[$_] }).Count -eq 0
     $reviewed = $pageChanged -or $page.Status -eq 'stale' -or -not [string]::IsNullOrWhiteSpace($page.GeneratedBy) -or $reviewReceipt.Count -gt 0 -or $coordinatesOnly
+    $priorReceipt = @($sourceReviews | Where-Object pageId -eq $page.Id | Select-Object -First 1)
+    $reason = if ($pageChanged) { 'page-updated' } elseif ($page.Status -eq 'stale') { 'page-marked-stale' } elseif ($page.GeneratedBy) { 'generated-page' } elseif ($coordinatesOnly) { 'navigation-coordinates-only' } elseif ($reviewReceipt.Count -gt 0) { 'current-review-receipt' } elseif ($priorReceipt.Count -eq 0) { 'review-receipt-missing' } elseif ($priorReceipt[0].pageSha256 -cne (Get-ContentHash $page.Path)) { 'reviewed-page-content-changed' } else { 'reviewed-source-content-changed' }
+    $pendingSources = @($requiredSources | Where-Object {
+        $source = $_
+        $priorReceipt.Count -eq 0 -or @($priorReceipt[0].sources | Where-Object { $_.path -eq $source -and $_.sha256 -ceq (Get-ContentHash $source) }).Count -eq 0
+    })
+    if ($reason -eq 'reviewed-page-content-changed') { $pendingSources = $requiredSources }
     $impacts.Add([pscustomobject]@{
         Id = $page.Id
         Path = $page.Path
@@ -168,6 +176,8 @@ foreach ($page in $pages) {
         PageChanged = $pageChanged
         ReviewReceipt = if ($reviewReceipt.Count -gt 0) { $reviewReceipt[0] } else { $null }
         Reviewed = $reviewed
+        ReviewReason = $reason
+        ReviewRequiredSources = @($(if (-not $reviewed) { $pendingSources }))
         SourceDelta = $(if ($coordinatesOnly) { 'navigation-coordinates-only' } else { 'semantic-or-unclassified' })
     })
 }
@@ -197,6 +207,7 @@ foreach ($impact in @($impacts | Where-Object { [string]::IsNullOrWhiteSpace($_.
         'needs review'
     }
     Write-Host " - $($impact.Path) [id: $($impact.Id); $($impact.Status), $reviewState]"
+    if (-not $impact.Reviewed) { Write-Host "   Reason: $($impact.ReviewReason); inspect current source changes and update the page or record a new rationale." }
     foreach ($source in $impact.ChangedSources) {
         Write-Host "   <- $source"
     }

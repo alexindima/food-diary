@@ -7,6 +7,8 @@ sources:
   - .llm-wiki/tools/LlmWikiEvidenceCommands.ps1
   - .llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1
   - .llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1
+  - .llm-wiki/tools/LlmWikiSubstantiveReview.ps1
+  - .llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidenceCache.ps1
   - .llm-wiki/tools/Import-LlmWikiEvidenceReceipts.ps1
@@ -21,6 +23,14 @@ sources:
 Evidence bundles record what a change required, what was verified, and which
 review decisions remain unresolved. They live under ignored `.artifacts/` and
 are not committed.
+
+`evidence-review -Id substantive-code-review -Status completed -Reason <scope>
+-ReviewContent <object>` records requirement conclusions and code-quality findings
+inside this same bundle. It does not replace policy review obligations. Source,
+scope, HEAD and acceptance definition/mapping fingerprints prevent stale reuse;
+open behavior gaps and major/critical findings invalidate delivery evidence.
+The content schema and small-route usage are documented in
+[the canonical review guide](../../docs/ai/CODE_REVIEW.md#substantive-review-record).
 
 Required checks retain the canonical policy command in `command`; the actual
 invocation is recorded separately in `executionCommand` and its lineage. Output

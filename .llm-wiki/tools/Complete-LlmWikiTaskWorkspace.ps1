@@ -11,6 +11,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiAssessmentRunner.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $policySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
@@ -144,10 +145,7 @@ foreach ($artifactName in $sealedArtifactNames) {
     }
 }
 
-$status = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Detailed `
-    -Format Json | ConvertFrom-Json
+$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'status'; WorkspacePath = $normalizedWorkspacePath; Detailed = $true }
 if ($status.verdict -ne 'ready') {
     $actionText = @($status.nextActions) -join ' | '
     throw "Task workspace is not ready ($($status.verdict), $($status.score)/100). $actionText"
@@ -169,56 +167,34 @@ if ($DryRun) {
     return
 }
 
-& (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') refresh `
-    -WorkspacePath $normalizedWorkspacePath | Out-Null
-& (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid | Out-Null
-& (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid | Out-Null
-& (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid | Out-Null
-& (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'refresh'; WorkspacePath = $normalizedWorkspacePath } | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiPlanConformance.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiImpactSimulation.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiProofOfChange.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 $failurePredictionPath = Join-Path $absoluteWorkspacePath 'failure-prediction.json'
 if (Test-Path -LiteralPath $failurePredictionPath -PathType Leaf) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiFailurePrediction.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') create `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiFailurePrediction.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 }
 $sealedArtifactNames += 'risk-calibration.json'
 $sealedArtifactNames += 'failure-prediction.json'
 $verificationCostPath = Join-Path $absoluteWorkspacePath 'verification-cost.json'
 if (Test-Path -LiteralPath $verificationCostPath -PathType Leaf) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiVerificationCost.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') create `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiVerificationCost.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 }
 $sealedArtifactNames += 'verification-cost.json'
 $modelRoutingPath = Join-Path $absoluteWorkspacePath 'model-routing.json'
 if (Test-Path -LiteralPath $modelRoutingPath -PathType Leaf) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiModelRouting.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiModelRouting.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
     $sealedArtifactNames += 'model-routing.json'
 }
 $repairLoopPath = Join-Path $absoluteWorkspacePath 'repair-loop.json'
 if (Test-Path -LiteralPath $repairLoopPath -PathType Leaf) {
-    $repairLoop = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid `
-        -Format Json | ConvertFrom-Json
+    $repairLoop = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRepairLoop.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true }
     if (@($repairLoop.activeAttempts).Count -gt 0 -or @($repairLoop.unresolvedAttempts).Count -gt 0) {
         throw 'Task completion requires every repair attempt chain to end with a completed attempt.'
     }
@@ -228,53 +204,36 @@ $sealedArtifactNames += 'plan-conformance.json'
 $sealedArtifactNames += 'requirement-model.json'
 $sealedArtifactNames += 'impact-simulation.json'
 $sealedArtifactNames += 'proof-of-change.json'
-$confidenceLedger = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid `
-    -Format Json | ConvertFrom-Json
+$confidenceLedger = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiConfidenceLedger.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true }
 if ($confidenceLedger.ledger.verdict -eq 'blocked') {
     throw "Task completion cannot seal a blocked confidence ledger at $($confidenceLedger.ledger.score)/100."
 }
 $sealedArtifactNames += 'confidence-ledger.json'
-$changeCritique = & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') create `
-    -WorkspacePath $normalizedWorkspacePath `
-    -FailOnInvalid `
-    -Format Json | ConvertFrom-Json
+$changeCritique = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiChangeCritique.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true }
 if ($changeCritique.critique.verdict -in @('reject', 'request-changes')) {
     throw "Task completion cannot seal critique verdict '$($changeCritique.critique.verdict)' at $($changeCritique.critique.score)/100."
 }
 $sealedArtifactNames += 'change-critique.json'
 $contextBundlePath = Join-Path $absoluteWorkspacePath 'context-bundle.json'
 if (Test-Path -LiteralPath $contextBundlePath -PathType Leaf) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBundle.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextBundle.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
     $contextBudgetPath = Join-Path $absoluteWorkspacePath 'context-budget.json'
     if (Test-Path -LiteralPath $contextBudgetPath -PathType Leaf) {
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBudget.ps1') verify `
-            -WorkspacePath $normalizedWorkspacePath `
-            -FailOnInvalid | Out-Null
+        Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextBudget.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
     } else {
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBudget.ps1') create `
-            -WorkspacePath $normalizedWorkspacePath `
-            -FailOnInvalid | Out-Null
+        Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextBudget.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
     }
     $sealedArtifactNames += 'context-bundle.json'
     $sealedArtifactNames += 'context-security.json'
     $sealedArtifactNames += 'context-budget.json'
     $contextBenchmarkPath = Join-Path $absoluteWorkspacePath 'context-benchmark.json'
     if (Test-Path -LiteralPath $contextBenchmarkPath -PathType Leaf) {
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextBenchmark.ps1') verify `
-            -WorkspacePath $normalizedWorkspacePath `
-            -FailOnInvalid `
-            -FailOnRegression | Out-Null
+        Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextBenchmark.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true; FailOnRegression = $true } | Out-Null
         $sealedArtifactNames += 'context-benchmark.json'
     }
     $contextExperimentPath = Join-Path $absoluteWorkspacePath 'context-experiment.json'
     if (Test-Path -LiteralPath $contextExperimentPath -PathType Leaf) {
-        & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextExperiment.ps1') verify `
-            -WorkspacePath $normalizedWorkspacePath `
-            -FailOnInvalid | Out-Null
+        Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextExperiment.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
         $sealedArtifactNames += 'context-experiment.json'
     }
     $contextStrategyApprovalPath = Join-Path $absoluteWorkspacePath 'context-strategy-approval.json'
@@ -283,10 +242,7 @@ if (Test-Path -LiteralPath $contextBundlePath -PathType Leaf) {
     }
     $contextStrategyApplicationPath = Join-Path $absoluteWorkspacePath 'context-strategy-application.json'
     if (Test-Path -LiteralPath $contextStrategyApplicationPath -PathType Leaf) {
-        $contextStrategy = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextStrategy.ps1') verify `
-            -WorkspacePath $normalizedWorkspacePath `
-            -FailOnInvalid `
-            -Format Json | ConvertFrom-Json
+        $contextStrategy = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiContextStrategy.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true }
         if ([string]$contextStrategy.strategy.state -eq 'rollback-recommended') {
             throw 'Task completion cannot seal a context strategy with a rollback recommendation.'
         }
@@ -295,18 +251,13 @@ if (Test-Path -LiteralPath $contextBundlePath -PathType Leaf) {
 }
 $planReusePath = Join-Path $absoluteWorkspacePath 'plan-reuse.json'
 if (Test-Path -LiteralPath $planReusePath -PathType Leaf) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskSimilarity.ps1') verify `
-        -WorkspacePath $normalizedWorkspacePath `
-        -FailOnInvalid | Out-Null
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskSimilarity.ps1' -Arguments @{ Action = 'verify'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
     $sealedArtifactNames += 'plan-reuse.json'
     if (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'verification-plan.json') -PathType Leaf) {
         $sealedArtifactNames += 'verification-plan.json'
     }
 }
-$status = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Detailed `
-    -Format Json | ConvertFrom-Json
+$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'status'; WorkspacePath = $normalizedWorkspacePath; Detailed = $true }
 if ($status.verdict -ne 'ready') {
     throw "Task readiness changed during final refresh: $($status.verdict)."
 }

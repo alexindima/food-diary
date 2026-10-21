@@ -9,7 +9,7 @@ tags:
   - quality
   - testing
 sources:
-  - .llm-wiki/generated/quality-index.json
+  - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
   - .llm-wiki/tools/Find-LlmWikiQualityRisk.ps1
   - .llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1

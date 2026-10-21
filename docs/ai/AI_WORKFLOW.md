@@ -24,12 +24,72 @@ machine-readable results and command-specific `-Help` for parameter semantics.
 Preview `task-finish -DryRun` and finish before the final delivery commit, because
 completion may record tracked learning observations.
 
+Long task assessments and `task-finish` report the current stage, elapsed wait
+and a live log path, including in JSON mode through PowerShell's information
+stream. Successful read-only assessments reuse the existing content-addressed
+query cache only while source, policy, runtime, task evidence and log hashes
+match. Application test execution keeps its existing verification receipts;
+failed or blocked assessments are never replayed as success.
+
+`task-refresh -DryRun` lists dependent artifacts that need regeneration.
+Refresh compares compiled packet contents as well as task identity, excludes
+only SQL timing diagnostics, and invalidates the full dependent assessment set
+before rebuilding the report. Unchanged check evidence is retained through the
+existing lineage rules. Stale dependency metadata points to refresh; unexpected
+current impact still requires review or replanning.
+
+Generic command guides declare their generators and query contracts as sources.
+Use a generated index as a page source when the page actually asserts facts
+about its current records. Metrics or record changes should not force a review
+of generic usage instructions. Source-impact output reports the invalidation
+reason and exact sources requiring review; coordinate-only changes can coexist
+with a current receipt for the remaining sources.
+
 For critical calculations, specify independently derived input/output examples
 before implementation and preserve units, source provenance and rounding.
 For risky changes, perform a separate review pass from the final diff, relevant
 contracts and acceptance criteria. Reproduce suspected failures; a second model's
 approval is not verification evidence. Routine local changes use their focused
 checks without adding a full governance cycle.
+
+## Behavior, phase proof and code review
+
+For a design-required route, pass `design -BehaviorSpec <object> -Criterion <outcomes>`.
+The compact specification describes current behavior with source anchors, target
+behavior from the intent, preserved behavior, non-goals, and concrete success plus
+failure/boundary examples. Each example has `kind`, `given`, `when`, and `then`.
+Use independently derived quantities and units for calculations. Explicitly empty
+preservation/non-goal lists are allowed; a missing fact remains an open question.
+The agent should fill these fields from current sources and the authorized task,
+asking only about unresolved product decisions. Store the reviewed design output
+in the existing task artifacts; do not create another persistent planning system.
+`design` reports `ready=false` while a required specification is incomplete.
+Tiny and ordinary bug routes gain no mandatory design stage.
+
+For governed phases, `phase-status` derives progress from the manifest, acceptance
+matrix, evidence bundle and current execution lineage. Map phase files to criteria
+using existing `acceptance-map -ChangedPath/-TestPath/-CheckId` links. Verification,
+generated-artifact and release phases use the task's full acceptance/check scope;
+source phases use their mapped files. `phase-complete -PhaseId <id> -FailOnInvalid` requires satisfied
+outcomes and mapped passing executed checks with current logs; changed files,
+manual pass labels and test-file existence do not prove completion. A source or
+log edit invalidates the corresponding proof. Criterion resolutions are bound to
+their text; legacy or edited requirements must be resolved again with the existing
+`acceptance-resolve` command. Context preparation has its own `completed` state;
+behavioral phases use `verified`. Final delivery gates remain
+required even after every phase verifies.
+
+Review non-trivial changes in a separate pass against the final diff. Record
+requirement-by-requirement conclusions and implementation correctness/failure/test
+gap reasoning through `evidence-review -Id substantive-code-review -Status completed
+-Reason <review scope> -ReviewContent <object>` in the existing evidence bundle.
+Follow [the review contract](CODE_REVIEW.md#substantive-review-record). Automatic
+critique validates records and policy; its verdict is not an independent semantic
+code review. Security, sensitive-data lifecycle and architecture-decision critiques
+require the substantive record. Other routes can record it without adding a new
+workspace, model call or mandatory role chain. Reviewer findings must be concrete;
+an open major/critical finding or behavior gap blocks completion. Changed sources,
+scope, HEAD or acceptance requirements require a fresh review.
 
 ## Conditional obligations and commands
 

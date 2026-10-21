@@ -73,21 +73,34 @@ if ($changedSources.Count -eq 0) {
     throw "Wiki page '$Id' has no declared source changed in the selected diff."
 }
 $pagePath = $page.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+$pageHash = Get-ContentHash $pagePath
+$ledger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
+$existingReview = @($ledger.reviews | Where-Object pageId -eq $Id | Select-Object -First 1)
+$reviewedSources = @($changedSources | Sort-Object | ForEach-Object {
+    [pscustomobject][ordered]@{ path = $_; sha256 = Get-ContentHash $_; reviewReason = $Reason }
+})
+# A task-delta review must not erase another task's still-current review of
+# the same page. Retain only sources declared by the unchanged page and whose
+# complete content hash still matches, with their original review rationale.
+if ($existingReview.Count -eq 1 -and $existingReview[0].pagePath -ceq $pagePath -and $existingReview[0].pageSha256 -ceq $pageHash) {
+    foreach ($source in @($existingReview[0].sources)) {
+        if ($source.path -in $pageSources -and $source.path -notin $changedSources -and $source.sha256 -ceq (Get-ContentHash $source.path)) {
+            $sourceReason = if ($source.PSObject.Properties['reviewReason']) { [string]$source.reviewReason } else { [string]$existingReview[0].reason }
+            $reviewedSources += [pscustomobject][ordered]@{ path = [string]$source.path; sha256 = [string]$source.sha256; reviewReason = $sourceReason }
+        }
+    }
+}
 $review = [pscustomobject][ordered]@{
     pageId = $Id
     pagePath = $pagePath
-    pageSha256 = Get-ContentHash $pagePath
-    sources = @($changedSources | Sort-Object | ForEach-Object {
-        [pscustomobject][ordered]@{ path = $_; sha256 = Get-ContentHash $_ }
-    })
+    pageSha256 = $pageHash
+    sources = @($reviewedSources | Sort-Object path)
     reason = $Reason
     baseRef = $BaseRef
     gitHead = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the source review.').Lines[0].Trim()
     reviewedAtUtc = [DateTime]::UtcNow.ToString('o')
 }
 
-$ledger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
-$existingReview = @($ledger.reviews | Where-Object pageId -eq $Id | Select-Object -First 1)
 if ($existingReview.Count -eq 1) {
     $signatureProperties = @('pageId', 'pagePath', 'pageSha256', 'sources', 'reason', 'baseRef', 'gitHead')
     $existingSignature = $existingReview[0] | Select-Object $signatureProperties | ConvertTo-Json -Depth 8 -Compress

@@ -67,8 +67,19 @@ no textual update, record that decision instead of adding a mechanical note:
 ```
 
 The receipt stores the page and changed-source SHA-256 hashes. Freshness accepts
-it only while those hashes still match; a later source or page edit
-automatically requires a new review.
+it while those hashes match for sources requiring semantic review. Numeric line
+coordinates in the two recognized navigation indexes do not invalidate an
+otherwise current receipt. Contract values, paths and unknown schemas still
+require review. JSON output includes `ReviewReason` and `ReviewRequiredSources`
+to distinguish a missing receipt, changed page, and changed source content.
+Reviewing a task's source subset retains still-current hashes for other declared
+sources on the same unchanged page, together with their original `reviewReason`.
+Changed page text, removed sources and changed source bytes cannot inherit that
+coverage. Repeating the same review remains idempotent.
+
+Generic usage guides cite their generators and query contracts. Cite current
+generated records when the page actually asserts their data, rather than making
+every metrics update require another review of unchanged command instructions.
 
 Review the current affected set with reasons grouped by review area:
 

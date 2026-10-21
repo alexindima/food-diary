@@ -260,6 +260,7 @@ switch ($Action) {
         $item.status = $AcceptanceStatus
         $item.resolution.reason = if ([string]::IsNullOrWhiteSpace($Reason)) { $null } else { $Reason }
         $item.resolution.evidenceNote = if ([string]::IsNullOrWhiteSpace($EvidenceNote)) { $null } else { $EvidenceNote }
+        $item.resolution | Add-Member -NotePropertyName criterionFingerprint -NotePropertyValue (Get-LlmWikiCriterionFingerprint $item) -Force
         Write-Matrix $matrix
         Write-Host "Resolved acceptance criterion $CriterionId as $AcceptanceStatus."
     }
@@ -273,6 +274,8 @@ switch ($Action) {
         $unverified = [System.Collections.Generic.List[string]]::new()
         $nonAtomic = [System.Collections.Generic.List[string]]::new()
         foreach ($item in @($matrix.criteria)) {
+            if ($item.status -in @('satisfied', 'not-applicable') -and $item.resolution.PSObject.Properties['criterionFingerprint'] -and
+                [string]$item.resolution.criterionFingerprint -cne (Get-LlmWikiCriterionFingerprint $item)) { $unverified.Add($item.id) }
             if (-not (Test-LlmWikiCriterionAtomic ([string]$item.text) $requirementPolicy)) { $nonAtomic.Add([string]$item.id) }
             $mappingCount = @(
                 @($item.mapping.scenarioIds) +

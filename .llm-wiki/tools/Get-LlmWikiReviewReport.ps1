@@ -21,6 +21,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSubstantiveReview.ps1')
 
 function ConvertTo-MarkdownCell([object]$Value) {
     if ($null -eq $Value) { return '' }
@@ -120,6 +121,8 @@ $report = [pscustomobject][ordered]@{
     }
     objective = $packetObjective
     verdict = $readiness.verdict
+    assessmentKind = 'automatic-readiness-assessment'
+    substantiveReview = $(if ($null -ne $evidence -and $evidenceApplicable) { Test-LlmWikiSubstantiveReview -Evidence $evidence -EvidencePath $EvidencePath } else { [pscustomobject]@{ present = $false; valid = $false; issues = @('No applicable substantive code review recorded.') } })
     engineeringReadiness = $readiness.engineeringReadiness
     governanceCompleteness = $readiness.governanceCompleteness
     score = $readiness.score
@@ -149,6 +152,13 @@ if ($Format -eq 'Json') {
 } else {
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('## LLM Wiki change review')
+    $lines.Add('')
+    $lines.Add("Substantive code review: present=$($report.substantiveReview.present), valid=$($report.substantiveReview.valid). Automated readiness does not establish semantic correctness.")
+    if ($report.substantiveReview.present) {
+        $lines.Add((ConvertTo-MarkdownCell $report.substantiveReview.codeQuality))
+        foreach ($requirement in $report.substantiveReview.requirements) { $lines.Add("- $($requirement.criterionId): $($requirement.conclusion); $(ConvertTo-MarkdownCell $requirement.evidence)") }
+        foreach ($finding in $report.substantiveReview.findings) { $lines.Add("- [$($finding.severity)/$($finding.status)] $($finding.id): $(ConvertTo-MarkdownCell $finding.consequence)") }
+    }
     $lines.Add('')
     $lines.Add("Assessment snapshot: $($report.freshness.assessedAtUtc). This verdict applies to the recorded packet and evidence hashes; later validation supersedes it.")
     $lines.Add("Refresh: ``$($report.freshness.refreshCommand)``.")

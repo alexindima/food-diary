@@ -11,9 +11,11 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiAssessmentRunner.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiImplementationBrief.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSubstantiveReview.ps1')
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $critiquePolicy = $policy.scheduler.changeCritique
@@ -52,6 +54,8 @@ function Get-Payload([object]$Critique) {
         findings = @($Critique.findings)
         summary = $Critique.summary
         score = $Critique.score
+        assessmentKind = $(if ($Critique.PSObject.Properties['assessmentKind']) { $Critique.assessmentKind } else { $null })
+        substantiveReview = $(if ($Critique.PSObject.Properties['substantiveReview']) { $Critique.substantiveReview } else { $null })
         verdict = $Critique.verdict
     }
 }
@@ -85,12 +89,12 @@ function New-Critique([string]$CreatedAtUtc) {
     $brief = Normalize-LlmWikiImplementationBrief $packet.brief
     $acceptance = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'acceptance-matrix.json') -Raw | ConvertFrom-Json
     $evidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
-    $requirements = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $conformance = & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $proof = & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    $requirements = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $conformance = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiPlanConformance.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $proof = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiProofOfChange.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $impact = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiImpactSimulation.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
     $repair = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $prediction = & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    $prediction = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiFailurePrediction.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
     $telemetryValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
     $telemetry = if ($telemetryValidation.valid) {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
@@ -102,6 +106,8 @@ function New-Critique([string]$CreatedAtUtc) {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     } else { $null }
     $matchedRuleIds = @($packet.policy.matchedRules | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } })
+    $requiresSubstantiveReview = [bool]$brief.decisionContext.reviewRequired -or @($matchedRuleIds | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle', 'architecture-decision', 'architecture-drift') }).Count -gt 0
+    $substantiveReview = Test-LlmWikiSubstantiveReview -Evidence $evidence -EvidencePath "$workspace/evidence.json" -Required:$requiresSubstantiveReview
     $externalIntegrations = $packet.PSObject.Properties['rolloutFlags'] -and $null -ne $packet.rolloutFlags -and
         $packet.rolloutFlags.PSObject.Properties['externalIntegrations'] -and [bool]$packet.rolloutFlags.externalIntegrations
     $sensitiveContextRequired = @($brief.privacyImpact.fields).Count -gt 0 -or
@@ -110,14 +116,14 @@ function New-Critique([string]$CreatedAtUtc) {
         @($matchedRuleIds | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -gt 0 -or
         $externalIntegrations
     $confidencePath = Join-Path $absoluteWorkspace 'confidence-ledger.json'
-    $confidence = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') `
-        $(if (Test-Path -LiteralPath $confidencePath -PathType Leaf) { 'verify' } else { 'assess' }) `
-        -WorkspacePath $workspace `
-        -Format Json | ConvertFrom-Json
+    $confidence = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiConfidenceLedger.ps1' -Arguments @{ Action = $(if (Test-Path -LiteralPath $confidencePath -PathType Leaf) { 'verify' } else { 'assess' }); WorkspacePath = $workspace }
 
     $findings = [Collections.Generic.List[object]]::new()
     if (-not $requirements.valid) {
         Add-Finding $findings 'intent-requirements-invalid' 'intent' 'major' 'Requirements contain ambiguity or weak acceptance criteria.' 'Clarify, split, or explicitly resolve every requirement-model finding.' @(Get-Ids @($requirements.model.findings))
+    }
+    if (-not $substantiveReview.valid) {
+        Add-Finding $findings 'substantive-code-review-unresolved' 'verification' 'major' 'Substantive requirement or code review is missing, stale, or has unresolved findings.' 'Review the final sources against acceptance criteria and record substantive-code-review with evidence-review.' @($substantiveReview.issues)
     }
     if (-not $conformance.valid) {
         Add-Finding $findings 'scope-plan-drift' 'scope' 'major' 'Observed changes do not conform to the declared implementation plan.' 'Replan the task or bring the changed paths back into the approved scope.' @(Get-Ids @($conformance.conformance.policyFindings)) "./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath $workspace -Reason '<observed scope evidence>'"
@@ -132,7 +138,11 @@ function New-Critique([string]$CreatedAtUtc) {
         Add-Finding $findings 'verification-unresolved' 'verification' 'critical' 'Checks, reviews, or acceptance criteria remain unresolved.' 'Resolve every required check, review, and acceptance criterion before completion.' @((Get-Ids $unresolvedChecks) + (Get-Ids $unresolvedReviews) + (Get-Ids $unresolvedCriteria)) "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath $workspace"
     }
     if (-not $impact.valid) {
-        Add-Finding $findings 'architecture-impact-drift' 'architecture' 'major' 'Observed architectural impact exceeds the forecast.' 'Review unexpected impact and replan or narrow the implementation.' @(Get-Ids @($impact.simulation.findings))
+        if (@($impact.simulation.findings | Where-Object id -eq 'packet-metadata-stale').Count -gt 0) {
+            Add-Finding $findings 'architecture-metadata-stale' 'architecture' 'major' 'Saved dependency metadata predates the current compiled indexes.' 'Refresh task metadata, then reassess impact before deciding whether replanning is needed.' @('packet-metadata-stale') "./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath $workspace"
+        } else {
+            Add-Finding $findings 'architecture-impact-drift' 'architecture' 'major' 'Observed architectural impact exceeds the forecast.' 'Review unexpected impact and replan or narrow the implementation.' @(Get-Ids @($impact.simulation.findings))
+        }
     }
     $repairUnresolved = -not $repair.valid -or @($repair.activeAttempts).Count -gt 0 -or @($repair.unresolvedAttempts).Count -gt 0
     if ($repairUnresolved) {
@@ -214,13 +224,15 @@ function New-Critique([string]$CreatedAtUtc) {
             baseConfidenceScore = [double]$confidence.ledger.score
         }
         score = $score
+        assessmentKind = 'automatic-policy-assessment'
+        substantiveReview = $substantiveReview
         verdict = $verdict
         critiqueHash = ''
     }
     $critique.critiqueHash = Get-Hash (Get-Payload $critique)
     $critique
 }
-function Test-Critique([object]$Critique) {
+function Test-Critique([object]$Critique, [object]$CurrentAssessment = $null) {
     $issues = [Collections.Generic.List[string]]::new()
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
     if ($Critique.schemaVersion -ne 1) { $issues.Add('schemaVersion must be 1.') }
@@ -233,7 +245,9 @@ function Test-Critique([object]$Critique) {
             $issues.Add("Critique input drifted: $($property.Name).")
         }
     }
-    $expected = New-Critique ([string]$Critique.createdAtUtc)
+    $expected = if ($null -ne $CurrentAssessment) { $CurrentAssessment } else { New-Critique ([string]$Critique.createdAtUtc) }
+    if (-not $Critique.PSObject.Properties['assessmentKind'] -or $Critique.assessmentKind -cne $expected.assessmentKind -or
+        -not $Critique.PSObject.Properties['substantiveReview'] -or (Get-Hash $Critique.substantiveReview) -cne (Get-Hash $expected.substantiveReview)) { $issues.Add('Substantive review assessment drifted.') }
     if ((Get-Hash @($Critique.reviewAreas)) -cne (Get-Hash @($expected.reviewAreas))) { $issues.Add('Critique review areas drifted.') }
     if ((Get-Hash @($Critique.findings)) -cne (Get-Hash @($expected.findings))) { $issues.Add('Critique findings drifted.') }
     if ((Get-Hash $Critique.summary) -cne (Get-Hash $expected.summary) -or [double]$Critique.score -ne [double]$expected.score -or [string]$Critique.verdict -cne [string]$expected.verdict) {
@@ -259,7 +273,7 @@ if ($Action -in @('show', 'verify')) {
     }
 } else {
     $critique = New-Critique ($AsOfUtc.ToUniversalTime().ToString('o'))
-    $issues = @(Test-Critique $critique)
+    $issues = @(Test-Critique $critique $critique)
     if ($Action -eq 'create' -and $issues.Count -eq 0) {
         [IO.File]::WriteAllText($receiptPath, (($critique | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         $savedPath = "$workspace/change-critique.json"

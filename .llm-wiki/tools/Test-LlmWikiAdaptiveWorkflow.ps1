@@ -377,9 +377,20 @@ $architecturalDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.p
     -Objective 'Introduce a durable architecture boundary for Wiki planning.' `
     -ProposedPath '.llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1' `
     -Decision 'Preserve existing phase contracts and add acceptance-oriented slices as an additive output.' `
+    -Criterion 'The existing phase contract remains available.' `
+    -BehaviorSpec @{
+        currentBehavior = 'Wiki planning emits the current phase contracts.'
+        preservedBehavior = @('Existing phase IDs remain compatible.')
+        nonGoals = @('Replace the existing workflow.')
+        examples = @(
+            @{ kind = 'success'; given = 'A grounded phase'; when = 'Request its plan'; then = 'The existing phase ID is retained.' }
+            @{ kind = 'boundary'; given = 'A bounded bug'; when = 'Request its design'; then = 'No vertical-slice ceremony is required.' }
+        )
+    } `
     -Limit 4 `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($architecturalDesign.sliceStrategy.enabled -and $architecturalDesign.sliceStrategy.kind -eq 'vertical-outcome') 'Architectural design did not enable vertical outcome slices.'
+Assert-Adaptive ($architecturalDesign.ready -and $architecturalDesign.behaviorSpecification.status -eq 'specified') 'A complete behavior specification did not make the grounded design ready.'
 Assert-Adaptive (@($architecturalDesign.decisionQuestions | Where-Object { $_.status -eq 'resolved' -and -not $_.blocking }).Count -gt 0) 'Resolved design input remained presented as an open decision.'
 Assert-Adaptive (@($architecturalDesign.designSlices).Count -eq 3) 'Architectural design did not produce the bounded three-slice decomposition.'
 Assert-Adaptive (@(Get-AdaptiveIds $architecturalDesign.designSlices) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
@@ -390,6 +401,7 @@ $bugDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
     -Limit 4 `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive (-not $bugDesign.sliceStrategy.enabled -and @($bugDesign.designSlices).Count -eq 0) 'Bounded bug design gained vertical-slice ceremony.'
+Assert-Adaptive ($bugDesign.behaviorSpecification.status -eq 'not-required') 'Ordinary bug work gained a mandatory behavior specification.'
 
 $qa = & (Join-Path $PSScriptRoot 'Get-LlmWikiManualQaPlan.ps1') `
     -Objective 'Fix the dietologist invitation email link.' `

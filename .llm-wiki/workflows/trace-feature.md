@@ -16,8 +16,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiTraceOutput.ps1
   - .llm-wiki/tools/code-graph-trace-scope.mjs
   - .llm-wiki/tools/Test-LlmWikiTraceScope.mjs
-  - .llm-wiki/generated/frontend-index.json
-  - .llm-wiki/generated/frontend-contract-index.json
+  - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
 ---
 
 # Trace an existing feature

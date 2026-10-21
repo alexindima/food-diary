@@ -9,6 +9,8 @@ param(
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
     [string[]]$Decision,
+    [object]$BehaviorSpec,
+    [string[]]$Criterion,
     [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
     [ValidateSet('Text', 'Json')]
@@ -18,6 +20,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiBehaviorSpecification.ps1')
 
 function Get-CollectionPropertyValues([object[]]$InputObject, [string]$PropertyName) {
     @(
@@ -60,6 +63,7 @@ $invariantCandidates = @($plan.phases | ForEach-Object { $_.stopConditions }) +
 $invariants = @($invariantCandidates | Where-Object { $_ } | Select-Object -Unique)
 $verticalSliceProfiles = @('feature', 'critical', 'architectural')
 $usesVerticalSlices = $verticalSliceProfiles -contains [string]$research.workflow.profile
+$behaviorSpecification = Get-LlmWikiBehaviorSpecification -Objective $Objective -InputSpec $BehaviorSpec -Criterion $Criterion -SourcePath @($research.discovery.groundedPaths) -Required $usesVerticalSlices
 $implementationPhase = @($plan.phases | Where-Object id -eq 'implementation' | Select-Object -First 1)
 $contractPhases = @($plan.phases | Where-Object id -in @('contracts', 'domain-data'))
 $verificationPhase = @($plan.phases | Where-Object id -eq 'focused-verification' | Select-Object -First 1)
@@ -110,6 +114,7 @@ $result = [pscustomobject][ordered]@{
     profile = $research.workflow.profile
     currentStateEvidence = @($research.discovery.groundedPaths)
     targetBehavior = $Objective
+    behaviorSpecification = $behaviorSpecification
     invariants = $invariants
     compatibility = [pscustomobject][ordered]@{
         scopes = @($plan.scopes)
@@ -133,8 +138,10 @@ $result = [pscustomobject][ordered]@{
         reason = if ($usesVerticalSlices) { 'Large feature, critical, and architectural profiles benefit from acceptance-oriented end-to-end slices.' } else { 'Tiny, maintenance, and bounded bug work avoids slice-planning ceremony.' }
     }
     designSlices = @($designSlices)
-    ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0
-    nextAction = if (@($decisionQuestions | Where-Object blocking).Count -gt 0) {
+    ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0 -and $behaviorSpecification.status -ne 'needs-input'
+    nextAction = if ($behaviorSpecification.status -eq 'needs-input') {
+        'Complete the compact behavior specification from current sources and task intent; resolve its open questions before implementation.'
+    } elseif (@($decisionQuestions | Where-Object blocking).Count -gt 0) {
         'Resolve blocking decision questions with current-source evidence and record the selected alternative before editing.'
     } else {
         'Confirm target behavior and acceptance criteria, then implement the generated phases in order.'
@@ -143,6 +150,9 @@ $result = [pscustomobject][ordered]@{
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 14; exit 0 }
 Write-Host "Design checkpoint: $($result.profile), ready=$($result.ready)"
 Write-Host "Objective: $Objective"
+Write-Host "Behavior specification: $($behaviorSpecification.status)"
+foreach ($question in $behaviorSpecification.openQuestions) { Write-Host "SPEC: $question" }
+foreach ($example in $behaviorSpecification.examples) { Write-Host "Example [$($example.kind)]: Given $($example.given); when $($example.when); then $($example.then)" }
 foreach ($question in $result.decisionQuestions) { Write-Host "$(([string]$question.status).ToUpperInvariant()) [$($question.id)]: $($question.question)" }
 foreach ($phase in $result.implementationPhases) { Write-Host "Phase $($phase.order): $($phase.title) - $($phase.outcome)" }
 if ($result.sliceStrategy.enabled) {

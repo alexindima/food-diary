@@ -51,6 +51,9 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/(LlmWikiAssessmentRunner|Test-LlmWikiFeedbackReliability)\.ps1$'; Groups = @('governed-delivery') }
+        @{ Pattern = '^\.llm-wiki/tools/(LlmWikiBehaviorSpecification|LlmWikiSubstantiveReview|Get-LlmWikiPhaseStatus|Test-LlmWikiBehaviorWorkflow)\.ps1$'; Groups = @('governed-delivery') }
+        @{ Pattern = '^\.llm-wiki/tools/LlmWikiBehaviorSpecification\.ps1$'; Groups = @('adaptive-experience') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiSmokeScheduling|Test-LlmWikiSmokeScheduling)\.ps1$'; Groups = @('facade-contract') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiSourceMatching\.cs$'; Groups = @('index-selection', 'contract-consumers') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiSmokeSandbox\.ps1$'; Groups = @('index-selection') }

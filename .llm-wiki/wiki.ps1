@@ -126,6 +126,8 @@ param(
     [string]$NoteId,
     [string]$Resolution,
     [string[]]$Decision,
+    [object]$BehaviorSpec,
+    [object]$ReviewContent,
     [string[]]$Option,
     [string[]]$BoundaryEvidence,
     [string]$PhaseId,
@@ -1341,6 +1343,8 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $designArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $designArguments.ProposedPath = $ProposedPath }
         if ($PSBoundParameters.ContainsKey('Decision')) { $designArguments.Decision = $Decision }
+        if ($PSBoundParameters.ContainsKey('BehaviorSpec')) { $designArguments.BehaviorSpec = $BehaviorSpec }
+        if ($PSBoundParameters.ContainsKey('Criterion')) { $designArguments.Criterion = $Criterion }
         Invoke-WikiTool 'Get-LlmWikiDesignCheckpoint.ps1' $designArguments
         if ($Format -eq 'Text' -and -not (Test-Path -LiteralPath (Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $WorkspacePath))) {
             Write-Host 'Delivery note: design does not create governed state. Use wiki start/task-start only when the selected workflow requires delivery validation.'
@@ -2740,6 +2744,7 @@ switch ($Command) {
             Id = $Id
             Status = $Status
             Reason = $Reason
+            ReviewContent = $ReviewContent
         }
     }
     'evidence-artifact' {

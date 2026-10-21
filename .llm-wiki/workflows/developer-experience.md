@@ -13,6 +13,9 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiExperience.ps1
   - .llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1
   - .llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1
+  - .llm-wiki/tools/LlmWikiBehaviorSpecification.ps1
+  - .llm-wiki/tools/LlmWikiSubstantiveReview.ps1
+  - .llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
@@ -69,9 +72,39 @@ option cannot appear grounded merely because it was proposed. Record the selecte
 option and source evidence through the existing `design -Decision` or task journal.
 
 For governed work, inspect implementation phases with `phase-status` or
-`phase-next`. `phase-complete -FailOnInvalid` verifies the selected manifest
-phase against the current Git diff. Phase state is never stored separately from
-the manifest and Git evidence.
+`phase-next`. `phase-complete -PhaseId <id> -FailOnInvalid` requires mapped
+acceptance outcomes and current passing executed checks with logs. Changed files
+alone yield `awaiting-evidence`; behavioral completion is `verified`. Context
+preparation uses `completed`. State is derived from existing manifest, acceptance,
+evidence and source lineage, with no separate progress record.
+
+Design-required work passes a compact `-BehaviorSpec` plus existing `-Criterion`
+outcomes to `design`. Missing current behavior, explicit preservation/non-goal
+scope, examples or unresolved decisions keep the design unready. Examples state
+expectations and never count as executed proof. Ordinary short routes retain
+their current ceremony budgets. Follow [the canonical behavior and review
+route](../../docs/ai/AI_WORKFLOW.md#behavior-phase-proof-and-code-review).
+
+```powershell
+$spec = @{
+    currentBehavior = 'Source-backed description of the existing behavior.'
+    preservedBehavior = @('Existing consumers retain their response shape.')
+    nonGoals = @('Change persistence or provider behavior.')
+    examples = @(
+        @{ kind = 'success'; given = 'Concrete valid input'; when = 'The user performs the action'; then = 'The exact observable result' }
+        @{ kind = 'boundary'; given = 'Concrete boundary input'; when = 'The same action runs'; then = 'The expected boundary result' }
+    )
+    openQuestions = @()
+}
+./.llm-wiki/wiki.ps1 design -Intent '<outcome>' -PlannedPath '<source>' `
+    -Criterion '<observable acceptance outcome>' -BehaviorSpec $spec
+```
+
+Use `evidence-review -Id substantive-code-review -ReviewContent <object>` to
+record a separate pass over requirements and code in the current evidence bundle.
+The automatic report labels its own assessment separately from the recorded
+semantic judgment. Current source and requirement fingerprints bind that judgment;
+open behavior gaps and blocking findings remain visible through evidence lineage.
 
 Generate manual exploratory coverage with `qa`. Journey cases come from the
 durable product journey catalog; generic failure and retry cases are always

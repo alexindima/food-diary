@@ -7,6 +7,7 @@ param(
     [string]$StageName = 'wiki-stage',
     [string]$LogPath,
     [string]$ResultPath,
+    [string]$OutputPath,
     [string]$Fingerprint,
     [string]$PassedReceiptPath
 )
@@ -51,7 +52,12 @@ if ($LogPath) {
 try {
     Write-Host "Observed stage '$StageName' started. Live log: $LogPath"
     $global:LASTEXITCODE = 0
-    & $ToolPath @arguments
+    if ($OutputPath) {
+        $output = & $ToolPath @arguments
+        [IO.File]::WriteAllText($OutputPath, ($output -join [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    } else {
+        & $ToolPath @arguments
+    }
     if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
         throw "Observed Wiki tool failed with exit code $LASTEXITCODE."
     }

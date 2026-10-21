@@ -240,7 +240,7 @@ if ($requiresDecisionCheckpoint) {
     Add-Stage 'checkpoint' 'Resolve architectural, contract, privacy, or rollout choices before editing.' "./.llm-wiki/wiki.ps1 research -Intent '$escapedObjective'$pathArgument -Format Json" $true 'Every blocking decision is resolved or recorded as an explicit assumption.'
 }
 if ($requiresDesign) {
-    Add-Stage 'design' 'Define target behavior, invariants, compatibility, failure behavior, and rejected alternatives.' "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$pathArgument -Decision '<selected choice and source evidence>'" $true 'The design checkpoint has no unresolved blocking question and its implementation phases have explicit outcomes.'
+    Add-Stage 'design' 'Define the source-grounded $spec object with target behavior, preservation, non-goals and concrete examples before invoking design.' "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$pathArgument -Decision '<selected choice and source evidence>' -Criterion '<observable outcome>' -BehaviorSpec `$spec" $true 'The design checkpoint is ready: its compact behavior specification has concrete success/failure examples, explicit preserved behavior and non-goals, no blocking question, and phases with observable outcomes.'
 }
 if ($requiresWorkspace) {
     Add-Stage 'workspace' 'Create governed scope, acceptance, evidence, and conformance state.' "./.llm-wiki/wiki.ps1 task-start -Intent '$escapedObjective' -Criterion '<acceptance criterion>' -AllowedPath '<path regex>' -WorkspacePath .artifacts/llm-wiki/tasks/<task-name>" $true 'A task workspace exists with acceptance criteria and bounded scope.'

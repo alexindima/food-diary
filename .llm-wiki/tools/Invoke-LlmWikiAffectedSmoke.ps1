@@ -415,6 +415,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'governed-delivery' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiFeedbackReliability.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiBehaviorWorkflow.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskHandoff.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiAcceptancePacketReuse.ps1')

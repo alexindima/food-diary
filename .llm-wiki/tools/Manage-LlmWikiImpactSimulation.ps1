@@ -245,8 +245,20 @@ function Get-Assessment {
         -Format Json | ConvertFrom-Json
     $forecast = Get-ImpactSnapshot $forecastPacket
     $actual = Get-ImpactSnapshot $actualPacket
+    # Compile both sides against the same index generation. A saved packet may
+    # have the same task-input fingerprint while its dependency records are old.
+    $actualPaths = @($actualPacket.diff.changedPaths | Sort-Object -Unique)
+    $currentPacket = if (($plannedPaths -join "`n") -ceq ($actualPaths -join "`n")) { $forecastPacket } else {
+        & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') -BaseRef ([string]$manifest.git.base) -Objective ([string]$manifest.objective) -ChangedPath $actualPaths -Format Json | ConvertFrom-Json
+    }
+    $currentActual = Get-ImpactSnapshot $currentPacket
+    $metadataStale = (Get-Hash $actual) -cne (Get-Hash $currentActual)
+    $actual = $currentActual
     $comparison = Get-Comparison $forecast $actual
     $findings = [Collections.Generic.List[object]]::new()
+    if ($metadataStale) {
+        $findings.Add([pscustomobject][ordered]@{ id = 'packet-metadata-stale'; severity = 'block'; count = 1; maximum = 0; nextCommand = "./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath $normalizedWorkspace" })
+    }
     $limits = [ordered]@{
         scopes = [int]$impactPolicy.maximumUnexpectedScopes
         modules = [int]$impactPolicy.maximumUnexpectedModules
@@ -295,6 +307,11 @@ function New-Receipt([object]$Assessment) {
 }
 function Test-Receipt([object]$Receipt) {
     $issues = [Collections.Generic.List[string]]::new()
+    foreach ($entry in @(@{ name = 'manifestHash'; path = $manifestPath }, @{ name = 'packetHash'; path = $packetPath }, @{ name = 'policyFingerprint'; path = $policyPath })) {
+        if ([string]$Receipt.($entry.name) -cne (Get-FileHashValue $entry.path)) { $issues.Add("$($entry.name) drifted; refresh task metadata before recreating impact simulation.") }
+    }
+    if ([string]$Receipt.simulationHash -cne (Get-Hash (Get-Payload $Receipt))) { $issues.Add('Impact simulation hash is invalid.') }
+    if ($issues.Count -gt 0) { return [pscustomobject]@{ valid = $false; integrityValid = $false; issues = @($issues) } }
     $current = New-Receipt (Get-Assessment)
     if ($Receipt.schemaVersion -ne 1) { $issues.Add('schemaVersion must be 1.') }
     if ([string]$Receipt.workspace -cne $normalizedWorkspace) { $issues.Add('Workspace does not match.') }

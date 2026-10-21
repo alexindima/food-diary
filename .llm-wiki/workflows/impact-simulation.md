@@ -63,7 +63,11 @@ TypeScript; frontend code-graph discovery requires the locked npm dependencies.
 Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 For an active workspace, the manifest's planned paths form the forecast and
-the stored task packet forms the actual impact:
+the stored packet supplies the actual path set. Both projections are compiled
+against the current indexes. If the stored dependency records differ, the
+`packet-metadata-stale` finding requires `task-refresh` before another impact
+assessment. This is metadata drift; current unexpected impacts remain separate
+findings and still require review or replanning:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 task-impact-assess `

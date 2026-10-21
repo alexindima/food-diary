@@ -5,7 +5,10 @@ status: current
 title: Independently critique an AI-authored change
 summary: Re-evaluate intent, scope, proof, verification, architecture, security, and operability before an AI task can be sealed.
 sources:
+  - .llm-wiki/tools/LlmWikiAssessmentRunner.ps1
   - .llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1
+  - .llm-wiki/tools/LlmWikiSubstantiveReview.ps1
+  - .llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskAudit.ps1
@@ -15,13 +18,26 @@ sources:
 
 # Independently critique an AI-authored change
 
-The confidence ledger aggregates evidence. The independent critique acts as a
-separate review pass: it re-derives findings from the current workspace rather
-than accepting the task's own conclusion.
+The confidence ledger aggregates evidence. The automatic critique independently
+re-derives policy and artifact findings from the current workspace. Its
+`assessmentKind=automatic-policy-assessment` does not imply semantic source review.
+The separate `substantiveReview` assessment validates a source-bound reviewer
+attestation recorded through existing `evidence-review`. Security-sensitive,
+data-lifecycle and architectural decision work requires that attestation; optional
+records are also validated when present. Missing/stale required reviews, behavior
+gaps and open major/critical findings block critique approval. See
+[the substantive review contract](../../docs/ai/CODE_REVIEW.md#substantive-review-record).
 
 Its assessment dependencies are read-only. In particular, requirement
 assessment must not rewrite a persisted requirement model and invalidate the
 confidence ledger that the critique is about to verify.
+
+Assessment stages report their start, elapsed time, log path and successful
+replay. Replays require unchanged Git/source, policy, runtime, task artifacts
+and execution-log hashes. Failed or blocked assessments are executed again.
+Creating a critique validates the freshly computed result once; verifying a
+saved critique independently re-derives its findings. Stale packet metadata has
+its own finding and points to `task-refresh`, before any scope replanning.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 task-critique-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>

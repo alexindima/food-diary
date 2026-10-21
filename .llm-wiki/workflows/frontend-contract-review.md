@@ -4,7 +4,7 @@ title: Frontend contract review
 kind: workflow
 status: current
 sources:
-  - .llm-wiki/generated/frontend-contract-index.json
+  - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Find-LlmWikiFrontendContract.ps1
   - .llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1
   - FoodDiary.Web.Client/AGENTS.md

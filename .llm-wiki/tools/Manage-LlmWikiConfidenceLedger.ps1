@@ -11,6 +11,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiAssessmentRunner.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
@@ -66,12 +67,12 @@ function New-Ledger {
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
     $acceptance = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'acceptance-matrix.json') -Raw | ConvertFrom-Json
     $evidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
-    $requirements = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $conformance = & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $proof = & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    $requirements = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $conformance = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiPlanConformance.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $proof = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiProofOfChange.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
+    $impact = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiImpactSimulation.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
     $repair = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show -WorkspacePath $workspace -Format Json | ConvertFrom-Json
-    $prediction = & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    $prediction = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiFailurePrediction.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $workspace }
     $telemetryValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
     $telemetry = if ($telemetryValidation.valid) {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json

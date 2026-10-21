@@ -15,6 +15,7 @@ param(
     [string]$Status,
     [string]$Command,
     [string]$Reason,
+    [object]$ReviewContent,
     [double]$DurationSeconds,
     [string]$OutputPath,
     [ValidateSet('screenshot', 'browser-log', 'accessibility-report', 'video')]
@@ -25,6 +26,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSubstantiveReview.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join-Path $repositoryRoot $Path }
@@ -333,6 +335,15 @@ switch ($Action) {
             throw 'Review evidence requires -Reason.'
         }
         $evidence = Read-EvidenceFile
+        if ($Id -eq 'substantive-code-review') {
+            if ($Status -ne 'completed' -or $null -eq $ReviewContent) { throw 'substantive-code-review requires -Status completed and structured -ReviewContent.' }
+            $record = New-LlmWikiSubstantiveReview -Content $ReviewContent -Evidence $evidence -EvidencePath $Path -Reason $Reason
+            $evidence | Add-Member -NotePropertyName substantiveReview -NotePropertyValue $record -Force
+            Write-EvidenceFile $evidence
+            Write-Host 'Recorded substantive review of requirements and code. Open findings remain delivery blockers.'
+            break
+        }
+        if ($null -ne $ReviewContent) { throw 'Structured ReviewContent belongs to -Id substantive-code-review; use -Reason for policy review obligations.' }
         $entry = @($evidence.reviews | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
         if ($entry.Count -eq 0) {
             throw "Review obligation is not present in the evidence bundle: $Id"

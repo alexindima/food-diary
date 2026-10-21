@@ -10,6 +10,8 @@ tags:
   - bootstrap
   - governance
 sources:
+  - .llm-wiki/tools/LlmWikiAssessmentRunner.ps1
+  - .llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1
   - .llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1
@@ -132,8 +134,11 @@ dimensions, and a concrete next-action list. It defers prediction, cost,
 telemetry, confidence, and critique diagnostics to `task-status -Detailed`,
 keeping the frequent status path bounded. Use `-Format Json` for automation and
 `-FailOnBlocked` as a gate.
-`task-finish` always reruns detailed status internally, so the compact interactive
-path cannot weaken completion gates.
+`task-finish` always validates detailed status internally, so the compact
+interactive path cannot weaken completion gates. Long stages report their name,
+elapsed wait and log path every ten seconds. Successful assessments can replay
+from the existing query cache only when their source, policy, runtime, task
+artifact and log hashes match. Failed or blocked assessments are not replayed.
 
 Refresh derived context after the implementation changes:
 
@@ -152,9 +157,14 @@ After refresh or replan, run `task-evidence-import` to explicitly restore any
 still-current content-addressed test receipts; refresh already attempts the same
 safe import automatically.
 
-Refresh updates only the compiled packet, review report, and workspace
-metadata. It deliberately preserves the task contract, manifest, acceptance
-decisions, and collected evidence.
+Refresh updates the compiled packet, review report, workspace metadata and
+dependency-aware evidence state. It preserves the task contract, manifest and
+still-current acceptance/check evidence. Packet content changes invalidate all
+dependent assessments, including impact, proof, conformance and requirement
+receipts, before rebuilding the report. The public task-input fingerprint alone
+does not detect updated index records. SQL timing diagnostics alone preserve the
+saved packet and receipts. Preview lists the invalidated artifact names and
+reason; stale dependency metadata points to refresh before scope replanning.
 
 Preview or execute the required automated checks:
 

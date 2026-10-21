@@ -15,7 +15,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiAssessmentRunner.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $refreshStopwatch = if ($Action -eq 'refresh') { [Diagnostics.Stopwatch]::StartNew() } else { $null }
@@ -162,6 +164,10 @@ $lastCompiledFingerprint = if ($descriptor.PSObject.Properties['currentPacketFin
     $initialFingerprint
 }
 $refreshRequired = $lastCompiledFingerprint -cne [string]$packet.fingerprint
+$savedPacket = Get-Content -LiteralPath (Join-Path $absoluteWorkspacePath $artifactNames.packet) -Raw | ConvertFrom-Json
+$packetContentChanged = (Get-LlmWikiPacketContentFingerprint $savedPacket) -cne (Get-LlmWikiPacketContentFingerprint $packet)
+$refreshRequired = $refreshRequired -or $packetContentChanged
+if (-not $refreshRequired) { $packet = $savedPacket }
 $planConformance = if ($Action -eq 'refresh') {
     [pscustomobject]@{
         valid = $true
@@ -171,24 +177,19 @@ $planConformance = if ($Action -eq 'refresh') {
         }
     }
 } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    if ($Detailed) { Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiPlanConformance.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath } }
+    else { & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json }
 }
 $proofOfChange = if ($Action -eq 'refresh') { [pscustomobject]@{ applicable = $false; valid = $true; deferred = $true; proof = [pscustomobject]@{ findings = @() } } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    if ($Detailed) { Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiProofOfChange.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath } }
+    else { & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json }
 }
 $requirementModel = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; model = [pscustomobject]@{ findings = @(); recommendations = @() } } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    if ($Detailed) { Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath } }
+    else { & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json }
 }
 $impactSimulation = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; simulation = [pscustomobject]@{ findings = @() } } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiImpactSimulation.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath }
 }
 $repairLoop = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; activeAttempts = @(); unresolvedAttempts = @() } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show `
@@ -205,14 +206,10 @@ $repairLearningCandidates = if ($Action -eq 'refresh' -or -not $Detailed) {
     [pscustomobject]@{ valid = $true; eligibleCount = 0; candidates = @() }
 }
 $failurePrediction = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; calibration = [pscustomobject]@{ outcomes = @() } } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiFailurePrediction.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath }
 }
 $verificationCost = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiVerificationCost.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath }
 }
 $verificationTelemetryValidation = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; issues = @() } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
@@ -233,14 +230,10 @@ function Get-Ids([object[]]$Items) {
 $evidenceCheckIds = @(Get-Ids @($evidence.checks))
 $relevantTelemetry = @($verificationTelemetry.metrics | Where-Object { $_.PSObject.Properties['checkId'] -and $_.checkId -in $evidenceCheckIds })
 $confidenceLedger = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiConfidenceLedger.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath }
 }
 $changeCritique = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; critique = [pscustomobject]@{ verdict = 'assessment-deferred'; findings = @() } } } else {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess `
-    -WorkspacePath $normalizedWorkspacePath `
-    -Format Json | ConvertFrom-Json
+    Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiChangeCritique.ps1' -Arguments @{ Action = 'assess'; WorkspacePath = $normalizedWorkspacePath }
 }
 
 $nextActions = [System.Collections.Generic.List[string]]::new()
@@ -274,7 +267,8 @@ if (@($requirementModel.model.recommendations).Count -gt 0 -and ($pendingCriteri
     $nextActions.Add("./.llm-wiki/wiki.ps1 task-requirements-expand -WorkspacePath $normalizedWorkspacePath -Reason <rationale>")
 }
 foreach ($finding in @($impactSimulation.simulation.findings)) {
-    $nextActions.Add("Replan or review forecast drift '$($finding.id)' ($($finding.count) unexpected impact(s)).")
+    if ($finding.id -eq 'packet-metadata-stale') { $nextActions.Add("Refresh stale dependency metadata: ./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath $normalizedWorkspacePath") }
+    else { $nextActions.Add("Replan or review forecast drift '$($finding.id)' ($($finding.count) unexpected impact(s)).") }
 }
 if ($unresolvedChecks.Count -gt 0) {
     $nextActions.Add("./.llm-wiki/wiki.ps1 task-verification-plan -WorkspacePath $normalizedWorkspacePath; ./.llm-wiki/wiki.ps1 task-verification-run -WorkspacePath $normalizedWorkspacePath -FailOnFailure")
@@ -409,7 +403,7 @@ if ($Action -eq 'refresh') {
     $originalTaskContract = Get-Content -LiteralPath $taskContractArtifactPath -Raw
     $originalEvidence = Get-Content -LiteralPath $evidenceArtifactPath -Raw
     $originalAcceptance = Get-Content -LiteralPath $acceptanceArtifactPath -Raw
-    $derivedArtifactNames = @('risk-calibration.json', 'failure-prediction.json', 'verification-cost.json', 'verification-plan.json', 'model-routing.json', 'model-routing-outcome.json', 'instruction-outcome.json', 'plan-reuse.json', 'context-security.json', 'context-bundle.json', 'context-budget.json', 'context-benchmark.json', 'context-experiment.json', 'context-strategy-approval.json', 'context-strategy-application.json', 'context-strategy-outcome.json', 'confidence-ledger.json', 'change-critique.json')
+    $derivedArtifactNames = @('plan-conformance.json', 'requirement-model.json', 'impact-simulation.json', 'proof-of-change.json', 'risk-calibration.json', 'failure-prediction.json', 'verification-cost.json', 'verification-plan.json', 'model-routing.json', 'model-routing-outcome.json', 'instruction-outcome.json', 'plan-reuse.json', 'context-security.json', 'context-bundle.json', 'context-budget.json', 'context-benchmark.json', 'context-experiment.json', 'context-strategy-approval.json', 'context-strategy-application.json', 'context-strategy-outcome.json', 'confidence-ledger.json', 'change-critique.json')
     $originalDerivedArtifacts = @{}
     foreach ($derivedArtifactName in $derivedArtifactNames) {
         $derivedArtifactPath = Join-Path $absoluteWorkspacePath $derivedArtifactName
@@ -428,15 +422,32 @@ if ($Action -eq 'refresh') {
             -Apply:(-not $DryRun) `
             -Format Json | ConvertFrom-Json
         $result.invalidation = $invalidation
+        $previewInvalidatesEvidence = @($invalidation.invalidatedChecks).Count + @($invalidation.invalidatedReviews).Count + @($invalidation.invalidatedCriteria).Count + @($invalidation.autoLinkedPaths).Count -gt 0
+        $result | Add-Member -NotePropertyName derivedInvalidation -NotePropertyValue ([pscustomobject]@{
+            reason = $(if ($refreshRequired) { 'compiled-packet-content-changed' } elseif ($previewInvalidatesEvidence) { 'evidence-or-acceptance-changed' } else { 'unchanged' })
+            artifacts = @($(if ($refreshRequired -or $previewInvalidatesEvidence) { @($originalDerivedArtifacts.Keys | Sort-Object) }))
+        })
         if ($DryRun) {
             $refreshStopwatch.Stop()
             $result.refreshDurationSeconds = [Math]::Round($refreshStopwatch.Elapsed.TotalSeconds, 2)
             if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10 } else {
                 Write-Host "Task refresh preview: $(@($invalidation.invalidatedChecks).Count) checks, $(@($invalidation.invalidatedReviews).Count) reviews, $(@($invalidation.invalidatedCriteria).Count) criteria would be invalidated."
+                Write-Host "Derived assessments: $(@($result.derivedInvalidation.artifacts).Count) would be invalidated ($($result.derivedInvalidation.reason)): $(@($result.derivedInvalidation.artifacts) -join ', ')"
             }
             return
         }
-        Write-RefreshProgress 3 'regenerating the review report and committing refreshed artifacts.'
+        $evidenceChanged = $originalEvidence -cne (Get-Content -LiteralPath $evidenceArtifactPath -Raw)
+        $acceptanceChanged = $originalAcceptance -cne (Get-Content -LiteralPath $acceptanceArtifactPath -Raw)
+        $invalidateDerived = $refreshRequired -or $evidenceChanged -or $acceptanceChanged
+        if ($invalidateDerived) {
+            $result.derivedInvalidation.reason = if ($refreshRequired) { 'compiled-packet-content-changed' } else { 'evidence-or-acceptance-changed' }
+            $result.derivedInvalidation.artifacts = @($originalDerivedArtifacts.Keys | Sort-Object)
+            foreach ($derivedArtifactName in $derivedArtifactNames) {
+                $derivedArtifactPath = Join-Path $absoluteWorkspacePath $derivedArtifactName
+                if (Test-Path -LiteralPath $derivedArtifactPath -PathType Leaf) { [IO.File]::Delete($derivedArtifactPath) }
+            }
+        }
+        Write-RefreshProgress 3 'regenerating the review report after invalidating dependent assessments.'
         & (Join-Path $PSScriptRoot 'Get-LlmWikiReviewReport.ps1') `
             -PacketInput $packet `
             -ManifestPath $manifestRelative `
@@ -445,6 +456,8 @@ if ($Action -eq 'refresh') {
             -OutputPath $temporaryReportRelative | Out-Null
         [System.IO.File]::Copy($temporaryPacketAbsolute, $packetArtifactPath, $true)
         [System.IO.File]::Copy($temporaryReportAbsolute, $reportArtifactPath, $true)
+        . (Join-Path $PSScriptRoot 'LlmWikiReportFreshness.ps1')
+        $result.reviewReportFreshness = Get-LlmWikiReportFreshness -RepositoryRoot $repositoryRoot -ReportPath "$normalizedWorkspacePath/review-report.md" -PacketFingerprint $packet.fingerprint
         if (-not $descriptor.PSObject.Properties['initialPacketFingerprint'] -or $null -eq $descriptor.initialPacketFingerprint) {
             $descriptor | Add-Member -NotePropertyName initialPacketFingerprint -NotePropertyValue $initialFingerprint
         }
@@ -473,14 +486,6 @@ if ($Action -eq 'refresh') {
             $descriptorPath,
             (($descriptor | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
             [System.Text.UTF8Encoding]::new($false))
-        if ([string]$packet.fingerprint -cne $lastCompiledFingerprint) {
-            foreach ($derivedArtifactName in $derivedArtifactNames) {
-                $derivedArtifactPath = Join-Path $absoluteWorkspacePath $derivedArtifactName
-                if (Test-Path -LiteralPath $derivedArtifactPath -PathType Leaf) {
-                    [System.IO.File]::Delete($derivedArtifactPath)
-                }
-            }
-        }
         $result.refreshRequired = $false
         $result.lastCompiledPacketFingerprint = [string]$packet.fingerprint
         $result.nextActions = @($result.nextActions | Where-Object { $_ -cne "./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath $normalizedWorkspacePath -DryRun" })
@@ -578,6 +583,7 @@ if ($Format -eq 'Json') {
     Write-Host "Open: $(@($result.pendingCriteria).Count) acceptance, $(@($result.unresolvedChecks).Count) checks, $(@($result.unresolvedReviews).Count) reviews, $($result.openJournalBlockers) journal blockers, $(@($result.outOfScopePaths).Count) out of scope"
     if ($result.PSObject.Properties['invalidation'] -and $null -ne $result.invalidation) {
         Write-Host "Invalidation: $(@($result.invalidation.invalidatedChecks).Count) checks, $(@($result.invalidation.invalidatedReviews).Count) reviews, $(@($result.invalidation.invalidatedCriteria).Count) criteria; applied=$($result.invalidation.applied)"
+        Write-Host "Derived assessments: $(@($result.derivedInvalidation.artifacts).Count) invalidated ($($result.derivedInvalidation.reason)); retained checks=$(@($result.invalidation.retainedChecks).Count)."
     }
     Write-Host 'Next actions:'
     foreach ($nextAction in $result.nextActions) { Write-Host " - $nextAction" }

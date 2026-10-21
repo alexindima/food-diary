@@ -12,9 +12,9 @@ tags:
 sources:
   - .llm-wiki/tools/Find-LlmWikiSecurityReview.ps1
   - .llm-wiki/policies/context-search-ranking.json
-  - .llm-wiki/generated/quality-index.json
-  - .llm-wiki/generated/runtime-topology.json
-  - .llm-wiki/generated/sensitive-data-index.json
+  - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
+  - .llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1
+  - .llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1
 ---
 
 # Compile security-review evidence

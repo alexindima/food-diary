@@ -21,6 +21,49 @@ architecture tests, and feature-specific acceptance criteria.
 - Does async work propagate `CancellationToken` and preserve idempotency where
   retries are possible?
 
+## Substantive Review Record
+
+Use two explicit perspectives in the same review pass: compliance with each
+observable requirement, then correctness and maintainability of the final code.
+Read the diff and relevant owning sources independently of the implementation
+summary. Inspect boundary inputs, failure paths and the actual assertions; run a
+focused reproduction for suspected defects. A separate pass does not inherently
+require another agent. Automatic readiness and artifact critique remain mechanical
+checks and must not be presented as this review.
+
+Record the result in the existing evidence bundle using `evidence-review` with
+`-Id substantive-code-review`, `-Status completed`, `-Reason` and `-ReviewContent`:
+
+```powershell
+$review = @{
+    inspectedPaths = @('path/to/changed-source') # every changed product source
+    requirements = @(@{
+        criterionId = 'AC-001'
+        conclusion = 'satisfied' # satisfied, gap, or not-applicable
+        evidence = 'path/to/source:line and the assertion/reproduction supporting this conclusion'
+    })
+    codeQuality = 'Concrete reasoning about correctness, failure handling, compatibility and test gaps.'
+    findings = @() # explicitly empty only after the source review
+}
+./.llm-wiki/wiki.ps1 evidence-review -EvidencePath <existing-evidence.json> `
+    -Id substantive-code-review -Status completed `
+    -Reason 'Reviewed the final diff and owning contracts.' -ReviewContent $review
+```
+
+When an acceptance matrix exists beside the evidence bundle, cover every current
+criterion ID. Without a governed workspace, use distinct task outcome IDs and
+describe the requirement in its evidence. Findings use the existing severity and
+kind vocabulary below, plus `location` (`path`, `startLine`), `status` (`open` or
+`resolved`) and a concrete `resolution` for resolved findings. Include `id`,
+`trigger`, `consequence`, `testGap` and `remediation`. An open major/critical finding
+or `gap` conclusion blocks delivery; recording that a review was conducted does
+not imply approval. Preserve unresolved warnings in the handoff.
+
+The record is bound to the inspected source content, changed-path scope, Git HEAD,
+and acceptance definitions/mappings. Source or requirement changes invalidate it;
+updating acceptance satisfaction status alone does not. Automatic validation can
+check this provenance and finding closure, but cannot prove a reviewer's judgment.
+
 ## Architecture And Ownership
 
 - Is code placed in the owning feature and correct layer?

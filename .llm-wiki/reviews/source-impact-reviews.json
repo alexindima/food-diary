@@ -176,7 +176,7 @@
       "reason": "Regenerated catalog recognizes the fifth Angular project and its scoped guide through existing Git-visible inventory; no catalog semantics changed.",
       "baseRef": "HEAD",
       "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:14.5459070Z"
+      "reviewedAtUtc": "2026-10-19T08:49:14.545907Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -184,14 +184,18 @@
       "pageSha256": "afbb2b3953ad84c0ee010f6ddc21c3a2ed157d398d98547d078567a506d928a7",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
+          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d"
         }
       ],
-      "reason": "Required check IDs and review mappings retain their meaning; supplemental checks are separate observations and cannot satisfy the acceptance matrix. The usability integration regression verifies pending required checks remain pending.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:23:51.8194498Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:39.4692894Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -199,14 +203,22 @@
       "pageSha256": "36ae70fb9f94087567ee3f08430135935b4ea65135a98019a45667df5b1e08bd",
       "sources": [
         {
-          "path": "scripts/ai/task-runtime.mjs",
-          "sha256": "3b897dafc06157c228050c7b30c1f792124d46e52df299f18b6d7c020986a8bc"
+          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "20e571f8df230b6273c3df5c381f3bb7fb96bdc2b6cf41b5a883ad7b97ef73cc"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+          "sha256": "a96c95e71affcec13bff122d97abf86cf4eb3e678a7bc72fb1425bb8c70383f7"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "4e3b8d0f24bc302f711919ae8fa9795c001b6b48cb6db6a620fb91a5fef4d4e4"
         }
       ],
-      "reason": "Only the task-runtime source-fingerprint scope adds the extracted library; isolated regression proves edits invalidate readiness while specs do not. Workflow routing is unchanged.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:12.8432271Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:39.6026479Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -259,14 +271,14 @@
       "pageSha256": "f054da72ff6c702b40e55b1b99985d044ffce9104c1c7e4c4aa8a8c8fb6b80e8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2"
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d"
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:33.0678749Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:39.7635509Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -289,14 +301,20 @@
       "pageSha256": "074bf2995247983cf0a0ece843392c4731a6ce2c410db95f710f861a28c596b8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "7963d20d0723ab738869076e3e4f239cbabfc0284cdf3cce015439815e23e48b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+          "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2",
+          "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
+          "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
         }
       ],
-      "reason": "The test now uses the accepted InitialBaseline source and requires exactly one AchievementDefinitions CreateTable edge with that source path. Full isolated code-graph regression passed, including provenance, incrementality, query, corruption and dependency checks. No graph runtime or documented query contracts changed.",
+      "reason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b07f5bc463fec763eac4b3f451f85d8d75dca4c6",
-      "reviewedAtUtc": "2026-10-19T11:27:27.3904118Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:50:17.531365Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -305,17 +323,21 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
+          "sha256": "df2049123c0914690383db342b1d4552b21eb6c04f270a6a3c7fbdaf16e9b7e3"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "sha256": "a32ec105b1170d0a122da785fdf4a76fded808deca9b69f15c531d101d6c60c1"
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:36.5282654Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:06.48654Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -403,13 +425,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         }
       ],
-      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:38.7175729Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:06.8763493Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -417,14 +439,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "5b4aea38f98d03621963cb2809b98c5b06a15fe4251310752d7fba237239a431"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         }
       ],
-      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:48:36.8151603Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:07.2739944Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -433,17 +455,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "sha256": "a32ec105b1170d0a122da785fdf4a76fded808deca9b69f15c531d101d6c60c1"
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:41.4415882Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:07.5801537Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -493,17 +515,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "f702d51cb0969966de791175e831339c9ad37670e9d6dcc0d07718b04266b23f",
+      "pageSha256": "18768e80b7ce7ade081889468ff188251cdc88d950819155fc3992d5eac6faae",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "523a4ef66069c0576f6620ed9f9c5901233503d17b5d85b376a45819726db653"
+          "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+          "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2"
         }
       ],
-      "reason": "Reviewed final Wiki performance sources and navigation claims: equivalent bounded Git precedent scoring; private checkout/source/ref freshness and mutation isolation; request-local test evidence and nearest-project selection; stable-graph reader scheduling with unchanged checks and SLA limits. Product code and domain contracts are unchanged.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "75219c34ebce1debb85576d34507c1f55cebf958",
-      "reviewedAtUtc": "2026-10-14T13:44:42.120736Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:07.8735509Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -650,14 +672,35 @@
       "pageSha256": "68747a1fd21d73998b55172d7c0b5e711b8bc12862555a50ff298adda147c31c",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "5b644ec5f47580b650f877ccf50e0687696d27c210d3120f62d7bf6ed5688fed",
+          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "57a92e706c7b2f0c39e3ac1af73f1b8c544307fb2b7f8a2acb5a952daa93cabe",
+          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
+          "sha256": "bb38c61924e46bb24d00092f039f0e18a2df7beb4dbd1e57db7ded94a3a0b32a",
+          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+          "sha256": "94eb50b5d2b5cb4c457657d80871bc6c739a7398bbddbfc3d514619ba69745d6",
+          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
+          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
         }
       ],
-      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
-      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
-      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
-      "reviewedAtUtc": "2026-10-19T18:18:48.1364367Z"
+      "reason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required.",
+      "baseRef": "HEAD",
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:50:19.239089Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -695,14 +738,14 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "9769eac303b05e9a30e69ee32b8260e7656e8e9cbe8f99efa89ca7a325ff6405"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         }
       ],
-      "reason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:48:37.9614612Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:08.8005142Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -760,17 +803,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "sha256": "a32ec105b1170d0a122da785fdf4a76fded808deca9b69f15c531d101d6c60c1"
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:49.2077125Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:09.1828493Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -779,13 +822,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         }
       ],
-      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:50.4820143Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:09.5802508Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -824,17 +867,24 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
+          "reviewReason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f",
+          "reviewReason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "sha256": "a32ec105b1170d0a122da785fdf4a76fded808deca9b69f15c531d101d6c60c1",
+          "reviewReason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion."
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:51.8613973Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:50:21.5958138Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -843,13 +893,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
+          "sha256": "554a32bafde8270ded6bd555e27017b70f0f5748c7cc7d6209e84d0b7c31eb9a"
         }
       ],
-      "reason": "Reviewed final generated quality-index delta: meal local-time validation, original-instant preservation and cancellation guard only change measured frontend source metrics. Quality workflow commands and static-navigation limitations remain accurate; 6230 executed frontend tests and 715 timezone test executions are recorded separately in the audit ledger.",
+      "reason": "Final source review confirms compact source-grounded behavior specifications, current criterion and executed-check proof for phases including generated artifacts, and substantive review attestations with requirement coverage, finding closure and source/requirement drift detection. Canonical workflow and Wiki guidance match the implemented contracts; behavior, adaptive, governed lifecycle and CLI regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
-      "reviewedAtUtc": "2026-10-20T22:51:17.5898147Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:59:34.0852124Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -857,14 +907,18 @@
       "pageSha256": "1684cbe2c98211ca7fd946264d33e15af96696e64ee7ab094b94fc1086af0b85",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "692dbd96db142989d75315ff687ed13cfdb8b24b500b72416ac525361eee0b23"
+          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d"
         }
       ],
-      "reason": "Canonical required checks and review obligations remain the gating evidence. Actual execution commands have separate validated identity, while supplemental checks cannot compensate for unresolved required checks. Integration fixtures confirmed required checks stay pending and incompatible command writes are rejected.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:53.8068789Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:41.0244861Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -873,17 +927,24 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
+          "reviewReason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f",
+          "reviewReason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "c0c870c77b35daff84ece6b1d21a3d4129562fe50c02a91825727e408f57825d"
+          "sha256": "a32ec105b1170d0a122da785fdf4a76fded808deca9b69f15c531d101d6c60c1",
+          "reviewReason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative."
         }
       ],
-      "reason": "Compared task status and completion with this page governance contract. Existing conformance, proof, requirement, impact, repair, confidence and critique gates remain unchanged; report freshness is an additive view and the final report is refreshed before its hash is sealed. Governed-delivery and research-confidence regressions passed.",
+      "reason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:55.1010074Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:50:24.2935316Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -891,14 +952,20 @@
       "pageSha256": "e2d8e40fe4c068e5d0754b907d23f8078816e56429491fb2e619e7dfcd76b7a1",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e"
+          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+          "sha256": "14efea7f02c0e51ef21c05fa5c36b861e47128fac8b262192c65e4478c16fe47",
+          "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiChangePacket.ps1",
+          "sha256": "7af220d692aa7995bd24a84be58d17f2559474586ba1de8285e188aae6201f7e",
+          "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
-      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
-      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
-      "reviewedAtUtc": "2026-10-19T18:18:49.2053213Z"
+      "reason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:50:25.9738920Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -937,13 +1004,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
+          "sha256": "554a32bafde8270ded6bd555e27017b70f0f5748c7cc7d6209e84d0b7c31eb9a"
         }
       ],
-      "reason": "Reviewed quality-index source impact. Final changes add no security-review tool, provider, authorization or privacy boundary; the workflow still describes navigation evidence rather than a security verdict. Selected permission-revocation browser results are recorded as journey evidence, not a repository security scan.",
+      "reason": "Final source review confirms compact source-grounded behavior specifications, current criterion and executed-check proof for phases including generated artifacts, and substantive review attestations with requirement coverage, finding closure and source/requirement drift detection. Canonical workflow and Wiki guidance match the implemented contracts; behavior, adaptive, governed lifecycle and CLI regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
-      "reviewedAtUtc": "2026-10-20T22:51:18.8537651Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:59:34.4257209Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -952,13 +1019,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "9a9e5348e116f72773313527f2e5f74c542b52397070356d913b857fc5765056"
+          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b"
         }
       ],
-      "reason": "Compared completion observation calls with the page lifecycle. The same sealed retrospective, guarded learning eligibility and outcome scoring remain in place; dry-run previews and the refreshed report add visibility before final delivery. Governed-delivery regressions passed.",
+      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:27:00.3459224Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:46:10.9990792Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1016,13 +1083,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
+          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e"
         }
       ],
-      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:10:58.5009803Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:42.4224443Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1049,18 +1116,26 @@
       "pageSha256": "e7bbcdd3bf36678ac1f01992447ea0fb84eb6b4044cf3f613edd8328576d21ba",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "f008b85f7cf0bbfcf2853e73a1b7d4c94e30d0427ee8e0f6487e4380c0afb34a"
+          "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+          "sha256": "14efea7f02c0e51ef21c05fa5c36b861e47128fac8b262192c65e4478c16fe47"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "606e98980d726be92ae7737e133620ef3dff45eb5c51223fee89b264a77115dd"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "d7a60509dc1f56366864f2b221ef03c74ae120e0a1b4780a916946c52ca858af"
         }
       ],
-      "reason": "Reviewed supplemental lineage with zero required checks. The existing collection helper now reads IDs safely from the empty policy array. The new governed-delivery regression proves a valid manual supplemental proof remains reusable and a tampered compatibility fingerprint still fails. Required checks, cache eligibility, source hashing and policy semantics are unchanged. Focused regression passed in .artifacts/master-baseline-preflight-lineage-regression.log.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T10:01:11.1096861Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:42.6649317Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1075,7 +1150,7 @@
       "reason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion.",
       "baseRef": "HEAD",
       "gitHead": "01ccc7bf347e67e63db2fd76bd1d29fd8d4d1e2f",
-      "reviewedAtUtc": "2026-10-15T09:10:09.4249250Z"
+      "reviewedAtUtc": "2026-10-15T09:10:09.424925Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1204,13 +1279,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "1fafbee70c4f9a78ec3a356bfef15c51b62ac54b9e0c23805efd96fc31495625"
+          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e"
         }
       ],
-      "reason": "Reviewed the facade diff: only Read-LlmWikiCompiledIndex dispatch now delegates direct read-only transactions and isolated recovery to its reader. Adaptive routing, diff, maintenance and dispatch commands retain their existing branches, parameters and evidence contracts; their workflow descriptions remain current.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "dfa073b828e9569ac01e235591373e5fd7fdb1e0",
-      "reviewedAtUtc": "2026-10-14T09:10:58.8208267Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:41.4417561Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1218,26 +1293,14 @@
       "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5d96f898a23d83fcdeb5823ac41060ab769d79bb9b642b8428d5d55771824b55"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "d8f923568a0cec993d11a73b8b523e8fafa54811b0e56c7eaa56541caf87ac57"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance-recovery.test.mjs",
-          "sha256": "5196ab83ca7b28d13f8f83b060ebc5c76a432fa877da160882f1774ef37b95ae"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e"
         }
       ],
-      "reason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry.",
+      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:09.9082425Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T01:55:42.2035209Z"
     }
   ]
 }

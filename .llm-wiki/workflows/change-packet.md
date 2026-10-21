@@ -45,6 +45,12 @@ For a brief or test plan without a packet or diff, use their direct
 
 Its SHA-256 fingerprint covers Git HEAD, base/head refs, normalized changed paths, and objective. Recompile when any of those inputs change; a packet is a snapshot, not a durable source of truth.
 
+Task refresh additionally compares compiled packet contents. Index source hashes,
+contract records and policy results participate even when the public task-input
+fingerprint stays the same. Only `sqlDurationMs` and `roundTripDurationMs` in
+compiled/impact provider diagnostics are excluded. Timing-only refreshes preserve
+the saved packet bytes; substantive changes invalidate dependent assessments.
+
 Packet consumers read metadata through a shared compatibility helper. The
 current `inputs.objective` location is preferred, legacy root `objective`
 remains readable for existing workspaces, and a packet with neither location

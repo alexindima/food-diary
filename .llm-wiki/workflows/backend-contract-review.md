@@ -9,7 +9,7 @@ tags:
   - contracts
   - compatibility
 sources:
-  - .llm-wiki/generated/backend-contract-index.json
+  - .llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
   - .llm-wiki/tools/code-graph.mjs
   - .llm-wiki/tools/Test-LlmWikiBackendContractQueries.ps1

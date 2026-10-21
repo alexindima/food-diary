@@ -12,6 +12,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiCollections.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiSubstantiveReview.ps1')
 if ([string]::IsNullOrWhiteSpace($WorkspacePath) -eq [string]::IsNullOrWhiteSpace($EvidencePath)) {
     throw 'Specify exactly one of WorkspacePath or EvidencePath.'
 }
@@ -148,6 +149,8 @@ if ($evidence.PSObject.Properties['supplementalChecks']) {
         Test-Lineage 'supplemental' $entry ([pscustomobject]@{ command = [string]$entry.command; sourceRule = 'manual' })
     }
 }
+$substantiveReview = Test-LlmWikiSubstantiveReview -Evidence $evidence -EvidencePath $normalizedEvidencePath
+foreach ($issue in $substantiveReview.issues) { $issues.Add($issue) }
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     workspace = $normalizedWorkspacePath
@@ -158,6 +161,7 @@ $result = [pscustomobject][ordered]@{
     invalidCount = @($items | Where-Object { -not $_.valid }).Count
     issues = @($issues)
     items = @($items)
+    substantiveReview = $substantiveReview
 }
 if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 10
