@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Cycles.Domain.Entities;
+using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Cycles.Domain.Tests;
@@ -6,6 +7,11 @@ namespace FoodDiary.Modules.Cycles.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class CycleDayNoteTests {
     private static readonly DateOnly Date = new(2026, 10, 1);
+
+    [Fact]
+    public void Creation_RejectsAnUnownedNoteBeforeAllocatingAnIdentity() {
+        Assert.Throws<ArgumentException>("cycleProfileId", () => CycleDayNote.Create(CycleProfileId.Empty, Date, "Note"));
+    }
 
     [Fact]
     public void NotesOnlyDay_CanBeCreatedAndUpdatedWithoutSymptoms() {

@@ -9,8 +9,8 @@
     "wikiToolFiles": 221,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1011,
-    "criticalSymbolsWithTestReferences": 968,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithTestReferences": 971,
+    "criticalSymbolsWithoutTestReferences": 40,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -39301,8 +39301,8 @@
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.26
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
     },
     {
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
@@ -39365,8 +39365,8 @@
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
@@ -39613,8 +39613,8 @@
       "nonBlankLines": 33,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.66
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.66
     },
     {
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
@@ -56428,8 +56428,9 @@
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
       "line": 16,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/CatalogMealPlanBoundaryTests.cs",
         "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs"
       ],
@@ -59475,8 +59476,9 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
       "line": 10,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/CatalogMealPlanBoundaryTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MealPlanRecipePrivacyIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59487,9 +59489,11 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/CatalogMealPlanBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -60635,9 +60639,11 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
       "line": 12,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListOverviewAccessTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -61600,9 +61606,11 @@
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/CatalogMealPlanBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

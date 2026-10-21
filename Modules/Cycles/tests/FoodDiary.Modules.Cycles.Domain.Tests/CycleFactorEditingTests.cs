@@ -8,6 +8,19 @@ namespace FoodDiary.Modules.Cycles.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public class CycleFactorEditingTests {
     [Fact]
+    public void UpdateFactor_RejectsAnEmptyIdWithoutChangingAnExistingFactor() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
+        CycleFactor factor = profile.UpsertFactor(CycleFactorType.HormonalContraception, new DateOnly(2026, 4, 2), endDate: null, "Keep");
+
+        Assert.Throws<ArgumentException>("factorId", () => profile.UpdateFactor(CycleFactorId.Empty,
+            CycleFactorType.NonHormonalContraception, new DateOnly(2026, 4, 3), endDate: null, "Changed"));
+
+        Assert.Same(factor, Assert.Single(profile.Factors));
+        Assert.Equal("Keep", factor.Notes);
+        Assert.Equal(CycleFactorType.HormonalContraception, factor.Type);
+    }
+
+    [Fact]
     public void UpdateFactor_ChangingIdentity_PreservesIdAndCount() {
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 4, 1));
         CycleFactor factor = profile.UpsertFactor(CycleFactorType.HormonalContraception, new DateOnly(2026, 4, 2), endDate: null, notes: "note");

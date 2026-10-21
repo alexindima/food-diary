@@ -4,6 +4,23 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAccountTests {
+    [Fact]
+    public void RelinkingTheSameTelegram_AfterMailboxVerificationEstablishesRecoveryTrustWithoutChangingIdentity() {
+        var user = User.Create("verified-relink@example.test", "hash");
+        user.LinkTelegram(123);
+        Assert.False(user.TelegramLinkVerifiedForRecovery);
+        user.CompleteEmailVerification();
+        long securityVersion = user.SecurityVersion;
+
+        user.LinkTelegram(123);
+
+        Assert.True(user.TelegramLinkVerifiedForRecovery);
+        Assert.Equal(securityVersion, user.SecurityVersion);
+        user.CompletePasswordReset("new-hash");
+        Assert.Equal(123, user.TelegramUserId);
+        Assert.True(user.TelegramLinkVerifiedForRecovery);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

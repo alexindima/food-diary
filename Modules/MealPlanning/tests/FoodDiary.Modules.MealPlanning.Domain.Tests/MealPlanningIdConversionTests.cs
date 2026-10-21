@@ -13,6 +13,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, MealPlanDayId.Empty.Value));
     }
@@ -25,6 +26,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, MealPlanId.Empty.Value));
     }
@@ -37,6 +39,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, MealPlanMealId.Empty.Value));
     }
@@ -49,6 +52,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, ShoppingListId.Empty.Value));
     }
@@ -61,6 +65,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, ShoppingListItemId.Empty.Value));
     }
@@ -73,6 +78,7 @@ public sealed class MealPlanningIdConversionTests {
         Assert.Multiple(
             () => Assert.Equal(value, roundTrip),
             () => Assert.Equal(value, id.Value),
+            () => Assert.Equal(Guid.Empty, (id with { Value = Guid.Empty }).Value),
             () => Assert.Equal(value.ToString(), id.ToString()),
             () => Assert.Equal(Guid.Empty, ShoppingListItemSourceId.Empty.Value));
     }

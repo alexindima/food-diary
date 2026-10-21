@@ -76,14 +76,14 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "18dddb45ff7ce8c1586067c65080a6570c1ff9969ff10c435a6766d5b1a960ae",
-          "reviewReason": "Reviewed the test-only dependency change against the architecture page and the executable project matrix: Infrastructure.Tests now directly references the owning Results contract and FoodDiary.Testing helpers that its new receipt tests consume. The exact reference allowlist matches the project, and the dependency-matrix checks pass. Production dependency direction, module ownership and runtime composition are unchanged."
+          "sha256": "f59d805b52e5779ac06a5cafc30682651698fadfe4af5f412b30c0e2ac2558f7",
+          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
         }
       ],
-      "reason": "Reviewed the test-only dependency change against the architecture page and the executable project matrix: Infrastructure.Tests now directly references the owning Results contract and FoodDiary.Testing helpers that its new receipt tests consume. The exact reference allowlist matches the project, and the dependency-matrix checks pass. Production dependency direction, module ownership and runtime composition are unchanged.",
+      "reason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff.",
       "baseRef": "HEAD",
-      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
-      "reviewedAtUtc": "2026-10-21T13:19:29.3726402Z"
+      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
+      "reviewedAtUtc": "2026-10-21T16:04:12.3468244Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -238,19 +238,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "cfebc2ed0810ebeadd0d738b91195f7eff0010803475b0e52c120b3b8f07ebc6",
-          "reviewReason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed."
+          "sha256": "fb42e58f67c0ac64772749ef81b02bce4b78317ef3b9417a4eec66f3b396e791",
+          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "18dddb45ff7ce8c1586067c65080a6570c1ff9969ff10c435a6766d5b1a960ae",
-          "reviewReason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed."
+          "sha256": "f59d805b52e5779ac06a5cafc30682651698fadfe4af5f412b30c0e2ac2558f7",
+          "reviewReason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff."
         }
       ],
-      "reason": "Reviewed the intentional test-only matrix edges for Infrastructure.Tests against the architecture-health workflow. Both narrow project references are exercised by receipt regression tests and match the exact matrix allowlist; focused project-convention and dependency-matrix checks pass. No production dependency allowance, module cycle rule or removal criterion changed.",
+      "reason": "Reviewed direct test-only dependencies against their actual use and the exact matrix: Users tests consume the domain clock, image IDs, mediator and cleanup request contracts; MealPlanning application tests consume UserId and Result/Error contracts. No production dependency edge or ownership rule changes. All 2274 architecture tests pass on this diff.",
       "baseRef": "HEAD",
-      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
-      "reviewedAtUtc": "2026-10-21T13:19:30.0237033Z"
+      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
+      "reviewedAtUtc": "2026-10-21T16:04:12.5500029Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1328,8 +1328,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "67d46df44fd484615f57a99ce6c687ba4ec070926f88d38f06e452a18b8f7115",
-          "reviewReason": "Reviewed the generated repository catalog changes against the query-context workflow: the catalog now records two direct test-library references consumed by Infrastructure.Tests. Query engines, scope rules, schema and ranking behavior are unchanged. The affected evaluation smoke has passed with the updated catalog, and the added MCP flow and batch regression cases pass."
+          "sha256": "416da4450d333896ddb6cde8a893645477d393136cb05e17e06dfd5a8fd0b85b",
+          "reviewReason": "Reviewed the regenerated repository catalog for the Users and MealPlanning test project references. Each added owner contract is consumed by regression tests. Query contracts, ranking, scope bounds, cache behavior and production module topology are unchanged; the current navigation guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1337,10 +1337,10 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         }
       ],
-      "reason": "Reviewed the generated repository catalog changes against the query-context workflow: the catalog now records two direct test-library references consumed by Infrastructure.Tests. Query engines, scope rules, schema and ranking behavior are unchanged. The affected evaluation smoke has passed with the updated catalog, and the added MCP flow and batch regression cases pass.",
+      "reason": "Reviewed the regenerated repository catalog for the Users and MealPlanning test project references. Each added owner contract is consumed by regression tests. Query contracts, ranking, scope bounds, cache behavior and production module topology are unchanged; the current navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
-      "reviewedAtUtc": "2026-10-21T13:21:22.7435582Z"
+      "gitHead": "d73a94f5185223d12553df872ba193862b647d88",
+      "reviewedAtUtc": "2026-10-21T16:04:04.0681614Z"
     },
     {
       "pageId": "workflow.review-diff",

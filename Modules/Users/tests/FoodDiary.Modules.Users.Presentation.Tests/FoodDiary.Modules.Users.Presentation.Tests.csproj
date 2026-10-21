@@ -17,7 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Compile Include="../../../../Platform/tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />

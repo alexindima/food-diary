@@ -9,6 +9,35 @@ namespace FoodDiary.Modules.Users.Domain.Tests;
 public sealed class TypedGoalMeasurementTests {
     private static readonly DateTime Now = new(2026, 10, 8, 12, 0, 0, DateTimeKind.Utc);
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void TypedReplacement_RejectsAnAbsentMeasurementBeforeEndingTheOwnedGoal(bool waist) {
+        var user = User.Create("replacement@example.test", "hash");
+        DateTime endedAt = Now.AddDays(1);
+        if (waist) {
+            var goal = WaistGoal.StartWithMeasurements(user.Id, DesiredWaistCm.Create(75), MeasuredWaistCm.Create(90), Now);
+            Assert.Throws<ArgumentNullException>("endWaist", () => goal.ReplaceWithMeasurement(endedAt, null!));
+            Assert.Equal(WaistGoalStatus.Active, goal.Status);
+            goal.ReplaceWithMeasurement(endedAt, MeasuredWaistCm.Create(85));
+            Assert.Multiple(
+                () => Assert.Equal(user.Id, goal.UserId),
+                () => Assert.Equal(WaistGoalStatus.Replaced, goal.Status),
+                () => Assert.Equal(85, goal.EndWaistCm),
+                () => Assert.Equal(endedAt, goal.EndedAtUtc));
+        } else {
+            var goal = WeightGoal.StartWithMeasurements(user.Id, DesiredWeightKg.Create(70), MeasuredWeightKg.Create(80), Now);
+            Assert.Throws<ArgumentNullException>("endWeight", () => goal.ReplaceWithMeasurement(endedAt, null!));
+            Assert.Equal(WeightGoalStatus.Active, goal.Status);
+            goal.ReplaceWithMeasurement(endedAt, MeasuredWeightKg.Create(78));
+            Assert.Multiple(
+                () => Assert.Equal(user.Id, goal.UserId),
+                () => Assert.Equal(WeightGoalStatus.Replaced, goal.Status),
+                () => Assert.Equal(78, goal.EndWeightKg),
+                () => Assert.Equal(endedAt, goal.EndedAtUtc));
+        }
+    }
+
     [Fact]
     public void DesiredDefaults_AreAbsentRatherThanZeroTargets() {
         DesiredWeightKg? weight = default;

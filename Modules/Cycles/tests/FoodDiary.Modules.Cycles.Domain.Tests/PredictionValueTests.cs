@@ -4,6 +4,35 @@ namespace FoodDiary.Modules.Cycles.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class PredictionValueTests {
+    [Fact]
+    public void ConfidenceClassifications_PublishStableCodesAndPreserveVersionedStoredValues() {
+        Assert.Multiple(
+            () => Assert.Equal("Learning", PredictionConfidence.Learning.Code),
+            () => Assert.Equal("Low", PredictionConfidence.Low.Code),
+            () => Assert.Equal("Medium", PredictionConfidence.Medium.Code),
+            () => Assert.Equal("High", PredictionConfidence.High.Code),
+            () => Assert.Equal("Limited", PredictionPatternConsistency.Limited.Code),
+            () => Assert.Equal(" future confidence ", PredictionConfidence.FromStoredCode(" future confidence ").Code),
+            () => Assert.Equal("future_reason", PredictionReasonCode.FromStoredCode("future_reason").Code));
+    }
+
+    [Fact]
+    public void Assessment_RejectsNullReasonsAndOwnsAnImmutableCopyOfTheInputCollection() {
+        var window = PredictionWindow.FromEndpoints(new DateOnly(2026, 10, 1), new DateOnly(2026, 10, 3));
+        Assert.Throws<ArgumentException>("reasons", () => new CyclePredictionAssessment(window, PredictionConfidence.Low,
+            PredictionDataSufficiency.Limited, PredictionPatternConsistency.Limited, [null!]));
+        PredictionReasonCode reason = PredictionReasonCode.InsufficientCompletedCycles;
+        List<PredictionReasonCode> reasons = [reason];
+
+        var assessment = new CyclePredictionAssessment(window, PredictionConfidence.Low,
+            PredictionDataSufficiency.Limited, PredictionPatternConsistency.Limited, reasons);
+        reasons.Clear();
+
+        Assert.Same(reason, Assert.Single(assessment.Reasons));
+        Assert.Throws<NotSupportedException>(() => ((ICollection<PredictionReasonCode>)assessment.Reasons).Clear());
+        Assert.Equal(window, assessment.Window);
+    }
+
     [Theory]
     [InlineData(null, "2026-10-08")]
     [InlineData("2026-10-08", null)]

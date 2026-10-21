@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 131,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbolsWithoutTestReferences": 40,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5736,16 +5736,6 @@
       "coveredThrough": []
     },
     {
-      "name": "GetCatalogMealPlansQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQueryHandler.cs",
-      "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "GetDailyAdviceGroupsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdviceGroups/GetDailyAdviceGroupsQueryHandler.cs",
@@ -5776,16 +5766,6 @@
       "coveredThrough": []
     },
     {
-      "name": "GetShoppingListOverviewQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListOverview/GetShoppingListOverviewQueryHandler.cs",
-      "line": 12,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "ListReadyTelegramOperationsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/ListReadyTelegramOperations/ListReadyTelegramOperationsQueryHandler.cs",
@@ -5810,16 +5790,6 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/PreviewAiPrompt/PreviewAiPromptQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "SearchCatalogRecipesQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/MealPlanning/Application/MealPlans/Queries/SearchCatalogRecipes/SearchCatalogRecipesQueryHandler.cs",
-      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

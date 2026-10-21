@@ -7840,10 +7840,12 @@
           "Modules/Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
-          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
@@ -11422,8 +11424,10 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
         "packageReferences": [
           {
@@ -11519,7 +11523,10 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj"
+          "Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj",
+          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
           {
