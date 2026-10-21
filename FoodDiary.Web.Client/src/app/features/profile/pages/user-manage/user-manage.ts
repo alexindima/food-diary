@@ -27,6 +27,7 @@ import { catchError, EMPTY } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { PwaInstallCardComponent } from '../../../../components/shared/pwa-install-card/pwa-install-card';
 import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
@@ -81,6 +82,7 @@ const MAX_PROFILE_HEIGHT_CM = 300;
         FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
+        PwaInstallCardComponent,
         PageBodyComponent,
         UnsavedChangesBarComponent,
         FdPageContainerDirective,

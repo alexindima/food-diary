@@ -117,6 +117,14 @@ describe('AppComponent shell behavior', () => {
     );
 });
 
+describe('AppComponent update departure checks', () => {
+    it('allows an update when no editor is active', async () => {
+        const { component } = await createComponentAsync();
+        const shell = component as unknown as { confirmAppReloadAsync: () => Promise<boolean> };
+        expect(await shell.confirmAppReloadAsync()).toBe(true);
+    });
+});
+
 describe('AppComponent sidebar behavior', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();

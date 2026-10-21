@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 498,
-    "componentsWithoutDirectSpecs": 130,
-    "inputs": 1610,
+    "components": 502,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1614,
     "outputs": 555,
     "apiCalls": 315,
-    "templatesWithTranslations": 359,
-    "translationKeys": 2162,
-    "consumerEdges": 1271,
-    "consumedComponents": 317,
+    "templatesWithTranslations": 363,
+    "translationKeys": 2175,
+    "consumerEdges": 1283,
+    "consumedComponents": 321,
     "unconsumedComponents": 180
   },
   "components": [
@@ -12356,6 +12356,27 @@
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-rows/ai-photo-result-rows.spec.ts"
     },
     {
+      "class": "AppUpdateNoticeComponent",
+      "selector": "fd-app-update-notice",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.html",
+      "inputs": [
+        {
+          "name": "visible",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "confirmReload",
+          "type": "() => Promise<boolean>",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.spec.ts"
+    },
+    {
       "class": "AppearanceDialogComponent",
       "selector": "fd-appearance-dialog",
       "feature": "shared",
@@ -14220,6 +14241,48 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.spec.ts"
+    },
+    {
+      "class": "PwaInstallActionsComponent",
+      "selector": "fd-pwa-install-actions",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "inputs": [
+        {
+          "name": "instructionsId",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PwaInstallBannerComponent",
+      "selector": "fd-pwa-install-banner",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.html",
+      "inputs": [
+        {
+          "name": "visible",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.spec.ts"
+    },
+    {
+      "class": "PwaInstallCardComponent",
+      "selector": "fd-pwa-install-card",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "RecipeCardComponent",
@@ -23318,6 +23381,13 @@
     },
     {
       "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.html",
+      "keys": [
+        "PWA.UPDATE.LATER"
+      ]
+    },
+    {
+      "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance-dialog.html",
       "keys": [
         "DASHBOARD.APPEARANCE.SURFACE_LABEL",
@@ -23553,6 +23623,38 @@
       "keys": [
         "PRODUCT_CARD.ADD_TO_MEAL",
         "PRODUCT_CARD.TO_DIARY"
+      ]
+    },
+    {
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "keys": [
+        "PWA.INSTALL.BUTTON",
+        "PWA.INSTALL.ERROR",
+        "PWA.INSTALL.IOS_ADD",
+        "PWA.INSTALL.IOS_BUTTON",
+        "PWA.INSTALL.IOS_SAFARI",
+        "PWA.INSTALL.IOS_SHARE"
+      ]
+    },
+    {
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.html",
+      "keys": [
+        "PWA.INSTALL.DESCRIPTION",
+        "PWA.INSTALL.TITLE",
+        "PWA.PROMOTION.NEVER",
+        "PWA.PROMOTION.NOT_NOW"
+      ]
+    },
+    {
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "keys": [
+        "PWA.INSTALL.DESCRIPTION",
+        "PWA.INSTALL.TITLE",
+        "PWA.PROMOTION.ALLOW",
+        "PWA.PROMOTION.MUTED"
       ]
     },
     {
@@ -25256,6 +25358,19 @@
       "consumerPath": "FoodDiary.Web.Client/src/index.html",
       "occurrences": 1,
       "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "AppUpdateNoticeComponent",
+      "selector": "fd-app-update-notice",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.ts",
+      "consumerFeature": "shell",
+      "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "confirmReload",
+        "visible"
+      ],
       "outputsHandled": []
     },
     {
@@ -28243,6 +28358,47 @@
       "inputsUsed": [
         "fill",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "ariaControls",
+        "ariaExpanded",
+        "icon",
+        "loading"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -31338,6 +31494,26 @@
       "inputsUsed": [
         "title"
       ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "occurrences": 1,
+      "inputsUsed": [],
       "outputsHandled": []
     },
     {
@@ -35171,6 +35347,39 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
+        "message",
+        "severity"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "message",
+        "primaryActionLabel",
+        "secondaryActionLabel",
+        "severity",
+        "title"
+      ],
+      "outputsHandled": [
+        "primaryAction",
+        "secondaryAction"
+      ]
+    },
+    {
+      "component": "FdUiInlineAlertComponent",
+      "selector": "fd-ui-inline-alert",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "message",
         "severity"
       ],
@@ -41917,6 +42126,52 @@
       "inputsUsed": [
         "recipe"
       ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PwaInstallActionsComponent",
+      "selector": "fd-pwa-install-actions",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "instructionsId"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PwaInstallActionsComponent",
+      "selector": "fd-pwa-install-actions",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "instructionsId"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PwaInstallBannerComponent",
+      "selector": "fd-pwa-install-banner",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.ts",
+      "consumerFeature": "shell",
+      "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "visible"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "PwaInstallCardComponent",
+      "selector": "fd-pwa-install-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
+      "occurrences": 1,
+      "inputsUsed": [],
       "outputsHandled": []
     },
     {

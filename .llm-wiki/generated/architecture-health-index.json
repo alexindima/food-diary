@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 132,
     "criticalSymbolsWithoutTestReferences": 48,
     "explicitDebtMarkers": 12
   },
@@ -5417,6 +5417,32 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PwaInstallActionsComponent",
+      "selector": "fd-pwa-install-actions",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "inputs": [
+        {
+          "name": "instructionsId",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PwaInstallCardComponent",
+      "selector": "fd-pwa-install-card",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },

@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2619,
-    "symbols": 843,
+    "typescriptFiles": 2637,
+    "symbols": 851,
     "routes": 108,
     "features": 46,
-    "specs": 761,
+    "specs": 769,
     "localeFiles": 5,
     "roles": {
-      "Component": 493,
+      "Component": 497,
       "Directive": 15,
       "Facade": 88,
       "Other": 40,
       "Pipe": 5,
-      "Service": 202
+      "Service": 206
     }
   },
   "features": [
@@ -3144,6 +3144,13 @@
       "line": 17
     },
     {
+      "name": "AppUpdateNoticeComponent",
+      "role": "Component",
+      "selector": "fd-app-update-notice",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/app-update-notice/app-update-notice.ts",
+      "line": 14
+    },
+    {
       "name": "AppearanceDialogComponent",
       "role": "Component",
       "selector": "fd-appearance-dialog",
@@ -3450,6 +3457,27 @@
       "selector": "fd-product-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.ts",
       "line": 38
+    },
+    {
+      "name": "PwaInstallActionsComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-actions",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
+      "line": 14
+    },
+    {
+      "name": "PwaInstallBannerComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-banner",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-banner/pwa-install-banner.ts",
+      "line": 16
+    },
+    {
+      "name": "PwaInstallCardComponent",
+      "role": "Component",
+      "selector": "fd-pwa-install-card",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
+      "line": 15
     },
     {
       "name": "RecipeCardComponent",
@@ -5584,7 +5612,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 100
+      "line": 102
     },
     {
       "name": "DietologistPromoComponent",
@@ -6620,7 +6648,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/frontend-observability.service.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "GlobalLoadingService",
@@ -7379,11 +7407,39 @@
       "line": 10
     },
     {
+      "name": "AppUpdateService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/app-update.service.ts",
+      "line": 15
+    },
+    {
       "name": "AppVersionRecoveryService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/app-version-recovery.service.ts",
-      "line": 7
+      "line": 9
+    },
+    {
+      "name": "PwaInstallPromotionService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install-promotion.service.ts",
+      "line": 21
+    },
+    {
+      "name": "PwaInstallService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install.service.ts",
+      "line": 16
+    },
+    {
+      "name": "ServiceWorkerDiagnosticsService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/service-worker/service-worker-diagnostics.service.ts",
+      "line": 11
     },
     {
       "name": "NutritionDataInvalidationService",
@@ -7460,7 +7516,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 55
+      "line": 72
     },
     {
       "name": "AdminPanelLauncherService",
@@ -8059,8 +8115,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4138,
-      "russianProperties": 4138,
+      "englishProperties": 4163,
+      "russianProperties": 4163,
       "countsMatch": true
     },
     {

@@ -1,4 +1,34 @@
 {
+    "PWA": {
+        "INSTALL": {
+            "TITLE": "FoodDiary at your fingertips",
+            "DESCRIPTION": "Add FoodDiary to your home screen to open your diary faster in its own window.",
+            "BUTTON": "Install app",
+            "IOS_BUTTON": "How to install on iPhone or iPad",
+            "IOS_SAFARI": "Open FoodDiary in Safari.",
+            "IOS_SHARE": "Open the browser menu and choose Share.",
+            "IOS_ADD": "Choose Add to Home Screen, enable Open as Web App if shown, and tap Add.",
+            "ERROR": "The installation dialog could not be opened. Try installing from your browser menu."
+        },
+        "PROMOTION": {
+            "NOT_NOW": "Not now",
+            "NEVER": "Don't show again",
+            "MUTED": "Installation suggestions are hidden on this device. You can still install the app here.",
+            "ALLOW": "Allow installation suggestions"
+        },
+        "RECOVERY": {
+            "TITLE": "FoodDiary needs to reload",
+            "DESCRIPTION": "Some app files are unavailable. Save or copy any unsaved data, then reload the app to continue.",
+            "BUTTON": "Reload"
+        },
+        "UPDATE": {
+            "TITLE": "A new version of FoodDiary is ready",
+            "DESCRIPTION": "Reload the app when you are ready to use the latest version.",
+            "BUTTON": "Update",
+            "LATER": "Later",
+            "SAVE_FIRST": "Save your changes or discard them before updating the app."
+        }
+    },
     "IMPERSONATION": {
         "MODE": "Impersonation mode",
         "END_SESSION": "End session"

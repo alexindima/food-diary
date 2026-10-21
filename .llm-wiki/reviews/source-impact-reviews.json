@@ -229,14 +229,14 @@
       "pageSha256": "20d3e15e2bb4fde9b589aafd6671e66c2285642e4cc94f00ffa9e46457598140",
       "sources": [
         {
-          "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0f990de86a636c6277f1601b23c69822ad565d27e64d1a595c55cc1a026ed3bd"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "c7725e286e0f3d1cfea8dd348bccd49e5d8e7ed6a78778573d36ede7eeeb9dff"
         }
       ],
-      "reason": "Reviewed the local-only WebMCP/fixture capability expansion against final owners and native browser evidence. No HTTP route/schema change, production provider activation, or automatic save/start. IDs/revisions, nutrition/date meanings, fenced exact-message cleanup, sensitive-field redaction and signed manifest ownership remain explicit. Real PostgreSQL tests cover nested purge rollback and foreign references.",
+      "reason": "Reviewed final PWA recovery and diagnostics delta: the recovery singleton owns a document-lifetime signal, AppUpdateService coordinates guarded reload, and telemetry reuses FrontendObservabilityService and generated Logging transport. No backend projects, migrations, module references or aggregate writes changed. Dependency and state-ownership gates passed in frontend verify.",
       "baseRef": "HEAD",
-      "gitHead": "75872d6308e169b5fe4e9211d25f3c9b8cfd3ea9",
-      "reviewedAtUtc": "2026-10-18T22:50:46.8172786Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:55:42.6152982Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -843,13 +843,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
+          "sha256": "b6e9ff47a140297fc3a4a188d5f1192024fd56bcd7e8f7424117575307aa7cbc"
         }
       ],
-      "reason": "Reviewed final generated quality-index delta: meal local-time validation, original-instant preservation and cancellation guard only change measured frontend source metrics. Quality workflow commands and static-navigation limitations remain accurate; 6230 executed frontend tests and 715 timezone test executions are recorded separately in the audit ledger.",
+      "reason": "Executed 141 final focused tests across 12 files and frontend verify with 5412 app tests. Tests cover recovery without automatic reload, repeated initialization, teardown, SSR/disabled contexts, draft rechecks, diagnostics suppression and unsafe target metadata. Chrome fault injection proves rendered draft retention. The final compatibility delta has a fresh production build, targeted tests, lint and live API acceptance.",
       "baseRef": "HEAD",
-      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
-      "reviewedAtUtc": "2026-10-20T22:51:17.5898147Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:55:43.9167192Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -937,13 +937,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "55b1448806882eea43853e6e7638dbcfb54e13403057164f4e212397f3116116"
+          "sha256": "b6e9ff47a140297fc3a4a188d5f1192024fd56bcd7e8f7424117575307aa7cbc"
         }
       ],
-      "reason": "Reviewed quality-index source impact. Final changes add no security-review tool, provider, authorization or privacy boundary; the workflow still describes navigation evidence rather than a security verdict. Selected permission-revocation browser results are recorded as journey evidence, not a repository security scan.",
+      "reason": "Reviewed telemetry against the owning request validator. Diagnostics omit raw worker reasons, error messages, stack traces and browser URLs, accept only SHA-shaped target versions, bound the recent-failure map and suppress duplicate/offline noise. The existing telemetry enable flag and SDK transport remain authoritative. No new identifiers, auth storage or HTTP surface were added.",
       "baseRef": "HEAD",
-      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
-      "reviewedAtUtc": "2026-10-20T22:51:18.8537651Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:55:44.6316333Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1083,14 +1083,18 @@
       "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "c1531f03ad0cadb7cf0a5bcc9c5ca9b482abf285e2ef78106bb79ee96e21ab58"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "591e086613ef7d2b4f04b2d343eaddee3655b2124ff770acfcbca23abaac2ff0"
+          "sha256": "dcc3a9d51e1b7d30b87612fffd2ce6ed0caeb3329a49e103a155cca823f1c94f"
         }
       ],
-      "reason": "Reviewed frontend-index source delta for ClientDashboardComponent and MealManageFormComponent: method spans changed while selectors, inputs, routes and transport contracts remain compatible. The existing trace workflow remains accurate and still requires confirming runtime behavior in current sources.",
+      "reason": "Traced root initialization through recovery signals, the shared notice and shell callback to registered and nested routed editor checks. Traced diagnostics through FrontendObservabilityService, LoggingApiService, generated postLogs and the owning validator/processor. Browser probes caught and corrected unsupported event names; final API requests returned 204 with PWA outcomes and build metadata.",
       "baseRef": "HEAD",
-      "gitHead": "382caf82fc9d7f774f04c0e5511bc5ee9fc43a48",
-      "reviewedAtUtc": "2026-10-20T22:51:19.9665413Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:55:45.2697942Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1174,13 +1178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "63876c5d584738a48b9a055ecd56cde9025bc6bb43f90536d3d3dfc593057ac8"
+          "sha256": "c1531f03ad0cadb7cf0a5bcc9c5ca9b482abf285e2ef78106bb79ee96e21ab58"
         }
       ],
-      "reason": "Reviewed current component templates, consumers and specs. ProductAddDialog now owns its tour service and host; shared chart and dialog controls retain their public inputs and outputs. Focused component tests, browser tour navigation and responsive contour checks passed. API adapters and generated SDK contracts are unchanged.",
+      "reason": "Reviewed unchanged notice inputs and both shell consumers, paired English/Russian recovery copy and regenerated locale aggregates. Chrome keyboard checks and component tests prove explicit reload, public-route recovery, profile draft blocking and nested recipe cancellation. Telemetry uses the server-supported global-error event with fixed PWA outcome codes; real API responses are 204.",
       "baseRef": "HEAD",
-      "gitHead": "7ed4b080e31f1b0526aba7f705b2c7a28189c284",
-      "reviewedAtUtc": "2026-10-19T20:55:09.2539394Z"
+      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
+      "reviewedAtUtc": "2026-10-21T02:55:43.2839573Z"
     },
     {
       "pageId": "workflow.query-context",

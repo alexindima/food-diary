@@ -10,6 +10,7 @@ import { type ClientTelemetryEvent, LoggingApiService } from './logging-api.serv
 
 type HttpOutcome = 'success' | 'client_error' | 'server_error' | 'network_error';
 type RouteOutcome = 'success' | 'cancelled' | 'error';
+export type ServiceWorkerFailureStage = 'check' | 'installation' | 'recovery';
 
 const DECIMAL_ROUNDING_FACTOR = 10;
 const DECIMAL_ROUNDING_DIVISOR = 10;
@@ -51,6 +52,19 @@ export class FrontendObservabilityService {
             details: error.details,
             timestamp: new Date().toISOString(),
             buildVersion: environment.buildVersion,
+        });
+    }
+
+    public recordServiceWorkerFailure(stage: ServiceWorkerFailureStage, targetVersion?: string): void {
+        this.send({
+            category: 'client_error',
+            name: 'global-error',
+            outcome: `pwa_${stage}_failed`,
+            level: stage === 'check' ? 'warning' : 'error',
+            timestamp: new Date().toISOString(),
+            message: `PWA service worker failure: ${stage}`,
+            buildVersion: environment.buildVersion,
+            details: { stage, ...(targetVersion !== undefined ? { targetVersion } : {}) },
         });
     }
 

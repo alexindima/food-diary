@@ -1,0 +1,14 @@
+@if (showNotice()) {
+    <div class="app-update-notice" role="status" aria-live="polite" [attr.aria-busy]="updates.isReloading()">
+        <fd-ui-inline-alert
+            appearance="notice"
+            [severity]="updates.recoveryRequired() ? 'warning' : 'info'"
+            [title]="titleKey() | translate"
+            [message]="messageKey() | translate"
+            [primaryActionLabel]="buttonKey() | translate"
+            [secondaryActionLabel]="updates.recoveryRequired() ? null : ('PWA.UPDATE.LATER' | translate)"
+            (primaryAction)="updates.reloadAsync(confirmReload())"
+            (secondaryAction)="updates.dismiss()"
+        />
+    </div>
+}

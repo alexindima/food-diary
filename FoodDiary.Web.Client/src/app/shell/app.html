@@ -18,6 +18,10 @@
         }
     }
     <main class="fd-root__main" id="main-content" tabindex="-1">
+        <fd-app-update-notice [visible]="usesAuthenticatedShell()" [confirmReload]="confirmAppReloadAsync" />
+        @defer (when showInstallPromotion()) {
+            <fd-pwa-install-banner [visible]="showInstallPromotion()" />
+        }
         @if (usesPublicSiteChrome()) {
             <fd-public-site-header [path]="currentPath()" />
         }

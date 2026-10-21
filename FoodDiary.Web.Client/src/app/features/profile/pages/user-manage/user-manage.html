@@ -127,6 +127,8 @@
             <fd-ui-form-error class="user-manage__error" [error]="globalError()" />
         </form>
 
+        <fd-pwa-install-card />
+
         @if (hasUnsavedProfileChanges()) {
             <fd-unsaved-changes-bar
                 [message]="'UNSAVED_CHANGES.TITLE' | translate"
