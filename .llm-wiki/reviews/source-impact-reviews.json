@@ -222,14 +222,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e",
-          "reviewReason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow."
+          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
+          "reviewReason": "Reviewed current local master and the added PWA Docker regression: API baseline resolution, OpenAPI comparisons and release compatibility remain unchanged."
         }
       ],
-      "reason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow.",
-      "baseRef": "7bf8087da8e5f4975020679f844cffe6e1f10a17",
-      "gitHead": "4676b270c1fa5505e86e31fae42c492afc819715",
-      "reviewedAtUtc": "2026-10-19T18:18:47.1962573Z"
+      "reason": "Reviewed current local master and the added PWA Docker regression: API baseline resolution, OpenAPI comparisons and release compatibility remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
+      "reviewedAtUtc": "2026-10-22T11:50:47.6272024Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -727,8 +727,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e",
-          "reviewReason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow."
+          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
+          "reviewReason": "The PWA shell-header regression runs independently before compiler setup; Wiki index selection, staged generators and verification modes still match this guide."
         },
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
@@ -766,10 +766,10 @@
           "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
         }
       ],
-      "reason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks.",
+      "reason": "The PWA shell-header regression runs independently before compiler setup; Wiki index selection, staged generators and verification modes still match this guide.",
       "baseRef": "HEAD",
-      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
-      "reviewedAtUtc": "2026-10-21T10:51:34.2166840Z"
+      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
+      "reviewedAtUtc": "2026-10-22T11:50:48.8946170Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1035,8 +1035,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "fab0fa3718eb758d184353d5b3df28d93af8b624f6504269f60ec117de5f6f6e",
-          "reviewReason": "Reviewed the final workflow diff and the affected guide: Dependabot only updates pinned setup-node, setup-java and artifact action revisions. API baseline selection, index/focused/full gates, report generation, inputs and stage ordering still match the documented workflow."
+          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
+          "reviewReason": "The added PWA test does not change CI comparison refs, review report generation, provenance or step-summary publication."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1049,10 +1049,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved.",
+      "reason": "The added PWA test does not change CI comparison refs, review report generation, provenance or step-summary publication.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:50:25.9738920Z"
+      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
+      "reviewedAtUtc": "2026-10-22T11:50:50.1724380Z"
     },
     {
       "pageId": "workflow-risk-calibration",

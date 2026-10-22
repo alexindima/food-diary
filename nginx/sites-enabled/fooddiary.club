@@ -184,13 +184,14 @@ server {
 
     location = /index.html {
         expires -1;
-        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        # Service worker hashes require byte-identical HTML through the CDN.
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, no-transform" always;
         try_files $uri =404;
     }
 
     location = /index.csr.html {
         expires -1;
-        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, no-transform" always;
         try_files $uri =404;
     }
 
