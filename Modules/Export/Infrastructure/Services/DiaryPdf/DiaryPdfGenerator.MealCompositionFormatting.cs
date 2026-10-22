@@ -168,5 +168,11 @@ internal sealed partial class DiaryPdfGenerator {
         double Proteins,
         double Fats,
         double Carbs,
-        double Fiber);
+        double Fiber) {
+        public readonly double Calories = Calories;
+        public readonly double Proteins = Proteins;
+        public readonly double Fats = Fats;
+        public readonly double Carbs = Carbs;
+        public readonly double Fiber = Fiber;
+    }
 }

@@ -11,7 +11,7 @@ public sealed class CycleFactor : Entity<CycleFactorId> {
     public DateOnly? EndDate { get; private set; }
     public string? Notes { get; private set; }
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     private CycleFactor() {
     }

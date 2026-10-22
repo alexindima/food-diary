@@ -23,7 +23,7 @@ public sealed class CyclePredictionRevision : Entity<CyclePredictionRevisionId> 
     public string ReasonCodes { get; private set; } = string.Empty;
     public string AlgorithmVersion { get; private set; } = string.Empty;
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     private CyclePredictionRevision() {
     }

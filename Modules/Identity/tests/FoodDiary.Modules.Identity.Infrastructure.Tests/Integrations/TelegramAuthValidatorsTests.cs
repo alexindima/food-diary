@@ -16,6 +16,36 @@ public sealed class TelegramAuthValidatorsTests {
     private const string BotToken = "123456:test-token";
     private static readonly DateTime NowUtc = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
 
+    [Theory]
+    [InlineData("auth_date")]
+    [InlineData("user")]
+    [InlineData("hash")]
+    public void RepeatedInitDataField_IsRejectedEvenWhenTheOriginalProofIsValid(string field) {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        string proof = CreateSignedInitData(authDate);
+        TelegramAuthValidator validator = CreateInitDataValidator();
+        ResultAssert.Success(validator.ValidateInitData(proof));
+        string repeated = Assert.Single(proof.Split('&'), pair => pair.StartsWith(field + "=", StringComparison.Ordinal));
+
+        ResultAssert.Failure(validator.ValidateInitData(proof + "&" + repeated), "Authentication.TelegramInvalidData");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("not-a-time")]
+    [InlineData("9223372036854775808")]
+    public void ValidSignature_WithoutAUsableAuthDate_DoesNotAuthenticateTheUser(string? authDate) {
+        const string userJson = "{\"id\":42}";
+        string dataCheckString = authDate is null ? "user=" + userJson : "auth_date=" + authDate + "\nuser=" + userJson;
+        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes("WebAppData"), BotToken);
+        string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        string fields = authDate is null ? "user=" + Uri.EscapeDataString(userJson)
+            : "auth_date=" + Uri.EscapeDataString(authDate) + "&user=" + Uri.EscapeDataString(userJson);
+
+        ResultAssert.Failure(CreateInitDataValidator().ValidateInitData(fields + "&hash=" + hash), "Authentication.TelegramInvalidData");
+    }
+
     [Fact]
     public void EquivalentInitData_UsesOneReplayIdentityAndConfiguredLifetime() {
         long authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();

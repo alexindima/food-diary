@@ -28,9 +28,7 @@ public sealed class NodeTaskToolExecutor : ITaskToolExecutor {
             },
         };
         process.StartInfo.ArgumentList.Add(Path.Combine(repositoryRoot, "scripts", "ai", "task-tools.mjs"));
-        if (!process.Start()) {
-            throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.TaskUnavailable, "Task tool process could not start.");
-        }
+        process.Start();
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(120));
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, cancellationToken);
         try {
@@ -44,11 +42,14 @@ public sealed class NodeTaskToolExecutor : ITaskToolExecutor {
             }
             using var document = JsonDocument.Parse(await output.ConfigureAwait(false));
             return document.RootElement.Clone();
-        } catch (OperationCanceledException) when (timeout.IsCancellationRequested && !cancellationToken.IsCancellationRequested) {
-            throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.Timeout, "Task operation exceeded its bounded timeout. A launched verification job has its own status and timeout.");
+        } catch (OperationCanceledException) {
+            if (timeout.IsCancellationRequested && !cancellationToken.IsCancellationRequested) {
+                throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.Timeout, "Task operation exceeded its bounded timeout. A launched verification job has its own status and timeout.");
+            }
+            throw;
         } finally {
             if (!process.HasExited) {
-                try { process.Kill(entireProcessTree: true); } catch (InvalidOperationException) { }
+                process.Kill(entireProcessTree: true);
             }
         }
     }

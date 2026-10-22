@@ -20,7 +20,7 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
     public string? Symptoms { get; private set; }
     public string? Notes { get; private set; }
 
-    public FastingOccurrence Occurrence { get; private set; } = null!;
+    public FastingOccurrence Occurrence { get; } = null!;
 
     private FastingCheckIn() {
     }

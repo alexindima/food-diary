@@ -27,7 +27,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     public DateTime? CheckedOnUtc { get; private set; }
     public int SortOrder { get; private set; }
 
-    public ShoppingList ShoppingList { get; private set; } = null!;
+    public ShoppingList ShoppingList { get; } = null!;
     public IReadOnlyCollection<ShoppingListItemSource> Sources => _sources.AsReadOnly();
 
     private ShoppingListItem() {

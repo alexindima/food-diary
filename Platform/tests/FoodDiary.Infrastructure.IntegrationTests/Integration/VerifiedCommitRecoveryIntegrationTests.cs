@@ -14,6 +14,29 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class VerifiedCommitRecoveryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task ConfirmedAbort_PreservesTheOriginalThrowSiteAcrossAsynchronousVerification() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        await using IDbContextTransaction provider = await database.Database.BeginTransactionAsync();
+        var commitFailure = new IOException("The original asynchronous COMMIT failure.");
+        IDbContextTransaction transaction = CreateFaultingCommit(provider, commitFailure);
+        transaction.CommitAsync(Arg.Any<CancellationToken>()).Returns(_ => ThrowCommitFailureAsync(commitFailure));
+        transaction.DisposeAsync().Returns(_ => provider.DisposeAsync());
+
+        IOException result = await Assert.ThrowsAsync<IOException>(() => VerifiedTransactionCommit.CommitAsync(transaction, CancellationToken.None));
+
+        Assert.Same(commitFailure, result);
+        string stack = Assert.IsType<string>(result.StackTrace);
+        Assert.Contains(nameof(ThrowCommitFailureAsync), stack, StringComparison.Ordinal);
+        _ = transaction.Received(1).CommitAsync(CancellationToken.None);
+        _ = transaction.Received(1).DisposeAsync();
+
+        static async Task ThrowCommitFailureAsync(Exception failure) {
+            await Task.Yield();
+            throw failure;
+        }
+    }
+
+    [RequiresDockerFact]
     public async Task ConfirmedAbort_RethrowsTheOriginalCommitFailureInsteadOfAnUnknownOutcome() {
         await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
         await using IDbContextTransaction provider = await database.Database.BeginTransactionAsync();

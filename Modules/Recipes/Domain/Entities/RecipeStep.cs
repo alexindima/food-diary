@@ -35,7 +35,7 @@ public sealed class RecipeStep : Entity<RecipeStepId> {
     private readonly List<RecipeIngredient> _ingredients = [];
     public IReadOnlyCollection<RecipeIngredient> Ingredients => _ingredients.OrderBy(ingredient => ingredient.Position).ToArray();
 
-    public Recipe Recipe { get; private set; } = null!;
+    public Recipe Recipe { get; } = null!;
 
     private RecipeStep() {
     }

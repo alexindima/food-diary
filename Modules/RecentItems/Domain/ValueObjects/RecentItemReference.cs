@@ -18,10 +18,8 @@ public sealed record RecentItemReference {
 
     public static RecentItemReference FromFields(RecentItemType itemType, Guid itemId) {
         DomainGuard.Defined(itemType, nameof(itemType));
-        return itemType switch {
-            RecentItemType.Product => ForProduct(new ProductId(itemId)),
-            RecentItemType.Recipe => ForRecipe(new RecipeId(itemId)),
-            _ => throw new ArgumentOutOfRangeException(nameof(itemType)),
-        };
+        return itemType == RecentItemType.Product
+            ? ForProduct(new ProductId(itemId))
+            : ForRecipe(new RecipeId(itemId));
     }
 }

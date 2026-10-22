@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1355,
     "ambiguousContracts": 29,
-    "consumerEdges": 10791,
+    "consumerEdges": 10798,
     "productionConsumerEdges": 6047,
-    "testConsumerEdges": 4744,
+    "testConsumerEdges": 4751,
     "consumedContracts": 1355,
     "unconsumedContracts": 0
   },
@@ -48084,6 +48084,19 @@
         "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/ProviderCacheRefreshTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDailyMicronutrientsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaProviderBudgetTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -73314,6 +73327,19 @@
         "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/ProviderCacheRefreshTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -90097,6 +90123,19 @@
         "Modules/Meals/Application/Services/IMealNutritionService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Nutrition/MealNutritionApplierBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IMealNutritionService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Services/IMealNutritionService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Nutrition/MealNutritionInputCopyTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -97912,6 +97951,19 @@
       "consumerPath": "Modules/Lessons/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "INutritionLessonReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Application.Abstractions/Common/INutritionLessonReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/DefaultAdminLessonReadModelTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "INutritionLessonReadModelRepository",
@@ -124080,7 +124132,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedFastingContextCompositionIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IUnitOfWork",
@@ -124417,6 +124469,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUsdaFoodReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application.Abstractions/Common/IUsdaFoodReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/ProviderCacheRefreshTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -124832,6 +124897,19 @@
         "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/ProviderCacheRefreshTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/UsdaFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -124963,6 +125041,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/MixedMicronutrientSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUsdaMealNutritionReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Contracts/Common/IUsdaMealNutritionReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/ProviderCacheRefreshTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -154935,7 +155026,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/NodeTaskProcessBoundaryTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 7
     },
     {
       "contract": "TaskToolRequest",

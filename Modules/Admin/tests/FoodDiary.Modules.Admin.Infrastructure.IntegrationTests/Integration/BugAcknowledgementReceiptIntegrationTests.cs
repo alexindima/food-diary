@@ -30,6 +30,8 @@ public sealed class BugAcknowledgementReceiptIntegrationTests(PostgresDatabaseFi
         await otherProvider.GetRequiredService<IBugAcknowledgementReceipts>().RecordAsync(id, CancellationToken.None);
         Assert.Empty(otherProvider.GetRequiredService<AdminDbContext>().ChangeTracker.Entries<BugAcknowledgementReceipt>());
         Assert.Equal(1, await other.BugAcknowledgementReceipts.CountAsync(x => x.InboxId == id));
+        BugAcknowledgementReceipt persisted = await other.BugAcknowledgementReceipts.AsNoTracking().SingleAsync();
+        Assert.Equal(id, persisted.InboxId);
     }
 
     [RequiresDockerFact]

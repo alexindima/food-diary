@@ -11,7 +11,7 @@ public sealed class RecommendationComment : AggregateRoot<RecommendationCommentI
     public UserId AuthorUserId { get; private set; }
     public string Text { get; private set; } = string.Empty;
 
-    public Recommendation Recommendation { get; private set; } = null!;
+    public Recommendation Recommendation { get; } = null!;
 
     private RecommendationComment() {
     }

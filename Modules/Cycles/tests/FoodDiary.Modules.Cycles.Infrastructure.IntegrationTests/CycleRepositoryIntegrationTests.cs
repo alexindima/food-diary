@@ -71,6 +71,41 @@ public sealed class CycleRepositoryIntegrationTests(PostgresDatabaseFixture data
     }
 
     [RequiresDockerFact]
+    public async Task TrackedDetails_RehydrateEveryOwnedNavigationAndThePredictionForeignKey() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("cycle-owned-navigation@example.test", "hash");
+        var today = new DateOnly(2026, 10, 21);
+        var profile = CycleProfile.Create(user.Id, today.AddDays(-28));
+        AddCycleDetails(profile, today);
+        profile.ConfirmPeriodStart(today.AddDays(-3));
+        profile.RecordPredictionRevision(new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc), today.AddDays(25), today.AddDays(27),
+            "high", "sufficient", "stable", completedCycleCount: 4, calibrationSampleCount: 3,
+            historicalCoveragePercent: 95.5, meanAbsoluteErrorDays: 1.2, reasonCodes: ["regular"], algorithmVersion: "v2");
+        context.AddRange(user, profile);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new CycleRepository(context.CycleProfiles);
+
+        CycleProfile? loaded = await repository.GetByIdAsync(profile.Id, user.Id, includeDetails: true, asTracking: true);
+
+        Assert.NotNull(loaded);
+        Assert.All(loaded.BleedingEntries, entry => Assert.Same(loaded, entry.CycleProfile));
+        Assert.All(loaded.SymptomEntries, entry => Assert.Same(loaded, entry.CycleProfile));
+        Assert.Same(loaded, Assert.Single(loaded.Factors).CycleProfile);
+        Assert.Same(loaded, Assert.Single(loaded.FertilitySignals).CycleProfile);
+        Assert.Same(loaded, Assert.Single(loaded.MenstrualEpisodes).CycleProfile);
+        Assert.Equal(2, loaded.Consents.Count);
+        Assert.All(loaded.Consents, consent => Assert.Same(loaded, consent.CycleProfile));
+        Assert.Same(loaded, Assert.Single(loaded.DayNotes).CycleProfile);
+        CyclePredictionRevision revision = Assert.Single(loaded.PredictionRevisions);
+        Assert.Equal(profile.Id, revision.CycleProfileId);
+        Assert.Same(loaded, revision.CycleProfile);
+        Assert.Equal(2, loaded.BleedingEntries.Count);
+        Assert.Single(loaded.SymptomEntries);
+        Assert.All(context.ChangeTracker.Entries(), entry => Assert.Equal(EntityState.Unchanged, entry.State));
+    }
+
+    [RequiresDockerFact]
     public async Task Delete_RemovesOnlyCycleAggregate() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"cycle-delete-{Guid.NewGuid():N}@example.com", "hash");

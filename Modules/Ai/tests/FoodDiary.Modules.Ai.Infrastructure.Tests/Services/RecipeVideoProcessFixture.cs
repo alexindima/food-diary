@@ -61,16 +61,22 @@ public sealed class RecipeVideoProcessFixture : IAsyncLifetime {
 
     public static async Task<RecipeVideoProcessState> ReadStateAsync(string path, CancellationToken cancellationToken) {
         long started = Stopwatch.GetTimestamp();
+        IOException? lastReadError = null;
         while (Stopwatch.GetElapsedTime(started) < TimeSpan.FromSeconds(10)) {
             cancellationToken.ThrowIfCancellationRequested();
             if (File.Exists(path)) {
-                return JsonSerializer.Deserialize<RecipeVideoProcessState>(await File.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false), JsonSerializerOptions.Web)
-                    ?? throw new InvalidDataException("The owned media process published an empty state.");
+                try {
+                    return JsonSerializer.Deserialize<RecipeVideoProcessState>(await File.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false), JsonSerializerOptions.Web)
+                        ?? throw new InvalidDataException("The owned media process published an empty state.");
+                } catch (IOException exception) when (OperatingSystem.IsWindows() && (exception.HResult & 0xffff) is 32 or 33) {
+                    // ERROR_SHARING_VIOLATION / ERROR_LOCK_VIOLATION can briefly affect an already-published file.
+                    lastReadError = exception;
+                }
             }
             // The owned child publishes this external-resource signal by an atomic rename.
             await Task.Delay(TimeSpan.FromMilliseconds(10), cancellationToken).ConfigureAwait(false);
         }
-        throw new TimeoutException("The owned media process did not publish its state within ten seconds.");
+        throw new TimeoutException("The owned media process did not publish its state within ten seconds.", lastReadError);
     }
 
     public static string MediaDirectory(RecipeVideoProcessState state) {

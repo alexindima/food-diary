@@ -3,6 +3,7 @@ using FoodDiary.Modules.Billing.Domain.Contracts;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Billing.Domain.Enums;
+using System.Collections.Frozen;
 
 namespace FoodDiary.Modules.Billing.Domain.Entities;
 
@@ -12,6 +13,12 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     public const string ReceivedStatus = "received";
     public const string ProcessedStatus = "processed";
     public const string FailedStatus = "failed";
+    private static readonly FrozenDictionary<BillingWebhookProcessingState, string> ProcessingStatusCodes =
+        new Dictionary<BillingWebhookProcessingState, string> {
+            [BillingWebhookProcessingState.Received] = ReceivedStatus,
+            [BillingWebhookProcessingState.Failed] = FailedStatus,
+            [BillingWebhookProcessingState.Processed] = ProcessedStatus,
+        }.ToFrozenDictionary();
     private const int ProviderMaxLength = 32;
     private const int EventIdMaxLength = 255;
     private const int EventTypeMaxLength = 128;
@@ -117,12 +124,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
     }
 
     private void SetProcessingState(BillingWebhookProcessingState state) {
-        Status = state switch {
-            BillingWebhookProcessingState.Received => ReceivedStatus,
-            BillingWebhookProcessingState.Failed => FailedStatus,
-            BillingWebhookProcessingState.Processed => ProcessedStatus,
-            _ => throw new ArgumentOutOfRangeException(nameof(state), "Unsupported webhook processing state."),
-        };
+        Status = ProcessingStatusCodes[state];
     }
 
     private static string NormalizeProvider(string provider) {

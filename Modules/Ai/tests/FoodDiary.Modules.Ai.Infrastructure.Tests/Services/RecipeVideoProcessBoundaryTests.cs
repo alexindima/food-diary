@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
@@ -12,6 +13,44 @@ namespace FoodDiary.Modules.Ai.Infrastructure.Tests.Services;
 [Collection("Recipe media")]
 [ExcludeFromCodeCoverage]
 public sealed class RecipeVideoProcessBoundaryTests(RecipeVideoProcessFixture fixture) : IClassFixture<RecipeVideoProcessFixture> {
+    [WindowsMediaFact]
+    public async Task PublishedState_WaitsForAWindowsReadLockAndReturnsItsExactContents() {
+        string statePath = fixture.NewStatePath();
+        var expected = new RecipeVideoProcessState(Environment.ProcessId, ChildPid: null, "owned-input", "owned-output", ["owned-argument"], DirectoryMode: null);
+        await File.WriteAllTextAsync(statePath, JsonSerializer.Serialize(expected, JsonSerializerOptions.Web));
+        using var harness = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        Task<RecipeVideoProcessState> reading;
+        await using (FileStream heldFile = File.Open(statePath, FileMode.Open, FileAccess.Read, FileShare.None)) {
+            reading = RecipeVideoProcessFixture.ReadStateAsync(statePath, harness.Token);
+            Assert.False(reading.IsCompleted);
+        }
+
+        RecipeVideoProcessState actual = await reading.WaitAsync(TimeSpan.FromSeconds(3), harness.Token);
+
+        Assert.Multiple(
+            () => Assert.Equal(expected.Pid, actual.Pid),
+            () => Assert.Null(actual.ChildPid),
+            () => Assert.Equal(expected.InputPath, actual.InputPath),
+            () => Assert.Equal(expected.OutputPath, actual.OutputPath),
+            () => Assert.Equal(expected.Arguments, actual.Arguments),
+            () => Assert.Null(actual.DirectoryMode),
+            () => Assert.False(harness.IsCancellationRequested));
+    }
+
+    [WindowsMediaFact]
+    public async Task PublishedState_StillHonorsCallerCancellationWhileAWindowsReadLockIsHeld() {
+        string statePath = fixture.NewStatePath();
+        await File.WriteAllTextAsync(statePath, "{}");
+        await using FileStream heldFile = File.Open(statePath, FileMode.Open, FileAccess.Read, FileShare.None);
+        using var cancellation = new CancellationTokenSource();
+        Task<RecipeVideoProcessState> reading = RecipeVideoProcessFixture.ReadStateAsync(statePath, cancellation.Token);
+        Assert.False(reading.IsCompleted);
+
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => reading.WaitAsync(TimeSpan.FromSeconds(3)));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

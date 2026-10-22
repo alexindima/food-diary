@@ -13,6 +13,7 @@ internal static class MealNutritionApplier {
         IMealNutritionService mealNutritionService,
         MealNutritionInput input,
         CancellationToken cancellationToken) {
+        ManualNutritionInput? manual = null;
         if (!input.IsNutritionAutoCalculated) {
             Result<ManualNutritionInput> manualValidation = ManualNutritionValidator.Validate(
                 input.ManualCalories, input.ManualProteins, input.ManualFats,
@@ -20,14 +21,15 @@ internal static class MealNutritionApplier {
             if (manualValidation.IsFailure) {
                 return manualValidation;
             }
+            manual = manualValidation.Value;
         }
         Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
         if (nutritionResult.IsFailure) {
             return nutritionResult;
         }
 
-        if (!input.IsNutritionAutoCalculated) {
-            return ApplyManualNutrition(meal, input);
+        if (manual is not null) {
+            return ApplyManualNutrition(meal, manual);
         }
 
         meal.ApplyNutrition(new MealNutritionUpdate(
@@ -41,19 +43,7 @@ internal static class MealNutritionApplier {
         return Result.Success();
     }
 
-    private static Result ApplyManualNutrition(Meal meal, MealNutritionInput input) {
-        Result<ManualNutritionInput> manualNutritionResult = ManualNutritionValidator.Validate(
-            input.ManualCalories,
-            input.ManualProteins,
-            input.ManualFats,
-            input.ManualCarbs,
-            input.ManualFiber,
-            input.ManualAlcohol);
-        if (manualNutritionResult.IsFailure) {
-            return manualNutritionResult;
-        }
-
-        ManualNutritionInput manual = manualNutritionResult.Value;
+    private static Result ApplyManualNutrition(Meal meal, ManualNutritionInput manual) {
         meal.ApplyNutrition(new MealNutritionUpdate(
             manual.Calories,
             manual.Proteins,

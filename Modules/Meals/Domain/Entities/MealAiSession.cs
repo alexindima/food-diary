@@ -17,7 +17,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
     public DateTime RecognizedAtUtc { get; private set; }
     public string? Notes { get; private set; }
 
-    public Meal Meal { get; private set; } = null!;
+    public Meal Meal { get; } = null!;
     private readonly List<MealAiItem> _items = [];
     public IReadOnlyCollection<MealAiItem> Items => _items.AsReadOnly();
 

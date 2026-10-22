@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1694,
+    "candidateFields": 1693,
     "credential": 158,
     "identity": 181,
-    "health": 797,
+    "health": 796,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 226,
@@ -4391,13 +4391,6 @@
       "type": "int",
       "path": "Modules/Fasting/Application/Services/FastingCyclicTransitionPlanner.cs",
       "line": 103
-    },
-    {
-      "category": "health",
-      "name": "CyclicFastingSettings",
-      "type": "or",
-      "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 77
     },
     {
       "category": "health",

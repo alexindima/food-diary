@@ -7,7 +7,7 @@ public sealed class CycleDayNote : Entity<CycleDayNoteId> {
     public CycleProfileId CycleProfileId { get; private set; }
     public DateOnly Date { get; private set; }
     public string Notes { get; private set; } = string.Empty;
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     private CycleDayNote() {
     }

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.ComponentModel;
 using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Infrastructure;
@@ -9,6 +10,65 @@ namespace FoodDiary.Development.Mcp.Tests;
 [Collection("PowerShell Wiki process")]
 [ExcludeFromCodeCoverage]
 public sealed class NodeTaskProcessBoundaryTests {
+    [Fact]
+    public async Task MissingNodeExecutable_PropagatesTheNativeLaunchFailure() {
+        using var repository = new NodeRepository("process.stdout.write('{}');");
+        string? originalPath = Environment.GetEnvironmentVariable("PATH");
+        try {
+            Environment.SetEnvironmentVariable("PATH", repository.Root);
+
+            await Assert.ThrowsAsync<Win32Exception>(() => new NodeTaskToolExecutor().ExecuteAsync(
+                new TaskToolRequest(TaskToolAction.Next), CancellationToken.None));
+        } finally {
+            Environment.SetEnvironmentVariable("PATH", originalPath);
+        }
+    }
+
+    [Fact]
+    public async Task CallerCancellation_TerminatesTheOwnedNodeChildAndItsGrandchild() {
+        using var repository = new NodeRepository(script: null);
+        string childPath = Path.Combine(repository.Root, "child.pid");
+        string grandchildPath = Path.Combine(repository.Root, "grandchild.pid");
+        string grandchildScript = PublishIdentity(grandchildPath) + "setInterval(() => {}, 1000);";
+        repository.WriteScript("import { spawn } from 'node:child_process'; "
+            + "spawn(process.execPath, ['--input-type=module', '-e', " + JsonSerializer.Serialize(grandchildScript) + "], { stdio: 'ignore' }); "
+            + PublishIdentity(childPath) + "setInterval(() => {}, 1000);");
+        using var cancellation = new CancellationTokenSource();
+        Task<JsonElement> execution = new NodeTaskToolExecutor().ExecuteAsync(new TaskToolRequest(TaskToolAction.Next), cancellation.Token);
+        Process? child = null;
+        Process? grandchild = null;
+        try {
+            child = await ReadOwnedProcessAsync(childPath);
+            grandchild = await ReadOwnedProcessAsync(grandchildPath);
+            child.EnableRaisingEvents = true;
+            grandchild.EnableRaisingEvents = true;
+            Assert.False(child.HasExited);
+            Assert.False(grandchild.HasExited);
+
+            await cancellation.CancelAsync();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => execution.WaitAsync(TimeSpan.FromSeconds(5)));
+            await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            await grandchild.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.True(child.HasExited);
+            Assert.True(grandchild.HasExited);
+        } finally {
+            await cancellation.CancelAsync();
+            foreach (Process? owned in new[] { child, grandchild }) {
+                if (owned is { HasExited: false }) {
+                    owned.Kill(entireProcessTree: true);
+                    await owned.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(5));
+                }
+                owned?.Dispose();
+            }
+            try { await execution.WaitAsync(TimeSpan.FromSeconds(5)); } catch (OperationCanceledException) { }
+        }
+
+        static string PublishIdentity(string path) => "const { writeFileSync, renameSync } = await import('node:fs'); "
+            + "writeFileSync(" + JsonSerializer.Serialize(path + ".tmp") + ", String(process.pid)); "
+            + "renameSync(" + JsonSerializer.Serialize(path + ".tmp") + ", " + JsonSerializer.Serialize(path) + "); ";
+    }
+
     [Fact]
     [Trait("Category", "Slow")]
     public async Task ToolTimeout_ReportsItsOwnDeadlineAndTerminatesTheOwnedNodeProcess() {

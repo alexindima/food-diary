@@ -123,8 +123,8 @@ public sealed partial class RecipeVideoProcessor(
             Stream body = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
             await using (body.ConfigureAwait(false)) {
                 await CopyBoundedAsync(body, destination, cancellationToken).ConfigureAwait(false);
-                return;
             }
+            return;
         }
         throw new HttpRequestException("Video source redirect limit exceeded.");
     }

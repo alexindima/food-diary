@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
 
 public sealed class MealPlanMeal : Entity<MealPlanMealId> {
     public MealPlanDayId MealPlanDayId { get; private set; }
-    public MealPlanDay Day { get; private set; } = null!;
+    public MealPlanDay Day { get; } = null!;
     public MealType MealType { get; private set; }
     public RecipeId RecipeId { get; private set; }
     public int Servings { get; private set; }

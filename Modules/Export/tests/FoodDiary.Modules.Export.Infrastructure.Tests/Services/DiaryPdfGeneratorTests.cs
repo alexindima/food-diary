@@ -163,11 +163,11 @@ public sealed class DiaryPdfGeneratorTests {
         object nutrition = InvokePrivateStatic<object>("CalculateMealItemNutrition", item);
 
         Assert.Multiple(
-            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Calories")),
-            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Proteins")),
-            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Fats")),
-            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Carbs")),
-            () => Assert.Equal(0d, GetPrivateProperty<double>(nutrition, "Fiber")));
+            () => Assert.Equal(0d, GetPrivateMember<double>(nutrition, "Calories")),
+            () => Assert.Equal(0d, GetPrivateMember<double>(nutrition, "Proteins")),
+            () => Assert.Equal(0d, GetPrivateMember<double>(nutrition, "Fats")),
+            () => Assert.Equal(0d, GetPrivateMember<double>(nutrition, "Carbs")),
+            () => Assert.Equal(0d, GetPrivateMember<double>(nutrition, "Fiber")));
     }
 
     [Fact]
@@ -544,14 +544,14 @@ public sealed class DiaryPdfGeneratorTests {
         object localAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", ToReadModel(session.Items.First()), ruReport);
         object fallbackAiComposition = InvokePrivateStatic<object>("FormatMealAiItem", ToReadModel(session.Items.Last()), enReport);
 
-        Assert.Equal("Rice", GetPrivateProperty<string>(productComposition, "Name"));
-        Assert.Equal(60, GetPrivateProperty<double>(productComposition, "Calories"));
-        Assert.Equal("Soup", GetPrivateProperty<string>(recipeComposition, "Name"));
-        Assert.Equal(100, GetPrivateProperty<double>(recipeComposition, "Calories"));
-        Assert.Equal("Product", GetPrivateProperty<string>(fallbackComposition, "Name"));
-        Assert.Equal(0, GetPrivateProperty<double>(fallbackComposition, "Calories"));
-        Assert.Equal("Local apple", GetPrivateProperty<string>(localAiComposition, "Name"));
-        Assert.Equal("Product", GetPrivateProperty<string>(fallbackAiComposition, "Name"));
+        Assert.Equal("Rice", GetPrivateMember<string>(productComposition, "Name"));
+        Assert.Equal(60, GetPrivateMember<double>(productComposition, "Calories"));
+        Assert.Equal("Soup", GetPrivateMember<string>(recipeComposition, "Name"));
+        Assert.Equal(100, GetPrivateMember<double>(recipeComposition, "Calories"));
+        Assert.Equal("Product", GetPrivateMember<string>(fallbackComposition, "Name"));
+        Assert.Equal(0, GetPrivateMember<double>(fallbackComposition, "Calories"));
+        Assert.Equal("Local apple", GetPrivateMember<string>(localAiComposition, "Name"));
+        Assert.Equal("Product", GetPrivateMember<string>(fallbackAiComposition, "Name"));
     }
 
     [Theory]
@@ -574,10 +574,10 @@ public sealed class DiaryPdfGeneratorTests {
         object recipeComposition = InvokePrivateStatic<object>("FormatMealItem", ToReadModel(recipeItem), report);
 
         Assert.Multiple(
-            () => Assert.StartsWith(grams, GetPrivateProperty<string>(productComposition, "Amount"), StringComparison.Ordinal),
-            () => Assert.StartsWith(servings, GetPrivateProperty<string>(recipeComposition, "Amount"), StringComparison.Ordinal),
-            () => Assert.Equal(45, GetPrivateProperty<double>(productComposition, "Calories")),
-            () => Assert.Equal(75, GetPrivateProperty<double>(recipeComposition, "Calories")));
+            () => Assert.StartsWith(grams, GetPrivateMember<string>(productComposition, "Amount"), StringComparison.Ordinal),
+            () => Assert.StartsWith(servings, GetPrivateMember<string>(recipeComposition, "Amount"), StringComparison.Ordinal),
+            () => Assert.Equal(45, GetPrivateMember<double>(productComposition, "Calories")),
+            () => Assert.Equal(75, GetPrivateMember<double>(recipeComposition, "Calories")));
     }
 
     [Fact]
@@ -606,10 +606,10 @@ public sealed class DiaryPdfGeneratorTests {
             cultureName: "bad-culture",
             timeZoneOffsetMinutes: 900);
 
-        Assert.Equal(2, GetPrivateProperty<int>(report, "DayCount"));
-        Assert.Contains("2026", GetPrivateProperty<string>(report, "PeriodStartLabel"), StringComparison.Ordinal);
-        Assert.Contains("2026", GetPrivateProperty<string>(report, "PeriodEndLabel"), StringComparison.Ordinal);
-        Assert.Equal("UTC+06:00", GetPrivateProperty<string>(report, "TimeZoneOffsetLabel"));
+        Assert.Equal(2, GetPrivateMember<int>(report, "DayCount"));
+        Assert.Contains("2026", GetPrivateMember<string>(report, "PeriodStartLabel"), StringComparison.Ordinal);
+        Assert.Contains("2026", GetPrivateMember<string>(report, "PeriodEndLabel"), StringComparison.Ordinal);
+        Assert.Equal("UTC+06:00", GetPrivateMember<string>(report, "TimeZoneOffsetLabel"));
         Assert.Equal("Other", InvokePrivateInstance<string>(report, "FormatMealType", (MealType?)null));
         Assert.Equal("Breakfast", InvokePrivateInstance<string>(report, "FormatMealType", (MealType?)MealType.Breakfast));
         Assert.Equal("Lunch", InvokePrivateInstance<string>(report, "FormatMealType", (MealType?)MealType.Lunch));
@@ -1100,11 +1100,18 @@ public sealed class DiaryPdfGeneratorTests {
         return (T)method.Invoke(null, arguments)!;
     }
 
-    private static T GetPrivateProperty<T>(object instance, string propertyName) {
-        PropertyInfo property = instance.GetType().GetProperty(
-            propertyName,
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!;
-        return (T)property.GetValue(instance)!;
+    private static T GetPrivateMember<T>(object instance, string memberName) {
+        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        Type type = instance.GetType();
+        PropertyInfo? property = type.GetProperty(memberName, flags);
+        if (property is not null) {
+            return (T)property.GetValue(instance)!;
+        }
+        FieldInfo? field = type.GetField(memberName, flags);
+        if (field is not null) {
+            return (T)field.GetValue(instance)!;
+        }
+        throw new InvalidOperationException($"Value member '{memberName}' was not found on {type.FullName}.");
     }
 
     private static object CreateReportData(

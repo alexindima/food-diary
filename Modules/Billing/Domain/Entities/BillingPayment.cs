@@ -223,7 +223,13 @@ public sealed class BillingPayment : Entity<Guid> {
         decimal? Tax,
         decimal? Fee,
         decimal? Earnings,
-        decimal? PayoutEarnings);
+        decimal? PayoutEarnings) {
+        public readonly decimal? Amount = Amount;
+        public readonly decimal? Tax = Tax;
+        public readonly decimal? Fee = Fee;
+        public readonly decimal? Earnings = Earnings;
+        public readonly decimal? PayoutEarnings = PayoutEarnings;
+    }
 
     private static string NormalizeProvider(string provider) {
         string normalized = NormalizeRequired(provider, ProviderMaxLength, nameof(provider));

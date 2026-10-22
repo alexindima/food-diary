@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4600,
-    "symbols": 4535,
+    "sourceFiles": 4599,
+    "symbols": 4534,
     "interfaceImplementationLinks": 201,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
       "class": 2340,
       "enum": 71,
       "interface": 415,
-      "record": 1568,
+      "record": 1567,
       "record struct": 141
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1870,
+      "Other": 1869,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -1586,13 +1586,6 @@
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
       "line": 9
-    },
-    {
-      "name": "DashboardFavoriteMealProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardFavoriteMealProjection.cs",
-      "line": 4
     },
     {
       "name": "DashboardMealAiSessionProjection",
@@ -7031,7 +7024,7 @@
       "kind": "class",
       "role": "Event",
       "path": "Modules/Billing/Domain/Entities/BillingWebhookEvent.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "BillingWebhookProcessingState",
@@ -31657,7 +31650,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/VerifiedTransactionCommit.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "SharedPersistenceDbContext",

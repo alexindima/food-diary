@@ -60,6 +60,10 @@ public sealed class SharedLessonsContextCompositionIntegrationTests(PostgresData
         Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync(page: 1, limit: 10)).CompletedCount);
         NutritionLesson? tracked = await repository.GetByIdTrackingAsync(lesson.Id);
         Assert.NotNull(tracked);
+        UserLessonProgress persistedProgress = await lessons.UserLessonProgress.Include(progress => progress.Lesson)
+            .SingleAsync(progress => progress.UserId == user.Id);
+        Assert.Equal(lesson.Id, persistedProgress.LessonId);
+        Assert.Same(tracked, persistedProgress.Lesson);
         tracked.SetPublication(isPublished: true);
         await unitOfWork.SaveChangesAsync();
         Assert.Single(await repository.GetByLocaleAsync("en"));

@@ -74,9 +74,6 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     public static FastingPlan CreateWithSettings(UserId userId, FastingPlanSettings settings, DateTime startedAtUtc, string? title = null) {
         EnsureUserId(userId);
         ArgumentNullException.ThrowIfNull(settings);
-        if (settings is not (IntermittentFastingSettings or ExtendedFastingSettings or CyclicFastingSettings)) {
-            throw new ArgumentOutOfRangeException(nameof(settings), "Unsupported fasting plan settings.");
-        }
         var plan = new FastingPlan {
             Id = FastingPlanId.New(),
             UserId = userId,

@@ -11,7 +11,7 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
     public MenstrualEpisodeStatus Status { get; private set; }
     public bool ExcludedFromPredictions { get; private set; }
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     private MenstrualEpisode() {
     }

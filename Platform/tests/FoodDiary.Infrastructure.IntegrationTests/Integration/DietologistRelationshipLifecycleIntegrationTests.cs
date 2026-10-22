@@ -23,12 +23,19 @@ public sealed class DietologistRelationshipLifecycleIntegrationTests(PostgresDat
         invitation.Accept(dietologist.Id);
         var task = ClientTask.Create(dietologist.Id, client.Id, "Test task", details: null, dueAtUtc: null);
         var recommendation = Recommendation.Create(dietologist.Id, client.Id, "Test recommendation");
+        var comment = RecommendationComment.Create(recommendation.Id, client.Id, "Persisted reply");
         context.Users.AddRange(dietologist, client);
         context.Set<DietologistInvitation>().Add(invitation);
         context.Set<ClientTask>().Add(task);
         context.Set<Recommendation>().Add(recommendation);
+        context.Set<RecommendationComment>().Add(comment);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
+        RecommendationComment persistedComment = await context.Set<RecommendationComment>().AsNoTracking()
+            .Include(item => item.Recommendation).SingleAsync(item => item.Id == comment.Id);
+        Assert.Equal(recommendation.Id, persistedComment.RecommendationId);
+        Assert.Equal(recommendation.Id, persistedComment.Recommendation.Id);
+        Assert.Equal(client.Id, persistedComment.AuthorUserId);
 
         foreach (UserId userId in new[] { dietologist.Id, client.Id }) {
             PostgresException exception = await Assert.ThrowsAsync<PostgresException>(() =>
@@ -48,6 +55,7 @@ public sealed class DietologistRelationshipLifecycleIntegrationTests(PostgresDat
         Assert.Null(retainedInvitation.DietologistUserId);
         Assert.Equal(client.Id, retainedInvitation.ClientUserId);
         Assert.False(await context.Set<Recommendation>().AnyAsync(item => item.Id == recommendation.Id));
+        Assert.False(await context.Set<RecommendationComment>().AnyAsync(item => item.Id == comment.Id));
 
         await context.Users.Where(user => user.Id == client.Id).ExecuteDeleteAsync();
         Assert.False(await context.Set<DietologistInvitation>().AnyAsync(item => item.Id == invitation.Id));

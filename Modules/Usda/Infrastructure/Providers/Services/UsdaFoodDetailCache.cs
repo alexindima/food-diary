@@ -113,6 +113,9 @@ internal sealed class UsdaFoodDetailCache {
         }
     }
 
-    private readonly record struct CacheKey(string BaseUrl, int FdcId);
+    private readonly record struct CacheKey(string BaseUrl, int FdcId) {
+        public readonly string BaseUrl = BaseUrl;
+        public readonly int FdcId = FdcId;
+    }
     private sealed record CacheEntry(UsdaFoodDetailModel? Value, DateTimeOffset ExpiresAt);
 }

@@ -513,14 +513,6 @@ public sealed partial class OpenAiFoodClient(
         return null;
     }
 
-    private static JsonSerializerOptions JsonOptions()
-        => new() {
-            PropertyNameCaseInsensitive = true,
-            RespectNullableAnnotations = true,
-            RespectRequiredConstructorParameters = true,
-            MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
-        };
-
     private static void RecordAiRequest(string operation, string model, string outcome) {
         IntegrationsTelemetry.AiRequestCounter.Add(
             1,

@@ -156,7 +156,10 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     [StructLayout(LayoutKind.Auto)]
-    private readonly record struct MealImageEntry(Guid MealId, byte[]? Image);
+    private readonly record struct MealImageEntry(Guid MealId, byte[]? Image) {
+        public readonly Guid MealId = MealId;
+        public readonly byte[]? Image = Image;
+    }
 
     private static IReadOnlyList<string> GetCompositionImageUrls(MealProjectionReadModel meal) =>
         meal.Items

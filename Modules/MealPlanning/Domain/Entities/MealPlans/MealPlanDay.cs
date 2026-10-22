@@ -10,7 +10,7 @@ public sealed class MealPlanDay : Entity<MealPlanDayId> {
     private const int MaxDayNumber = 31;
 
     public MealPlanId MealPlanId { get; private set; }
-    public MealPlan MealPlan { get; private set; } = null!;
+    public MealPlan MealPlan { get; } = null!;
     public int DayNumber { get; private set; }
 
     private readonly List<MealPlanMeal> _meals = [];

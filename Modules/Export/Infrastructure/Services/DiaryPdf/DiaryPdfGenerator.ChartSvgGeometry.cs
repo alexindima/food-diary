@@ -87,6 +87,9 @@ internal sealed partial class DiaryPdfGenerator {
         private static string Escape(string value) => WebUtility.HtmlEncode(value);
 
         [StructLayout(LayoutKind.Auto)]
-        private readonly record struct Point(double X, double Y);
+        private readonly record struct Point(double X, double Y) {
+            public readonly double X = X;
+            public readonly double Y = Y;
+        }
     }
 }

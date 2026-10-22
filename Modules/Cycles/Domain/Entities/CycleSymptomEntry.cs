@@ -16,7 +16,7 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
     public string TagsJson { get; private set; } = "[]";
     public string? Note { get; private set; }
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     public IReadOnlyList<string> Tags => JsonSerializer.Deserialize<IReadOnlyList<string>>(TagsJson) ?? [];
 

@@ -1,4 +1,3 @@
-using System.Runtime.ExceptionServices;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
@@ -44,14 +43,15 @@ internal static class VerifiedTransactionCommit {
             } catch (Exception verificationException) {
                 throw new CommitOutcomeUnknownException(new AggregateException(commitException, verificationException));
             }
-            if (string.Equals(status, "committed", StringComparison.Ordinal)) {
-                return;
+            switch (status) {
+                case "committed":
+                    break;
+                case "aborted":
+                    throw;
+                default:
+                    // An unavailable or still-running outcome is never permission to replay the handler.
+                    throw new CommitOutcomeUnknownException(commitException);
             }
-            if (string.Equals(status, "aborted", StringComparison.Ordinal)) {
-                ExceptionDispatchInfo.Capture(commitException).Throw();
-            }
-            // An unavailable or still-running outcome is never permission to replay the handler.
-            throw new CommitOutcomeUnknownException(commitException);
         }
     }
 }

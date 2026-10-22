@@ -38,7 +38,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
         Position = position;
     }
 
-    public RecipeStep RecipeStep { get; private set; } = null!;
+    public RecipeStep RecipeStep { get; } = null!;
     public RecipeIngredientProductSnapshot? ProductSnapshot { get; private set; }
 
     public void SetProductSnapshot(RecipeIngredientProductSnapshot? snapshot) {

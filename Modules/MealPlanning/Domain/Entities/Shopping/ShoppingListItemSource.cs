@@ -21,7 +21,7 @@ public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
     public double Amount { get; private set; }
     public MeasurementUnit? Unit { get; private set; }
 
-    public ShoppingListItem ShoppingListItem { get; private set; } = null!;
+    public ShoppingListItem ShoppingListItem { get; } = null!;
 
     private ShoppingListItemSource() {
     }

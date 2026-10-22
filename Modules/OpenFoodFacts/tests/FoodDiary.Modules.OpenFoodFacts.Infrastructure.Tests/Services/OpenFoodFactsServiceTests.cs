@@ -247,6 +247,8 @@ public sealed class OpenFoodFactsServiceTests {
                   "code": "111",
                   "product_name": "Milk",
                   "brands": "Brand A",
+                  "categories": "  Dairy  ",
+                  "image_url": "  https://images.example.test/milk.png  ",
                   "nutriments": { "energy-kcal_100g": 60, "proteins_100g": 3.2 }
                 },
                 {
@@ -259,15 +261,20 @@ public sealed class OpenFoodFactsServiceTests {
             """;
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("dairy");
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync($"dairy-metadata-{Guid.NewGuid():N}");
 
         Assert.Equal(2, result.Count);
         Assert.Equal("111", result[0].Barcode);
         Assert.Equal("Milk", result[0].Name);
         Assert.Equal("Brand A", result[0].Brand);
+        Assert.Equal("Dairy", result[0].Category);
+        Assert.Equal("https://images.example.test/milk.png", result[0].ImageUrl);
         Assert.Equal(60, result[0].CaloriesPer100G);
+        Assert.Equal(3.2, result[0].ProteinsPer100G);
         Assert.Equal("222", result[1].Barcode);
         Assert.Equal("Yogurt", result[1].Name);
+        Assert.Null(result[1].Category);
+        Assert.Null(result[1].ImageUrl);
     }
 
     [Fact]

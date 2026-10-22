@@ -36,7 +36,7 @@ public sealed class MealItem : Entity<MealItemId> {
     public double? SnapshotFiberPerBase { get; private set; }
     public double? SnapshotAlcoholPerBase { get; private set; }
 
-    public Meal Meal { get; private set; } = null!;
+    public Meal Meal { get; } = null!;
 
     private MealItem() { }
 

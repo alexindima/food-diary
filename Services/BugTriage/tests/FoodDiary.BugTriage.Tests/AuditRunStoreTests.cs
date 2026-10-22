@@ -32,6 +32,63 @@ public sealed class AuditRunStoreTests : IAsyncLifetime {
     }
 
     [Fact]
+    public async Task InvalidStart_CannotReplaceTheExistingRunningAuditOrItsInterval() {
+        var original = (AuditRunId)Guid.NewGuid();
+        Assert.True(await _store.StartAsync(original, Window, Now, CancellationToken.None));
+        (AuditRunId Id, AuditWindow Window)[] invalid = [
+            (new AuditRunId(Guid.Empty), Window),
+            ((AuditRunId)Guid.NewGuid(), new AuditWindow(Now, Now)),
+            ((AuditRunId)Guid.NewGuid(), new AuditWindow(Now, Now.AddMinutes(-1))),
+            ((AuditRunId)Guid.NewGuid(), new AuditWindow(Now.AddDays(-7).AddTicks(-1), Now)),
+            ((AuditRunId)Guid.NewGuid(), new AuditWindow(Now, Now.AddMinutes(5).AddTicks(1))),
+            ((AuditRunId)Guid.NewGuid(), new AuditWindow(Now.AddDays(-90).AddTicks(-1), Now.AddDays(-89))),
+        ];
+
+        foreach ((AuditRunId id, AuditWindow window) in invalid) {
+            ArgumentException error = await Assert.ThrowsAsync<ArgumentException>(() => _store.StartAsync(id, window, Now, CancellationToken.None));
+            Assert.Equal("window", error.ParamName);
+        }
+
+        AuditRunSummary? latest = await _store.GetLatestAsync(Now, CancellationToken.None);
+        Assert.NotNull(latest);
+        Assert.Multiple(
+            () => Assert.Equal(original.Value, latest.Id),
+            () => Assert.Equal(Window.FromUtc, latest.FromUtc),
+            () => Assert.Equal(Window.ToUtc, latest.ToUtc),
+            () => Assert.Equal("running", latest.Status));
+    }
+
+    [Fact]
+    public async Task ReorderedFindingRetry_IsIdenticalAndCannotDuplicateOrReplaceTheCompletedPublication() {
+        var id = (AuditRunId)Guid.NewGuid();
+        var first = new AuditFinding(Guid.Parse("10000000-0000-0000-0000-000000000001"), "First finding",
+            ReportOutcome.NeedsInformation, "First evidence", MergeRequestUrl: null);
+        var second = new AuditFinding(Guid.Parse("20000000-0000-0000-0000-000000000002"), "Second finding",
+            ReportOutcome.DraftReady, "Second evidence", "https://github.com/example/repo/pull/2");
+        var completion = new AuditCompletion("findings", "Two verified findings", [second, first]);
+        Assert.True(await _store.StartAsync(id, Window, Now, CancellationToken.None));
+
+        Assert.True(await _store.CompleteAsync(id, completion, Now.AddMinutes(1), CancellationToken.None));
+        Assert.True(await _store.CompleteAsync(id, completion with { Findings = [first, second] }, Now.AddMinutes(2), CancellationToken.None));
+        Assert.False(await _store.CompleteAsync(id, completion with { Summary = "Conflicting content" }, Now.AddMinutes(3), CancellationToken.None));
+
+        BugReportJournalPage page = await Journal().GetPageAsync(Filter(), Now.AddMinutes(4), CancellationToken.None);
+        Assert.Equal(2, page.TotalItems);
+        Assert.Equal(new[] { first.Id, second.Id }, page.Items.Select(item => item.Id).Order());
+        foreach (AuditFinding finding in completion.Findings) {
+            BugReportJournalEntry entry = Assert.Single(page.Items, item => item.Id == finding.Id);
+            Assert.Multiple(
+                () => Assert.Equal(id.Value, entry.AuditRunId),
+                () => Assert.Equal(finding.Title, entry.Subject),
+                () => Assert.Equal(finding.Summary, entry.Summary),
+                () => Assert.Equal(finding.MergeRequestUrl, entry.MergeRequestUrl));
+        }
+        Assert.NotNull(page.LatestAudit);
+        Assert.Equal("Two verified findings", page.LatestAudit.Summary);
+        Assert.Equal(Now.AddMinutes(1), page.LatestAudit.CompletedAtUtc);
+    }
+
+    [Fact]
     public async Task ConcurrentIdenticalPublication_CreatesOneFindingAndFencesConflictingRetries() {
         var id = (AuditRunId)Guid.NewGuid();
         bool[] starts = await Task.WhenAll(Enumerable.Range(0, 4).Select(_ => _store.StartAsync(id, Window, Now, CancellationToken.None)));

@@ -64,6 +64,38 @@ public sealed class SharedFastingContextCompositionIntegrationTests(PostgresData
     }
 
     [RequiresDockerFact]
+    public async Task SharedSave_RehydratesCheckInAndOccurrenceInTheSameOwnedContextAsync() {
+        await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
+        await using ServiceProvider provider = CreateProvider(central);
+        FastingDbContext fasting = provider.GetRequiredService<FastingDbContext>();
+        var user = User.Create("fasting-checkin-owner@example.test", "hash");
+        var started = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);
+        var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.Fast16Eat8, 16, 8, started);
+        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, started, sequenceNumber: 1, targetHours: 16);
+        var checkIn = FastingCheckIn.Create(occurrence.Id, user.Id, hungerLevel: 3, energyLevel: 4, moodLevel: 5,
+            symptoms: null, notes: "Fixture check-in", started.AddHours(1));
+        central.Users.Add(user);
+        fasting.AddRange(plan, occurrence, checkIn);
+
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        fasting.ChangeTracker.Clear();
+        FastingOccurrence loadedOccurrence = await fasting.Set<FastingOccurrence>().SingleAsync(item => item.Id == occurrence.Id);
+        FastingCheckIn loadedCheckIn = await fasting.Set<FastingCheckIn>().Include(item => item.Occurrence)
+            .SingleAsync(item => item.Id == checkIn.Id);
+
+        Assert.Multiple(
+            () => Assert.Same(loadedOccurrence, loadedCheckIn.Occurrence),
+            () => Assert.Equal(occurrence.Id, loadedCheckIn.OccurrenceId),
+            () => Assert.Equal(user.Id, loadedCheckIn.UserId),
+            () => Assert.Equal(plan.Id, loadedOccurrence.PlanId),
+            () => Assert.Equal(user.Id, loadedOccurrence.UserId),
+            () => Assert.Equal(new DateTime(2026, 10, 21, 13, 0, 0, DateTimeKind.Utc), loadedCheckIn.CheckedInAtUtc),
+            () => Assert.Equal(DateTimeKind.Utc, loadedCheckIn.CheckedInAtUtc.Kind),
+            () => Assert.Empty(central.ChangeTracker.Entries<FastingOccurrence>()),
+            () => Assert.Empty(central.ChangeTracker.Entries<FastingCheckIn>()));
+    }
+
+    [RequiresDockerFact]
     public async Task InvalidOwnerRollsBackCentralUserAsync() {
         await using FoodDiaryDbContext central = await databaseFixture.CreateDbContextAsync();
         await using ServiceProvider provider = CreateProvider(central);

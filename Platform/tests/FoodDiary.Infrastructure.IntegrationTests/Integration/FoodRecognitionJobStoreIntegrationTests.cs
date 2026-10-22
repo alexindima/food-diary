@@ -3,6 +3,7 @@ using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
+using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -16,6 +17,76 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerTheory]
+    [InlineData("Succeeded", true, null, null)]
+    [InlineData("Failed", false, "Ai.RecognitionInterrupted", null)]
+    [InlineData("Succeeded", false, null, "Ai.InvalidResponse")]
+    public async Task SavedCheckpointAndErrorFields_RoundTripThroughAFreshStoreAsync(
+        string status, bool hasNutrition, string? errorCode, string? nutritionErrorCode) {
+        (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
+        var store = new FoodRecognitionJobStore(options, TimeProvider.System);
+        Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+        var created = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);
+        DateTime updated = created.AddMinutes(3);
+        const string visionJson = """
+            {"items":[{"nameEn":"Apple","nameLocal":null,"amount":125.5,"unit":"g","confidence":0.875}],"notes":"saved vision"}
+            """;
+        const string nutritionJson = """
+            {"calories":66.375,"protein":0.375,"fat":0.25,"carbs":17.625,"fiber":3.125,"alcohol":0,
+             "items":[{"name":"Apple","amount":125.5,"unit":"g","calories":66.375,"protein":0.375,"fat":0.25,"carbs":17.625,"fiber":3.125,"alcohol":0}],
+             "notes":"saved nutrition"}
+            """;
+        await using (var context = new AiDbContext(options)) {
+            FoodRecognitionJob saved = await context.Set<FoodRecognitionJob>().SingleAsync(row => row.Id == job.Id);
+            saved.Status = status;
+            saved.CreatedOnUtc = created;
+            saved.UpdatedOnUtc = updated;
+            saved.VisionJson = visionJson;
+            saved.NutritionJson = hasNutrition ? nutritionJson : null;
+            saved.ErrorCode = errorCode;
+            saved.NutritionErrorCode = nutritionErrorCode;
+            await context.SaveChangesAsync();
+        }
+
+        FoodRecognitionJobModel restored = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(
+            new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));
+
+        Assert.Multiple(
+            () => Assert.Equal(job.Id, restored.Id),
+            () => Assert.Equal(job.UserId, restored.UserId),
+            () => Assert.Equal(job.ImageAssetId, restored.ImageAssetId),
+            () => Assert.Equal(status, restored.Status),
+            () => Assert.Equal(created, restored.CreatedOnUtc),
+            () => Assert.Equal(updated, restored.UpdatedOnUtc),
+            () => Assert.Equal(DateTimeKind.Utc, restored.UpdatedOnUtc.Kind),
+            () => Assert.Equal(errorCode, restored.ErrorCode),
+            () => Assert.Equal(nutritionErrorCode, restored.NutritionErrorCode));
+        FoodVisionModel vision = Assert.IsType<FoodVisionModel>(restored.Vision);
+        FoodVisionItemModel item = Assert.Single(vision.Items);
+        Assert.Multiple(
+            () => Assert.Equal("saved vision", vision.Notes),
+            () => Assert.Equal("Apple", item.NameEn),
+            () => Assert.Null(item.NameLocal),
+            () => Assert.Equal(125.5m, item.Amount),
+            () => Assert.Equal("g", item.Unit),
+            () => Assert.Equal(0.875m, item.Confidence));
+        if (hasNutrition) {
+            FoodNutritionModel nutrition = Assert.IsType<FoodNutritionModel>(restored.Nutrition);
+            FoodNutritionItemModel nutritionItem = Assert.Single(nutrition.Items);
+            Assert.Multiple(
+                () => Assert.Equal("saved nutrition", nutrition.Notes),
+                () => Assert.Equal(66.375m, nutrition.Calories),
+                () => Assert.Equal(0.375m, nutrition.Protein),
+                () => Assert.Equal(0.25m, nutrition.Fat),
+                () => Assert.Equal(17.625m, nutrition.Carbs),
+                () => Assert.Equal(3.125m, nutrition.Fiber),
+                () => Assert.Equal(0m, nutrition.Alcohol),
+                () => Assert.Equal(new FoodNutritionItemModel("Apple", 125.5m, "g", 66.375m, 0.375m, 0.25m, 17.625m, 3.125m, 0m), nutritionItem));
+        } else {
+            Assert.Null(restored.Nutrition);
+        }
+    }
+
     [RequiresDockerFact]
     public async Task ProductPhotos_RoundTripProtectCleanupAndParticipateInIdempotency() {
         (DbContextOptions<AiDbContext> options, FoodRecognitionJobModel job) = await CreateDatabaseAsync();
@@ -29,6 +100,10 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         var store = new FoodRecognitionJobStore(options, TimeProvider.System);
         Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
         Assert.True((await store.CreateAsync(job, CancellationToken.None)).IsSuccess);
+        FoodRecognitionJobImage persistedLabel = await context.Set<FoodRecognitionJobImage>().AsNoTracking()
+            .SingleAsync(image => image.ImageAssetId == labelPhoto.Id);
+        Assert.Equal(job.Id, persistedLabel.JobId);
+        Assert.Equal(labelPhoto.Id, persistedLabel.ImageAssetId);
         Assert.Equal("Ai.RecognitionConflict", (await store.CreateAsync(job with { AdditionalImages = [] }, CancellationToken.None)).Error.Code);
         Assert.Equal("Ai.RecognitionConflict", (await store.CreateAsync(job with { IsProductLabel = false }, CancellationToken.None)).Error.Code);
         FoodRecognitionJobModel loaded = Assert.IsType<FoodRecognitionJobModel>(await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));

@@ -125,5 +125,10 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     [StructLayout(LayoutKind.Auto)]
-    private readonly record struct CollageSlot(int X, int Y, int Width, int Height);
+    private readonly record struct CollageSlot(int X, int Y, int Width, int Height) {
+        public readonly int X = X;
+        public readonly int Y = Y;
+        public readonly int Width = Width;
+        public readonly int Height = Height;
+    }
 }

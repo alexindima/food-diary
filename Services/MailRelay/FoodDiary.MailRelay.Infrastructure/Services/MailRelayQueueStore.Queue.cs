@@ -419,15 +419,17 @@ public sealed partial class MailRelayQueueStore {
 
     private async Task<bool> ExecuteClaimCommandAsync(string sql, QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
         NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        bool updated;
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("attemptCount", attemptCount);
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
-                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
+                updated = await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
             }
         }
+        return updated;
     }
 
 }

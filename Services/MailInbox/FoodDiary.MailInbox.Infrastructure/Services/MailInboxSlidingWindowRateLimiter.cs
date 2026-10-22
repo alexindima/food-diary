@@ -252,7 +252,10 @@ public sealed class MailInboxSlidingWindowRateLimiter(
     }
 
     [StructLayout(LayoutKind.Auto)]
-    private readonly record struct SlidingWindowEntry(long TimestampTicks, long Permits);
+    private readonly record struct SlidingWindowEntry(long TimestampTicks, long Permits) {
+        public readonly long TimestampTicks = TimestampTicks;
+        public readonly long Permits = Permits;
+    }
 
     private sealed record CounterExpiration(string Key, long ExpiresAtTicks);
 }

@@ -13,7 +13,7 @@ internal sealed class RecipeYouTubeHttpHandler : DelegatingHandler {
                 }
                 using (response) {
                     if (response.Headers.Location is null || hop == 3) {
-                        throw new HttpRequestException("YouTube source redirect limit exceeded.");
+                        break;
                     }
                     Uri target = new(current.RequestUri!, response.Headers.Location);
                     bool keepBody = (int)response.StatusCode is 307 or 308;

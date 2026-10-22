@@ -14,6 +14,40 @@ public sealed class MailRelayMessageProcessorTests {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task FailedOrTimedOutRenewal_CancelsDeliveryWithoutAcknowledgingOrRetryingAStaleAttempt(bool renewalTimeout) {
+        const string privateContent = "renewal-private-fixture-content";
+        var store = new RecordingQueueStore {
+            ClaimRenewalInterval = TimeSpan.FromMilliseconds(100),
+            RenewalFailure = renewalTimeout ? null : new IOException(privateContent),
+            BlockRenewal = renewalTimeout,
+        };
+        var transport = new RecordingTransport {
+            DuringSendAsync = token => Task.Delay(Timeout.InfiniteTimeSpan, token),
+        };
+        var logger = new RecordingLogger();
+        using var caller = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        MailRelayProcessResult result = await CreateProcessor(store, transport, logger).ProcessAsync(CreateMessage(), caller.Token)
+            .WaitAsync(TimeSpan.FromSeconds(15));
+
+        Assert.Multiple(
+            () => Assert.False(result.Succeeded),
+            () => Assert.False(result.IsTerminalFailure),
+            () => Assert.False(caller.IsCancellationRequested),
+            () => Assert.True(transport.SendCalled),
+            () => Assert.True(store.RenewalObserved.Task.IsCompletedSuccessfully),
+            () => Assert.Null(store.Status),
+            () => Assert.Null(store.FailureDecision));
+        string warning = Assert.Single(logger.Messages);
+        Assert.Contains(renewalTimeout ? "TaskCanceledException" : "IOException", warning, StringComparison.Ordinal);
+        Assert.DoesNotContain(privateContent, warning, StringComparison.Ordinal);
+        Assert.DoesNotContain("user@example.com", warning, StringComparison.OrdinalIgnoreCase);
+        Assert.All(logger.Exceptions, Assert.Null);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task ActiveSmtpDelivery_RenewsItsClaimAndStopsWhenOwnershipIsLost(bool loseClaim) {
         var store = new RecordingQueueStore {
             ClaimRenewalInterval = TimeSpan.FromMilliseconds(20),
@@ -200,6 +234,8 @@ public sealed class MailRelayMessageProcessorTests {
     private sealed class RecordingQueueStore : IMailRelayQueueStore {
         private int _renewals;
         public bool LoseOnRenewal { get; init; }
+        public Exception? RenewalFailure { get; init; }
+        public bool BlockRenewal { get; init; }
         public TimeSpan ClaimRenewalInterval { get; init; } = TimeSpan.FromSeconds(30);
         public TaskCompletionSource RenewalObserved { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public IReadOnlyList<string> SuppressedRecipients { get; init; } = [];
@@ -238,8 +274,15 @@ public sealed class MailRelayMessageProcessorTests {
             int count = Interlocked.Increment(ref _renewals);
             if (count > 1) {
                 RenewalObserved.TrySetResult();
+                if (RenewalFailure is not null) { return Task.FromException<bool>(RenewalFailure); }
+                if (BlockRenewal) { return WaitForRenewalCancellationAsync(cancellationToken); }
             }
             return Task.FromResult(count == 1 || !LoseOnRenewal);
+        }
+
+        private static async Task<bool> WaitForRenewalCancellationAsync(CancellationToken cancellationToken) {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken).ConfigureAwait(false);
+            return true;
         }
 
         public Task MarkSentAsync(QueuedEmailId id, int attemptCount, CancellationToken cancellationToken) {
@@ -297,6 +340,7 @@ public sealed class MailRelayMessageProcessorTests {
         }
     }
 
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingLogger : ILogger<MailRelayMessageProcessor> {
         public List<string> Messages { get; } = [];
         public List<Exception?> Exceptions { get; } = [];

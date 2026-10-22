@@ -21,7 +21,7 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
     public double Confidence { get; private set; }
     public MealAiItemResolution Resolution { get; private set; }
 
-    public MealAiSession Session { get; private set; } = null!;
+    public MealAiSession Session { get; } = null!;
 
     [ExcludeFromCodeCoverage]
     private MealAiItem() { }

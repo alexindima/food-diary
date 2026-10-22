@@ -10,7 +10,7 @@ public sealed class CycleConsent : Entity<CycleConsentId> {
     public DateTime GrantedAtUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
     public bool IsActive => RevokedAtUtc is null;
 
     private CycleConsent() {

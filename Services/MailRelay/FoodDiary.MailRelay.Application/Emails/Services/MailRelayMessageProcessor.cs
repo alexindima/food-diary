@@ -31,7 +31,8 @@ public sealed class MailRelayMessageProcessor(
     private async Task RenewClaimAsync(QueuedEmailMessage message, CancellationTokenSource delivery, CancellationToken stoppingToken) {
         using var timer = new PeriodicTimer(queueStore.ClaimRenewalInterval);
         try {
-            while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false)) {
+            while (true) {
+                await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false);
                 using var renewalTimeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 renewalTimeout.CancelAfter(queueStore.ClaimRenewalInterval);
                 if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, renewalTimeout.Token).ConfigureAwait(false)) {

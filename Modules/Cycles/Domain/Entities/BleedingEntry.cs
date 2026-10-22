@@ -12,7 +12,7 @@ public sealed class BleedingEntry : Entity<BleedingEntryId> {
     public int? PainImpact { get; private set; }
     public string? Notes { get; private set; }
 
-    public CycleProfile CycleProfile { get; private set; } = null!;
+    public CycleProfile CycleProfile { get; } = null!;
 
     private BleedingEntry() {
     }

@@ -76,14 +76,14 @@
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8fe8783142c8915fc38145d8513786506c08610209059b84cfe5838c5dd5568b",
-          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
+          "sha256": "cf95fa1d391ad059512fc7d06d9dd2582b5942b92bc83eeb8e4d08cc07b556a8",
+          "reviewReason": "Reviewed the final ProjectDependencyMatrixTests delta: only the existing Lessons Application test project gains its own narrow Lessons.Contracts reference, matching its existing LessonAdminReadModel use and new default reader calls. Production matrix, ownership, transaction and host boundaries remain unchanged; exact reference-list equality is preserved. Full architecture suite2274passed, complete backend build0warnings0errors. The architecture overview remains accurate."
         }
       ],
-      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
+      "reason": "Reviewed the final ProjectDependencyMatrixTests delta: only the existing Lessons Application test project gains its own narrow Lessons.Contracts reference, matching its existing LessonAdminReadModel use and new default reader calls. Production matrix, ownership, transaction and host boundaries remain unchanged; exact reference-list equality is preserved. Full architecture suite2274passed, complete backend build0warnings0errors. The architecture overview remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
-      "reviewedAtUtc": "2026-10-21T18:40:56.7089811Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-21T22:20:15.5753140Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -243,14 +243,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8fe8783142c8915fc38145d8513786506c08610209059b84cfe5838c5dd5568b",
-          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
+          "sha256": "cf95fa1d391ad059512fc7d06d9dd2582b5942b92bc83eeb8e4d08cc07b556a8",
+          "reviewReason": "Inspected the one intentional same-owner test dependency and its exact allowlist update. All runtime edges and architecture assertions remain intact; no new production project, cycle or policy exception.2274architecture tests and full solution build pass. Workflow instruction to justify and record intentional dependencies remains valid; no deletion or dead-code policy change."
         }
       ],
-      "reason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate.",
+      "reason": "Inspected the one intentional same-owner test dependency and its exact allowlist update. All runtime edges and architecture assertions remain intact; no new production project, cycle or policy exception.2274architecture tests and full solution build pass. Workflow instruction to justify and record intentional dependencies remains valid; no deletion or dead-code policy change.",
       "baseRef": "HEAD",
-      "gitHead": "4bd10b4045af6d78d51c20fa8431eea3d554ae22",
-      "reviewedAtUtc": "2026-10-21T18:40:57.0008024Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-21T22:20:16.2952429Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -324,15 +324,20 @@
           "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
         },
         {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+          "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
+          "reviewReason": "Reviewed the current SqliteFlowScopeReader diff and its complete521-case MCP ordinary/profile owner results plus both current context-search/retrieval smoke groups. SQL text, seed12/depth2/node16/row40/link80 bounds, read-only non-pooled transaction,2-second SQL timeouts, exact fingerprint and explicit unavailable/truncation semantics are unchanged. The same results are assigned before disposal and returned after all five configured async disposals. Node remains the sole projection writer; this page makes no claim about async-disposal syntax, so its flow guidance remains accurate."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
           "sha256": "2671d148ca748550c399985eb6eece0d70de83fabf3d6c01c256c6e3a38e70e0",
           "reviewReason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged."
         }
       ],
-      "reason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged.",
+      "reason": "Reviewed the current SqliteFlowScopeReader diff and its complete521-case MCP ordinary/profile owner results plus both current context-search/retrieval smoke groups. SQL text, seed12/depth2/node16/row40/link80 bounds, read-only non-pooled transaction,2-second SQL timeouts, exact fingerprint and explicit unavailable/truncation semantics are unchanged. The same results are assigned before disposal and returned after all five configured async disposals. Node remains the sole projection writer; this page makes no claim about async-disposal syntax, so its flow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "19c7bccfcce5afa45c609e173829836eca2c065e",
-      "reviewedAtUtc": "2026-10-21T12:43:02.4269634Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-22T05:50:41.7635730Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -571,11 +576,17 @@
       "pageId": "workflow-domain-data-review",
       "pagePath": ".llm-wiki/workflows/domain-data-review.md",
       "pageSha256": "3e6c8653055b940700866104a57be1c900a5ae74cd666d7eb0eda5d0109942fd",
-      "sources": [],
-      "reason": "Read the domain-data workflow. Generated inventory refresh does not change aggregate ownership, EF review procedure or query commands. WebMCP delegates to the existing editor and catalog without schema or domain changes; unrelated pending domain edits are outside this pilot review.",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "4ef1c241b14ec6d022b8aa3d382dc711861ef581000bebb70c348fd83d66ef96",
+          "reviewReason": "Reviewed the regenerated domain-data index against all39 changed production sources. The19 EF inverse navigation getters retain their backing field names and established field-access mappings; prior real-provider model/schema proofs and57 provider cases preserve seven schemas. Fasting closed variants, recent-item defined guard/empty sentinels, manual nutrition validation/service ordering and rounding, and Billing raw ordinal storage codes retain their contracts. No mapping, nullability, key, index or physical schema changed; the existing constructor/mutation/provider-review workflow remains accurate."
+        }
+      ],
+      "reason": "Reviewed the regenerated domain-data index against all39 changed production sources. The19 EF inverse navigation getters retain their backing field names and established field-access mappings; prior real-provider model/schema proofs and57 provider cases preserve seven schemas. Fasting closed variants, recent-item defined guard/empty sentinels, manual nutrition validation/service ordering and rounding, and Billing raw ordinal storage codes retain their contracts. No mapping, nullability, key, index or physical schema changed; the existing constructor/mutation/provider-review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T20:15:10.0644507Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-22T05:50:42.5729496Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -901,11 +912,17 @@
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
       "pageSha256": "b60f38c1d4bb6323e6d9a1128ef46cbe3f2c097c8abd5f71e062f9d48a25997c",
-      "sources": [],
-      "reason": "Read the privacy workflow against the local WebMCP boundary: authenticated loopback development only, explicit screen fields, no credential output or persisted tool context. Data-lifecycle and candidate-confirmation guidance remains current.",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "d796304a1c16a3dadbf894a08b6bebb0bcd786c832cbb2d475bd7376d13a6a19",
+          "reviewReason": "Reviewed the regenerated sensitive-data index and current provider/mail/MCP diffs. Changes update derived locations/member metadata and remove unused code; they introduce no credential, query, payload, provider-transfer, export, retention or authentication path. Existing bounded HTTP/process diagnostics and type-only MailRelay renewal logging remain. SqliteFlowScopeReader still reads a scoped snapshot without telemetry payload writes. The page correctly treats generated entries as source-review leads and needs no text change."
+        }
+      ],
+      "reason": "Reviewed the regenerated sensitive-data index and current provider/mail/MCP diffs. Changes update derived locations/member metadata and remove unused code; they introduce no credential, query, payload, provider-transfer, export, retention or authentication path. Existing bounded HTTP/process diagnostics and type-only MailRelay renewal logging remain. SqliteFlowScopeReader still reads a scoped snapshot without telemetry payload writes. The page correctly treats generated entries as source-review leads and needs no text change.",
       "baseRef": "HEAD",
-      "gitHead": "fd7b50f6676a645a1ab966214532e76e91d4e55f",
-      "reviewedAtUtc": "2026-10-17T20:15:12.9464152Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-22T05:50:43.3292960Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1060,14 +1077,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "9f83c10efe2824243457fc59c93ae086310fd509c3173e8578a0b5d363cde244",
-          "reviewReason": "Read current runtime-impact workflow. Runtime topology regenerated after source inventory changes; no services, jobs, providers, environment files or production configuration changed. Owned runtime/provider-options evidence distinguishes local declarations from running process readiness and external provider success."
+          "sha256": "b2c63dc1ff60f8b4858833dbce75fd6bea3bd50dc53775a44e7989c85fc15d0a",
+          "reviewReason": "Reviewed refreshed runtime topology against current COMMIT, Node, mail and video code. No host, endpoint, worker registration, schedule or provider was added. Node120-second deadline/output bounds/owned-tree kill, mail renewal cancellation/attempt ownership, media limits/redirect caps and independent15-second PostgreSQL verification remain; unknown outcomes never authorize replay. The actual346 unit and10 real recovery cases pass ordinary/profile with original exception/throw-site preservation. The topology remains an inventory of review leads; its guidance is accurate."
         }
       ],
-      "reason": "Read current runtime-impact workflow. Runtime topology regenerated after source inventory changes; no services, jobs, providers, environment files or production configuration changed. Owned runtime/provider-options evidence distinguishes local declarations from running process readiness and external provider success.",
+      "reason": "Reviewed refreshed runtime topology against current COMMIT, Node, mail and video code. No host, endpoint, worker registration, schedule or provider was added. Node120-second deadline/output bounds/owned-tree kill, mail renewal cancellation/attempt ownership, media limits/redirect caps and independent15-second PostgreSQL verification remain; unknown outcomes never authorize replay. The actual346 unit and10 real recovery cases pass ordinary/profile with original exception/throw-site preservation. The topology remains an inventory of review leads; its guidance is accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:54:10.6924002Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-22T05:50:45.0455951Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1328,19 +1345,24 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e869b44fb7938d066f1ab89d70510640373071f5b6c763981e59387d66615326",
-          "reviewReason": "Reviewed the exact repository-catalog delta: one explicit Microsoft.EntityFrameworkCore.InMemory dependency in the Users integration-test project. Production query/index/cache code and all query-context claims are unchanged. Existing PostgreSQL tests remain, the owner-context bypass tests pass, and both affected retrieval smoke groups (context-search-evals and context-retrieval) passed with frozen corpora and thresholds. No page wording change is needed."
+          "sha256": "79f4fb585d31aabd87fc86d1425566bbcb6f0511f601e8540a6297904f4cc916",
+          "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9",
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+          "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
+          "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
         }
       ],
-      "reason": "Reviewed the exact repository-catalog delta: one explicit Microsoft.EntityFrameworkCore.InMemory dependency in the Users integration-test project. Production query/index/cache code and all query-context claims are unchanged. Existing PostgreSQL tests remain, the owner-context bypass tests pass, and both affected retrieval smoke groups (context-search-evals and context-retrieval) passed with frozen corpora and thresholds. No page wording change is needed.",
+      "reason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance.",
       "baseRef": "HEAD",
-      "gitHead": "6901a7292e32057ea3a5cc6c7885b8e1837ff0f6",
-      "reviewedAtUtc": "2026-10-21T19:58:55.1973732Z"
+      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
+      "reviewedAtUtc": "2026-10-22T05:50:44.2139215Z"
     },
     {
       "pageId": "workflow.review-diff",
