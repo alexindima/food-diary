@@ -49,7 +49,12 @@ $testModelOutcomeRegistryPath = Join-Path $testKnowledgeRoot 'model-routing-outc
     [Text.UTF8Encoding]::new($false))
 $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH = $testModelOutcomeRegistryPath
 foreach ($registryName in @('learning-promotions.json', 'learning-experiments.json', 'eval-promotions.json', 'learning-health.json')) {
-    Copy-Item -LiteralPath (Join-Path $wikiRoot "knowledge/$registryName") -Destination (Join-Path $testKnowledgeRoot $registryName)
+    # Synthetic lifecycle assertions require only their own task observations.
+    # Canonical learning history can change candidate ordering and eligibility.
+    [IO.File]::WriteAllText(
+        (Join-Path $testKnowledgeRoot $registryName),
+        "{`n  `"schemaVersion`": 1,`n  `"events`": []`n}`n",
+        [Text.UTF8Encoding]::new($false))
 }
 [IO.File]::WriteAllText(
     $memoryRegistryPath,

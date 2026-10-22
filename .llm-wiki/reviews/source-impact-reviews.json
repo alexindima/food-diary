@@ -723,53 +723,18 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "68747a1fd21d73998b55172d7c0b5e711b8bc12862555a50ff298adda147c31c",
+      "pageSha256": "80606c1acf5c740884b97ae1c1beadab9fc1430477a6b08c8d4baa5d9a2df2e8",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
-          "reviewReason": "The PWA shell-header regression runs independently before compiler setup; Wiki index selection, staged generators and verification modes still match this guide."
-        },
-        {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "5b644ec5f47580b650f877ccf50e0687696d27c210d3120f62d7bf6ed5688fed",
-          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "57a92e706c7b2f0c39e3ac1af73f1b8c544307fb2b7f8a2acb5a952daa93cabe",
-          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
-          "sha256": "d5a49a7f77b4966048de059af55d13f94341f5e81742a30b33ceb4db2c98793f",
-          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
-          "sha256": "94eb50b5d2b5cb4c457657d80871bc6c739a7398bbddbfc3d514619ba69745d6",
-          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "be641090f54a934162033b06b4ed3273650a15c2917b74b4445cb1fe404bc46f",
-          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
-        },
-        {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "f5e1d1286560e4b67b70967150f5faa91a84a335b8b2746b8a3c2a1c01bbf48d",
-          "reviewReason": "Reviewed the complete mixed CI repair explicitly, including Wiki implementation and audit assertion inventory, not only its generated provenance. Linux governed-delivery and full Workspace audit pass; Windows desktop/mobile accessibility tests pass with contract-checked history mocks."
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
-          "reviewReason": "Reviewed optional observed-worker JSON capture and facade forwarding; existing stage fingerprints, generation checks, isolation and source-impact gates remain required."
+          "sha256": "50d2e035692e6f3f6ca70895d5f66d6d37309845020bdd3fd82dc0885121a502",
+          "reviewReason": "Reviewed Test-LlmWikiTools.ps1 fixture initialization: four synthetic lifecycle registries now start empty under the existing owned test knowledge root; canonical history, production promotion rules and all lifecycle assertions remain unchanged. Documented the isolation contract in index-pipeline.md."
         }
       ],
-      "reason": "The PWA shell-header regression runs independently before compiler setup; Wiki index selection, staged generators and verification modes still match this guide.",
+      "reason": "Reviewed Test-LlmWikiTools.ps1 fixture initialization: four synthetic lifecycle registries now start empty under the existing owned test knowledge root; canonical history, production promotion rules and all lifecycle assertions remain unchanged. Documented the isolation contract in index-pipeline.md.",
       "baseRef": "HEAD",
-      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
-      "reviewedAtUtc": "2026-10-22T11:50:48.8946170Z"
+      "gitHead": "ffeadd91326bafdb3dc3f4e154b918a1b73edc8f",
+      "reviewedAtUtc": "2026-10-22T13:09:28.4623049Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

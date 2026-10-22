@@ -227,6 +227,10 @@ input validation before they can satisfy a command.
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
 
+The monolithic audit starts its synthetic learning lifecycle with empty promotion,
+experiment, eval and health registries. Existing canonical observations must not
+change fixture candidate ordering, task counts or approval eligibility.
+
 Smoke logs and source-inventory fixture sandboxes stay under the run's repository artifacts. Independent native Git repositories use `New-LlmWikiSmokeFixtureDirectory -IndependentRepository` in the short, owned run/group temporary directory, selected by `LLM_WIKI_SMOKE_EXTERNAL_SANDBOX`. Their paths do not inherit the checkout's depth; the architecture-cache regression exercises this with a deliberately deep logical checkout and real Git cache checks. Standalone independent fixtures use a PID scope under the system temporary parent. Native temporary files, `TEMP`, `TMP`, and `TMPDIR` share the runner's group scope. Cleanup verifies the owned parent and exact fixture/run name before removing those directories.
 
 Changes to the native fixture helper or architecture-cache regression select the
