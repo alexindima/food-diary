@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 12
   },
@@ -5259,40 +5259,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.html",
       "inputs": [],
       "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "RecipeRecognitionComponent",
-      "selector": "fd-recipe-recognition",
-      "feature": "recipes",
-      "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.html",
-      "inputs": [
-        {
-          "name": "sourceUrl",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "text",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "draftRecognized",
-          "type": "RecipeImportResult"
-        },
-        {
-          "name": "sourceUrlSuggested",
-          "type": "string"
-        },
-        {
-          "name": "busyChanged",
-          "type": "boolean"
-        }
-      ],
       "specPath": null
     },
     {

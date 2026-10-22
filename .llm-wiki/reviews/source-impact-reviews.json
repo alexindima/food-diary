@@ -238,8 +238,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "73e14c3730754584cfef3cdf54dbf19f4f2712a36d4a803e468bf8b1daf49b1b",
-          "reviewReason": "Reviewed test-only calendar guards, mixed nutrient provenance, metadata/configuration boundaries and offline recipe HTTP/video flows. The only additional graph edge is Ai.Presentation.Tests to the already-consumed Presentation.Api kernel, with an exact test allowlist entry. The real idempotency filter admits the fixture request before the controller; production references, authorization, public API, persistence and calculation/time rules remain unchanged. Owner suites and full architecture pass; current architecture/navigation guidance remains accurate."
+          "sha256": "d92e10d085e0c4fea17c5bb83ed85074d16f26ff32ee0ee6576ef2a235a2cea4",
+          "reviewReason": "Read the workflow and checked the generated diff against the final component and rendered spec. The direct-spec gap count drops from 131 to 130 because RecipeRecognitionComponent now has executable tests; dependency edges, routed-component classification and removal guidance are unchanged."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -247,10 +247,10 @@
           "reviewReason": "Inspected the one intentional same-owner test dependency and its exact allowlist update. All runtime edges and architecture assertions remain intact; no new production project, cycle or policy exception.2274architecture tests and full solution build pass. Workflow instruction to justify and record intentional dependencies remains valid; no deletion or dead-code policy change."
         }
       ],
-      "reason": "Inspected the one intentional same-owner test dependency and its exact allowlist update. All runtime edges and architecture assertions remain intact; no new production project, cycle or policy exception.2274architecture tests and full solution build pass. Workflow instruction to justify and record intentional dependencies remains valid; no deletion or dead-code policy change.",
+      "reason": "Read the workflow and checked the generated diff against the final component and rendered spec. The direct-spec gap count drops from 131 to 130 because RecipeRecognitionComponent now has executable tests; dependency edges, routed-component classification and removal guidance are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-21T22:20:16.2952429Z"
+      "gitHead": "a09333d00e8cb10a18387fd10c096c51aee64c25",
+      "reviewedAtUtc": "2026-10-22T19:10:52.1337667Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

@@ -14690,11 +14690,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.ts",
-      "nonBlankLines": 74,
-      "decisionPoints": 7,
+      "nonBlankLines": 109,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.98
+      "structuralRiskScore": 33.68
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.ts",

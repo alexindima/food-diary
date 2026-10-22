@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 502,
-    "componentsWithoutDirectSpecs": 131,
+    "componentsWithoutDirectSpecs": 130,
     "inputs": 1618,
     "outputs": 555,
     "apiCalls": 317,
@@ -11548,7 +11548,7 @@
           "type": "boolean"
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.spec.ts"
     },
     {
       "class": "RecipeSelectDialogComponent",

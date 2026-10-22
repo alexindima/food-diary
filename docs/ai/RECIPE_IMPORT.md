@@ -16,8 +16,14 @@ different post. Instagram tracking parameters and VK away wrappers are handled.
 No additional scraping service, subscription, cookies or Instagram login is used.
 Public Instagram pages can still reject server requests; in that case the user
 is asked to paste the caption. There is no guarantee that every public Reel is
-readable. Enable **Recognize speech from video** to use a public video URL or
-upload a saved MP4/WebM file. Text displayed in video frames (OCR) is not read.
+readable. Public YouTube watch, Shorts and youtu.be video links automatically
+select **Recognize speech from video** when no recipe text is pasted. This selection
+is visible before recognition and makes no provider request until the user chooses
+**Recognize recipe**. Users can turn video speech off for the current URL and paste
+recipe text instead; a new source URL resets that opt-out. Explicitly enabling video
+speech keeps it enabled when captions or the URL change. For other public video
+URLs or a saved MP4/WebM file, enable it manually. Text displayed in video frames
+(OCR) is not read.
 
 ## Video speech
 

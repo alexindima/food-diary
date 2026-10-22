@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2644,
+    "typescriptFiles": 2645,
     "symbols": 851,
     "routes": 108,
     "features": 46,
-    "specs": 772,
+    "specs": 773,
     "localeFiles": 5,
     "roles": {
       "Component": 497,
@@ -1318,6 +1318,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage-lib/recipe-step-form.manager.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-recognition/recipe-recognition.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-step-card/recipe-step-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-steps-list/recipe-steps-list.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/components/public-card/public-card.spec.ts",
