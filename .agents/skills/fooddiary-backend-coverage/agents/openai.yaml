@@ -1,0 +1,3 @@
+interface:
+  display_name: "FoodDiary backend coverage"
+  short_description: "Diagnose and verify FoodDiary backend coverage"
