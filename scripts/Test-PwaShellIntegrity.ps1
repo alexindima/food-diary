@@ -27,6 +27,10 @@ try {
     foreach ($url in $shells.Keys) {
         [IO.File]::WriteAllText((Join-Path $fixture $url.TrimStart('/')), $shells[$url])
     }
+    foreach ($path in @('ru', 'pricing', 'ru/pricing')) {
+        New-Item -ItemType Directory -Path (Join-Path $fixture $path) -Force | Out-Null
+        [IO.File]::WriteAllText((Join-Path $fixture "$path/index.html"), "Public page: $path")
+    }
     [IO.File]::WriteAllText((Join-Path $fixture 'assets/control.css'), 'body { color: black; }')
     $configuration = @"
 events {}
@@ -72,6 +76,26 @@ http {
             } finally { $response.Dispose() }
         }
     }
+    $navigationShells = @{
+        '/' = $shells['/index.html']
+        '/ru' = 'Public page: ru'
+        '/pricing' = 'Public page: pricing'
+        '/ru/pricing' = 'Public page: ru/pricing'
+        '/dashboard' = $shells['/index.csr.html']
+        '/dashboard?date=2026-10-22' = $shells['/index.csr.html']
+        '/meals' = $shells['/index.csr.html']
+        '/products' = $shells['/index.csr.html']
+        '/meals/create' = $shells['/index.csr.html']
+    }
+    foreach ($path in $navigationShells.Keys) {
+        $response = $client.GetAsync("$baseUri$path").GetAwaiter().GetResult()
+        try {
+            $body = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+            if ([int]$response.StatusCode -ne 200 -or $body -cne $navigationShells[$path]) {
+                throw "Navigation served the wrong shell: $path"
+            }
+        } finally { $response.Dispose() }
+    }
     $control = $client.GetAsync("$baseUri/assets/control.css").GetAwaiter().GetResult()
     try {
         if ([int]$control.StatusCode -ne 200 -or ($control.Headers.GetValues('Cache-Control') -join ',') -notmatch 'immutable') {
@@ -83,7 +107,7 @@ http {
     try {
         if ([int]$missing.StatusCode -ne 404) { throw 'Missing versioned shell must return 404 instead of SPA fallback.' }
     } finally { $missing.Dispose() }
-    Write-Host 'PWA shell integrity passed: 4 shell requests, security/cache headers, static control, missing-shell 404.'
+    Write-Host 'PWA shell integrity passed: 4 shell requests, 9 public/workspace navigations, security/cache headers, static control, missing-shell 404.'
 } finally {
     $client.Dispose()
     if ($started) { & docker rm --force $container | Out-Null }

@@ -26,7 +26,7 @@
         "sdk:check": "node scripts/generate-api-sdk.mjs --check",
         "sdk:check:api": "node scripts/generate-api-sdk.mjs --export --check",
         "test:sdk": "node --test scripts/api-sdk-contract.test.mjs scripts/api-sdk-normalization.test.mjs scripts/bot-api-contract.test.mjs scripts/semantic-types.test.mjs scripts/openapi-fixtures.test.mjs scripts/smoke-fixture-contract.test.mjs",
-        "test:performance-build": "node --test scripts/finalize-service-worker.test.mjs scripts/lighthouse-public.test.mjs",
+        "test:performance-build": "node --test scripts/finalize-service-worker.test.mjs scripts/lighthouse-public.test.mjs scripts/startup-document.test.mjs",
         "build": "node scripts/generate-legacy-i18n.mjs && ng build --stats-json && node scripts/finalize-service-worker.mjs",
         "build:prod": "node scripts/generate-legacy-i18n.mjs && ng build --configuration=production --stats-json && node scripts/finalize-service-worker.mjs",
         "build:audit": "node scripts/generate-legacy-i18n.mjs && ng build --configuration=audit --stats-json && node scripts/finalize-service-worker.mjs",

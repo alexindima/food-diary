@@ -648,14 +648,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "87d942b79787bf709d60d3688a7bde377ff9a1dab6f55f6b558c3195cf309449",
-          "reviewReason": "Reviewed package.json: only a scoped Angular build Vite security override changed. Browser QA commands and rendered UI evidence workflow remain accurate; no UI content, layout or interaction contract changed."
+          "sha256": "ae41f2e1007b10e7828ed1b9b3d764fb6ba29c07d2c4718760076d7f51da934d",
+          "reviewReason": "Reviewed package.json: only test:performance-build adds startup-document.test.mjs. Existing visual evidence tooling, capture commands and acceptance requirements remain unchanged."
         }
       ],
-      "reason": "Reviewed package.json: only a scoped Angular build Vite security override changed. Browser QA commands and rendered UI evidence workflow remain accurate; no UI content, layout or interaction contract changed.",
+      "reason": "Reviewed package.json: only test:performance-build adds startup-document.test.mjs. Existing visual evidence tooling, capture commands and acceptance requirements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "87b174f0b33d233f0a5488dd1f4e85c88627aa4c",
-      "reviewedAtUtc": "2026-10-22T11:04:25.1523908Z"
+      "gitHead": "a09333d00e8cb10a18387fd10c096c51aee64c25",
+      "reviewedAtUtc": "2026-10-22T14:13:53.3835004Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

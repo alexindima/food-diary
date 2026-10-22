@@ -1,4 +1,6 @@
-﻿.ai-input-bar {
+@use 'variables' as variables;
+
+.ai-input-bar {
     gap: var(--fd-space-actions-gap);
     padding: var(--fd-space-surface-padding);
     border: var(--fd-border-default);
@@ -143,4 +145,25 @@
 .ai-input-bar__result-panel {
     display: block;
     margin-top: calc(0px - var(--fd-border-width));
+}
+
+@media #{variables.$media-tablet} {
+    .ai-input-bar__actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+    }
+
+    .ai-input-bar__history {
+        grid-column: 2;
+        justify-self: end;
+        --fd-button-width: var(--fd-size-control-md);
+        --fd-button-min-width: var(--fd-size-control-md);
+        --fd-button-height: var(--fd-size-control-md);
+        --fd-button-padding-x: 0;
+    }
+
+    .ai-input-bar__history-label {
+        display: none;
+    }
 }

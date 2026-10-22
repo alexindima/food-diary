@@ -365,6 +365,7 @@ describe('AiInputBarComponent history access', () => {
         const historyButton = buttons.find(button => button.textContent.includes('AI_RECOGNITION.SHOW_RECENT'));
 
         expect(historyButton).toBeDefined();
+        expect(historyButton?.getAttribute('aria-label')).toBe('AI_RECOGNITION.SHOW_RECENT');
         historyButton?.click();
 
         expect(dialogService.open).toHaveBeenCalledOnce();

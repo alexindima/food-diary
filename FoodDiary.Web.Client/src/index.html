@@ -11,6 +11,10 @@
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
+            html.fd-session-route-pending {
+                background: var(--fd-bg-body);
+            }
+
             html.fd-session-route-pending fd-root {
                 visibility: hidden;
                 opacity: 0;
@@ -27,12 +31,6 @@
                     return;
                 }
 
-                const hasSessionDependentShell =
-                    location.pathname === '/' || location.pathname === '/explore' || location.pathname.startsWith('/explore/');
-                if (!hasSessionDependentShell) {
-                    return;
-                }
-
                 try {
                     const hasStoredSession =
                         localStorage.getItem('authToken') !== null ||
@@ -41,7 +39,23 @@
                         localStorage.getItem('refreshToken') !== null;
 
                     if (hasStoredSession) {
-                        document.documentElement.classList.add('fd-session-route-pending');
+                        const root = document.documentElement;
+                        root.classList.add('fd-session-route-pending');
+
+                        // Run before the prerendered body can paint, including on workspace deep links.
+                        const theme = localStorage.getItem('fd_theme');
+                        if (['ocean', 'leaf', 'dark'].includes(theme)) {
+                            root.setAttribute('data-theme', theme);
+                            root.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
+                        }
+                        const uiStyle = localStorage.getItem('fd_ui_style');
+                        if (['classic', 'modern'].includes(uiStyle)) {
+                            root.setAttribute('data-ui-style', uiStyle);
+                        }
+                        const surfaceStyle = localStorage.getItem('fd_surface_style');
+                        if (['normal', 'matte', 'glass'].includes(surfaceStyle)) {
+                            root.setAttribute('data-surface-style', surfaceStyle);
+                        }
                     }
                 } catch {
                     // Storage can be unavailable in hardened browser contexts; the route guard remains authoritative.

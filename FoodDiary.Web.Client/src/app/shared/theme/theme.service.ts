@@ -45,6 +45,11 @@ export class ThemeService {
     }
 
     public initializeTheme(): void {
+        if (this.document.documentElement.classList.contains('fd-session-route-pending')) {
+            this.applyStoredTheme();
+            return;
+        }
+
         this.applyThemeForRoute(this.browserWindow.getPathname() ?? '/');
     }
 

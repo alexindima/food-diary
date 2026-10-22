@@ -83,11 +83,13 @@
         icon="history"
         variant="secondary"
         fill="text"
+        [ariaLabel]="'AI_RECOGNITION.SHOW_RECENT' | translate"
+        [fdUiHint]="'AI_RECOGNITION.SHOW_RECENT' | translate"
         [disabled]="isDisabled()"
         [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
         (click)="openRecognitionHistory()"
     >
-        {{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}
+        <span class="ai-input-bar__history-label">{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</span>
     </fd-ui-button>
 </div>
 

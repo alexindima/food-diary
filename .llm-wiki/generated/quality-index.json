@@ -20266,11 +20266,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/theme/theme.service.ts",
-      "nonBlankLines": 153,
-      "decisionPoints": 23,
+      "nonBlankLines": 157,
+      "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.56
+      "structuralRiskScore": 39.14
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/tours/localized-tour-definition.service.ts",

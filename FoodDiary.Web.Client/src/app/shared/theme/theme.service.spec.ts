@@ -21,10 +21,30 @@ beforeEach(() => {
     documentRef.documentElement.removeAttribute('data-ui-style');
     documentRef.documentElement.removeAttribute('data-surface-style');
     documentRef.documentElement.style.colorScheme = '';
+    documentRef.documentElement.classList.remove('fd-session-route-pending');
     ensureMetaThemeColor();
 });
 
 describe('ThemeService initialization', () => {
+    it('keeps the saved dark theme until the initial session route resolves', () => {
+        localStorage.setItem('fd_theme', 'dark');
+        localStorage.setItem('fd_ui_style', 'modern');
+        localStorage.setItem('fd_surface_style', 'matte');
+        documentRef.documentElement.classList.add('fd-session-route-pending');
+
+        service.initializeTheme();
+
+        expect(service.theme()).toBe('dark');
+        expect(service.uiStyle()).toBe('modern');
+        expect(service.surfaceStyle()).toBe('matte');
+        expect(documentRef.documentElement.style.colorScheme).toBe('dark');
+
+        documentRef.documentElement.classList.remove('fd-session-route-pending');
+        service.applyThemeForRoute('/');
+        expect(service.theme()).toBe('ocean');
+        expect(localStorage.getItem('fd_theme')).toBe('dark');
+    });
+
     it('should initialize with the default theme', () => {
         service.initializeTheme();
 
