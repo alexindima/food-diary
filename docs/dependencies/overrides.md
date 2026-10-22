@@ -1,5 +1,37 @@
 # Temporary dependency constraints
 
+## Angular build Vite override
+
+Reviewed on 2026-10-22. `@angular/build 22.2.3`, still the latest release,
+requires exactly `vite 8.3.0`. The web workspace's scoped `@angular/build`
+override uses `$vite` to share its direct `vite ^8.3.4` dependency, locked to
+8.3.4, instead of retaining a vulnerable nested installation. This stays within
+Vite 8.3 and does not override unrelated consumers. TechRadar separately raises
+its direct Vite minimum to `^8.2.4`, locked to the patched 8.2.4 release.
+
+The affected Vite versions bundle vulnerable development-server code:
+
+- Editor launch on Windows and WSL:
+  [existence-check bypass](https://github.com/advisories/GHSA-587h-7wmj-h5pm),
+  [Windows percent expansion](https://github.com/advisories/GHSA-698v-4r3x-3vcv),
+  and [editor argument injection](https://github.com/advisories/GHSA-r825-w8mm-5pxw).
+- [Custom HTML transform script injection](https://github.com/advisories/GHSA-9jrq-w75r-8gcw),
+  [non-Windows filesystem allow bypass](https://github.com/advisories/GHSA-rq7h-c2jc-7f22),
+  and [denied-file WASM error disclosure](https://github.com/advisories/GHSA-vfpm-58rq-9qcg).
+
+Angular's dev server loads Vite through `@angular/build`; a patched root Vite
+alone did not repair that nested copy. TechRadar's development command exposes
+Vite with `--host 0.0.0.0`. These advisories concern development tooling;
+installation does not by itself prove every attack prerequisite or an affected
+production runtime.
+
+Remove the scoped override after updating Angular build to a compatible release
+whose dependency declaration resolves patched Vite without it. Check a fresh
+resolution and every nested copy, both npm audits, harmless advisory probes,
+Angular development serving and tests, client/admin and Storybook builds, and
+the TechRadar build. Keep the web workspace's direct safe Vite minimum while
+other direct Vite consumers still require it.
+
 ## npm braces depth mitigation
 
 Reviewed on 2026-10-17. The web workspace resolves `braces 3.0.3` through

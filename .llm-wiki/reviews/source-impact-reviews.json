@@ -648,14 +648,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "0b022d1be0fda58ecd1cb01689874a448befbd9ff41bdbfb6e6672f976b9dcd8",
-          "reviewReason": "Final Dependabot merge changes dependency versions only; verified QA script definitions and browser evidence rules still match the current frontend and its scoped guides."
+          "sha256": "87d942b79787bf709d60d3688a7bde377ff9a1dab6f55f6b558c3195cf309449",
+          "reviewReason": "Reviewed package.json: only a scoped Angular build Vite security override changed. Browser QA commands and rendered UI evidence workflow remain accurate; no UI content, layout or interaction contract changed."
         }
       ],
-      "reason": "Reviewed the final browser QA skill and WebMCP reference against the local adapters and current browser API. The workflow page still correctly delegates browser selection, session ownership and verification details to that skill; Chrome remains the default, explicit browser requests are preserved, and WebMCP preparation does not replace UI evidence.",
+      "reason": "Reviewed package.json: only a scoped Angular build Vite security override changed. Browser QA commands and rendered UI evidence workflow remain accurate; no UI content, layout or interaction contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "70ea680eaf717b33af13bb7bf294e6c4baaf3dff",
-      "reviewedAtUtc": "2026-10-21T02:35:09.2701663Z"
+      "gitHead": "87b174f0b33d233f0a5488dd1f4e85c88627aa4c",
+      "reviewedAtUtc": "2026-10-22T11:04:25.1523908Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

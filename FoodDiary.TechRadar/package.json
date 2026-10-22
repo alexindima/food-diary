@@ -13,7 +13,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "d3": "^7.9.0",
-    "vite": "latest",
+    "vite": "^8.2.4",
     "react": "latest",
     "react-dom": "latest"
   },
