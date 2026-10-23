@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 using FoodDiary.Telegram.Bot.Images;
@@ -203,7 +204,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         if (string.Equals(checkpoint.Stage, "statistics-ready", StringComparison.Ordinal)) {
             message = BotStatisticsFormatter.Format(checkpoint.Statistics ?? throw new InvalidDataException("Missing statistics checkpoint."), russian);
         } else if (string.Equals(checkpoint.Stage, "water-saved", StringComparison.Ordinal)) {
-            message = string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            message = string.Create(CultureInfo.InvariantCulture,
                 $"{(russian ? "Вода добавлена" : "Water added")}: {incoming.AmountMl} {(russian ? "мл" : "ml")}.");
         } else if (string.Equals(checkpoint.Stage, "meal-saved", StringComparison.Ordinal)) {
             BotRecognizedMeal meal = checkpoint.SavedMeal ?? throw new InvalidDataException("Missing saved meal receipt.");

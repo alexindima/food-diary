@@ -1,3 +1,4 @@
+using System.Data;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ public sealed partial class SharedBillingContextIntegrationTests {
         var userId = Guid.NewGuid();
         IAsyncDisposable lease = await checkoutLock.AcquireAsync(userId);
         await using (lease) {
-            Assert.Equal(System.Data.ConnectionState.Closed, context.Database.GetDbConnection().State);
+            Assert.Equal(ConnectionState.Closed, context.Database.GetDbConnection().State);
             await using (IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
                 if (commit) {
                     await transaction.CommitAsync();

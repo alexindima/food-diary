@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Notifications.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Presentation.Extensions;
 using FoodDiary.Modules.Ai.Presentation.Extensions;
@@ -12,7 +13,7 @@ using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public static class ApiApplicationBuilderExtensions {
     extension(WebApplication app) {
         public WebApplication UseApiPipeline() {

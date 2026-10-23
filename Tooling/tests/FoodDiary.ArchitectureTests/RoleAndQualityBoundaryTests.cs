@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -24,9 +26,9 @@ public sealed class RoleAndQualityBoundaryTests {
             ProjectReferenceReader.ReadProjectReferences(
                 "Modules/Products/FoodQuality/FoodDiary.Modules.Products.FoodQuality.csproj"));
 
-        Type[] publicTypes = typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityScore).Assembly.GetExportedTypes();
+        Type[] publicTypes = typeof(FoodQualityScore).Assembly.GetExportedTypes();
         Assert.Equal(
-            [typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityGrade), typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityScore)],
+            [typeof(FoodQualityGrade), typeof(FoodQualityScore)],
             publicTypes.OrderBy(type => type.FullName, StringComparer.Ordinal));
     }
 }

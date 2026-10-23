@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -11,8 +13,8 @@ public sealed class MealsModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.MealType))]
-    [InlineData(typeof(FoodDiary.Modules.Meals.Domain.Contracts.Enums.AiRecognitionSource))]
+    [InlineData(typeof(MealType))]
+    [InlineData(typeof(AiRecognitionSource))]
     public void MealEnums_AreOwnedOnlyByMealsDomainContractsContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts.Enums", enumType.Namespace);

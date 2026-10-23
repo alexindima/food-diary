@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Products.Application.Models;
+using FoodDiary.Results;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Products.Application.Queries.GetPublicProduct;
 using FoodDiary.Modules.Products.Contracts.Common;
@@ -21,7 +23,7 @@ public sealed class PublicProductQueryTests {
         IProductOverviewReadService read = Substitute.For<IProductOverviewReadService>();
         read.GetByIdsWithUsageAsync(Arg.Any<IEnumerable<ProductId>>(), UserId.Empty, includePublic: true, Arg.Any<CancellationToken>())
             .Returns(new Dictionary<ProductId, ProductOverviewReadItem> { [item.Id] = item });
-        FoodDiary.Results.Result<FoodDiary.Modules.Products.Application.Models.PublicProductModel> result = await new GetPublicProductQueryHandler(read).Handle(new GetPublicProductQuery(item.Id), CancellationToken.None);
+        Result<PublicProductModel> result = await new GetPublicProductQueryHandler(read).Handle(new GetPublicProductQuery(item.Id), CancellationToken.None);
         Assert.Equal(expectedSuccess, result.IsSuccess);
         if (result.IsSuccess) {
             Assert.Equal("Apple", result.Value.Name);

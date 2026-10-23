@@ -1,3 +1,4 @@
+using System.Data;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Models;
@@ -302,14 +303,14 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         var secondEntered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         Task<Result> first = recipeRunner.ExecuteAsync(async _ => {
-            Assert.Equal(System.Data.IsolationLevel.Serializable, firstContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
+            Assert.Equal(IsolationLevel.Serializable, firstContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
             firstEntered.SetResult();
             await releaseFirst.Task;
             return Result.Success();
         });
         await firstEntered.Task;
         Task<Result> second = productRunner.ExecuteAsync(_ => {
-            Assert.Equal(System.Data.IsolationLevel.Serializable, secondContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
+            Assert.Equal(IsolationLevel.Serializable, secondContext.Database.CurrentTransaction!.GetDbTransaction().IsolationLevel);
             secondEntered.SetResult();
             return Task.FromResult(Result.Success());
         });

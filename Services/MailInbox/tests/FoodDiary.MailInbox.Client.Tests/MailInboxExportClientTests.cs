@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
@@ -102,7 +103,7 @@ public sealed class MailInboxExportClientTests {
     private static HttpClient CreateHttp(HttpMessageHandler handler) => new(handler) { BaseAddress = new Uri("https://inbox.test") };
 
     private static MailInboxExportClient CreateClient(HttpClient http) => new(http,
-        Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
+        MsOptions.Create(new MailInboxClientOptions {
             MetadataApiKey = "metadata-test-key",
             ContentApiKey = "content-test-key",
         }));

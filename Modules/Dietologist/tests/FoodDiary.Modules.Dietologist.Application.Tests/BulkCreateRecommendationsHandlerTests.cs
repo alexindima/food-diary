@@ -39,7 +39,7 @@ public sealed class BulkCreateRecommendationsHandlerTests {
             invitations,
             CreateUserContext(dietologist));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.BulkRecommendationResultModel> result = await handler.Handle(
+        Result<BulkRecommendationResultModel> result = await handler.Handle(
             new BulkCreateRecommendationsCommand(
                 dietologist.Id.Value,
                 [activeClientId.Value, inactiveClientId.Value],
@@ -92,7 +92,7 @@ public sealed class BulkCreateRecommendationsHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateUserContext(dietologist));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.BulkRecommendationResultModel> result = await handler.Handle(
+        Result<BulkRecommendationResultModel> result = await handler.Handle(
             new BulkCreateRecommendationsCommand(
                 dietologist.Id.Value,
                 [clientId.Value],

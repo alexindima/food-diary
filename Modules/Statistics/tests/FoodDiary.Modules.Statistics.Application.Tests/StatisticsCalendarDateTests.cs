@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
@@ -28,7 +29,7 @@ public sealed class StatisticsCalendarDateTests {
     [Theory]
     [MemberData(nameof(CalendarCases))]
     public async Task Summary_UsesExactCalendarDayForMeasurements_AndLocalDayInstantsForMeals(string zoneId, string dateText) {
-        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
         DateTime from = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(TimeOnly.MinValue), zone);
         DateTime to = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(1).ToDateTime(TimeOnly.MinValue), zone).AddTicks(-1);
@@ -64,8 +65,8 @@ public sealed class StatisticsCalendarDateTests {
     [InlineData("2026-09-22", "2026-09-21")]
     [InlineData("2024-01-01", "2026-01-01")]
     public async Task Summary_RejectsIncompleteInvertedAndExcessiveBodyRanges(string? fromText, string? toText) {
-        DateOnly? from = fromText is null ? null : DateOnly.ParseExact(fromText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-        DateOnly? to = toText is null ? null : DateOnly.ParseExact(toText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        DateOnly? from = fromText is null ? null : DateOnly.ParseExact(fromText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        DateOnly? to = toText is null ? null : DateOnly.ParseExact(toText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var query = new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.Date, DateTime.UtcNow.Date, 1, from, to);
         ISender sender = Substitute.For<ISender>();
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();

@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
@@ -208,7 +209,7 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
             return string.Equals(actual, expected, StringComparison.Ordinal);
         });
 
-    private static ImmutableDictionary<string, string> ReadFingerprints(ImmutableArray<AdditionalText> files, System.Threading.CancellationToken cancellationToken) {
+    private static ImmutableDictionary<string, string> ReadFingerprints(ImmutableArray<AdditionalText> files, CancellationToken cancellationToken) {
         ImmutableDictionary<string, string>.Builder result = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.Ordinal);
         AdditionalText? file = files.FirstOrDefault(candidate => candidate.Path.Replace('\\', '/').EndsWith("/persistence-technical-sources.txt", StringComparison.Ordinal));
         if (file?.GetText(cancellationToken) is not { } text) { return result.ToImmutable(); }

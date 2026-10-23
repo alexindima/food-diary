@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using Stripe.BillingPortal;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using System.Text.Json;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
@@ -27,7 +29,7 @@ public sealed class StripeBillingGateway(
             : options.Value.SecretKey)) {
     }
 
-    public string Provider => global::FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames.Stripe;
+    public string Provider => BillingProviderNames.Stripe;
 
     public async Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
         BillingCheckoutSessionRequestModel request,
@@ -120,7 +122,7 @@ public sealed class StripeBillingGateway(
 
         try {
             var portalSessionService = new BillingPortalSessionService(stripeClient);
-            Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
+            Session portalSession = await portalSessionService.CreateAsync(
                 new BillingPortalSessionCreateOptions {
                     Customer = request.CustomerId,
                     ReturnUrl = _options.PortalReturnUrl,

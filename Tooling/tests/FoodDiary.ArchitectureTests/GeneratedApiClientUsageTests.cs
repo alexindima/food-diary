@@ -1,11 +1,13 @@
+using System.Text.Json;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class GeneratedApiClientUsageTests {
     [Fact]
     public void FrontendGuard_RemainsInLocalAndCiVerification() {
-        using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", "package.json")));
-        System.Text.Json.JsonElement scripts = document.RootElement.GetProperty("scripts");
+        using var document = JsonDocument.Parse(File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", "package.json")));
+        JsonElement scripts = document.RootElement.GetProperty("scripts");
         Assert.Multiple(() => {
             Assert.Contains("check-api-client-usage.test.mjs", scripts.GetProperty("check:api-client-usage").GetString(), StringComparison.Ordinal);
             Assert.Contains("check-api-client-usage.mjs", scripts.GetProperty("check:api-client-usage").GetString(), StringComparison.Ordinal);

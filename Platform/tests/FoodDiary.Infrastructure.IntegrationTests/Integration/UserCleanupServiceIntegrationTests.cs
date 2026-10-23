@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Meals.Domain.Entities;
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -127,7 +130,7 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
         var recordedAt = new DateTime(2026, 7, 26, 8, 0, 0, DateTimeKind.Utc);
-        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(deletedUser.Id, recordedAt);
+        var meal = Meal.Create(deletedUser.Id, recordedAt);
         meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
         meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
         var ownedPlan = MealPlan.CreateForUser(deletedUser.Id, "Owned plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
@@ -344,7 +347,7 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
     [ExcludeFromCodeCoverage]
     private sealed class FailingParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
         public int Order => 150;
-        public Task PurgeAsync(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId, FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId? reassignTarget, CancellationToken cancellationToken) {
+        public Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
             context.Users.Add(User.Create("uncommitted-purge-work@example.com", "hash"));
             throw new InvalidOperationException("Injected owner cleanup failure.");
         }
@@ -356,9 +359,9 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         services.AddPersistenceRuntime(new ConfigurationBuilder().Build());
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(
-            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context,
+        services.AddSingleton<IModuleContextFactory>(context);
+        services.AddSingleton<IModuleTransactionCoordinator>(
+            new EfModuleTransactionCoordinator(context,
                 new EfUnitOfWork(context, new NoEvents(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddUsersPersistence();
         services.AddAdminPersistence();
@@ -386,8 +389,8 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
         Assert.Equal(extra is null ? 15 : 16, participants.Length);
         service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
-            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context),
+            provider.GetRequiredService<IModuleTransactionCoordinator>(),
+            new EfModuleScopeGuard(context),
             provider.GetServices<IUserContentRetentionParticipant>());
         return provider;
     }
@@ -434,7 +437,7 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
             imageAssetId: productAsset.Id);
         var recipe = Recipe.Create(deletedUser.Id, "Toast", servings: 1, imageAssetId: recipeAsset.Id);
         recipe.AddStep(1, "Toast bread", imageAssetId: stepAsset.Id);
-        var meal = FoodDiary.Modules.Meals.Domain.Entities.Meal.Create(
+        var meal = Meal.Create(
             deletedUser.Id,
             new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
             imageAssetId: mealAsset.Id);

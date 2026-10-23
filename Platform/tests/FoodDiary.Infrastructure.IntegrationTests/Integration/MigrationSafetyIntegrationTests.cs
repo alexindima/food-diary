@@ -1,3 +1,5 @@
+using System.Data;
+using System.Security.Cryptography;
 using System.Data.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -183,7 +185,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await using PostgreSqlContainer postgres = new PostgreSqlBuilder("postgres:18-alpine")
             .WithDatabase("fooddiary_baseline")
             .WithUsername("postgres")
-            .WithPassword(Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)))
+            .WithPassword(Convert.ToHexString(RandomNumberGenerator.GetBytes(32)))
             .WithPortBinding(5432, assignRandomHostPort: true)
             .Build();
         await postgres.StartAsync();
@@ -303,7 +305,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     }
 
     private static async Task ExecuteSqlAsync(FoodDiaryDbContext context, string sql) {
-        if (context.Database.GetDbConnection().State != System.Data.ConnectionState.Open) {
+        if (context.Database.GetDbConnection().State != ConnectionState.Open) {
             await context.Database.OpenConnectionAsync();
         }
         await using DbCommand command = context.Database.GetDbConnection().CreateCommand();

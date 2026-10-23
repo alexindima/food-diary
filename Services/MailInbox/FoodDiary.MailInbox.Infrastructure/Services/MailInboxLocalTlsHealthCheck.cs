@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 
@@ -6,7 +7,7 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 public static class MailInboxLocalTlsHealthCheck {
     private const int HttpsPort = 5098;
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public static async Task<bool> IsReadyAsync(
         string? serverName,
         CancellationToken cancellationToken) {

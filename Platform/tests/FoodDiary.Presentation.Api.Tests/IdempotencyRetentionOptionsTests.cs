@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Presentation.Api.Filters;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -17,10 +18,10 @@ public sealed class IdempotencyRetentionOptionsTests {
 
         Assert.Equal(expectedValid, valid);
         if (expectedValid) {
-            Assert.NotNull(new IdempotencyFilter(store, idempotencyOptions: Microsoft.Extensions.Options.Options.Create(options)));
+            Assert.NotNull(new IdempotencyFilter(store, idempotencyOptions: MsOptions.Create(options)));
         } else {
             Assert.Throws<InvalidOperationException>(() =>
-                new IdempotencyFilter(store, idempotencyOptions: Microsoft.Extensions.Options.Options.Create(options)));
+                new IdempotencyFilter(store, idempotencyOptions: MsOptions.Create(options)));
         }
         Assert.Empty(store.ReceivedCalls());
     }

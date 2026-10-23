@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using Microsoft.AspNetCore.Http;
 
 namespace FoodDiary.Presentation.Api.Filters;
@@ -7,7 +8,7 @@ public static class IdempotencyRequestContext {
     private static readonly object RequestHashKey = new();
     private static readonly object RetentionKey = new();
 
-    public static FoodDiary.Application.Contracts.Common.Abstractions.Persistence.AtomicOperation? GetAtomicOperation(HttpContext context, Guid userId) =>
+    public static AtomicOperation? GetAtomicOperation(HttpContext context, Guid userId) =>
         GetRequestId(context) is { } key && GetRequestHash(context) is { } hash
             ? new(userId, key, hash, context.Items.TryGetValue(RetentionKey, out object? value) && value is TimeSpan retention
                 ? retention : TimeSpan.FromDays(1))

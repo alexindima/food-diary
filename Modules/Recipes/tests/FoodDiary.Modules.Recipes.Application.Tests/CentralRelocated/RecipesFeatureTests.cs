@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Contracts.Models;
+using System.Text.Json;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentRecipes;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -61,8 +63,8 @@ public partial class RecipesFeatureTests {
     private static IUserProfileReadService CreateUserProfileReadService(ICurrentUserAccessService access) {
         IUserProfileReadService service = Substitute.For<IUserProfileReadService>();
         string? language = (access as StubUserRepository)?.Language;
-        string json = System.Text.Json.JsonSerializer.Serialize(new { Language = language });
-        FoodDiary.Modules.Users.Contracts.Models.UserModel model = System.Text.Json.JsonSerializer.Deserialize<FoodDiary.Modules.Users.Contracts.Models.UserModel>(json)!;
+        string json = JsonSerializer.Serialize(new { Language = language });
+        UserModel model = JsonSerializer.Deserialize<UserModel>(json)!;
         service.GetUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(Result.Success(model));
         return service;
     }

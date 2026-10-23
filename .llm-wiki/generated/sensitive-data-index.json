@@ -29,7 +29,7 @@
       "name": "ConnectionString",
       "type": "string?",
       "path": "FoodDiary.Initializer/InitializerCommand.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "credential",
@@ -78,14 +78,14 @@
       "name": "Token",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "credential",
       "name": "ApiSecret",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 10
+      "line": 12
     },
     {
       "category": "credential",
@@ -225,42 +225,42 @@
       "name": "ApiKey",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 10
+      "line": 12
     },
     {
       "category": "credential",
       "name": "ClientSideToken",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 12
+      "line": 14
     },
     {
       "category": "credential",
       "name": "WebhookSecretKey",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 13
+      "line": 15
     },
     {
       "category": "credential",
       "name": "SecretKey",
-      "type": "string",
-      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
-      "name": "WebhookSecret",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
       "line": 8
     },
     {
       "category": "credential",
+      "name": "WebhookSecret",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
-      "line": 7
+      "line": 11
     },
     {
       "category": "credential",
@@ -484,7 +484,7 @@
       "name": "ClientSecret",
       "type": "string",
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs",
-      "line": 8
+      "line": 10
     },
     {
       "category": "credential",
@@ -617,7 +617,7 @@
       "name": "NewPassword",
       "type": "string",
       "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "credential",
@@ -883,14 +883,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 239
+      "line": 240
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 242
+      "line": 243
     },
     {
       "category": "credential",
@@ -988,35 +988,35 @@
       "name": "MetadataApiKey",
       "type": "string",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 13
+      "line": 15
     },
     {
       "category": "credential",
       "name": "ContentApiKey",
       "type": "string",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 14
+      "line": 16
     },
     {
       "category": "credential",
       "name": "StateApiKey",
       "type": "string",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 15
+      "line": 17
     },
     {
       "category": "credential",
       "name": "DatabasePasswordKeys",
       "type": "in",
       "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 130
+      "line": 132
     },
     {
       "category": "credential",
       "name": "ConnectionString",
       "type": "string?",
       "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 158
+      "line": 160
     },
     {
       "category": "credential",
@@ -1128,7 +1128,7 @@
       "name": "Transaction",
       "type": "SqliteTransaction",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "line": 133
+      "line": 135
     },
     {
       "category": "financial",
@@ -1518,23 +1518,23 @@
     {
       "category": "financial",
       "name": "BillingSubscriptionId",
-      "type": "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId",
+      "type": "BillingSubscriptionId",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "financial",
       "name": "CustomerId",
       "type": "string",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "financial",
@@ -1877,119 +1877,119 @@
       "name": "Amount",
       "type": "AmountRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 342
+      "line": 343
     },
     {
       "category": "financial",
       "name": "SavePaymentMethod",
       "type": "bool",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 345
+      "line": 346
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 350
+      "line": 351
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 352
+      "line": 353
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 358
+      "line": 359
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 372
+      "line": 373
     },
     {
       "category": "financial",
       "name": "PaymentMethod",
       "type": "PaymentMethodResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 374
+      "line": 375
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 381
+      "line": 382
     },
     {
       "category": "financial",
       "name": "CheckoutEnabled",
       "type": "bool",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 9
+      "line": 11
     },
     {
       "category": "financial",
       "name": "PremiumMonthlyPriceId",
-      "type": "string",
-      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "PremiumYearlyPriceId",
-      "type": "string",
-      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 16
-    },
-    {
-      "category": "financial",
-      "name": "CheckoutUrl",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
       "line": 17
     },
     {
       "category": "financial",
+      "name": "PremiumYearlyPriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 18
+    },
+    {
+      "category": "financial",
+      "name": "CheckoutUrl",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 19
+    },
+    {
+      "category": "financial",
       "name": "PremiumMonthlyPriceId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
-      "line": 9
+      "line": 11
     },
     {
       "category": "financial",
       "name": "PremiumYearlyPriceId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
-      "line": 10
+      "line": 12
     },
     {
       "category": "financial",
       "name": "PremiumMonthlyAmount",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
-      "line": 9
+      "line": 13
     },
     {
       "category": "financial",
       "name": "PremiumYearlyAmount",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
-      "line": 10
+      "line": 14
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
-      "line": 11
+      "line": 15
     },
     {
       "category": "financial",
@@ -2031,21 +2031,21 @@
       "name": "DeliveredSubscriptions",
       "type": "List<Guid>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 84
+      "line": 85
     },
     {
       "category": "financial",
       "name": "InvalidSubscriptions",
       "type": "List<WebPushDeliverySubscription>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 84
+      "line": 85
     },
     {
       "category": "financial",
       "name": "CompletedSubscriptionIdsJson",
       "type": "string",
       "path": "Modules/Notifications/PersistenceModel/NotificationWebPushOutboxMessage.cs",
-      "line": 20
+      "line": 21
     },
     {
       "category": "financial",
@@ -3298,21 +3298,21 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
       "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
-      "line": 19
+      "line": 20
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
-      "line": 26
+      "line": 27
     },
     {
       "category": "health",
@@ -3543,7 +3543,7 @@
       "name": "Weight",
       "type": "int",
       "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "health",
@@ -4313,7 +4313,7 @@
       "name": "Height",
       "type": "int",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "line": 128
+      "line": 129
     },
     {
       "category": "health",
@@ -4607,28 +4607,28 @@
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 24
+      "line": 25
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 25
+      "line": 26
     },
     {
       "category": "health",
@@ -4852,7 +4852,7 @@
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 32
+      "line": 34
     },
     {
       "category": "health",
@@ -5839,7 +5839,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 232
+      "line": 233
     },
     {
       "category": "health",
@@ -8205,14 +8205,14 @@
       "name": "IpAddress",
       "type": "string?",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "identity",
@@ -8401,7 +8401,7 @@
       "name": "ITelegramOperationPolicy",
       "type": "ITelegramIdentityPolicy,",
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "category": "identity",
@@ -10186,21 +10186,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
@@ -10417,14 +10417,14 @@
       "name": "SnapshotImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 29
+      "line": 31
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 208
+      "line": 210
     },
     {
       "category": "privateContent",
@@ -10690,35 +10690,35 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "privateContent",
       "name": "HasResolvedImageAsset",
       "type": "bool",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "privateContent",
@@ -13510,7 +13510,7 @@
   "potentialLogging": [
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 62,
+      "line": 63,
       "fieldNames": [
         "DeliveredSubscriptions",
         "InvalidSubscriptions"
@@ -13520,7 +13520,7 @@
   "externalTransfers": [
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 213,
+      "line": 214,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -13535,7 +13535,7 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 359,
+      "line": 360,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

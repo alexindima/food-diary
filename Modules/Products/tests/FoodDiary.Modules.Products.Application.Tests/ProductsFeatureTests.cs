@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.RecentItems.Application.Queries.ReadRecentProducts;
@@ -29,7 +30,7 @@ namespace FoodDiary.Modules.Products.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public partial class ProductsFeatureTests {
-    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ProductId, int> UsageCounts = new();
+    private static readonly ConcurrentDictionary<ProductId, int> UsageCounts = new();
 
     private static IProductMutationTransactionRunner ProductTransactionRunner { get; } =
         new ImmediateProductMutationTransactionRunner();

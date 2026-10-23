@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
@@ -173,7 +174,7 @@ internal sealed class MealPlanRepository(DbSet<MealPlan> plans, IMealPlanComposi
 
     private async Task<MealPlan?> GetFilteredByIdAsync(
         MealPlanId id,
-        System.Linq.Expressions.Expression<Func<MealPlan, bool>> accessPredicate,
+        Expression<Func<MealPlan, bool>> accessPredicate,
         bool includeDays,
         CancellationToken cancellationToken,
         UserId? viewerId = null) {

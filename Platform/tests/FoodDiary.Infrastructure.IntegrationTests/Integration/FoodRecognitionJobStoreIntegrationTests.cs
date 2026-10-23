@@ -1,3 +1,4 @@
+using Npgsql;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -199,7 +200,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         Assert.False(await store.SaveVisionAsync(new FoodRecognitionJobId(job.Id), new FoodVisionModel([]), CancellationToken.None));
         await using var context = new FoodDiaryDbContext(new DbContextOptions<FoodDiaryDbContext>(
             options.Extensions.ToDictionary(extension => extension.GetType(), extension => extension)));
-        await Assert.ThrowsAsync<Npgsql.PostgresException>(() => context.ImageAssets.ExecuteDeleteAsync());
+        await Assert.ThrowsAsync<PostgresException>(() => context.ImageAssets.ExecuteDeleteAsync());
         clock.Now = clock.Now.AddDays(8);
         await store.MaintainAsync(CancellationToken.None);
         Assert.Null(await store.GetAsync(new UserId(job.UserId), new FoodRecognitionJobId(job.Id), CancellationToken.None));
@@ -264,7 +265,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
         var store = new FoodRecognitionJobStore(options, new TestClock(now));
         await using var context = new AiDbContext(options);
         for (int index = 0; index < 25; index++) {
-            context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
+            context.FoodRecognitionJobs.Add(new FoodRecognitionJob {
                 Id = Guid.NewGuid(),
                 UserId = new UserId(job.UserId),
                 ImageAssetId = new ImageAssetId(job.ImageAssetId),
@@ -275,7 +276,7 @@ public sealed class FoodRecognitionJobStoreIntegrationTests(PostgresDatabaseFixt
                 UpdatedOnUtc = now.UtcDateTime,
             });
         }
-        context.FoodRecognitionJobs.Add(new FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob {
+        context.FoodRecognitionJobs.Add(new FoodRecognitionJob {
             Id = Guid.NewGuid(),
             UserId = new UserId(job.UserId),
             ImageAssetId = new ImageAssetId(job.ImageAssetId),

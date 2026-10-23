@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.Enums;
@@ -19,7 +20,7 @@ public class RecipeInvariantAndEventsTests {
     public void IngredientSnapshot_RejectsAnotherProductAndDoesNotChangeAmount() {
         var recipe = Recipe.Create(UserId.New(), "Snapshot", 1);
         RecipeIngredient ingredient = recipe.AddStep(1, "Prepare").AddProductIngredient(ProductId.New(), ProductUnitQuantity.FromUnits(50));
-        var snapshot = new RecipeIngredientProductSnapshot(ProductId.New(), "Other", FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit.G,
+        var snapshot = new RecipeIngredientProductSnapshot(ProductId.New(), "Other", MeasurementUnit.G,
             100, 52, 1, 1, 11, 2, 0, Visibility.Public);
         Assert.Throws<ArgumentException>(() => ingredient.SetProductSnapshot(snapshot));
         Assert.Null(ingredient.ProductSnapshot);
@@ -454,9 +455,9 @@ public class RecipeInvariantAndEventsTests {
     public void Step_Create_WithEmptyRecipeId_Throws() {
         MethodInfo? method = typeof(RecipeStep).GetMethod(
             "Create",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Static | BindingFlags.NonPublic);
 
-        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
             method!.Invoke(null, [RecipeId.Empty, 1, "Step", null, null, null]));
 
         Assert.IsType<ArgumentException>(exception.InnerException);
@@ -502,9 +503,9 @@ public class RecipeInvariantAndEventsTests {
     public void Ingredient_CreateWithRecipe_WithEmptyRecipeStepId_Throws() {
         MethodInfo? method = typeof(RecipeIngredient).GetMethod(
             "CreateWithRecipe",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Static | BindingFlags.NonPublic);
 
-        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
             method!.Invoke(null, [RecipeStepId.Empty, RecipeId.New(), RecipeServingQuantity.FromServings(1)]));
 
         Assert.IsType<ArgumentException>(exception.InnerException);

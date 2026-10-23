@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,7 +21,7 @@ internal static class QueryReadBoundaryScanner {
             foreach (SyntaxNode node in tree.GetRoot().DescendantNodes().Where(node => node is InvocationExpressionSyntax or TypeSyntax)) {
                 ITypeSymbol? type = model.GetTypeInfo(node).Type;
                 if (ContainsEntity(type)) {
-                    violations.Add($"{tree.FilePath}:{(tree.GetLineSpan(node.Span).StartLinePosition.Line + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}: query uses aggregate {type}");
+                    violations.Add($"{tree.FilePath}:{(tree.GetLineSpan(node.Span).StartLinePosition.Line + 1).ToString(CultureInfo.InvariantCulture)}: query uses aggregate {type}");
                 }
             }
         }

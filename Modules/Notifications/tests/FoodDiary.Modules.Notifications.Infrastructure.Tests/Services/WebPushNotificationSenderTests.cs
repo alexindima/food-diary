@@ -1,3 +1,6 @@
+using System.Net;
+using System.Reflection;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Notifications.Infrastructure.Services;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using System.Globalization;
@@ -127,7 +130,7 @@ public sealed class WebPushNotificationSenderTests {
         var sender = new WebPushNotificationSender(
             CreateAudienceService(repository, new SingleUserRepository(user)),
             new StubNotificationTextRenderer(),
-            Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
+            MsOptions.Create(new WebPushOptions {
                 Enabled = true,
                 Subject = "https://example.com",
                 PublicKey = "public",
@@ -261,10 +264,10 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     [Theory]
-    [InlineData(System.Net.HttpStatusCode.Gone, true)]
-    [InlineData(System.Net.HttpStatusCode.NotFound, true)]
-    [InlineData(System.Net.HttpStatusCode.BadRequest, false)]
-    public void IsExpiredSubscription_ReturnsTrueOnlyForGoneOrNotFound(System.Net.HttpStatusCode statusCode, bool expected) {
+    [InlineData(HttpStatusCode.Gone, true)]
+    [InlineData(HttpStatusCode.NotFound, true)]
+    [InlineData(HttpStatusCode.BadRequest, false)]
+    public void IsExpiredSubscription_ReturnsTrueOnlyForGoneOrNotFound(HttpStatusCode statusCode, bool expected) {
         var exception = new WebPushException(
             "failed",
             new PushSubscription("https://push.example.com/subscriptions/1", "p256", "auth"),
@@ -310,7 +313,7 @@ public sealed class WebPushNotificationSenderTests {
         return new WebPushNotificationSender(
             CreateAudienceService(subscriptionRepository, userRepository),
             new StubNotificationTextRenderer(),
-            Microsoft.Extensions.Options.Options.Create(options ?? new WebPushOptions {
+            MsOptions.Create(options ?? new WebPushOptions {
                 Enabled = true,
                 Subject = "https://example.com",
                 PublicKey = "public",
@@ -340,11 +343,11 @@ public sealed class WebPushNotificationSenderTests {
         var webPushClient = new StubWebPushClientAdapter(new WebPushException(
             "gone",
             new PushSubscription(activeSubscription.Endpoint, activeSubscription.P256Dh, activeSubscription.Auth),
-            new HttpResponseMessage(System.Net.HttpStatusCode.Gone)));
+            new HttpResponseMessage(HttpStatusCode.Gone)));
         var sender = new WebPushNotificationSender(
             CreateAudienceService(subscriptionRepository, new SingleUserRepository(user)),
             new StubNotificationTextRenderer(),
-            Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
+            MsOptions.Create(new WebPushOptions {
                 Enabled = true,
                 Subject = "https://example.com",
                 PublicKey = "public",
@@ -380,7 +383,7 @@ public sealed class WebPushNotificationSenderTests {
         var sender = new WebPushNotificationSender(
             CreateAudienceService(subscriptionRepository, new SingleUserRepository(user)),
             new StubNotificationTextRenderer(),
-            Microsoft.Extensions.Options.Options.Create(new WebPushOptions {
+            MsOptions.Create(new WebPushOptions {
                 Enabled = true,
                 Subject = "https://example.com",
                 PublicKey = "public",
@@ -493,9 +496,9 @@ public sealed class WebPushNotificationSenderTests {
             "Chrome");
 
     private static T InvokePrivate<T>(object instance, string methodName, params object[] args) {
-        System.Reflection.MethodInfo method = instance.GetType().GetMethod(
+        MethodInfo method = instance.GetType().GetMethod(
             methodName,
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         return (T)method.Invoke(instance, args)!;
     }
 
@@ -508,16 +511,16 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     private static T InvokePrivateStatic<T>(string methodName, params object[] args) {
-        System.Reflection.MethodInfo method = typeof(WebPushNotificationSender).GetMethod(
+        MethodInfo method = typeof(WebPushNotificationSender).GetMethod(
             methodName,
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         return (T)method.Invoke(null, args)!;
     }
 
     private static T InvokeAudiencePrivateStatic<T>(string methodName, params object[] args) {
-        System.Reflection.MethodInfo method = typeof(WebPushDeliveryAudienceService).GetMethod(
+        MethodInfo method = typeof(WebPushDeliveryAudienceService).GetMethod(
             methodName,
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         return (T)method.Invoke(null, args)!;
     }
 

@@ -1,3 +1,5 @@
+using FoodDiary.MailRelay.Application.Emails.Services;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Queue.Models;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
@@ -29,11 +31,11 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         Assert.False(await store.RenewClaimAsync(new QueuedEmailId(id), first.AttemptCount, CancellationToken.None));
         await store.MarkSentAsync(new QueuedEmailId(id), second.AttemptCount, CancellationToken.None);
         long outboxCount = await CountRowsAsync(dataSource, "mailrelay_outbox_messages");
-        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+        await Assert.ThrowsAsync<MailRelayClaimLostException>(() =>
             store.MarkSentAsync(new QueuedEmailId(id), first.AttemptCount, CancellationToken.None));
-        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+        await Assert.ThrowsAsync<MailRelayClaimLostException>(() =>
             store.MarkSuppressedAsync(new QueuedEmailId(id), first.AttemptCount, ["blocked@example.com"], CancellationToken.None));
-        await Assert.ThrowsAsync<FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException>(() =>
+        await Assert.ThrowsAsync<MailRelayClaimLostException>(() =>
             store.MarkFailedAttemptAsync(new QueuedEmailFailureDecision((QueuedEmailId)id, first.AttemptCount,
                 QueuedEmailProcessingState.Retry, "stale failure"), CancellationToken.None));
         Assert.Equal(QueuedEmailStatus.Sent, (await store.GetMessageDetailsAsync(new QueuedEmailId(id), CancellationToken.None))!.Status);
@@ -376,7 +378,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     private static MailRelayQueueStore CreateStore(NpgsqlDataSource dataSource) =>
-        new(dataSource, Microsoft.Extensions.Options.Options.Create(new MailRelayQueueOptions {
+        new(dataSource, MsOptions.Create(new MailRelayQueueOptions {
             BatchSize = 10,
             MaxAttempts = 2,
             BaseRetryDelaySeconds = 1,

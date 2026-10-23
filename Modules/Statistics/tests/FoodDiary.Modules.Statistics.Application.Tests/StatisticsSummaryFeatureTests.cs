@@ -72,7 +72,7 @@ public sealed class StatisticsSummaryFeatureTests {
             .Returns(Task.FromResult<IReadOnlyList<WeightEntrySummaryModel>>([new WeightEntrySummaryModel(from.Date, to.Date, 75.3)]));
         waistReadService.Send(new ReadWaistSummariesQuery(UserId: user.Id, DateFrom: from.Date, DateTo: to.Date, QuantizationDays: 1), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<WaistEntrySummaryModel>>([new WaistEntrySummaryModel(from.Date, to.Date, 82.1)]));
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (waistReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(ReadWeightSummariesQuery)]), (waistReadService, [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
             new GetStatisticsSummaryQuery(user.Id.Value, from, to, 1),
@@ -95,7 +95,7 @@ public sealed class StatisticsSummaryFeatureTests {
         accessService
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Error?>(accessError));
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (waistReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), accessService);
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(ReadWeightSummariesQuery)]), (waistReadService, [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), accessService);
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
             new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1),
@@ -107,7 +107,7 @@ public sealed class StatisticsSummaryFeatureTests {
 
     [Fact]
     public async Task GetStatisticsSummaryQueryHandler_WhenDateRangeIsInverted_ReturnsValidationFailure() {
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
         DateTime date = DateTime.UtcNow;
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
@@ -120,7 +120,7 @@ public sealed class StatisticsSummaryFeatureTests {
 
     [Fact]
     public async Task GetStatisticsSummaryQueryHandler_WhenQuantizationIsNonPositive_ReturnsValidationFailure() {
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
             new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 0),
@@ -137,7 +137,7 @@ public sealed class StatisticsSummaryFeatureTests {
     public async Task GetStatisticsSummaryQueryHandler_WhenTemporalRangeIsUnsupported_ReturnsValidationFailure(
         int periodDays,
         int quantizationDays) {
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((Substitute.For<ISender>(), [typeof(ReadWeightSummariesQuery)]), (Substitute.For<ISender>(), [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
@@ -156,7 +156,7 @@ public sealed class StatisticsSummaryFeatureTests {
         statisticsReadService
             .Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.QuantizationDays == 1), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(error)));
-        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (waistReadService, [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
+        var handler = new GetStatisticsSummaryQueryHandler(RequestTestSender.Route((statisticsReadService, [typeof(ReadMealNutritionStatisticsQuery)]), (RequestTestSender.Route((weightReadService, [typeof(ReadWeightSummariesQuery)]), (waistReadService, [typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)])), CreateCurrentUserAccessService());
 
         Result<StatisticsSummaryModel> result = await handler.Handle(
             new GetStatisticsSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1),

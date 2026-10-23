@@ -1,3 +1,6 @@
+using FoodDiary.Development.Mcp.Infrastructure;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.Data.Sqlite;
 
 namespace FoodDiary.Development.Mcp.Tests;
@@ -127,7 +130,7 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [Fact]
     public async Task SearchAsync_RecallsLongIndexPageWithBoundedIdentityPoolAsync() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         policy["candidatePoolLimit"] = 1;
         policy["identityCandidatePoolLimit"] = 1;
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
@@ -152,7 +155,7 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [Fact]
     public async Task SearchAsync_PreservesOriginalRecordRepresentationsWhenExpandingThePathPoolAsync() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         policy["candidatePoolLimit"] = 2;
         policy["identityCandidatePoolLimit"] = 1;
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
@@ -181,7 +184,7 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [Fact]
     public async Task SearchAsync_DuplicateRowsCannotCrowdOtherFilesOutOfTheCandidatePoolAsync() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         policy["candidatePoolLimit"] = 2;
         policy["identityCandidatePoolLimit"] = 1;
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
@@ -312,8 +315,8 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("складской", true)]
     public async Task SearchAsync_PreservesExactAlternativesInPrefixGroupsAsync(string query, bool expected) {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
-        policy["queryPrefixExpansions"] = System.Text.Json.Nodes.JsonNode.Parse("""{"stock$|склад":["inventory"]}""");
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["queryPrefixExpansions"] = JsonNode.Parse("""{"stock$|склад":["inventory"]}""");
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
         WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
             query, 10, "Any", module: null, scopePaths: null, CancellationToken.None,
@@ -347,11 +350,11 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("stock tests xx", true, true)]
     public async Task SearchAsync_RespectsExplicitMcpAndExcludedBoostTerms(string query, bool identityExpected, bool pathExpected) {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
-        policy["identityBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["identityBoosts"] = JsonNode.Parse("""
             [{"id":"explicit-powershell-file-intent","queryTerms":["stock"],"minimumMatches":1,"identityTerms":["stock"],"minimumIdentityMatches":1,"score":300,"identityScope":"file","excludedQueryTerms":["excluded"]}]
             """);
-        policy["pathBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+        policy["pathBoosts"] = JsonNode.Parse("""
             [{"id":"stock-path","queryTerms":["stock"],"minimumMatches":1,"pathPrefixes":["Tooling/"],"score":300,"excludedQueryTerms":["excluded","mcp"]}]
             """);
         // Keep the short term in the query so it cannot be mistaken for a test subject.
@@ -379,8 +382,8 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("roleTerms")]
     public async Task SearchAsync_AllowsDisabledNegatedRolePolicy(string emptyProperty) {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
-        policy["negatedRolePenalty"]![emptyProperty] = new System.Text.Json.Nodes.JsonArray();
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["negatedRolePenalty"]![emptyProperty] = new JsonArray();
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
 
         WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
@@ -435,7 +438,7 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
         Directory.CreateDirectory(policyDirectory);
         Directory.CreateDirectory(databaseDirectory);
         string sourcePolicy = Path.Combine(
-            FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve(),
+            RepositoryRootResolver.Resolve(),
             ".llm-wiki",
             "policies",
             "context-search-ranking.json");
@@ -476,7 +479,7 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("parcel implementation", false)]
     public async Task SearchAsync_PluralAbstractionIntent_WaivesContractPenalty(string query, bool expectedWaiver) {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         policy["applicationAbstractionPenalty"] = 1_000_000;
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
         await using SqliteConnection connection = new($"Data Source={_databasePath}");
@@ -628,15 +631,15 @@ public sealed partial class SqliteWikiContextSearchTests : IDisposable {
     public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch,
         string selectorPrefix = "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/") {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
-        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         // A synthetic role tests selector equivalence without any benchmark vocabulary.
-        policy["structuralRoleBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+        policy["structuralRoleBoosts"] = JsonNode.Parse("""
             [{"id":"synthetic-stock-integration-tests","queryTerms":["stock"],"minimumMatches":1,
               "candidateTerms":["stock"],"minimumCandidateMatches":1,"minimumQueryIdentityMatches":1,
               "score":300,"identityScope":"file","changeTypes":["Tests"],"recordTypes":["code"],
               "pathPrefixes":["Platform/tests/FoodDiary.Infrastructure.IntegrationTests/"],"pathSuffixes":["Tests.cs"]}]
             """);
-        policy["structuralRoleBoosts"]![0]!["pathPrefixes"] = System.Text.Json.JsonSerializer.SerializeToNode<string[]>([selectorPrefix]);
+        policy["structuralRoleBoosts"]![0]!["pathPrefixes"] = JsonSerializer.SerializeToNode<string[]>([selectorPrefix]);
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
         await using SqliteConnection connection = new($"Data Source={_databasePath}");
         await connection.OpenAsync();

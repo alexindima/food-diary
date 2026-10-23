@@ -5,7 +5,7 @@ namespace FoodDiary.Modules.Billing.Presentation.Extensions;
 
 public static class BillingPresentationServiceCollectionExtensions {
     public static IServiceCollection AddBillingPresentation(this IServiceCollection services) {
-        services.AddScoped<FoodDiary.Modules.Billing.Presentation.BillingWebhookHttpProcessor>();
+        services.AddScoped<BillingWebhookHttpProcessor>();
         return services.AddPresentationAssembly(typeof(BillingPresentationServiceCollectionExtensions).Assembly);
     }
 }

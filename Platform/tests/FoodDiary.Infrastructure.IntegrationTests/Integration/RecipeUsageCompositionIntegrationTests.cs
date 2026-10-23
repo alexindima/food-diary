@@ -42,7 +42,7 @@ public sealed class RecipeUsageCompositionIntegrationTests(PostgresDatabaseFixtu
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
             new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddMemoryCache();

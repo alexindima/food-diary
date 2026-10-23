@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Application.Abstractions.Prompts;
 using FoodDiary.Modules.Ai.Application.Commands.TestAiPrompt;
@@ -47,7 +48,7 @@ public sealed class AiPromptWorkbenchTests {
         Result<string> result = await new TestAiPromptCommandHandler(service, images)
             .Handle(new TestAiPromptCommand(user.Value, "request", draft), cancellation.Token);
         if (success) {
-            using var json = System.Text.Json.JsonDocument.Parse(ResultAssert.Success(result));
+            using var json = JsonDocument.Parse(ResultAssert.Success(result));
             Assert.Equal(52, json.RootElement.GetProperty("calories").GetDecimal());
         } else {
             ResultAssert.Failure(result);

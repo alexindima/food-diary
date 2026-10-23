@@ -1,3 +1,4 @@
+using FoodDiary.MailRelay.Client.Journal;
 using FoodDiary.MailRelay.Client.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ public static class MailRelayClientServiceCollectionExtensions {
             client.Timeout = options.Timeout;
         });
 
-        services.AddHttpClient<FoodDiary.MailRelay.Client.Journal.IMailRelayJournalClient, FoodDiary.MailRelay.Client.Journal.MailRelayJournalClient>((sp, client) => {
+        services.AddHttpClient<IMailRelayJournalClient, MailRelayJournalClient>((sp, client) => {
             MailRelayClientOptions options = sp.GetRequiredService<IOptions<MailRelayClientOptions>>().Value;
             client.BaseAddress = new Uri(options.BaseUrl, UriKind.Absolute);
             client.Timeout = options.Timeout;

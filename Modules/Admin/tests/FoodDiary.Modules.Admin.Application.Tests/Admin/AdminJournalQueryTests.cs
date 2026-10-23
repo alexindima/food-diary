@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Testing;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
@@ -97,7 +98,7 @@ public class AdminJournalQueryTests {
         var id = Guid.NewGuid();
         email.Send(new GetEmailTemplateRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new EmailTemplateRevisionReadModel(id, "subject", "html", "text", IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
         prompts.Send(new GetAiPromptRevisionsQuery(Key: "welcome", Locale: "en"), cancellation.Token).Returns([new AiPromptRevisionReadModel(id, "text", 2, IsActive: true, DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1))]);
-        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(global::FoodDiary.Modules.Identity.Contracts.Email.Queries.GetEmailTemplateRevisions.GetEmailTemplateRevisionsQuery)]), (prompts, [typeof(global::FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery)]))).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
+        Result<IReadOnlyList<AdminTemplateRevisionModel>> result = await new GetAdminTemplateRevisionsQueryHandler(RequestTestSender.Route((email, [typeof(GetEmailTemplateRevisionsQuery)]), (prompts, [typeof(GetAiPromptRevisionsQuery)]))).Handle(new GetAdminTemplateRevisionsQuery(" WELCOME ", " EN ", ai), cancellation.Token);
         ResultAssert.Success(result);
         Assert.Equal(id, Assert.Single(result.Value).Id);
         if (ai) {
@@ -157,8 +158,8 @@ public class AdminJournalQueryTests {
         clock.GetUtcNow().Returns(new DateTimeOffset(2026, 9, 9, 12, 0, 0, TimeSpan.Zero));
         IAdminRetentionReader reader = Substitute.For<IAdminRetentionReader>();
         Result<AdminRetentionReport> result = await new GetAdminRetentionQueryHandler(reader, clock).Handle(
-            new GetAdminRetentionQuery(From: null, To: null, DateOnly.Parse(from, System.Globalization.CultureInfo.InvariantCulture),
-                DateOnly.Parse(to, System.Globalization.CultureInfo.InvariantCulture)), CancellationToken.None);
+            new GetAdminRetentionQuery(From: null, To: null, DateOnly.Parse(from, CultureInfo.InvariantCulture),
+                DateOnly.Parse(to, CultureInfo.InvariantCulture)), CancellationToken.None);
         ResultAssert.Failure(result);
         Assert.Empty(reader.ReceivedCalls());
     }
@@ -171,7 +172,7 @@ public class AdminJournalQueryTests {
         TimeProvider clock = Substitute.For<TimeProvider>();
         clock.GetUtcNow().Returns(new DateTimeOffset(2026, 9, 9, 12, 0, 0, TimeSpan.Zero));
         IAdminRetentionReader reader = Substitute.For<IAdminRetentionReader>();
-        Result<AdminRetentionReport> result = await new GetAdminRetentionQueryHandler(reader, clock).Handle(new GetAdminRetentionQuery(DateOnly.Parse(from, System.Globalization.CultureInfo.InvariantCulture), DateOnly.Parse(to, System.Globalization.CultureInfo.InvariantCulture)), CancellationToken.None);
+        Result<AdminRetentionReport> result = await new GetAdminRetentionQueryHandler(reader, clock).Handle(new GetAdminRetentionQuery(DateOnly.Parse(from, CultureInfo.InvariantCulture), DateOnly.Parse(to, CultureInfo.InvariantCulture)), CancellationToken.None);
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Empty(reader.ReceivedCalls());

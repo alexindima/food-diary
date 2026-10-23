@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using SkiaSharp;
 using System.Runtime.InteropServices;
 
@@ -6,7 +7,7 @@ namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 internal sealed partial class DiaryPdfGenerator {
     private static readonly SKSamplingOptions MealImageSamplingOptions = new(SKFilterMode.Linear, SKMipmapMode.Linear);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static byte[]? PrepareMealImage(byte[] imageBytes) {
         try {
             SKImageInfo sourceInfo = SKBitmap.DecodeBounds(imageBytes);

@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Email.Infrastructure.Persistence;
 using FoodDiary.Outbox.Infrastructure.Options;
@@ -95,7 +96,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new RecordingEmailTransport(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -120,7 +121,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             transport,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -269,7 +270,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new ThrowingEmailTransport(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -298,7 +299,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new ThrowingEmailTransport(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -630,7 +631,7 @@ public sealed class EmailOutboxTests {
         new(
             context,
             transport,
-            Microsoft.Extensions.Options.Options.Create(options ?? new OutboxProcessingOptions()),
+            MsOptions.Create(options ?? new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 

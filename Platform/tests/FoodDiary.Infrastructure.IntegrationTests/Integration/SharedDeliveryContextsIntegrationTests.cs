@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -131,7 +133,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await using ServiceProvider provider = CreateProvider(central);
         IImageAssetWriteRepository repository = provider.GetRequiredService<IImageAssetWriteRepository>();
         Assert.True(await repository.IsAssetInUseAsync(image.Id));
-        Assert.Empty(await provider.GetRequiredService<FoodDiary.Modules.Images.Application.Abstractions.Common.IImageAssetUsageQuery>().GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
+        Assert.Empty(await provider.GetRequiredService<IImageAssetUsageQuery>().GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), 10));
         await repository.DeleteAsync(image);
         await provider.GetRequiredService<IImageObjectDeletionOutbox>().EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey));
         await Assert.ThrowsAsync<DbUpdateException>(() => provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync());
@@ -169,8 +171,8 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await using ServiceProvider provider = CreateProvider(central);
         var cleanup = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), provider.GetServices<IUserDataPurgeParticipant>(),
             NullLogger<UserCleanupService>.Instance,
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
+            provider.GetRequiredService<IModuleTransactionCoordinator>(),
+            provider.GetRequiredService<IModuleScopeGuard>());
         Assert.Equal(1, (await cleanup.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null)).RemovedCount);
         await using FoodDiaryDbContext read = databaseFixture.CreateDbContext(central.Database.GetConnectionString()!);
         Assert.False(await read.Users.AnyAsync(item => item.Id == user.Id));
@@ -193,7 +195,7 @@ public sealed partial class SharedDeliveryContextsIntegrationTests(PostgresDatab
         await using ServiceProvider provider = CreateProvider(central, handler);
         await provider.GetRequiredService<IAchievementEvaluationOutbox>().EnqueueAsync(user.Id);
         Assert.Equal(0, await provider.GetRequiredService<IAchievementEvaluationOutboxProcessor>().ProcessDueAsync(1));
-        FoodDiary.Modules.Gamification.PersistenceModel.Achievements.AchievementEvaluationOutboxMessage message =
+        AchievementEvaluationOutboxMessage message =
             await central.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
         Assert.Equal(2, message.Revision);
         Assert.Null(message.ProcessedOnUtc);

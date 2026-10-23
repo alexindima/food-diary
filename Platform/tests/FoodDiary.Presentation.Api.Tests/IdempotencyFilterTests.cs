@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -140,11 +143,11 @@ public sealed class IdempotencyFilterTests {
     [Fact]
     public async Task OnActionExecutionAsync_UsesConfiguredMvcJsonOptionsForReplayBody() {
         var store = new RecordingIdempotencyStore();
-        var jsonOptions = new Microsoft.AspNetCore.Mvc.JsonOptions();
+        var jsonOptions = new JsonOptions();
         jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
         var filter = new IdempotencyFilter(
             store,
-            mvcJsonOptions: Microsoft.Extensions.Options.Options.Create(jsonOptions));
+            mvcJsonOptions: MsOptions.Create(jsonOptions));
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/items", "json-options", "user-json-options");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
@@ -758,7 +761,7 @@ public sealed class IdempotencyFilterTests {
 
     [Fact]
     public void Constructor_WhenRenewalAndTimeoutConsumeProcessingTtl_RejectsOptions() {
-        Microsoft.Extensions.Options.IOptions<IdempotencyFilterOptions> options = Microsoft.Extensions.Options.Options.Create(
+        IOptions<IdempotencyFilterOptions> options = MsOptions.Create(
             new IdempotencyFilterOptions {
                 ProcessingTtl = TimeSpan.FromSeconds(5),
                 LeaseRenewalInterval = TimeSpan.FromSeconds(4),
@@ -957,7 +960,7 @@ public sealed class IdempotencyFilterTests {
         var store = new RecordingIdempotencyStore();
         var filter = new IdempotencyFilter(store);
         DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-multiple-keys");
-        httpContext.Request.Headers["Idempotency-Key"] = new Microsoft.Extensions.Primitives.StringValues(["first", "second"]);
+        httpContext.Request.Headers["Idempotency-Key"] = new StringValues(["first", "second"]);
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("Multiple keys must not execute the action."));
@@ -1033,7 +1036,7 @@ public sealed class IdempotencyFilterTests {
     private static IdempotencyFilter CreateFastRenewalFilter(IIdempotencyStore store) =>
         new(
             store,
-            idempotencyOptions: Microsoft.Extensions.Options.Options.Create(new IdempotencyFilterOptions {
+            idempotencyOptions: MsOptions.Create(new IdempotencyFilterOptions {
                 ProcessingTtl = TimeSpan.FromMilliseconds(200),
                 LeaseRenewalInterval = TimeSpan.FromMilliseconds(10),
                 StoreOperationTimeout = TimeSpan.FromMilliseconds(50),

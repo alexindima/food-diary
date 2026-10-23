@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -42,7 +43,7 @@ public sealed class PrimaryConstructorBackingFieldAnalyzer : DiagnosticAnalyzer 
             !parameterList.Parameters.Any(parameter => string.Equals(
                 parameter.Identifier.ValueText,
                 initializer.Identifier.ValueText,
-                System.StringComparison.Ordinal))) {
+                StringComparison.Ordinal))) {
             return;
         }
 
@@ -57,7 +58,7 @@ public sealed class PrimaryConstructorBackingFieldAnalyzer : DiagnosticAnalyzer 
                 .Any(identifier => string.Equals(
                     identifier.Identifier.ValueText,
                     parameterName,
-                    System.StringComparison.Ordinal)) == true);
+                    StringComparison.Ordinal)) == true);
         if (initializesAnotherField) {
             return;
         }

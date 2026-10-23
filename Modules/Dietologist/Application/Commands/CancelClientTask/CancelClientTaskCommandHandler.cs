@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Application.Common.Validation;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
@@ -52,7 +53,7 @@ public sealed class CancelClientTaskCommandHandler(
             return Result.Failure<ClientTaskModel>(accessResult.Error);
         }
 
-        bool wasCancelled = task.Status == FoodDiary.Modules.Dietologist.Domain.Enums.ClientTaskStatus.Cancelled;
+        bool wasCancelled = task.Status == ClientTaskStatus.Cancelled;
         task.Cancel();
         if (!wasCancelled) {
             await notificationWriter.AddAsync(

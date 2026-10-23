@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using System.Data.Common;
 using FoodDiary.Modules.WeeklyGoals.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -32,7 +33,7 @@ public sealed class EfWeeklyGoalTransactionRunner(IModuleTransactionCoordinator 
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue(
                 "serialization_key",
-                NpgsqlTypes.NpgsqlDbType.Text,
+                NpgsqlDbType.Text,
                 $"weekly-goal:{userId.Value:N}:{weekStartUtc:O}");
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application;
 using FoodDiary.Modules.Admin.Application.Commands.SendBugAcknowledgements;
@@ -52,7 +53,7 @@ public sealed class AdminMailInboxRegistrationTests {
         Assert.IsType<MailInboxExportClient>(provider.GetRequiredService<IMailInboxExportClient>());
         Assert.IsType<BugAcknowledgementWorker>(Assert.Single(provider.GetServices<IHostedService>()));
         if (valid) {
-            Assert.Equal(TimeSpan.Parse(interval, System.Globalization.CultureInfo.InvariantCulture), provider.GetRequiredService<IOptions<BugAcknowledgementOptions>>().Value.PollInterval);
+            Assert.Equal(TimeSpan.Parse(interval, CultureInfo.InvariantCulture), provider.GetRequiredService<IOptions<BugAcknowledgementOptions>>().Value.PollInterval);
         } else {
             Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<BugAcknowledgementOptions>>().Value);
         }

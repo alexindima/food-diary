@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.Infrastructure;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public static class RepositoryRootResolver {
     public const string RepositoryRootEnvironmentVariable = "FOODDIARY_REPOSITORY_ROOT";
 

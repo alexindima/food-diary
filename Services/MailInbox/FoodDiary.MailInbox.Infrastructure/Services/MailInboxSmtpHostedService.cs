@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using SmtpServerHost = SmtpServer.SmtpServer;
 using System.Net;
 using System.Security.Authentication;
 using System.Security.Cryptography;
@@ -12,7 +14,7 @@ using SmtpServer.Storage;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class MailInboxSmtpHostedService(
     IOptions<MailInboxSmtpOptions> options,
     SmtpInboundMessageStore messageStore,
@@ -45,7 +47,7 @@ public sealed class MailInboxSmtpHostedService(
         serviceProvider.Add(new DelegatingMailboxFilterFactory(_ => mailboxFilter));
         serviceProvider.Add(endpointListenerFactory);
 
-        var server = new SmtpServer.SmtpServer(serverOptions, serviceProvider);
+        var server = new SmtpServerHost(serverOptions, serviceProvider);
         logger.LogInformation(
             "Mail inbox SMTP listener starting with STARTTLS. ServerName={ServerName}; ListenAddress={ListenAddress}; Port={Port}; CertificateExpiresUtc={CertificateExpiresUtc}; MaxMessageSizeBytes={MaxMessageSizeBytes}",
             _options.ServerName,

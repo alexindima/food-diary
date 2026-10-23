@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Tests;
@@ -98,7 +99,7 @@ public sealed class WikiCommandResultTests {
 
     [Fact]
     public void ToCompactChangeContext_LimitsPathsAndKeepsVerificationGuidance() {
-        string[] paths = [.. Enumerable.Range(1, 25).Select(index => $"FoodDiary.Web.Client/src/app/path-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}.ts")];
+        string[] paths = [.. Enumerable.Range(1, 25).Select(index => $"FoodDiary.Web.Client/src/app/path-{index.ToString(CultureInfo.InvariantCulture)}.ts")];
         JsonElement structuredOutput = JsonSerializer.SerializeToElement(new {
             analysis = new { mode = "working-tree" },
             risk = new { level = "high", score = 10 },

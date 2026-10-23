@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -16,7 +17,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         await using var server = new RecordingSmtpServer();
         await server.StartAsync();
         var transport = new SmtpRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions {
+            MsOptions.Create(new MailRelaySmtpOptions {
                 Host = IPAddress.Loopback.ToString(),
                 Port = server.Port,
                 UseSsl = false,
@@ -55,7 +56,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         await server.StartAsync();
         using var rsa = RSA.Create(1024);
         var transport = new SmtpRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions {
+            MsOptions.Create(new MailRelaySmtpOptions {
                 Host = IPAddress.Loopback.ToString(),
                 Port = server.Port,
                 UseSsl = false,
@@ -80,7 +81,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         await using var server = new RecordingSmtpServer();
         await server.StartAsync();
         var transport = new SmtpRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions {
+            MsOptions.Create(new MailRelaySmtpOptions {
                 Host = IPAddress.Loopback.ToString(),
                 Port = server.Port,
                 UseSsl = false,
@@ -99,7 +100,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         await using var server = new RecordingSmtpServer();
         await server.StartAsync();
         var smtpTransport = new SmtpRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions {
+            MsOptions.Create(new MailRelaySmtpOptions {
                 Host = IPAddress.Loopback.ToString(),
                 Port = server.Port,
                 UseSsl = false,
@@ -109,7 +110,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport,
             CreateDirectMxTransport("127.0.0.1"),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+            MsOptions.Create(new MailRelayDeliveryOptions {
                 Mode = MailRelayDeliveryOptions.SmtpSubmissionMode,
             }));
 
@@ -122,7 +123,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
     [Fact]
     public async Task ConfigurableTransport_WhenModeIsDirectMx_UsesDirectMxTransport() {
         var smtpTransport = new SmtpRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions {
+            MsOptions.Create(new MailRelaySmtpOptions {
                 Host = "invalid.local",
                 Port = 25,
                 UseSsl = false,
@@ -132,7 +133,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport,
             CreateDirectMxTransport("127.0.0.1"),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+            MsOptions.Create(new MailRelayDeliveryOptions {
                 Mode = MailRelayDeliveryOptions.DirectMxMode,
             }));
 
@@ -146,11 +147,11 @@ public sealed class SmtpRelayDeliveryTransportTests {
     public async Task ConfigurableTransport_WhenModeIsUnsupported_ThrowsConfigurationError() {
         var transport = new ConfigurableRelayDeliveryTransport(
             new SmtpRelayDeliveryTransport(
-                Microsoft.Extensions.Options.Options.Create(new MailRelaySmtpOptions()),
+                MsOptions.Create(new MailRelaySmtpOptions()),
                 CreateDkimSigningService(),
                 FixedTime),
             CreateDirectMxTransport("127.0.0.1"),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+            MsOptions.Create(new MailRelayDeliveryOptions {
                 Mode = "unsupported",
             }));
 
@@ -171,7 +172,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
 
     private static DirectMxRelayDeliveryTransport CreateDirectMxTransport(string mxHost) =>
         new(
-            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
+            MsOptions.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -185,7 +186,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static DkimSigningService CreateDkimSigningService(MailRelayDkimOptions? options = null) =>
-        new(Microsoft.Extensions.Options.Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
+        new(MsOptions.Create(options ?? new MailRelayDkimOptions()), FixedTime);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {

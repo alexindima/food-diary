@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Models;
@@ -57,7 +58,7 @@ internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientT
         CancellationToken cancellationToken = default) =>
         await records
             .Where(task =>
-                task.Status == Domain.Enums.ClientTaskStatus.Open &&
+                task.Status == ClientTaskStatus.Open &&
                 task.DueAtUtc >= utcNow &&
                 task.DueAtUtc <= dueBeforeUtc &&
                 task.DueReminderSentAtUtc == null)

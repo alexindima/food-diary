@@ -406,7 +406,7 @@ public partial class BillingFeatureTests {
                 user.PremiumTrialEndsAtUtc,
                 user.IsEmailConfirmed);
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
             GetUserBillingProfileQuery r => (Task<TResponse>)(object)GetAccessibleProfileAsync(r.UserId, cancellationToken),
             GetUserBillingProfileIncludingDeletedQuery r => (Task<TResponse>)(object)GetProfileIncludingDeletedAsync(r.UserId, cancellationToken),
             StartUserPremiumTrialCommand r => (Task<TResponse>)(object)StartPremiumTrialAsync(r.UserId, r.StartedAtUtc, r.Duration, cancellationToken),
@@ -741,7 +741,7 @@ public partial class BillingFeatureTests {
         public Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
             RecordPremiumConversionCommand r => (Task<TResponse>)(object)AsUnitAsync(RecordPremiumStartedAsync(r.UserId, cancellationToken)),
             _ => throw new InvalidOperationException(request.GetType().Name),
         };
@@ -756,7 +756,7 @@ public partial class BillingFeatureTests {
             return Task.CompletedTask;
         }
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
             RecordPremiumConversionCommand r => (Task<TResponse>)(object)AsUnitAsync(RecordPremiumStartedAsync(r.UserId, cancellationToken)),
             _ => throw new InvalidOperationException(request.GetType().Name),
         };

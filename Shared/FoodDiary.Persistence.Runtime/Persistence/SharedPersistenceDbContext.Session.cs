@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace FoodDiary.Persistence.Runtime.Persistence;
 
 public abstract partial class SharedPersistenceDbContext : IModuleContextFactory, IModuleChangeTrackerSource, IModuleScopeGuard {
-    void IModuleScopeGuard.EnsureCleanEntry() => Shared.SharedTransactionBoundary.EnsureCleanEntry(this);
+    void IModuleScopeGuard.EnsureCleanEntry() => SharedTransactionBoundary.EnsureCleanEntry(this);
 
     internal PersistenceSession Session { get; private set; } = null!;
 

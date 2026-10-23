@@ -11,7 +11,7 @@ public sealed class ApplicationDependencyInjectionTests {
     public void AddApplicationRuntime_RegistersCoreApplicationServices() {
         var services = new ServiceCollection();
 
-        FoodDiary.Application.Runtime.DependencyInjection.AddApplicationRuntime(services);
+        DependencyInjection.AddApplicationRuntime(services);
 
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
         Assert.Contains(services, descriptor =>

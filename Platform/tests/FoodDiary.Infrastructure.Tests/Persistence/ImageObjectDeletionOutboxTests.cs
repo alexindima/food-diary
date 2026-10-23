@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Outbox.Infrastructure.Options;
 using System.Globalization;
@@ -35,7 +37,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context, context.ImageObjectDeletionOutbox,
             storage,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -56,7 +58,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context, context.ImageObjectDeletionOutbox,
             new ThrowingImageStorageService(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -83,7 +85,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context, context.ImageObjectDeletionOutbox,
             new ThrowingImageStorageService(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -104,7 +106,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context, context.ImageObjectDeletionOutbox,
             new RecordingImageStorageService(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -126,7 +128,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         public List<string> DeletedObjectKeys { get; } = [];
 
         public Task<PresignedUpload> CreatePresignedUploadAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+            UserId userId,
             string fileName,
             string contentType,
             long fileSizeBytes,
@@ -145,7 +147,7 @@ public sealed class ImageObjectDeletionOutboxTests {
     [ExcludeFromCodeCoverage]
     private sealed class ThrowingImageStorageService : IImageStorageService {
         public Task<PresignedUpload> CreatePresignedUploadAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+            UserId userId,
             string fileName,
             string contentType,
             long fileSizeBytes,

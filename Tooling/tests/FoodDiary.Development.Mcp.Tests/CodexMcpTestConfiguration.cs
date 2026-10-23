@@ -53,7 +53,7 @@ internal sealed record CodexMcpTestConfiguration(
                                         (command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase) ||
                                          string.Equals(command, "powershell.exe", StringComparison.OrdinalIgnoreCase));
         if (requiresPortableFallback || usePortableLauncher) {
-            string serverAssembly = typeof(Wiki.WikiRuntimeTelemetry).Assembly.Location;
+            string serverAssembly = typeof(WikiRuntimeTelemetry).Assembly.Location;
             command = "dotnet";
             arguments = [serverAssembly];
             usesConfiguredLauncher = false;

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using System.Data;
 using FoodDiary.Modules.Wearables.Infrastructure.Persistence;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +26,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
             $"wearable-transaction-scope:{Guid.NewGuid():N}",
             _ => {
                 Assert.Null(context.Database.CurrentTransaction);
-                Assert.Equal(System.Data.ConnectionState.Closed, context.Database.GetDbConnection().State);
+                Assert.Equal(ConnectionState.Closed, context.Database.GetDbConnection().State);
                 return Task.FromResult(true);
             },
             CancellationToken.None);
@@ -96,7 +98,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
         IWearableTransactionRunner runner,
         WearablesDbContext context,
         string serializationKey,
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+        UserId userId,
         string externalUserId) =>
         runner.ExecuteSerializedAsync(
             serializationKey,
@@ -124,7 +126,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
         IWearableTransactionRunner runner,
         WearablesDbContext context,
         string serializationKey,
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+        UserId userId,
         DateTime date,
         double value) =>
         runner.ExecuteSerializedAsync(

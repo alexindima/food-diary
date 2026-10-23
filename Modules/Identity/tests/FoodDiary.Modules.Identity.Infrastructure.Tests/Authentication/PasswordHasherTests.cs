@@ -1,3 +1,4 @@
+using BCryptHasher = BCrypt.Net.BCrypt;
 using FoodDiary.Modules.Identity.Infrastructure.Services;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;
@@ -55,7 +56,7 @@ public class PasswordHasherTests {
     [Fact]
     public void Verify_WithLegacyBcryptHash_RemainsCompatible() {
         const string password = "legacy-password";
-        string legacyHash = BCrypt.Net.BCrypt.HashPassword(password);
+        string legacyHash = BCryptHasher.HashPassword(password);
 
         Assert.Multiple(
             () => Assert.True(_hasher.Verify(password, legacyHash)),

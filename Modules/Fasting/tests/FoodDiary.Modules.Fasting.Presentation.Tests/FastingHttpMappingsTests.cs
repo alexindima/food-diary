@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Fasting.Presentation.Mappings;
 using FoodDiary.Modules.Fasting.Presentation.Requests;
@@ -233,7 +234,7 @@ public sealed class FastingHttpMappingsTests {
                 [
                     new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive"),
                 ]),
-            new FoodDiary.Application.Contracts.Common.Models.PagedResponse<FastingSessionModel>(
+            new PagedResponse<FastingSessionModel>(
                 [],
                 1,
                 10,

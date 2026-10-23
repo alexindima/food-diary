@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Admin.Contracts.Errors;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Security.Claims;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ImpersonationAccessGuardMiddleware(
     RequestDelegate next,
     ILogger<ImpersonationAccessGuardMiddleware> logger) {

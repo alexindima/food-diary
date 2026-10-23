@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
@@ -119,7 +120,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         var query = new UserLoginEventQuery(context);
-        await using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
+        await using (IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
             var repository = new UserLoginEventRepository(context.UserLoginEvents, query);
             await repository.AddAsync(CreateLoginEvent(user, DateTime.UtcNow, @"Literal%_\", "Linux", "Desktop"));
             await repository.AddAsync(CreateLoginEvent(user, DateTime.UtcNow, "LiteralXYZ", "Linux", "Desktop"));

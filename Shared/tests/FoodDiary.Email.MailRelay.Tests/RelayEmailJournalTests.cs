@@ -1,3 +1,5 @@
+using ClientJournalEntry = FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalEntry;
+using ClientJournalPage = FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalPage;
 using FoodDiary.Email.Contracts.Email.Common;
 using FoodDiary.MailRelay.Client.Journal;
 
@@ -10,8 +12,8 @@ public sealed class RelayEmailJournalTests {
         using var cancellation = new CancellationTokenSource();
         IMailRelayJournalClient client = Substitute.For<IMailRelayJournalClient>();
         var id = Guid.NewGuid();
-        var entry = new FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalEntry(id, "sent", "welcome", "from@example.com", ["to@example.com"], "subject", DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddMinutes(1), 1, 3, "trace", "body", ContentHidden: false, "reply@example.com", "message-id");
-        var page = new FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalPage([entry], 31, new Dictionary<string, long>(StringComparer.Ordinal) { ["sent"] = 31 });
+        var entry = new ClientJournalEntry(id, "sent", "welcome", "from@example.com", ["to@example.com"], "subject", DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddMinutes(1), 1, 3, "trace", "body", ContentHidden: false, "reply@example.com", "message-id");
+        var page = new ClientJournalPage([entry], 31, new Dictionary<string, long>(StringComparer.Ordinal) { ["sent"] = 31 });
         client.GetPageAsync(2, 10, "welcome", "sent", "to@example.com", cancellation.Token, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), id, "trace").Returns(page);
         var journal = new RelayEmailJournal(client);
         OutgoingEmailJournalPage actual = await journal.GetPageAsync(2, 10, "welcome", "sent", "to@example.com", cancellation.Token, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), id, "trace");

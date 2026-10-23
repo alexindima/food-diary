@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Metadata;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,9 @@ public sealed class WebhookStateMappingTests {
             .UseNpgsql("Host=localhost;Database=metadata_only;Username=unused")
             .Options;
         using var context = new BillingDbContext(options);
-        Microsoft.EntityFrameworkCore.Metadata.IEntityType? entity = context.Model.FindEntityType(typeof(BillingWebhookEvent));
+        IEntityType? entity = context.Model.FindEntityType(typeof(BillingWebhookEvent));
         Assert.NotNull(entity);
-        Microsoft.EntityFrameworkCore.Metadata.IProperty? status = entity.FindProperty(nameof(BillingWebhookEvent.Status));
+        IProperty? status = entity.FindProperty(nameof(BillingWebhookEvent.Status));
         Assert.NotNull(status);
 
         Assert.Multiple(() => {

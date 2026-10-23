@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Models;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -339,7 +340,7 @@ public partial class MealPlansFeatureTests {
     public async Task GetMealPlans_WithEmptyUserId_ReturnsInvalidToken() {
         GetMealPlansQueryHandler handler = CreateMealPlansHandler(new StubMealPlanRepository(plan: null));
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
+        Result<PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -353,7 +354,7 @@ public partial class MealPlansFeatureTests {
         var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
         GetMealPlansQueryHandler handler = CreateMealPlansHandler(repository);
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(
+        Result<PagedResponse<MealPlanSummaryModel>> result = await handler.Handle(
             new GetMealPlansQuery(userId.Value, "keto"),
             CancellationToken.None);
 

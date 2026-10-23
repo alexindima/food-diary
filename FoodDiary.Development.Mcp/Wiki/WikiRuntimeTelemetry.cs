@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Concurrent;
 
 namespace FoodDiary.Development.Mcp.Wiki;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class WikiRuntimeTelemetry(ContextRoutingTelemetryStore? contextRoutingStore = null) {
     private const int MaximumTimingSamples = 128;
     private readonly ConcurrentDictionary<string, TimingWindow> _timings =

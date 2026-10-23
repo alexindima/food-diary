@@ -1,9 +1,11 @@
 using System.Buffers;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace LlmWiki.SqliteReader;
 
@@ -19,7 +21,7 @@ public static class DomainDataReader {
     };
 
     static DomainDataReader() {
-        SQLitePCL.Batteries_V2.Init();
+        Batteries_V2.Init();
     }
 
     public static string Query(
@@ -80,7 +82,7 @@ public static class DomainDataReader {
         int scannedRecords = Convert.ToInt32(ReadScalarInt64(
             connection,
             "SELECT COUNT(*) FROM query_documents WHERE category = 'domain';"),
-            System.Globalization.CultureInfo.InvariantCulture);
+            CultureInfo.InvariantCulture);
         stopwatch.Stop();
 
         var buffer = new ArrayBufferWriter<byte>();
@@ -145,7 +147,7 @@ public static class DomainDataReader {
             WHERE category = 'domain' AND record_kind = $recordKind{AdditionalPredicate(group)};
             """;
         command.Parameters.AddWithValue("$recordKind", group.RecordKind);
-        return Convert.ToInt32(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+        return Convert.ToInt32(command.ExecuteScalar(), CultureInfo.InvariantCulture);
     }
 
     private static List<string> ReadPayloads(
@@ -192,7 +194,7 @@ public static class DomainDataReader {
         using SqliteCommand command = connection.CreateCommand();
         command.CommandTimeout = 2;
         command.CommandText = commandText;
-        return Convert.ToInt64(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+        return Convert.ToInt64(command.ExecuteScalar(), CultureInfo.InvariantCulture);
     }
 
     private static string EscapeLike(string value) => value

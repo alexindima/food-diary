@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
@@ -36,9 +37,9 @@ public sealed class MailInboxExportClient(HttpClient httpClient, IOptions<MailIn
             throw new InvalidOperationException("MailInbox MIME exceeds the export size limit.");
         }
         Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
         var output = new MemoryStream();
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable outputScope = output.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable outputScope = output.ConfigureAwait(false);
         byte[] buffer = new byte[8192];
         int read;
         while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {

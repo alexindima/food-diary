@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Recipes.Infrastructure;
@@ -112,8 +113,8 @@ public sealed class SharedUserPurgeContextsIntegrationTests(PostgresDatabaseFixt
         await using ServiceProvider provider = CreateProvider(central);
         IUserDataPurgeParticipant[] participants = [.. Participants(provider), new FailingParticipant(failed.User.Id)];
         var service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleScopeGuard>());
+            provider.GetRequiredService<IModuleTransactionCoordinator>(),
+            provider.GetRequiredService<IModuleScopeGuard>());
 
         Assert.Equal(1, (await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, reassignUserId: null)).RemovedCount);
 

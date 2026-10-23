@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.Recognition;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -192,7 +193,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using ConfiguredAsyncDisposable transactionDisposal = transaction.ConfigureAwait(false);
             T result = await action(context, cancellationToken).ConfigureAwait(false);
-            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
             return result;
         }).ConfigureAwait(false);
     }

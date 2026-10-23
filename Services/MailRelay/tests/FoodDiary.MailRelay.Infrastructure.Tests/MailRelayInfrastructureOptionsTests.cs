@@ -1,3 +1,6 @@
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Options;
@@ -96,7 +99,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void ConfiguredMailRelayDeliveryPolicy_WhenDirectMxRecipientsSpanDomains_ReturnsValidationFailure() {
-        var policy = new ConfiguredMailRelayDeliveryPolicy(Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(MsOptions.Create(new MailRelayDeliveryOptions {
             Mode = MailRelayDeliveryOptions.DirectMxMode,
         }));
 
@@ -114,7 +117,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void ConfiguredMailRelayDeliveryPolicy_WhenModeIsNotDirectMx_AllowsMultipleDomains() {
-        var policy = new ConfiguredMailRelayDeliveryPolicy(Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(MsOptions.Create(new MailRelayDeliveryOptions {
             Mode = MailRelayDeliveryOptions.SmtpSubmissionMode,
         }));
 
@@ -139,7 +142,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayDispatchNotifier_WhenBrokerIsDisabled_CompletesWithoutPublishing() {
         var broker = new RabbitMqMailRelayBroker(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
@@ -153,7 +156,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayBroker_WhenDisabled_SkipsReadyTopologyAndPublishOperations() {
         var broker = new RabbitMqMailRelayBroker(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
@@ -168,13 +171,13 @@ public sealed class MailRelayInfrastructureOptionsTests {
     [Fact]
     public async Task RabbitMqMailRelayBootstrapHostedService_WhenBrokerIsDisabled_StartsAndStopsWithoutDeclaringTopology() {
         var broker = new RabbitMqMailRelayBroker(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var service = new RabbitMqMailRelayBootstrapHostedService(
             broker,
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
@@ -188,7 +191,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport: null!,
             directMxTransport: null!,
-            Microsoft.Extensions.Options.Options.Create(new MailRelayDeliveryOptions {
+            MsOptions.Create(new MailRelayDeliveryOptions {
                 Mode = "Unknown",
             }));
 
@@ -291,8 +294,8 @@ public sealed class MailRelayInfrastructureOptionsTests {
         using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Multiple(
-            () => Assert.Null(provider.GetService<OpenTelemetry.Metrics.MeterProvider>()),
-            () => Assert.Null(provider.GetService<OpenTelemetry.Trace.TracerProvider>()));
+            () => Assert.Null(provider.GetService<MeterProvider>()),
+            () => Assert.Null(provider.GetService<TracerProvider>()));
     }
 
     [Fact]
@@ -309,8 +312,8 @@ public sealed class MailRelayInfrastructureOptionsTests {
         using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Multiple(
-            () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>()),
-            () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Trace.TracerProvider>()));
+            () => Assert.NotNull(provider.GetRequiredService<MeterProvider>()),
+            () => Assert.NotNull(provider.GetRequiredService<TracerProvider>()));
     }
 
     [Fact]

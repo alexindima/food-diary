@@ -1,3 +1,6 @@
+using FoodDiary.MailRelay.Domain.Emails;
+using Microsoft.AspNetCore.Http.Metadata;
+using System.Reflection;
 using FoodDiary.MailRelay.Presentation.Features.Email;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -8,9 +11,9 @@ namespace FoodDiary.MailRelay.Presentation.Tests;
 public sealed class MailRelayControllerSurfaceTests {
     [Fact]
     public void Enqueue_HasExplicitRequestSizeBudget() {
-        System.Reflection.MethodInfo action = typeof(MailRelayQueueController).GetMethod(nameof(MailRelayQueueController.Enqueue))!;
+        MethodInfo action = typeof(MailRelayQueueController).GetMethod(nameof(MailRelayQueueController.Enqueue))!;
         RequestSizeLimitAttribute limit = Assert.Single(action.GetCustomAttributes(typeof(RequestSizeLimitAttribute), inherit: false).Cast<RequestSizeLimitAttribute>());
-        Assert.Equal(FoodDiary.MailRelay.Domain.Emails.RelayEmailMessageLimits.MaximumRequestBytes, ((Microsoft.AspNetCore.Http.Metadata.IRequestSizeLimitMetadata)limit).MaxRequestBodySize);
+        Assert.Equal(RelayEmailMessageLimits.MaximumRequestBytes, ((IRequestSizeLimitMetadata)limit).MaxRequestBodySize);
     }
 
     public static TheoryData<Type, string, int> ControllerContracts => new() {

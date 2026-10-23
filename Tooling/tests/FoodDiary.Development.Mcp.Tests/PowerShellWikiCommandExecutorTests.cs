@@ -1,3 +1,7 @@
+using System.Globalization;
+using System.Reflection;
+using System.Text.Json;
+
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -12,8 +16,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
         PowerShellWikiCommandExecutor executor = useDefaultLimits
             ? new()
             : new(maxConcurrentCommands: 1, maxOutputCharacters: 9000);
-        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
-            "ReadBoundedAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+            "ReadBoundedAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
         string expected = new('я', length);
         using StringReader reader = new(expected);
         var operation = (Task<string>)method.Invoke(executor, [reader, "standard output", CancellationToken.None])!;
@@ -34,10 +38,10 @@ public sealed class PowerShellWikiCommandExecutorTests {
         ];
         string requestPath = await WriteRequestAsync(arguments);
         try {
-            using var document = System.Text.Json.JsonDocument.Parse(
+            using var document = JsonDocument.Parse(
                 await File.ReadAllTextAsync(requestPath));
-            System.Text.Json.JsonElement root = document.RootElement;
-            System.Text.Json.JsonElement values = root.GetProperty("arguments");
+            JsonElement root = document.RootElement;
+            JsonElement values = root.GetProperty("arguments");
 
             Assert.Multiple(
                 () => Assert.Equal(1, root.GetProperty("schemaVersion").GetInt32()),
@@ -60,7 +64,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         try {
             string secondPath = await WriteRequestAsync([]);
             try {
-                using var document = System.Text.Json.JsonDocument.Parse(
+                using var document = JsonDocument.Parse(
                     await File.ReadAllTextAsync(secondPath));
                 Assert.Multiple(
                     () => Assert.NotEqual(firstPath, secondPath, StringComparer.Ordinal),
@@ -76,8 +80,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
     }
 
     private static Task<string> WriteRequestAsync(IReadOnlyList<string> arguments) {
-        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
-            "WriteRequestAsync", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+            "WriteRequestAsync", BindingFlags.Static | BindingFlags.NonPublic)!;
         return (Task<string>)method.Invoke(null, [arguments, CancellationToken.None])!;
     }
 
@@ -97,9 +101,9 @@ public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
     public async Task ReadBoundedAsync_WhenLimitIsExceeded_Throws() {
         var executor = new PowerShellWikiCommandExecutor(maxConcurrentCommands: 1, maxOutputCharacters: 3);
-        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+        MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
             "ReadBoundedAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         var operation = (Task<string>)method.Invoke(
             executor,
             [new StringReader("overflow"), "standard output", CancellationToken.None])!;
@@ -192,7 +196,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         List<string> arguments = ["-Format", "Json", "-Fast", "-Objective", new string('я', 12_000)];
         for (int index = 0; index < 250; index++) {
             arguments.Add("-ChangedPath");
-            arguments.Add($"FoodDiary.Web.Client/src/app/измерения/компонент-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}.ts");
+            arguments.Add($"FoodDiary.Web.Client/src/app/измерения/компонент-{index.ToString(CultureInfo.InvariantCulture)}.ts");
         }
 
         WikiCommandResult result = await executor.ExecuteAsync(

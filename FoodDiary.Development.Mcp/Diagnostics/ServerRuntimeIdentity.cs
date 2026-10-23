@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -5,7 +6,7 @@ using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed record ServerRuntimeIdentity(
     int ProcessId,
     DateTimeOffset ProcessStartedAtUtc,

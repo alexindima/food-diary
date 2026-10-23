@@ -1,3 +1,4 @@
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
@@ -13,7 +14,7 @@ public sealed class GetCatalogMealPlanQueryHandler(IMealPlanCompositionReader re
     public async Task<Result<MealPlanModel>> Handle(GetCatalogMealPlanQuery query, CancellationToken cancellationToken) {
         Result<MealPlanId> id = RequiredIdParser.Parse(query.Id, nameof(query.Id), "Meal plan id is required.", value => new MealPlanId(value));
         if (id.IsFailure) { return Result.Failure<MealPlanModel>(id.Error); }
-        FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanReadModel? plan = await reader.GetReadModelByIdAsync(id.Value, viewerId: null, cancellationToken).ConfigureAwait(false);
+        MealPlanReadModel? plan = await reader.GetReadModelByIdAsync(id.Value, viewerId: null, cancellationToken).ConfigureAwait(false);
         return plan?.UserId.HasValue != false
             ? Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(query.Id)) : Result.Success(plan.ToModel());
     }

@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace FoodDiary.Results.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -172,7 +174,7 @@ public sealed class ResultTests {
         Assert.NotNull(missingMessages);
         Assert.Empty(missingMessages);
 
-        System.Collections.IEnumerator enumerator = ((System.Collections.IEnumerable)details).GetEnumerator();
+        IEnumerator enumerator = ((IEnumerable)details).GetEnumerator();
         Assert.True(enumerator.MoveNext());
     }
 

@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using System.Net;
 
 namespace FoodDiary.MailInbox.Infrastructure.Services;
@@ -7,7 +8,7 @@ internal static class MailInboxNetworkIdentity {
 
     public static string GetKey(IPAddress address) {
         IPAddress normalized = address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address;
-        if (normalized.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) {
+        if (normalized.AddressFamily != AddressFamily.InterNetworkV6) {
             return normalized.ToString();
         }
 

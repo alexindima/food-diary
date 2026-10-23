@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Reflection;
 using System.Security.Claims;
 using FoodDiary.Presentation.Api.Policies;
@@ -13,7 +14,7 @@ public sealed class OutputCacheOptionsSetupTests {
     public async Task Configure_UserScopedPolicy_UsesAuthenticatedUserIdAndConfiguredExpiration() {
         var userId = Guid.NewGuid();
         var options = new OutputCacheOptions();
-        new OutputCacheOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiOutputCacheOptions {
+        new OutputCacheOptionsSetup(MsOptions.Create(new ApiOutputCacheOptions {
             UserScoped = new ApiOutputCacheOptions.UserScopedCacheOptions {
                 ExpirationSeconds = 17,
             },
@@ -36,7 +37,7 @@ public sealed class OutputCacheOptionsSetupTests {
     [Fact]
     public async Task Configure_UserScopedPolicy_DoesNotCacheWithoutUserIdentity() {
         var options = new OutputCacheOptions();
-        new OutputCacheOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiOutputCacheOptions())).Configure(options);
+        new OutputCacheOptionsSetup(MsOptions.Create(new ApiOutputCacheOptions())).Configure(options);
         IOutputCachePolicy policy = FindPolicy(options, PresentationPolicyNames.UserScopedCachePolicyName);
         var context = new OutputCacheContext {
             HttpContext = new DefaultHttpContext(),

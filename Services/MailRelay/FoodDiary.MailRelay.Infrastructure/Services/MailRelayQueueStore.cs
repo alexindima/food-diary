@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -8,7 +9,7 @@ public sealed partial class MailRelayQueueStore(
     NpgsqlDataSource dataSource,
     IOptions<MailRelayQueueOptions> queueOptions,
     TimeProvider timeProvider) : IMailRelayQueueStore, IMailRelaySchemaInitializer {
-    private static readonly System.Text.Json.JsonSerializerOptions JsonOptions = new(System.Text.Json.JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly MailRelayPostgresExecutor _executor = new(dataSource);
     private readonly MailRelayQueueOptions _queueOptions = queueOptions.Value;
     private NpgsqlDataSource DataSource => dataSource;

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Recipes.Domain.Entities;
@@ -23,7 +24,7 @@ internal static class MealsCrossModuleRelationships {
             .IsRequired(false)
             .OnDelete(DeleteBehavior.ClientNoAction);
 
-        modelBuilder.Entity<MealItem>().HasOne<FoodDiary.Modules.Products.Domain.Entities.Product>()
+        modelBuilder.Entity<MealItem>().HasOne<Product>()
             .WithMany()
             .HasForeignKey(e => e.ProductId)
             .IsRequired(false);

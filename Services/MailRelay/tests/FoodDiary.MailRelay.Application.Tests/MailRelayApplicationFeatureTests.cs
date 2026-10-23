@@ -153,9 +153,9 @@ public sealed class MailRelayApplicationFeatureTests {
             Stats = stats,
         });
 
-        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
+        Result<MailRelayPage<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
             .Handle(new GetMailRelaySuppressionsQuery("user@example.com"), CancellationToken.None);
-        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelayDeliveryEventEntry>> deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
+        Result<MailRelayPage<MailRelayDeliveryEventEntry>> deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
             .Handle(new GetMailRelayDeliveryEventsQuery("user@example.com"), CancellationToken.None);
         Result<MailRelayQueueStats> queueStats = await new GetMailRelayQueueStatsQueryHandler(useCases)
             .Handle(new GetMailRelayQueueStatsQuery(), CancellationToken.None);

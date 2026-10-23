@@ -1,3 +1,4 @@
+using ProductIdType = FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
@@ -134,7 +135,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     }
 
     private static void EnsureProductId(ProductId productId) {
-        if (productId == global::FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId.Empty) {
+        if (productId == ProductIdType.Empty) {
             throw new ArgumentException("ProductId is required.", nameof(productId));
         }
     }

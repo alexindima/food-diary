@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.SaveCatalogMealPlan;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Models;
@@ -17,7 +18,7 @@ public sealed class SaveCatalogMealPlanTests {
             [.. Enumerable.Range(0, 32).Select(_ => new CatalogDayInput(0,
                 [.. Enumerable.Range(0, 21).Select(_ => new CatalogMealInput("Unknown", Guid.Empty, 101))]))]);
 
-        FluentValidation.Results.ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
+        ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.All(result.Errors, error => Assert.StartsWith("Validation.", error.ErrorCode, StringComparison.Ordinal));
@@ -28,7 +29,7 @@ public sealed class SaveCatalogMealPlanTests {
     [InlineData(false, true)]
     public async Task Publication_RequiresEveryDayFilled_ButDraftMayBeIncomplete(bool published, bool valid) {
         var command = new SaveCatalogMealPlanCommand(Id: null, "Plan", Description: null, "Balanced", 2, TargetCaloriesPerDay: null, published, [new CatalogDayInput(1, [])]);
-        FluentValidation.Results.ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
+        ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
         Assert.Equal(valid, result.IsValid);
     }
 
@@ -47,7 +48,7 @@ public sealed class SaveCatalogMealPlanTests {
             [new CatalogDayInput(1, [new CatalogMealInput("Lunch", Guid.NewGuid(), Servings: 1)])]);
         var handler = new SaveCatalogMealPlanCommandHandler(catalog, repository, reader, composition, transactionRunner);
 
-        FoodDiary.Results.Result<FoodDiary.Modules.MealPlanning.Application.MealPlans.Models.MealPlanModel> result = await handler.Handle(command, CancellationToken.None);
+        Result<MealPlanModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("MealPlan.RecipeUnavailable", result.Error.Code);

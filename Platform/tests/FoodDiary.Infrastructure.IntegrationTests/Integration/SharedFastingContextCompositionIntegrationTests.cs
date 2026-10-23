@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -115,7 +116,7 @@ public sealed class SharedFastingContextCompositionIntegrationTests(PostgresData
         services.AddSingleton<SharedPersistenceDbContext>(context);
         services.AddSingleton<IDomainEventPublisher, NoEvents>();
         services.AddFastingModule();
-        FoodDiary.Modules.Users.Infrastructure.UsersModuleRegistration.AddUsersPersistence(services);
+        UsersModuleRegistration.AddUsersPersistence(services);
         return services.BuildServiceProvider();
     }
 

@@ -489,14 +489,14 @@ public partial class CyclesFeatureTests {
     public void FertilitySignalCommandModel_ConstructsExpectedValues() {
         var model = new FertilitySignalCommandModel(
             BasalBodyTemperatureCelsius: 36.62,
-            OvulationTestResult: (int)FoodDiary.Modules.Cycles.Domain.Contracts.Enums.OvulationTestResult.Positive,
+            OvulationTestResult: (int)OvulationTestResult.Positive,
             CervicalFluid: "egg white",
             HadSex: true,
             Notes: "peak",
             ClearNotes: false);
 
         Assert.Equal(36.62, model.BasalBodyTemperatureCelsius);
-        Assert.Equal((int)FoodDiary.Modules.Cycles.Domain.Contracts.Enums.OvulationTestResult.Positive, model.OvulationTestResult);
+        Assert.Equal((int)OvulationTestResult.Positive, model.OvulationTestResult);
         Assert.Equal("egg white", model.CervicalFluid);
         Assert.True(model.HadSex);
         Assert.Equal("peak", model.Notes);

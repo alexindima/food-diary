@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -9,7 +11,7 @@ public sealed class WearablesModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiary.Application.Common", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -22,7 +24,7 @@ public sealed class WearablesModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiary.Modules.Wearables.Application", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

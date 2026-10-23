@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Filters;
 using StackExchange.Redis;
@@ -41,7 +42,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 [
                     lockValue,
                     Math.Max(1L, (long)processingTtl.TotalMilliseconds)
-                        .ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        .ToString(CultureInfo.InvariantCulture),
                 ]).WaitAsync(cancellationToken).ConfigureAwait(false);
             IdempotencyReservation? reservation = ParseReservation(
                 result,
@@ -84,7 +85,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
 
         if (state != CompletedState) {
             throw new InvalidOperationException(
-                $"Unexpected Redis idempotency reservation state: {state.ToString(System.Globalization.CultureInfo.InvariantCulture)}.");
+                $"Unexpected Redis idempotency reservation state: {state.ToString(CultureInfo.InvariantCulture)}.");
         }
 
         CompletedEntry? entry = TryDeserialize(storedValue);
@@ -136,7 +137,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             [
                 BuildLockValue(requestHash, ownerToken),
                 Math.Max(1L, (long)processingTtl.TotalMilliseconds)
-                    .ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    .ToString(CultureInfo.InvariantCulture),
             ]).WaitAsync(cancellationToken).ConfigureAwait(false);
         return (int)result == 1;
     }
@@ -166,7 +167,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
             [
                 BuildLockValue(requestHash, ownerToken),
                 JsonSerializer.Serialize(entry, JsonOptions),
-                ((long)responseTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                ((long)responseTtl.TotalMilliseconds).ToString(CultureInfo.InvariantCulture),
             ]).WaitAsync(cancellationToken).ConfigureAwait(false);
         return (int)result == 1;
     }

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using FoodDiary.Development.Mcp.Infrastructure;
 using FoodDiary.Development.Mcp.Protocol;
@@ -77,9 +78,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
         string[] expectedStages = includeTests
             ? ["frontend", "endpoint", "handler", "service", "infrastructure", "tests"]
             : ["frontend", "endpoint", "handler", "infrastructure"];
-        bool requestsWorker = System.Text.RegularExpressions.Regex.IsMatch(query,
+        bool requestsWorker = Regex.IsMatch(query,
             @"\b(?:worker|job|background)\b|задан|фонов|воркер",
-            System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant,
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
             TimeSpan.FromMilliseconds(100));
         if (requestsWorker) { expectedStages = [.. expectedStages, "worker"]; }
         foreach (string stage in expectedStages) {
@@ -108,8 +109,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
         return paths.Where(path => !path.Contains("/generated/", StringComparison.OrdinalIgnoreCase) &&
                 !path.Contains("/fooddiary-admin/", StringComparison.OrdinalIgnoreCase) &&
                 !string.Equals(SqliteFlowScopeReader.Stage(path), "tests", StringComparison.Ordinal))
-            .Select(path => System.Text.RegularExpressions.Regex.Replace(Path.GetFileName(path).Split('.')[0],
-                @"(?<=[a-z0-9])(?=[A-Z])|[-_]", " ", System.Text.RegularExpressions.RegexOptions.CultureInvariant,
+            .Select(path => Regex.Replace(Path.GetFileName(path).Split('.')[0],
+                @"(?<=[a-z0-9])(?=[A-Z])|[-_]", " ", RegexOptions.CultureInvariant,
                 TimeSpan.FromMilliseconds(100)))
             .Select(name => string.Join(' ', name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
                 .Where(term => !roles.Contains(term)).Take(2)))
@@ -121,10 +122,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
 
     private static string GetFlowOperations(string query) {
         string value = query.ToLowerInvariant();
-        if (System.Text.RegularExpressions.Regex.IsMatch(value, @"\b(?:chang(?:e|es|ing|ed)|updat\w*)\b|измен|обнов",
-            System.Text.RegularExpressions.RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) { return "update"; }
-        if (System.Text.RegularExpressions.Regex.IsMatch(value, @"\bstart\w*\b|запуск|запуст",
-            System.Text.RegularExpressions.RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) { return "start process"; }
+        if (Regex.IsMatch(value, @"\b(?:chang(?:e|es|ing|ed)|updat\w*)\b|измен|обнов",
+            RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) { return "update"; }
+        if (Regex.IsMatch(value, @"\bstart\w*\b|запуск|запуст",
+            RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))) { return "start process"; }
         return "";
     }
 

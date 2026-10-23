@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
@@ -23,7 +24,7 @@ public sealed class CatalogRecipeImportTests {
         var ownerId = Guid.NewGuid();
         ISender sender = Substitute.For<ISender>();
         CreateRecipeCommand? captured = null;
-        FoodDiary.Modules.Recipes.Domain.Entities.Recipe? created = null;
+        Recipe? created = null;
         var values = new CreateRecipeValues(new UserId(ownerId), Visibility.Public, ImageAssetId: null, ImageAsset: null);
         sender.Send(Arg.Any<CreateRecipeCommand>(), Arg.Any<CancellationToken>()).Returns(call => {
             captured = call.Arg<CreateRecipeCommand>();
@@ -38,7 +39,7 @@ public sealed class CatalogRecipeImportTests {
         Assert.NotNull(created);
         Assert.Equal(prepTime, created.PrepTime);
         Assert.NotNull(captured);
-        FoodDiary.Modules.Recipes.Domain.Entities.Recipe ordinary = RecipeCreateFactory.Create(captured with { CatalogImportId = null }, values);
+        Recipe ordinary = RecipeCreateFactory.Create(captured with { CatalogImportId = null }, values);
         Assert.Equal(prepTime, ordinary.PrepTime);
     }
 
@@ -58,7 +59,7 @@ public sealed class CatalogRecipeImportTests {
         CreateRecipeCommand? captured = null;
         sender.Send(Arg.Any<CreateRecipeCommand>(), Arg.Any<CancellationToken>()).Returns(call => {
             captured = call.Arg<CreateRecipeCommand>();
-            FoodDiary.Modules.Recipes.Domain.Entities.Recipe recipe = RecipeCreateFactory.Create(captured, new CreateRecipeValues(new UserId(ownerId), Visibility.Public, ImageAssetId: null, ImageAsset: null));
+            Recipe recipe = RecipeCreateFactory.Create(captured, new CreateRecipeValues(new UserId(ownerId), Visibility.Public, ImageAssetId: null, ImageAsset: null));
             return Result.Success(recipe.ToModel(usageCount: 0, isOwnedByCurrentUser: true));
         });
         var handler = new ImportCatalogRecipeCommandHandler(Substitute.For<IRecipeCatalogIdReadService>(), new CreateRecipeCommandValidator(), sender);

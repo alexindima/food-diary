@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+
 namespace FoodDiary.Presentation.Api.Responses;
 
 [AttributeUsage(AttributeTargets.Method)]
@@ -11,9 +13,9 @@ public sealed class ProducesFileResponseAttribute : Attribute {
         var uniqueContentTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (string contentType in contentTypes) {
             if (string.IsNullOrWhiteSpace(contentType) ||
-                !System.Net.Http.Headers.MediaTypeHeaderValue.TryParse(
+                !MediaTypeHeaderValue.TryParse(
                     contentType,
-                    out System.Net.Http.Headers.MediaTypeHeaderValue? parsedContentType) ||
+                    out MediaTypeHeaderValue? parsedContentType) ||
                 parsedContentType.Parameters.Count > 0 ||
                 parsedContentType.MediaType!.Contains('*', StringComparison.Ordinal) ||
                 !string.Equals(contentType, contentType.Trim(), StringComparison.Ordinal)) {

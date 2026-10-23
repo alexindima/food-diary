@@ -1,3 +1,8 @@
+using FoodDiary.Development.Mcp.Infrastructure;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text.Json;
+
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -84,15 +89,15 @@ public sealed class ChangeSetSnapshotServiceTests {
         Directory.CreateDirectory(repositoryRoot);
         try {
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
-            System.Reflection.MethodInfo method = typeof(ChangeSetSnapshotService).GetMethod(
+            MethodInfo method = typeof(ChangeSetSnapshotService).GetMethod(
                 "OnWatcherError",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
 
             method.Invoke(service, [service, new ErrorEventArgs(new IOException("watcher failed"))]);
 
-            System.Reflection.FieldInfo generation = typeof(ChangeSetSnapshotService).GetField(
+            FieldInfo generation = typeof(ChangeSetSnapshotService).GetField(
                 "_generation",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
             Assert.Equal(1L, generation.GetValue(service));
         } finally {
             Directory.Delete(repositoryRoot, recursive: true);
@@ -235,10 +240,10 @@ public sealed class ChangeSetSnapshotServiceTests {
         Directory.CreateDirectory(repositoryRoot);
         try {
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
-            System.Reflection.MethodInfo handler = typeof(ChangeSetSnapshotService).GetMethod(
-                "OnChanged", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
-            System.Reflection.MethodInfo pending = typeof(ChangeSetSnapshotService).GetMethod(
-                "HasRelevantPendingChange", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            MethodInfo handler = typeof(ChangeSetSnapshotService).GetMethod(
+                "OnChanged", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            MethodInfo pending = typeof(ChangeSetSnapshotService).GetMethod(
+                "HasRelevantPendingChange", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
             handler.Invoke(service, [service, new RenamedEventArgs(WatcherChangeTypes.Renamed, repositoryRoot, destination, "Scoped/source.cs")]);
 
@@ -249,8 +254,8 @@ public sealed class ChangeSetSnapshotServiceTests {
     }
 
     private static async Task<string> RunGitAsync(string repositoryRoot, params string[] arguments) {
-        using System.Diagnostics.Process process = new() {
-            StartInfo = new System.Diagnostics.ProcessStartInfo {
+        using Process process = new() {
+            StartInfo = new ProcessStartInfo {
                 FileName = "git",
                 WorkingDirectory = repositoryRoot,
                 RedirectStandardOutput = true,
@@ -262,7 +267,7 @@ public sealed class ChangeSetSnapshotServiceTests {
         foreach (string argument in arguments) {
             process.StartInfo.ArgumentList.Add(argument);
         }
-        FoodDiary.Development.Mcp.Infrastructure.GitProcessEnvironment
+        GitProcessEnvironment
             .ClearLocalRepositoryVariables(process.StartInfo);
         process.Start();
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
@@ -288,7 +293,7 @@ public sealed class ChangeSetSnapshotServiceTests {
         if (!string.Equals(Path.GetDirectoryName(repositoryRoot), Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar), StringComparison.Ordinal)) {
             throw new InvalidOperationException("Unsafe snapshot fixture path.");
         }
-        string sourceRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+        string sourceRoot = RepositoryRootResolver.Resolve();
         Directory.CreateDirectory(Path.Combine(repositoryRoot, ".llm-wiki", "tools"));
         Directory.CreateDirectory(Path.Combine(repositoryRoot, ".llm-wiki", "policies"));
         Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(repositoryRoot, sourcePath))!);
@@ -310,8 +315,8 @@ public sealed class ChangeSetSnapshotServiceTests {
             using var service = new ChangeSetSnapshotService(TimeProvider.System, repositoryRoot);
             ChangeSetSnapshot snapshot = await service.GetAsync(CancellationToken.None);
             Assert.Equal(new[] { sourcePath, destinationPath }.Order(StringComparer.Ordinal), snapshot.ChangedPaths, StringComparer.Ordinal);
-            using System.Diagnostics.Process process = new() {
-                StartInfo = new System.Diagnostics.ProcessStartInfo {
+            using Process process = new() {
+                StartInfo = new ProcessStartInfo {
                     FileName = "node",
                     WorkingDirectory = repositoryRoot,
                     RedirectStandardOutput = true,
@@ -322,7 +327,7 @@ public sealed class ChangeSetSnapshotServiceTests {
             };
             process.StartInfo.ArgumentList.Add(Path.Combine(repositoryRoot, ".llm-wiki", "tools", "code-graph.mjs"));
             process.StartInfo.ArgumentList.Add("status");
-            FoodDiary.Development.Mcp.Infrastructure.GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
+            GitProcessEnvironment.ClearLocalRepositoryVariables(process.StartInfo);
             using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
             process.Start();
             Task<string> output = process.StandardOutput.ReadToEndAsync(timeout.Token);
@@ -334,7 +339,7 @@ public sealed class ChangeSetSnapshotServiceTests {
                 throw;
             }
             Assert.True(process.ExitCode == 0, await error);
-            using var status = System.Text.Json.JsonDocument.Parse(await output);
+            using var status = JsonDocument.Parse(await output);
             Assert.Equal(snapshot.Fingerprint, status.RootElement.GetProperty("currentChangeSetFingerprint").GetString());
             Assert.Equal(snapshot.ChangedPaths.Count, status.RootElement.GetProperty("currentWorkspace").GetProperty("changedPathCount").GetInt32());
         } finally {

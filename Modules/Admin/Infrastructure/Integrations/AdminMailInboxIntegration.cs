@@ -1,3 +1,5 @@
+using FoodDiary.MailInbox.Client.Export;
+using Microsoft.Extensions.Options;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 using FoodDiary.MailInbox.Client.Extensions;
@@ -34,15 +36,15 @@ public static class AdminMailInboxIntegration {
                 options.AllowInsecureLoopback = section.GetValue<bool>("AllowInsecureLoopback");
             });
             services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
-            services.AddHttpClient<FoodDiary.MailInbox.Client.Export.IMailInboxExportClient, FoodDiary.MailInbox.Client.Export.MailInboxExportClient>((provider, client) => {
-                MailInboxClientOptions options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<MailInboxClientOptions>>().Value;
+            services.AddHttpClient<IMailInboxExportClient, MailInboxExportClient>((provider, client) => {
+                MailInboxClientOptions options = provider.GetRequiredService<IOptions<MailInboxClientOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
                 client.Timeout = options.Timeout;
             }).ConfigurePrimaryHttpMessageHandler(static () => new HttpClientHandler { AllowAutoRedirect = false });
             services.AddFoodDiaryMediator(_ => { });
             services.TryAddEnumerable(ServiceDescriptor.Transient<IRequestHandler<SendBugAcknowledgementsCommand, Unit>, SendBugAcknowledgementsCommandHandler>());
             services.AddScoped<IBugAcknowledgementReceipts, BugAcknowledgementReceipts>();
-            services.AddScoped<FoodDiary.Modules.Admin.Application.Abstractions.Common.IBugAcknowledgementSource, BugAcknowledgementSource>();
+            services.AddScoped<IBugAcknowledgementSource, BugAcknowledgementSource>();
             services.AddOptions<BugAcknowledgementOptions>().Bind(configuration.GetSection("BugAcknowledgement"))
                 .Validate(x => x.PollInterval >= TimeSpan.FromSeconds(10) && x.PollInterval <= TimeSpan.FromDays(1), "Invalid acknowledgement poll interval.")
                 .ValidateOnStart();

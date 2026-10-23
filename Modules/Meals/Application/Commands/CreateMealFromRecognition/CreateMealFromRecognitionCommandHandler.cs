@@ -20,7 +20,7 @@ public sealed class CreateMealFromRecognitionCommandHandler(
     IMealRecognitionTransactionRunner transactions,
     IMealRecognitionReceiptRepository receipts,
     ISender recognitionResults,
-    FoodDiary.Mediator.IRequestHandler<CreateMealCommand, Result<MealModel>> createMeal,
+    IRequestHandler<CreateMealCommand, Result<MealModel>> createMeal,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider) : ICommandHandler<CreateMealFromRecognitionCommand, Result<RecognizedMealCreationModel>> {
     public async Task<Result<RecognizedMealCreationModel>> Handle(CreateMealFromRecognitionCommand command, CancellationToken cancellationToken) {

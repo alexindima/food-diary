@@ -1,10 +1,12 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContentReportsModuleExtractionTests {
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus))]
-    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType))]
+    [InlineData(typeof(ReportStatus))]
+    [InlineData(typeof(ReportTargetType))]
     public void ReportEnums_AreOwnedOnlyByContentReportsDomainContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.ContentReports.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.ContentReports.Domain.Contracts.Enums", enumType.Namespace);

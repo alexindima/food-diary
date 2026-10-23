@@ -1,3 +1,4 @@
+using Stripe;
 using System.Text.Json;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
@@ -13,7 +14,7 @@ public sealed partial class BillingGatewayTests {
     [InlineData("invoice.payment_failed")]
     public async Task StripeInvoice_UnsupportedEvent_IsIgnoredWithoutProviderRequests(string eventType) {
         string payload = CreateStripeInvoicePayload(Guid.NewGuid(), eventType, "usd", 799, "price_other");
-        Stripe.IStripeClient client = Substitute.For<Stripe.IStripeClient>();
+        IStripeClient client = Substitute.For<IStripeClient>();
         var gateway = new StripeBillingGateway(MsOptions.Create(new StripeOptions {
             SecretKey = "sk_test",
             WebhookSecret = "whsec_test",

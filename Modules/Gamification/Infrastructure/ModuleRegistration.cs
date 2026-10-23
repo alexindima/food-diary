@@ -1,3 +1,4 @@
+using FoodDiary.Mediator;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Persistence.Abstractions;
@@ -40,7 +41,7 @@ public static class ModuleRegistration {
             GamificationDbContext owned = provider.GetRequiredService<GamificationDbContext>();
             IModuleScopeGuard scopeGuard = provider.GetRequiredService<IModuleScopeGuard>();
             return new AchievementEvaluationOutboxProcessor(owned, owned.AchievementEvaluationOutbox,
-                provider.GetRequiredService<FoodDiary.Mediator.ISender>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
+                provider.GetRequiredService<ISender>(), provider.GetRequiredService<IOptions<OutboxProcessingOptions>>(),
                 provider.GetRequiredService<TimeProvider>(), provider.GetRequiredService<ILogger<AchievementEvaluationOutboxProcessor>>(),
                 scopeGuard.EnsureCleanEntry);
         });

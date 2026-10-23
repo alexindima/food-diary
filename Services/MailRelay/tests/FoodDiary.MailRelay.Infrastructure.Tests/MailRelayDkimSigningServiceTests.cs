@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Security.Cryptography;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
@@ -107,7 +108,7 @@ public sealed class MailRelayDkimSigningServiceTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static DkimSigningService CreateService(MailRelayDkimOptions options) =>
-        new(Microsoft.Extensions.Options.Options.Create(options), FixedTime);
+        new(MsOptions.Create(options), FixedTime);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {

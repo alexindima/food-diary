@@ -41,7 +41,7 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                 ImportedReport report;
                 try {
                     var stream = new MemoryStream(mime, writable: false);
-                    await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
+                    await using ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
                     using MimeMessage message = await MimeMessage.LoadAsync(stream, cancellationToken).ConfigureAwait(false);
                     string body = message.TextBody ?? message.HtmlBody ?? string.Empty;
                     report = new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, Bound(message.Subject ?? "(no subject)", 1000), Bound(body, 100_000), mime);

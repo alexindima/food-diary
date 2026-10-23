@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Entities.Tracking;
+using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -36,8 +38,8 @@ public sealed class UpdateDesiredWeightCommandHandler(
         }
 
         User currentUser = userResult.Value;
-        FoodDiary.Modules.Users.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
+        WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
+            goal => goal.Status == WeightGoalStatus.Active);
         if (command.DesiredWeightKg == currentUser.DesiredWeightKg) {
             return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
         }
@@ -60,7 +62,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
         await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         activeGoal = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
+            goal => goal.Status == WeightGoalStatus.Active);
         return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
     }
 

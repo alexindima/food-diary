@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 
 namespace FoodDiary.Modules.Cycles.Domain.Tests;
@@ -24,5 +25,5 @@ public sealed class CycleEnumContractTests {
     }
 
     private static (string Name, int Value)[] ReadValues<TEnum>() where TEnum : struct, Enum =>
-        [.. Enum.GetValues<TEnum>().Select(value => (value.ToString(), Convert.ToInt32(value, System.Globalization.CultureInfo.InvariantCulture)))];
+        [.. Enum.GetValues<TEnum>().Select(value => (value.ToString(), Convert.ToInt32(value, CultureInfo.InvariantCulture)))];
 }

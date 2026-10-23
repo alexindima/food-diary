@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using System.Text;
 using FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
@@ -27,8 +28,8 @@ public sealed class BugAcknowledgementSourceTests {
 
     [Fact]
     public void ReimportedMessageUsesSameIdempotencyKey() {
-        FoodDiary.Modules.Admin.Application.Abstractions.Common.BugAcknowledgementCandidate? first = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
-        FoodDiary.Modules.Admin.Application.Abstractions.Common.BugAcknowledgementCandidate? second = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
+        BugAcknowledgementCandidate? first = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
+        BugAcknowledgementCandidate? second = BugAcknowledgementSource.Parse(Guid.NewGuid(), "person@example.com", Mime(""));
         Assert.NotNull(first);
         Assert.NotNull(second);
         Assert.Equal(first.IdempotencyKey, second.IdempotencyKey);

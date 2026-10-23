@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Meals.Application.Commands.CreateMeal;
@@ -33,7 +34,7 @@ public sealed class AtomicMealBoundaryTests {
 
     [Fact]
     public void AtomicExecutionPort_DoesNotExposeDatabaseCapabilities() {
-        System.Reflection.MethodInfo[] methods = typeof(IAtomicCommandExecutor).GetMethods();
+        MethodInfo[] methods = typeof(IAtomicCommandExecutor).GetMethods();
         Assert.Equal(2, methods.Length);
         Assert.All(methods, method => {
             Assert.Equal("ExecuteAsync", method.Name);

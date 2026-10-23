@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
@@ -17,7 +19,7 @@ public sealed partial class SqliteWikiContextSearchTests {
         await WikiContextSearchEvaluationRunner.RunAsync(new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()),
             corpus, output, CancellationToken.None, "fixture-change-set");
 
-        using var document = System.Text.Json.JsonDocument.Parse(output.ToString());
+        using var document = JsonDocument.Parse(output.ToString());
         Assert.True(document.RootElement.GetProperty("passed").GetBoolean(), output.ToString());
     }
 

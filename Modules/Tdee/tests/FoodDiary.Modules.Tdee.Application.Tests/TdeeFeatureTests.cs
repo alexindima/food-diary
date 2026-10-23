@@ -1,3 +1,6 @@
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Modules.Exercises.Contracts.Models;
+using System.Globalization;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
 using FoodDiary.Mediator;
@@ -33,11 +36,11 @@ public class TdeeFeatureTests {
         var user = User.Create("recorded-weight@example.com", "hash");
         user.UpdatePersonalInfo(birthDate: new DateTime(1990, 3, 1, 0, 0, 0, DateTimeKind.Utc), gender: "M", height: 180);
         ISender sender = Substitute.For<ISender>();
-        IReadOnlyList<FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel> weights = [
+        IReadOnlyList<WeightEntryModel> weights = [
             new(Guid.NewGuid(), user.Id.Value, Today.AddDays(-60), 80),
         ];
         sender.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult(weights));
-        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.Exercises.Contracts.Models.ExerciseEntryModel>>([]));
+        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<ExerciseEntryModel>>([]));
         var handler = new GetTdeeInsightQueryHandler(CreateProfileService(user), sender, CreateStatisticsReadService(),
             new StubDateTimeProvider(), CreateCurrentUserAccessService(user));
 
@@ -149,14 +152,14 @@ public class TdeeFeatureTests {
     [InlineData("America/Los_Angeles", "2026-11-01")]
     public async Task GetTdeeInsight_AlignsNutritionInstantsWithCalendarSamples(string zoneId, string dateText) {
         var user = User.Create("local-tdee@example.com", "hash");
-        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
         var date = day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         DateTime from = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(-28).ToDateTime(TimeOnly.MinValue), zone);
         DateTime to = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(1).ToDateTime(TimeOnly.MinValue), zone).AddTicks(-1);
         ISender sender = Substitute.For<ISender>();
-        sender.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel>>([]));
-        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<FoodDiary.Modules.Exercises.Contracts.Models.ExerciseEntryModel>>([]));
+        sender.Send(Arg.Any<ReadWeightEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<WeightEntryModel>>([]));
+        sender.Send(Arg.Any<ReadExerciseEntriesQuery>(), Arg.Any<CancellationToken>()).Returns(Task.FromResult<IReadOnlyList<ExerciseEntryModel>>([]));
         IMealDailyCalorieReadService nutrition = CreateStatisticsReadService();
         var handler = new GetTdeeInsightQueryHandler(CreateProfileService(user), sender, nutrition, new StubDateTimeProvider(), CreateCurrentUserAccessService(user));
         using var cancellation = new CancellationTokenSource();

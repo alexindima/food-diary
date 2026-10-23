@@ -7,7 +7,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 internal static class TestRecipeOverview {
     public static RecipeOverviewReadItem From(Recipe recipe, UserId currentUserId, int usageCount = 0) {
         RecipeModel model = recipe.ToModel(usageCount, recipe.UserId == currentUserId);

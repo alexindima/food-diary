@@ -1,3 +1,4 @@
+using System.Net;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Modules.Dietologist.Application.Services;
@@ -150,7 +151,7 @@ public sealed class DietologistEmailSenderTests {
         await sender.SendDietologistInvitationAsync(new DietologistInvitationMessage("diet@example.com", Guid.NewGuid(), "token", name, ClientLastName: null, "en"), CancellationToken.None);
 
         Assert.NotNull(captured);
-        Assert.Contains(System.Net.WebUtility.HtmlEncode(name), captured.HtmlBody, StringComparison.Ordinal);
+        Assert.Contains(WebUtility.HtmlEncode(name), captured.HtmlBody, StringComparison.Ordinal);
         Assert.DoesNotContain(name, captured.HtmlBody, StringComparison.Ordinal);
         Assert.Contains(name, captured.TextBody!, StringComparison.Ordinal);
     }

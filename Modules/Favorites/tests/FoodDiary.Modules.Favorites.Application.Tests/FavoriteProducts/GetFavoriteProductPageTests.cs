@@ -1,3 +1,6 @@
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Models;
@@ -17,10 +20,10 @@ public sealed class GetFavoriteProductPageTests {
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         access.EnsureCanAccessAsync(owner, cancellation.Token).Returns((Error?)null);
         IFavoriteProductQuery repository = Substitute.For<IFavoriteProductQuery>();
-        var item = new FavoriteProductReadModel(Guid.NewGuid(), Guid.NewGuid(), owner.Value, Name: null, DateTime.UtcNow, "Rice", Brand: null, Barcode: null, Comment: null, "https://example.com/rice.jpg", CaloriesPerBase: 100, ProteinsPerBase: 2, FatsPerBase: 1, CarbsPerBase: 20, FiberPerBase: 7.5, AlcoholPerBase: 0, FoodDiary.Modules.Products.Domain.Contracts.Enums.ProductType.Grain, FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit.G, PreferredPortionAmount: 150, DefaultPortionAmount: 100, owner.Value);
+        var item = new FavoriteProductReadModel(Guid.NewGuid(), Guid.NewGuid(), owner.Value, Name: null, DateTime.UtcNow, "Rice", Brand: null, Barcode: null, Comment: null, "https://example.com/rice.jpg", CaloriesPerBase: 100, ProteinsPerBase: 2, FatsPerBase: 1, CarbsPerBase: 20, FiberPerBase: 7.5, AlcoholPerBase: 0, ProductType.Grain, MeasurementUnit.G, PreferredPortionAmount: 150, DefaultPortionAmount: 100, owner.Value);
         repository.GetPageReadModelsAsync(owner, 2, 10, "rice", cancellation.Token).Returns((new[] { item }, 23));
         var handler = new GetFavoriteProductPageQueryHandler(repository, access);
-        FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models.FavoriteProductModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteProductPageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
+        PagedResponse<FavoriteProductModel> result = ResultAssert.Success(await handler.Handle(new GetFavoriteProductPageQuery(owner.Value, 2, 10, " rice "), cancellation.Token));
         Assert.Multiple(
             () => Assert.Equal("https://example.com/rice.jpg", result.Data.Single().ImageUrl),
             () => Assert.Equal(7.5, result.Data.Single().FiberPerBase),

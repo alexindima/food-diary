@@ -26,7 +26,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -75,7 +75,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -134,7 +134,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("manual-missing@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -166,7 +166,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("manual-negative@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -197,7 +197,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("missing-user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -217,7 +217,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("missing-recipe@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -237,7 +237,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("bad-visibility@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -259,7 +259,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -307,7 +307,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("empty-step-image@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -343,7 +343,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -396,7 +396,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(RecipeId.New(), userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -444,7 +444,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("empty-product@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

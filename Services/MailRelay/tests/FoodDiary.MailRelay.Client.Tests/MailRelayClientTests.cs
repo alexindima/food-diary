@@ -1,3 +1,6 @@
+using System.Text;
+using System.Text.Json;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.MailRelay.Client.Models;
@@ -7,8 +10,8 @@ namespace FoodDiary.MailRelay.Client.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayClientTests {
-    private static readonly System.Text.Json.JsonSerializerOptions WebJsonOptions =
-        new(System.Text.Json.JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions WebJsonOptions =
+        new(JsonSerializerDefaults.Web);
 
     [Theory]
     [InlineData("https://relay.example.test", false, true)]
@@ -40,7 +43,7 @@ public sealed class MailRelayClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, MsOptions.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
             ApiKey = "secret",
         }));
@@ -52,7 +55,7 @@ public sealed class MailRelayClientTests {
             () => Assert.Equal(HttpMethod.Post, handler.Request?.Method),
             () => Assert.Equal("https://relay.example.test/api/email/send", handler.Request?.RequestUri?.ToString()),
             () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-Relay-Api-Key").Single()));
-        EnqueueMailRelayEmailRequest? payload = System.Text.Json.JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
+        EnqueueMailRelayEmailRequest? payload = JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
             handler.RequestBody!,
             WebJsonOptions);
         Assert.Equal("user@example.com", payload!.To.Single());
@@ -61,7 +64,7 @@ public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_WhenBaseAddressIsMissing_Throws() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK)));
-        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions()));
+        var client = new MailRelayClient(httpClient, MsOptions.Create(new MailRelayClientOptions()));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
     }
@@ -71,7 +74,7 @@ public sealed class MailRelayClientTests {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted))) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, MsOptions.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
         }));
 
@@ -81,11 +84,11 @@ public sealed class MailRelayClientTests {
     [Fact]
     public async Task EnqueueAsync_WhenResponseJsonIsInvalid_ThrowsInvalidOperationException() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Accepted) {
-            Content = new StringContent("{not-json", System.Text.Encoding.UTF8, "application/json"),
+            Content = new StringContent("{not-json", Encoding.UTF8, "application/json"),
         })) {
             BaseAddress = new Uri("https://relay.example.test"),
         };
-        var client = new MailRelayClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions {
+        var client = new MailRelayClient(httpClient, MsOptions.Create(new MailRelayClientOptions {
             BaseUrl = "https://relay.example.test",
         }));
 
@@ -93,7 +96,7 @@ public sealed class MailRelayClientTests {
             () => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
 
         Assert.Equal("Mail relay returned an invalid enqueue response.", exception.Message);
-        Assert.IsType<System.Text.Json.JsonException>(exception.InnerException);
+        Assert.IsType<JsonException>(exception.InnerException);
     }
 
     private static EnqueueMailRelayEmailRequest CreateRequest() =>

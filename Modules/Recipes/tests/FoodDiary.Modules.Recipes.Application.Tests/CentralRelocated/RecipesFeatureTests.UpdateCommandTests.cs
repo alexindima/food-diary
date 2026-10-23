@@ -63,7 +63,7 @@ public partial class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -116,7 +116,7 @@ public partial class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             cleanup,
             new StubUserRepository(user),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Buffers;
 using System.Net;
 using System.Text;
@@ -35,8 +37,8 @@ public sealed class SmtpInboundMessageStoreTests {
         listener.SetMeasurementEventCallback<double>((instrument, _, tags, _) =>
             measurements.Add((instrument.Name, GetOutcome(tags))));
         listener.Start();
-        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> options =
-            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
+        IOptions<MailInboxSmtpOptions> options =
+            MsOptions.Create(new MailInboxSmtpOptions {
                 AllowedRecipients = ["private-recipient@fooddiary.club"],
             });
         var messageStore = new SmtpInboundMessageStore(
@@ -487,8 +489,8 @@ public sealed class SmtpInboundMessageStoreTests {
     private static SmtpInboundMessageStore CreateMessageStore(
         IInboundMailStore store,
         MailInboxSmtpOptions? options = null) {
-        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
-            Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxSmtpOptions());
+        IOptions<MailInboxSmtpOptions> optionsWrapper =
+            MsOptions.Create(options ?? new MailInboxSmtpOptions());
         return new SmtpInboundMessageStore(
             store,
             optionsWrapper,

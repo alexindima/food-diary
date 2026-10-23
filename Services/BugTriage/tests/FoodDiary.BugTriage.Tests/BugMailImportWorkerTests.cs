@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Infrastructure.Options;
@@ -23,7 +26,7 @@ public sealed class BugMailImportWorkerTests {
         });
         var logger = new RecordingLogger();
         using var worker = new BugMailImportWorker(new ImportBugReports(source, store, TimeProvider.System),
-            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions { PollInterval = TimeSpan.Zero }), logger);
+            MsOptions.Create(new BugTriageOptions { PollInterval = TimeSpan.Zero }), logger);
 
         await worker.StartAsync(CancellationToken.None);
         await secondPoll.Task.WaitAsync(TimeSpan.FromSeconds(10));
@@ -36,7 +39,7 @@ public sealed class BugMailImportWorkerTests {
     }
 
     private static async IAsyncEnumerable<ImportedReport> EmptyReports(
-        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken) {
+        [EnumeratorCancellation] CancellationToken cancellationToken) {
         await Task.CompletedTask.ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         yield break;
@@ -48,10 +51,10 @@ public sealed class BugMailImportWorkerTests {
         using var cancellation = new CancellationTokenSource();
         await cancellation.CancelAsync();
         using var worker = new BugMailImportWorker(new ImportBugReports(Substitute.For<IBugMailSource>(), store, TimeProvider.System),
-            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()), new RecordingLogger());
+            MsOptions.Create(new BugTriageOptions()), new RecordingLogger());
 
         // BackgroundService short-circuits canceled startup before invoking the worker's entrypoint.
-        System.Reflection.MethodInfo execute = typeof(BugMailImportWorker).GetMethod("ExecuteAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        MethodInfo execute = typeof(BugMailImportWorker).GetMethod("ExecuteAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
         await ((Task)execute.Invoke(worker, [cancellation.Token])!).WaitAsync(TimeSpan.FromSeconds(10));
 
         Assert.Empty(store.ReceivedCalls());
@@ -73,7 +76,7 @@ public sealed class BugMailImportWorkerTests {
             await Task.Delay(Timeout.InfiniteTimeSpan, call.Arg<CancellationToken>()).ConfigureAwait(false);
         });
         using var worker = new BugMailImportWorker(new ImportBugReports(source, store, TimeProvider.System),
-            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions { PollInterval = TimeSpan.Zero }), logger);
+            MsOptions.Create(new BugTriageOptions { PollInterval = TimeSpan.Zero }), logger);
 
         await worker.StartAsync(CancellationToken.None);
         await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));

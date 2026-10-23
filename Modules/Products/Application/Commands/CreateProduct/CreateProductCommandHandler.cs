@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -57,6 +58,6 @@ public sealed class CreateProductCommandHandler(
             imageUrl: values.ImageUrl,
             imageAssetId: values.ImageAssetId,
             visibility: values.Visibility,
-            importId: command.CatalogImportId is { } id ? new FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId(id) : null
+            importId: command.CatalogImportId is { } id ? new ProductId(id) : null
         );
 }

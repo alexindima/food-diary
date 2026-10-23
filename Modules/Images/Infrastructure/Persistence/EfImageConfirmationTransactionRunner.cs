@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using System.Data.Common;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -30,7 +31,7 @@ public sealed class EfImageConfirmationTransactionRunner(IModuleTransactionCoord
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue(
                 "serialization_key",
-                NpgsqlTypes.NpgsqlDbType.Text,
+                NpgsqlDbType.Text,
                 $"image-confirmation:{assetId.Value:N}");
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }

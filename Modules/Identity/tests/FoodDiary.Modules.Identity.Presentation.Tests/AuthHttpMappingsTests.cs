@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
@@ -41,7 +42,7 @@ public sealed class AuthHttpMappingsTests {
             () => Assert.Equal("existing-refresh-token", google.ClientContext!.ExistingRefreshToken),
             () => Assert.Null(admin.ClientContext!.ExistingRefreshToken),
             () => Assert.DoesNotContain("existing-refresh-token", login.ClientContext!.ToString(), StringComparison.Ordinal),
-            () => Assert.DoesNotContain("existing-refresh-token", System.Text.Json.JsonSerializer.Serialize(login.ClientContext), StringComparison.Ordinal));
+            () => Assert.DoesNotContain("existing-refresh-token", JsonSerializer.Serialize(login.ClientContext), StringComparison.Ordinal));
     }
 
     [Fact]

@@ -58,3 +58,9 @@ Application sources, including explicit discard assignments and ConfigureAwait.
 Handle or propagate failures. Deliberate best-effort exceptions need a local
 suppression with a reason; do not disable the rule for a whole module. The rule does
 not prove correct handling of values assigned to locals on every control-flow path.
+
+FD0020 requires using directives or aliases for namespace-qualified type references,
+including attributes and static member access. It reports even when the import is
+missing or short names conflict; use an alias to preserve the intended type.
+Namespace/type aliases and nested types remain valid. Generated code is skipped;
+the root .editorconfig also excludes EF migration implementations explicitly.

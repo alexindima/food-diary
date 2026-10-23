@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Infrastructure.Persistence;
@@ -32,7 +33,7 @@ public sealed class FoodDiaryDbContextTests {
         Assert.NotNull(context.MealPlans);
         Assert.NotNull(context.MealPlanDays);
         Assert.NotNull(context.MealPlanMeals);
-        Assert.Same(context.Set<FoodDiary.Modules.Ai.PersistenceModel.AiQuotaPeriod>(), context.AiQuotaPeriods);
+        Assert.Same(context.Set<AiQuotaPeriod>(), context.AiQuotaPeriods);
     }
 
     [Fact]

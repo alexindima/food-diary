@@ -1,3 +1,9 @@
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries;
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
+using Microsoft.Extensions.Logging;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotal;
 using FoodDiary.Modules.Hydration.Application.Queries.ReadHydrationDailyTotals;
@@ -631,13 +637,13 @@ public sealed class DashboardSnapshotBuilderTests {
         IHydrationEntryReadModelRepository hydrationEntryRepository,
         ISender fastingReadService,
         IExerciseEntryRepository exerciseEntryRepository,
-        Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder> logger) =>
+        ILogger<DashboardSnapshotBuilder> logger) =>
         new(
             new SectionRequestSender(sender, fastingReadService, RequestTestSender.Create(new ReadExerciseCaloriesQueryHandler(exerciseEntryRepository))),
             dashboardUserContextService,
             new ComposedDashboardReadService(
                 new SenderStatisticsFixture(sender),
-                new RepositoryDashboardBodyReadService(global::FoodDiary.Testing.RequestTestSender.Route((RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)])), [typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightSummaries.ReadWeightSummariesQuery), typeof(global::FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries.ReadWaistSummariesQuery)]), (RequestTestSender.Create(new ReadHydrationEntriesQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalsQueryHandler(hydrationEntryRepository)), [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals.ReadHydrationDailyTotalsQuery)]))),
+                new RepositoryDashboardBodyReadService(RequestTestSender.Route((RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(ReadWeightEntriesQuery), typeof(ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(ReadWaistEntriesQuery), typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery), typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)]), (RequestTestSender.Create(new ReadHydrationEntriesQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalsQueryHandler(hydrationEntryRepository)), [typeof(ReadHydrationDailyTotalsQuery)]))),
                 new MediatorDashboardMealsReadService(sender)),
             logger);
 

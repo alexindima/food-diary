@@ -1,3 +1,5 @@
+using FoodDiary.Development.Mcp.Infrastructure;
+using System.Globalization;
 using FoodDiary.Development.Mcp.ChangeSets;
 using FoodDiary.Development.Mcp.Diagnostics;
 using FoodDiary.Development.Mcp.Tools;
@@ -54,9 +56,9 @@ if (args.Length is 2 or 3 && string.Equals(
     "--record-context-routing-retirement-evidence",
     StringComparison.Ordinal)) {
     int? maximumCases = args.Length == 3
-        ? int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture)
+        ? int.Parse(args[2], CultureInfo.InvariantCulture)
         : null;
-    string evaluationRepositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+    string evaluationRepositoryRoot = RepositoryRootResolver.Resolve();
     string evaluationGitDirectory = await ServerStatusService
         .ResolveGitDirectoryForStatusAsync(evaluationRepositoryRoot, CancellationToken.None)
         .ConfigureAwait(false);
@@ -90,7 +92,7 @@ string? sessionLockPath = Environment.GetEnvironmentVariable("FOODDIARY_MCP_SESS
 FileStream? sessionLock = string.IsNullOrWhiteSpace(sessionLockPath)
     ? null
     : File.Open(sessionLockPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
-string repositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+string repositoryRoot = RepositoryRootResolver.Resolve();
 string repositoryHeadAtStartup = await ServerStatusService
     .ReadGitHeadAsync(repositoryRoot, CancellationToken.None)
     .ConfigureAwait(false);

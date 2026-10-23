@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Results;
@@ -208,7 +209,7 @@ public sealed class AuthSessionControllerTests {
     private static DefaultHttpContext CreateHttpContext() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
-        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
+        services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         var httpContext = new DefaultHttpContext {
             RequestServices = services.BuildServiceProvider(),

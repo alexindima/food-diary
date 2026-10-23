@@ -1,3 +1,4 @@
+using System.Text;
 using MimeKit;
 using MimeKit.Cryptography;
 using MimeKit.Utils;
@@ -41,7 +42,7 @@ public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options, T
 
     private Stream OpenPrivateKeyStream() {
         if (!string.IsNullOrWhiteSpace(_options.PrivateKeyPem)) {
-            return new MemoryStream(System.Text.Encoding.UTF8.GetBytes(_options.PrivateKeyPem));
+            return new MemoryStream(Encoding.UTF8.GetBytes(_options.PrivateKeyPem));
         }
 
         if (string.IsNullOrWhiteSpace(_options.PrivateKeyPath)) {

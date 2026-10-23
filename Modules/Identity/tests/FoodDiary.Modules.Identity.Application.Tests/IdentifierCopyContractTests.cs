@@ -2,9 +2,9 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class IdentifierCopyContractTests {
-    [Xunit.Fact]
+    [Fact]
     public void TelegramLeaseId_CopyPreservesOriginalAndRebindsValue() {
         var originalValue = Guid.Parse("12345678-1234-5678-9abc-def012345678");
         var replacementValue = Guid.Parse("87654321-4321-8765-cba9-876543210fed");
@@ -12,17 +12,17 @@ public sealed class IdentifierCopyContractTests {
         TelegramLeaseId copied = original with { Value = replacementValue };
         var expected = new TelegramLeaseId(replacementValue);
 
-        Xunit.Assert.Multiple(
-            () => Xunit.Assert.Equal(originalValue, original.Value),
-            () => Xunit.Assert.Equal(replacementValue, copied.Value),
-            () => Xunit.Assert.Equal(expected, copied),
-            () => Xunit.Assert.Equal(expected.GetHashCode(), copied.GetHashCode()),
-            () => Xunit.Assert.NotEqual(original, copied),
-            () => Xunit.Assert.Equal("87654321-4321-8765-cba9-876543210fed", copied.ToString()),
-            () => Xunit.Assert.Equal(Guid.Empty, TelegramLeaseId.Empty.Value));
+        Assert.Multiple(
+            () => Assert.Equal(originalValue, original.Value),
+            () => Assert.Equal(replacementValue, copied.Value),
+            () => Assert.Equal(expected, copied),
+            () => Assert.Equal(expected.GetHashCode(), copied.GetHashCode()),
+            () => Assert.NotEqual(original, copied),
+            () => Assert.Equal("87654321-4321-8765-cba9-876543210fed", copied.ToString()),
+            () => Assert.Equal(Guid.Empty, TelegramLeaseId.Empty.Value));
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void TelegramOperationId_CopyPreservesOriginalAndRebindsValue() {
         var originalValue = Guid.Parse("12345678-1234-5678-9abc-def012345678");
         var replacementValue = Guid.Parse("87654321-4321-8765-cba9-876543210fed");
@@ -30,13 +30,13 @@ public sealed class IdentifierCopyContractTests {
         TelegramOperationId copied = original with { Value = replacementValue };
         var expected = new TelegramOperationId(replacementValue);
 
-        Xunit.Assert.Multiple(
-            () => Xunit.Assert.Equal(originalValue, original.Value),
-            () => Xunit.Assert.Equal(replacementValue, copied.Value),
-            () => Xunit.Assert.Equal(expected, copied),
-            () => Xunit.Assert.Equal(expected.GetHashCode(), copied.GetHashCode()),
-            () => Xunit.Assert.NotEqual(original, copied),
-            () => Xunit.Assert.Equal("87654321-4321-8765-cba9-876543210fed", copied.ToString()),
-            () => Xunit.Assert.Equal(Guid.Empty, TelegramOperationId.Empty.Value));
+        Assert.Multiple(
+            () => Assert.Equal(originalValue, original.Value),
+            () => Assert.Equal(replacementValue, copied.Value),
+            () => Assert.Equal(expected, copied),
+            () => Assert.Equal(expected.GetHashCode(), copied.GetHashCode()),
+            () => Assert.NotEqual(original, copied),
+            () => Assert.Equal("87654321-4321-8765-cba9-876543210fed", copied.ToString()),
+            () => Assert.Equal(Guid.Empty, TelegramOperationId.Empty.Value));
     }
 }

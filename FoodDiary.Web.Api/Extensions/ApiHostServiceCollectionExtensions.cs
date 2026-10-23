@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Web.Api.HealthChecks;
 using FoodDiary.Web.Api.Options;
@@ -7,7 +8,7 @@ using Microsoft.OpenApi;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public static class ApiHostServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiHostServices() {

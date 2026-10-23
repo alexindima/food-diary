@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Cycles.Domain.Tests;
@@ -38,8 +39,8 @@ public sealed class PredictionValueTests {
     [InlineData("2026-10-08", null)]
     [InlineData(null, null)]
     public void Window_PreservesPartialAndAbsentEndpoints(string? from, string? to) {
-        DateOnly? start = from is null ? null : DateOnly.ParseExact(from, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-        DateOnly? end = to is null ? null : DateOnly.ParseExact(to, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        DateOnly? start = from is null ? null : DateOnly.ParseExact(from, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        DateOnly? end = to is null ? null : DateOnly.ParseExact(to, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var window = PredictionWindow.FromEndpoints(start, end);
         Assert.Equal(start, window.From);
         Assert.Equal(end, window.To);

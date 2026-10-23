@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.AuditRuns;
@@ -22,7 +23,7 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
                 where bugtriage_audit_runs.from_utc = excluded.from_utc and bugtriage_audit_runs.to_utc = excluded.to_utc
                     and bugtriage_audit_runs.expires_at_utc > @now
             """);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("id", id.Value);
         command.Parameters.AddWithValue("from", window.FromUtc.ToUniversalTime());
         command.Parameters.AddWithValue("to", window.ToUtc.ToUniversalTime());
@@ -37,9 +38,9 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
         }
         string json = JsonSerializer.Serialize(completion with { Findings = completion.Findings.OrderBy(finding => finding.Id).ToArray() }, JsonOptions);
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable connectionScope = connection.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable connectionScope = connection.ConfigureAwait(false);
         NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable transactionScope = transaction.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable transactionScope = transaction.ConfigureAwait(false);
         bool running;
         bool identical;
         {
@@ -47,12 +48,12 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
                 select status = 'running', completion = @completion
                 from bugtriage_audit_runs where id = @id and expires_at_utc > @now for update
                 """, connection, transaction);
-            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable stateScope = state.ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable stateScope = state.ConfigureAwait(false);
             state.Parameters.AddWithValue("id", id.Value);
             state.Parameters.AddWithValue("now", now);
             state.Parameters.AddWithValue("completion", NpgsqlDbType.Jsonb, json);
             NpgsqlDataReader reader = await state.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
             if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
                 return false;
             }
@@ -67,7 +68,7 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
                 insert into bugtriage_audit_findings (id, audit_run_id, title, status, summary, merge_request_url)
                 values (@id, @run, @title, @status, @summary, @url)
                 """, connection, transaction);
-            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable insertScope = insert.ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable insertScope = insert.ConfigureAwait(false);
             insert.Parameters.AddWithValue("id", finding.Id);
             insert.Parameters.AddWithValue("run", id.Value);
             insert.Parameters.AddWithValue("title", finding.Title);
@@ -84,7 +85,7 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
             update bugtriage_audit_runs set status = @status, summary = @summary, completed_at_utc = @now,
                 finding_count = @count, coverage_complete = @covered, completion = @completion where id = @id
             """, connection, transaction);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable updateScope = update.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable updateScope = update.ConfigureAwait(false);
         update.Parameters.AddWithValue("id", id.Value);
         update.Parameters.AddWithValue("status", completion.Outcome);
         update.Parameters.AddWithValue("summary", completion.Summary);
@@ -106,12 +107,12 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
                 (select max(completed_at_utc) from bugtriage_audit_runs where coverage_complete)
             from bugtriage_audit_runs order by started_at_utc desc, id desc limit 1
             """);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("now", now);
         command.Parameters.AddWithValue("stale", now.AddHours(-36));
         command.Parameters.AddWithValue("interrupted", now.AddHours(-2));
         NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
         if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
             return null;
         }
@@ -138,7 +139,7 @@ public sealed class NpgsqlAuditRunStore(NpgsqlDataSource dataSource, IOptions<Bu
                 where expires_at_utc <= @now and status <> 'expired';
             commit;
             """);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("now", now);
         await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }

@@ -1,3 +1,5 @@
+using FoodDiary.MailInbox.Presentation.Security;
+
 namespace FoodDiary.MailInbox.Presentation.Options;
 
 public sealed class MailInboxHttpOptions {
@@ -56,10 +58,10 @@ public sealed class MailInboxHttpOptions {
                options.ReadinessExecutionTimeout <= TimeSpan.FromSeconds(30);
     }
 
-    public string GetApiKey(Security.MailInboxPermission permission) => permission switch {
-        Security.MailInboxPermission.Metadata => MetadataApiKey,
-        Security.MailInboxPermission.Content => ContentApiKey,
-        Security.MailInboxPermission.State => StateApiKey,
+    public string GetApiKey(MailInboxPermission permission) => permission switch {
+        MailInboxPermission.Metadata => MetadataApiKey,
+        MailInboxPermission.Content => ContentApiKey,
+        MailInboxPermission.State => StateApiKey,
         _ => string.Empty,
     };
 

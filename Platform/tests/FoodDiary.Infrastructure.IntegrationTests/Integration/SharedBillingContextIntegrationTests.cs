@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Runtime.Persistence.Shared;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Audit.Infrastructure;
@@ -139,7 +140,7 @@ public sealed partial class SharedBillingContextIntegrationTests(PostgresDatabas
     public async Task EmptyBillingCommandStillInvokesUnitOfWorkOnceAsync() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
-        var coordinator = new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork);
+        var coordinator = new EfModuleTransactionCoordinator(context, unitOfWork);
         var runner = new EfBillingTransactionRunner(coordinator);
         await runner.ExecuteAsync(_ => Task.CompletedTask);
         await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());

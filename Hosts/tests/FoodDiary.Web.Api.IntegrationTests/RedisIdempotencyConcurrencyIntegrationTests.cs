@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Runtime.CompilerServices;
 using Docker.DotNet.Models;
@@ -152,7 +153,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
         var originalProcessingTtl = TimeSpan.FromMilliseconds(200);
         var renewedProcessingTtl = TimeSpan.FromSeconds(2);
         var responseTtl = TimeSpan.FromMinutes(1);
-        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        var elapsed = Stopwatch.StartNew();
         IdempotencyReservation owner = await store.ReserveAsync(
             "renewed-request",
             "same-hash",

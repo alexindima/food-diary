@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
 using System.Data.Common;
 using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
@@ -33,7 +34,7 @@ public sealed class EfLessonProgressTransactionRunner(IModuleTransactionCoordina
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue(
                 "serialization_key",
-                NpgsqlTypes.NpgsqlDbType.Text,
+                NpgsqlDbType.Text,
                 $"lesson-progress:{userId.Value:N}:{lessonId.Value:N}");
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }

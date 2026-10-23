@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands.CreateMailRelaySuppression;
@@ -70,8 +71,8 @@ public sealed class MailRelayApplicationValidationTests {
     public void IngestManyDeliveryEventsValidator_RejectsEmptyAndInvalidItems() {
         var validator = new IngestManyMailRelayDeliveryEventsCommandValidator();
 
-        FluentValidation.Results.ValidationResult emptyResult = validator.Validate(new IngestManyMailRelayDeliveryEventsCommand([]));
-        FluentValidation.Results.ValidationResult invalidItemResult = validator.Validate(new IngestManyMailRelayDeliveryEventsCommand([
+        ValidationResult emptyResult = validator.Validate(new IngestManyMailRelayDeliveryEventsCommand([]));
+        ValidationResult invalidItemResult = validator.Validate(new IngestManyMailRelayDeliveryEventsCommand([
             new IngestMailEventRequest("", "not-an-email", "", "unknown"),
         ]));
 
@@ -88,7 +89,7 @@ public sealed class MailRelayApplicationValidationTests {
         await using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
         ISender sender = provider.GetRequiredService<ISender>();
 
-        Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
+        Result<MailRelayPage<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
 
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorKind.Validation, result.Error?.Kind);
@@ -107,9 +108,9 @@ public sealed class MailRelayApplicationValidationTests {
     public void CreateSuppressionValidator_UsesTimeProviderForExpiresAtValidation() {
         var validator = new CreateMailRelaySuppressionCommandValidator(FixedTime);
 
-        FluentValidation.Results.ValidationResult pastResult = validator.Validate(new CreateMailRelaySuppressionCommand(
+        ValidationResult pastResult = validator.Validate(new CreateMailRelaySuppressionCommand(
             new CreateSuppressionRequest("user@example.com", "manual", "test", FixedNow.AddMinutes(-1))));
-        FluentValidation.Results.ValidationResult futureResult = validator.Validate(new CreateMailRelaySuppressionCommand(
+        ValidationResult futureResult = validator.Validate(new CreateMailRelaySuppressionCommand(
             new CreateSuppressionRequest("user@example.com", "manual", "test", FixedNow.AddMinutes(1))));
 
         Assert.False(pastResult.IsValid);

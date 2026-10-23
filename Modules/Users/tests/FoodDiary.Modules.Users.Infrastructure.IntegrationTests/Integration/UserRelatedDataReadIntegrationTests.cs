@@ -1,3 +1,6 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Events;
+using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure;
@@ -71,8 +74,8 @@ public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture 
     [Fact]
     public void Registration_SharesBothNarrowReadersWithinScope() {
         var services = new ServiceCollection();
-        services.AddInfrastructure(new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build()).AddOutboxProcessing(new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
-        services.AddSingleton(NSubstitute.Substitute.For<FoodDiary.Application.Contracts.Common.Abstractions.Events.IDomainEventPublisher>());
+        services.AddInfrastructure(new ConfigurationBuilder().Build()).AddOutboxProcessing(new ConfigurationBuilder().Build()).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement();
+        services.AddSingleton(Substitute.For<IDomainEventPublisher>());
         services.AddScoped(_ => new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=unused;Username=test").Options));
         services.AddUsersPersistence();

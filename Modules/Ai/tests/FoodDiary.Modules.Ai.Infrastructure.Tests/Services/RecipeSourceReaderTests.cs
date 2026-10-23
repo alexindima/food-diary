@@ -1,3 +1,4 @@
+using System.Text;
 using System.Net;
 using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.Recipes;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -103,7 +104,7 @@ public sealed class RecipeSourceReaderTests {
             <div>Suggested recipes</div>
             """;
         using var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
-            Content = new StringContent(html, System.Text.Encoding.UTF8, "text/html"),
+            Content = new StringContent(html, Encoding.UTF8, "text/html"),
         });
         using var http = new HttpClient(handler);
         Result<RecipeSource> result = await new RecipeSourceReader(http).ReadAsync("https://www.instagram.com/reel/example/", CancellationToken.None);
@@ -129,7 +130,7 @@ public sealed class RecipeSourceReaderTests {
 
     [Fact]
     public async Task Reader_OversizedPage_IsRejected() {
-        using var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(new string('x', (1024 * 1024) + 1), System.Text.Encoding.UTF8, "text/html") });
+        using var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(new string('x', (1024 * 1024) + 1), Encoding.UTF8, "text/html") });
         using var http = new HttpClient(handler);
         Result<RecipeSource> result = await new RecipeSourceReader(http).ReadAsync("https://example.org/recipe", CancellationToken.None);
         ResultAssert.Failure(result);

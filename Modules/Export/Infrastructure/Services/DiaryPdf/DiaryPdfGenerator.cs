@@ -1,3 +1,4 @@
+using QuestPDF;
 using FoodDiary.Modules.Export.Application.Abstractions.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using QuestPDF.Fluent;
@@ -39,7 +40,7 @@ internal sealed partial class DiaryPdfGenerator(
         int? timeZoneOffsetMinutes,
         string? reportOrigin,
         CancellationToken cancellationToken) {
-        QuestPDF.Settings.License = LicenseType.Community;
+        Settings.License = LicenseType.Community;
         await PdfRenderGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try {
             return await GenerateCoreAsync(

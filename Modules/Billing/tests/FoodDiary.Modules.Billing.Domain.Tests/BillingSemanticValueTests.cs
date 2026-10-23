@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Domain.ValueObjects;
 
@@ -11,7 +12,7 @@ public sealed class BillingSemanticValueTests {
     [InlineData(null, " usd ")]
     [InlineData("-12.345", "XYZ")]
     public void MoneyObservations_RetainPartialAndProviderCurrencyValues(string? amount, string? currency) {
-        decimal? number = amount is null ? null : decimal.Parse(amount, System.Globalization.CultureInfo.InvariantCulture);
+        decimal? number = amount is null ? null : decimal.Parse(amount, CultureInfo.InvariantCulture);
         var observation = BillingMoneyObservation.FromFields(number, currency);
         Assert.Multiple(() => Assert.Equal(number, observation.Amount?.Value), () => Assert.Equal(currency?.Trim().ToUpperInvariant(), observation.Currency?.Value));
     }

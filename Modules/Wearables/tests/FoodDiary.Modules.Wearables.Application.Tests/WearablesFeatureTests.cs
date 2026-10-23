@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using FoodDiary.Modules.Wearables.Application.Commands.ConnectWearable;
 using FoodDiary.Modules.Wearables.Application.Commands.DisconnectWearable;
 using FoodDiary.Modules.Wearables.Application.Commands.SyncWearableData;
@@ -903,7 +904,7 @@ public sealed partial class WearablesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SerializedWearableTransactionRunner : IWearableTransactionRunner {
-        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, SemaphoreSlim> _gates = new(StringComparer.Ordinal);
+        private readonly ConcurrentDictionary<string, SemaphoreSlim> _gates = new(StringComparer.Ordinal);
         private int _concurrentOperations;
 
         public int MaxConcurrentOperations { get; private set; }

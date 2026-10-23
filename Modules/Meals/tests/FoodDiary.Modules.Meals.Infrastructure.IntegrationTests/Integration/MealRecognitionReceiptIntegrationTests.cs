@@ -1,3 +1,4 @@
+using Npgsql;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -53,8 +54,8 @@ public sealed class MealRecognitionReceiptIntegrationTests(PostgresDatabaseFixtu
             version, now, now, TimeSpan.FromHours(24)));
 
         DbUpdateException error = await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
-        Npgsql.PostgresException postgresError = Assert.IsType<Npgsql.PostgresException>(error.InnerException);
-        Assert.Equal(Npgsql.PostgresErrorCodes.UniqueViolation, postgresError.SqlState);
+        PostgresException postgresError = Assert.IsType<PostgresException>(error.InnerException);
+        Assert.Equal(PostgresErrorCodes.UniqueViolation, postgresError.SqlState);
         Assert.Equal("IX_MealRecognitionReceipts_UserId_RecognitionId", postgresError.ConstraintName);
     }
 }

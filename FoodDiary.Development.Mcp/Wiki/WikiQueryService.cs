@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FoodDiary.Development.Mcp.ChangeSets;
 using FoodDiary.Development.Mcp.Protocol;
 
@@ -121,7 +122,7 @@ public sealed class WikiQueryService(
         ArgumentException.ThrowIfNullOrWhiteSpace(intent);
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
 
-        var routingStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var routingStopwatch = Stopwatch.StartNew();
         ChangeSetSnapshot fullSnapshot = await snapshots
             .GetAsync(relevantPaths: null, cancellationToken)
             .ConfigureAwait(false);

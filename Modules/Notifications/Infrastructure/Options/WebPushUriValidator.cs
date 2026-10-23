@@ -1,3 +1,5 @@
+using System.Net.Mail;
+
 namespace FoodDiary.Modules.Notifications.Infrastructure.Options;
 
 internal static class WebPushUriValidator {
@@ -10,7 +12,7 @@ internal static class WebPushUriValidator {
         if (string.Equals(uri.Scheme, Uri.UriSchemeMailto, StringComparison.OrdinalIgnoreCase)) {
             int schemeSeparator = value!.IndexOf(':', StringComparison.Ordinal);
             string address = schemeSeparator >= 0 ? value[(schemeSeparator + 1)..] : string.Empty;
-            return System.Net.Mail.MailAddress.TryCreate(address, out _);
+            return MailAddress.TryCreate(address, out _);
         }
 
         return string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) &&

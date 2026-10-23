@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Gamification.PersistenceModel.Achievements;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -25,7 +27,7 @@ public sealed class ApplicationConsumerBoundaryTests {
             .SelectMany(folder => Directory.GetFiles(folder, "*.csproj"))];
         foreach (string project in consumers) {
             string owner = Directory.GetParent(project)!.Parent!.Name;
-            foreach (System.Xml.Linq.XElement reference in XDocument.Load(project).Descendants("ProjectReference")) {
+            foreach (XElement reference in XDocument.Load(project).Descendants("ProjectReference")) {
                 string target = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(project)!, reference.Attribute("Include")!.Value));
                 if (owners.TryGetValue(target, out string? targetOwner) && !string.Equals(owner, targetOwner, StringComparison.Ordinal)) {
                     violations.Add($"{owner} -> {targetOwner}");
@@ -97,11 +99,11 @@ public sealed class ApplicationConsumerBoundaryTests {
     public void EveryOutboxStream_FencesEfWritesByClaimOwner() {
         using var context = new FoodDiaryDbContext(new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=architecture;Username=test;Password=test").Options);
-        Microsoft.EntityFrameworkCore.Metadata.IEntityType[] streams = [.. context.Model.GetEntityTypes()
+        IEntityType[] streams = [.. context.Model.GetEntityTypes()
             .Where(entity => typeof(IOutboxMessage).IsAssignableFrom(entity.ClrType))];
         Assert.Equal(4, streams.Length);
         Assert.All(streams, entity => Assert.True(entity.FindProperty(nameof(IOutboxMessage.LockedBy))!.IsConcurrencyToken));
-        Assert.True(context.Model.FindEntityType(typeof(FoodDiary.Modules.Gamification.PersistenceModel.Achievements.AchievementEvaluationOutboxMessage))!
+        Assert.True(context.Model.FindEntityType(typeof(AchievementEvaluationOutboxMessage))!
             .FindProperty("Revision")!.IsConcurrencyToken);
         Assert.False(context.Database.HasPendingModelChanges());
     }

@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -58,7 +59,7 @@ public sealed class UserCurrentMeasurementsCompositionIntegrationTests(PostgresD
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddUsersPersistence();
         services.AddReadModelComposition();
         return services.BuildServiceProvider();

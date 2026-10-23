@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -376,8 +379,8 @@ public sealed class WikiRuntimeTelemetryTests {
 
     private static string CreateTelemetryMutexName(string path) {
         string fullPath = Path.GetFullPath(path);
-        byte[] hash = System.Security.Cryptography.SHA256.HashData(
-            System.Text.Encoding.UTF8.GetBytes(fullPath.ToUpperInvariant()));
+        byte[] hash = SHA256.HashData(
+            Encoding.UTF8.GetBytes(fullPath.ToUpperInvariant()));
         return $"FoodDiary.LlmWiki.ContextRouting.{Convert.ToHexString(hash)}";
     }
 

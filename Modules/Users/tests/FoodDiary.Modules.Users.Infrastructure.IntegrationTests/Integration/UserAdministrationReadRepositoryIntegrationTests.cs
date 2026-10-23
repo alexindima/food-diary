@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -246,9 +247,9 @@ public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDat
     public async Task GetPagedAsync_NormalizesPagingAndEscapesLikePattern() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create("100%real@example.com", "hash");
-        matchingUser.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "special_user"));
+        matchingUser.UpdatePersonalInfo(new UserPersonalInfoUpdate(Username: "special_user"));
         var otherUser = User.Create("1000real@example.com", "hash");
-        otherUser.UpdatePersonalInfo(new FoodDiary.Modules.Users.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "plain_user"));
+        otherUser.UpdatePersonalInfo(new UserPersonalInfoUpdate(Username: "plain_user"));
         context.Users.AddRange(matchingUser, otherUser);
         await context.SaveChangesAsync();
 

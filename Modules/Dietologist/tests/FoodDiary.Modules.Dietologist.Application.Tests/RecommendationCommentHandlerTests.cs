@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Modules.Dietologist.Application.Models;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
 using FoodDiary.Audit.Contracts.Audit.Common;
@@ -31,7 +33,7 @@ public sealed class RecommendationCommentHandlerTests {
             users,
             Substitute.For<IUserDietologistProfileReadService>());
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
@@ -50,7 +52,7 @@ public sealed class RecommendationCommentHandlerTests {
             CreateAccessibleUserContext(user),
             CreateProfileReadService(user));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(user.Id.Value, Guid.Empty, "Text"),
             CancellationToken.None);
 
@@ -78,7 +80,7 @@ public sealed class RecommendationCommentHandlerTests {
             users,
             profiles);
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "Text"),
             CancellationToken.None);
 
@@ -104,13 +106,13 @@ public sealed class RecommendationCommentHandlerTests {
             users,
             CreateProfileReadService(client));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(clientId.Value, recommendation.Id.Value, "  My question  "),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel model = Assert.IsType<
-            FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>(result.Value);
+        RecommendationCommentModel model = Assert.IsType<
+            RecommendationCommentModel>(result.Value);
         Assert.Multiple(
             () => Assert.Equal("My question", model.Text),
             () => Assert.Equal(clientId.Value, model.AuthorUserId),
@@ -145,7 +147,7 @@ public sealed class RecommendationCommentHandlerTests {
             CreateAccessibleUserContext(dietologist),
             CreateProfileReadService(dietologist));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(dietologistId.Value, recommendation.Id.Value, "Reply"),
             CancellationToken.None);
 
@@ -170,7 +172,7 @@ public sealed class RecommendationCommentHandlerTests {
             CreateAccessibleUserContext(outsider),
             CreateProfileReadService(outsider));
 
-        Result<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel> result = await handler.Handle(
+        Result<RecommendationCommentModel> result = await handler.Handle(
             new CreateRecommendationCommentCommand(outsider.Id.Value, recommendation.Id.Value, "Reply"),
             CancellationToken.None);
 
@@ -195,7 +197,7 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateCurrentUserAccess());
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
+        Result<PagedResponse<RecommendationCommentModel>> result =
             await handler.Handle(
                 new GetRecommendationCommentsQuery(clientId.Value, recommendation.Id.Value),
                 CancellationToken.None);
@@ -218,7 +220,7 @@ public sealed class RecommendationCommentHandlerTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             CreateCurrentUserAccess());
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodDiary.Modules.Dietologist.Application.Models.RecommendationCommentModel>> result =
+        Result<PagedResponse<RecommendationCommentModel>> result =
             await handler.Handle(
                 new GetRecommendationCommentsQuery(Guid.NewGuid(), recommendation.Id.Value),
                 CancellationToken.None);

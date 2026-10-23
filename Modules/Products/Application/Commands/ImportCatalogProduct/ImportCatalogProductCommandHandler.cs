@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FluentValidation;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
@@ -32,7 +33,7 @@ public sealed class ImportCatalogProductCommandHandler(
             item.Category, item.Description, Comment: null, item.ImageUrl, ImageAssetId: null, item.BaseUnit, item.BaseAmount,
             item.DefaultPortionAmount, item.CaloriesPerBase, item.ProteinsPerBase, item.FatsPerBase,
             item.CarbsPerBase, item.FiberPerBase, item.AlcoholPerBase, "Public") { CatalogImportId = item.Id };
-        FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(create, cancellationToken).ConfigureAwait(false);
+        ValidationResult validation = await validator.ValidateAsync(create, cancellationToken).ConfigureAwait(false);
         if (!validation.IsValid) {
             return Report(item.Id, "invalid", validation.Errors.Select(error => $"{error.PropertyName}: {error.ErrorMessage}").ToArray());
         }

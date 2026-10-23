@@ -36,7 +36,7 @@ public partial class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance, ProductTransactionRunner);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")), AllowImageAssetAccessService.Instance, ProductTransactionRunner);
 
         var command = new UpdateProductCommand(
             userId.Value,
@@ -110,7 +110,7 @@ public partial class ProductsFeatureTests {
             repository,
             cleanup,
             new StubUserRepository(user),
-            new FoodDiary.Modules.Products.Application.Tests.Support.RecordingImageAssetAccessService()
+            new RecordingImageAssetAccessService()
                 .WithAsset(newAssetId, "https://cdn.example/new.jpg"),
             ProductTransactionRunner);
 
@@ -158,7 +158,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -205,7 +205,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -267,7 +267,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -314,7 +314,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -334,7 +334,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -353,7 +353,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -373,7 +373,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -407,7 +407,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -444,7 +444,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -488,7 +488,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -523,7 +523,7 @@ public partial class ProductsFeatureTests {
             repository,
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -547,7 +547,7 @@ public partial class ProductsFeatureTests {
             new NoopProductRepository(),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
@@ -584,7 +584,7 @@ public partial class ProductsFeatureTests {
             repository,
             cleanup,
             new StubUserRepository(user),
-            FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             ProductTransactionRunner);
 
         UpdateProductCommand command = CreateUpdateProductCommand(user.Id.Value, product.Id.Value,
@@ -609,7 +609,7 @@ public partial class ProductsFeatureTests {
     [Fact]
     public async Task UpdateProductCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-product-forbidden-image@example.com", "hash");
-        RecordingImageAssetAccessService access = new FoodDiary.Modules.Products.Application.Tests.Support.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService access = new RecordingImageAssetAccessService()
             .WithFailure(ImageErrors.Forbidden());
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
@@ -646,7 +646,7 @@ public partial class ProductsFeatureTests {
 
         var repository = new SingleProductRepository(product);
         var cleanup = new RecordingCleanupService();
-        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), FoodDiary.Modules.Products.Application.Tests.Support.AllowImageAssetAccessService.Instance, ProductTransactionRunner);
+        var handler = new UpdateProductCommandHandler(repository, repository, cleanup, new StubUserRepository(user), AllowImageAssetAccessService.Instance, ProductTransactionRunner);
 
         Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(

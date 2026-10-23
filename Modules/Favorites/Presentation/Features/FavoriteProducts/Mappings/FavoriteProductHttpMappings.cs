@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProductPage;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 using FoodDiary.Modules.Favorites.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
@@ -9,7 +10,7 @@ namespace FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Map
 
 public static class FavoriteProductHttpMappings {
     extension(GetFavoriteProductPageHttpQuery query) {
-        public FoodDiary.Modules.Favorites.Application.FavoriteProducts.Queries.GetFavoriteProductPage.GetFavoriteProductPageQuery ToQuery(Guid userId) => new(userId, query.Page, query.Limit, query.Search);
+        public GetFavoriteProductPageQuery ToQuery(Guid userId) => new(userId, query.Page, query.Limit, query.Search);
     }
 
     extension(AddFavoriteProductHttpRequest request) {

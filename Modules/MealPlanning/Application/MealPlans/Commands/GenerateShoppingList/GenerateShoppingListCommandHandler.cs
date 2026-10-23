@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using System.Globalization;
@@ -148,7 +149,7 @@ public sealed class GenerateShoppingListCommandHandler(
     private sealed class AggregatedIngredient {
         public required ProductId? ProductId { get; init; }
         public required string Name { get; init; }
-        public global::FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit? Unit { get; init; }
+        public MeasurementUnit? Unit { get; init; }
         public string? PublishedUnit { get; init; }
         public string? Note { get; init; }
         public string? Category { get; init; }
@@ -164,6 +165,6 @@ public sealed class GenerateShoppingListCommandHandler(
         public required int DayNumber { get; init; }
         public required string MealType { get; init; }
         public required double Amount { get; init; }
-        public global::FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit? Unit { get; init; }
+        public MeasurementUnit? Unit { get; init; }
     }
 }

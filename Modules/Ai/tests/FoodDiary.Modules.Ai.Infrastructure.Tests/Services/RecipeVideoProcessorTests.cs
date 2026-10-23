@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Diagnostics;
 using System.Net;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
@@ -86,7 +87,7 @@ public sealed class RecipeVideoProcessorTests {
             if (audio) {
                 arguments.AddRange(["-f", "lavfi", "-i", "sine=frequency=440:sample_rate=48000", "-ac", "2", "-c:a", "aac"]);
             }
-            arguments.AddRange(["-t", duration.ToString(System.Globalization.CultureInfo.InvariantCulture), "-c:v", "libx264", "-threads", "1", "-pix_fmt", "yuv420p", path]);
+            arguments.AddRange(["-t", duration.ToString(CultureInfo.InvariantCulture), "-c:v", "libx264", "-threads", "1", "-pix_fmt", "yuv420p", path]);
             foreach (string argument in arguments) {
                 start.ArgumentList.Add(argument);
             }

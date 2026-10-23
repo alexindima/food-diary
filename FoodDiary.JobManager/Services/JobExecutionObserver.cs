@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 
 namespace FoodDiary.JobManager.Services;
@@ -30,7 +31,7 @@ public sealed class JobExecutionObserver(
         executionStateTracker.RecordSuccess(jobName, UtcNow);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "ReSharper",
         "MemberCanBeMadeStatic.Global",
         Justification = "Cancellation recording is part of the injected job execution observer API.")]

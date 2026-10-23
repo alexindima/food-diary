@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FoodDiary.Presentation.Api.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -62,7 +63,7 @@ public sealed class CurrentUserIdModelBinderTests {
         Type effectiveModelType = modelType ?? typeof(Guid);
 
         return new DefaultModelBindingContext {
-            ActionContext = new Microsoft.AspNetCore.Mvc.ActionContext {
+            ActionContext = new ActionContext {
                 HttpContext = httpContext,
             },
             ModelMetadata = metadataProvider.GetMetadataForType(effectiveModelType),

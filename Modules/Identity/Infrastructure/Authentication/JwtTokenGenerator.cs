@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -202,7 +203,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, impersonation.ActorUserId.Value.ToString()));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorSecurityVersion,
-                impersonation.ActorSecurityVersion.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                impersonation.ActorSecurityVersion.ToString(CultureInfo.InvariantCulture)));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorSessionId, impersonation.ActorSessionId.ToString()));
             claims.Add(new Claim(JwtImpersonationClaimNames.Reason, impersonation.Reason));
         }
@@ -210,7 +211,7 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
         if (securityVersion.HasValue) {
             claims.Add(new Claim(
                 JwtSecurityClaimNames.SecurityVersion,
-                securityVersion.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                securityVersion.Value.ToString(CultureInfo.InvariantCulture)));
         }
 
         if (rememberMe) {

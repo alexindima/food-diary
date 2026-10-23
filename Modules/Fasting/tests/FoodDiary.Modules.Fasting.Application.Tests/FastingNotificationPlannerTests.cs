@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.Fasting.Domain.Enums;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Fasting.Application.Services;
@@ -169,11 +170,11 @@ public sealed class FastingNotificationPlannerTests {
     }
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
-        System.Reflection.PropertyInfo? property = typeof(TTarget).GetProperty(
+        PropertyInfo? property = typeof(TTarget).GetProperty(
             propertyName,
-            System.Reflection.BindingFlags.Instance |
-            System.Reflection.BindingFlags.Public |
-            System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance |
+            BindingFlags.Public |
+            BindingFlags.NonPublic);
         Assert.NotNull(property);
         property!.SetValue(target, value);
     }

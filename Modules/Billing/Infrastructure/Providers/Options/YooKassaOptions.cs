@@ -1,3 +1,7 @@
+using FoodDiary.Integrations.Http.Options;
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+using System.Globalization;
+
 namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class YooKassaOptions {
@@ -25,12 +29,12 @@ public sealed class YooKassaOptions {
         IsValidAmount(options.PremiumMonthlyAmount) &&
         IsValidAmount(options.PremiumYearlyAmount) &&
         !string.IsNullOrWhiteSpace(options.Currency) &&
-        Billing.BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
+        BillingUrlValidator.IsAbsoluteHttps(options.ReturnUrl);
 
     private static bool HasValidApiBaseUrl(string? value) =>
-        FoodDiary.Integrations.Http.Options.IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
+        IntegrationUriValidator.IsAbsoluteHttpsBaseUrl(value);
 
     private static bool IsValidAmount(string? value) =>
-        decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&
+        decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal amount) &&
         amount > 0;
 }

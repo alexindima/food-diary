@@ -228,18 +228,18 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "6a4fbe9e389de624f52a78cd689384c475d8a770e74e9fd1109f861f2ceda68b",
+      "pageSha256": "f21a78ea954e7adc60acb8bc9bd7e4372c4a0ac6e8f779783486dd19db08d1a0",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
-          "reviewReason": "Reviewed current local master and the added PWA Docker regression: API baseline resolution, OpenAPI comparisons and release compatibility remain unchanged."
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "70630ab9a45809960e13ae1b31a02bc5b8c8cdb4c6113097d11128f627e51c18",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed current local master and the added PWA Docker regression: API baseline resolution, OpenAPI comparisons and release compatibility remain unchanged.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
-      "reviewedAtUtc": "2026-10-22T11:50:47.6272024Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:46.0374472Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -248,8 +248,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "46fb27bcb59d9d1e283ba5ea8c306e948ec2ca611cec4544d1730681316508d1",
-          "reviewReason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof."
+          "sha256": "29445b8d1a837e280cf820bf13f96dcf4f12dd158a578330033162bbf4b2680c",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -257,10 +257,10 @@
           "reviewReason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate."
         }
       ],
-      "reason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:36:38.4377529Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:46.3268979Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -319,6 +319,16 @@
       "pageSha256": "074bf2995247983cf0a0ece843392c4731a6ce2c410db95f710f861a28c596b8",
       "sources": [
         {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+          "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
+          "sha256": "8eb3616ee2d1968494a827a73af7c28b3b6ec34ac19162ab8f0981167fa068cb",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
           "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2",
           "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
@@ -334,20 +344,40 @@
           "reviewReason": "The wiki.ps1 delta is confined to optional ChangedPath forwarding in task-finish/task-verify. The page's context preparation, graph command routing, fast trace and explicit graph-impact examples use other unchanged clauses. It makes no finish-scope or automatic completion claim. Its SQLite/source-freshness boundaries therefore need no text update for this delta."
         },
         {
+          "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
+          "sha256": "7717e12d95aa6f9436c5d5715b67b72d816f9db189b2219746cf3c05aa765bdc",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "b9af72c787c5e8c94171005dbd084aa7a558bff4d387c0d85b3591a81090e023",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
           "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
           "reviewReason": "Reviewed the current SqliteFlowScopeReader diff and its complete521-case MCP ordinary/profile owner results plus both current context-search/retrieval smoke groups. SQL text, seed12/depth2/node16/row40/link80 bounds, read-only non-pooled transaction,2-second SQL timeouts, exact fingerprint and explicit unavailable/truncation semantics are unchanged. The same results are assigned before disposal and returned after all five configured async disposals. Node remains the sole projection writer; this page makes no claim about async-disposal syntax, so its flow guidance remains accurate."
         },
         {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "33ed2bdcbe91b590250bddd42a5feb494b7fe6a8197c7219dfd2b0d44adfb410",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
           "sha256": "2671d148ca748550c399985eb6eece0d70de83fabf3d6c01c256c6e3a38e70e0",
           "reviewReason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged."
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs",
+          "sha256": "7c61dd3034ba69b8ecd1c07a0d434363e3a70108872963e39580518c91490320",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "The wiki.ps1 delta is confined to optional ChangedPath forwarding in task-finish/task-verify. The page's context preparation, graph command routing, fast trace and explicit graph-impact examples use other unchanged clauses. It makes no finish-scope or automatic completion claim. Its SQLite/source-freshness boundaries therefore need no text update for this delta.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:34.2895161Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:46.6384819Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -604,14 +634,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "901f3f9c0000e32ef0c15fb3964d3b0261e6c07dfc18bfb2bffab4d4fae5e0e3",
-          "reviewReason": "Reviewed UserRefreshTokenSession.ExpiresAtUtc, nullable EF mapping, matching additive migration/designer/snapshot, UTC expiration validation and passing domain plus PostgreSQL expiry/rotation tests; the existing domain/data discovery instructions remain accurate."
+          "sha256": "68718adbc807a53e051292003f3360e42e4a510d4497052f4706799aa4d0b2f4",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+          "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed UserRefreshTokenSession.ExpiresAtUtc, nullable EF mapping, matching additive migration/designer/snapshot, UTC expiration validation and passing domain plus PostgreSQL expiry/rotation tests; the existing domain/data discovery instructions remain accurate.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:35:55.0955746Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:47.0498019Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -759,18 +794,23 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "80606c1acf5c740884b97ae1c1beadab9fc1430477a6b08c8d4baa5d9a2df2e8",
+      "pageSha256": "e6c3d19bcc8aca497afb641900f09134ca03b753f43adf6ea52ef46b72483250",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "50d2e035692e6f3f6ca70895d5f66d6d37309845020bdd3fd82dc0885121a502",
-          "reviewReason": "Reviewed Test-LlmWikiTools.ps1 fixture initialization: four synthetic lifecycle registries now start empty under the existing owned test knowledge root; canonical history, production promotion rules and all lifecycle assertions remain unchanged. Documented the isolation contract in index-pipeline.md."
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
+          "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
+          "sha256": "8eb3616ee2d1968494a827a73af7c28b3b6ec34ac19162ab8f0981167fa068cb",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed Test-LlmWikiTools.ps1 fixture initialization: four synthetic lifecycle registries now start empty under the existing owned test knowledge root; canonical history, production promotion rules and all lifecycle assertions remain unchanged. Documented the isolation contract in index-pipeline.md.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "ffeadd91326bafdb3dc3f4e154b918a1b73edc8f",
-      "reviewedAtUtc": "2026-10-22T13:09:28.4623049Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:47.5237390Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -922,8 +962,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b9bca637c0013e8e20f6bfc7e9e7b1d3e7f16717c268549cdd3b0ee228cd8364",
-          "reviewReason": "Reviewed the added in-memory existing refresh cookie context: it is ignored by JSON serialization and redacted from ToString, never stored or logged; only an expiration timestamp is added to persistence, with unchanged owner isolation and provider sharing."
+          "sha256": "de677c52608509156d23a34913571691fc5dad42e19b38422ddc981453ffcef9",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -931,10 +971,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed the added in-memory existing refresh cookie context: it is ignored by JSON serialization and redacted from ToString, never stored or logged; only an expiration timestamp is added to persistence, with unchanged owner isolation and provider sharing.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:35:59.0868244Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:47.9523075Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1089,14 +1129,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4dc755b9d4379a281f7a7cc6fa7831d92505ed285f471453cfad77c224d58ffb",
-          "reviewReason": "Reviewed topology changes caused by cookie expiry and Identity constructor dependencies: no service, worker, provider or recurring job was added; prior browser revocation is staged with replacement in one coordinated unit-of-work save and cancellation remains propagated."
+          "sha256": "1d38dc8273beeecc25fc75e125976929cc04263c92d558c360486130a524a0fb",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed topology changes caused by cookie expiry and Identity constructor dependencies: no service, worker, provider or recurring job was added; prior browser revocation is staged with replacement in one coordinated unit-of-work save and cancellation remains propagated.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:36:07.9911279Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:48.8494612Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1379,8 +1419,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "4fd5d0e1aa0cd561e4f00420a09e0fb18373df726ce6a25144de911106522293",
-          "reviewReason": "Reviewed catalog changes from narrow direct test references and internal authentication metadata methods; the owner navigation, scoped query commands and authoritative-source rules remain accurate with no new production project or endpoint."
+          "sha256": "ec63af3302e8682545d5f19fd6938f4e977d09eb497265da1a76d54f8ba816ed",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1388,15 +1428,25 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         },
         {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "b9af72c787c5e8c94171005dbd084aa7a558bff4d387c0d85b3591a81090e023",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
           "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
           "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+          "sha256": "6959d7826e76fe149ac997d2a270da72f2450ee443dd3e1055c5b10536e4c3eb",
+          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed catalog changes from narrow direct test references and internal authentication metadata methods; the owner navigation, scoped query commands and authoritative-source rules remain accurate with no new production project or endpoint.",
+      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:36:02.6274050Z"
+      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
+      "reviewedAtUtc": "2026-10-23T20:36:48.4483481Z"
     },
     {
       "pageId": "workflow.review-diff",

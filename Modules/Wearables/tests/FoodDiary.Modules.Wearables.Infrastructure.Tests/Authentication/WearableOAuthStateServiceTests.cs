@@ -1,3 +1,4 @@
+using System.Text;
 using FoodDiary.Modules.Wearables.Domain.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Wearables.Infrastructure.Authentication;
@@ -120,6 +121,6 @@ public sealed class WearableOAuthStateServiceTests {
 
         public byte[] Protect(byte[] plaintext) => plaintext;
 
-        public byte[] Unprotect(byte[] protectedData) => System.Text.Encoding.UTF8.GetBytes(payload);
+        public byte[] Unprotect(byte[] protectedData) => Encoding.UTF8.GetBytes(payload);
     }
 }

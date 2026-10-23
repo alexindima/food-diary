@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -67,7 +68,7 @@ public sealed class YooKassaRecurringPaymentTests {
     }
 
     private static BillingRecurringPaymentRequestModel CreateRequest() =>
-        new(Guid.NewGuid(), new FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_saved", "monthly", PeriodEnd, "attempt-key");
+        new(Guid.NewGuid(), new BillingSubscriptionId(Guid.NewGuid()), "customer", "pm_saved", "monthly", PeriodEnd, "attempt-key");
 
     [Theory]
     [InlineData("succeeded", true)]

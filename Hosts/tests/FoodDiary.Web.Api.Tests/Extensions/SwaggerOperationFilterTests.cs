@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using FoodDiary.Presentation.Api.Controllers;
@@ -202,7 +203,7 @@ public sealed class SwaggerOperationFilterTests {
     public void GetDescription_ForUnknownStatusCode_ReturnsGenericErrorDescription() {
         MethodInfo? method = typeof(StandardErrorResponsesOperationFilter).GetMethod(
             "GetDescription",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            BindingFlags.NonPublic | BindingFlags.Static);
 
         object? description = method!.Invoke(null, [StatusCodes.Status418ImATeapot]);
 
@@ -297,7 +298,7 @@ public sealed class SwaggerOperationFilterTests {
     public void PresentationTransportFilter_AddApiErrorResponse_WhenStatusIsUnknown_UsesGenericDescription() {
         MethodInfo method = typeof(PresentationTransportOperationFilter).GetMethod(
             "AddApiErrorResponse",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+            BindingFlags.NonPublic | BindingFlags.Static)!;
         var operation = new OpenApiOperation { Responses = [] };
         OperationFilterContext context = CreateContext(nameof(TestController.RequiredIdempotency));
 
@@ -450,7 +451,7 @@ public sealed class SwaggerOperationFilterTests {
         MethodInfo methodInfo = controllerType.GetMethod(methodName)!;
         var actionDescriptor = new ControllerActionDescriptor {
             MethodInfo = methodInfo,
-            ControllerTypeInfo = System.Reflection.IntrospectionExtensions.GetTypeInfo(controllerType),
+            ControllerTypeInfo = IntrospectionExtensions.GetTypeInfo(controllerType),
         };
 
         return CreateContext(actionDescriptor, methodInfo, httpMethod);
@@ -463,7 +464,7 @@ public sealed class SwaggerOperationFilterTests {
 
     private static OperationFilterContext CreateContext(
         ActionDescriptor actionDescriptor,
-        System.Reflection.MethodInfo methodInfo,
+        MethodInfo methodInfo,
         string? httpMethod) {
         var apiDescription = new ApiDescription {
             HttpMethod = httpMethod,
@@ -471,7 +472,7 @@ public sealed class SwaggerOperationFilterTests {
         };
         var schemaGenerator = new SchemaGenerator(
             new SchemaGeneratorOptions(),
-            new JsonSerializerDataContractResolver(new System.Text.Json.JsonSerializerOptions()));
+            new JsonSerializerDataContractResolver(new JsonSerializerOptions()));
 
         return new OperationFilterContext(
             apiDescription,

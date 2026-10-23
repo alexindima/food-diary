@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FoodDiary.Presentation.Api.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +44,7 @@ public sealed class CurrentRefreshSessionIdModelBinderTests {
     private static DefaultModelBindingContext CreateBindingContext(HttpContext httpContext) {
         var metadataProvider = new EmptyModelMetadataProvider();
         return new DefaultModelBindingContext {
-            ActionContext = new Microsoft.AspNetCore.Mvc.ActionContext { HttpContext = httpContext },
+            ActionContext = new ActionContext { HttpContext = httpContext },
             ModelMetadata = metadataProvider.GetMetadataForType(typeof(Guid)),
             ModelName = "currentSessionId",
             ModelState = new ModelStateDictionary(),

@@ -1,3 +1,5 @@
+using Amazon;
+using Xunit.Sdk;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using System.Net;
 using System.Reflection;
@@ -72,7 +74,7 @@ public sealed class S3ObjectStorageClientTests {
     public void GetPreSignedUploadUrl_PreservesConfiguredEndpointProtocol(
         string? serviceUrl, string expectedScheme, string expectedHost, int expectedPort) {
         var config = new AmazonS3Config {
-            RegionEndpoint = Amazon.RegionEndpoint.USEast1,
+            RegionEndpoint = RegionEndpoint.USEast1,
             AuthenticationRegion = "us-east-1",
             ForcePathStyle = serviceUrl is not null,
         };
@@ -200,7 +202,7 @@ public sealed class S3ObjectStorageClientTests {
     [InlineData(0)]
     [InlineData(-1)]
     public async Task GetObjectBytesAsync_WhenMaximumSizeIsInvalid_ThrowsBeforeCallingS3(long maximumBytes) {
-        IAmazonS3 amazonS3 = CreateS3Client((method, _) => throw new Xunit.Sdk.XunitException(
+        IAmazonS3 amazonS3 = CreateS3Client((method, _) => throw new XunitException(
             $"S3 must not be called, but {method.Name} was invoked."));
         var client = new S3ObjectStorageClient(amazonS3);
 

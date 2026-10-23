@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+
 namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class PaddleOptions {
@@ -33,7 +35,7 @@ public sealed class PaddleOptions {
         HasValidNotificationRecoveryConfiguration(options) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Billing.BillingUrlValidator.IsAbsoluteHttps(options.CheckoutUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.CheckoutUrl) &&
         options.WebhookTimestampToleranceSeconds is >= 5 and <= 900 &&
         HasMatchingEnvironment(options);
 

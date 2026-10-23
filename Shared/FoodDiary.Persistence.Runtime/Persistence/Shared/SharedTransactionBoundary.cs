@@ -1,3 +1,4 @@
+using FoodDiary.Results;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ internal static class SharedTransactionBoundary {
         Reset(context, postCommitActionQueue);
         try {
             T result = await operation().ConfigureAwait(false);
-            if (result is FoodDiary.Results.Result { IsFailure: true }) {
+            if (result is Result { IsFailure: true }) {
                 Reset(context, postCommitActionQueue);
             }
             return result;

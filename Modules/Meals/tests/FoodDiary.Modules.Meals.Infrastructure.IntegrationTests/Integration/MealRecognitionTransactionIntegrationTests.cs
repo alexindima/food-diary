@@ -1,3 +1,7 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Modules.Meals.Contracts.Common;
+using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -313,7 +317,7 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
             owned.Add(meal);
             uint version = await runner.FlushCreatedMealAsync(meal.Id, user.Id, token);
             if (attempts == 1) {
-                throw new Npgsql.NpgsqlException("Injected transient failure after meal flush.", new TimeoutException());
+                throw new NpgsqlException("Injected transient failure after meal flush.", new TimeoutException());
             }
             await receipts.AddAsync(MealRecognitionReceipt.Create(operationId, user.Id, operationId, meal.Id,
                 version, now, now, TimeSpan.FromHours(24)), token);
@@ -331,12 +335,12 @@ public sealed class MealRecognitionTransactionIntegrationTests(PostgresDatabaseF
         context.Users.Add(user);
         await context.SaveChangesAsync();
         await using ServiceProvider provider = CreateProvider(context);
-        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         IMealRepository repository = provider.GetRequiredService<IMealRepository>();
         await repository.AddAsync(meal);
-        await provider.GetRequiredService<FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IUnitOfWork>().SaveChangesAsync();
-        var filters = new FoodDiary.Modules.Meals.Contracts.Common.MealQueryFilters(DateFrom: null, DateTo: null);
+        await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
+        var filters = new MealQueryFilters(DateFrom: null, DateTo: null);
         Assert.Equal(meal.Id, Assert.Single(await repository.GetByPeriodAsync(user.Id, meal.Date, meal.Date)).Id);
         Assert.Single(await repository.GetByPeriodMealProjectionsAsync(user.Id, meal.Date, meal.Date));
         Assert.Single(await repository.GetByPeriodMealProjectionsAsync(user.Id, meal.Date.AddMinutes(-1), meal.Date.AddMinutes(1), 1));

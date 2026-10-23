@@ -1,3 +1,5 @@
+using MailKit.Security;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -15,7 +17,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task SendAsync_WhenMxHostIsLoopbackAddress_RejectsBeforeDelivery() {
         var transport = new DirectMxRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
+            MsOptions.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -41,7 +43,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public async Task SendAsync_WhenRecipientsSpanMultipleDomains_RejectsBeforeDelivery() {
         var transport = new DirectMxRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
+            MsOptions.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -69,7 +71,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         var connector = new RecordingEndpointConnector();
         var smtpClient = new RecordingDirectMxSmtpClient();
         var transport = new DirectMxRelayDeliveryTransport(
-            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
+            MsOptions.Create(new DirectMxOptions {
                 Port = 2525,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -292,7 +294,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
 
     private static DirectMxRelayDeliveryTransport CreateTransport(DkimSigningService dkimSigningService) =>
         new(
-            Microsoft.Extensions.Options.Options.Create(new DirectMxOptions {
+            MsOptions.Create(new DirectMxOptions {
                 Port = 25,
                 ConnectTimeoutSeconds = 1,
                 UseStartTlsWhenAvailable = false,
@@ -320,7 +322,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static DkimSigningService CreateDkimSigningService(MailRelayDkimOptions? options = null) =>
-        new(Microsoft.Extensions.Options.Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
+        new(MsOptions.Create(options ?? new MailRelayDkimOptions()), FixedTime);
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {
@@ -370,7 +372,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
             Socket socket,
             string host,
             int port,
-            MailKit.Security.SecureSocketOptions options,
+            SecureSocketOptions options,
             CancellationToken cancellationToken) {
             socket.Dispose();
             Connected = true;

@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
@@ -19,7 +20,7 @@ public sealed class ImpersonationTokenIssuerTests {
     public void IssueAccessToken_PreservesImpersonationIdentityAndAccessOnlySemantics(string? email) {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
-        services.AddSingleton<IOptions<JwtOptions>>(Microsoft.Extensions.Options.Options.Create(new JwtOptions {
+        services.AddSingleton<IOptions<JwtOptions>>(MsOptions.Create(new JwtOptions {
             SecretKey = "impersonation-adapter-test-key-only-123456789",
             Issuer = "FoodDiaryTests",
             Audience = "FoodDiaryTestClients",

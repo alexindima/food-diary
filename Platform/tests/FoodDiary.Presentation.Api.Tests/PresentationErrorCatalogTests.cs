@@ -1,3 +1,22 @@
+using FoodDiary.Modules.Admin.Application.Abstractions.Common;
+using FoodDiary.Modules.Ai.Application.Abstractions.Common;
+using FoodDiary.Modules.Billing.Application.Abstractions.Common;
+using FoodDiary.Modules.Cycles.Contracts.Common;
+using FoodDiary.Modules.Dietologist.Application.Abstractions.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Modules.Images.Application.Abstractions.Common;
+using FoodDiary.Modules.Lessons.Application.Abstractions.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Modules.Meals.Application.Abstractions.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Usda.Application.Abstractions.Common;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
@@ -59,25 +78,25 @@ public sealed class PresentationErrorCatalogTests {
         return typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .Concat([
-                typeof(FoodDiary.Modules.Ai.Application.Abstractions.Common.AiErrors),
-                typeof(FoodDiary.Modules.Billing.Application.Abstractions.Common.BillingErrors),
-                typeof(FoodDiary.Modules.Cycles.Contracts.Common.CycleErrors),
-                typeof(FoodDiary.Modules.Dietologist.Application.Abstractions.Common.DietologistErrors),
-                typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
-                typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),
-                typeof(FoodDiary.Modules.Favorites.Application.Abstractions.FavoriteRecipes.Common.FavoriteRecipeErrors),
-                typeof(FoodDiary.Modules.Images.Application.Abstractions.Common.ImageErrors),
-                typeof(FoodDiary.Modules.Lessons.Application.Abstractions.Common.LessonErrors),
-                typeof(FoodDiary.Modules.Admin.Application.Abstractions.Common.AdminMailInboxErrors),
-                typeof(FoodDiary.Modules.Meals.Application.Abstractions.Common.MealErrors),
-                typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common.MealPlanErrors),
-                typeof(FoodDiary.Modules.Products.Contracts.Common.ProductErrors),
-                typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors),
-                typeof(FoodDiary.Modules.RecipeCommunity.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
-                typeof(FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
-                typeof(FoodDiary.Modules.Usda.Application.Abstractions.Common.UsdaErrors),
-                typeof(FoodDiary.Modules.Users.Contracts.Common.UserErrors),
-                typeof(FoodDiary.Modules.Wearables.Application.Abstractions.Common.WearableErrors),
+                typeof(AiErrors),
+                typeof(BillingErrors),
+                typeof(CycleErrors),
+                typeof(DietologistErrors),
+                typeof(FavoriteMealErrors),
+                typeof(FavoriteProductErrors),
+                typeof(FavoriteRecipeErrors),
+                typeof(ImageErrors),
+                typeof(LessonErrors),
+                typeof(AdminMailInboxErrors),
+                typeof(MealErrors),
+                typeof(MealPlanErrors),
+                typeof(ProductErrors),
+                typeof(RecipeErrors),
+                typeof(RecipeCommentErrors),
+                typeof(ShoppingListErrors),
+                typeof(UsdaErrors),
+                typeof(UserErrors),
+                typeof(WearableErrors),
             ])
             .SelectMany(GetErrorsFromType)
             .OrderBy(static error => error.Code, StringComparer.Ordinal)

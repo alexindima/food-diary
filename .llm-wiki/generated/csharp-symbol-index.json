@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4611,
-    "symbols": 4546,
+    "sourceFiles": 4612,
+    "symbols": 4547,
     "interfaceImplementationLinks": 204,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2349,
+      "class": 2350,
       "enum": 71,
       "interface": 418,
       "record": 1567,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1875,
+      "Other": 1876,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -52,7 +52,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "IgnoredResultAnalyzer",
@@ -66,7 +66,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "line": 14
+      "line": 15
+    },
+    {
+      "name": "NamespaceQualifiedTypeAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/NamespaceQualifiedTypeAnalyzer.cs",
+      "line": 12
     },
     {
       "name": "ParameterNamingAnalyzer",
@@ -80,7 +87,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Analyzers/PrimaryConstructorBackingFieldAnalyzer.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "PrivateInstanceFieldNamingAnalyzer",
@@ -136,7 +143,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "IChangeSetSnapshotService",
@@ -157,7 +164,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerRuntimeIdentity.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ServerStatus",
@@ -171,7 +178,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "WikiIndexManifest",
@@ -192,7 +199,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/WikiVerificationReceipt.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DevelopmentMcpSourceFingerprint",
@@ -213,14 +220,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositoryRootResolver.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RepositorySourceFingerprint",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositorySourceFingerprint.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "Program",
@@ -360,14 +367,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingRetirementEvaluationRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ContextRoutingTelemetryStore",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "DevelopmentContextEvaluationRunner",
@@ -402,14 +409,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
-      "line": 9
+      "line": 12
     },
     {
       "name": "SqliteContextSearchReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "SqliteFlowScopeReader",
@@ -423,7 +430,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WikiCommandRequest",
@@ -437,7 +444,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandResult.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WikiCommandStageTiming",
@@ -472,7 +479,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WikiQueryCacheMetrics",
@@ -486,7 +493,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WikiRuntimeMetrics",
@@ -500,7 +507,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DependencyInjection",
@@ -633,7 +640,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Composition/MealsCrossModuleRelationships.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "NotificationsCrossModuleRelationships",
@@ -773,7 +780,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "FoodDiaryDbContext",
@@ -822,7 +829,7 @@
       "kind": "record",
       "role": "Command",
       "path": "FoodDiary.Initializer/InitializerCommand.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "NoOpEmailVerificationNotifier",
@@ -857,7 +864,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/UsdaDataSeeder.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "Program",
@@ -1025,7 +1032,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "JobExecutionStateSnapshot",
@@ -1326,7 +1333,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "line": 19
+      "line": 21
     },
     {
       "name": "IdempotencyFilterOptions",
@@ -1340,7 +1347,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyRequestContext.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "IdempotencyReservation",
@@ -1494,7 +1501,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Responses/ProducesFileResponseAttribute.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "AllowImpersonatedAccessAttribute",
@@ -1550,7 +1557,7 @@
       "kind": "class",
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminImpersonationSessionQuery.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "AdminRetentionReader",
@@ -2075,7 +2082,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BotMenu",
@@ -2089,7 +2096,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/BotUriHelper.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "BoundedImageStream",
@@ -2124,7 +2131,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/BotDiaryClient.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "BotDiaryStatistics",
@@ -2313,7 +2320,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/Operations/TelegramOperationWorker.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "Program",
@@ -2327,14 +2334,14 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Telegram.Bot/TelegramBotOptions.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "TelegramBotWorker",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 17
+      "line": 21
     },
     {
       "name": "ApiBuildInfo",
@@ -2355,21 +2362,21 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "ApiAuthenticationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 15
+      "line": 18
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ApiCompositionConstants",
@@ -2383,14 +2390,14 @@
       "kind": "class",
       "role": "Handler",
       "path": "FoodDiary.Web.Api/Extensions/ApiExceptionHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ApiHostServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ApiOptionsServiceCollectionExtensions",
@@ -2404,7 +2411,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 100
+      "line": 101
     },
     {
       "name": "ApiTaskConfigurationExtensions",
@@ -2425,7 +2432,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DevelopmentRuntimeHeadersMiddleware",
@@ -2439,7 +2446,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "JwtTokenUseValidator",
@@ -2453,7 +2460,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "SecurityHeadersMiddleware",
@@ -2474,21 +2481,21 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DistributedCacheHealthCheck",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/HealthChecks/DistributedCacheHealthCheck.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "S3HealthCheck",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/HealthChecks/S3HealthCheck.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ApiBuildInfoOptions",
@@ -2502,7 +2509,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiCorsOptions.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "ApiDataProtectionOptions",
@@ -2516,7 +2523,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiForwardedHeadersOptions.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "ApiHttpsRedirectionOptions",
@@ -2572,7 +2579,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/ForwardedHeadersOptionsSetup.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "NotificationTestSchedulerOptions",
@@ -2607,7 +2614,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "Program",
@@ -2635,28 +2642,28 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "PresentationContractOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/PresentationContractOperationFilter.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "PresentationTransportOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/PresentationTransportOperationFilter.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "StandardErrorResponsesOperationFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "AdminMailInboxErrors",
@@ -3062,7 +3069,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/ImportAdminDailyAdvicePairs/ImportAdminDailyAdvicePairsCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ImportAdminDailyAdviceItem",
@@ -3657,7 +3664,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GetAdminAiUsageSummaryQuery",
@@ -4203,7 +4210,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "AdminBugReportReader",
@@ -4245,7 +4252,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementWorker.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -4364,7 +4371,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDashboardController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AdminEmailTemplatesController",
@@ -6093,7 +6100,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 10
+      "line": 13
     },
     {
       "name": "AiDbContext",
@@ -6121,7 +6128,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AiUserDataPurgeParticipant",
@@ -6135,7 +6142,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "OpenAiOptions",
@@ -6163,14 +6170,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "OpenAiFoodClient",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "OpenAiFoodClient",
@@ -6233,7 +6240,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/Recipes/RecipeVideoProcessor.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "RecipeYouTubeHttpHandler",
@@ -6709,7 +6716,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingRecurringPaymentRequestModel.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "BillingSubscriptionOverviewReadModel",
@@ -7108,14 +7115,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "EfBillingTransactionRunner",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "PostgresBillingCheckoutLock",
@@ -7178,7 +7185,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "YooKassaApiClient",
@@ -7192,7 +7199,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DependencyInjection",
@@ -7206,7 +7213,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingOptions",
@@ -7220,21 +7227,21 @@
       "kind": "class",
       "role": "Options",
       "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "StripeOptions",
       "kind": "class",
       "role": "Options",
       "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "YooKassaOptions",
       "kind": "class",
       "role": "Options",
       "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
-      "line": 2
+      "line": 6
     },
     {
       "name": "BillingPaymentConfiguration",
@@ -8718,7 +8725,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Application/Mappings/CycleMappings.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "GetCurrentCycleQueryHandler",
@@ -8977,7 +8984,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/CyclePredictionRevision.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "CycleProfile",
@@ -9600,7 +9607,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DailyAdviceId",
@@ -9803,7 +9810,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "UtcDateNormalizer",
@@ -9838,7 +9845,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetDietologistClientDashboardQueryHandler",
@@ -9866,7 +9873,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Services/DashboardBuildContext.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DashboardMapping",
@@ -10454,7 +10461,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ChangeClientTaskStatusCommand",
@@ -11350,7 +11357,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecommendationBulkDispatchRepository",
@@ -12232,7 +12239,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "DiaryPdfGenerator",
@@ -12260,14 +12267,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DiaryPdfGenerator",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DiaryPdfGenerator",
@@ -13415,7 +13422,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Presentation/Extensions/FastingPresentationServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ClientTelemetryHttpProcessor",
@@ -14416,7 +14423,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Presentation/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AddFavoriteProductHttpRequest",
@@ -14717,7 +14724,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "AchievementDefinitionStore",
@@ -15151,7 +15158,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Infrastructure/Persistence/EfHydrationOperationTransactionRunner.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "HydrationDbContext",
@@ -15613,7 +15620,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "RefreshTokenSessionReadModel",
@@ -16201,7 +16208,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "VerifyEmailCommandValidator",
@@ -16649,7 +16656,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "IdentityAuthenticationRegistration",
@@ -16740,7 +16747,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "UserLoginEventRepository",
@@ -16817,21 +16824,21 @@
       "kind": "class",
       "role": "Options",
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramClientOptions.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "TelegramOidcOptions",
       "kind": "class",
       "role": "Options",
       "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramOidcOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "PasswordHasher",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "ConsumedTelegramAssertion",
@@ -17559,7 +17566,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/EfImageConfirmationTransactionRunner.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "ImageAssetCleanupBatch",
@@ -17636,7 +17643,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "S3ObjectStorageClient",
@@ -18119,7 +18126,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Lessons/Infrastructure/Persistence/EfLessonProgressTransactionRunner.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "LessonsDbContext",
@@ -18301,7 +18308,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "MarketingAttributionEventTypes",
@@ -18777,7 +18784,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "GenerateShoppingListCommandValidator",
@@ -18812,7 +18819,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/SaveCatalogMealPlan/SaveCatalogMealPlanCommandHandler.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "SaveCatalogMealPlanCommandValidator",
@@ -18868,7 +18875,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlan/GetCatalogMealPlanQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetCatalogMealPlansQuery",
@@ -18882,7 +18889,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetCatalogMealPlans/GetCatalogMealPlansQueryHandler.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "GetMealPlanByIdQuery",
@@ -19253,14 +19260,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "ShoppingListItemSource",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 9
+      "line": 12
     },
     {
       "name": "DietType",
@@ -19407,7 +19414,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ShoppingListRepository",
@@ -19666,7 +19673,7 @@
       "kind": "interface",
       "role": "ReadRepository",
       "path": "Modules/Meals/Application.Abstractions/Common/IMealProjectionReadRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "IMealReadRepository",
@@ -19736,7 +19743,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "CreateMealCommandHandler",
@@ -19799,7 +19806,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommand.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RepeatMealCommandHandler",
@@ -19988,7 +19995,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Meals/Application/Models/MealOverviewModel.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "RecognizedMealCreationModel",
@@ -20037,14 +20044,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs",
-      "line": 21
+      "line": 23
     },
     {
       "name": "GetMealsOverviewQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ReadDistinctMealDatesQueryHandler",
@@ -20387,7 +20394,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/MealItem.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "MealRecognitionReceipt",
@@ -20450,7 +20457,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MealDailyCalorieReadService",
@@ -21465,14 +21472,14 @@
       "kind": "class",
       "role": "Options",
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WebPushUriValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "NotificationRepository",
@@ -21535,7 +21542,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "WebPushEndpointValidationHandler",
@@ -21549,14 +21556,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "WebPushSocketsHttpHandlerFactory",
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "NotificationConfiguration",
@@ -21577,7 +21584,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/PersistenceModel/NotificationWebPushOutboxMessage.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "NotificationWebPushOutboxMessageConfiguration",
@@ -21983,7 +21990,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CreateProductCommandValidator",
@@ -21997,14 +22004,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "CreateProductValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DeleteProductCommand",
@@ -22060,14 +22067,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/ImportCatalogProduct/ImportCatalogProductCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductUpdateApplier",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ProductUpdateLimitValidator",
@@ -22081,14 +22088,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ProductUpdateValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "UpdateProductCommand",
@@ -22151,7 +22158,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Common/ProductImageAssetResolver.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "ProductRequiredIdParser",
@@ -23383,7 +23390,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "CreateRecipeCommandValidator",
@@ -23411,7 +23418,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/RecipeCreateFactory.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "DeleteRecipeCommand",
@@ -23467,7 +23474,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/ImportCatalogRecipe/ImportCatalogRecipeCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecipeUpdateApplier",
@@ -23495,7 +23502,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "UpdateRecipeCommandValidator",
@@ -23523,7 +23530,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Application/Common/RecipeImageAssetResolver.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "RecipeIngredientInput",
@@ -24020,7 +24027,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/RecipeIngredient.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "RecipeIngredientProductSnapshot",
@@ -25175,7 +25182,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "UsdaProviderRegistration",
@@ -25420,7 +25427,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ChangePasswordCommandValidator",
@@ -25518,7 +25525,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "SetPasswordCommandValidator",
@@ -25553,7 +25560,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "UpdateDesiredWaistCommandValidator",
@@ -25574,7 +25581,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "UpdateDesiredWeightCommandValidator",
@@ -25693,7 +25700,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Common/UserContextService.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "UserInputParser",
@@ -26022,7 +26029,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Users/Contracts/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommand.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "StartUserPremiumTrialCommand",
@@ -27121,7 +27128,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UsersDbContext",
@@ -27310,7 +27317,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Presentation/Development/OwnedFixtureCleanupExtensions.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "UsersPresentationServiceCollectionExtensions",
@@ -27814,7 +27821,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "WearableTokenProtector",
@@ -28157,7 +28164,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "WeeklyGoalRepository",
@@ -28381,7 +28388,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "MailInboxBugSource",
@@ -28402,28 +28409,28 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "NpgsqlAuditRunStore",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlAuditRunStore.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "NpgsqlBugReportJournal",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportJournal.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "NpgsqlBugReportStore",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AuditRetentionWorker",
@@ -28521,14 +28528,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "BugTriageReadAuthorizationFilter",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageReadAuthorizationFilter.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "Program",
@@ -28542,7 +28549,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "IInboundMailStore",
@@ -28794,7 +28801,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MailInboxClientServiceCollectionExtensions",
@@ -28920,7 +28927,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MailInboxSmtpOptions",
@@ -28976,14 +28983,14 @@
       "kind": "class",
       "role": "Factory",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "MailInboxLocalTlsHealthCheck",
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MailInboxMailboxFilter",
@@ -28997,7 +29004,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "MailInboxRetentionHostedService",
@@ -29018,7 +29025,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "line": 16
+      "line": 18
     },
     {
       "name": "MailInboxStoredMessageLimits",
@@ -29039,14 +29046,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "NpgsqlInboundMailStore",
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "NpgsqlMailInboxReadinessChecker",
@@ -29186,7 +29193,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 20
+      "line": 22
     },
     {
       "name": "InboundMailHttpMappings",
@@ -29305,7 +29312,7 @@
       "kind": "class",
       "role": "Options",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "MailInboxApiErrorDetailsMapper",
@@ -29347,7 +29354,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "Program",
@@ -29767,7 +29774,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IMailRelayClient",
@@ -29788,7 +29795,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/MailRelayJournalClient.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MailRelayClient",
@@ -30075,7 +30082,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DnsClientMxResolver",
@@ -30117,7 +30124,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayJournalReader.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MailRelayOutboxPublisherHostedService",
@@ -30159,7 +30166,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "MailRelayQueueStore",
@@ -30187,7 +30194,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MailRelayQueueStore",
@@ -30348,7 +30355,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "MailRelayProviderEventsController",
@@ -30397,7 +30404,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/OutgoingEmailJournalHttpMappings.cs",
-      "line": 5
+      "line": 7
     },
     {
       "name": "AwsSesBouncedRecipientHttpRequest",
@@ -31041,7 +31048,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Domain.Primitives/DomainGuard.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DomainTime",
@@ -31216,7 +31223,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Email.MailRelay/RelayEmailJournal.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "RelayEmailTransport",
@@ -31440,7 +31447,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "OutboxProcessingEngine",
@@ -31622,7 +31629,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Locking/PostgresAdvisoryLockLease.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "OutboxDeadLetterReplayService",
@@ -31685,7 +31692,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleSessionCoordinator.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "EfModuleSessionLock",
@@ -31699,7 +31706,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/EfModuleTransactionCoordinator.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "EfReadSnapshotExecutor",
@@ -31713,7 +31720,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/ModuleContextSaveCoordinator.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "PersistenceSession",
@@ -31734,7 +31741,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "SharedPersistenceDbContext",
@@ -33306,35 +33313,35 @@
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 113
+      "line": 115
     },
     {
       "service": "IServerStatusService",
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 114
+      "line": 116
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 115
+      "line": 117
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 116
+      "line": 118
     },
     {
       "service": "ITaskToolExecutor",
       "implementation": "NodeTaskToolExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 118
+      "line": 120
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -33404,14 +33411,14 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 40
+      "line": 43
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 231
+      "line": 232
     },
     {
       "service": "IAdminDashboardReadService",
@@ -33453,35 +33460,35 @@
       "implementation": "RepositoryDashboardBodyReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 20
     },
     {
       "service": "IDashboardMealsReadService",
       "implementation": "MediatorDashboardMealsReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 21
     },
     {
       "service": "IDashboardReadService",
       "implementation": "ComposedDashboardReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 22
     },
     {
       "service": "IDashboardUserContextService",
       "implementation": "DashboardUserContextService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 23
     },
     {
       "service": "IDashboardSectionDataLoader",
       "implementation": "DashboardSectionDataLoader",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 22
+      "line": 24
     },
     {
       "service": "IDietologistDashboardAccessService",

@@ -36,6 +36,6 @@ internal sealed class MealAiItemConfiguration : IEntityTypeConfiguration<MealAiI
             .HasConversion<string>()
             .HasMaxLength(16)
             .HasDefaultValue(MealAiItemResolution.Accepted)
-            .HasSentinel((FoodDiary.Modules.Meals.Domain.Contracts.Enums.MealAiItemResolution)0);
+            .HasSentinel((MealAiItemResolution)0);
     }
 }

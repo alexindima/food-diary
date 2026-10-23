@@ -1,3 +1,9 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans;
+using FoodDiary.Modules.Recipes.Domain.Entities;
+using FoodDiary.ReadModel.Composition.MealPlanning;
+using FoodDiary.Results;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -32,13 +38,13 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         var viewer = User.Create($"plan-viewer-{Guid.NewGuid():N}@example.com", "hash");
         var privateProduct = Product.Create(author.Id, "Secret supplier product", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
         var viewerProduct = Product.Create(viewer.Id, "Viewer rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        privateProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
-        viewerProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        privateProduct.ChangeVisibility(Visibility.Private);
+        viewerProduct.ChangeVisibility(Visibility.Private);
         var publicProduct = Product.Create(author.Id, "Public rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        publicProduct.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Public);
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(author.Id, "Published dish", 2);
-        recipe.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Public);
-        FoodDiary.Modules.Recipes.Domain.Entities.RecipeStep step = recipe.AddStep(1, "Cook");
+        publicProduct.ChangeVisibility(Visibility.Public);
+        var recipe = Recipe.Create(author.Id, "Published dish", 2);
+        recipe.ChangeVisibility(Visibility.Public);
+        RecipeStep step = recipe.AddStep(1, "Cook");
         step.AddProductIngredient(privateProduct.Id, ProductUnitQuantity.FromUnits(250)).SetPublicDescription("Published ingredient", "g");
         step.AddProductIngredient(viewerProduct.Id, ProductUnitQuantity.FromUnits(100));
         step.AddProductIngredient(publicProduct.Id, ProductUnitQuantity.FromUnits(50));
@@ -47,8 +53,8 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         context.AddRange(author, viewer, privateProduct, viewerProduct, publicProduct, recipe, plan);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var reader = new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context);
-        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, reader);
+        var reader = new MealPlanCompositionReader(context);
+        var repository = new MealPlanRepository(context.MealPlans, reader);
         MealPlan loaded = (await repository.GetAccessibleByIdAsync(plan.Id, viewer.Id, includeDays: true))!;
         MealPlanRecipeSnapshot snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot!;
         Assert.Equal(3, snapshot.Ingredients.Count);
@@ -69,7 +75,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await using ServiceProvider provider = services.BuildServiceProvider();
         var handler = new GenerateShoppingListCommandHandler(repository,
             provider.GetRequiredService<IShoppingListCreationService>(), new OwnedUserAccess(viewer.Id));
-        FoodDiary.Results.Result<ShoppingListModel> generated = await handler.Handle(
+        Result<ShoppingListModel> generated = await handler.Handle(
             new GenerateShoppingListCommand(viewer.Id.Value, plan.Id.Value), CancellationToken.None);
         Assert.True(generated.IsSuccess, generated.Error.Message);
         ShoppingListItemModel publishedItem = Assert.Single(generated.Value.Items, item => item.ProductId is null);
@@ -85,10 +91,10 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
 
     [ExcludeFromCodeCoverage]
     private sealed class OwnedUserAccess(UserId owner) : ICurrentUserAccessService {
-        public Task<FoodDiary.Results.Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
             Assert.Equal(owner, userId);
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult<FoodDiary.Results.Error?>(null);
+            return Task.FromResult<Error?>(null);
         }
     }
 
@@ -98,7 +104,7 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         var owner = User.Create($"plan-delete-owner-{Guid.NewGuid():N}@example.com", "hash");
         var other = User.Create($"plan-delete-other-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(owner.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(owner.Id, "Rice dish", 2);
+        var recipe = Recipe.Create(owner.Id, "Rice dish", 2);
         recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(250));
         var template = MealPlan.CreateCurated("Template", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
         MealPlan personal = template.Adopt(owner.Id);
@@ -111,8 +117,8 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         context.AddRange(owner, other, product, recipe, template, personal, foreign, list);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(
-            context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
+        var repository = new MealPlanRepository(
+            context.MealPlans, new MealPlanCompositionReader(context));
 
         Assert.False(await repository.DeletePersonalAsync(foreign.Id, owner.Id));
         Assert.False(await repository.DeletePersonalAsync(template.Id, owner.Id));
@@ -127,8 +133,8 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
             () => Assert.Equal(meal.Id, source.MealPlanMealId),
             () => Assert.Equal(recipe.Id, source.RecipeId));
         Assert.False(await context.MealPlans.AnyAsync(plan => plan.Id == personal.Id));
-        Assert.False(await context.Set<FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanDay>().AnyAsync(value => value.Id == day.Id));
-        Assert.False(await context.Set<FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanMeal>().AnyAsync(value => value.Id == meal.Id));
+        Assert.False(await context.Set<MealPlanDay>().AnyAsync(value => value.Id == day.Id));
+        Assert.False(await context.Set<MealPlanMeal>().AnyAsync(value => value.Id == meal.Id));
         Assert.True(await context.MealPlans.AnyAsync(plan => plan.Id == foreign.Id));
         Assert.True(await context.MealPlans.AnyAsync(plan => plan.Id == template.Id));
         Assert.True(await context.Recipes.AnyAsync(value => value.Id == recipe.Id));
@@ -145,25 +151,25 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var owner = User.Create($"plan-filter-owner-{Guid.NewGuid():N}@example.com", "hash");
         var other = User.Create($"plan-filter-other-{Guid.NewGuid():N}@example.com", "hash");
-        var ownBalanced = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(owner.Id, "Own balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
-        var ownKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(owner.Id, "Own keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
-        var foreignKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(other.Id, "Private keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
-        var curatedBalanced = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateCurated("Curated balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
-        var curatedKeto = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateCurated("Curated keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        var ownBalanced = MealPlan.CreateForUser(owner.Id, "Own balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
+        var ownKeto = MealPlan.CreateForUser(owner.Id, "Own keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        var foreignKeto = MealPlan.CreateForUser(other.Id, "Private keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
+        var curatedBalanced = MealPlan.CreateCurated("Curated balanced", description: null, DietType.Balanced, durationDays: 1, targetCaloriesPerDay: null);
+        var curatedKeto = MealPlan.CreateCurated("Curated keto", description: null, DietType.Keto, durationDays: 1, targetCaloriesPerDay: null);
         context.AddRange(owner, other, ownBalanced, ownKeto, foreignKeto, curatedBalanced, curatedKeto);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
+        var repository = new MealPlanRepository(context.MealPlans, new MealPlanCompositionReader(context));
 
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> firstItems, int firstTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> secondItems, int secondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> beyondItems, int beyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 3, limit: 1);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> balancedItems, int balancedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Balanced, page: 1, limit: 50);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> allItems, int allTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> savedItems, int savedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: false);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> savedBeyond, int savedBeyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1, isCurated: false);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> curatedItems, int curatedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: true);
-        (IReadOnlyList<FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Models.MealPlanSummaryReadModel> allSavedItems, int allSavedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50, isCurated: false);
+        (IReadOnlyList<MealPlanSummaryReadModel> firstItems, int firstTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1);
+        (IReadOnlyList<MealPlanSummaryReadModel> secondItems, int secondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1);
+        (IReadOnlyList<MealPlanSummaryReadModel> beyondItems, int beyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 3, limit: 1);
+        (IReadOnlyList<MealPlanSummaryReadModel> balancedItems, int balancedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Balanced, page: 1, limit: 50);
+        (IReadOnlyList<MealPlanSummaryReadModel> allItems, int allTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50);
+        (IReadOnlyList<MealPlanSummaryReadModel> savedItems, int savedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: false);
+        (IReadOnlyList<MealPlanSummaryReadModel> savedBeyond, int savedBeyondTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 2, limit: 1, isCurated: false);
+        (IReadOnlyList<MealPlanSummaryReadModel> curatedItems, int curatedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, DietType.Keto, page: 1, limit: 1, isCurated: true);
+        (IReadOnlyList<MealPlanSummaryReadModel> allSavedItems, int allSavedTotal) = await repository.GetPageSummaryReadModelsAsync(owner.Id, dietType: null, page: 1, limit: 50, isCurated: false);
 
         Guid firstId = Assert.Single(firstItems).Id;
         Guid secondId = Assert.Single(secondItems).Id;
@@ -198,23 +204,23 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"plan-snapshot-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Rice dish", 2);
+        var recipe = Recipe.Create(user.Id, "Rice dish", 2);
         recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, ProductUnitQuantity.FromUnits(250));
-        var plan = FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        var plan = MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);
         context.AddRange(user, product, recipe, plan);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Modules.MealPlanning.Infrastructure.Persistence.MealPlans.MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context)).GetByIdAsync(plan.Id, includeDays: true);
+        MealPlan? loaded = await new MealPlanRepository(context.MealPlans, new MealPlanCompositionReader(context)).GetByIdAsync(plan.Id, includeDays: true);
 
         Assert.NotNull(loaded);
-        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;
+        MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;
         Assert.NotNull(snapshot);
         Assert.Equal(recipe.Id, snapshot.Id);
         Assert.Equal("Rice dish", snapshot.Name);
         Assert.Equal(2, snapshot.Servings);
-        FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans.MealPlanRecipeIngredientSnapshot ingredient = Assert.Single(snapshot.Ingredients);
+        MealPlanRecipeIngredientSnapshot ingredient = Assert.Single(snapshot.Ingredients);
         Assert.Equal(product.Id, ingredient.ProductId);
         Assert.Equal(250, ingredient.Amount);
         Assert.Equal("Rice", ingredient.Name);

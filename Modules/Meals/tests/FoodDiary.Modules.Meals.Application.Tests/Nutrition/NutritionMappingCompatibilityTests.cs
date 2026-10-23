@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Service.Contracts.Models;
 using FoodDiary.Modules.Meals.Application.Mappings;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -16,7 +17,7 @@ public sealed class NutritionMappingCompatibilityTests {
         var meal = Meal.Create(userId, new DateTime(2026, 9, 2, 0, 0, 0, DateTimeKind.Utc));
         meal.ApplyNutrition(new MealNutritionUpdate(calories, 0, 0, 0, fiber, 0, IsAutoCalculated: true));
 
-        FoodDiary.Modules.Meals.Service.Contracts.Models.MealModel mealModel = meal.ToModel();
+        MealModel mealModel = meal.ToModel();
 
         Assert.Multiple(
             () => Assert.Equal(expectedScore, mealModel.QualityScore),

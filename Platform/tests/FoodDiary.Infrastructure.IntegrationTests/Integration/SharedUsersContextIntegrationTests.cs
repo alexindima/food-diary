@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
@@ -116,7 +117,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         var user = User.Create("transaction-read@example.com", "hash");
         user.LinkTelegram(7654321);
         user.LinkGoogleIdentity("test-issuer", "test-subject");
-        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRepository repository = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRepository>();
+        UserRepository repository = provider.GetRequiredService<UserRepository>();
         await repository.AddAsync(user);
         await provider.GetRequiredService<IUserRoleCatalogService>().EnsureRolesByNamesAsync(["transaction-reader"]);
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
@@ -126,16 +127,16 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         Assert.Equal(user.Id, (await repository.GetByGoogleIdentityIncludingDeletedAsync("test-issuer", "test-subject"))?.Id);
         Assert.Equal(user.Id, (await repository.GetByTelegramUserIdAsync(7654321))?.Id);
         await repository.UpdateAsync(user, Array.Empty<UserRoleAuditEvent>());
-        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserAdministrationReadRepository admin = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserAdministrationReadRepository>();
+        UserAdministrationReadRepository admin = provider.GetRequiredService<UserAdministrationReadRepository>();
         Assert.NotNull(await admin.GetByIdIncludingDeletedReadModelAsync(user.Id));
         Assert.Single((await admin.GetPagedAsync(search: null, 1, 10, includeDeleted: true)).Items);
         Assert.Single((await admin.GetFilteredPagedReadModelsAsync(search: null, 1, 10,
-            FoodDiary.Modules.Users.Contracts.Common.UserAccountStatusFilter.All,
-            new FoodDiary.Modules.Users.Contracts.Common.UserAdministrationFilter(), CancellationToken.None)).Items);
-        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserProfileProjectionService profile = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserProfileProjectionService>();
+            UserAccountStatusFilter.All,
+            new UserAdministrationFilter(), CancellationToken.None)).Items);
+        UserProfileProjectionService profile = provider.GetRequiredService<UserProfileProjectionService>();
         Assert.True((await profile.GetGamificationProfileAsync(user.Id)).IsSuccess);
         Assert.True((await profile.GetWeeklyCheckInProfileAsync(user.Id)).IsSuccess);
-        FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService related = provider.GetRequiredService<FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService>();
+        UserRelatedDataReadService related = provider.GetRequiredService<UserRelatedDataReadService>();
         Assert.True((await related.GetAuthorsAsync([user.Id])).ContainsKey(user.Id));
         Assert.True((await related.GetReminderSettingsAsync([user.Id])).ContainsKey(user.Id));
         await provider.GetRequiredService<IUserRoleMembershipService>().RemoveRoleAsync(user.Id, "transaction-reader");

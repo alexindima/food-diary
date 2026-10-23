@@ -5559,7 +5559,7 @@
       "name": "GetAdminAiPromptScenariosQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
-      "line": 8,
+      "line": 9,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5789,7 +5789,7 @@
       "name": "WebPushUriValidator",
       "role": "Validator",
       "path": "Modules/Notifications/Infrastructure/Options/WebPushUriValidator.cs",
-      "line": 2,
+      "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5874,7 +5874,7 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
-      "line": 33,
+      "line": 34,
       "marker": "SuppressMessage"
     },
     {
@@ -5894,17 +5894,17 @@
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 118,
+      "line": 119,
       "marker": "#pragma warning disable"
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 152,
+      "line": 153,
       "marker": "#pragma warning disable"
     },
     {
       "path": "Shared/FoodDiary.Outbox.Infrastructure/Persistence/OutboxMessageClaimer.cs",
-      "line": 179,
+      "line": 180,
       "marker": "#pragma warning disable"
     }
   ]

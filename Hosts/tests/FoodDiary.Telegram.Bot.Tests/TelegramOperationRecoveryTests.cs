@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using System.Net;
 using System.Text.Json;
 using FoodDiary.Telegram.Bot.Operations;
@@ -119,7 +120,7 @@ public sealed class TelegramOperationRecoveryTests {
     public async Task PermanentFailure_IsCheckpointedBeforeSendingNotice(string code, HttpStatusCode status) {
         using var scenario = new BotOperationScenario();
         scenario.State = new BotPhotoCheckpoint("image-ready", ImageAssetId: scenario.ImageId);
-        scenario.BusinessResponse = _ => Task.FromResult(new HttpResponseMessage(status) { Content = System.Net.Http.Json.JsonContent.Create(new { error = code }) });
+        scenario.BusinessResponse = _ => Task.FromResult(new HttpResponseMessage(status) { Content = JsonContent.Create(new { error = code }) });
         await scenario.ProcessAsync();
         Assert.Equal("failed", scenario.State.Stage);
         Assert.Equal(code, scenario.State.ErrorCode);

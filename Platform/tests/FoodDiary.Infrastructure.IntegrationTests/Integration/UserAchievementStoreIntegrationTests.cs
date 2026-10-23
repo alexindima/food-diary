@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
@@ -82,7 +83,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         var processor = new AchievementEvaluationOutboxProcessor(
             processContext, processContext.AchievementEvaluationOutbox,
             handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             timeProvider,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -136,7 +137,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         var processor = new AchievementEvaluationOutboxProcessor(
             processContext, processContext.AchievementEvaluationOutbox,
             handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             timeProvider,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -254,7 +255,7 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
     }
 
     private static AchievementDefinition CreateDefinition(string key) => AchievementDefinition.Create(
-        key, "habits", FoodDiary.Modules.Gamification.Domain.Contracts.Enums.AchievementMetric.TotalMeals, 10,
+        key, "habits", AchievementMetric.TotalMeals, 10,
         "Название", "Title", "Описание", "Description", "trophy", 1);
 
     [ExcludeFromCodeCoverage]

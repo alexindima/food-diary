@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Results;
 using FoodDiary.MailInbox.Presentation.Extensions;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
@@ -58,7 +59,7 @@ public sealed class MailInboxPresentationSecurityTests {
     [Fact]
     public void ApiKeyFilter_UsesExactSingleValueComparison() {
         var filter = new MailInboxApiKeyAuthorizationFilter(
-            Microsoft.Extensions.Options.Options.Create(CreateOptions()));
+            MsOptions.Create(CreateOptions()));
         AuthorizationFilterContext matching = CreateAuthorizationContext();
         matching.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = ValidApiKey;
         AuthorizationFilterContext wrong = CreateAuthorizationContext();
@@ -82,7 +83,7 @@ public sealed class MailInboxPresentationSecurityTests {
     [InlineData(MailInboxPermission.State)]
     public void ApiKeyFilter_MetadataCredentialCannotUseOtherCapabilities(MailInboxPermission permission) {
         var filter = new MailInboxApiKeyAuthorizationFilter(
-            Microsoft.Extensions.Options.Options.Create(CreateOptions()));
+            MsOptions.Create(CreateOptions()));
         AuthorizationFilterContext context = CreateAuthorizationContext(permission);
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = ValidApiKey;
 

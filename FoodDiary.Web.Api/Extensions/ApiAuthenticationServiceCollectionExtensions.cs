@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.RateLimiting;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Authentication.Contracts.Options;
 using System.Text;
@@ -16,10 +19,10 @@ namespace FoodDiary.Web.Api.Extensions;
 public static class ApiAuthenticationServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiAuthentication() {
-            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<CorsOptions>, CorsOptionsSetup>();
             services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
-            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
-            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<RateLimiterOptions>, RateLimiterOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<OutputCacheOptions>, OutputCacheOptionsSetup>();
             services.AddSingleton(static serviceProvider => {
                 ApiBuildInfoOptions options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
                 IHostEnvironment environment = serviceProvider.GetRequiredService<IHostEnvironment>();

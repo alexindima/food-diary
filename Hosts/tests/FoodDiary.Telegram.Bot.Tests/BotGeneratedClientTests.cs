@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
@@ -34,7 +35,7 @@ public sealed class BotGeneratedClientTests {
         var entryId = Guid.NewGuid();
         DateTime timestamp = new DateTime(2026, 10, 7, 9, 30, 0, DateTimeKind.Utc).AddTicks(1234567);
         using var handler = new Handler(async request => {
-            using var body = System.Text.Json.JsonDocument.Parse(await request.Content!.ReadAsStringAsync());
+            using var body = JsonDocument.Parse(await request.Content!.ReadAsStringAsync());
             Assert.Equal(timestamp, body.RootElement.GetProperty("timestampUtc").GetDateTime());
             return new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(new { OperationId = operationId, EntryId = entryId, TimestampUtc = timestamp, AmountMl = 250 }) };
         });

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -41,7 +43,7 @@ public sealed class EventGovernanceTests {
         string[] violations = [.. SourceScanner.SourceFiles(eventsRoot)
             .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
             .Where(entry => forbiddenNamespaces.Any(entry.line.Contains))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -77,6 +79,6 @@ public sealed class EventGovernanceTests {
             .Where(entry => entry.line.Contains(": IIntegrationEvent", StringComparison.Ordinal))
             .Where(entry => !entry.path.Contains($"{Path.DirectorySeparatorChar}Events{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
                             !Path.GetFileNameWithoutExtension(entry.path).EndsWith("IntegrationEvent", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
 }

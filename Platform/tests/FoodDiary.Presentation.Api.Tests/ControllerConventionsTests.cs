@@ -1,3 +1,4 @@
+using FoodDiary.Presentation.Api.Controllers;
 using System.Reflection;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Responses;
@@ -139,7 +140,7 @@ public sealed class ControllerConventionsTests {
         string?[] violations = [.. GetFeatureControllerTypes()
             .Where(type => !string.Equals(type.Namespace, "FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
-            .Where(type => !type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)))
+            .Where(type => !type.IsAssignableTo(typeof(AuthorizedController)))
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
             .Select(type => type.FullName)];
 

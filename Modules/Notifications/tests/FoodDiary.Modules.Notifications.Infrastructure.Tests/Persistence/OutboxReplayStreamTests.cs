@@ -1,3 +1,5 @@
+using FoodDiary.Persistence.Abstractions;
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure.Persistence;
@@ -15,10 +17,10 @@ public sealed class OutboxReplayStreamTests {
     [Fact]
     public async Task Adapter_PreservesProjectionTrackingFiltersAndBoundedList() {
         DateTime now = new(2026, 9, 3, 10, 0, 0, DateTimeKind.Utc);
-        await using FoodDiaryDbContext context = new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot()).Options);
+        await using FoodDiaryDbContext context = new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new InMemoryDatabaseRoot()).Options);
         var services = new ServiceCollection();
         services.AddSingleton(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddNotificationsPersistence();
         services.AddNotificationsPersistence();
         await using ServiceProvider provider = services.BuildServiceProvider();

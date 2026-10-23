@@ -14,8 +14,8 @@ public sealed class SetUserPasswordByAdministratorCommandHandler(IUserLookupRepo
     IUserWriteRepository userWriteRepository,
     IPasswordHasher passwordHasher) : IRequestHandler<SetUserPasswordByAdministratorCommand, Result> {
     public async Task<Result> Handle(SetUserPasswordByAdministratorCommand request, CancellationToken cancellationToken) {
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId = request.UserId;
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId actorUserId = request.ActorUserId;
+        UserId userId = request.UserId;
+        UserId actorUserId = request.ActorUserId;
         string newPassword = request.NewPassword;
         if (userId == SystemContentOwner.Id) {
             return Result.Failure(UserErrors.NotFound(userId));

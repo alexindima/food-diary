@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using System.Text.Json;
 using Npgsql;
 
@@ -28,9 +29,9 @@ public sealed class MailRelayJournalReader(NpgsqlDataSource dataSource) : IMailR
         var executor = new MailRelayPostgresExecutor(dataSource);
         return await executor.QueryAsync("select count(*) " + filter + statusFilter + ";" + projection + " " + filter + statusFilter + " order by created_at_utc desc, id desc limit @limit offset @offset;" + "select status, count(*) " + filter + " group by status;",
             command => {
-                command.Parameters.AddWithValue("from_utc", NpgsqlTypes.NpgsqlDbType.TimestampTz, (object?)fromUtc?.ToUniversalTime() ?? DBNull.Value);
-                command.Parameters.AddWithValue("to_utc", NpgsqlTypes.NpgsqlDbType.TimestampTz, (object?)toUtc?.ToUniversalTime() ?? DBNull.Value);
-                command.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Uuid, (object?)id ?? DBNull.Value);
+                command.Parameters.AddWithValue("from_utc", NpgsqlDbType.TimestampTz, (object?)fromUtc?.ToUniversalTime() ?? DBNull.Value);
+                command.Parameters.AddWithValue("to_utc", NpgsqlDbType.TimestampTz, (object?)toUtc?.ToUniversalTime() ?? DBNull.Value);
+                command.Parameters.AddWithValue("id", NpgsqlDbType.Uuid, (object?)id ?? DBNull.Value);
                 command.Parameters.AddWithValue("correlation", correlationId?.Trim() ?? "");
                 command.Parameters.AddWithValue("purpose", purpose?.Trim() ?? "");
                 command.Parameters.AddWithValue("status", status?.Trim() ?? "");

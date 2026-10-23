@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
@@ -84,7 +85,7 @@ public sealed class CommunityPlanningContextIntegrationTests(PostgresDatabaseFix
         Assert.Equal("Updated", (await read.ShoppingLists.SingleAsync(item => item.Id == list.Id)).Name);
         Assert.Equal("Updated item", (await read.ShoppingListItems.SingleAsync(item => item.ShoppingListId == list.Id)).Name);
         await new MealPlanningUserDataPurgeParticipant(planning,
-            provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>())
+            provider.GetRequiredService<IModuleTransactionCoordinator>())
             .PurgeAsync(user.Id, reassignTarget: null, CancellationToken.None);
         Assert.False(await read.ShoppingLists.AnyAsync(item => item.Id == list.Id));
         Assert.False(await read.ShoppingListItems.AnyAsync(item => item.ShoppingListId == list.Id));

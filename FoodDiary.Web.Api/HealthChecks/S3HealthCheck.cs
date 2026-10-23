@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class S3HealthCheck(
     IAmazonS3 s3Client,
     IOptions<S3Options> s3Options) : IHealthCheck {

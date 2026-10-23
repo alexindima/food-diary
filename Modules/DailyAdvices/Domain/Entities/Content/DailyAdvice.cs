@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.DailyAdvices.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
@@ -17,7 +18,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     public int Weight { get; private set; }
     public string? Tag { get; private set; }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private DailyAdvice() {
     }
 

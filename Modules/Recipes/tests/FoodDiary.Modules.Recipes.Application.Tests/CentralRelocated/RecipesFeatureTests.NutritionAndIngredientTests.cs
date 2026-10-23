@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -236,9 +237,9 @@ public partial class RecipesFeatureTests {
     [InlineData(1d, 1.005d, true)]
     [InlineData(1d, 1.02d, false)]
     public void RecipeNutritionUpdater_AreClose_HandlesNullableAndToleranceBranches(double? left, double? right, bool expected) {
-        System.Reflection.MethodInfo method = typeof(RecipeNutritionUpdater).GetMethod(
+        MethodInfo method = typeof(RecipeNutritionUpdater).GetMethod(
             "AreClose",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+            BindingFlags.NonPublic | BindingFlags.Static)!;
 
         bool actual = (bool)method.Invoke(null, [left, right])!;
 

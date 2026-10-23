@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Ai.Application;
+using FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Modules.Ai.Infrastructure;
 
 public static class ModuleRegistration {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public static IServiceCollection AddAiPersistence(this IServiceCollection services) {
         services.AddMemoryCache();
         services.AddScoped(provider => provider.GetRequiredService<IModuleContextFactory>()
@@ -18,7 +21,7 @@ public static class ModuleRegistration {
             .CreateOptions<AiDbContext>());
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AiUserDataPurgeParticipant>());
         services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
-        services.AddSingleton<IAiPromptPreviewRenderer, FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi.AiPromptPreviewRenderer>();
+        services.AddSingleton<IAiPromptPreviewRenderer, AiPromptPreviewRenderer>();
         services.AddScoped<IAiQuotaRepository, AiQuotaRepository>();
         services.AddScoped<FoodRecognitionJobStore>();
         services.AddScoped<IFoodRecognitionJobStore>(provider => provider.GetRequiredService<FoodRecognitionJobStore>());
@@ -42,7 +45,7 @@ public static class ModuleRegistration {
     }
 
     public static IServiceCollection AddAiModule(this IServiceCollection services) {
-        FoodDiary.Modules.Ai.Application.DependencyInjection.AddAiApplication(services);
+        DependencyInjection.AddAiApplication(services);
         return services.AddAiPersistence();
     }
 }

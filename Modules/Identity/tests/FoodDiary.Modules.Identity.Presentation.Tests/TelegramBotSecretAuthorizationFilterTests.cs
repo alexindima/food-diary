@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Extensions;
@@ -91,7 +92,7 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
     }
 
     private static TelegramBotSecretAuthorizationFilter CreateFilter(string apiSecret) {
-        IOptions<TelegramBotAuthOptions> options = Microsoft.Extensions.Options.Options.Create(new TelegramBotAuthOptions {
+        IOptions<TelegramBotAuthOptions> options = MsOptions.Create(new TelegramBotAuthOptions {
             ApiSecret = apiSecret,
         });
 

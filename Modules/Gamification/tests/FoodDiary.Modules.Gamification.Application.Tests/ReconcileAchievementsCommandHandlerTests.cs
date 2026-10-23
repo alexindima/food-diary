@@ -25,7 +25,7 @@ public sealed class ReconcileAchievementsCommandHandlerTests {
         IAchievementAwardService awards = Substitute.For<IAchievementAwardService>();
         awards.EvaluateAndGrantAsync(userId, Arg.Any<AchievementMetricSnapshot>(), Arg.Any<CancellationToken>(), Arg.Any<DateTime?>())
             .Returns(Task.FromResult<IReadOnlyList<BadgeModel>>([]));
-        FoodDiary.Mediator.ISender handler = RequestTestSender.Create(new ReconcileAchievementsCommandHandler(activity, metricReader, awards, new StubTimeProvider()));
+        ISender handler = RequestTestSender.Create(new ReconcileAchievementsCommandHandler(activity, metricReader, awards, new StubTimeProvider()));
 
         DateTime occurredAtUtc = new(2026, 8, 10, 11, 30, 0, DateTimeKind.Utc);
         await handler.Send(new ReconcileAchievementsCommand(userId, occurredAtUtc));

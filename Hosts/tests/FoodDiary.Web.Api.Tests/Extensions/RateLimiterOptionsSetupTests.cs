@@ -1,3 +1,9 @@
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Images.Presentation.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Security.Claims;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Reflection;
 using System.Collections;
 using FoodDiary.Presentation.Api.Policies;
@@ -12,7 +18,7 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void TelegramConfiguration_UsesSeparatePolicy_WhileAuthenticationPostsKeepAuthPolicy() {
-        Type controller = typeof(FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers.AuthTelegramOnboardingController);
+        Type controller = typeof(AuthTelegramOnboardingController);
         EnableRateLimitingAttribute? controllerPolicy = controller.GetCustomAttribute<EnableRateLimitingAttribute>();
         MethodInfo configuration = controller.GetMethod("Configuration")!;
         EnableRateLimitingAttribute? configurationPolicy = configuration.GetCustomAttribute<EnableRateLimitingAttribute>();
@@ -21,7 +27,7 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.Equal(PresentationPolicyNames.AuthRateLimitPolicyName, controllerPolicy.PolicyName);
         Assert.Equal(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, configurationPolicy.PolicyName);
         MethodInfo[] posts = [.. controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-            .Where(method => method.GetCustomAttribute<Microsoft.AspNetCore.Mvc.HttpPostAttribute>() is not null)];
+            .Where(method => method.GetCustomAttribute<HttpPostAttribute>() is not null)];
         Assert.NotEmpty(posts);
         Assert.All(posts, method => Assert.Null(method.GetCustomAttribute<EnableRateLimitingAttribute>()));
     }
@@ -30,7 +36,7 @@ public sealed class RateLimiterOptionsSetupTests {
     [InlineData("GetUploadUrl")]
     [InlineData("Confirm")]
     public void ImageEndpoints_UseDedicatedImagePolicy(string action) {
-        MethodInfo method = typeof(FoodDiary.Modules.Images.Presentation.Controllers.ImagesController).GetMethod(action)!;
+        MethodInfo method = typeof(ImagesController).GetMethod(action)!;
         EnableRateLimitingAttribute? policy = method.GetCustomAttribute<EnableRateLimitingAttribute>();
         Assert.NotNull(policy);
         Assert.Equal(PresentationPolicyNames.ImagesRateLimitPolicyName, policy.PolicyName);
@@ -39,12 +45,12 @@ public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void ImagesPolicy_AllowsSixtyRequests_AndIsSeparateFromAuth() {
         var options = new RateLimiterOptions();
-        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
         Delegate images = Assert.Single(GetDelegates(FindPolicy(options, PresentationPolicyNames.ImagesRateLimitPolicyName)));
         Delegate auth = Assert.Single(GetDelegates(FindPolicy(options, PresentationPolicyNames.AuthRateLimitPolicyName)));
         var context = new DefaultHttpContext {
-            User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(
-                [new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())], "test")),
+            User = new ClaimsPrincipal(new ClaimsIdentity(
+                [new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())], "test")),
         };
         context.Request.Path = "/api/v1/images/upload-url";
         object partition = images.DynamicInvoke(context)!;
@@ -76,7 +82,7 @@ public sealed class RateLimiterOptionsSetupTests {
     public void GetPartitionKey_IgnoresSpoofedForwardedForHeader_AndUsesRemoteIp() {
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["X-Forwarded-For"] = "203.0.113.10";
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
 
         string partitionKey = InvokeGetPartitionKey(httpContext);
 
@@ -86,7 +92,7 @@ public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void GetPartitionKey_NormalizesIpv6MappedIpv4Address() {
         var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("::ffff:198.51.100.25");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("::ffff:198.51.100.25");
 
         string partitionKey = InvokeGetPartitionKey(httpContext);
 
@@ -106,9 +112,9 @@ public sealed class RateLimiterOptionsSetupTests {
     public void GetPartitionKey_WhenAuthenticatedUserHasId_UsesUserId() {
         var userId = Guid.NewGuid();
         var httpContext = new DefaultHttpContext {
-            User = new System.Security.Claims.ClaimsPrincipal(
-                new System.Security.Claims.ClaimsIdentity(
-                    [new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, userId.ToString())],
+            User = new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    [new Claim(ClaimTypes.NameIdentifier, userId.ToString())],
                     "test")),
         };
 
@@ -120,11 +126,11 @@ public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void Configure_WebhookPolicyFactory_CreatesPartition() {
         var options = new RateLimiterOptions();
-        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
         object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
         Delegate factory = Assert.Single(GetDelegates(policy));
         var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
 
         object? partition = factory.DynamicInvoke(httpContext);
 
@@ -134,7 +140,7 @@ public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public void Configure_WebhookPolicyFactory_ProtectsYooKassaPartitionFromUntrustedSources() {
         var options = new RateLimiterOptions();
-        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
         object policy = FindPolicy(options, PresentationPolicyNames.WebhookRateLimitPolicyName);
         Delegate factory = Assert.Single(GetDelegates(policy));
         DefaultHttpContext firstContext = CreateWebhookContext("YooKassa", "185.71.76.1");
@@ -165,11 +171,11 @@ public sealed class RateLimiterOptionsSetupTests {
     [InlineData(PresentationPolicyNames.ExportRateLimitPolicyName)]
     public void Configure_DedicatedPolicyFactory_CreatesPartition(string policyName) {
         var options = new RateLimiterOptions();
-        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
         object policy = FindPolicy(options, policyName);
         Delegate factory = Assert.Single(GetDelegates(policy));
         var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
 
         object? partition = factory.DynamicInvoke(httpContext);
 
@@ -179,7 +185,7 @@ public sealed class RateLimiterOptionsSetupTests {
     [Fact]
     public async Task Configure_OnRejected_WritesRetryAfterMetadata() {
         var options = new RateLimiterOptions();
-        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
         var httpContext = new DefaultHttpContext();
         httpContext.Response.Body = new MemoryStream();
         var context = new OnRejectedContext {
@@ -219,7 +225,7 @@ public sealed class RateLimiterOptionsSetupTests {
     private static DefaultHttpContext CreateWebhookContext(string provider, string remoteIpAddress) {
         var context = new DefaultHttpContext();
         context.Request.RouteValues["provider"] = provider;
-        context.Connection.RemoteIpAddress = System.Net.IPAddress.Parse(remoteIpAddress);
+        context.Connection.RemoteIpAddress = IPAddress.Parse(remoteIpAddress);
         return context;
     }
 

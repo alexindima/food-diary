@@ -1,3 +1,7 @@
+using FoodDiary.Mediator;
+using FoodDiary.Modules.Admin.Domain.Entities;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Identity.Application.Abstractions.Admin.Common;
 using FoodDiary.Modules.Identity.Application.Email.Commands.UpsertEmailTemplate;
@@ -504,7 +508,7 @@ public partial class AdminFeatureTests {
             StringComparer.Ordinal);
 
         public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
-        public FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel? LatestWeight { get; init; }
+        public WeightEntryModel? LatestWeight { get; init; }
         public int UpdateCallCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string? email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -578,8 +582,8 @@ public partial class AdminFeatureTests {
             return Task.CompletedTask;
         }
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
-            FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadLatestWeightEntry.ReadLatestWeightEntryQuery => (Task<TResponse>)(object)Task.FromResult(LatestWeight),
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+            ReadLatestWeightEntryQuery => (Task<TResponse>)(object)Task.FromResult(LatestWeight),
             GetFilteredUsersForAdministrationQuery r => (Task<TResponse>)(object)GetFilteredPagedAsync(r.Search, r.Page, r.Limit, r.Status, r.Filter, cancellationToken),
             GetUserForAdministrationQuery r => (Task<TResponse>)(object)GetByIdIncludingDeletedForRequestAsync(r.UserId, cancellationToken),
             GetUsersForAdministrationQuery r => (Task<TResponse>)(object)GetPagedForRequestAsync(r.Search, r.Page, r.Limit, r.Status, cancellationToken),
@@ -620,13 +624,13 @@ public partial class AdminFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingImpersonationSessionRepository : IAdminImpersonationSessionWriteRepository, IAdminImpersonationSessionQuery {
         public int AddCallCount { get; private set; }
-        public FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession? LastSession { get; private set; }
+        public AdminImpersonationSession? LastSession { get; private set; }
         public (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) PagedResponse { get; set; } = ([], 0);
         public int LastPage { get; private set; }
         public int LastLimit { get; private set; }
         public string? LastSearch { get; private set; }
 
-        public Task AddAsync(FoodDiary.Modules.Admin.Domain.Entities.AdminImpersonationSession session, CancellationToken cancellationToken = default) {
+        public Task AddAsync(AdminImpersonationSession session, CancellationToken cancellationToken = default) {
             AddCallCount++;
             LastSession = session;
             return Task.CompletedTask;
@@ -656,24 +660,24 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository(
-        FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary? response = null) : IAiUsageQuery {
-        public Task<FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary> GetSummaryForUserAsync(
+        AiUsageSummary? response = null) : IAiUsageQuery {
+        public Task<AiUsageSummary> GetSummaryForUserAsync(
             DateTime fromUtc, DateTime toUtc, UserId userId, CancellationToken cancellationToken) => GetSummaryAsync(fromUtc, toUtc, cancellationToken);
 
         public DateTime LastFromUtc { get; private set; }
         public DateTime LastToUtc { get; private set; }
 
-        public Task AddAsync(FoodDiary.Modules.Ai.Domain.Entities.AiUsage usage, CancellationToken cancellationToken = default) =>
+        public Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary> GetSummaryAsync(
+        public Task<AiUsageSummary> GetSummaryAsync(
             DateTime fromUtc,
             DateTime toUtc,
             CancellationToken cancellationToken = default) {
             LastFromUtc = fromUtc;
             LastToUtc = toUtc;
 
-            return Task.FromResult(response ?? new FoodDiary.Modules.Ai.Contracts.Models.AiUsageSummary(
+            return Task.FromResult(response ?? new AiUsageSummary(
                 0,
                 0,
                 0,
@@ -748,7 +752,7 @@ public partial class AdminFeatureTests {
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
             GetFilteredUsersForAdministrationQuery r => (Task<TResponse>)(object)GetFilteredPagedAsync(r.Search, r.Page, r.Limit, r.Status, r.Filter, cancellationToken),
             GetUserForAdministrationQuery r => (Task<TResponse>)(object)GetByIdIncludingDeletedForRequestAsync(r.UserId, cancellationToken),
             GetUsersForAdministrationQuery r => (Task<TResponse>)(object)GetPagedForRequestAsync(r.Search, r.Page, r.Limit, r.Status, cancellationToken),

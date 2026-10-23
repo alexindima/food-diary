@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
 using FoodDiary.Email.Infrastructure;
@@ -58,8 +60,8 @@ public sealed class SharedDietologistContextIntegrationTests(PostgresDatabaseFix
         Assert.NotNull(await provider.GetRequiredService<IDietologistInvitationRepository>().GetByIdReadModelAsync(invitation.Id));
         Assert.Null(await provider.GetRequiredService<IDietologistInvitationRepository>().GetActiveByClientReadModelAsync(client.Id));
         Assert.True(await comments.IsParticipantAsync(recommendation.Id, dietologist.Id));
-        Assert.False(await comments.IsParticipantAsync(recommendation.Id, FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New()));
-        Assert.False(await comments.IsParticipantAsync(FoodDiary.Modules.Dietologist.Domain.ValueObjects.Ids.RecommendationId.New(), client.Id));
+        Assert.False(await comments.IsParticipantAsync(recommendation.Id, UserId.New()));
+        Assert.False(await comments.IsParticipantAsync(RecommendationId.New(), client.Id));
         shared.ChangeTracker.Clear();
         owned.ChangeTracker.Clear();
         Recommendation? tracked = await provider.GetRequiredService<IRecommendationReadRepository>().GetByIdAsync(recommendation.Id, asTracking: true);

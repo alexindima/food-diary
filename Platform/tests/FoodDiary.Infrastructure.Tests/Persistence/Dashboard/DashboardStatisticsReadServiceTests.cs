@@ -1,3 +1,6 @@
+using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using System.Globalization;
 using FoodDiary.Modules.Meals.Contracts.Models;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Infrastructure.Persistence.Meals;
@@ -29,14 +32,14 @@ public sealed class DashboardStatisticsReadServiceTests {
             from.AddDays(1), to.AddTicks(1), from.AddDays(100), from.AddDays(7).AddTicks(-1)];
         Meal[] meals = [.. dates.Select((date, index) => CreateMeal(user.Id, date, 100 + (index * 0.17), 10 + (index * 0.13), index == 7 ? null : (MealType)(index % 5)))];
         context.Meals.AddRange(meals);
-        context.Meals.Add(CreateMeal(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), from, 9999, 9999));
+        context.Meals.Add(CreateMeal(UserId.New(), from, 9999, 9999));
         await context.SaveChangesAsync();
         var service = new MealNutritionStatisticsReadService(context.Meals);
 
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await service.GetStatisticsAsync(user.Id, from, to, quantizationDays);
 
         Assert.True(result.IsSuccess, result.Error.Message);
-        IReadOnlyList<(DateTime Start, DateTime End)> ranges = FoodDiary.Application.Contracts.Common.Validation.TemporalRangePolicy.BuildInstantBuckets(from, to, quantizationDays);
+        IReadOnlyList<(DateTime Start, DateTime End)> ranges = TemporalRangePolicy.BuildInstantBuckets(from, to, quantizationDays);
         Assert.Equal(ranges.Count, result.Value.Count);
         for (int index = 0; index < ranges.Count; index++) {
             (DateTime start, DateTime end) = ranges[index];
@@ -108,7 +111,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
+            UserId.New(),
             new DateTime(2026, 6, 3, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 6, 2, 0, 0, 0, DateTimeKind.Utc),
             quantizationDays: 1,
@@ -124,7 +127,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context.Meals));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
+            UserId.New(),
             DateTime.MaxValue,
             DateTime.MaxValue,
             quantizationDays: 1,
@@ -149,7 +152,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(),
+            UserId.New(),
             from,
             from.AddDays(periodDays),
             quantizationDays,
@@ -183,7 +186,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         DateTime to = TimeZoneInfo.ConvertTimeToUtc(start.AddDays(366), zone).AddTicks(-1);
         var service = new MealNutritionStatisticsReadService(context.Meals);
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await service.GetStatisticsAsync(
-            FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), from, to, 1, CancellationToken.None, zone);
+            UserId.New(), from, to, 1, CancellationToken.None, zone);
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Equal(366, result.Value.Count);
     }
@@ -197,7 +200,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     public async Task CalendarBuckets_CountLocalMealDatesAndKeepVariableLengthDays(string zoneId, string dateText, double hours) {
         await using FoodDiaryDbContext context = CreateContext();
         var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
-        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         DateTime from = TimeZoneInfo.ConvertTimeToUtc(day.ToDateTime(TimeOnly.MinValue), zone);
         DateTime nextDay = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(1).ToDateTime(TimeOnly.MinValue), zone);
         DateTime to = TimeZoneInfo.ConvertTimeToUtc(day.AddDays(2).ToDateTime(TimeOnly.MinValue), zone).AddTicks(-1);
@@ -252,7 +255,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     }
 
     private static Meal CreateMeal(
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+        UserId userId,
         DateTime date,
         double calories,
         double proteins,

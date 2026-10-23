@@ -118,7 +118,7 @@ public sealed class ApiHostOptionsConfigurationTests {
         ApiHttpsRedirectionOptions httpsRedirection = provider.GetRequiredService<IOptions<ApiHttpsRedirectionOptions>>().Value;
         ApiRateLimitingOptions rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
         ApiOutputCacheOptions outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
-        ForwardedHeadersOptions forwardedHeadersOptions = provider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>().Value;
+        ForwardedHeadersOptions forwardedHeadersOptions = provider.GetRequiredService<IOptions<ForwardedHeadersOptions>>().Value;
 
         Assert.Equal(["http://localhost:4200"], cors.Origins);
         Assert.Equal(2, forwardedHeaders.ForwardLimit);

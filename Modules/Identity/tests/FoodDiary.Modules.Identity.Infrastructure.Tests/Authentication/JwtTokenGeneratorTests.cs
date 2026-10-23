@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
@@ -188,7 +189,7 @@ public sealed class JwtTokenGeneratorTests {
         bool includeSecret = true,
         string issuer = "FoodDiary",
         string audience = "FoodDiaryClients") {
-        return Microsoft.Extensions.Options.Options.Create(new JwtOptions {
+        return MsOptions.Create(new JwtOptions {
             Issuer = issuer,
             Audience = audience,
             SecretKey = includeSecret ? "super-secret-key-for-tests-only-123456789" : string.Empty,

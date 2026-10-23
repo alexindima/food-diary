@@ -1,3 +1,4 @@
+using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -35,7 +36,7 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         string replacementRefresh = AuthenticationResponseCookies.ReadRefreshToken(repeated);
         JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(replacementRefresh);
         string setCookie = Assert.Single(repeated.Headers.GetValues("Set-Cookie"));
-        Assert.Equal(jwt.ValidTo, Microsoft.Net.Http.Headers.SetCookieHeaderValue.Parse(setCookie).Expires!.Value.UtcDateTime);
+        Assert.Equal(jwt.ValidTo, SetCookieHeaderValue.Parse(setCookie).Expires!.Value.UtcDateTime);
         using HttpResponseMessage listed = await browser.GetAsync("/api/v1/auth/sessions");
         listed.EnsureSuccessStatusCode();
         using var sessions = JsonDocument.Parse(await listed.Content.ReadAsStringAsync());

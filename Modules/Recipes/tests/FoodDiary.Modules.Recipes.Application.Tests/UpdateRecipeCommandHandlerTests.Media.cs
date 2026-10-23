@@ -29,7 +29,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -72,7 +72,7 @@ public partial class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        RecordingImageAssetAccessService imageAccess = new FoodDiary.Modules.Recipes.Application.Tests.Support.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
             .WithFailure(ImageErrors.Forbidden());
         UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
@@ -139,7 +139,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             cleanup,
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Modules.Recipes.Application.Tests.Support.AllowImageAssetAccessService.Instance,
+            AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

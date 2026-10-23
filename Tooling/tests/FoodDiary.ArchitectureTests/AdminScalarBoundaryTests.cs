@@ -1,3 +1,9 @@
+using FoodDiary.Modules.Billing.Domain.Contracts;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements;
+using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -24,12 +30,12 @@ public sealed class AdminScalarBoundaryTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames), "Billing", "")]
-    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus), "ContentReports", "Enums")]
-    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType), "ContentReports", "Enums")]
-    [InlineData(typeof(FoodDiary.Modules.Gamification.Domain.Contracts.Enums.AchievementMetric), "Gamification", "Enums")]
-    [InlineData(typeof(FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements.AchievementDefinitionLimits), "Gamification", "Entities/Achievements")]
-    [InlineData(typeof(FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId), "ContentReports", "ValueObjects/Ids")]
+    [InlineData(typeof(BillingProviderNames), "Billing", "")]
+    [InlineData(typeof(ReportStatus), "ContentReports", "Enums")]
+    [InlineData(typeof(ReportTargetType), "ContentReports", "Enums")]
+    [InlineData(typeof(AchievementMetric), "Gamification", "Enums")]
+    [InlineData(typeof(AchievementDefinitionLimits), "Gamification", "Entities/Achievements")]
+    [InlineData(typeof(ContentReportId), "ContentReports", "ValueObjects/Ids")]
     public void Scalars_HaveOneNarrowOwner(Type type, string owner, string folder) {
         string projectName = $"FoodDiary.Modules.{owner}.Domain.Contracts";
         Assert.Equal(projectName, type.Assembly.GetName().Name);

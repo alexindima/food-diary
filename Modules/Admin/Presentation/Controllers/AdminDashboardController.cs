@@ -1,3 +1,4 @@
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
@@ -16,7 +17,7 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 public sealed class AdminDashboardController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet("overview")]
     [ProducesResponseType<AdminDashboardOverviewHttpResponse>(StatusCodes.Status200OK)]
-    [FoodDiary.Presentation.Api.Responses.ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public Task<IActionResult> GetOverview([FromQuery] GetAdminDashboardOverviewHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToHttpResponse());

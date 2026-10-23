@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitation;
 using FoodDiary.Modules.Dietologist.Application.Commands.AcceptInvitationForCurrentUser;
 using FoodDiary.Modules.Dietologist.Application.Commands.CreateRecommendation;
@@ -27,7 +28,7 @@ public sealed class DietologistHttpMappingsTests {
     [InlineData(false)]
     public void ProfileRelationship_MapsAllFields(bool accepted) {
         DateTime now = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var model = new FoodDiary.Modules.Users.Contracts.Models.ProfileDietologistRelationshipModel(
+        var model = new ProfileDietologistRelationshipModel(
             Guid.NewGuid(), accepted ? "Accepted" : "Pending", "diet@example.com", "First", "Last", accepted ? Guid.NewGuid() : null,
             new(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false), now, now.AddDays(2), accepted ? now.AddDays(1) : null);
 

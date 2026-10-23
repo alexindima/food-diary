@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Commands.DuplicateRecipe;
 using FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
@@ -14,10 +16,10 @@ public partial class RecipesFeatureTests {
     public async Task Create_WhenPreferredLanguageLookupFails_DoesNotSaveRecipe() {
         var user = User.Create("profile-error@example.com", "hash");
         var repository = new SingleRecipeRepositoryForCreate();
-        FoodDiary.Modules.Users.Contracts.Common.IUserProfileReadService profiles = Substitute.For<FoodDiary.Modules.Users.Contracts.Common.IUserProfileReadService>();
+        IUserProfileReadService profiles = Substitute.For<IUserProfileReadService>();
         var error = new Error("User.NotFound", "Profile unavailable");
         profiles.GetUserAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<FoodDiary.Modules.Users.Contracts.Models.UserModel>(error));
+            .Returns(Result.Failure<UserModel>(error));
         var handler = new CreateRecipeCommandHandler(repository, repository, new StubUserRepository(user),
             AllowImageAssetAccessService.Instance, new AllowAllProductLookupService(), new AllowAllRecipeLookupService(),
             new ImmediateRecipeMutationTransactionRunner(), profiles);

@@ -3,7 +3,7 @@ using FoodDiary.BugTriage.Presentation.Features.Reports;
 
 namespace FoodDiary.BugTriage.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class BugReportJournalValidationTests {
     [Theory]
     [InlineData(null, null, true)]

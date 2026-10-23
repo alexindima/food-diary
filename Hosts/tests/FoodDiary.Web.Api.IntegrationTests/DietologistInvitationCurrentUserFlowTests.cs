@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
+using System.IdentityModel.Tokens.Jwt;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Globalization;
 using System.Net;
@@ -333,7 +335,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             [RoleNames.Dietologist],
             expiresAtUtc: null,
             securityVersion,
-            new FoodDiary.Modules.Identity.Domain.ValueObjects.Ids.RefreshTokenSessionId(Guid.Parse(new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler()
+            new RefreshTokenSessionId(Guid.Parse(new JwtSecurityTokenHandler()
                 .ReadJwtToken(user.Client.DefaultRequestHeaders.Authorization!.Parameter!)
                 .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value)));
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

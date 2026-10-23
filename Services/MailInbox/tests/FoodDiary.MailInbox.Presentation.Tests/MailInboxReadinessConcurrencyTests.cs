@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Results;
 using FoodDiary.MailInbox.Application.Health;
 using FoodDiary.MailInbox.Presentation.Features.Health;
@@ -114,7 +115,7 @@ public sealed class MailInboxReadinessConcurrencyTests {
     }
 
     private static MailInboxReadinessConcurrencyGate CreateGate(TimeSpan queueTimeout) =>
-        new(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+        new(MsOptions.Create(new MailInboxHttpOptions {
             MetadataApiKey = ValidApiKey,
             MaxConcurrentReadinessRequests = 1,
             ReadinessQueueTimeout = queueTimeout,
@@ -123,7 +124,7 @@ public sealed class MailInboxReadinessConcurrencyTests {
     private static MailInboxHealthController CreateController(ISender sender, TimeSpan executionTimeout) =>
         new(
             sender,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = ValidApiKey,
                 ReadinessExecutionTimeout = executionTimeout,
             })) {

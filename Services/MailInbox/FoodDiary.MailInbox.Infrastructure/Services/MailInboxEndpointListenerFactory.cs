@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography.X509Certificates;
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Net;
@@ -59,7 +61,7 @@ public sealed class MailInboxEndpointListenerFactory(IOptions<MailInboxSmtpOptio
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private sealed class ConnectionLimiter(int globalLimit, int perSourceLimit) : IDisposable {
         private readonly SemaphoreSlim _global = new(globalLimit, globalLimit);
         private readonly ConcurrentDictionary<string, int> _sourceCounts = new(StringComparer.Ordinal);
@@ -117,7 +119,7 @@ public sealed class MailInboxEndpointListenerFactory(IOptions<MailInboxSmtpOptio
         public SslProtocols SslProtocol => inner.SslProtocol;
 
         public Task UpgradeAsync(
-            System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+            X509Certificate certificate,
             SslProtocols protocols,
             CancellationToken cancellationToken = default) =>
             inner.UpgradeAsync(certificate, protocols, cancellationToken);

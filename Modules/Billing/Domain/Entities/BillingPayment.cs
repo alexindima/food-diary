@@ -18,8 +18,8 @@ public sealed class BillingPayment : Entity<Guid> {
 
     public UserId UserId { get; private set; }
     public Guid? BillingSubscriptionId { get; private set; }
-    public FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId? SubscriptionReference =>
-        BillingSubscriptionId is { } id ? new FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId(id) : null;
+    public BillingSubscriptionId? SubscriptionReference =>
+        BillingSubscriptionId is { } id ? new BillingSubscriptionId(id) : null;
     public string Provider { get; private set; } = string.Empty;
     public string ExternalPaymentId { get; private set; } = string.Empty;
     public string? ExternalCustomerId { get; private set; }

@@ -1,3 +1,5 @@
+using System.Reflection;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
@@ -14,9 +16,9 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public void ContentTypeMatchesFormat_WhenCodecFormatIsUnsupported_ReturnsFalse() {
-        System.Reflection.MethodInfo method = typeof(S3ImageStorageService).GetMethod(
+        MethodInfo method = typeof(S3ImageStorageService).GetMethod(
             "ContentTypeMatchesFormat",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
 
         bool result = (bool)method.Invoke(null, ["image/png", SKEncodedImageFormat.Bmp])!;
 
@@ -473,7 +475,7 @@ public sealed class S3ImageStorageServiceTests {
     private static S3ImageStorageService CreateService(IObjectStorageClient storageClient, string publicBaseUrl = "") {
         return new S3ImageStorageService(
             storageClient,
-            Microsoft.Extensions.Options.Options.Create(new S3Options {
+            MsOptions.Create(new S3Options {
                 Bucket = "fooddiary-assets",
                 StagingBucket = "fooddiary-assets-staging",
                 Region = "eu-central-1",

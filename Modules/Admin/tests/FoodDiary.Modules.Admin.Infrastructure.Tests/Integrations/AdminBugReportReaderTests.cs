@@ -1,3 +1,4 @@
+using System.Text;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.Modules.Admin.Application.Abstractions.Common;
@@ -88,7 +89,7 @@ public sealed class AdminBugReportReaderTests {
 
     [Fact]
     public async Task NullResponse_ThrowsInsteadOfReportingEmptyJournal() {
-        using var handler = new ResponseHandler(() => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null", System.Text.Encoding.UTF8, "application/json") });
+        using var handler = new ResponseHandler(() => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null", Encoding.UTF8, "application/json") });
         using var client = new HttpClient(handler) { BaseAddress = new Uri("https://bugs.example.com/") };
         var reader = new AdminBugReportReader(client, Options.Create(new AdminBugTriageOptions { BaseUrl = client.BaseAddress.ToString(), ReadApiKey = new string('k', 32) }));
         await Assert.ThrowsAsync<InvalidOperationException>(() => reader.GetPageAsync(Filter(), CancellationToken.None));

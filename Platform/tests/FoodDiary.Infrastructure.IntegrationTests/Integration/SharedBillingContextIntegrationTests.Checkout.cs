@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfile;
 using FoodDiary.Modules.Users.Contracts.Queries.GetUserBillingProfileIncludingDeleted;
@@ -46,7 +47,7 @@ public sealed partial class SharedBillingContextIntegrationTests {
         BillingSubscription before = await context.BillingSubscriptions.AsNoTracking().SingleAsync();
 
         // Simulate the response cache being lost after the transaction committed.
-        provider.GetRequiredService<FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingDbContext>().ChangeTracker.Clear();
+        provider.GetRequiredService<BillingDbContext>().ChangeTracker.Clear();
         clock.GetUtcNow().Returns(DateTimeOffset.UtcNow.AddMinutes(30));
         Result<BillingCheckoutSessionModel> replay = await handler.Handle(command, CancellationToken.None);
 
@@ -85,7 +86,7 @@ public sealed partial class SharedBillingContextIntegrationTests {
                 await subscriptions.AddAsync(subscription, token);
             });
         }
-        provider.GetRequiredService<FoodDiary.Modules.Billing.Infrastructure.Persistence.BillingDbContext>().ChangeTracker.Clear();
+        provider.GetRequiredService<BillingDbContext>().ChangeTracker.Clear();
         await using FoodDiaryDbContext otherContext = databaseFixture.CreateDbContext(context.Database.GetConnectionString()!);
         await using ServiceProvider otherProvider = CreateProvider(otherContext);
         ISender users = WorkflowUsers(user);

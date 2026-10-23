@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.SaveCatalogMealPlan;
 using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Mappings;
 using FoodDiary.Modules.MealPlanning.Presentation.MealPlans.Requests;
@@ -14,7 +15,7 @@ public sealed class CatalogMealPlanHttpMappingsTests {
             Days: [null!, new CatalogDayHttpRequest(1, [null!])]);
         SaveCatalogMealPlanCommand command = request.ToCatalogCommand(id: null);
 
-        FluentValidation.Results.ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
+        ValidationResult result = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command);
 
         Assert.Multiple(
             () => Assert.False(result.IsValid),

@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects;
 using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.MealPlanning.Application.Common.Validation;
@@ -21,7 +22,7 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
         transactionRunner.ExecuteAsync(token => HandleCoreAsync(command, token), cancellationToken);
 
     private async Task<Result<MealPlanModel>> HandleCoreAsync(SaveCatalogMealPlanCommand command, CancellationToken cancellationToken) {
-        FluentValidation.Results.ValidationResult validation = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command, cancellationToken).ConfigureAwait(false);
+        ValidationResult validation = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command, cancellationToken).ConfigureAwait(false);
         if (!validation.IsValid) {
             return Result.Failure<MealPlanModel>(new Error("MealPlan.InvalidCatalogPlan",
                 string.Join(' ', validation.Errors.Select(error => error.ErrorMessage).Distinct(StringComparer.Ordinal)), Kind: ErrorKind.Validation));

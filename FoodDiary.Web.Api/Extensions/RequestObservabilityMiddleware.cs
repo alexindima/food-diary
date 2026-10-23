@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Telemetry;
 using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger<RequestObservabilityMiddleware> logger) {
     private static readonly object HandledExceptionKey = new();
 

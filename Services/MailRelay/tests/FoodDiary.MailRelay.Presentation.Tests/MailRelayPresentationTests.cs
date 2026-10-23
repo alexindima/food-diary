@@ -1,3 +1,7 @@
+using FoodDiary.MailRelay.Application.Emails.Queries.GetOutgoingEmailJournal;
+using System.Net;
+using ApplicationJournalPage = FoodDiary.MailRelay.Application.Emails.Models.OutgoingEmailJournalPage;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -118,7 +122,7 @@ public sealed partial class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyIsRequiredAndMissing_ReturnsUnauthorized() {
-        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(MsOptions.Create(new MailRelayOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));
@@ -133,7 +137,7 @@ public sealed partial class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyRequirementIsDisabled_ReturnsUnauthorized() {
-        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(MsOptions.Create(new MailRelayOptions {
             RequireApiKey = false,
             ApiKey = "secret",
         }));
@@ -149,7 +153,7 @@ public sealed partial class MailRelayPresentationTests {
 
     [Fact]
     public void RelayApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
-        var filter = new RelayApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+        var filter = new RelayApiKeyAuthorizationFilter(MsOptions.Create(new MailRelayOptions {
             RequireApiKey = true,
             ApiKey = "secret",
         }));
@@ -200,7 +204,7 @@ public sealed partial class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunIsDisabled_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+            MsOptions.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = false,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -214,7 +218,7 @@ public sealed partial class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunKeyOrSignatureIsMissing_RejectsRequest() {
         var missingKey = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+            MsOptions.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -285,7 +289,7 @@ public sealed partial class MailRelayPresentationTests {
     [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsSignatureRequirementIsDisabled_AllowsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+            MsOptions.Create(new MailRelayOptions {
                 RequireAwsSesSnsSignature = false,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
@@ -355,7 +359,7 @@ public sealed partial class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificatePemIsInvalid_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
             CreateAwsSesSnsOptions(),
-            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
             FixedTime);
@@ -382,7 +386,7 @@ public sealed partial class MailRelayPresentationTests {
         };
         var authorizer = new ProviderWebhookAuthorizer(
             CreateAwsSesSnsOptions(),
-            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
             FixedTime,
@@ -398,7 +402,7 @@ public sealed partial class MailRelayPresentationTests {
         using X509Certificate2 certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(10));
         var authorizer = new ProviderWebhookAuthorizer(
             CreateAwsSesSnsOptions(),
-            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
             FixedTime,
@@ -415,7 +419,7 @@ public sealed partial class MailRelayPresentationTests {
         using X509Certificate2 certificate = CreateSelfSignedCertificate(rsa);
         var authorizer = new ProviderWebhookAuthorizer(
             CreateAwsSesSnsOptions(),
-            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
             FixedTime);
@@ -429,7 +433,7 @@ public sealed partial class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsConfirmationMessageHasInvalidPem_BuildsConfirmationCanonicalString() {
         var authorizer = new ProviderWebhookAuthorizer(
             CreateAwsSesSnsOptions(),
-            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
             })),
             FixedTime);
@@ -503,7 +507,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = true,
                     MailgunWebhookSigningKey = "mailgun-secret",
                 }),
@@ -526,7 +530,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -554,7 +558,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = true,
                     MailgunWebhookSigningKey = "mailgun-secret",
                 }),
@@ -577,7 +581,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             new RecordingSender(),
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = true,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -601,7 +605,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             sender,
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -636,7 +640,7 @@ public sealed partial class MailRelayPresentationTests {
         MailRelayProviderEventsController controller = CreateProviderEventsController(
             new RecordingSender(),
             new ProviderWebhookAuthorizer(
-                Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+                MsOptions.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
                 new HttpClient(new RecordingHttpMessageHandler()),
@@ -693,7 +697,7 @@ public sealed partial class MailRelayPresentationTests {
             DateTimeOffset.UtcNow,
             ExpiresAtUtc: null);
         var sender = new RecordingSender {
-            SuppressionsPageResult = Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>([suppression], 1, 20, 1, 1)),
+            SuppressionsPageResult = Result.Success(new MailRelayPage<MailRelaySuppressionEntry>([suppression], 1, 20, 1, 1)),
             SuppressionCreateResult = Result.Success(),
             SuppressionRemoveResult = Result.Success(),
         };
@@ -884,15 +888,15 @@ public sealed partial class MailRelayPresentationTests {
 
     private static ProviderWebhookAuthorizer CreateProviderWebhookAuthorizer(string mailgunSigningKey) =>
         new(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+            MsOptions.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
                 MailgunWebhookSigningKey = mailgunSigningKey,
             }),
             new HttpClient(new RecordingHttpMessageHandler()),
             FixedTime);
 
-    private static Microsoft.Extensions.Options.IOptions<MailRelayOptions> CreateAwsSesSnsOptions() =>
-        Microsoft.Extensions.Options.Options.Create(new MailRelayOptions {
+    private static IOptions<MailRelayOptions> CreateAwsSesSnsOptions() =>
+        MsOptions.Create(new MailRelayOptions {
             ExpectedAwsSesSnsTopicArn = ExpectedAwsSesSnsTopicArn,
         });
 
@@ -976,13 +980,13 @@ public sealed partial class MailRelayPresentationTests {
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             WasCalled = true;
-            return Task.FromResult(responseFactory?.Invoke(request) ?? new HttpResponseMessage(System.Net.HttpStatusCode.OK));
+            return Task.FromResult(responseFactory?.Invoke(request) ?? new HttpResponseMessage(HttpStatusCode.OK));
         }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingSender : ISender {
-        public Result<FoodDiary.MailRelay.Application.Emails.Models.OutgoingEmailJournalPage> JournalResult { get; init; } = Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.OutgoingEmailJournalPage([], 0));
+        public Result<ApplicationJournalPage> JournalResult { get; init; } = Result.Success(new ApplicationJournalPage([], 0));
         public object? LastRequest { get; private set; }
         public Result<MailRelayDeliveryEventEntry> DeliveryEventResult { get; init; } = Result.Success(CreateDeliveryEvent());
         public Result<IReadOnlyList<MailRelayDeliveryEventEntry>> DeliveryEventsResult { get; init; } =
@@ -993,8 +997,8 @@ public sealed partial class MailRelayPresentationTests {
         public Result<Guid> EnqueueResult { get; init; } = Result.Success(Guid.NewGuid());
         public Result<IReadOnlyList<MailRelaySuppressionEntry>> SuppressionsResult { get; init; } =
             Result.Success<IReadOnlyList<MailRelaySuppressionEntry>>([]);
-        public Result<FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>> SuppressionsPageResult { get; init; } =
-            Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.MailRelayPage<MailRelaySuppressionEntry>([], 1, 20, 0, 0));
+        public Result<MailRelayPage<MailRelaySuppressionEntry>> SuppressionsPageResult { get; init; } =
+            Result.Success(new MailRelayPage<MailRelaySuppressionEntry>([], 1, 20, 0, 0));
         public Result SuppressionCreateResult { get; init; } = Result.Success();
         public Result SuppressionRemoveResult { get; init; } = Result.Success();
 
@@ -1005,7 +1009,7 @@ public sealed partial class MailRelayPresentationTests {
                 IngestManyMailRelayDeliveryEventsCommand => DeliveryEventsResult,
                 CheckMailRelayReadinessQuery => ReadinessResult,
                 GetMailRelayQueueStatsQuery => QueueStatsResult,
-                FoodDiary.MailRelay.Application.Emails.Queries.GetOutgoingEmailJournal.GetOutgoingEmailJournalQuery => JournalResult,
+                GetOutgoingEmailJournalQuery => JournalResult,
                 EnqueueMailRelayEmailCommand => EnqueueResult,
                 GetMailRelaySuppressionsQuery => SuppressionsPageResult,
                 CreateMailRelaySuppressionCommand => SuppressionCreateResult,

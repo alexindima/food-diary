@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Diagnostics;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ApiExceptionHandler(
     ILogger<ApiExceptionHandler> logger) : IExceptionHandler {
     public async ValueTask<bool> TryHandleAsync(

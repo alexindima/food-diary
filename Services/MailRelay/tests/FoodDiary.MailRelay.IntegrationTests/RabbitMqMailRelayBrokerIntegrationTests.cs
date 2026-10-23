@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailRelay.Domain.Emails;
 using System.Text;
 using FoodDiary.MailRelay.Infrastructure.Options;
@@ -17,7 +18,7 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
         fixture.EnsureAvailable();
         MailRelayBrokerOptions options = CreateOptions();
         var broker = new RabbitMqMailRelayBroker(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBroker>.Instance);
 
         await broker.DeclareTopologyAsync(CancellationToken.None);

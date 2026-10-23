@@ -1,6 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace FoodDiary.Telegram.Bot;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class TelegramBotOptions {
     public const string SectionName = "TelegramBot";
 

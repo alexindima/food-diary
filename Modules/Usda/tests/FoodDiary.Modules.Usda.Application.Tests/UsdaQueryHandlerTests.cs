@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -21,7 +22,7 @@ namespace FoodDiary.Modules.Usda.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaQueryHandlerTests {
-    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ProductId, int?> ProductUsdaLinks = new();
+    private static readonly ConcurrentDictionary<ProductId, int?> ProductUsdaLinks = new();
     [Fact]
     public async Task SearchUsdaFoods_WhenLocalResultsAreSparse_AddsNonDuplicateBrandedResults() {
         IUsdaFoodRepository repository = CreateUsdaFoodRepository(

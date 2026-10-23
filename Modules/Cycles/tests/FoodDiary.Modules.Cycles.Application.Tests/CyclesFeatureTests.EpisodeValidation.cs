@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Modules.Cycles.Domain.Entities;
 using FluentValidation.TestHelper;
 using FoodDiary.Modules.Cycles.Application.Commands.DeleteMenstrualEpisode;
 using FoodDiary.Modules.Cycles.Application.Commands.UpdateMenstrualEpisode;
@@ -87,8 +89,8 @@ public partial class CyclesFeatureTests {
     public async Task UpdateMenstrualEpisodeCommandHandler_WhenEndPrecedesStart_ReturnsValidationFailure() {
         var user = User.Create("episode-invalid-range@example.com", "hash");
         DateOnly start = new(2026, 4, 10);
-        var profile = FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile.Create(user.Id, start);
-        FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+        var profile = CycleProfile.Create(user.Id, start);
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpdateMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -110,10 +112,10 @@ public partial class CyclesFeatureTests {
     public async Task UpdateMenstrualEpisodeCommandHandler_WhenRangesOverlap_ReturnsValidationFailure() {
         var user = User.Create("episode-overlap@example.com", "hash");
         DateOnly start = new(2026, 4, 1);
-        var profile = FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile.Create(user.Id, start);
-        FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode first = profile.ConfirmPeriodStart(start);
+        var profile = CycleProfile.Create(user.Id, start);
+        MenstrualEpisode first = profile.ConfirmPeriodStart(start);
         profile.UpdateMenstrualEpisode(first.Id, start, start.AddDays(4));
-        FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode second = profile.ConfirmPeriodStart(start.AddDays(20));
+        MenstrualEpisode second = profile.ConfirmPeriodStart(start.AddDays(20));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpdateMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -135,14 +137,14 @@ public partial class CyclesFeatureTests {
     public async Task DeleteMenstrualEpisodeCommandHandler_WithInferredEpisode_ReturnsValidationFailure() {
         var user = User.Create("episode-delete-inferred@example.com", "hash");
         DateOnly date = new(2026, 4, 1);
-        var profile = FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile.Create(user.Id, date);
+        var profile = CycleProfile.Create(user.Id, date);
         profile.UpsertBleedingEntry(
             date,
-            FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType.Bleeding,
-            FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleFlowLevel.Light,
+            BleedingType.Bleeding,
+            CycleFlowLevel.Light,
             painImpact: null,
             notes: null);
-        FoodDiary.Modules.Cycles.Domain.Entities.MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
+        MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
         var repository = new InMemoryCycleRepository(profile);
         var handler = new DeleteMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
 

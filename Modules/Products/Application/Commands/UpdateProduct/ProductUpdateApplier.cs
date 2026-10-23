@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Products.Domain.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Entities;
@@ -54,7 +55,7 @@ internal static class ProductUpdateApplier {
             command.CarbsPerBase.HasValue ||
             command.FiberPerBase.HasValue ||
             command.AlcoholPerBase.HasValue) {
-            FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit unit = values.Unit ?? product.BaseUnit;
+            MeasurementUnit unit = values.Unit ?? product.BaseUnit;
             ProductMeasurementBasis? basis = null;
             if (command.BaseAmount is { } baseAmount) {
                 basis = ProductMeasurementBasis.FromFields(unit, baseAmount);

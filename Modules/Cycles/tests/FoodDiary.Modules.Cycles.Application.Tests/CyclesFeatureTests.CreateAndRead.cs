@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Results;
@@ -67,7 +68,7 @@ public partial class CyclesFeatureTests {
             DiscreetNotifications: true,
             Notes: null);
 
-        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }

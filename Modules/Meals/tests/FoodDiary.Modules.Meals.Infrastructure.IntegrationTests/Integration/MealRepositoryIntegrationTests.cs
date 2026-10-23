@@ -1,3 +1,6 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Modules.Recipes.Domain.Entities;
 using System.Globalization;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
@@ -31,10 +34,10 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var owner = User.Create($"legacy-owner-{Guid.NewGuid():N}@example.com", "hash");
         var attacker = User.Create($"legacy-attacker-{Guid.NewGuid():N}@example.com", "hash");
-        var product = FoodDiary.Modules.Products.Domain.Entities.Product.Create(owner.Id, "Private product", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
-        product.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(owner.Id, "Private recipe", 2);
-        recipe.ChangeVisibility(FoodDiary.Domain.Primitives.Visibility.Private);
+        var product = Product.Create(owner.Id, "Private product", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        product.ChangeVisibility(Visibility.Private);
+        var recipe = Recipe.Create(owner.Id, "Private recipe", 2);
+        recipe.ChangeVisibility(Visibility.Private);
         recipe.SetManualNutrition(600, 20, 30, 50, 5, 0);
         var meal = Meal.Create(attacker.Id, DateTime.UtcNow);
         meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
@@ -63,8 +66,8 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
     public async Task Projection_LoadsAiImageAndLegacyRecipeWithoutTrackingForeignEntities() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");
-        var image = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Legacy recipe", 2);
+        var image = ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
+        var recipe = Recipe.Create(user.Id, "Legacy recipe", 2);
         recipe.SetManualNutrition(600, 20, 30, 50, fiber: null, alcohol: null);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1));
@@ -90,7 +93,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
     public async Task Projection_PreservesRecipeSnapshotOverCurrentSourceNutrition() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"snapshot-{Guid.NewGuid():N}@example.com", "hash");
-        var recipe = FoodDiary.Modules.Recipes.Domain.Entities.Recipe.Create(user.Id, "Current recipe", 4);
+        var recipe = Recipe.Create(user.Id, "Current recipe", 4);
         recipe.SetManualNutrition(1000, 40, 20, 160, 5, 0);
         var meal = Meal.Create(user.Id, DateTime.UtcNow);
         meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(0.75)).ApplyRecipeSnapshot("Saved recipe", imageUrl: null, 2, 600, 20, 30, 50, 0, 0);

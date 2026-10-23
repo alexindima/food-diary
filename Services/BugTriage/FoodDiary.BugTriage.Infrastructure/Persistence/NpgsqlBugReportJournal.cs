@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using Npgsql;
@@ -39,7 +40,7 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
                 case when expires_at_utc > @now then short_summary else null end
             """;
         NpgsqlCommand command = dataSource.CreateCommand(rows + " select count(*) " + predicate + "; " + rows + " " + projection + " " + predicate + " order by received_at_utc desc, id desc limit @limit offset @offset");
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, (object?)filter.FromUtc?.ToUniversalTime() ?? DBNull.Value);
         command.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, (object?)filter.ToUtc?.ToUniversalTime() ?? DBNull.Value);
         command.Parameters.AddWithValue("id", NpgsqlDbType.Uuid, (object?)filter.Id ?? DBNull.Value);
@@ -50,7 +51,7 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
         command.Parameters.AddWithValue("limit", Math.Clamp(filter.Limit, 1, 100));
         command.Parameters.AddWithValue("offset", (Math.Clamp(filter.Page, 1, 10000) - 1) * Math.Clamp(filter.Limit, 1, 100));
         NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
+        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
         await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
         long total = reader.GetInt64(0);
         await reader.NextResultAsync(cancellationToken).ConfigureAwait(false);

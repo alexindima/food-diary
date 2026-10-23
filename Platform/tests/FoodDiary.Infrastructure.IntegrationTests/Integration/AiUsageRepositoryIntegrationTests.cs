@@ -203,7 +203,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         MethodInfo method = typeof(AiUsage).BaseType?
             .GetMethod(
                 "SetCreated",
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+                BindingFlags.Instance | BindingFlags.NonPublic,
                 binder: null,
                 [typeof(DateTime)],
                 modifiers: null)

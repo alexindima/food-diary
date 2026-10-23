@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
@@ -9,7 +10,7 @@ using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.ChangeSets;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDisposable {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(15);
     private readonly string _repositoryRoot;
@@ -178,7 +179,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         };
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private async Task<string> RunGitAsync(
         IReadOnlyList<string> arguments,
         CancellationToken cancellationToken) {
@@ -353,7 +354,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             normalized.Contains($"/{segment}/", StringComparison.OrdinalIgnoreCase));
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {

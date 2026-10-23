@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 using FoodDiary.Modules.Dashboard.Application.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
@@ -16,4 +17,4 @@ internal sealed record DashboardBuildContext(
     DateTime TrendStart,
     DashboardSnapshotSections Sections,
     DashboardUserContextModel CurrentUser,
-    FoodDiary.Modules.Dashboard.Application.Abstractions.Models.DashboardCalendarRange Calendar);
+    DashboardCalendarRange Calendar);

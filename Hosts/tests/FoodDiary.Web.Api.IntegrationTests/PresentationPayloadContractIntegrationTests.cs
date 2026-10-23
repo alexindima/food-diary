@@ -474,7 +474,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",

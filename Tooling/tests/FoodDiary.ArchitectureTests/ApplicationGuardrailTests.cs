@@ -2965,7 +2965,7 @@ public sealed class ApplicationGuardrailTests {
             .Where(path => !path.Equals(compositionFile, StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path).Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiaryDbContext", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires FoodDiaryDbContext outside the persistence boundary")
+            .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires FoodDiaryDbContext outside the persistence boundary")
             .Order(StringComparer.Ordinal)];
 
         Assert.True(violations.Length == 0, string.Join(Environment.NewLine, violations));

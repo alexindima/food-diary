@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dietologist.Domain.ValueObjects;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FoodDiary.Modules.Dietologist.Application.Mappings;
 using FoodDiary.Modules.Dietologist.Application.Models;
@@ -13,7 +14,7 @@ public partial class DietologistFeatureTests {
     [InlineData(true)]
     [InlineData(false)]
     public void PermissionsMapping_PreservesEachPermission(bool enabled) {
-        var permissions = new FoodDiary.Modules.Dietologist.Domain.ValueObjects.DietologistPermissions(enabled, !enabled, enabled, !enabled, enabled, !enabled, enabled, !enabled);
+        var permissions = new DietologistPermissions(enabled, !enabled, enabled, !enabled, enabled, !enabled, enabled, !enabled);
         Assert.Equal(new DietologistPermissionsModel(enabled, !enabled, enabled, !enabled, enabled, !enabled, enabled, !enabled), permissions.ToModel());
     }
 

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using System.Globalization;
 using FoodDiary.Integrations.Http.Services;
@@ -275,7 +276,7 @@ public sealed partial class OpenAiFoodClient(
         return Result.Failure<long>(AiErrors.OpenAiFailed("OpenAI input token count request failed."));
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private async Task<(bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback)> SendRequestAsync(
         object payload,
         string operation,

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Application.Commands.DeleteMenstrualEpisode;
 using FoodDiary.Modules.Cycles.Application.Commands.UpdateMenstrualEpisode;
@@ -82,7 +83,7 @@ public partial class CyclesFeatureTests {
         var user = User.Create("cycle-episode-delete@example.com", "hash");
         DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, start);
-        profile.UpsertBleedingEntry(start, FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType.Bleeding, FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleFlowLevel.Light, 1, "kept");
+        profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Light, 1, "kept");
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
         var repository = new InMemoryCycleRepository(profile);
         var handler = new DeleteMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
@@ -94,7 +95,7 @@ public partial class CyclesFeatureTests {
         CycleModel model = ResultAssert.Success(result);
         Assert.Multiple(
             () => Assert.Single(model.BleedingEntries),
-            () => Assert.Equal(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.MenstrualEpisodeStatus.Inferred, Assert.Single(model.MenstrualEpisodes!).Status),
+            () => Assert.Equal(MenstrualEpisodeStatus.Inferred, Assert.Single(model.MenstrualEpisodes!).Status),
             () => Assert.True(repository.WasUpdated));
     }
 
@@ -122,8 +123,8 @@ public partial class CyclesFeatureTests {
         var profile = CycleProfile.Create(user.Id, start);
         profile.UpsertBleedingEntry(
             start,
-            FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType.Bleeding,
-            FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleFlowLevel.Light,
+            BleedingType.Bleeding,
+            CycleFlowLevel.Light,
             painImpact: null,
             notes: null);
         MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);

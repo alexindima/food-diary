@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using Microsoft.Extensions.Logging;
 using FluentValidation;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Common;
@@ -23,8 +25,8 @@ public static class DependencyInjection {
         services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>
             new DashboardSnapshotBuilder(
                 serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
-                serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>(),
-                serviceProvider.GetRequiredService<FoodDiary.Application.Contracts.Common.Abstractions.Persistence.IReadSnapshotExecutor>()));
+                serviceProvider.GetRequiredService<ILogger<DashboardSnapshotBuilder>>(),
+                serviceProvider.GetRequiredService<IReadSnapshotExecutor>()));
         return services;
     }
 }

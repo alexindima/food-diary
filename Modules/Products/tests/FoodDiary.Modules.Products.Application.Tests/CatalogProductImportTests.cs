@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Application.Commands.CreateProduct;
@@ -21,7 +22,7 @@ public sealed class CatalogProductImportTests {
         ISender sender = Substitute.For<ISender>();
         var product = Product.Create(new UserId(ownerId), item.Name, MeasurementUnit.G, baseAmount: 100,
             defaultPortionAmount: 100, caloriesPerBase: 350, proteinsPerBase: 12, fatsPerBase: 6, carbsPerBase: 60,
-            fiberPerBase: 5, alcoholPerBase: 0, importId: new FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId(item.Id));
+            fiberPerBase: 5, alcoholPerBase: 0, importId: new ProductId(item.Id));
         sender.Send(Arg.Any<CreateProductCommand>(), Arg.Any<CancellationToken>()).Returns(Result.Success(product.ToModel(isOwnedByCurrentUser: true)));
         var handler = new ImportCatalogProductCommandHandler(Substitute.For<IProductCatalogIdReadService>(), new CreateProductCommandValidator(), sender,
             new ImmediateTransactionRunner());

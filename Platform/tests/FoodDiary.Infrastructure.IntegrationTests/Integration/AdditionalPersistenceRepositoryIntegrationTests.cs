@@ -1,3 +1,10 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Identity.Domain.Entities.Content;
+using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.ReadModel.Composition.MealPlanning;
+using Npgsql;
+using System.Data;
 using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.Enums;
@@ -276,7 +283,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddUsdaModule();
         await using ServiceProvider provider = services.BuildServiceProvider();
         UsdaDbContext owned = provider.GetRequiredService<UsdaDbContext>();
@@ -359,7 +366,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.False(await likeRepository.ExistsByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
-        var commentRepository = new RecipeCommentRepository(context.RecipeComments, new FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService(context.Users));
+        var commentRepository = new RecipeCommentRepository(context.RecipeComments, new UserRelatedDataReadService(context.Users));
         RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
         await context.SaveChangesAsync();
         comment.UpdateText("Updated comment");
@@ -396,8 +403,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         context.RecipeLikes.Add(RecipeLike.Create(user.Id, recipe.Id));
         DbUpdateException exception = await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
-        Npgsql.PostgresException postgresException = Assert.IsType<Npgsql.PostgresException>(exception.InnerException);
-        Assert.Equal(Npgsql.PostgresErrorCodes.UniqueViolation, postgresException.SqlState);
+        PostgresException postgresException = Assert.IsType<PostgresException>(exception.InnerException);
+        Assert.Equal(PostgresErrorCodes.UniqueViolation, postgresException.SqlState);
         context.ChangeTracker.Clear();
 
         RecipeComment comment = await context.RecipeComments.SingleAsync();
@@ -431,7 +438,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-plans-{Guid.NewGuid():N}@example.com", "hash");
         var outsider = User.Create($"meal-plans-outsider-{Guid.NewGuid():N}@example.com", "hash");
-        var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description", visibility: FoodDiary.Domain.Primitives.Visibility.Public);
+        var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description", visibility: Visibility.Public);
         context.Users.AddRange(user, outsider);
         context.Recipes.Add(recipe);
         await context.SaveChangesAsync();
@@ -440,8 +447,8 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         curated.AddDay(1).AddMeal(MealType.Breakfast, recipe.Id, servings: 1);
         var keto = MealPlan.CreateCurated("Keto curated", "Curated", DietType.Keto, durationDays: 7, targetCaloriesPerDay: 1800);
         var userPlan = MealPlan.CreateForUser(user.Id, "User plan", description: null, DietType.Balanced, durationDays: 3, targetCaloriesPerDay: null);
-        var repository = new MealPlanRepository(context.MealPlans, new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context));
-        var composition = new FoodDiary.ReadModel.Composition.MealPlanning.MealPlanCompositionReader(context);
+        var repository = new MealPlanRepository(context.MealPlans, new MealPlanCompositionReader(context));
+        var composition = new MealPlanCompositionReader(context);
         Assert.Empty(await composition.GetRecipeSnapshotsAsync([], user.Id));
         Assert.Equal(recipe.Name, (await composition.GetRecipeSnapshotsAsync([recipe.Id], user.Id))[recipe.Id].Name);
 
@@ -586,11 +593,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
         IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
-        Assert.Equal(System.Data.ConnectionState.Closed, context.Database.GetDbConnection().State);
+        Assert.Equal(ConnectionState.Closed, context.Database.GetDbConnection().State);
         await releaser.DisposeAsync();
         await releaser.DisposeAsync();
 
-        Assert.False(context.Database.GetDbConnection().State == System.Data.ConnectionState.Open);
+        Assert.False(context.Database.GetDbConnection().State == ConnectionState.Open);
     }
 
     [RequiresDockerFact]
@@ -626,16 +633,16 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     public async Task PostgresBillingCheckoutLock_WhenContextConnectionIsAborted_UsesIndependentConnection() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         await context.Database.OpenConnectionAsync();
-        var connection = (Npgsql.NpgsqlConnection)context.Database.GetDbConnection();
-        await using (var command = new Npgsql.NpgsqlCommand("BEGIN; SELECT missing_billing_lock_test_function()", connection)) {
-            await Assert.ThrowsAsync<Npgsql.PostgresException>(() => command.ExecuteNonQueryAsync());
+        var connection = (NpgsqlConnection)context.Database.GetDbConnection();
+        await using (var command = new NpgsqlCommand("BEGIN; SELECT missing_billing_lock_test_function()", connection)) {
+            await Assert.ThrowsAsync<PostgresException>(() => command.ExecuteNonQueryAsync());
         }
         var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
         IAsyncDisposable releaser = await checkoutLock.AcquireAsync(Guid.NewGuid());
         await releaser.DisposeAsync();
 
-        Assert.Equal(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
+        Assert.Equal(ConnectionState.Open, context.Database.GetDbConnection().State);
         await context.Database.CloseConnectionAsync();
     }
 
@@ -647,11 +654,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await using var context = new FoodDiaryDbContext(options);
         var checkoutLock = new PostgresBillingCheckoutLock(new EfModuleSessionLock(context));
 
-        Npgsql.NpgsqlException exception = await Assert.ThrowsAsync<Npgsql.NpgsqlException>(() =>
+        NpgsqlException exception = await Assert.ThrowsAsync<NpgsqlException>(() =>
             checkoutLock.AcquireAsync(Guid.NewGuid()));
 
         Assert.NotNull(exception.InnerException);
-        Assert.NotEqual(System.Data.ConnectionState.Open, context.Database.GetDbConnection().State);
+        Assert.NotEqual(ConnectionState.Open, context.Database.GetDbConnection().State);
     }
 
     [RequiresDockerFact]
@@ -796,9 +803,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await repository.UpsertAsync("reset", "ru", "Reset", "<p>Reset</p>", "Reset", isActive: true);
         await context.SaveChangesAsync();
 
-        IReadOnlyList<FoodDiary.Modules.Identity.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
+        IReadOnlyList<EmailTemplate> templates = await repository.GetAllAsync();
         IReadOnlyList<EmailTemplateReadModel> templateReadModels = await repository.GetAllReadModelsAsync();
-        FoodDiary.Modules.Identity.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
+        EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
 
         Assert.Contains(
             templates,

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Images.Service.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -22,7 +24,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("height@example.com", "hash");
         user.UpdatePersonalInfo(height: 170);
         UpdateUserCommandHandler handler = new(CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
         UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", HeightCmSpecified = specified };
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
@@ -42,10 +44,10 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("avatar@example.com", "hash");
         var assetId = ImageAssetId.New();
         const string originalImage = "https://example.test/avatar.png";
-        user.UpdateProfileMedia(new FoodDiary.Modules.Users.Domain.ValueObjects.UserProfileMediaUpdate(originalImage, assetId));
+        user.UpdateProfileMedia(new UserProfileMediaUpdate(originalImage, assetId));
         IImageAssetCleanupService cleanup = CreateImageAssetCleanupService(errorCode: null, requestedAssetIds: out List<ImageAssetId> requestedAssetIds);
         UpdateUserCommandHandler handler = new(CreateUserRepository(user),
-            CreateProfileImageService(cleanup, FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(cleanup, AllowImageAssetAccessService.Instance));
         UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", ProfileImageSpecified = specified };
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
@@ -67,7 +69,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var originalDate = new DateTime(2000, 10, 2, 0, 0, 0, DateTimeKind.Utc);
         user.UpdatePersonalInfo(birthDate: originalDate);
         UpdateUserCommandHandler handler = new(CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
         UpdateUserCommand command = CreateCommand(user.Id.Value) with { FirstName = "Updated", BirthDateSpecified = specified };
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
@@ -89,7 +91,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("profile-clear@example.com", "hash");
         user.UpdatePersonalInfo(username: "Existing", firstName: "Existing", lastName: "Existing");
         UpdateUserCommandHandler handler = new(CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
         UpdateUserCommand command = CreateCommand(user.Id.Value) with { Username = input, FirstName = input, LastName = input };
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
@@ -113,7 +115,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("timezone@example.com", "hash");
         user.SetTimeZone("Europe/Paris");
         var handler = new UpdateUserCommandHandler(CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
         UpdateUserCommand command = CreateCommand(user.Id.Value) with { TimeZoneId = timeZoneId, FirstName = "Updated" };
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
@@ -134,7 +136,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"], SetupHintDismissed: true);
         var command = new UpdateUserCommand(
@@ -179,7 +181,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("setup-hint@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
         Result<UserModel> dismissal = await handler.Handle(CreateCommand(user.Id.Value) with {
             DashboardLayout = new DashboardLayoutModel(["summary"], ["summary", "meals"], SetupHintDismissed: true),
         }, CancellationToken.None);
@@ -198,12 +200,12 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WhenProfileImageCleanupFails_StillReturnsSuccessAndUpdatesUser() {
         var user = User.Create("user@example.com", "hash");
         var oldAssetId = ImageAssetId.New();
-        user.UpdateProfileMedia(new FoodDiary.Modules.Users.Domain.ValueObjects.UserProfileMediaUpdate(ProfileImageAssetId: oldAssetId));
+        user.UpdateProfileMedia(new UserProfileMediaUpdate(ProfileImageAssetId: oldAssetId));
 
         IImageAssetCleanupService cleanup = CreateImageAssetCleanupService("storage_error", out List<ImageAssetId> requestedAssetIds);
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(cleanup, FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(cleanup, AllowImageAssetAccessService.Instance));
 
         var newAssetId = ImageAssetId.New();
         var command = new UpdateUserCommand(
@@ -241,7 +243,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             new UpdateUserCommand(
@@ -278,7 +280,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
 
@@ -292,7 +294,7 @@ public sealed class UpdateUserCommandHandlerTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
@@ -313,7 +315,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var handler = new UpdateUserCommandHandler(
             userContextService,
             CreateProfileImageService(CreateImageAssetCleanupService(),
-                FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+                AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId.Value), CancellationToken.None);
 
@@ -337,7 +339,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("preferences-user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(
@@ -359,7 +361,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         var command = new UpdateUserCommand(
             UserId: user.Id.Value,
@@ -396,7 +398,7 @@ public sealed class UpdateUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WhenProfileImageAccessFails_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
-        RecordingImageAssetAccessService imageAccess = new FoodDiary.Modules.Users.Application.Tests.Support.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
             .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
@@ -417,7 +419,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("active@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: false),
@@ -433,7 +435,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("active-again@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Modules.Users.Application.Tests.Support.AllowImageAssetAccessService.Instance));
+            CreateProfileImageService(CreateImageAssetCleanupService(), AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: true),
@@ -505,7 +507,7 @@ public sealed class UpdateUserCommandHandlerTests {
         IUserProfileImageService service = Substitute.For<IUserProfileImageService>();
         service.ResolveOptionalUrlAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(async call => {
-                Result<FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
+                Result<ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
                     call.Arg<ImageAssetId?>(), call.Arg<UserId>(), call.Arg<CancellationToken>()).ConfigureAwait(false);
                 return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
             });

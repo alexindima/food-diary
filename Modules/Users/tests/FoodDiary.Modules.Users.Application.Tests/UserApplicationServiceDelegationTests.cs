@@ -1,3 +1,5 @@
+using FoodDiary.Modules.ContentReports.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary;
 using FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Users.Application.Queries.GetFilteredUsersForAdministration;
@@ -39,8 +41,8 @@ public sealed class UserApplicationServiceDelegationTests {
         UserAdminReadModel? byId = await service.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationTokenSource.Token);
         (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await service.Send(new GetUsersForAdministrationQuery(Search: "adm", Page: 2, Limit: 5, Status: UserAccountStatusFilter.Deleted), cancellationTokenSource.Token);
         ISender reports = Substitute.For<ISender>();
-        reports.Send(new CountContentReportsQuery(Status: FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
-        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(global::FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (reports, [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)])))
+        reports.Send(new CountContentReportsQuery(Status: ReportStatus.Pending), cancellationTokenSource.Token).Returns(4);
+        AdminDashboardSummaryModel summary = (await new AdminDashboardReadService(RequestTestSender.Route((service, [typeof(GetUserAdministrationSummaryQuery)]), (reports, [typeof(CountContentReportsQuery)])))
             .GetSummaryAsync(3, cancellationTokenSource.Token)).Value;
 
         Assert.Multiple(

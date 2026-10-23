@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessageDetails;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
 using FoodDiary.MailInbox.Presentation.Filters;
@@ -17,7 +18,7 @@ public sealed class MailInboxMessageDetailConcurrencyTests {
     [Fact]
     public async Task Gate_WhenCapacityIsBusy_TimesOutAndRecoversAfterRelease() {
         using var gate = new MailInboxMessageDetailConcurrencyGate(
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = "test-key",
                 MaxConcurrentMessageDetailRequests = 1,
                 MessageDetailQueueTimeout = TimeSpan.FromMilliseconds(25),
@@ -118,7 +119,7 @@ public sealed class MailInboxMessageDetailConcurrencyTests {
     }
 
     private static MailInboxMessageDetailConcurrencyGate CreateGate(TimeSpan queueTimeout) =>
-        new(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+        new(MsOptions.Create(new MailInboxHttpOptions {
             MetadataApiKey = "0123456789abcdef0123456789abcdef",
             MaxConcurrentMessageDetailRequests = 1,
             MessageDetailQueueTimeout = queueTimeout,
@@ -129,7 +130,7 @@ public sealed class MailInboxMessageDetailConcurrencyTests {
         TimeSpan executionTimeout) =>
         new(
             sender,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = "0123456789abcdef0123456789abcdef",
                 MessageDetailExecutionTimeout = executionTimeout,
             })) {

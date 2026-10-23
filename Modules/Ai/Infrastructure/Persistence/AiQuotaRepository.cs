@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Domain.Entities;
@@ -157,7 +158,7 @@ public sealed class AiQuotaRepository(
                 .ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 T result = await operation(context, cancellationToken).ConfigureAwait(false);
-                await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                 return result;
             }
         }).ConfigureAwait(false);

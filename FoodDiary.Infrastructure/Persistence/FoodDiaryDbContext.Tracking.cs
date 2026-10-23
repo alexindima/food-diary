@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Exercises.Domain.Entities.Tracking;
@@ -23,9 +24,9 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<CycleFactor> CycleFactors => Set<CycleFactor>();
     public DbSet<FertilitySignal> FertilitySignals => Set<FertilitySignal>();
     public DbSet<MenstrualEpisode> CycleMenstrualEpisodes => Set<MenstrualEpisode>();
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public DbSet<CycleConsent> CycleConsents => Set<CycleConsent>();
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public DbSet<CyclePredictionRevision> CyclePredictionRevisions => Set<CyclePredictionRevision>();
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();

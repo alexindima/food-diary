@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -74,7 +75,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         var services = new ServiceCollection();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddSingleton<IModuleTransactionCoordinator>(new EfModuleTransactionCoordinator(context,
             new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance)));
         services.AddMealsPersistence();
@@ -111,7 +112,7 @@ public sealed class ModuleBoundaryIntegrationTests(PostgresDatabaseFixture datab
         Assert.True(context.ChangeTracker.HasChanges());
         Assert.Null(await context.Users.AsNoTracking().Where(candidate => candidate.Id == user.Id).Select(candidate => candidate.DeletedAt).SingleAsync());
         context.ChangeTracker.Clear();
-        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
+        await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync();
         await Assert.ThrowsAsync<InvalidOperationException>(() => runner.ExecuteAsync(_ => Task.CompletedTask));
         await transaction.RollbackAsync();
     }

@@ -1,3 +1,5 @@
+using System.Text;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Usda.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 using System.Net;
@@ -301,7 +303,7 @@ public sealed class UsdaFoodSearchServiceTests {
         var httpClient = new HttpClient(handler);
         return new UsdaFoodSearchService(
             httpClient,
-            Microsoft.Extensions.Options.Options.Create(new UsdaApiOptions {
+            MsOptions.Create(new UsdaApiOptions {
                 ApiKey = apiKey,
             }),
             detailCache ?? new UsdaFoodDetailCache(TimeProvider.System),
@@ -313,7 +315,7 @@ public sealed class UsdaFoodSearchServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             });
     }
 
@@ -347,7 +349,7 @@ public sealed class UsdaFoodSearchServiceTests {
             RequestStarted.TrySetResult();
             await Release.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
             return new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             };
         }
     }
@@ -367,7 +369,7 @@ public sealed class UsdaFoodSearchServiceTests {
             return new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(
                     """{"fdcId":539790,"description":"Next detail","foodNutrients":[],"foodPortions":[]}""",
-                    System.Text.Encoding.UTF8,
+                    Encoding.UTF8,
                     "application/json"),
             };
         }
@@ -381,7 +383,7 @@ public sealed class UsdaFoodSearchServiceTests {
             HttpRequestMessage request, CancellationToken cancellationToken) {
             RequestCount++;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             });
         }
     }

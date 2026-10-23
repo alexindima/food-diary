@@ -1,3 +1,5 @@
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -232,13 +234,13 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public Task<InboundMailSaveResult> SaveAsync(
         InboundMailMessage message,
         CancellationToken cancellationToken) =>
         SaveAsync(message, InboundMailAdmission.Untrusted, cancellationToken);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public async Task<InboundMailSaveResult> SaveAsync(
         InboundMailMessage message,
         InboundMailAdmission admission,
@@ -539,7 +541,7 @@ public sealed class NpgsqlInboundMailStore(
         return details;
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public async Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) {
         const string sql = """
                            with existing as materialized (
@@ -570,7 +572,7 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public async Task<InboundMailRetentionResult> PurgeExpiredAsync(
         DateTimeOffset contentCutoffUtc,
         DateTimeOffset metadataCutoffUtc,
@@ -815,11 +817,11 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static async Task ReleaseSchemaMigrationLockAsync(
         NpgsqlConnection connection,
         CancellationToken cancellationToken) {
-        if (connection.State != System.Data.ConnectionState.Open) {
+        if (connection.State != ConnectionState.Open) {
             return;
         }
 

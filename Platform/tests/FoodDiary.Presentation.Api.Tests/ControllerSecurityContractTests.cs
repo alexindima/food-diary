@@ -1,3 +1,7 @@
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests;
+using FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests;
+using FoodDiary.Modules.Lessons.Presentation.Requests;
+using FoodDiary.Modules.Recipes.Presentation.Requests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Fasting.Presentation.Features.Logs;
 using System.Reflection;
@@ -306,14 +310,14 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void ClosedSetQueryStrings_RejectUnknownValues() {
         (Type QueryType, string ParameterName, string AcceptedValue)[] expectations = [
-            (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
-            (typeof(global::FoodDiary.Modules.Admin.Presentation.Requests.GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
-            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
-            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
-            (typeof(global::FoodDiary.Modules.Lessons.Presentation.Requests.GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
-            (typeof(global::FoodDiary.Modules.Recipes.Presentation.Requests.ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
-            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WaistEntries.Requests.GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
-            (typeof(global::FoodDiary.Modules.BodyMetrics.Presentation.Features.WeightEntries.Requests.GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(GetAdminContentReportsHttpQuery), "Status", PresentationQueryValues.Pending),
+            (typeof(GetAdminUsersHttpQuery), "Status", PresentationQueryValues.Active),
+            (typeof(GetLessonsHttpQuery), "Category", PresentationQueryValues.NutritionBasics),
+            (typeof(GetLessonsHttpQuery), "Difficulty", PresentationQueryValues.Beginner),
+            (typeof(GetLessonsHttpQuery), "Sort", PresentationQueryValues.Recommended),
+            (typeof(ExploreRecipesHttpQuery), "SortBy", PresentationQueryValues.Newest),
+            (typeof(GetWaistEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
+            (typeof(GetWeightEntriesHttpQuery), "Sort", PresentationQueryValues.Descending),
         ];
 
         foreach ((Type queryType, string parameterName, string acceptedValue) in expectations) {

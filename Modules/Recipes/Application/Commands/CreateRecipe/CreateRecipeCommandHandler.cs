@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -47,9 +49,9 @@ public sealed class CreateRecipeCommandHandler(
         Recipe recipe = RecipeCreateFactory.Create(command, values);
         string language = command.Language ?? "en";
         if (command.Language is null) {
-            Result<FoodDiary.Modules.Users.Contracts.Models.UserModel> profile = await userProfileReadService.GetUserAsync(values.UserId, cancellationToken).ConfigureAwait(false);
+            Result<UserModel> profile = await userProfileReadService.GetUserAsync(values.UserId, cancellationToken).ConfigureAwait(false);
             if (profile.IsFailure) { return Result.Failure<RecipeModel>(profile.Error); }
-            language = FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.LanguageCode.FromPreferred(profile.Value.Language).Value;
+            language = LanguageCode.FromPreferred(profile.Value.Language).Value;
         }
         recipe.ChangeLanguage(language);
         recipe.SetLanguageConfirmation(command.LanguageConfirmed);

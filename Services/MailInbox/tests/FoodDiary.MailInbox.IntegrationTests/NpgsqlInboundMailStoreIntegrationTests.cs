@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.MailInbox.Infrastructure.Services;
@@ -528,7 +531,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         InboundMailSaveResult saved = await store.SaveAsync(
             CreateMessage("bounded-recipient", new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero)),
             CancellationToken.None);
-        string recipientsJson = System.Text.Json.JsonSerializer.Serialize(new[] { new string('r', 321) });
+        string recipientsJson = JsonSerializer.Serialize(new[] { new string('r', 321) });
 
         PostgresException exception = await Assert.ThrowsAsync<PostgresException>(() => GetScalarAsync<int>(
             dataSource,
@@ -725,7 +728,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         fixture.EnsureAvailable();
         string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
         var migrationDataSource = NpgsqlDataSource.Create(connectionString);
-        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable migrationDataSourceLifetime =
+        await using ConfiguredAsyncDisposable migrationDataSourceLifetime =
             migrationDataSource.ConfigureAwait(false);
         await CreateStore(migrationDataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
         string roleName = $"mailinbox_runtime_{Guid.NewGuid():N}";
@@ -749,7 +752,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                 Pooling = false,
             };
             var runtimeDataSource = NpgsqlDataSource.Create(runtimeBuilder.ConnectionString);
-            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable runtimeDataSourceLifetime =
+            await using ConfiguredAsyncDisposable runtimeDataSourceLifetime =
                 runtimeDataSource.ConfigureAwait(false);
             var runtimeRoleValidator = new NpgsqlMailInboxRuntimeRoleValidator(runtimeDataSource);
 
@@ -1028,7 +1031,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         new(
             dataSource,
             parser ?? new DmarcReportParser(),
-            Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxStorageOptions()),
+            MsOptions.Create(options ?? new MailInboxStorageOptions()),
             FixedTime);
 
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();

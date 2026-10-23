@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Images.Domain.ValueObjects;
+using FoodDiary.Modules.WeeklyGoals.Domain.Entities;
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Recipes.Infrastructure.Persistence.Recipes;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Application.Commands.CleanupOrphanImages;
@@ -57,8 +60,8 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
             .UseNpgsql(seed.Database.GetConnectionString(), provider => provider.EnableRetryOnFailure(2, TimeSpan.Zero, errorCodesToAdd: null))
             .AddInterceptors(new SaveFaultInterceptor(fault), new CommitFaultInterceptor(fault)).Options;
         await using var context = new FoodDiaryDbContext(options);
-        await using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence.WeeklyGoalsDbContext? weeklyOwner = owner.Equals("WeeklyGoals", StringComparison.Ordinal)
-            ? context.CreateModuleContext<FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence.WeeklyGoalsDbContext>(options => new FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence.WeeklyGoalsDbContext(options)) : null;
+        await using WeeklyGoalsDbContext? weeklyOwner = owner.Equals("WeeklyGoals", StringComparison.Ordinal)
+            ? context.CreateModuleContext<WeeklyGoalsDbContext>(options => new WeeklyGoalsDbContext(options)) : null;
         IUnitOfWork unitOfWork = weeklyOwner is null ? new TestUnitOfWork(context)
             : new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance);
         var queue = new RecordingActionQueue();
@@ -70,11 +73,11 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         async Task<Result> MutateAsync(CancellationToken cancellationToken) {
             attempts++;
             if (weeklyOwner is not null) {
-                weeklyOwner.WeeklyGoals.Add(FoodDiary.Modules.WeeklyGoals.Domain.Entities.WeeklyGoal.Create(user.Id, weekStartUtc,
+                weeklyOwner.WeeklyGoals.Add(WeeklyGoal.Create(user.Id, weekStartUtc,
                     WeeklyGoalType.DiaryLogging, targetDays: 5, reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null));
             }
             context.Products.Add(CreateProduct(user.Id, "one product"));
-            await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue("one-object"), isConfirmed: true, cancellationToken);
+            await new ImageObjectDeletionOutbox(context.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(ObjectStorageKey.FromStoredValue("one-object"), isConfirmed: true, cancellationToken);
             if (!owner.Equals("BatchItem", StringComparison.Ordinal)) {
                 queue.Enqueue("notify", _ => { delivered++; return Task.CompletedTask; });
             }
@@ -95,7 +98,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
                 await new EfRecipeMutationTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteAsync(MutateAsync);
                 break;
             case "WeeklyGoals":
-                await new EfWeeklyGoalTransactionRunner(new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, weekStartUtc, MutateAsync);
+                await new EfWeeklyGoalTransactionRunner(new EfModuleTransactionCoordinator(context, unitOfWork, queue)).ExecuteSerializedAsync(user.Id, weekStartUtc, MutateAsync);
                 break;
             case "Billing":
                 await new EfBillingTransactionRunner(new EfModuleTransactionCoordinator(context, new EfUnitOfWork(context, Substitute.For<IDomainEventPublisher>(), NullLogger<EfUnitOfWork>.Instance), queue)).ExecuteAsync(async token => await MutateAsync(token));
@@ -146,7 +149,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         var repository = new ImageAssetRepository(deleting.ImageAssets, new ImageAssetUsageQuery(deleting));
         Assert.False(await repository.IsAssetInUseAsync(image.Id));
         await repository.DeleteAsync(image);
-        await new ImageObjectDeletionOutbox(deleting.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true);
+        await new ImageObjectDeletionOutbox(deleting.ImageObjectDeletionOutbox, TimeProvider.System).EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true);
         await using FoodDiaryDbContext linking = databaseFixture.CreateDbContext(deleting.Database.GetConnectionString()!);
         linking.Products.Add(CreateProduct(user.Id, "linked", image.Id));
         await linking.SaveChangesAsync();
@@ -191,7 +194,7 @@ public sealed class BoundaryReliabilityIntegrationTests(PostgresDatabaseFixture 
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton(TimeProvider.System);
-        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddScoped<IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseNpgsql(seed.Database.GetConnectionString())
             .AddInterceptors(new RejectImageDeleteInterceptor(first.Id)));
         services.AddScoped<SharedPersistenceDbContext>(provider => provider.GetRequiredService<FoodDiaryDbContext>());

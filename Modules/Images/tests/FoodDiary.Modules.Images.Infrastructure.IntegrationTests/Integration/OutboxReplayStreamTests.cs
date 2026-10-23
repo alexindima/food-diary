@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Infrastructure.Persistence;
@@ -18,7 +19,7 @@ public sealed class OutboxReplayStreamTests(PostgresDatabaseFixture databaseFixt
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var services = new ServiceCollection();
         services.AddSingleton(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddImagesInfrastructure();
         services.AddImagesInfrastructure();
         await using ServiceProvider provider = services.BuildServiceProvider();

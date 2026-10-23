@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.Marketing.Domain.Entities.Tracking;
 using FoodDiary.Outbox.Infrastructure;
@@ -83,8 +84,8 @@ public sealed class SharedMarketingContextCompositionIntegrationTests(PostgresDa
 
     private static MarketingAttributionEventRecord CreateRecord(DateTime occurredAtUtc) => new(
         "page_landing", occurredAtUtc, UserId: null,
-        new FoodDiary.Modules.Marketing.Domain.ValueObjects.AnonymousVisitorId("anonymous"),
-        new FoodDiary.Modules.Marketing.Domain.ValueObjects.MarketingSessionId("session"), "/",
+        new AnonymousVisitorId("anonymous"),
+        new MarketingSessionId("session"), "/",
         ReferrerHost: null, UtmSource: null, UtmMedium: null, UtmCampaign: null,
         UtmContent: null, UtmTerm: null, BuildVersion: null, EventId: Guid.NewGuid());
 

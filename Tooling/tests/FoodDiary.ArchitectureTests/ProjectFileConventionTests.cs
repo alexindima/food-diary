@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
@@ -8,7 +9,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ProjectFileConventionTests {
     [PowerShellFact]
     public async Task ProjectFiles_MatchAutomaticFormatterAsync() {
-        var startInfo = new System.Diagnostics.ProcessStartInfo("pwsh") {
+        var startInfo = new ProcessStartInfo("pwsh") {
             WorkingDirectory = ArchitectureTestPaths.RepositoryRoot,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -18,7 +19,7 @@ public sealed class ProjectFileConventionTests {
         startInfo.ArgumentList.Add("-File");
         startInfo.ArgumentList.Add(ArchitectureTestPaths.FromRoot("scripts", "Format-ProjectFiles.ps1"));
         startInfo.ArgumentList.Add("-Check");
-        using System.Diagnostics.Process process = System.Diagnostics.Process.Start(startInfo)!;
+        using Process process = Process.Start(startInfo)!;
         Task<string> output = process.StandardOutput.ReadToEndAsync();
         Task<string> error = process.StandardError.ReadToEndAsync();
         if (!process.WaitForExit(60_000)) {

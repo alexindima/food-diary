@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Gamification.Contracts.Commands.ReconcileAchievements;
 using FoodDiary.Modules.Gamification.PersistenceModel;
@@ -57,7 +58,7 @@ public sealed class AchievementPersistenceTests {
             await writer.SaveChangesAsync();
         });
         var processor = new AchievementEvaluationOutboxProcessor(context, context.AchievementEvaluationOutbox, handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()), TimeProvider.System,
+            MsOptions.Create(new OutboxProcessingOptions()), TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
         Assert.Equal(0, await processor.ProcessDueAsync(1));
@@ -140,7 +141,7 @@ public sealed class AchievementPersistenceTests {
         var processor = new AchievementEvaluationOutboxProcessor(
             context, context.AchievementEvaluationOutbox,
             handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -162,7 +163,7 @@ public sealed class AchievementPersistenceTests {
         var processor = new AchievementEvaluationOutboxProcessor(
             context, context.AchievementEvaluationOutbox,
             handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -204,7 +205,7 @@ public sealed class AchievementPersistenceTests {
         var processor = new AchievementEvaluationOutboxProcessor(
             context, context.AchievementEvaluationOutbox,
             handler,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 

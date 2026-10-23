@@ -1,8 +1,10 @@
+using FoodDiary.MailInbox.Application.Messages.Models;
+
 namespace FoodDiary.MailInbox.Application.Abstractions;
 
 /// <summary>Recipient-filtered, lossless export for independent mail consumers.</summary>
 public interface IInboundMailExportStore {
-    Task<IReadOnlyList<Messages.Models.InboundMailExportEntry>> GetExportPageAsync(
+    Task<IReadOnlyList<InboundMailExportEntry>> GetExportPageAsync(
         string recipient, DateTimeOffset? beforeReceivedAtUtc, Guid? beforeId, int limit,
         CancellationToken cancellationToken);
 

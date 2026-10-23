@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 
@@ -9,7 +10,7 @@ internal sealed partial class DiaryPdfGenerator {
     internal static Func<string, CancellationToken, Task<IPAddress[]>> RemoteImageHostResolver { get; set; } =
         ResolveRemoteImageHostAsync;
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static Task<IPAddress[]> ResolveRemoteImageHostAsync(string host, CancellationToken cancellationToken) =>
         Dns.GetHostAddressesAsync(host, cancellationToken);
 

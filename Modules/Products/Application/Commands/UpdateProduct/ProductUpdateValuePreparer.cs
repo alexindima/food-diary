@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Contracts.Common.Validation;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -65,7 +66,7 @@ internal static class ProductUpdateValuePreparer {
             return Result.Failure<ProductUpdateValues>(imageAssetResult.Error);
         }
 
-        Result<IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
         if (gallery.IsFailure) { return Result.Failure<ProductUpdateValues>(gallery.Error); }
 
         return Result.Success(new ProductUpdateValues(

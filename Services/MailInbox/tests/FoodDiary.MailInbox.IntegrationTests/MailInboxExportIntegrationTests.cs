@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc.Testing;
+using System.Globalization;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.MailInbox.Application.Abstractions;
@@ -19,12 +22,12 @@ public sealed class MailInboxExportIntegrationTests(MailInboxPostgresFixture fix
         string connectionString = await fixture.CreateIsolatedDatabaseAsync();
         await using var dataSource = NpgsqlDataSource.Create(connectionString);
         using var store = new NpgsqlInboundMailStore(dataSource, new DmarcReportParser(),
-            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions()), TimeProvider.System);
+            MsOptions.Create(new MailInboxStorageOptions()), TimeProvider.System);
         await store.EnsureSchemaAsync(CancellationToken.None);
         DateTimeOffset now = TimeProvider.System.GetUtcNow();
         byte[] mime = [0, 255, 128, 13, 10, 10, 42];
         for (int i = 0; i < 3; i++) {
-            await store.SaveAsync(InboundMailMessage.Receive(i.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            await store.SaveAsync(InboundMailMessage.Receive(i.ToString(CultureInfo.InvariantCulture),
                 "reporter@example.com", ["bugs@fooddiary.club"], "Bug", "Steps", htmlBody: null, [.. mime, (byte)i], now), CancellationToken.None);
         }
         InboundMailSaveResult other = await store.SaveAsync(InboundMailMessage.Receive("other", "sender@example.com",
@@ -38,7 +41,7 @@ public sealed class MailInboxExportIntegrationTests(MailInboxPostgresFixture fix
         Assert.Null(await exporter.GetRawMimeAsync(other.Id, "bugs@fooddiary.club", CancellationToken.None));
 
         await using var factory = new MailInboxWebApiFactory();
-        await using Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<global::Program> configured = factory.WithWebHostBuilder(builder => builder.ConfigureServices(services => {
+        await using WebApplicationFactory<global::Program> configured = factory.WithWebHostBuilder(builder => builder.ConfigureServices(services => {
             services.RemoveAll<IInboundMailExportStore>();
             services.AddSingleton<IInboundMailExportStore>(exporter);
         }));

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Text;
@@ -38,7 +40,7 @@ public sealed class IdempotencyFilter(
             return;
         }
 
-        Microsoft.Extensions.Primitives.StringValues headerValues = context.HttpContext.Request.Headers[IdempotencyKeyHeader];
+        StringValues headerValues = context.HttpContext.Request.Headers[IdempotencyKeyHeader];
         if (headerValues.Count > 1) {
             context.Result = CreateInvalidIdempotencyKey(context);
             return;
@@ -86,7 +88,7 @@ public sealed class IdempotencyFilter(
             reservation.OwnerToken!).ConfigureAwait(false);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private async Task ExecuteAndFinalizeAsync(
         ActionExecutingContext context,
         ActionExecutionDelegate next,

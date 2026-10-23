@@ -31,7 +31,7 @@ internal sealed class ComposedDashboardReadService(
 
         if (periodDays == 1 && calendar is not null) {
             try {
-                weeklyFrom = FoodDiary.Application.Contracts.Common.Validation.LocalCalendar.StartOfDayUtc(
+                weeklyFrom = LocalCalendar.StartOfDayUtc(
                     DateOnly.FromDateTime(calendar.Date).AddDays(-6), calendar.TimeZone);
             } catch (ArgumentOutOfRangeException) {
                 return Result.Failure<DashboardReadModel>(Errors.Validation.Invalid(nameof(dayStart), "Weekly range is outside supported boundaries."));

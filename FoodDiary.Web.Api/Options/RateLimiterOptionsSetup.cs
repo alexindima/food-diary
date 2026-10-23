@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
@@ -10,7 +11,7 @@ using FoodDiary.Web.Api.Extensions;
 
 namespace FoodDiary.Web.Api.Options;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rateLimitingOptions)
     : IConfigureOptions<RateLimiterOptions> {
     public void Configure(RateLimiterOptions options) {

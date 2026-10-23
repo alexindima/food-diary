@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Persistence.Runtime.Persistence.Outbox;
@@ -30,7 +31,7 @@ internal sealed class OutboxReplayTestScope : IDisposable {
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddSingleton(context);
         services.AddSingleton<SharedPersistenceDbContext>(context);
-        services.AddSingleton<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(context);
+        services.AddSingleton<IModuleContextFactory>(context);
         services.AddSingleton(timeProvider);
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.AddScoped<IOutboxReplayStream, EmailOutboxReplayStream>();

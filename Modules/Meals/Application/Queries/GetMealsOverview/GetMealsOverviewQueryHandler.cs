@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Results;
+using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Queries.ReadMealFavoritesOverview;
@@ -46,7 +48,7 @@ public sealed class GetMealsOverviewQueryHandler(
             : null;
         MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
         if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
-            return Result.Failure<MealOverviewModel>(FoodDiary.Application.Contracts.Common.Abstractions.Results.Errors.Validation.Invalid(nameof(request.TimeZoneId), "Invalid time zone."));
+            return Result.Failure<MealOverviewModel>(Errors.Validation.Invalid(nameof(request.TimeZoneId), "Invalid time zone."));
         }
 
         MealOverviewModel overview = await GetOverviewAsync(
@@ -101,7 +103,7 @@ public sealed class GetMealsOverviewQueryHandler(
         var allMeals = MealReadSupport.ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
 
         DateOnly[] dates = [.. items.Select(item => LocalCalendar.DateAt(item.Date, timeZone)).Distinct()];
-        IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary> summaries = dates.Length == 0 ? [] : await mealRepository.GetDaySummariesAsync(userId, dates, timeZone, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealDaySummary> summaries = dates.Length == 0 ? [] : await mealRepository.GetDaySummariesAsync(userId, dates, timeZone, cancellationToken).ConfigureAwait(false);
         return new MealOverviewModel(allMeals, favoriteItems, favoriteCount) { DaySummaries = summaries };
     }
 }

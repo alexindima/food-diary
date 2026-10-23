@@ -1,3 +1,5 @@
+using FoodDiary.Persistence.PostgreSql;
+using FoodDiary.Results;
 using System.Data;
 using System.Data.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
@@ -27,7 +29,7 @@ internal sealed class EfModuleTransactionCoordinator(
                     if (processed) {
                         await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                     }
-                    await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                    await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                     return processed;
                 }, cancellationToken).ConfigureAwait(false);
             }
@@ -63,7 +65,7 @@ internal sealed class EfModuleTransactionCoordinator(
         if (!context.Database.IsRelational()) {
             return await SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
                 T result = await operation(cancellationToken).ConfigureAwait(false);
-                if (result is not FoodDiary.Results.Result { IsFailure: true } && unitOfWork.HasPendingChanges) {
+                if (result is not Result { IsFailure: true } && unitOfWork.HasPendingChanges) {
                     await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 }
                 return result;
@@ -88,12 +90,12 @@ internal sealed class EfModuleTransactionCoordinator(
                 await using (transaction.ConfigureAwait(false)) {
                     transactionResult = await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), async () => {
                         T result = await operation(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
-                        if (result is not FoodDiary.Results.Result { IsFailure: true } && (alwaysSave || unitOfWork.HasPendingChanges)) {
+                        if (result is not Result { IsFailure: true } && (alwaysSave || unitOfWork.HasPendingChanges)) {
                             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                         }
 
-                        if (result is not FoodDiary.Results.Result { IsFailure: true }) {
-                            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                        if (result is not Result { IsFailure: true }) {
+                            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                         }
                         return result;
                     }, cancellationToken).ConfigureAwait(false);

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Outbox.Infrastructure.Options;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Email.Contracts.Email.Common;
@@ -47,7 +48,7 @@ public sealed class DedicatedOutboxContextIntegrationTests(PostgresDatabaseFixtu
         await Assert.ThrowsAsync<InvalidOperationException>(() => RunAsync(owned, owned.EmailOutbox, (_, _) => Task.CompletedTask));
         Assert.Single(owned.ChangeTracker.Entries());
         await owned.SaveChangesAsync();
-        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = await owned.Database.BeginTransactionAsync();
+        await using IDbContextTransaction transaction = await owned.Database.BeginTransactionAsync();
         await Assert.ThrowsAsync<InvalidOperationException>(() => RunAsync(owned, owned.EmailOutbox, (_, _) => Task.CompletedTask));
         await transaction.RollbackAsync();
     }

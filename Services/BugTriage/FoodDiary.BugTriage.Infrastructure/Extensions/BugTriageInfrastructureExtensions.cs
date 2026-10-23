@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Infrastructure.Mail;
@@ -31,7 +32,7 @@ public static class BugTriageInfrastructureExtensions {
         services.AddSingleton<IBugMailSource, MailInboxBugSource>();
         services.AddSingleton<ImportBugReports>();
         services.AddOptions<BugTriageOptions>().Bind(configuration.GetSection("BugTriage"))
-            .Validate(static o => System.Net.Mail.MailAddress.TryCreate(o.Recipient, out _) &&
+            .Validate(static o => MailAddress.TryCreate(o.Recipient, out _) &&
                 o.PollInterval >= TimeSpan.FromSeconds(10) && o.PollInterval <= TimeSpan.FromDays(1) &&
                 o.ImportTimeout >= TimeSpan.FromSeconds(10) && o.ImportTimeout <= TimeSpan.FromHours(1) &&
                 o.ContentRetention >= TimeSpan.FromDays(1) && o.ContentRetention <= TimeSpan.FromDays(90) &&

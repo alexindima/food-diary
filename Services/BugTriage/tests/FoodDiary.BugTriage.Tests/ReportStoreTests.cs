@@ -1,3 +1,7 @@
+using FoodDiary.BugTriage.Infrastructure.Options;
+using System.Diagnostics;
+using System.Reflection;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.Reports;
 using FoodDiary.BugTriage.Infrastructure.Persistence;
@@ -17,7 +21,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddMinutes(-1), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
         await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now, "other", "private", [1]), Now.AddDays(1), CancellationToken.None);
         var journal = new NpgsqlBugReportJournal(_dataSource, new NpgsqlAuditRunStore(_dataSource,
-            Microsoft.Extensions.Options.Options.Create(new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions())));
+            MsOptions.Create(new BugTriageOptions())));
         var filter = new BugReportJournalFilter(Page: 2, Limit: 1, FromUtc: Now.AddMinutes(-3), ToUtc: Now,
             Status: null, Search: "_%", Id: null);
 
@@ -45,7 +49,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         string? previous = Environment.GetEnvironmentVariable(connectionKey);
         try {
             Environment.SetEnvironmentVariable(connectionKey, _postgres.GetConnectionString());
-            System.Reflection.MethodInfo entryPoint = typeof(Program).Assembly.EntryPoint!;
+            MethodInfo entryPoint = typeof(Program).Assembly.EntryPoint!;
             await Task.Run(() => entryPoint.Invoke(null, [new[] { "--initialize" }]));
             Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
         } finally {
@@ -58,7 +62,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         await using (NpgsqlCommand drop = _dataSource.CreateCommand("drop table bugtriage_reports")) {
             await drop.ExecuteNonQueryAsync();
         }
-        var start = new System.Diagnostics.ProcessStartInfo("dotnet") {
+        var start = new ProcessStartInfo("dotnet") {
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
@@ -67,7 +71,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         start.ArgumentList.Add(typeof(Program).Assembly.Location);
         start.ArgumentList.Add("--initialize");
         start.Environment["ConnectionStrings__BugTriage"] = _postgres.GetConnectionString();
-        using System.Diagnostics.Process process = System.Diagnostics.Process.Start(start)!;
+        using Process process = Process.Start(start)!;
         Task<string> output = process.StandardOutput.ReadToEndAsync();
         Task<string> errors = process.StandardError.ReadToEndAsync();
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(30));
@@ -152,7 +156,7 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         Assert.False(await _store.CompleteAsync(second.Id, second.LeaseToken, completion with { Summary = "Changed" }, Now.AddMinutes(7), CancellationToken.None));
         Assert.False(await _store.CompleteAsync(second.Id, second.LeaseToken, completion with { Title = "Changed" }, Now.AddMinutes(7), CancellationToken.None));
         var journal = new NpgsqlBugReportJournal(_dataSource, new NpgsqlAuditRunStore(_dataSource,
-            Microsoft.Extensions.Options.Options.Create(new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions())));
+            MsOptions.Create(new BugTriageOptions())));
         BugReportJournalPage display = await journal.GetPageAsync(new BugReportJournalFilter(Page: 1, Limit: 25, FromUtc: null, ToUtc: null,
             Status: null, Search: "Dynamics", Id: null), Now.AddMinutes(7), CancellationToken.None);
         BugReportJournalEntry entry = Assert.Single(display.Items);
@@ -199,8 +203,8 @@ public sealed class ReportStoreTests : IAsyncLifetime {
     [InlineData(1)]
     [InlineData(2)]
     public async Task ConcurrentClaimsAcrossDifferentReports_RespectCapacity_AndCompletionReleasesSlot(int capacity) {
-        _store = new NpgsqlBugReportStore(_dataSource, Microsoft.Extensions.Options.Options.Create(
-            new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions { MaxConcurrentReports = capacity }));
+        _store = new NpgsqlBugReportStore(_dataSource, MsOptions.Create(
+            new BugTriageOptions { MaxConcurrentReports = capacity }));
         for (int index = 0; index < 6; index++) {
             await _store.ImportAsync(new ImportedReport(SourceMessageId.New(), Now.AddSeconds(index), "Bug", "Steps", [1]),
                 Now.AddDays(1), CancellationToken.None);

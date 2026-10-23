@@ -1,3 +1,4 @@
+using HttpResults = Microsoft.AspNetCore.Http.Results;
 using System.Net;
 using System.Text.Json;
 using FoodDiary.Web.Api.Extensions;
@@ -32,8 +33,8 @@ public sealed class DevelopmentRuntimeHeadersContractTests {
                 context.Response.Headers[instanceHeader] = "stale-downstream-instance";
                 return next(context);
             });
-            app.MapGet("/api/probe", () => Microsoft.AspNetCore.Http.Results.NoContent());
-            app.MapGet("/health/probe", () => Microsoft.AspNetCore.Http.Results.NoContent());
+            app.MapGet("/api/probe", () => HttpResults.NoContent());
+            app.MapGet("/health/probe", () => HttpResults.NoContent());
             await app.StartAsync();
             using HttpClient client = app.GetTestClient();
             using HttpResponseMessage response = await client.GetAsync(example.GetProperty("path").GetString());

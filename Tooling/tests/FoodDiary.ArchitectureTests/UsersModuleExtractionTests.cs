@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -20,7 +22,7 @@ public sealed class UsersModuleExtractionTests {
 
     [Fact]
     public void ActivityLevel_IsOwnedOnlyByUsersDomainContracts() {
-        Type enumType = typeof(FoodDiary.Modules.Users.Domain.Contracts.Enums.ActivityLevel);
+        Type enumType = typeof(ActivityLevel);
         Assert.Equal("FoodDiary.Modules.Users.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.Users.Domain.Contracts.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts", "Enums", "ActivityLevel.cs")));

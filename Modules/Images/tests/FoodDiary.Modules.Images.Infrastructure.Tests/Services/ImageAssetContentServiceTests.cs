@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -14,7 +15,7 @@ public sealed class ImageAssetContentServiceTests {
     public async Task GetDataUrlAsync_UnconfiguredStorageDoesNotAttemptNetworkRead() {
         var fixture = new Fixture();
         var service = new ImageAssetContentService(new Repository(fixture.Asset), fixture.Storage,
-            Microsoft.Extensions.Options.Options.Create(new S3Options()));
+            MsOptions.Create(new S3Options()));
         Result<string> result = await service.GetDataUrlAsync(fixture.Asset.Id, fixture.Asset.UserId, CancellationToken.None);
         Assert.Equal("Image.StorageError", result.Error.Code);
         Assert.Equal(0, fixture.Storage.MetadataCalls);
@@ -123,7 +124,7 @@ public sealed class ImageAssetContentServiceTests {
             if (confirmed) {
                 Asset.Confirm();
             }
-            Service = new ImageAssetContentService(new Repository(Asset), Storage, Microsoft.Extensions.Options.Options.Create(new S3Options {
+            Service = new ImageAssetContentService(new Repository(Asset), Storage, MsOptions.Create(new S3Options {
                 Bucket = "published",
                 StagingBucket = "staging",
                 Region = "us-east-1",

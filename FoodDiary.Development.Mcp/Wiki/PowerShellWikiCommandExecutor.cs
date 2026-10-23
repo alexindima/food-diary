@@ -1,3 +1,6 @@
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -35,7 +38,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         _telemetry = telemetry ?? new WikiRuntimeTelemetry();
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public async Task<WikiCommandResult> ExecuteAsync(
         string command,
         IReadOnlyList<string> arguments,
@@ -108,7 +111,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private async Task<WikiCommandResult> ExecuteProcessAsync(
         string command,
         string requestPath,
@@ -197,7 +200,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
             throw new DevelopmentMcpException(
                 DevelopmentMcpErrorCodes.WikiCommandFailed,
                 $"Wiki command '{command}' failed with exit code " +
-                $"{process.ExitCode.ToString(System.Globalization.CultureInfo.InvariantCulture)}: {error.Trim()}");
+                $"{process.ExitCode.ToString(CultureInfo.InvariantCulture)}: {error.Trim()}");
         }
 
         var resultStopwatch = Stopwatch.StartNew();
@@ -258,13 +261,13 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                 throw new DevelopmentMcpException(
                     DevelopmentMcpErrorCodes.WikiCommandFailed,
                     $"Wiki command {streamName} exceeded " +
-                    $"{_maxOutputCharacters.ToString(System.Globalization.CultureInfo.InvariantCulture)} characters.");
+                    $"{_maxOutputCharacters.ToString(CultureInfo.InvariantCulture)} characters.");
             }
             output.Append(buffer, 0, read);
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static void TryDelete(string path) {
         try {
             File.Delete(path);
@@ -273,14 +276,14 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {
                 process.Kill(entireProcessTree: true);
             }
         } catch (InvalidOperationException) {
-        } catch (System.ComponentModel.Win32Exception) {
+        } catch (Win32Exception) {
         }
     }
 }

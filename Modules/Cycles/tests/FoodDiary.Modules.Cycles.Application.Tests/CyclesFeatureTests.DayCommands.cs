@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Results;
@@ -21,7 +22,7 @@ public partial class CyclesFeatureTests {
             Symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 11, [], Note: null, ClearNote: false)],
             FertilitySignal: null);
 
-        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }

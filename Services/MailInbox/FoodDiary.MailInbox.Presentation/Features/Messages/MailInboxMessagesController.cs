@@ -1,3 +1,5 @@
+using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage;
+using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
 using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRead;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessageDetails;
 using FoodDiary.MailInbox.Presentation.Controllers;
@@ -28,7 +30,7 @@ public sealed class MailInboxMessagesController(
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status503ServiceUnavailable)]
     public Task<IActionResult> GetPage([FromQuery] GetInboundMailMessagePageHttpQuery query) =>
         ExecuteMetadataOperationAsync(cancellationToken => HandleOk(
-            new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(
+            new GetInboundMailMessagePageQuery(
                 query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id),
             static value => new InboundMailMessagePageHttpResponse(value.Items.ToHttpResponse(), value.TotalItems, value.UnreadCount, value.ReadCount), cancellationToken));
 
@@ -41,7 +43,7 @@ public sealed class MailInboxMessagesController(
     public Task<IActionResult> Get([FromQuery] GetInboundMailMessagesHttpQuery query) =>
         ExecuteMetadataOperationAsync(
             cancellationToken => HandleOk(
-                new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages.GetInboundMailMessagesQuery(
+                new GetInboundMailMessagesQuery(
                     query.Limit ?? 50, query.Recipient, query.Category, query.Unread),
                 static value => value.ToHttpResponse(),
                 cancellationToken));

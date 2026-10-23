@@ -1,3 +1,8 @@
+using FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages;
+using FoodDiary.Modules.Images.Service.Contracts.Commands.ProcessOwnedImageDeletions;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Images.Service.Contracts.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using System.Reflection;
 using FoodDiary.Domain.Primitives;
@@ -39,7 +44,7 @@ public sealed class ModuleAggregateIsolationTests {
     [Fact]
     public void ImageForeignKeys_NeverNullForeignReferencesDuringDeletion() {
         using FoodDiaryDbContext context = CreateContext();
-        Microsoft.EntityFrameworkCore.Metadata.IForeignKey[] imageLinks = [.. context.Model.GetEntityTypes().SelectMany(entity => entity.GetForeignKeys())
+        IForeignKey[] imageLinks = [.. context.Model.GetEntityTypes().SelectMany(entity => entity.GetForeignKeys())
             .Where(key => string.Equals(key.PrincipalEntityType.ClrType.Name, "ImageAsset", StringComparison.Ordinal))];
         Assert.Equal(11, imageLinks.Length);
         Assert.Contains(imageLinks, key => string.Equals(key.DeclaringEntityType.ClrType.Name, "RecipeImage", StringComparison.Ordinal));
@@ -54,20 +59,20 @@ public sealed class ModuleAggregateIsolationTests {
 
     [Fact]
     public void ImagesServiceContracts_ExposeOnlyAggregateFreeCapabilities() {
-        Assembly assembly = typeof(FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel).Assembly;
+        Assembly assembly = typeof(ImageAssetReadModel).Assembly;
         Assert.Equal(
             new[] {
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Commands.CleanupOrphanImages.CleanupOrphanImagesCommand),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Commands.ProcessOwnedImageDeletions.ProcessOwnedImageDeletionsCommand),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.DeleteImageAssetResult),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetAccessService),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetCleanupService),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetContentService),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetOwnershipService),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Models.ImageAssetReadModel),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.ImageAssetIdParser),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.ImageAssetResolution),
-                typeof(FoodDiary.Modules.Images.Service.Contracts.Common.ImageAssetResolver),
+                typeof(CleanupOrphanImagesCommand),
+                typeof(ProcessOwnedImageDeletionsCommand),
+                typeof(DeleteImageAssetResult),
+                typeof(IImageAssetAccessService),
+                typeof(IImageAssetCleanupService),
+                typeof(IImageAssetContentService),
+                typeof(IImageAssetOwnershipService),
+                typeof(ImageAssetReadModel),
+                typeof(ImageAssetIdParser),
+                typeof(ImageAssetResolution),
+                typeof(ImageAssetResolver),
             }.OrderBy(type => type.FullName, StringComparer.Ordinal),
             assembly.GetExportedTypes().OrderBy(type => type.FullName, StringComparer.Ordinal));
         Assert.DoesNotContain(assembly.GetReferencedAssemblies(), reference =>

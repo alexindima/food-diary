@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -5,7 +7,7 @@ public sealed class ProviderAdapterOwnershipTests {
     [Fact]
     public void SharedTransportHelpers_HaveNoRuntimeProjectOrPackageDependencies() {
         string path = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Integrations.Http", "FoodDiary.Integrations.Http.csproj");
-        var project = System.Xml.Linq.XDocument.Load(path);
+        var project = XDocument.Load(path);
         Assert.Empty(project.Descendants("ProjectReference"));
         Assert.Empty(project.Descendants("PackageReference"));
         foreach (string source in new[] { "Http/BoundedHttpContentReader.cs", "Options/IntegrationUriValidator.cs", "Services/IntegrationsTelemetry.cs" }) {

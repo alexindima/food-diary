@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -37,17 +39,17 @@ public sealed class ApplicationDomainBoundaryTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConfidence))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleFactorType))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleFlowLevel))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleReproductiveState))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleSymptomCategory))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleTrackingGoal))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleTrackingMode))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.MenstrualEpisodeStatus))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.OvulationTestResult))]
+    [InlineData(typeof(BleedingType))]
+    [InlineData(typeof(CycleConfidence))]
+    [InlineData(typeof(CycleConsentPurpose))]
+    [InlineData(typeof(CycleFactorType))]
+    [InlineData(typeof(CycleFlowLevel))]
+    [InlineData(typeof(CycleReproductiveState))]
+    [InlineData(typeof(CycleSymptomCategory))]
+    [InlineData(typeof(CycleTrackingGoal))]
+    [InlineData(typeof(CycleTrackingMode))]
+    [InlineData(typeof(MenstrualEpisodeStatus))]
+    [InlineData(typeof(OvulationTestResult))]
     public void PublicCycleEnums_HaveOneScalarOwner(Type type) {
         Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts", type.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts.Enums", type.Namespace);
@@ -61,7 +63,7 @@ public sealed class ApplicationDomainBoundaryTests {
     public void CycleScalarContract_IsDependencyFreeAndExportsOnlyPublicEnums() {
         Assert.Empty(ProjectReferenceReader.ReadProjectReferences(
             "Modules/Cycles/Domain.Contracts/FoodDiary.Modules.Cycles.Domain.Contracts.csproj"));
-        Type[] exportedTypes = typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleTrackingMode).Assembly.GetExportedTypes();
+        Type[] exportedTypes = typeof(CycleTrackingMode).Assembly.GetExportedTypes();
         Assert.All(exportedTypes, type => Assert.True(type.IsEnum));
         Assert.Equal(
             ["BleedingType", "CycleConfidence", "CycleConsentPurpose", "CycleFactorType", "CycleFlowLevel",

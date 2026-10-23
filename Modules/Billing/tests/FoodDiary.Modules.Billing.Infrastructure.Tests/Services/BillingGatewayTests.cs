@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using System.Globalization;
 using System.Net;
@@ -2928,9 +2929,9 @@ public sealed partial class BillingGatewayTests {
     }
 
     private static T? InvokePrivate<T>(object instance, string methodName, params object?[] args) {
-        System.Reflection.MethodInfo method = instance.GetType().GetMethod(
+        MethodInfo method = instance.GetType().GetMethod(
             methodName,
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         return (T?)method.Invoke(instance, args);
     }
 

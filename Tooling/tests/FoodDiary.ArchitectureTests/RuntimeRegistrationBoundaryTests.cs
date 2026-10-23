@@ -1,3 +1,4 @@
+using RuntimeDependencyInjection = FoodDiary.Application.Runtime.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
@@ -11,7 +12,7 @@ public sealed class RuntimeRegistrationBoundaryTests {
     [Fact]
     public void RuntimeRegistration_DoesNotRegisterBusinessServices() {
         var services = new ServiceCollection();
-        FoodDiary.Application.Runtime.DependencyInjection.AddApplicationRuntime(services);
+        RuntimeDependencyInjection.AddApplicationRuntime(services);
 
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRequestHandler<CleanupExpiredNotificationsCommand, int>));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IProductSearchSuggestionProvider));

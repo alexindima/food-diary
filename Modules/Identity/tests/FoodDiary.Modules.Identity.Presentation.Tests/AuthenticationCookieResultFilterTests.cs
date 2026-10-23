@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
@@ -41,7 +42,7 @@ public sealed class AuthenticationCookieResultFilterTests {
         Assert.Equal("main-session", new RefreshTokenCookieService(CreateTokenGenerator()).Read(httpContext));
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         Assert.Equal("admin-access-token", Assert.IsType<AuthenticationHttpResponse>(result.Value).AccessToken);
-        string json = System.Text.Json.JsonSerializer.Serialize(response, System.Text.Json.JsonSerializerOptions.Web);
+        string json = JsonSerializer.Serialize(response, JsonSerializerOptions.Web);
         Assert.DoesNotContain("refreshToken", json, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("admin-refresh-token", json, StringComparison.Ordinal);
     }
@@ -61,7 +62,7 @@ public sealed class AuthenticationCookieResultFilterTests {
             new ResultExecutedContext(actionContext, [], result, controller)));
 
         string setCookie = Assert.Single(httpContext.Response.Headers.SetCookie)!;
-        string json = System.Text.Json.JsonSerializer.Serialize(response, System.Text.Json.JsonSerializerOptions.Web);
+        string json = JsonSerializer.Serialize(response, JsonSerializerOptions.Web);
         Assert.DoesNotContain("refreshToken", json, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("refresh-token", json, StringComparison.Ordinal);
         Assert.Contains("access-token", json, StringComparison.Ordinal);

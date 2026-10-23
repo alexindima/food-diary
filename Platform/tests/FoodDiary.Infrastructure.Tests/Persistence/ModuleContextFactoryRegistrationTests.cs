@@ -1,3 +1,31 @@
+using FoodDiary.Modules.Admin.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Meals.Infrastructure;
+using FoodDiary.Modules.Products.Infrastructure;
+using FoodDiary.Modules.Recipes.Infrastructure;
+using FoodDiary.Modules.Users.Infrastructure;
+using System.Reflection;
+using AiModuleRegistration = FoodDiary.Modules.Ai.Infrastructure.ModuleRegistration;
+using BillingModuleRegistration = FoodDiary.Modules.Billing.Infrastructure.ModuleRegistration;
+using BodyMetricsModuleRegistration = FoodDiary.Modules.BodyMetrics.Infrastructure.ModuleRegistration;
+using ContentReportsModuleRegistration = FoodDiary.Modules.ContentReports.Infrastructure.ModuleRegistration;
+using CyclesModuleRegistration = FoodDiary.Modules.Cycles.Infrastructure.ModuleRegistration;
+using DailyAdvicesModuleRegistration = FoodDiary.Modules.DailyAdvices.Infrastructure.ModuleRegistration;
+using DietologistModuleRegistration = FoodDiary.Modules.Dietologist.Infrastructure.ModuleRegistration;
+using ExercisesModuleRegistration = FoodDiary.Modules.Exercises.Infrastructure.ModuleRegistration;
+using FastingModuleRegistration = FoodDiary.Modules.Fasting.Infrastructure.ModuleRegistration;
+using FavoritesModuleRegistration = FoodDiary.Modules.Favorites.Infrastructure.ModuleRegistration;
+using GamificationModuleRegistration = FoodDiary.Modules.Gamification.Infrastructure.ModuleRegistration;
+using HydrationModuleRegistration = FoodDiary.Modules.Hydration.Infrastructure.ModuleRegistration;
+using ImagesDependencyInjection = FoodDiary.Modules.Images.Infrastructure.DependencyInjection;
+using LessonsModuleRegistration = FoodDiary.Modules.Lessons.Infrastructure.ModuleRegistration;
+using MarketingModuleRegistration = FoodDiary.Modules.Marketing.Infrastructure.ModuleRegistration;
+using MealPlanningModuleRegistration = FoodDiary.Modules.MealPlanning.Infrastructure.ModuleRegistration;
+using NotificationsModuleRegistration = FoodDiary.Modules.Notifications.Infrastructure.ModuleRegistration;
+using OpenFoodFactsModuleRegistration = FoodDiary.Modules.OpenFoodFacts.Infrastructure.ModuleRegistration;
+using UsdaModuleRegistration = FoodDiary.Modules.Usda.Infrastructure.ModuleRegistration;
+using WearablesModuleRegistration = FoodDiary.Modules.Wearables.Infrastructure.ModuleRegistration;
+using WeeklyGoalsModuleRegistration = FoodDiary.Modules.WeeklyGoals.Infrastructure.ModuleRegistration;
 using FoodDiary.Modules.RecipeCommunity.Infrastructure;
 using FoodDiary.Modules.RecentItems.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
@@ -47,7 +75,7 @@ public sealed class ModuleContextFactoryRegistrationTests {
             Assert.Same(coordinator.Database.GetDbConnection(), owner.Database.GetDbConnection());
             Assert.NotSame(owner.Database.GetDbConnection(), otherOwner.Database.GetDbConnection());
             Assert.Contains(owner, coordinator.ModuleContexts);
-            foreach (System.Reflection.PropertyInfo property in type.GetProperties().Where(property =>
+            foreach (PropertyInfo property in type.GetProperties().Where(property =>
                          property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))) {
                 object? set = property.GetValue(owner);
                 Assert.NotNull(set);
@@ -60,34 +88,34 @@ public sealed class ModuleContextFactoryRegistrationTests {
     }
 
     private static void RegisterModules(IServiceCollection services) {
-        global::FoodDiary.Modules.DailyAdvices.Infrastructure.ModuleRegistration.AddDailyAdvicesModule(services);
-        global::FoodDiary.Modules.ContentReports.Infrastructure.ModuleRegistration.AddContentReportsModule(services);
-        global::FoodDiary.Modules.WeeklyGoals.Infrastructure.ModuleRegistration.AddWeeklyGoalsModule(services);
-        global::FoodDiary.Modules.Gamification.Infrastructure.ModuleRegistration.AddGamificationModule(services);
-        global::FoodDiary.Modules.Billing.Infrastructure.ModuleRegistration.AddBillingModule(services);
-        global::FoodDiary.Modules.Cycles.Infrastructure.ModuleRegistration.AddCyclesModule(services);
-        global::FoodDiary.Modules.BodyMetrics.Infrastructure.ModuleRegistration.AddBodyMetricsModule(services);
-        global::FoodDiary.Modules.Ai.Infrastructure.ModuleRegistration.AddAiPersistence(services);
-        global::FoodDiary.Modules.Favorites.Infrastructure.ModuleRegistration.AddFavoritesModule(services);
-        global::FoodDiary.Modules.Exercises.Infrastructure.ModuleRegistration.AddExercisesModule(services);
-        global::FoodDiary.Modules.Admin.Infrastructure.AdminModuleRegistration.AddAdminPersistence(services);
+        DailyAdvicesModuleRegistration.AddDailyAdvicesModule(services);
+        ContentReportsModuleRegistration.AddContentReportsModule(services);
+        WeeklyGoalsModuleRegistration.AddWeeklyGoalsModule(services);
+        GamificationModuleRegistration.AddGamificationModule(services);
+        BillingModuleRegistration.AddBillingModule(services);
+        CyclesModuleRegistration.AddCyclesModule(services);
+        BodyMetricsModuleRegistration.AddBodyMetricsModule(services);
+        AiModuleRegistration.AddAiPersistence(services);
+        FavoritesModuleRegistration.AddFavoritesModule(services);
+        ExercisesModuleRegistration.AddExercisesModule(services);
+        AdminModuleRegistration.AddAdminPersistence(services);
         services.AddRecipeCommunityModule();
-        global::FoodDiary.Modules.Wearables.Infrastructure.ModuleRegistration.AddWearablesModule(services);
-        global::FoodDiary.Modules.Products.Infrastructure.ProductsModuleRegistration.AddProductsPersistence(services);
-        global::FoodDiary.Modules.Dietologist.Infrastructure.ModuleRegistration.AddDietologistModule(services);
-        global::FoodDiary.Modules.Fasting.Infrastructure.ModuleRegistration.AddFastingModule(services);
+        WearablesModuleRegistration.AddWearablesModule(services);
+        ProductsModuleRegistration.AddProductsPersistence(services);
+        DietologistModuleRegistration.AddDietologistModule(services);
+        FastingModuleRegistration.AddFastingModule(services);
         services.AddRecentItemsModule();
-        global::FoodDiary.Modules.OpenFoodFacts.Infrastructure.ModuleRegistration.AddOpenFoodFactsModule(services);
-        global::FoodDiary.Modules.Usda.Infrastructure.ModuleRegistration.AddUsdaModule(services);
-        global::FoodDiary.Modules.Users.Infrastructure.UsersModuleRegistration.AddUsersPersistence(services);
-        global::FoodDiary.Modules.Meals.Infrastructure.MealsModuleRegistration.AddMealsPersistence(services);
-        global::FoodDiary.Modules.MealPlanning.Infrastructure.ModuleRegistration.AddMealPlanningModule(services);
-        global::FoodDiary.Modules.Notifications.Infrastructure.ModuleRegistration.AddNotificationsPersistence(services);
-        global::FoodDiary.Modules.Recipes.Infrastructure.RecipesModuleRegistration.AddRecipesPersistence(services);
-        global::FoodDiary.Modules.Images.Infrastructure.DependencyInjection.AddImagesInfrastructure(services);
-        global::FoodDiary.Modules.Marketing.Infrastructure.ModuleRegistration.AddMarketingModule(services);
-        global::FoodDiary.Modules.Lessons.Infrastructure.ModuleRegistration.AddLessonsModule(services);
-        global::FoodDiary.Modules.Identity.Infrastructure.IdentityModuleRegistration.AddIdentityPersistence(services);
-        global::FoodDiary.Modules.Hydration.Infrastructure.ModuleRegistration.AddHydrationModule(services);
+        OpenFoodFactsModuleRegistration.AddOpenFoodFactsModule(services);
+        UsdaModuleRegistration.AddUsdaModule(services);
+        UsersModuleRegistration.AddUsersPersistence(services);
+        MealsModuleRegistration.AddMealsPersistence(services);
+        MealPlanningModuleRegistration.AddMealPlanningModule(services);
+        NotificationsModuleRegistration.AddNotificationsPersistence(services);
+        RecipesModuleRegistration.AddRecipesPersistence(services);
+        ImagesDependencyInjection.AddImagesInfrastructure(services);
+        MarketingModuleRegistration.AddMarketingModule(services);
+        LessonsModuleRegistration.AddLessonsModule(services);
+        IdentityModuleRegistration.AddIdentityPersistence(services);
+        HydrationModuleRegistration.AddHydrationModule(services);
     }
 }

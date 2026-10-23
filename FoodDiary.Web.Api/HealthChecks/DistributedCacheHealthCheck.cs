@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class DistributedCacheHealthCheck(IDistributedCache cache, TimeProvider timeProvider) : IHealthCheck {
     private const string ProbeKey = "health:distributed-cache";
 
@@ -13,7 +15,7 @@ public sealed class DistributedCacheHealthCheck(IDistributedCache cache, TimePro
         try {
             await cache.SetStringAsync(
                 ProbeKey,
-                timeProvider.GetUtcNow().ToUnixTimeSeconds().ToString(System.Globalization.CultureInfo.InvariantCulture),
+                timeProvider.GetUtcNow().ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture),
                 new DistributedCacheEntryOptions {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
                 },

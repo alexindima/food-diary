@@ -1,3 +1,4 @@
+using System.Net;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -93,7 +94,7 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
         using HttpResponseMessage response = await new BotMealsApi(CreateTransport()).UndoRecognizedMealAsync(operationId.Value, "1",
             new BotApiRequestContext(token), cancellationToken).ConfigureAwait(false);
         await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken).ConfigureAwait(false);
-        if (response.StatusCode is System.Net.HttpStatusCode.Conflict or System.Net.HttpStatusCode.NotFound) {
+        if (response.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.NotFound) {
             ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             return error?.Error ?? "Meal.RecognitionOperationNotFound";
         }
@@ -122,7 +123,7 @@ internal sealed class BotDiaryClient(HttpClient client, IOptions<TelegramBotOpti
     }
 
     private static async Task<T> ReadAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken) {
-        if (response.StatusCode is System.Net.HttpStatusCode.Forbidden or System.Net.HttpStatusCode.TooManyRequests) {
+        if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.TooManyRequests) {
             await response.Content.LoadIntoBufferAsync(MaximumResponseBytes, cancellationToken).ConfigureAwait(false);
             try {
                 ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);

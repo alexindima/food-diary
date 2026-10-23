@@ -1,3 +1,6 @@
+using BCrypt.Net;
+using System.Diagnostics.CodeAnalysis;
+using BCryptHasher = BCrypt.Net.BCrypt;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Services;
@@ -6,9 +9,9 @@ public sealed class PasswordHasher : IPasswordHasher {
     private const string EnhancedHashPrefix = "$fd$bcrypt-sha384$";
 
     public string Hash(string password) =>
-        EnhancedHashPrefix + BCrypt.Net.BCrypt.EnhancedHashPassword(password, BCrypt.Net.HashType.SHA384);
+        EnhancedHashPrefix + BCryptHasher.EnhancedHashPassword(password, HashType.SHA384);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public bool Verify(string password, string hashedPassword) {
         if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(hashedPassword)) {
             return false;
@@ -16,12 +19,12 @@ public sealed class PasswordHasher : IPasswordHasher {
 
         try {
             return hashedPassword.StartsWith(EnhancedHashPrefix, StringComparison.Ordinal)
-                ? BCrypt.Net.BCrypt.EnhancedVerify(
+                ? BCryptHasher.EnhancedVerify(
                     password,
                     hashedPassword[EnhancedHashPrefix.Length..],
-                    BCrypt.Net.HashType.SHA384)
-                : BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        } catch (BCrypt.Net.SaltParseException) {
+                    HashType.SHA384)
+                : BCryptHasher.Verify(password, hashedPassword);
+        } catch (SaltParseException) {
             return false;
         } catch (ArgumentException) {
             return false;

@@ -1,3 +1,4 @@
+using FoodDiary.Testing;
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics;
 using FoodDiary.Mediator;
@@ -21,7 +22,7 @@ public sealed class DiaryStatisticsQueryTests {
         profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
         ISender statistics = Substitute.For<ISender>();
         ISender hydration = Substitute.For<ISender>();
-        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, global::FoodDiary.Testing.RequestTestSender.Route((statistics, [typeof(global::FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics.ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval.ReadHydrationIntervalQuery)])), new Clock());
+        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, RequestTestSender.Route((statistics, [typeof(ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(ReadHydrationIntervalQuery)])), new Clock());
 
         Result<DiaryStatisticsSummaryModel> result = await handler.HandleAsync(new GetDiaryStatisticsQuery(owner.Value, 1),
             _ => throw new InvalidTimeZoneException("Corrupt system rules."), CancellationToken.None);
@@ -52,7 +53,7 @@ public sealed class DiaryStatisticsQueryTests {
             ? Result.Failure<UserDashboardProfileModel>(new Error("Profile.Unavailable", "Unavailable")) : Result.Success(profile));
         ISender statistics = Substitute.For<ISender>();
         ISender hydration = Substitute.For<ISender>();
-        var handler = new GetDiaryStatisticsQueryHandler(access, profiles, global::FoodDiary.Testing.RequestTestSender.Route((statistics, [typeof(global::FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics.ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval.ReadHydrationIntervalQuery)])), new Clock());
+        var handler = new GetDiaryStatisticsQueryHandler(access, profiles, RequestTestSender.Route((statistics, [typeof(ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(ReadHydrationIntervalQuery)])), new Clock());
         var query = new GetDiaryStatisticsQuery(owner.Value,
             string.Equals(scenario, "days", StringComparison.Ordinal) ? 2 : 1);
         Result<DiaryStatisticsSummaryModel> result = await handler.Handle(query, CancellationToken.None);
@@ -78,7 +79,7 @@ public sealed class DiaryStatisticsQueryTests {
         });
         ISender hydration = Substitute.For<ISender>();
         hydration.Send(Arg.Is<ReadHydrationIntervalQuery>(q => q.UserId == owner), Arg.Any<CancellationToken>()).Returns(250L);
-        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, global::FoodDiary.Testing.RequestTestSender.Route((statistics, [typeof(global::FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics.ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval.ReadHydrationIntervalQuery)])), new Clock());
+        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, RequestTestSender.Route((statistics, [typeof(ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(ReadHydrationIntervalQuery)])), new Clock());
 
         Result<DiaryStatisticsSummaryModel> result = await handler.Handle(new GetDiaryStatisticsQuery(owner.Value, 7), CancellationToken.None);
 
@@ -102,7 +103,7 @@ public sealed class DiaryStatisticsQueryTests {
         statistics.Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == owner && query.QuantizationDays == 2), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(new Error("Statistics.Unavailable", "Unavailable.", ErrorKind.Internal)));
         ISender hydration = Substitute.For<ISender>();
-        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, global::FoodDiary.Testing.RequestTestSender.Route((statistics, [typeof(global::FoodDiary.Modules.Meals.Contracts.Queries.ReadMealNutritionStatistics.ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(global::FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationInterval.ReadHydrationIntervalQuery)])), new Clock());
+        var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, RequestTestSender.Route((statistics, [typeof(ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(ReadHydrationIntervalQuery)])), new Clock());
 
         Result<DiaryStatisticsSummaryModel> result = await handler.Handle(new GetDiaryStatisticsQuery(owner.Value), CancellationToken.None);
 

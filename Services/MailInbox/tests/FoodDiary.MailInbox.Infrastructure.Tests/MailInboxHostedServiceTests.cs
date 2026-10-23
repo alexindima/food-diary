@@ -1,3 +1,7 @@
+using Microsoft.Extensions.Options;
+using System.Net;
+using System.Reflection;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
@@ -25,7 +29,7 @@ public sealed class MailInboxHostedServiceTests {
         var store = new RecordingDeliveryStore();
         using MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             ServerName = "localhost",
-            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            ListenAddress = IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -36,7 +40,7 @@ public sealed class MailInboxHostedServiceTests {
             await WaitForPortAsync(port, timeout.Token);
             for (int session = 0; session < 2; session++) {
                 using var client = new TcpClient();
-                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+                await client.ConnectAsync(IPAddress.Loopback, port, timeout.Token);
                 using var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
                 await using var writer = new StreamWriter(client.GetStream(), Encoding.ASCII, leaveOpen: true) {
                     AutoFlush = true,
@@ -75,7 +79,7 @@ public sealed class MailInboxHostedServiceTests {
         using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
         using MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             ServerName = "localhost",
-            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            ListenAddress = IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -89,7 +93,7 @@ public sealed class MailInboxHostedServiceTests {
         try {
             await WaitForPortAsync(port, timeout.Token);
             using var client = new TcpClient();
-            await client.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+            await client.ConnectAsync(IPAddress.Loopback, port, timeout.Token);
             using var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
             await using var writer = new StreamWriter(client.GetStream(), Encoding.ASCII, leaveOpen: true) {
                 AutoFlush = true,
@@ -138,7 +142,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
-            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            ListenAddress = IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -149,7 +153,7 @@ public sealed class MailInboxHostedServiceTests {
         try {
             await WaitForPortAsync(port, CancellationToken.None);
             using var client = new TcpClient();
-            await client.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            await client.ConnectAsync(IPAddress.Loopback, port, CancellationToken.None);
             using (var reader = new StreamReader(
                        client.GetStream(),
                        Encoding.ASCII,
@@ -266,7 +270,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
-            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            ListenAddress = IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -279,13 +283,13 @@ public sealed class MailInboxHostedServiceTests {
         try {
             await WaitForPortAsync(port, CancellationToken.None);
             using var firstClient = new TcpClient();
-            await firstClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            await firstClient.ConnectAsync(IPAddress.Loopback, port, CancellationToken.None);
             using var firstReader = new StreamReader(firstClient.GetStream());
             string? firstBanner = await firstReader.ReadLineAsync(CancellationToken.None);
             Assert.StartsWith("220", firstBanner, StringComparison.Ordinal);
 
             using var secondClient = new TcpClient();
-            await secondClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            await secondClient.ConnectAsync(IPAddress.Loopback, port, CancellationToken.None);
             using var secondReader = new StreamReader(secondClient.GetStream());
             Task<string?> secondBannerTask = secondReader.ReadLineAsync(CancellationToken.None).AsTask();
 
@@ -307,7 +311,7 @@ public sealed class MailInboxHostedServiceTests {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
             Enabled = true,
             ServerName = "localhost",
-            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            ListenAddress = IPAddress.Loopback.ToString(),
             Port = port,
             CertificatePath = certificateFiles.CertificatePath,
             PrivateKeyPath = certificateFiles.PrivateKeyPath,
@@ -320,7 +324,7 @@ public sealed class MailInboxHostedServiceTests {
         try {
             await WaitForPortAsync(port, CancellationToken.None);
             using var firstClient = new TcpClient();
-            await firstClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            await firstClient.ConnectAsync(IPAddress.Loopback, port, CancellationToken.None);
             using var firstReader = new StreamReader(firstClient.GetStream());
             Assert.StartsWith(
                 "220",
@@ -328,7 +332,7 @@ public sealed class MailInboxHostedServiceTests {
                 StringComparison.Ordinal);
 
             using var excessClient = new TcpClient();
-            await excessClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            await excessClient.ConnectAsync(IPAddress.Loopback, port, CancellationToken.None);
             using var excessReader = new StreamReader(excessClient.GetStream());
             string? excessBanner = await excessReader.ReadLineAsync(CancellationToken.None)
                 .AsTask()
@@ -341,7 +345,7 @@ public sealed class MailInboxHostedServiceTests {
             string? nextBanner;
             do {
                 using var nextClient = new TcpClient();
-                await nextClient.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+                await nextClient.ConnectAsync(IPAddress.Loopback, port, timeout.Token);
                 using var nextReader = new StreamReader(nextClient.GetStream());
                 nextBanner = await nextReader.ReadLineAsync(timeout.Token);
                 if (nextBanner is null) {
@@ -367,7 +371,7 @@ public sealed class MailInboxHostedServiceTests {
         };
         var service = new MailInboxRetentionHostedService(
             store,
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             FixedTime,
             NullLogger<MailInboxRetentionHostedService>.Instance);
 
@@ -388,7 +392,7 @@ public sealed class MailInboxHostedServiceTests {
         var store = new RecordingRetentionStore(expectedCallCount: 2, failuresBeforeSuccess: 1);
         var service = new MailInboxRetentionHostedService(
             store,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions {
+            MsOptions.Create(new MailInboxStorageOptions {
                 CleanupInterval = TimeSpan.FromMilliseconds(10),
             }),
             FixedTime,
@@ -409,7 +413,7 @@ public sealed class MailInboxHostedServiceTests {
         using var cts = new CancellationTokenSource();
         var service = new MailInboxRetentionHostedService(
             new CancelingRetentionStore(cts),
-            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions()),
+            MsOptions.Create(new MailInboxStorageOptions()),
             FixedTime,
             NullLogger<MailInboxRetentionHostedService>.Instance);
 
@@ -425,7 +429,7 @@ public sealed class MailInboxHostedServiceTests {
         ]);
         var service = new MailInboxRetentionHostedService(
             store,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions { CleanupBatchSize = 2 }),
+            MsOptions.Create(new MailInboxStorageOptions { CleanupBatchSize = 2 }),
             FixedTime,
             NullLogger<MailInboxRetentionHostedService>.Instance);
 
@@ -437,10 +441,10 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     private static int GetFreeTcpPort() {
-        var listener = new TcpListener(System.Net.IPAddress.Loopback, port: 0);
+        var listener = new TcpListener(IPAddress.Loopback, port: 0);
         listener.Start();
         try {
-            return ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+            return ((IPEndPoint)listener.LocalEndpoint).Port;
         } finally {
             listener.Stop();
         }
@@ -501,8 +505,8 @@ public sealed class MailInboxHostedServiceTests {
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options, IInboundMailStore? store = null) {
-        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
-            Microsoft.Extensions.Options.Options.Create(options);
+        IOptions<MailInboxSmtpOptions> optionsWrapper =
+            MsOptions.Create(options);
         var rateLimiter = new MailInboxSlidingWindowRateLimiter(optionsWrapper, TimeProvider.System);
         var messageStore = new SmtpInboundMessageStore(
             store ?? new ThrowingInboundMailStore(),
@@ -527,7 +531,7 @@ public sealed class MailInboxHostedServiceTests {
         while (stopwatch.Elapsed < TimeSpan.FromSeconds(5)) {
             try {
                 using var client = new TcpClient();
-                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, cancellationToken).ConfigureAwait(false);
+                await client.ConnectAsync(IPAddress.Loopback, port, cancellationToken).ConfigureAwait(false);
                 return;
             } catch (SocketException) {
                 await Task.Delay(TimeSpan.FromMilliseconds(25), TimeProvider.System, cancellationToken).ConfigureAwait(false);
@@ -538,18 +542,18 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     private static async Task InvokeExecuteAsync(BackgroundService service, CancellationToken cancellationToken) {
-        System.Reflection.MethodInfo method = service.GetType().GetMethod(
+        MethodInfo method = service.GetType().GetMethod(
             "ExecuteAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         await ((Task)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
     }
 
     private static async Task<InboundMailRetentionResult> InvokeDrainExpiredAsync(
         MailInboxRetentionHostedService service,
         CancellationToken cancellationToken) {
-        System.Reflection.MethodInfo method = service.GetType().GetMethod(
+        MethodInfo method = service.GetType().GetMethod(
             "DrainExpiredAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         return await ((Task<InboundMailRetentionResult>)method.Invoke(service, [cancellationToken])!)
             .ConfigureAwait(false);
     }

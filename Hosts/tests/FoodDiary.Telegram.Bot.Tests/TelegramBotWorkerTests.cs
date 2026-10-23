@@ -656,14 +656,14 @@ public sealed class TelegramBotWorkerTests {
         Update update) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "HandleUpdateAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         return (Task)method!.Invoke(worker, [botClient, update, CancellationToken.None])!;
     }
 
     private static Task InvokeExecuteAsync(TelegramBotWorker worker, CancellationToken cancellationToken) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "ExecuteAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         return (Task)method!.Invoke(worker, [cancellationToken])!;
     }
 
@@ -673,14 +673,14 @@ public sealed class TelegramBotWorkerTests {
         CancellationToken cancellationToken = default) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "HandleErrorAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         return (Task)method!.Invoke(worker, [new RecordingTelegramBotClient(), exception, cancellationToken])!;
     }
 
     private static async Task<string?> InvokeTryGetAccessTokenAsync(TelegramBotWorker worker, long telegramUserId) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "TryGetAccessTokenAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         var task = (Task<string?>)method!.Invoke(worker, [telegramUserId, CancellationToken.None])!;
         return await task.ConfigureAwait(false);
     }
@@ -691,7 +691,7 @@ public sealed class TelegramBotWorkerTests {
         int amountMl) {
         MethodInfo? method = typeof(TelegramBotWorker).GetMethod(
             "CreateHydrationAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic);
         var task = (Task<bool>)method!.Invoke(worker, [accessToken, amountMl, CancellationToken.None])!;
         return await task.ConfigureAwait(false);
     }

@@ -1,3 +1,4 @@
+using System.Text;
 using FoodDiary.Web.Api.HealthChecks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -17,7 +18,7 @@ public sealed class DistributedCacheHealthCheckTests {
         Assert.Equal("health:distributed-cache", cache.SetKey);
         Assert.Equal("health:distributed-cache", cache.RemovedKey);
         Assert.NotNull(cache.SetValue);
-        Assert.Equal("1773651600", System.Text.Encoding.UTF8.GetString(cache.SetValue));
+        Assert.Equal("1773651600", Encoding.UTF8.GetString(cache.SetValue));
         Assert.Equal(TimeSpan.FromSeconds(30), cache.Options?.AbsoluteExpirationRelativeToNow);
     }
 

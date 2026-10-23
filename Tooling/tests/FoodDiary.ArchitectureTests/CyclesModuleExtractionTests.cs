@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using FoodDiary.Modules.Cycles.Domain.Entities;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -21,9 +24,9 @@ public sealed class CyclesModuleExtractionTests {
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleSymptomCategory))]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Domain.Contracts.Enums.OvulationTestResult))]
+    [InlineData(typeof(BleedingType))]
+    [InlineData(typeof(CycleSymptomCategory))]
+    [InlineData(typeof(OvulationTestResult))]
     public void CycleEnums_AreOwnedOnlyByCyclesDomainContracts(Type enumType) {
         Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.Cycles.Domain.Contracts.Enums", enumType.Namespace);
@@ -42,7 +45,7 @@ public sealed class CyclesModuleExtractionTests {
 
     [Fact]
     public void RetiredCycleId_HasNoRuntimeType() {
-        Assert.Null(typeof(FoodDiary.Modules.Cycles.Domain.Entities.CycleProfile).Assembly.GetType(
+        Assert.Null(typeof(CycleProfile).Assembly.GetType(
             "FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids.CycleId"));
     }
 

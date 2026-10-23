@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Cycles.Application.Services;
 using FoodDiary.Modules.Cycles.Domain.Entities;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Models;
@@ -24,7 +26,7 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
                 : [],
             predictions,
@@ -58,7 +60,7 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
                 : [],
             predictions,
@@ -106,12 +108,12 @@ public static class CycleMappings {
             revision.ReasonCodes.Split('|', StringSplitOptions.RemoveEmptyEntries),
             revision.AlgorithmVersion);
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static IReadOnlyCollection<MenstrualEpisodeModel> BuildEpisodeModels(CycleProfileReadModel profile) {
         var persisted = new List<MenstrualEpisodeModel>(
             (profile.MenstrualEpisodes ?? []).Select(episode => episode.ToModel()));
         DateOnly[] bleedingDates = [.. profile.BleedingEntries
-            .Where(entry => entry.Type == global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.BleedingType.Bleeding)
+            .Where(entry => entry.Type == BleedingType.Bleeding)
             .Select(entry => entry.Date)
             .Distinct()
             .Order()];
@@ -130,7 +132,7 @@ public static class CycleMappings {
                     profile.Id,
                     start,
                     end,
-                    global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.MenstrualEpisodeStatus.Inferred,
+                    MenstrualEpisodeStatus.Inferred,
                     ExcludedFromPredictions: false));
             }
         }
@@ -238,7 +240,7 @@ public static class CycleMappings {
                 .OrderBy(entry => entry.Category)
                 .Select(entry => entry.ToModel())
                 .ToList(),
-            profile.HasActiveConsent(global::FoodDiary.Modules.Cycles.Domain.Contracts.Enums.CycleConsentPurpose.FertilitySignals)
+            profile.HasActiveConsent(CycleConsentPurpose.FertilitySignals)
                 ? profile.FertilitySignals
                     .Where(signal => signal.Date == date)
                     .Select(signal => signal.ToModel())

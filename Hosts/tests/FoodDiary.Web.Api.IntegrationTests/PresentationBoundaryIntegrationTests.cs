@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
 using System.Globalization;
@@ -60,7 +61,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     };
     private static readonly JsonSerializerOptions ErrorSnapshotJsonOptions = new() {
         WriteIndented = true,
-        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
     private static readonly Guid MissingProductId = Guid.Parse("11111111-1111-1111-1111-111111111111");
@@ -523,7 +524,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/shopping-lists",
@@ -541,7 +542,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
         using var content = new ByteArrayContent(new byte[PresentationRequestLimits.RichWritePayloadBytes + 1]);
-        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
         HttpResponseMessage response = await client.PostAsync("/api/v1/shopping-lists", content);
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -556,7 +557,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
         string maximumDate = Uri.EscapeDataString("9999-12-31T23:59:59.9999999Z");
 
         HttpResponseMessage response = await client.GetAsync(
@@ -585,7 +586,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
         string search = new('s', UsdaRequestLimits.MaximumSearchLength + 1);
 
         HttpResponseMessage response = await client.GetAsync(
@@ -599,7 +600,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/hydrations",
@@ -613,7 +614,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.GetAsync($"/api/v1/products/{MissingProductId}");
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -629,7 +630,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         var request = new CreateWeightEntryHttpRequest(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
@@ -652,7 +653,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         var request = new CreateWaistEntryHttpRequest(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
@@ -684,7 +685,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/recipes", new { });
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -718,7 +719,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage uploadResponse = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
@@ -792,7 +793,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/statistics?dateFrom=invalid&dateTo=invalid");
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -810,7 +811,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.GetAsync(
             "/api/v1/exercises?dateFrom=2026-08-20T00:00:00Z&dateTo=2026-08-19T00:00:00Z");
@@ -828,7 +829,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
         string search = new('s', PresentationQueryLimits.MaximumSearchLength + 1);
 
         HttpResponseMessage response = await client.GetAsync(
@@ -855,7 +856,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.GetAsync(requestUri);
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -872,7 +873,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         HttpClient client = apiFactory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            new AuthenticationHeaderValue("Bearer", accessToken);
 
         HttpResponseMessage response = await client.PutAsJsonAsync(
             "/api/v1/users/desired-weight",

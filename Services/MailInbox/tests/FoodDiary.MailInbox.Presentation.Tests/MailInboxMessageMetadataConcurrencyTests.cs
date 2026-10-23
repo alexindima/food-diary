@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailInbox.Application.Messages.Commands.MarkInboundMailMessageRead;
 using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
 using FoodDiary.MailInbox.Presentation.Features.Messages;
@@ -121,7 +122,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
     }
 
     private static MailInboxMessageMetadataConcurrencyGate CreateGate(TimeSpan queueTimeout) =>
-        new(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+        new(MsOptions.Create(new MailInboxHttpOptions {
             MetadataApiKey = ValidApiKey,
             MaxConcurrentMessageMetadataRequests = 1,
             MessageMetadataQueueTimeout = queueTimeout,
@@ -132,7 +133,7 @@ public sealed class MailInboxMessageMetadataConcurrencyTests {
         TimeSpan executionTimeout) =>
         new(
             sender,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = ValidApiKey,
                 MessageMetadataExecutionTimeout = executionTimeout,
             })) {

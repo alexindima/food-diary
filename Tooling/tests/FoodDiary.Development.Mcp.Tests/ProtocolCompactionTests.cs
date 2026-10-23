@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Tests;
@@ -90,10 +91,10 @@ public sealed class ProtocolCompactionTests {
             ChangeSetFingerprint: "change",
             GitHead: "head",
             Fresh: true,
-            QueryTerms: [.. Enumerable.Range(1, 30).Select(index => $"term-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}")],
+            QueryTerms: [.. Enumerable.Range(1, 30).Select(index => $"term-{index.ToString(CultureInfo.InvariantCulture)}")],
             Candidates: [.. Enumerable.Range(1, 25).Select(index => new WikiContextSearchCandidate(
                 Rank: index,
-                Path: $"path-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}.cs",
+                Path: $"path-{index.ToString(CultureInfo.InvariantCulture)}.cs",
                 RecordType: "code",
                 Category: "csharp",
                 Score: 100 - index,
@@ -108,7 +109,7 @@ public sealed class ProtocolCompactionTests {
             TestPlan: plan,
             PartialSuccess: false,
             ComponentErrors: [],
-            ExpandedScopePaths: [.. Enumerable.Range(1, 25).Select(index => $"scope-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}")],
+            ExpandedScopePaths: [.. Enumerable.Range(1, 25).Select(index => $"scope-{index.ToString(CultureInfo.InvariantCulture)}")],
             ScopeMismatch: false,
             EffectiveLayers: ["Application"],
             CrossLayerScope: false,

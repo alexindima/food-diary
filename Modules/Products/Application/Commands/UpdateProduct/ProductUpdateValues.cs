@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
@@ -15,5 +16,5 @@ internal sealed record ProductUpdateValues(
     ImageAssetId? ImageAssetId,
     string? ImageUrl,
     bool HasResolvedImageAsset) {
-    public IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>? Images { get; init; }
+    public IReadOnlyList<ProductImage>? Images { get; init; }
 }

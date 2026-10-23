@@ -1,15 +1,17 @@
 using System.Buffers;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace LlmWiki.SqliteReader;
 
 public static class CompiledIndexReader {
     static CompiledIndexReader() {
-        SQLitePCL.Batteries_V2.Init();
+        Batteries_V2.Init();
     }
 
     public static string QueryRuntime(
@@ -145,7 +147,7 @@ public static class CompiledIndexReader {
         int scannedRecords = includeDiagnostics
             ? Convert.ToInt32(
                 ReadScalarInt64(connection, "SELECT COUNT(*) FROM query_documents WHERE category = $category;", ("$category", category)),
-                System.Globalization.CultureInfo.InvariantCulture)
+                CultureInfo.InvariantCulture)
             : 0;
         stopwatch.Stop();
 
@@ -185,13 +187,13 @@ public static class CompiledIndexReader {
     private static int CountCandidates(SqliteConnection connection, string category, string[] recordKinds) {
         using SqliteCommand command = connection.CreateCommand();
         command.CommandTimeout = 2;
-        string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+        string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(CultureInfo.InvariantCulture)));
         command.CommandText = $"SELECT COUNT(*) FROM query_documents WHERE category = $category AND record_kind IN ({kindParameters});";
         command.Parameters.AddWithValue("$category", category);
         for (int index = 0; index < recordKinds.Length; index++) {
-            command.Parameters.AddWithValue("$recordKind" + index.ToString(System.Globalization.CultureInfo.InvariantCulture), recordKinds[index]);
+            command.Parameters.AddWithValue("$recordKind" + index.ToString(CultureInfo.InvariantCulture), recordKinds[index]);
         }
-        return Convert.ToInt32(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+        return Convert.ToInt32(command.ExecuteScalar(), CultureInfo.InvariantCulture);
     }
 
     private static Dictionary<string, List<string>> ReadPayloads(
@@ -203,7 +205,7 @@ public static class CompiledIndexReader {
         int limit) {
         using SqliteCommand command = connection.CreateCommand();
         command.CommandTimeout = 2;
-        string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+        string kindParameters = string.Join(", ", recordKinds.Select((_, index) => "$recordKind" + index.ToString(CultureInfo.InvariantCulture)));
         command.CommandText = $"""
             SELECT record_kind, payload_json
             FROM query_documents
@@ -213,7 +215,7 @@ public static class CompiledIndexReader {
             """;
         command.Parameters.AddWithValue("$category", category);
         for (int index = 0; index < recordKinds.Length; index++) {
-            command.Parameters.AddWithValue("$recordKind" + index.ToString(System.Globalization.CultureInfo.InvariantCulture), recordKinds[index]);
+            command.Parameters.AddWithValue("$recordKind" + index.ToString(CultureInfo.InvariantCulture), recordKinds[index]);
         }
         command.Parameters.AddWithValue("$query", query);
         command.Parameters.AddWithValue("$queryPattern", queryPattern);
@@ -235,7 +237,7 @@ public static class CompiledIndexReader {
 
     private static long ReadScalarInt64(SqliteConnection connection, string commandText, params (string Name, object Value)[] parameters) {
         using SqliteCommand command = CreateCommand(connection, commandText, parameters);
-        return Convert.ToInt64(command.ExecuteScalar(), System.Globalization.CultureInfo.InvariantCulture);
+        return Convert.ToInt64(command.ExecuteScalar(), CultureInfo.InvariantCulture);
     }
 
     private static SqliteCommand CreateCommand(SqliteConnection connection, string commandText, params (string Name, object Value)[] parameters) {

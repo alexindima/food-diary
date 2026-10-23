@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -65,7 +67,7 @@ public sealed class SqliteContextSearchReader {
             LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public Task<WikiContextSearchResult> SearchAsync(
         string query,
         int limit,
@@ -249,7 +251,7 @@ public sealed class SqliteContextSearchReader {
             throw;
         } catch (SqliteException exception) {
             return Unavailable(
-                $"sqlite-error-{exception.SqliteErrorCode.ToString(System.Globalization.CultureInfo.InvariantCulture)}",
+                $"sqlite-error-{exception.SqliteErrorCode.ToString(CultureInfo.InvariantCulture)}",
                 stopwatch);
         } catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException or InvalidDataException) {
             return Unavailable("context-search-configuration-unavailable", stopwatch);
@@ -260,7 +262,7 @@ public sealed class SqliteContextSearchReader {
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static async Task<(
         string? Fingerprint,
         string? UpdatedAtUtc,
@@ -300,7 +302,7 @@ public sealed class SqliteContextSearchReader {
             reader.GetBoolean(5));
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static async Task<List<RawCandidate>> ReadCandidatesAsync(
         SqliteConnection connection,
         string query,

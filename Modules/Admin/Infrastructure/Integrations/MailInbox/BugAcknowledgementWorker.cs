@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Admin.Contracts.Commands.SendBugAcknowledgements;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ internal sealed class BugAcknowledgementWorker(IServiceScopeFactory scopes, IOpt
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 timeout.CancelAfter(TimeSpan.FromMinutes(10));
                 AsyncServiceScope scope = scopes.CreateAsyncScope();
-                await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable scopeLease = scope.ConfigureAwait(false);
+                await using ConfiguredAsyncDisposable scopeLease = scope.ConfigureAwait(false);
                 await scope.ServiceProvider.GetRequiredService<ISender>()
                     .Send(new SendBugAcknowledgementsCommand(settings.StartAtUtc ?? DateTimeOffset.UnixEpoch), timeout.Token).ConfigureAwait(false);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {

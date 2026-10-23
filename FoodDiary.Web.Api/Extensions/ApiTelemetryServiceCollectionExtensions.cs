@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using FoodDiary.Presentation.Api.Extensions;
 using Npgsql;
@@ -7,7 +8,7 @@ using OpenTelemetry.Trace;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public static class ApiTelemetryServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddConfiguredOpenTelemetry(IConfiguration configuration) {

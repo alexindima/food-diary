@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -23,12 +24,12 @@ public sealed class ChangePasswordCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<FoodDiary.Modules.Users.Domain.Entities.User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
 
-        FoodDiary.Modules.Users.Domain.Entities.User currentUser = userResult.Value;
+        User currentUser = userResult.Value;
         if (!currentUser.HasPassword) {
             return Result.Failure(UserErrors.PasswordNotSet);
         }

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using FoodDiary.Email.Contracts.Email.Common;
@@ -99,7 +100,7 @@ public sealed class OutboxReplayLookupTests {
     }
 
     private static FoodDiaryDbContext CreateContext() =>
-        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new Microsoft.EntityFrameworkCore.Storage.InMemoryDatabaseRoot()).Options);
+        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString(), new InMemoryDatabaseRoot()).Options);
 
     private static IOutboxMessage CreateMessage(string streamName, string marker) => streamName switch {
         "email" => EmailOutboxMessage.Create(new EmailMessage("from@example.com", "Sender", ["to@example.com"], marker, "body", TextBody: null), Now),

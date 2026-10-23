@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.MailRelay.Application.Emails.Services;
 using FoodDiary.MailRelay.Application.Queue.Models;
@@ -143,7 +144,7 @@ public sealed class MailRelayClaimRecoveryTests {
 
     private static MailRelayMessageProcessor CreateProcessor(IMailRelayQueueStore store, IRelayDeliveryTransport transport,
         ILogger<MailRelayMessageProcessor>? logger = null) => new(store, new SmtpSubmissionService(transport),
-        logger ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<MailRelayMessageProcessor>.Instance);
+        logger ?? NullLogger<MailRelayMessageProcessor>.Instance);
 
     private static QueuedEmailMessage CreateMessage() => new(QueuedEmailId.New(), "relay@example.test", "FoodDiary", ["recipient@example.test"],
         "Subject", "<p>Body</p>", "Body", "correlation", AttemptCount: 2, MaxAttempts: 3);

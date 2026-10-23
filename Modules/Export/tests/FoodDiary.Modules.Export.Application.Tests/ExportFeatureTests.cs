@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using FoodDiary.Modules.Meals.Application.Queries.ReadMealsForExport;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Meals.Contracts.Queries.ReadMealsForExport;
@@ -210,7 +212,7 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("inside period", content, StringComparison.Ordinal);
         Assert.DoesNotContain("outside before", content, StringComparison.Ordinal);
         Assert.DoesNotContain("outside after", content, StringComparison.Ordinal);
@@ -230,7 +232,7 @@ public class ExportFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
-        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
         Assert.Contains("local day meal", content, StringComparison.Ordinal);
     }
@@ -249,7 +251,7 @@ public class ExportFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
-        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
 
@@ -263,7 +265,7 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("Date,MealType,Calories", content, StringComparison.Ordinal);
     }
 
@@ -401,7 +403,7 @@ public class ExportFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal("text/csv", result.Value.ContentType);
         Assert.EndsWith(".csv", result.Value.FileName, StringComparison.Ordinal);
-        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("RecordType,Date,EndDate,Category", content, StringComparison.Ordinal);
         Assert.Contains("Bleeding,2026-04-01,,Bleeding,,Heavy,8", content, StringComparison.Ordinal);
         Assert.Contains("Symptom,2026-04-01,,Mood,irritable,,6", content, StringComparison.Ordinal);
@@ -444,7 +446,7 @@ public class ExportFeatureTests {
         ResultAssert.Failure(invalid);
         Assert.Equal("User.InvalidPassword", invalid.Error.Code);
         ResultAssert.Success(valid);
-        string content = System.Text.Encoding.UTF8.GetString(valid.Value.Content);
+        string content = Encoding.UTF8.GetString(valid.Value.Content);
         Assert.Contains("\"private, \"\"quoted\"\" note\"", content, StringComparison.Ordinal);
         Assert.Contains("FertilitySignal", content, StringComparison.Ordinal);
         Assert.Contains("signal note", content, StringComparison.Ordinal);
@@ -566,7 +568,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal();
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("500", content, StringComparison.Ordinal);
         Assert.Contains("30", content, StringComparison.Ordinal);
@@ -583,7 +585,7 @@ public class ExportFeatureTests {
             ManualCarbs: 50, ManualFiber: 3, ManualAlcohol: 0));
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("400", content, StringComparison.Ordinal);
         Assert.Contains("25", content, StringComparison.Ordinal);
@@ -594,7 +596,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(comment: "eggs, bacon");
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"eggs, bacon\"", content, StringComparison.Ordinal);
     }
@@ -604,7 +606,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(comment: "she said \"hello\"");
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"she said \"\"hello\"\"\"", content, StringComparison.Ordinal);
     }
@@ -614,7 +616,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(comment: "first line\nsecond line");
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"first line\nsecond line\"", content, StringComparison.Ordinal);
     }
@@ -627,7 +629,7 @@ public class ExportFeatureTests {
     public void CsvGenerator_WithFormulaLikeComment_NeutralizesSpreadsheetInterpretation(string comment) {
         Meal meal = CreateMeal(comment: comment);
 
-        string content = System.Text.Encoding.UTF8.GetString(DiaryCsvGenerator.Generate([ToReadModel(meal)]));
+        string content = Encoding.UTF8.GetString(DiaryCsvGenerator.Generate([ToReadModel(meal)]));
         string normalizedComment = comment.Trim();
 
         Assert.Contains($"'{normalizedComment.Replace("\"", "\"\"", StringComparison.Ordinal)}", content, StringComparison.Ordinal);
@@ -638,7 +640,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(mealType: null);
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)]);
-        string[] lines = System.Text.Encoding.UTF8.GetString(csv).Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        string[] lines = Encoding.UTF8.GetString(csv).Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(lines.Length >= 2);
         string dataLine = lines[1];
@@ -650,7 +652,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], timeZoneOffsetMinutes: 240);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
@@ -660,7 +662,7 @@ public class ExportFeatureTests {
         Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], timeZoneOffsetMinutes: 900);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-03,Breakfast", content, StringComparison.Ordinal);
     }
@@ -671,7 +673,7 @@ public class ExportFeatureTests {
         SetMealDate(meal, new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Unspecified));
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], TimeSpan.FromHours(4));
-        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string content = Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
@@ -683,8 +685,8 @@ public class ExportFeatureTests {
         SetMealDate(meal, localDate);
 
         byte[] csv = DiaryCsvGenerator.Generate([ToReadModel(meal)], TimeSpan.Zero);
-        string content = System.Text.Encoding.UTF8.GetString(csv);
-        string expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        string content = Encoding.UTF8.GetString(csv);
+        string expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         Assert.Contains($"{expectedDate},Breakfast", content, StringComparison.Ordinal);
     }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.WebUtilities;
 using WebPush;
@@ -27,7 +28,7 @@ public sealed class WebPushOptions {
                && WebPushUriValidator.IsSafeNavigationUrl(options.DefaultUrl);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static bool HasValidVapidKeys(WebPushOptions options) {
         try {
             VapidHelper.ValidatePublicKey(options.PublicKey);

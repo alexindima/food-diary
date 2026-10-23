@@ -142,7 +142,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
     private static IReadOnlyList<UserRoleAuditEvent> CreateRoleAuditEvents(
         User user,
         IReadOnlyCollection<Role> requestedRoles,
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId? actorUserId,
+        UserId? actorUserId,
         DateTime occurredAtUtc) {
         var current = user.UserRoles.Select(userRole => userRole.Role).ToDictionary(role => role.Name, StringComparer.Ordinal);
         var requested = requestedRoles.ToDictionary(role => role.Name, StringComparer.Ordinal);

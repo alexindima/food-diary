@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -12,7 +13,7 @@ public sealed partial class PresentationBoundaryIntegrationTests {
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAndGetAccessTokenAsync(client));
         for (int index = 0; index < 3; index++) {
             using HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/shopping-lists", new {
-                name = "Pagination " + index.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                name = "Pagination " + index.ToString(CultureInfo.InvariantCulture),
                 items = new[] { new { name = "Milk", isChecked = false }, new { name = "Bread", isChecked = true } },
             });
             Assert.Equal(HttpStatusCode.Created, created.StatusCode);

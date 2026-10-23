@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using System.Text;
 using FoodDiary.BugTriage.Application.Abstractions;
@@ -16,7 +17,7 @@ public sealed class MailInboxBugSourceTests {
         IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
         var entry = new MailInboxExportEntryResponse(Guid.NewGuid(), DateTimeOffset.UtcNow, ContentAvailable: false);
         client.GetPageAsync(Arg.Any<string>(), Arg.Any<DateTimeOffset?>(), Arg.Any<Guid?>(), Arg.Any<CancellationToken>()).Returns([entry]);
-        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));
+        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), MsOptions.Create(new BugTriageOptions()));
         int seen = 0;
 
         InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(async () => {
@@ -41,7 +42,7 @@ public sealed class MailInboxBugSourceTests {
         client.GetPageAsync(Arg.Any<string>(), entry.ReceivedAtUtc, entry.Id, Arg.Any<CancellationToken>()).Returns([]);
         byte[] mime = Encoding.UTF8.GetBytes(raw);
         client.GetMimeAsync(entry.Id, Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(mime);
-        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));
+        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), MsOptions.Create(new BugTriageOptions()));
         var results = new List<ImportedReport>();
 
         await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) { results.Add(report); }
@@ -63,7 +64,7 @@ public sealed class MailInboxBugSourceTests {
         client.GetPageAsync("bugs@fooddiary.club", beforeReceivedAtUtc: null, beforeId: null, Arg.Any<CancellationToken>()).Returns([first, second]);
         client.GetPageAsync("bugs@fooddiary.club", second.ReceivedAtUtc, second.Id, Arg.Any<CancellationToken>()).Returns([]);
         var source = new MailInboxBugSource(client, store,
-            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions { MaxImportsPerPoll = 1 }));
+            MsOptions.Create(new BugTriageOptions { MaxImportsPerPoll = 1 }));
         var reports = new List<ImportedReport>();
         await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
             reports.Add(report);
@@ -91,7 +92,7 @@ public sealed class MailInboxBugSourceTests {
         store.ContainsAsync((SourceMessageId)first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         byte[] mime = Encoding.UTF8.GetBytes("Subject: Bug\r\nContent-Type: text/plain; charset=utf-8\r\n\r\nКнопка не работает");
         client.GetMimeAsync(third.Id, "bugs@fooddiary.club", Arg.Any<CancellationToken>()).Returns(mime);
-        var source = new MailInboxBugSource(client, store, Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));
+        var source = new MailInboxBugSource(client, store, MsOptions.Create(new BugTriageOptions()));
         var reports = new List<ImportedReport>();
         await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
             reports.Add(report);

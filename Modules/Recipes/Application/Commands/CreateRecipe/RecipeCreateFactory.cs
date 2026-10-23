@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 
 namespace FoodDiary.Modules.Recipes.Application.Commands.CreateRecipe;
@@ -15,5 +16,5 @@ internal static class RecipeCreateFactory {
             values.ImageAssetId,
             command.PrepTime,
             command.CookTime,
-            values.Visibility, importId: command.CatalogImportId is { } id ? new FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId(id) : null);
+            values.Visibility, importId: command.CatalogImportId is { } id ? new RecipeId(id) : null);
 }

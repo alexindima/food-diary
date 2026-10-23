@@ -1,3 +1,6 @@
+using System.Net.Sockets;
+using System.Text;
+using System.Xml.Linq;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -37,7 +40,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -60,7 +63,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -83,7 +86,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -106,7 +109,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -126,7 +129,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -192,7 +195,7 @@ public sealed class DiaryPdfGeneratorTests {
         }).GeneratePdf();
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -214,7 +217,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
         Assert.Contains("https://93.184.216.34/rice.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
         Assert.Contains("https://93.184.216.34/carrot.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
@@ -240,7 +243,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(2, imageHandler.RequestCount);
         Assert.Contains("https://93.184.216.34/ai-1.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
         Assert.Contains("https://93.184.216.34/ai-2.png", imageHandler.RequestedUrls, StringComparer.Ordinal);
@@ -262,7 +265,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -290,7 +293,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
     }
 
     [Fact]
@@ -312,7 +315,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(0, imageHandler.RequestCount);
     }
 
@@ -334,7 +337,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(0, imageHandler.RequestCount);
     }
 
@@ -356,7 +359,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(0, imageHandler.RequestCount);
     }
 
@@ -378,7 +381,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(1, imageHandler.RequestCount);
     }
 
@@ -402,7 +405,7 @@ public sealed class DiaryPdfGeneratorTests {
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
-        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
         Assert.Equal(1, imageHandler.RequestCount);
     }
 
@@ -587,8 +590,8 @@ public sealed class DiaryPdfGeneratorTests {
         var series = Array.CreateInstance(seriesType, 1);
         series.SetValue(Activator.CreateInstance(seriesType, "Protein", new double[] { 25 }, "#123456"), 0);
         string svg = InvokeStatic<string>(renderer, "RenderMultiLineChart", new[] { "12 Oct" }, series);
-        var xml = System.Xml.Linq.XDocument.Parse(svg);
-        System.Xml.Linq.XElement[] markers = [.. xml.Descendants().Where(node => string.Equals(node.Name.LocalName, "circle", StringComparison.Ordinal)
+        var xml = XDocument.Parse(svg);
+        XElement[] markers = [.. xml.Descendants().Where(node => string.Equals(node.Name.LocalName, "circle", StringComparison.Ordinal)
             && string.Equals((string?)node.Attribute("fill"), "#123456", StringComparison.Ordinal))];
 
         Assert.Equal(2, markers.Length);
@@ -734,7 +737,7 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task IsAllowedRemoteImageUriAsync_WhenDnsResolverThrowsSocketException_ReturnsFalse() {
         Func<string, CancellationToken, Task<IPAddress[]>> originalResolver = DiaryPdfGenerator.RemoteImageHostResolver;
-        DiaryPdfGenerator.RemoteImageHostResolver = (_, _) => Task.FromException<IPAddress[]>(new System.Net.Sockets.SocketException());
+        DiaryPdfGenerator.RemoteImageHostResolver = (_, _) => Task.FromException<IPAddress[]>(new SocketException());
         try {
             bool allowed = await InvokePrivateStatic<Task<bool>>(
                 "IsAllowedRemoteImageUriAsync",
@@ -1231,10 +1234,10 @@ public sealed class DiaryPdfGeneratorTests {
             _requestedUrls.Add(request.RequestUri?.ToString() ?? "");
 
             if (!successfulImageResponse) {
-                return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.NotFound));
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
 
-            var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            var response = new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new ByteArrayContent(content ?? Convert.FromBase64String(TransparentPngBase64)),
             };
             if (contentLength.HasValue) {
@@ -1248,7 +1251,7 @@ public sealed class DiaryPdfGeneratorTests {
     [ExcludeFromCodeCoverage]
     private sealed class ChunkedImageHandler(int chunkSize, int totalBytes) : HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-            var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            var response = new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StreamContent(new ChunkedReadStream(chunkSize, totalBytes)),
             };
             return Task.FromResult(response);
@@ -1262,7 +1265,7 @@ public sealed class DiaryPdfGeneratorTests {
         public Task CancellationObserved => _cancellationObserved.Task;
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
-            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StreamContent(new StallingReadStream(_cancellationObserved)),
             });
     }

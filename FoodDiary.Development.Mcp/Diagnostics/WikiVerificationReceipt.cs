@@ -1,8 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 internal sealed record WikiVerificationReceipt(
     int SchemaVersion,
     string GitHead,

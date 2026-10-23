@@ -781,7 +781,7 @@ public class ImagesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InlineImageTransactionRunner(Exception? commitFailure = null) : IImageConfirmationTransactionRunner {
-        public async Task<T> ExecuteSerializedAsync<T>(FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) {
+        public async Task<T> ExecuteSerializedAsync<T>(ImageAssetId assetId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) {
             T result = await operation(cancellationToken);
             if (commitFailure is not null) { throw commitFailure; }
             return result;

@@ -1,3 +1,4 @@
+using System.Net;
 using FoodDiary.Modules.Notifications.Infrastructure.Options;
 using System.Collections.Concurrent;
 using System.Text.Json;
@@ -184,7 +185,7 @@ public sealed class WebPushNotificationSender(
          string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
 
     private static bool IsExpiredSubscription(WebPushException ex) {
-        return ex.StatusCode is System.Net.HttpStatusCode.Gone or System.Net.HttpStatusCode.NotFound;
+        return ex.StatusCode is HttpStatusCode.Gone or HttpStatusCode.NotFound;
     }
 
 }

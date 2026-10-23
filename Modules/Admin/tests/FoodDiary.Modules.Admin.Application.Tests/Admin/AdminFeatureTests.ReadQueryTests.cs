@@ -1,3 +1,6 @@
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
+using FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports;
+using FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.ContentReports.Application.Abstractions.Common;
 using FoodDiary.Modules.ContentReports.Contracts.Models;
@@ -390,7 +393,7 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var recordedDate = new DateTime(2026, 10, 5, 0, 0, 0, DateTimeKind.Utc);
         var repository = new InMemoryUserRepository(user, [RoleNames.Admin]) {
-            LatestWeight = new FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models.WeightEntryModel(Guid.NewGuid(), user.Id.Value, recordedDate, 78.4),
+            LatestWeight = new WeightEntryModel(Guid.NewGuid(), user.Id.Value, recordedDate, 78.4),
         };
         var handler = new GetAdminUserQueryHandler(repository);
 
@@ -468,7 +471,7 @@ public partial class AdminFeatureTests {
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
-RequestTestSender.Route((userRepository, [typeof(global::FoodDiary.Modules.Users.Contracts.Queries.GetUserAdministrationSummary.GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(global::FoodDiary.Modules.ContentReports.Contracts.Queries.CountContentReports.CountContentReportsQuery)]))));
+RequestTestSender.Route((userRepository, [typeof(GetUserAdministrationSummaryQuery)]), (RequestTestSender.Create(new GetContentReportsForAdministrationQueryHandler(contentReportRepository), new CountContentReportsQueryHandler(contentReportRepository)), [typeof(CountContentReportsQuery)]))));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 

@@ -1,3 +1,4 @@
+using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Diagnostics.Metrics;
@@ -31,9 +32,9 @@ public sealed class MailInboxApplicationTests {
     public async Task PageHandler_ForwardsAllFiltersAndCancellation() {
         using var cancellation = new CancellationTokenSource();
         var store = new RecordingPagedStore();
-        var query = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(
+        var query = new GetInboundMailMessagePageQuery(
             2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid());
-        var handler = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQueryHandler(store);
+        var handler = new GetInboundMailMessagePageQueryHandler(store);
         Result<InboundMailMessagePage> result = await handler.Handle(query, cancellation.Token);
         Assert.True(result.IsSuccess);
         Assert.Same(store.Page, result.Value);
@@ -44,10 +45,10 @@ public sealed class MailInboxApplicationTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingPagedStore : RecordingInboundMailStore, IInboundMailStore {
         public InboundMailMessagePage Page { get; } = new([], 31, 11, 20);
-        public FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery? Query { get; private set; }
+        public GetInboundMailMessagePageQuery? Query { get; private set; }
         public CancellationToken Token { get; private set; }
         public Task<InboundMailMessagePage> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
-            Query = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id);
+            Query = new GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id);
             Token = cancellationToken;
             return Task.FromResult(Page);
         }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 
@@ -49,7 +50,7 @@ internal sealed class MailInboxNetworkRange(byte[] networkBytes, int prefixLengt
         int maxPrefixLength = normalized.AddressFamily == AddressFamily.InterNetwork ? 32 : 128;
         int parsedPrefixLength = maxPrefixLength;
         if (parts.Length == 2 &&
-            (!int.TryParse(parts[1], System.Globalization.CultureInfo.InvariantCulture, out parsedPrefixLength) ||
+            (!int.TryParse(parts[1], CultureInfo.InvariantCulture, out parsedPrefixLength) ||
              parsedPrefixLength is <= 0 ||
              parsedPrefixLength > maxPrefixLength)) {
             return false;

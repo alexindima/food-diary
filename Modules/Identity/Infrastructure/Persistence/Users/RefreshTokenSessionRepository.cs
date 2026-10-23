@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
@@ -12,7 +13,7 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 
 public sealed class RefreshTokenSessionRepository(
     DbSet<UserRefreshTokenSession> sessions,
-    Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database,
+    DatabaseFacade database,
     TimeProvider timeProvider,
     IOptions<JwtOptions> jwtOptions,
     Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {

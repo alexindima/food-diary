@@ -1,4 +1,5 @@
 using System.Globalization;
+using SQLitePCL;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -23,7 +24,7 @@ public static class StandaloneIndexReader {
     };
 
     static StandaloneIndexReader() {
-        SQLitePCL.Batteries_V2.Init();
+        Batteries_V2.Init();
     }
 
     public static string Query(string repositoryRoot, string index, string? query, int limit, string? databasePathOverride = null) {

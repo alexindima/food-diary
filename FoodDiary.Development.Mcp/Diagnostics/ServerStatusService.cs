@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using FoodDiary.Development.Mcp.Infrastructure;
 using FoodDiary.Development.Mcp.Protocol;
 using FoodDiary.Development.Mcp.ChangeSets;
@@ -6,7 +8,7 @@ using System.Security.Cryptography;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ServerStatusService(
     TimeProvider timeProvider,
     ServerRuntimeIdentity runtimeIdentity,
@@ -135,7 +137,7 @@ public sealed class ServerStatusService(
         CancellationToken cancellationToken) {
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         foreach (string path in indexPaths.Order(StringComparer.Ordinal)) {
-            hash.AppendData(System.Text.Encoding.UTF8.GetBytes(path));
+            hash.AppendData(Encoding.UTF8.GetBytes(path));
             FileStream stream = File.OpenRead(Path.Combine(
                 repositoryRoot,
                 path.Replace('/', Path.DirectorySeparatorChar)));

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.Initializer;
 
 internal sealed record InitializerCommand(
@@ -102,8 +104,8 @@ internal sealed record InitializerCommand(
         string value = ReadOptionValue(args, ref index, option);
         if (!int.TryParse(
                 value,
-                System.Globalization.NumberStyles.Integer,
-                System.Globalization.CultureInfo.InvariantCulture,
+                NumberStyles.Integer,
+                CultureInfo.InvariantCulture,
                 out int result) ||
             result <= 0) {
             throw new InvalidOperationException($"{option} requires a positive integer.");

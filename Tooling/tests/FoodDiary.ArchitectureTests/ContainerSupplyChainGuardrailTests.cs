@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using System.Text.RegularExpressions;
 
 namespace FoodDiary.ArchitectureTests;
@@ -216,24 +217,24 @@ public sealed class ContainerSupplyChainGuardrailTests {
     [Fact]
     public void NuGetRestore_UsesRepositorySourceAllowlistAndCommittedLockFiles() {
         string configPath = ArchitectureTestPaths.FromRoot("NuGet.config");
-        var config = System.Xml.Linq.XDocument.Load(configPath);
-        System.Xml.Linq.XElement root = Assert.IsType<System.Xml.Linq.XElement>(config.Root);
-        System.Xml.Linq.XElement packageSources = Assert.Single(root.Elements("packageSources"));
-        System.Xml.Linq.XElement auditSources = Assert.Single(root.Elements("auditSources"));
-        System.Xml.Linq.XElement sourceMapping = Assert.Single(root.Elements("packageSourceMapping"));
+        var config = XDocument.Load(configPath);
+        XElement root = Assert.IsType<XElement>(config.Root);
+        XElement packageSources = Assert.Single(root.Elements("packageSources"));
+        XElement auditSources = Assert.Single(root.Elements("auditSources"));
+        XElement sourceMapping = Assert.Single(root.Elements("packageSourceMapping"));
 
         Assert.Single(packageSources.Elements("clear"));
-        System.Xml.Linq.XElement packageSource = Assert.Single(packageSources.Elements("add"));
+        XElement packageSource = Assert.Single(packageSources.Elements("add"));
         Assert.Equal("nuget.org", packageSource.Attribute("key")?.Value);
         Assert.Equal("https://api.nuget.org/v3/index.json", packageSource.Attribute("value")?.Value);
 
         Assert.Single(auditSources.Elements("clear"));
-        System.Xml.Linq.XElement auditSource = Assert.Single(auditSources.Elements("add"));
+        XElement auditSource = Assert.Single(auditSources.Elements("add"));
         Assert.Equal("nuget.org", auditSource.Attribute("key")?.Value);
         Assert.Equal("https://api.nuget.org/v3/index.json", auditSource.Attribute("value")?.Value);
 
         Assert.Single(sourceMapping.Elements("clear"));
-        System.Xml.Linq.XElement mapping = Assert.Single(sourceMapping.Elements("packageSource"));
+        XElement mapping = Assert.Single(sourceMapping.Elements("packageSource"));
         Assert.Equal("nuget.org", mapping.Attribute("key")?.Value);
         Assert.Equal("*", Assert.Single(mapping.Elements("package")).Attribute("pattern")?.Value);
 
@@ -242,7 +243,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains(".nuget\\lockfiles\\$(MSBuildProjectName).packages.lock.json", buildProps, StringComparison.Ordinal);
 
         string lockDirectory = ArchitectureTestPaths.FromRoot(".nuget", "lockfiles");
-        var solution = System.Xml.Linq.XDocument.Load(ArchitectureTestPaths.FromRoot("FoodDiary.slnx"));
+        var solution = XDocument.Load(ArchitectureTestPaths.FromRoot("FoodDiary.slnx"));
         string[] projectNames = [
             .. solution
                 .Descendants("Project")

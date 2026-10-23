@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Application.Common;
 using FoodDiary.Modules.Recipes.Application.Mappings;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
@@ -84,7 +85,7 @@ public sealed class UpdateRecipeCommandHandler(
             values,
             imageAssetCleanupService,
             cancellationToken).ConfigureAwait(false);
-        foreach (FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId in previousGallery.Where(id => !values.Recipe.Images.Any(image => image.ImageAssetId == id))) {
+        foreach (ImageAssetId assetId in previousGallery.Where(id => !values.Recipe.Images.Any(image => image.ImageAssetId == id))) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
         }
         Recipe updated = updatedResult.Value;

@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.OpenFoodFacts.Contracts.Models;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
@@ -130,9 +131,9 @@ public sealed class OpenFoodFactsExternalFoodServiceTests {
     }
 
     private static void MakeOpenFoodFactsSearchCacheStale(string query, int limit, TimeSpan age) {
-        System.Reflection.FieldInfo field = typeof(OpenFoodFactsService).GetField(
+        FieldInfo field = typeof(OpenFoodFactsService).GetField(
             "SearchCache",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         object cache = field.GetValue(null)!;
         string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, Math.Clamp(limit, 1, 50));
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;

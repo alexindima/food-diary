@@ -1,3 +1,4 @@
+using FoodDiary.Development.Mcp.Infrastructure;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Tasks;
 using FoodDiary.Development.Mcp.Tools;
@@ -10,7 +11,7 @@ namespace FoodDiary.Development.Mcp.Tests;
 public sealed class TaskToolsTests {
     [Fact]
     public async Task NodeExecutor_SerializesTypedOperationAndRejectsAnUnknownCheckBeforeLaunch() {
-        string repositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+        string repositoryRoot = RepositoryRootResolver.Resolve();
         string relativePath = $".artifacts/llm-wiki/mcp-task-fixture-{Guid.NewGuid():N}.json";
         string absolutePath = Path.Combine(repositoryRoot, relativePath);
         Directory.CreateDirectory(Path.GetDirectoryName(absolutePath)!);
@@ -24,7 +25,7 @@ public sealed class TaskToolsTests {
             using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(30));
             JsonElement next = await executor.ExecuteAsync(new TaskToolRequest(TaskToolAction.Next, EvidencePath: relativePath), timeout.Token);
             Assert.Equal("checks-resolved", next.GetProperty("state").GetString());
-            FoodDiary.Development.Mcp.Protocol.DevelopmentMcpException failure = await Assert.ThrowsAsync<FoodDiary.Development.Mcp.Protocol.DevelopmentMcpException>(() =>
+            DevelopmentMcpException failure = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
                 executor.ExecuteAsync(new TaskToolRequest(TaskToolAction.Verify, EvidencePath: relativePath, CheckId: "arbitrary-command"), timeout.Token));
             Assert.Contains("check ID", failure.Message, StringComparison.Ordinal);
         } finally { File.Delete(absolutePath); }

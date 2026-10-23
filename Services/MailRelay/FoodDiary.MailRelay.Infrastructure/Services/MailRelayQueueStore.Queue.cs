@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Npgsql;
 
@@ -212,7 +213,7 @@ public sealed partial class MailRelayQueueStore {
             cancellationToken).ConfigureAwait(false);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public async Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(QueuedEmailId id, CancellationToken cancellationToken) {
         const string sql = """
                            update mailrelay_outbound_emails
@@ -279,7 +280,7 @@ public sealed partial class MailRelayQueueStore {
                            """;
 
         if (!await ExecuteClaimCommandAsync(sql, id, attemptCount, cancellationToken).ConfigureAwait(false)) {
-            throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+            throw new MailRelayClaimLostException();
         }
     }
 
@@ -306,7 +307,7 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
                 command.Parameters.AddWithValue("lastError", Truncate($"Suppressed recipient(s): {string.Join(", ", recipients)}", 4000));
                 if (await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) != 1) {
-                    throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+                    throw new MailRelayClaimLostException();
                 }
             }
         }
@@ -396,7 +397,7 @@ public sealed partial class MailRelayQueueStore {
                     command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
                     command.Parameters.AddWithValue("lastError", Truncate(decision.Error, 4000));
                     if (await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) != 1) {
-                        throw new FoodDiary.MailRelay.Application.Emails.Services.MailRelayClaimLostException();
+                        throw new MailRelayClaimLostException();
                     }
                 }
 

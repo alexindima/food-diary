@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using NetIPNetwork = System.Net.IPNetwork;
 using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -5,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.Options;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOptions> apiForwardedHeadersOptions)
     : IConfigureOptions<ForwardedHeadersOptions> {
     public void Configure(ForwardedHeadersOptions options) {
@@ -35,8 +37,8 @@ public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOpt
         }
     }
 
-    private static System.Net.IPNetwork ParseNetwork(string cidr) {
+    private static NetIPNetwork ParseNetwork(string cidr) {
         string[] parts = cidr.Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-        return new System.Net.IPNetwork(IPAddress.Parse(parts[0]), int.Parse(parts[1], CultureInfo.InvariantCulture));
+        return new NetIPNetwork(IPAddress.Parse(parts[0]), int.Parse(parts[1], CultureInfo.InvariantCulture));
     }
 }

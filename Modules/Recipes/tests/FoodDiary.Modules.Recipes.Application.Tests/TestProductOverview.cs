@@ -5,7 +5,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Recipes.Application.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 internal static class TestProductOverview {
     public static ProductOverviewReadItem From(Product product, UserId currentUserId) {
         FoodQualityScore quality = product.GetQualityScore();

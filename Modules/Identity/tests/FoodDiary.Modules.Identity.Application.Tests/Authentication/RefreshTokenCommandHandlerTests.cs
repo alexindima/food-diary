@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
@@ -511,7 +512,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         public bool RotationSucceeds { get; init; } = true;
 
         public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
-            FoodDiary.Modules.Users.Contracts.Models.UserAuthenticationPrincipalModel principal,
+            UserAuthenticationPrincipalModel principal,
             CancellationToken cancellationToken,
             AuthenticationClientContext? clientContext = null,
             bool rememberMe = false) {
@@ -521,7 +522,7 @@ public sealed class RefreshTokenCommandHandlerTests {
         }
 
         public Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
-            FoodDiary.Modules.Users.Contracts.Models.UserAuthenticationPrincipalModel principal,
+            UserAuthenticationPrincipalModel principal,
             RefreshTokenSessionId refreshSessionId,
             string expectedRefreshTokenHash,
             bool rememberMe,

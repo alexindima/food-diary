@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -241,7 +242,7 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
     public async Task AuditEntryService_AddsFiltersAndProjectsEntries() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var service = new AuditEntryService(context, FixedTime);
-        var actor = FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New();
+        var actor = UserId.New();
         var subject = Guid.NewGuid();
 
         await service.AddAsync(actor, subject, "action", "Target", "id", """{"value":1}""");

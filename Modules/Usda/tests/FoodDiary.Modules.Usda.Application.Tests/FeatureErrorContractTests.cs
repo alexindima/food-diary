@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Usda.Application.Abstractions.Common;
 using FoodDiary.Results;
 
@@ -23,15 +24,15 @@ public sealed class FeatureErrorContractTests {
     [InlineData("ru-RU")]
     [InlineData("ar-SA")]
     public void UsdaErrors_FormatsParametersInvariantly(string cultureName) {
-        System.Globalization.CultureInfo previous = System.Globalization.CultureInfo.CurrentCulture;
+        CultureInfo previous = CultureInfo.CurrentCulture;
         try {
-            var culture = (System.Globalization.CultureInfo)System.Globalization.CultureInfo.GetCultureInfo(cultureName).Clone();
+            var culture = (CultureInfo)CultureInfo.GetCultureInfo(cultureName).Clone();
             culture.NumberFormat.NegativeSign = "NEG";
-            System.Globalization.CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentCulture = culture;
             AssertError(UsdaErrors.DailyMicronutrientItemLimitExceeded(-123), "Usda.DailyMicronutrientItemLimitExceeded", "Daily micronutrient summaries support at most -123 product items.", ErrorKind.RateLimited);
             AssertError(UsdaErrors.FoodNotFound(-123), "Usda.FoodNotFound", "USDA food with FDC ID -123 was not found.", ErrorKind.NotFound);
         } finally {
-            System.Globalization.CultureInfo.CurrentCulture = previous;
+            CultureInfo.CurrentCulture = previous;
         }
     }
 

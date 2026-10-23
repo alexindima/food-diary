@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Domain.Primitives;
@@ -12,5 +13,5 @@ internal sealed record CreateProductValues(
     ProductType ProductType,
     ImageAssetId? ImageAssetId,
     string? ImageUrl) {
-    public IReadOnlyList<FoodDiary.Modules.Products.Domain.Entities.ProductImage>? Images { get; init; }
+    public IReadOnlyList<ProductImage>? Images { get; init; }
 }

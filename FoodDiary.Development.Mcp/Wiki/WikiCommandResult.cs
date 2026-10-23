@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Wiki;
@@ -123,7 +124,7 @@ public sealed record WikiCommandResult(
         };
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public WikiCommandResult ToCompactChangeContext(int pathLimit = 20, bool includeRawOutput = false) {
         if (StructuredOutput is not { ValueKind: JsonValueKind.Object } output) {
             return WithoutRawOutput();

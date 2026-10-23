@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NpgsqlTypes;
 using System.Data.Common;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
@@ -44,13 +46,13 @@ public sealed class EfBillingTransactionRunner(IModuleTransactionCoordinator coo
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             connection, (NpgsqlTransaction)transaction);
         await using (command.ConfigureAwait(false)) {
-            command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, serializationKey);
+            command.Parameters.AddWithValue("serialization_key", NpgsqlDbType.Text, serializationKey);
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
     private static BillingPayment? DetachAddedPayment(DbUpdateException exception) {
-        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry? entry = exception.Entries
+        EntityEntry? entry = exception.Entries
             .FirstOrDefault(candidate => candidate.Entity is BillingPayment && candidate.State == EntityState.Added);
         if (entry is null) {
             return null;
@@ -62,7 +64,7 @@ public sealed class EfBillingTransactionRunner(IModuleTransactionCoordinator coo
     }
 
     private static BillingWebhookEvent? DetachAddedWebhookEvent(DbUpdateException exception) {
-        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry? entry = exception.Entries
+        EntityEntry? entry = exception.Entries
             .FirstOrDefault(candidate => candidate.Entity is BillingWebhookEvent && candidate.State == EntityState.Added);
         if (entry is null) {
             return null;

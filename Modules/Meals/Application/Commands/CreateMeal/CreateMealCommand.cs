@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Application.Common;
@@ -23,5 +24,5 @@ public record CreateMealCommand(
     double? ManualAlcohol,
     int PreMealSatietyLevel,
     int PostMealSatietyLevel) : ICommand<Result<MealModel>>, IUserRequest, IIdempotentAtomicCommand {
-    public FoodDiary.Application.Contracts.Common.Abstractions.Persistence.AtomicOperation? Operation { get; init; }
+    public AtomicOperation? Operation { get; init; }
 }

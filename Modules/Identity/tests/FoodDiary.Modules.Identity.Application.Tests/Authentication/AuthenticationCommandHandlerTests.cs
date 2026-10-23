@@ -291,33 +291,33 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAuthValidator(bool validateFailure = false) : ITelegramAuthValidator {
-        public FoodDiary.Results.Result<TelegramInitData> ValidateInitData(string initData) =>
+        public Result<TelegramInitData> ValidateInitData(string initData) =>
             validateFailure
-                ? FoodDiary.Results.Result.Failure<TelegramInitData>(
+                ? Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("initData", "Invalid Telegram init data."))
-                : FoodDiary.Results.Result.Success(
+                : Result.Success(
                     new TelegramInitData(123456, "alex", "Alex", "User", PhotoUrl: null, "en", DateTime.UtcNow, ReplayIdentity: "proof", ExpiresAtUtc: DateTime.UtcNow.AddDays(1)));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramLoginWidgetValidator(bool validateFailure = false) : ITelegramLoginWidgetValidator {
-        public FoodDiary.Results.Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) =>
+        public Result<TelegramInitData> ValidateLoginWidget(TelegramLoginWidgetData data) =>
             validateFailure
-                ? FoodDiary.Results.Result.Failure<TelegramInitData>(
+                ? Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("hash", "Invalid Telegram login widget hash."))
-                : FoodDiary.Results.Result.Success(
+                : Result.Success(
                     new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, LanguageCode: null, DateTime.UtcNow, ReplayIdentity: "proof", ExpiresAtUtc: DateTime.UtcNow.AddDays(1)));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubGoogleTokenValidator(GoogleIdentityPayload payload, bool validateFailure = false) : IGoogleTokenValidator {
-        public Task<FoodDiary.Results.Result<GoogleIdentityPayload>> ValidateCredentialAsync(
+        public Task<Result<GoogleIdentityPayload>> ValidateCredentialAsync(
             string credential,
             CancellationToken cancellationToken) =>
             Task.FromResult(validateFailure
-                ? FoodDiary.Results.Result.Failure<GoogleIdentityPayload>(
+                ? Result.Failure<GoogleIdentityPayload>(
                     Errors.Validation.Invalid("credential", "Invalid Google credential."))
-                : FoodDiary.Results.Result.Success(payload));
+                : Result.Success(payload));
     }
 
     private static ResendEmailVerificationCommandHandler CreateResendEmailVerificationHandler(

@@ -1,62 +1,98 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions;
+using FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition;
+using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
+using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
+using FoodDiary.Modules.Cycles.Contracts.Common;
+using FoodDiary.Modules.Dietologist.Contracts.Common;
+using FoodDiary.Modules.Dietologist.Contracts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common;
+using FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models;
+using FoodDiary.Modules.Gamification.Contracts.Achievements.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Services;
+using FoodDiary.Modules.Images.Service.Contracts.Common;
+using FoodDiary.Modules.Lessons.Domain.Contracts.Enums;
+using FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
+using FoodDiary.Modules.Notifications.Contracts.Common;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Products.Domain.Contracts.Enums;
+using FoodDiary.Modules.Products.FoodQuality.ValueObjects;
+using FoodDiary.Modules.RecentItems.Contracts.Common;
+using FoodDiary.Modules.RecentItems.Contracts.Queries.ReadRecentProducts;
+using FoodDiary.Modules.Recipes.Contracts.Common;
+using FoodDiary.Modules.Usda.Contracts.Common;
+using FoodDiary.Modules.Usda.Contracts.Models;
+using FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods;
+using FoodDiary.Modules.Usda.Domain.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class RetiredDomainAssemblyTests {
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Common.IFavoriteMealSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Common.IFavoriteProductSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Common.IFavoriteRecipeSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteMeals.Models.FavoriteMealSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteProducts.Models.FavoriteProductSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Favorites.Contracts.FavoriteRecipes.Models.FavoriteRecipeSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.RecentItems.Contracts.Queries.ReadRecentProducts.ReadRecentProductsQuery), "FoodDiary.Modules.RecentItems.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.RecentItems.Contracts.Common.IRecentItemUsageRecorder), "FoodDiary.Modules.RecentItems.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.RecentItems.Contracts.Common.RecentProductUsage), "FoodDiary.Modules.RecentItems.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.RecentItems.Contracts.Common.RecentRecipeUsage), "FoodDiary.Modules.RecentItems.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion.RecordPremiumConversionCommand), "FoodDiary.Modules.Marketing.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Dietologist.Contracts.Common.IDietologistDashboardAccessService), "FoodDiary.Modules.Dietologist.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Dietologist.Contracts.Models.DietologistPermissionsReadModel), "FoodDiary.Modules.Dietologist.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Contracts.Common.IUsdaFoodSearchService), "FoodDiary.Modules.Usda.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Contracts.Queries.SearchUsdaFoods.SearchUsdaFoodsQuery), "FoodDiary.Modules.Usda.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Contracts.Common.IUsdaProductLinkService), "FoodDiary.Modules.Usda.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Contracts.Common.IUsdaMealNutritionReadService), "FoodDiary.Modules.Usda.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Contracts.Models.UsdaMealProductNutritionReadModel), "FoodDiary.Modules.Usda.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Ai.Contracts.Queries.GetAiPromptRevisions.GetAiPromptRevisionsQuery), "FoodDiary.Modules.Ai.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Ai.Contracts.Commands.UpsertAiPrompt.UpsertAiPromptCommand), "FoodDiary.Modules.Ai.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Ai.Contracts.Queries.GetCompletedFoodRecognition.GetCompletedFoodRecognitionQuery), "FoodDiary.Modules.Ai.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Gamification.Contracts.Achievements.Common.IAchievementEvaluationOutbox), "FoodDiary.Modules.Gamification.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserCalorieSchedule), "FoodDiary.Modules.Users.Domain.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.UserPreferenceUpdate), "FoodDiary.Modules.Users.Domain.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Lessons.Domain.Contracts.ValueObjects.Ids.NutritionLessonId), "FoodDiary.Modules.Lessons.Domain.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Lessons.Domain.Contracts.Enums.LessonCategory), "FoodDiary.Modules.Lessons.Domain.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Lessons.Domain.Contracts.Enums.LessonDifficulty), "FoodDiary.Modules.Lessons.Domain.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Notifications.Contracts.Common.INotificationWriter), "FoodDiary.Modules.Notifications.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Identity.Contracts.Authentication.Common.IEmailSender), "FoodDiary.Modules.Identity.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Identity.Contracts.Authentication.Services.IImpersonationTokenIssuer), "FoodDiary.Modules.Identity.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries.ReadWeightEntriesQuery), "FoodDiary.Modules.BodyMetrics.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries.ReadWaistEntriesQuery), "FoodDiary.Modules.BodyMetrics.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Products.Contracts.Common.ProductErrors), "FoodDiary.Modules.Products.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Recipes.Contracts.Common.RecipeErrors), "FoodDiary.Modules.Recipes.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Cycles.Contracts.Common.CycleErrors), "FoodDiary.Modules.Cycles.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetCleanupService), "FoodDiary.Modules.Images.Service.Contracts")]
-    [InlineData(typeof(FoodDiary.Modules.Images.Service.Contracts.Common.IImageAssetOwnershipService), "FoodDiary.Modules.Images.Service.Contracts")]
+    [InlineData(typeof(IFavoriteMealSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(IFavoriteProductSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(IFavoriteRecipeSourceReadService), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(FavoriteMealSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(FavoriteProductSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(FavoriteRecipeSourceModel), "FoodDiary.Modules.Favorites.Contracts")]
+    [InlineData(typeof(ReadRecentProductsQuery), "FoodDiary.Modules.RecentItems.Contracts")]
+    [InlineData(typeof(IRecentItemUsageRecorder), "FoodDiary.Modules.RecentItems.Contracts")]
+    [InlineData(typeof(RecentProductUsage), "FoodDiary.Modules.RecentItems.Contracts")]
+    [InlineData(typeof(RecentRecipeUsage), "FoodDiary.Modules.RecentItems.Contracts")]
+    [InlineData(typeof(RecordPremiumConversionCommand), "FoodDiary.Modules.Marketing.Contracts")]
+    [InlineData(typeof(IDietologistDashboardAccessService), "FoodDiary.Modules.Dietologist.Contracts")]
+    [InlineData(typeof(DietologistPermissionsReadModel), "FoodDiary.Modules.Dietologist.Contracts")]
+    [InlineData(typeof(IUsdaFoodSearchService), "FoodDiary.Modules.Usda.Contracts")]
+    [InlineData(typeof(SearchUsdaFoodsQuery), "FoodDiary.Modules.Usda.Contracts")]
+    [InlineData(typeof(IUsdaProductLinkService), "FoodDiary.Modules.Usda.Contracts")]
+    [InlineData(typeof(IUsdaMealNutritionReadService), "FoodDiary.Modules.Usda.Contracts")]
+    [InlineData(typeof(UsdaMealProductNutritionReadModel), "FoodDiary.Modules.Usda.Contracts")]
+    [InlineData(typeof(GetAiPromptRevisionsQuery), "FoodDiary.Modules.Ai.Contracts")]
+    [InlineData(typeof(UpsertAiPromptCommand), "FoodDiary.Modules.Ai.Contracts")]
+    [InlineData(typeof(GetCompletedFoodRecognitionQuery), "FoodDiary.Modules.Ai.Contracts")]
+    [InlineData(typeof(IAchievementEvaluationOutbox), "FoodDiary.Modules.Gamification.Contracts")]
+    [InlineData(typeof(UserCalorieSchedule), "FoodDiary.Modules.Users.Domain.Contracts")]
+    [InlineData(typeof(UserPreferenceUpdate), "FoodDiary.Modules.Users.Domain.Contracts")]
+    [InlineData(typeof(NutritionLessonId), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(LessonCategory), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(LessonDifficulty), "FoodDiary.Modules.Lessons.Domain.Contracts")]
+    [InlineData(typeof(INotificationWriter), "FoodDiary.Modules.Notifications.Contracts")]
+    [InlineData(typeof(IEmailSender), "FoodDiary.Modules.Identity.Contracts")]
+    [InlineData(typeof(IImpersonationTokenIssuer), "FoodDiary.Modules.Identity.Contracts")]
+    [InlineData(typeof(ReadWeightEntriesQuery), "FoodDiary.Modules.BodyMetrics.Contracts")]
+    [InlineData(typeof(ReadWaistEntriesQuery), "FoodDiary.Modules.BodyMetrics.Contracts")]
+    [InlineData(typeof(ProductErrors), "FoodDiary.Modules.Products.Contracts")]
+    [InlineData(typeof(RecipeErrors), "FoodDiary.Modules.Recipes.Contracts")]
+    [InlineData(typeof(CycleErrors), "FoodDiary.Modules.Cycles.Contracts")]
+    [InlineData(typeof(IImageAssetCleanupService), "FoodDiary.Modules.Images.Service.Contracts")]
+    [InlineData(typeof(IImageAssetOwnershipService), "FoodDiary.Modules.Images.Service.Contracts")]
     public void ConsumerValueAndCapability_HasNarrowAssemblyOwner(Type type, string assembly) {
         Assert.Equal(assembly, type.Assembly.GetName().Name);
     }
 
     [Theory]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.Enums.RoleNames), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/Enums", "FoodDiary.Modules.Users.Domain.Contracts.Enums")]
-    [InlineData(typeof(FoodDiary.Modules.Products.Domain.Contracts.Enums.MeasurementUnit), "FoodDiary.Modules.Products.Domain.Contracts", "Modules/Products/Domain.Contracts/Enums", "FoodDiary.Modules.Products.Domain.Contracts.Enums")]
-    [InlineData(typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityScore), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Modules.Products.FoodQuality.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Products.FoodQuality.ValueObjects.FoodQualityGrade), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Modules.Products.FoodQuality.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Domain.ValueObjects.HealthAreaScore), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Domain.ValueObjects.HealthAreaGrade), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Usda.Domain.ValueObjects.HealthAreaScores), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.DesiredWeightKg), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.DesiredWaistCm), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.LanguageCode), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
-    [InlineData(typeof(FoodDiary.Domain.Primitives.EmailAddress), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
-    [InlineData(typeof(FoodDiary.Domain.Primitives.Visibility), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
+    [InlineData(typeof(RoleNames), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/Enums", "FoodDiary.Modules.Users.Domain.Contracts.Enums")]
+    [InlineData(typeof(MeasurementUnit), "FoodDiary.Modules.Products.Domain.Contracts", "Modules/Products/Domain.Contracts/Enums", "FoodDiary.Modules.Products.Domain.Contracts.Enums")]
+    [InlineData(typeof(FoodQualityScore), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Modules.Products.FoodQuality.ValueObjects")]
+    [InlineData(typeof(FoodQualityGrade), "FoodDiary.Modules.Products.FoodQuality", "Modules/Products/FoodQuality/ValueObjects", "FoodDiary.Modules.Products.FoodQuality.ValueObjects")]
+    [InlineData(typeof(HealthAreaScore), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
+    [InlineData(typeof(HealthAreaGrade), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
+    [InlineData(typeof(HealthAreaScores), "FoodDiary.Modules.Usda.Domain", "Modules/Usda/Domain/ValueObjects", "FoodDiary.Modules.Usda.Domain.ValueObjects")]
+    [InlineData(typeof(DesiredWeightKg), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
+    [InlineData(typeof(DesiredWaistCm), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
+    [InlineData(typeof(LanguageCode), "FoodDiary.Modules.Users.Domain.Contracts", "Modules/Users/Domain.Contracts/ValueObjects", "FoodDiary.Modules.Users.Domain.Contracts.ValueObjects")]
+    [InlineData(typeof(EmailAddress), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
+    [InlineData(typeof(Visibility), "FoodDiary.Domain.Primitives", "Shared/FoodDiary.Domain.Primitives", "FoodDiary.Domain.Primitives")]
     public void RelocatedTypes_HaveExactlyOneApprovedOwner(Type type, string assembly, string folder, string expectedNamespace) {
         Assert.Equal(assembly, type.Assembly.GetName().Name);
         Assert.Equal(expectedNamespace, type.Namespace);

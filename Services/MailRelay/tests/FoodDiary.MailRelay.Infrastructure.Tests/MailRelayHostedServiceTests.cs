@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Application.Emails.Services;
@@ -23,7 +24,7 @@ public sealed class MailRelayHostedServiceTests {
         var store = new RecordingQueueStore();
         var service = new MailRelayOutboxPublisherHostedService(
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            MsOptions.Create(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             NullLogger<MailRelayOutboxPublisherHostedService>.Instance);
 
@@ -39,7 +40,7 @@ public sealed class MailRelayHostedServiceTests {
         };
         var service = new MailRelayOutboxPublisherHostedService(
             CreateBroker(CreateRabbitOptions()),
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             store,
             NullLogger<MailRelayOutboxPublisherHostedService>.Instance);
 
@@ -57,7 +58,7 @@ public sealed class MailRelayHostedServiceTests {
         };
         var service = new MailRelayOutboxPublisherHostedService(
             CreateBroker(CreateRabbitOptions()),
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             store,
             NullLogger<MailRelayOutboxPublisherHostedService>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -74,7 +75,7 @@ public sealed class MailRelayHostedServiceTests {
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1);
         var service = new MailRelayOutboxPublisherHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             store,
             NullLogger<MailRelayOutboxPublisherHostedService>.Instance);
 
@@ -92,11 +93,11 @@ public sealed class MailRelayHostedServiceTests {
         var service = new MailRelayQueueProcessorHostedService(
             store,
             CreateProcessor(store),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.RabbitMqBackend,
                 EnablePollingFallback = false,
             }),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
+            MsOptions.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
             NullLogger<MailRelayQueueProcessorHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
@@ -112,10 +113,10 @@ public sealed class MailRelayHostedServiceTests {
         var service = new MailRelayQueueProcessorHostedService(
             store,
             CreateProcessor(store),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
+            MsOptions.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
             NullLogger<MailRelayQueueProcessorHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
@@ -133,10 +134,10 @@ public sealed class MailRelayHostedServiceTests {
         var service = new MailRelayQueueProcessorHostedService(
             store,
             CreateProcessor(store),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions {
+            MsOptions.Create(new MailRelayBrokerOptions {
                 Backend = MailRelayBrokerOptions.PostgresPollingBackend,
             }),
-            Microsoft.Extensions.Options.Options.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
+            MsOptions.Create(new MailRelayQueueOptions { PollIntervalSeconds = 1 }),
             NullLogger<MailRelayQueueProcessorHostedService>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource();
         await cancellationTokenSource.CancelAsync();
@@ -148,7 +149,7 @@ public sealed class MailRelayHostedServiceTests {
     public async Task RabbitMqConsumer_WhenBackendIsNotRabbitMq_ReturnsWithoutConnecting() {
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            MsOptions.Create(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -164,7 +165,7 @@ public sealed class MailRelayHostedServiceTests {
         var store = new RecordingQueueStore();
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             CreateBroker(options),
             store,
             CreateProcessor(store),
@@ -182,7 +183,7 @@ public sealed class MailRelayHostedServiceTests {
         MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 5);
         using var cancellationTokenSource = new CancellationTokenSource();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             CreateBroker(options),
             store,
             CreateProcessor(store),
@@ -204,7 +205,7 @@ public sealed class MailRelayHostedServiceTests {
         using var cancellationTokenSource = new CancellationTokenSource();
         int attempts = 0;
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             CreateBroker(options),
             store,
             CreateProcessor(store),
@@ -229,7 +230,7 @@ public sealed class MailRelayHostedServiceTests {
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
         var service = new RabbitMqMailRelayBootstrapHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
 
@@ -244,7 +245,7 @@ public sealed class MailRelayHostedServiceTests {
         await cancellationTokenSource.CancelAsync();
         var service = new RabbitMqMailRelayBootstrapHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
             _ => throw new InvalidOperationException("should not run"));
 
@@ -258,7 +259,7 @@ public sealed class MailRelayHostedServiceTests {
         using var cancellationTokenSource = new CancellationTokenSource();
         var service = new RabbitMqMailRelayBootstrapHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
             async _ => {
                 await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
@@ -276,7 +277,7 @@ public sealed class MailRelayHostedServiceTests {
         int attempts = 0;
         var service = new RabbitMqMailRelayBootstrapHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
             async _ => {
                 attempts++;
@@ -303,7 +304,7 @@ public sealed class MailRelayHostedServiceTests {
             .ConfigureServices(services => {
                 services.AddSingleton<IHostedService>(new RabbitMqMailRelayBootstrapHostedService(
                     CreateBroker(options),
-                    Microsoft.Extensions.Options.Options.Create(options),
+                    MsOptions.Create(options),
                     NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
                     _ => {
                         attempted.TrySetResult();
@@ -343,7 +344,7 @@ public sealed class MailRelayHostedServiceTests {
             ThrowCancellationOnMessageClaim = true,
         };
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(CreateRabbitOptions()),
             store,
             CreateProcessor(store),
@@ -366,7 +367,7 @@ public sealed class MailRelayHostedServiceTests {
         };
         MailRelayBrokerOptions options = CreateRabbitOptions();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             CreateBroker(options),
             store,
             CreateProcessor(store),
@@ -383,7 +384,7 @@ public sealed class MailRelayHostedServiceTests {
     public async Task RabbitMqConsumer_WhenPayloadIsInvalid_AcksDelivery() {
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -401,7 +402,7 @@ public sealed class MailRelayHostedServiceTests {
     public async Task RabbitMqConsumer_WhenMessageCannotBeClaimed_AcksDelivery() {
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -423,7 +424,7 @@ public sealed class MailRelayHostedServiceTests {
             ClaimedMessage = CreateQueuedMessage(),
         };
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -443,7 +444,7 @@ public sealed class MailRelayHostedServiceTests {
             SuppressedRecipients = ["recipient@example.com"],
         };
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -463,7 +464,7 @@ public sealed class MailRelayHostedServiceTests {
         MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             CreateBroker(options),
             store,
             CreateProcessor(store),
@@ -485,7 +486,7 @@ public sealed class MailRelayHostedServiceTests {
         MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
         var service = new RabbitMqMailRelayBootstrapHostedService(
             CreateBroker(options),
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource();
         if (cancelBeforeDelay) {
@@ -503,7 +504,7 @@ public sealed class MailRelayHostedServiceTests {
     public async Task RabbitMqConsumer_WhenStoppingRunConsumer_CatchesCancellationAndCancelsOnlyOpenChannel(bool channelIsOpen) {
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
-            Microsoft.Extensions.Options.Options.Create(CreateRabbitOptions()),
+            MsOptions.Create(CreateRabbitOptions()),
             CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
             store,
             CreateProcessor(store),
@@ -525,7 +526,7 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     private static RabbitMqMailRelayBroker CreateBroker(MailRelayBrokerOptions options) =>
-        new(Microsoft.Extensions.Options.Options.Create(options), NullLogger<RabbitMqMailRelayBroker>.Instance);
+        new(MsOptions.Create(options), NullLogger<RabbitMqMailRelayBroker>.Instance);
 
     private static MailRelayBrokerOptions CreateRabbitOptions(int port = 5672, int connectionRetryDelaySeconds = 5) =>
         new() {

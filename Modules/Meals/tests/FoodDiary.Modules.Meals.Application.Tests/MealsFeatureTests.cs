@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -201,7 +202,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            imageAccess ?? FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            imageAccess ?? AllowImageAssetAccessService.Instance);
 
     private static MealProjectionReadModel ToMealProjectionReadModel(Meal meal) =>
         new(
@@ -346,9 +347,9 @@ public partial class MealsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+        public Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
             UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+            Task.FromResult<IReadOnlyList<MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
@@ -437,9 +438,9 @@ public partial class MealsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+        public Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
             UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+            Task.FromResult<IReadOnlyList<MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
@@ -528,9 +529,9 @@ public partial class MealsFeatureTests {
             MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+        public Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
             UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+            Task.FromResult<IReadOnlyList<MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,
@@ -622,9 +623,9 @@ public partial class MealsFeatureTests {
             return Task.FromResult((_items, totalItems));
         }
 
-        public Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+        public Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
             UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>>([]);
+            Task.FromResult<IReadOnlyList<MealDaySummary>>([]);
 
         public Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
             UserId userId,

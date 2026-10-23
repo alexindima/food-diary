@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -11,7 +12,7 @@ internal static class ContextRoutingRetirementEvaluationRunner {
         WriteIndented = true,
     };
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public static async Task RunAsync(
         WikiQueryService queries,
         ContextRoutingTelemetryStore routingStore,

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Entities.Tracking;
+using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
@@ -51,8 +53,8 @@ internal sealed class UserContextService(
     }
 
     private static UserDesiredWeightModel ToDesiredWeightModel(User user) {
-        FoodDiary.Modules.Users.Domain.Entities.Tracking.WeightGoal? goal = user.WeightGoals.SingleOrDefault(
-            item => item.Status == FoodDiary.Modules.Users.Domain.Enums.WeightGoalStatus.Active);
+        WeightGoal? goal = user.WeightGoals.SingleOrDefault(
+            item => item.Status == WeightGoalStatus.Active);
         return new UserDesiredWeightModel(user.DesiredWeightKg, goal?.StartWeightKg, goal?.StartedAtUtc);
     }
 
@@ -75,8 +77,8 @@ internal sealed class UserContextService(
     }
 
     private static UserDesiredWaistModel ToDesiredWaistModel(User user) {
-        FoodDiary.Modules.Users.Domain.Entities.Tracking.WaistGoal? goal = user.WaistGoals.SingleOrDefault(
-            item => item.Status == FoodDiary.Modules.Users.Domain.Enums.WaistGoalStatus.Active);
+        WaistGoal? goal = user.WaistGoals.SingleOrDefault(
+            item => item.Status == WaistGoalStatus.Active);
         return new UserDesiredWaistModel(user.DesiredWaistCm, goal?.StartWaistCm, goal?.StartedAtUtc);
     }
 

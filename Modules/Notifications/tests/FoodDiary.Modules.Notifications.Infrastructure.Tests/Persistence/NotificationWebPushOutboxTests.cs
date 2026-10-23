@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure.Options;
@@ -37,10 +38,10 @@ public sealed class NotificationWebPushOutboxTests {
         renderer.RenderFromPayload(notification.Type, notification.PayloadJson, "en").Returns(new NotificationText("Test", "Body"));
         var client = new PartiallyFailingPushClient();
         var sender = new WebPushNotificationSender(audience, renderer,
-            Microsoft.Extensions.Options.Options.Create(new WebPushOptions { Enabled = true, Subject = "https://example.com", PublicKey = "public", PrivateKey = "private" }),
+            MsOptions.Create(new WebPushOptions { Enabled = true, Subject = "https://example.com", PublicKey = "public", PrivateKey = "private" }),
             client, time, NullLogger<WebPushNotificationSender>.Instance);
         var processor = new NotificationWebPushOutboxProcessor(context, context.NotificationWebPushOutbox, sender,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()), time, NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+            MsOptions.Create(new OutboxProcessingOptions()), time, NullLogger<NotificationWebPushOutboxProcessor>.Instance);
         Assert.Equal(0, await processor.ProcessDueAsync(10));
         NotificationWebPushOutboxMessage checkpoint = await context.NotificationWebPushOutbox.AsNoTracking().SingleAsync();
         Assert.Null(checkpoint.ProcessedOnUtc);
@@ -84,7 +85,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context, context.NotificationWebPushOutbox,
             sender,
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -106,7 +107,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context, context.NotificationWebPushOutbox,
             new ThrowingWebPushNotificationSender(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -134,7 +135,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context, context.NotificationWebPushOutbox,
             new ThrowingWebPushNotificationSender(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -156,7 +157,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context, context.NotificationWebPushOutbox,
             new RecordingWebPushNotificationSender(),
-            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            MsOptions.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -248,7 +249,7 @@ public sealed class NotificationWebPushOutboxTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingWebPushNotificationSender : IWebPushNotificationSender {
-        public List<FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids.NotificationId> NotificationIds { get; } = [];
+        public List<NotificationId> NotificationIds { get; } = [];
 
         public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
             NotificationIds.Add(notification.Id);

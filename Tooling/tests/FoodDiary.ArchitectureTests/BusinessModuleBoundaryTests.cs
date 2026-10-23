@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -84,7 +85,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
             .Where(static entry => entry.line.Contains("FoodDiary.Application.Users.Models", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references the legacy Users model namespace")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references the legacy Users model namespace")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -100,7 +101,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
             .Where(static entry => entry.line.Contains("IUserContextService", StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references internal Users aggregate access")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references internal Users aggregate access")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -137,7 +138,7 @@ public sealed class BusinessModuleBoundaryTests {
                 .Select((line, index) => new { path, line, index }))
             .SelectMany(entry => forbiddenReferences
                 .Where(entry.line.Contains)
-                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references {reference}"))
+                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references {reference}"))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -235,7 +236,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(static entry => !entry.line.Contains("InternalsVisibleTo(", StringComparison.Ordinal) &&
                 (entry.line.Contains("FoodDiary.Application.Users.", StringComparison.Ordinal) ||
                  entry.line.Contains("FoodDiary.Modules.Users.Application.", StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references internal Users implementation namespace")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references internal Users implementation namespace")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -248,7 +249,7 @@ public sealed class BusinessModuleBoundaryTests {
                 .Select((line, index) => new { path, line, index }))
             .SelectMany(entry => references
                 .Where(entry.line.Contains)
-                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references {reference}"))
+                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} references {reference}"))
             .Order(StringComparer.Ordinal)];
 
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
@@ -392,7 +393,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !ApprovedFastingApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -410,7 +411,7 @@ public sealed class BusinessModuleBoundaryTests {
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Fasting.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Contracts.Common", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Contracts.Common.", StringComparison.Ordinal))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -427,7 +428,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !ApprovedNotificationsApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -447,7 +448,7 @@ public sealed class BusinessModuleBoundaryTests {
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Notifications.", StringComparison.Ordinal) &&
                                  !dependency.Namespace.Equals("FoodDiary.Application.Contracts.Common", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Contracts.Common.", StringComparison.Ordinal))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references foreign feature contract {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -476,7 +477,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenRepositoryContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Notifications-owned persistence repository; use a semantic Notifications API")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a Notifications-owned persistence repository; use a semantic Notifications API")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -544,7 +545,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Fasting-owned repository; use a semantic Fasting API")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a Fasting-owned repository; use a semantic Fasting API")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -579,7 +580,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !ApprovedBillingApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -609,7 +610,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Billing-owned repository; use a semantic Billing API")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a Billing-owned repository; use a semantic Billing API")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -669,7 +670,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !approvedDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -696,7 +697,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a {ownerModule}-owned aggregate repository; use its lookup/access/read service API")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a {ownerModule}-owned aggregate repository; use its lookup/access/read service API")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -744,7 +745,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !ApprovedMealsApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -770,7 +771,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Meal-owned Meal repository; use a semantic Meal read capability")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a Meal-owned Meal repository; use a semantic Meal read capability")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -792,7 +793,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a RecentItems repository; use IRecentItemUsageReadService or IRecentItemUsageRecorder")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a RecentItems repository; use IRecentItemUsageReadService or IRecentItemUsageRecorder")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -829,7 +830,7 @@ public sealed class BusinessModuleBoundaryTests {
             .Where(dependency => !approvedDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
-            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
+            .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -857,7 +858,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Users-owned repository; use a narrow Users-owned capability")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a Users-owned repository; use a narrow Users-owned capability")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -1154,7 +1155,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a {ownerModule}-owned repository; {guidance}")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(CultureInfo.InvariantCulture)} acquires a {ownerModule}-owned repository; {guidance}")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

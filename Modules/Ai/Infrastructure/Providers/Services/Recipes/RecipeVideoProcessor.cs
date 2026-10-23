@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Buffers.Binary;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -172,7 +173,7 @@ public sealed partial class RecipeVideoProcessor(
         var start = new ProcessStartInfo(options.Value.FfmpegPath) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true };
         string[] arguments = ["-nostdin", "-hide_banner", "-v", "error", "-protocol_whitelist", "file,pipe", "-f", format, "-i", input,
             "-map", "0:a:0", "-vn", "-sn", "-dn", "-map_metadata", "-1", "-map_chapters", "-1", "-ac", "1", "-ar", "16000",
-            "-c:a", "pcm_s16le", "-threads", "2", "-filter_threads", "1", "-t", "301", "-fs", MaximumAudioBytes.ToString(System.Globalization.CultureInfo.InvariantCulture), output];
+            "-c:a", "pcm_s16le", "-threads", "2", "-filter_threads", "1", "-t", "301", "-fs", MaximumAudioBytes.ToString(CultureInfo.InvariantCulture), output];
         foreach (string argument in arguments) {
             start.ArgumentList.Add(argument);
         }

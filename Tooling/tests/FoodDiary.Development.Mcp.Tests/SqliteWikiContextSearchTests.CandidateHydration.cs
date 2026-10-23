@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Collections;
 using System.Reflection;
 using System.Text.Json;
@@ -24,9 +25,9 @@ public sealed partial class SqliteWikiContextSearchTests {
         await using SqliteCommand insert = connection.CreateCommand();
         insert.CommandText = "INSERT INTO context_search VALUES ('code',$key,$path,$key,'csharp','Star Orchard',$body);";
         for (int index = 0; index < 160; index++) {
-            string path = index < 140 ? "Area/Repeated.cs" : "Area/Item" + index.ToString("000", System.Globalization.CultureInfo.InvariantCulture) + ".cs";
+            string path = index < 140 ? "Area/Repeated.cs" : "Area/Item" + index.ToString("000", CultureInfo.InvariantCulture) + ".cs";
             insert.Parameters.Clear();
-            insert.Parameters.AddWithValue("$key", index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            insert.Parameters.AddWithValue("$key", index.ToString(CultureInfo.InvariantCulture));
             insert.Parameters.AddWithValue("$path", path);
             insert.Parameters.AddWithValue("$body", "star orchard " + new string('x', 4096));
             await insert.ExecuteNonQueryAsync();

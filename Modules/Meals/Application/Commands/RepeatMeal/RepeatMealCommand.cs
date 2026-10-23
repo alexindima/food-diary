@@ -1,3 +1,4 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Meals.Service.Contracts.Models;
@@ -9,5 +10,5 @@ public record RepeatMealCommand(
     Guid MealId,
     DateTime TargetDate,
     string? MealType) : ICommand<Result<MealModel>>, IUserRequest, IIdempotentAtomicCommand {
-    public FoodDiary.Application.Contracts.Common.Abstractions.Persistence.AtomicOperation? Operation { get; init; }
+    public AtomicOperation? Operation { get; init; }
 }

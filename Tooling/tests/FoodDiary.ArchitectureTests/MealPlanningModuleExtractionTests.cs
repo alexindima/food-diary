@@ -1,10 +1,12 @@
+using FoodDiary.Modules.MealPlanning.Domain.Enums;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningModuleExtractionTests {
     [Fact]
     public void DietType_IsOwnedOnlyByMealPlanningDomain() {
-        Type enumType = typeof(FoodDiary.Modules.MealPlanning.Domain.Enums.DietType);
+        Type enumType = typeof(DietType);
         Assert.Equal("FoodDiary.Modules.MealPlanning.Domain", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Modules.MealPlanning.Domain.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Enums", "DietType.cs")));

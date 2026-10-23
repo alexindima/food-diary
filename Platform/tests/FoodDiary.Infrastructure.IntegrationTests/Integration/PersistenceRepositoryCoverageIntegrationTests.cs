@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
 using Microsoft.Extensions.Options;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
@@ -1226,7 +1227,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await repository.GetByIdAsync(asset.Id));
         Assert.True(await repository.IsAssetInUseAsync(usedAsset.Id));
         Assert.False(await repository.IsAssetInUseAsync(asset.Id));
-        Assert.Contains(await new FoodDiary.ReadModel.Composition.Images.ImageAssetUsageQuery(context).GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), batchSize: 10), item => item.Id == asset.Id);
+        Assert.Contains(await new ImageAssetUsageQuery(context).GetUnusedCandidatesOlderThanAsync(DateTime.UtcNow.AddDays(1), batchSize: 10), item => item.Id == asset.Id);
 
         await repository.DeleteAsync(asset);
         await context.SaveChangesAsync();
@@ -1344,9 +1345,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             now));
         await context.SaveChangesAsync();
 
-        (IReadOnlyList<global::FoodDiary.Modules.Identity.Contracts.Authentication.Models.UserLoginEventReadModel> items, int total) =
+        (IReadOnlyList<UserLoginEventReadModel> items, int total) =
             await repository.GetPagedAsync(page: 0, limit: 500, userId.Value, search: "Chrome");
-        IReadOnlyList<global::FoodDiary.Modules.Identity.Contracts.Authentication.Models.UserLoginDeviceSummaryModel> summary =
+        IReadOnlyList<UserLoginDeviceSummaryModel> summary =
             await repository.GetDeviceSummaryAsync(now.AddDays(-3), now.AddDays(1));
         int deletedNone = await repository.DeleteOlderThanAsync(now.AddDays(-10), batchSize: 0);
         int deleted = await repository.DeleteOlderThanAsync(now.AddDays(-1), batchSize: 0);
@@ -1835,7 +1836,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId userId,
         FastingPlanId planId,
         DateTime now) {
-        var occurrenceRepository = new FastingOccurrenceRepository(context.FastingOccurrences, new FoodDiary.Modules.Users.Infrastructure.Persistence.Users.UserRelatedDataReadService(context.Users));
+        var occurrenceRepository = new FastingOccurrenceRepository(context.FastingOccurrences, new UserRelatedDataReadService(context.Users));
         var active = FastingOccurrence.Create(planId, userId, FastingOccurrenceKind.FastingWindow, now.AddHours(-4), 1, targetHours: 16);
         var scheduled = FastingOccurrence.Schedule(planId, userId, FastingOccurrenceKind.EatingWindow, now.AddHours(20), 2, targetHours: 8);
         await occurrenceRepository.AddAsync(active);

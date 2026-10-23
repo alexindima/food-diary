@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -49,7 +50,7 @@ public sealed class ExpressionTreeSpanOverloadAnalyzer : DiagnosticAnalyzer {
     private static bool IsInsideExpressionTree(
         InvocationExpressionSyntax invocation,
         SemanticModel semanticModel,
-        System.Threading.CancellationToken cancellationToken) {
+        CancellationToken cancellationToken) {
         foreach (AnonymousFunctionExpressionSyntax lambda in invocation.Ancestors().OfType<AnonymousFunctionExpressionSyntax>()) {
             ITypeSymbol? convertedType = semanticModel.GetTypeInfo(lambda, cancellationToken).ConvertedType;
             if (convertedType is INamedTypeSymbol {

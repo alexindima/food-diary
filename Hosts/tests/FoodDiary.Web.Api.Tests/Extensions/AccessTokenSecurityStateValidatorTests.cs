@@ -140,8 +140,8 @@ public sealed class AccessTokenSecurityStateValidatorTests {
         reader.IsCurrentAsync(userId, 3, Arg.Any<CancellationToken>()).Returns(returnThis: true);
         var principal = new ClaimsPrincipal(new ClaimsIdentity([
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()), new Claim(JwtSecurityClaimNames.SecurityVersion, "3"),
-            new Claim(FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.JwtImpersonationClaimNames.IsImpersonation, "true"),
-            new Claim(FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.JwtImpersonationClaimNames.ActorUserId, Guid.NewGuid().ToString()),
+            new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"),
+            new Claim(JwtImpersonationClaimNames.ActorUserId, Guid.NewGuid().ToString()),
         ]));
         IUserAccessTokenSessionReader sessions = Substitute.For<IUserAccessTokenSessionReader>();
         Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(principal, reader, sessions, CancellationToken.None));

@@ -16,7 +16,7 @@ public static class ToolExecution {
         Func<Task<T>> operation,
         CancellationToken cancellationToken) {
         DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken).ConfigureAwait(false);
-        return System.Text.Json.JsonSerializer.Serialize(result, JsonOptions);
+        return JsonSerializer.Serialize(result, JsonOptions);
     }
 
     public static async Task<DevelopmentMcpResult<T>> RunAsync<T>(

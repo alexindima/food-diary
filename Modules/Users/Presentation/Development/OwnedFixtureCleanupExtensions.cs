@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Data.Common;
 using System.Text.Json;
 using FoodDiary.Mediator;
@@ -38,7 +39,7 @@ public static class OwnedFixtureCleanupExtensions {
                 !string.Equals(Path.GetFullPath(manifest.RootElement.GetProperty("checkout").GetString()!), Path.GetFullPath(checkout), StringComparison.OrdinalIgnoreCase) ||
                 manifest.RootElement.GetProperty("runtimeId").GetGuid() != runtime.RootElement.GetProperty("id").GetGuid() ||
                 !string.Equals(database["Host"].ToString(), "127.0.0.1", StringComparison.Ordinal) || !string.Equals(database["Database"].ToString(), "fooddiary_task", StringComparison.Ordinal) ||
-                !string.Equals(database["Port"].ToString(), runtime.RootElement.GetProperty("ports").GetProperty("postgres").GetInt32().ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal)) {
+                !string.Equals(database["Port"].ToString(), runtime.RootElement.GetProperty("ports").GetProperty("postgres").GetInt32().ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)) {
                 throw new InvalidOperationException("Fixture manifest, checkout and database ownership must match.");
             }
             Guid[] ids = [.. manifest.RootElement.GetProperty("accounts").EnumerateObject().Select(account => account.Value.GetProperty("id").GetGuid())];

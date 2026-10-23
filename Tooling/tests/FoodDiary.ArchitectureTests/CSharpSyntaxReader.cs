@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -102,7 +103,7 @@ internal static class CSharpSyntaxReader {
         }
 
         public string Format(string repositoryRoot) =>
-            string.Create(CultureInfo.InvariantCulture, $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})");
+            string.Create(CultureInfo.InvariantCulture, $"{IOPath.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})");
     }
 
     [ExcludeFromCodeCoverage]

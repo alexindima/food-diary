@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Tests;
@@ -37,7 +38,7 @@ public sealed class WikiQueryCacheTests {
 
         WikiCommandResult result = CreateResult("{}");
         for (int index = 0; index < 129; index++) {
-            cache.Set(index.ToString(System.Globalization.CultureInfo.InvariantCulture), "brief", [], result);
+            cache.Set(index.ToString(CultureInfo.InvariantCulture), "brief", [], result);
         }
 
         Assert.Equal(128, cache.CaptureMetrics().QueryCache.Entries);
@@ -75,7 +76,7 @@ public sealed class WikiQueryCacheTests {
         cache.Set("oldest-live", "brief", [], result);
         cache.Set("reinserted", "brief", [], result);
         for (int index = 0; index < 127; index++) {
-            cache.Set(index.ToString(System.Globalization.CultureInfo.InvariantCulture), "brief", [], result);
+            cache.Set(index.ToString(CultureInfo.InvariantCulture), "brief", [], result);
         }
 
         Assert.Multiple(
@@ -90,10 +91,10 @@ public sealed class WikiQueryCacheTests {
         WikiQueryCache cache = new(TimeProvider.System, new WikiRuntimeTelemetry());
 
         Parallel.For(0, 16, worker => {
-            string snapshot = worker.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string snapshot = worker.ToString(CultureInfo.InvariantCulture);
             WikiCommandResult expected = CreateResult(snapshot);
             for (int iteration = 0; iteration < 64; iteration++) {
-                string argument = (iteration % 8).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                string argument = (iteration % 8).ToString(CultureInfo.InvariantCulture);
                 cache.Set(snapshot, "brief", [argument], expected);
                 Assert.True(cache.TryGet(snapshot, "brief", [argument], out WikiCommandResult? actual));
                 Assert.Same(expected, actual);

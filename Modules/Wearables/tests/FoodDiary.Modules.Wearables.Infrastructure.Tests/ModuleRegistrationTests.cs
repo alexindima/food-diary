@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Wearables.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 
@@ -11,7 +12,7 @@ public sealed class ModuleRegistrationTests {
     [Fact]
     public void AddWearablesModule_ResolvesAllRepositoryAliasesToTheirOwnedScopedRepository() {
         var services = new ServiceCollection();
-        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddScoped<IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddWearablesModule();
 

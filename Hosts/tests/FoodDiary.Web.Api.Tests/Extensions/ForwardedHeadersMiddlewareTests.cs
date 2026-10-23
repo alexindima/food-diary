@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Builder;
+using MsOptions = Microsoft.Extensions.Options.Options;
+using NetIPNetwork = System.Net.IPNetwork;
 using System.Net;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Http;
@@ -10,14 +13,14 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 public sealed class ForwardedHeadersMiddlewareTests {
     [Fact]
     public async Task Invoke_WithKnownProxy_UsesForwardedForAndProto() {
-        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
-            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") },
+            KnownProxies = { IPAddress.Parse("10.0.0.10") },
         });
 
         var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("10.0.0.10");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("10.0.0.10");
         httpContext.Request.Scheme = "http";
         httpContext.Request.Headers["X-Forwarded-For"] = "203.0.113.10";
         httpContext.Request.Headers["X-Forwarded-Proto"] = "https";
@@ -30,14 +33,14 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithUnknownProxy_IgnoresForwardedHeaders() {
-        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
-            KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") },
+            KnownProxies = { IPAddress.Parse("10.0.0.10") },
         });
 
         var httpContext = new DefaultHttpContext();
-        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+        httpContext.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
         httpContext.Request.Scheme = "http";
         httpContext.Request.Headers["X-Forwarded-For"] = "203.0.113.10";
         httpContext.Request.Headers["X-Forwarded-Proto"] = "https";
@@ -50,7 +53,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithKnownProxyAndAllowedForwardedHost_UsesForwardedHost() {
-        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedHost,
             ForwardLimit = 1,
             KnownProxies = { IPAddress.Parse("10.0.0.10") },
@@ -68,7 +71,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithKnownProxyAndDisallowedForwardedHost_IgnoresForwardedHost() {
-        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedHost,
             ForwardLimit = 1,
             KnownProxies = { IPAddress.Parse("10.0.0.10") },
@@ -86,13 +89,13 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public void Configure_WithKnownProxiesAndNetworks_MapsTrustBoundaries() {
-        var setup = new ForwardedHeadersOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiForwardedHeadersOptions {
+        var setup = new ForwardedHeadersOptionsSetup(MsOptions.Create(new ApiForwardedHeadersOptions {
             ForwardLimit = 2,
             KnownProxies = ["10.0.0.10"],
             KnownNetworks = ["10.0.0.0/24", "2001:db8::/32"],
             AllowedHosts = ["fooddiary.club"],
         }));
-        var options = new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions();
+        var options = new ForwardedHeadersOptions();
 
         setup.Configure(options);
 
@@ -105,10 +108,10 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public void Configure_WithoutExplicitTrustBoundary_PreservesFrameworkLoopbackDefaults() {
-        var setup = new ForwardedHeadersOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiForwardedHeadersOptions()));
-        var options = new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions();
+        var setup = new ForwardedHeadersOptionsSetup(MsOptions.Create(new ApiForwardedHeadersOptions()));
+        var options = new ForwardedHeadersOptions();
         IPAddress[] defaultProxies = [.. options.KnownProxies];
-        System.Net.IPNetwork[] defaultNetworks = [.. options.KnownIPNetworks];
+        NetIPNetwork[] defaultNetworks = [.. options.KnownIPNetworks];
 
         setup.Configure(options);
 
@@ -119,7 +122,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithDefaultSetupAndLoopbackProxy_UsesForwardedHeaders() {
-        Microsoft.AspNetCore.Builder.ForwardedHeadersOptions options = CreateDefaultConfiguredOptions();
+        ForwardedHeadersOptions options = CreateDefaultConfiguredOptions();
         ForwardedHeadersMiddleware middleware = CreateMiddleware(options);
         var httpContext = new DefaultHttpContext();
         httpContext.Connection.RemoteIpAddress = IPAddress.Loopback;
@@ -136,7 +139,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithDefaultSetupAndUnknownProxy_IgnoresForwardedHeaders() {
-        Microsoft.AspNetCore.Builder.ForwardedHeadersOptions options = CreateDefaultConfiguredOptions();
+        ForwardedHeadersOptions options = CreateDefaultConfiguredOptions();
         ForwardedHeadersMiddleware middleware = CreateMiddleware(options);
         var httpContext = new DefaultHttpContext();
         httpContext.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
@@ -193,16 +196,16 @@ public sealed class ForwardedHeadersMiddlewareTests {
         Assert.Equal(expected, valid);
     }
 
-    private static ForwardedHeadersMiddleware CreateMiddleware(Microsoft.AspNetCore.Builder.ForwardedHeadersOptions options) {
+    private static ForwardedHeadersMiddleware CreateMiddleware(ForwardedHeadersOptions options) {
         return new ForwardedHeadersMiddleware(
             static _ => Task.CompletedTask,
             NullLoggerFactory.Instance,
-            Microsoft.Extensions.Options.Options.Create(options));
+            MsOptions.Create(options));
     }
 
-    private static Microsoft.AspNetCore.Builder.ForwardedHeadersOptions CreateDefaultConfiguredOptions() {
-        var options = new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions();
-        new ForwardedHeadersOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiForwardedHeadersOptions()))
+    private static ForwardedHeadersOptions CreateDefaultConfiguredOptions() {
+        var options = new ForwardedHeadersOptions();
+        new ForwardedHeadersOptionsSetup(MsOptions.Create(new ApiForwardedHeadersOptions()))
             .Configure(options);
         return options;
     }

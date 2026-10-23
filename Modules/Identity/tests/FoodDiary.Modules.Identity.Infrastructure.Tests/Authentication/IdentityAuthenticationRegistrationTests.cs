@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -97,7 +98,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
             () => Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IPasswordHasher)));
     }
 
-    private static IOptions<JwtOptions> CreateOptions() => Microsoft.Extensions.Options.Options.Create(new JwtOptions {
+    private static IOptions<JwtOptions> CreateOptions() => MsOptions.Create(new JwtOptions {
         SecretKey = "identity-adapter-test-key-only-123456789",
         Issuer = "FoodDiaryTests",
         Audience = "FoodDiaryTestClients",

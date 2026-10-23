@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.PostgreSql;
 using System.Runtime.ExceptionServices;
 using FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ internal static class ModuleContextSaveCoordinator {
                 IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(token).ConfigureAwait(false);
                 await using (transaction.ConfigureAwait(false)) {
                     await SaveInTransactionAsync(session, participants, transaction, logger, token).ConfigureAwait(false);
-                    await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, token).ConfigureAwait(false);
+                    await VerifiedTransactionCommit.CommitAsync(transaction, token).ConfigureAwait(false);
                 }
             }, cancellationToken).ConfigureAwait(false);
         }

@@ -28,7 +28,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
         builder.OwnsMany(e => e.Images, images => {
             images.ToTable("ProductImages");
             images.WithOwner().HasForeignKey("ProductId");
-            images.Property<FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId>("ProductId").HasConversion(id => id.Value, value => new FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId(value));
+            images.Property<ProductId>("ProductId").HasConversion(id => id.Value, value => new ProductId(value));
             images.Property(e => e.ImageAssetId).HasConversion(id => id.Value, value => new ImageAssetId(value));
             images.Property(e => e.ImageUrl).HasMaxLength(Product.ImageUrlMaxLength);
             images.HasKey("ProductId", nameof(ProductImage.ImageAssetId));

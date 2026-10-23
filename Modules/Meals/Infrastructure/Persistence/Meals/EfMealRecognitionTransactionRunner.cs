@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Modules.Meals.Application.Abstractions.Common;
@@ -45,7 +46,7 @@ public sealed class EfMealRecognitionTransactionRunner(
         var command = new NpgsqlCommand("SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             postgresTransaction.Connection, postgresTransaction);
         await using (command.ConfigureAwait(false)) {
-            command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, $"meal-recognition:{userId.Value:N}");
+            command.Parameters.AddWithValue("serialization_key", NpgsqlDbType.Text, $"meal-recognition:{userId.Value:N}");
             await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }

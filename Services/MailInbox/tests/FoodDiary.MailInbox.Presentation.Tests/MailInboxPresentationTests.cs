@@ -1,3 +1,4 @@
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Globalization;
 using FoodDiary.Results;
 using FoodDiary.MailInbox.Application.Common.Results;
@@ -386,7 +387,7 @@ public sealed partial class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyIsMissing_ReturnsUnauthorized() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+        var filter = new MailInboxApiKeyAuthorizationFilter(MsOptions.Create(new MailInboxHttpOptions {
             MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
@@ -400,7 +401,7 @@ public sealed partial class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxApiKeyAuthorizationFilter_WhenApiKeyMatches_AllowsRequest() {
-        var filter = new MailInboxApiKeyAuthorizationFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+        var filter = new MailInboxApiKeyAuthorizationFilter(MsOptions.Create(new MailInboxHttpOptions {
             MetadataApiKey = "secret",
         }));
         AuthorizationFilterContext context = CreateAuthorizationContext();
@@ -575,7 +576,7 @@ public sealed partial class MailInboxPresentationTests {
     private static MailInboxHealthController CreateHealthController(ISender sender) =>
         new(
             sender,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = "0123456789abcdef0123456789abcdef",
             })) {
             ControllerContext = CreateControllerContext(),
@@ -584,7 +585,7 @@ public sealed partial class MailInboxPresentationTests {
     private static MailInboxMessagesController CreateMessagesController(ISender sender) =>
         new(
             sender,
-            Microsoft.Extensions.Options.Options.Create(new MailInboxHttpOptions {
+            MsOptions.Create(new MailInboxHttpOptions {
                 MetadataApiKey = "0123456789abcdef0123456789abcdef",
             })) {
             ControllerContext = CreateControllerContext(),

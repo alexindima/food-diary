@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.ReadModel.Composition.Images;
 using FoodDiary.Modules.Products.Infrastructure;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -128,8 +130,8 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
         await using ServiceProvider provider = CreateProvider(connection);
         (User user, Product product) = await SeedAsync(provider);
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
-        var front = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "gallery/front", "https://example.test/front.jpg");
-        var label = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(user.Id, "gallery/label", "https://example.test/label.jpg");
+        var front = ImageAsset.Create(user.Id, "gallery/front", "https://example.test/front.jpg");
+        var label = ImageAsset.Create(user.Id, "gallery/label", "https://example.test/label.jpg");
         shared.ImageAssets.AddRange(front, label);
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         product.ReplaceImages([new ProductImage(front.Id, front.Url, 0), new ProductImage(label.Id, label.Url, 1)]);
@@ -146,7 +148,7 @@ public sealed class SharedProductsContextIntegrationTests(PostgresDatabaseFixtur
         Product saved = await database.Products.AsNoTracking().SingleAsync(item => item.Id == product.Id);
         Assert.Equal(label.Id, saved.ImageAssetId);
         Assert.Equal(label.Id, saved.Images.OrderBy(image => image.Position).First().ImageAssetId);
-        var usage = new FoodDiary.ReadModel.Composition.Images.ImageAssetUsageQuery(database);
+        var usage = new ImageAssetUsageQuery(database);
         Assert.True(await usage.IsAssetInUseAsync(front.Id, CancellationToken.None));
         Assert.True(await usage.IsAssetInUseAsync(label.Id, CancellationToken.None));
     }

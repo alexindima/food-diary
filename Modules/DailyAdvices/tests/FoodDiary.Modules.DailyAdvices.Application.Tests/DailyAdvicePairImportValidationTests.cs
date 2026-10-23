@@ -36,7 +36,7 @@ public sealed class DailyAdvicePairImportValidationTests {
         Result<DailyAdviceImportModel> result = await new ImportDailyAdvicePairsCommandHandler(repository)
             .Handle(new ImportDailyAdvicePairsCommand(items), CancellationToken.None);
         ResultAssert.Failure(result);
-        Assert.Equal(FoodDiary.Results.ErrorKind.Validation, result.Error.Kind);
+        Assert.Equal(ErrorKind.Validation, result.Error.Kind);
         Assert.Empty(repository.ReceivedCalls());
     }
 
@@ -84,7 +84,7 @@ public sealed class DailyAdvicePairImportValidationTests {
         Result<DailyAdviceGroupModel> result = await new UpdateDailyAdviceGroupCommandHandler(repository)
             .Handle(new UpdateDailyAdviceGroupCommand(Guid.NewGuid(), "Russian", "English", 1, Tag: null), CancellationToken.None);
         ResultAssert.Failure(result);
-        Assert.Equal(FoodDiary.Results.ErrorKind.NotFound, result.Error.Kind);
+        Assert.Equal(ErrorKind.NotFound, result.Error.Kind);
         await repository.DidNotReceiveWithAnyArgs().AddRangeAsync(default!, default);
     }
 }

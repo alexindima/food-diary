@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
 
 public sealed class TelegramOidcOptions {
@@ -14,15 +16,15 @@ public sealed class TelegramOidcOptions {
         }
         string[] tokenParts = auth.BotToken.Split(':', 2);
         return tokenParts.Length == 2 && !string.IsNullOrWhiteSpace(tokenParts[1]) &&
-               long.TryParse(tokenParts[0], System.Globalization.NumberStyles.None,
-                   System.Globalization.CultureInfo.InvariantCulture, out long botId) && botId > 0 &&
-               long.TryParse(options.ClientId, System.Globalization.NumberStyles.None,
-                   System.Globalization.CultureInfo.InvariantCulture, out long clientId) && clientId == botId;
+               long.TryParse(tokenParts[0], NumberStyles.None,
+                   CultureInfo.InvariantCulture, out long botId) && botId > 0 &&
+               long.TryParse(options.ClientId, NumberStyles.None,
+                   CultureInfo.InvariantCulture, out long clientId) && clientId == botId;
     }
 
     public static bool IsValid(TelegramOidcOptions options) => !options.Enabled ||
-        (long.TryParse(options.ClientId, System.Globalization.NumberStyles.None,
-            System.Globalization.CultureInfo.InvariantCulture, out long clientId) && clientId > 0 &&
+        (long.TryParse(options.ClientId, NumberStyles.None,
+            CultureInfo.InvariantCulture, out long clientId) && clientId > 0 &&
          !string.IsNullOrWhiteSpace(options.ClientSecret) &&
          Uri.TryCreate(options.RedirectUri, UriKind.Absolute, out Uri? redirect) &&
          string.Equals(redirect.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal) &&

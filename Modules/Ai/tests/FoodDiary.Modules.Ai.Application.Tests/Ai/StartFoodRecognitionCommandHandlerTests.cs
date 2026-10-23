@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Models;
+using FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions;
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -73,8 +75,8 @@ public sealed class StartFoodRecognitionCommandHandlerTests {
         IReadOnlyList<FoodRecognitionJobModel> jobs = [new(Guid.NewGuid(), owner, Guid.NewGuid(), "https://example.com/image", Description: null, "Queued", DateTime.UtcNow, DateTime.UtcNow)];
         store.ListAsync(new UserId(owner), 2, 20, isProductLabel: true, cancellation.Token).Returns((jobs, 21));
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<FoodRecognitionJobModel>> result = await new FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions.ListFoodRecognitionsQueryHandler(store)
-            .Handle(new FoodDiary.Modules.Ai.Application.Queries.ListFoodRecognitions.ListFoodRecognitionsQuery(owner, 2, 20, IsProductLabel: true), cancellation.Token);
+        Result<PagedResponse<FoodRecognitionJobModel>> result = await new ListFoodRecognitionsQueryHandler(store)
+            .Handle(new ListFoodRecognitionsQuery(owner, 2, 20, IsProductLabel: true), cancellation.Token);
 
         Assert.True(result.IsSuccess);
         Assert.Same(jobs, result.Value.Data);

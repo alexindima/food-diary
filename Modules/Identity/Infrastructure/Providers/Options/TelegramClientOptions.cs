@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
@@ -18,8 +19,8 @@ public sealed class TelegramClientOptions : ITelegramIdentityPolicy, ITelegramOp
         }
         string[] tokenParts = auth.BotToken.Split(':', 2);
         return tokenParts.Length == 2 && !string.IsNullOrWhiteSpace(tokenParts[1]) &&
-               long.TryParse(tokenParts[0], System.Globalization.NumberStyles.None,
-                   System.Globalization.CultureInfo.InvariantCulture, out long tokenBotId) && tokenBotId > 0 &&
+               long.TryParse(tokenParts[0], NumberStyles.None,
+                   CultureInfo.InvariantCulture, out long tokenBotId) && tokenBotId > 0 &&
                (!options.OperationsEnabled || options.BotId == tokenBotId);
     }
 }

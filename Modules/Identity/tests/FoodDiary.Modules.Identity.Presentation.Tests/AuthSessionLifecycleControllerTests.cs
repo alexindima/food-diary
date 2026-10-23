@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Results;
@@ -46,7 +48,7 @@ public sealed class AuthSessionLifecycleControllerTests {
         var sessionId = Guid.NewGuid();
         IRequest<Result<IReadOnlyList<ActiveSessionModel>>>? sentRequest = null;
         IReadOnlyList<ActiveSessionModel> sessions = [new(
-            new FoodDiary.Modules.Identity.Domain.ValueObjects.Ids.RefreshTokenSessionId(sessionId),
+            new RefreshTokenSessionId(sessionId),
             IsCurrent: true,
             "password",
             "Chrome",
@@ -83,7 +85,7 @@ public sealed class AuthSessionLifecycleControllerTests {
     public async Task Logout_RevokesCookieSessionAndExpiresRefreshCookie() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
-        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
+        services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(
@@ -111,7 +113,7 @@ public sealed class AuthSessionLifecycleControllerTests {
     public async Task Logout_RequestTokenSupportsLegacyClientAndTakesPrecedenceOverCookie() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
-        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
+        services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(

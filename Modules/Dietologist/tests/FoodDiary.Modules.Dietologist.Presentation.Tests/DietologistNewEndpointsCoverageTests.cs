@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.Dietologist.Application.Queries.GetMyRecommendations;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Presentation.Api.Requests;
@@ -106,7 +107,7 @@ public sealed class DietologistNewEndpointsCoverageTests {
             CreateBulkModel(clientId).ToHttpResponse(),
         ];
         foreach (object response in responses) {
-            foreach (System.Reflection.PropertyInfo property in response.GetType().GetProperties()) {
+            foreach (PropertyInfo property in response.GetType().GetProperties()) {
                 _ = property.GetValue(response);
             }
         }

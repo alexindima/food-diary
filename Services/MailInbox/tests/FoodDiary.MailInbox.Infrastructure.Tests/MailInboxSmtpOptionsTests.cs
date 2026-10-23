@@ -1,3 +1,5 @@
+using OpenTelemetry.Trace;
+using System.Net;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Extensions;
@@ -71,7 +73,7 @@ public sealed class MailInboxSmtpOptionsTests {
         object range = rangeType.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static)!
             .Invoke(obj: null, [network])!;
         bool actual = (bool)rangeType.GetMethod("Contains", BindingFlags.Public | BindingFlags.Instance)!
-            .Invoke(range, [System.Net.IPAddress.Parse(address)])!;
+            .Invoke(range, [IPAddress.Parse(address)])!;
 
         Assert.Equal(expected, actual);
     }
@@ -422,7 +424,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
         Assert.IsType<MailInboxEndpointListenerFactory>(provider.GetRequiredService<MailInboxEndpointListenerFactory>());
         Assert.NotNull(provider.GetRequiredService<MeterProvider>());
-        Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Trace.TracerProvider>());
+        Assert.NotNull(provider.GetRequiredService<TracerProvider>());
 
         IHostedService[] hostedServices = [.. provider.GetServices<IHostedService>()];
         Assert.DoesNotContain(hostedServices, static service => service.GetType().Name.Contains("SchemaInitializer", StringComparison.Ordinal));
@@ -440,7 +442,7 @@ public sealed class MailInboxSmtpOptionsTests {
 
         Assert.Multiple(
             () => Assert.Null(provider.GetService<MeterProvider>()),
-            () => Assert.Null(provider.GetService<OpenTelemetry.Trace.TracerProvider>()));
+            () => Assert.Null(provider.GetService<TracerProvider>()));
     }
 
     [Fact]

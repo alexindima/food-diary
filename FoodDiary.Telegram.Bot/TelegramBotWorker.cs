@@ -1,3 +1,7 @@
+using FoodDiary.Telegram.Bot.Api;
+using FoodDiary.Telegram.Bot.Api.Generated.Api;
+using FoodDiary.Telegram.Bot.Api.Generated.Model;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using FoodDiary.Telegram.Bot.Images;
 using FoodDiary.Telegram.Bot.Operations;
@@ -13,7 +17,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace FoodDiary.Telegram.Bot;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class TelegramBotWorker(
     ITelegramBotClient botClient,
     IOptions<TelegramBotOptions> options,
@@ -313,17 +317,17 @@ public sealed class TelegramBotWorker(
         }
 
         using HttpClient client = httpClientFactory.CreateClient(BotOperationClient.ClientName);
-        var sdk = new Api.Generated.Api.BotAuthApi(new Api.BotApiTransport(client, baseUri!));
+        var sdk = new BotAuthApi(new BotApiTransport(client, baseUri!));
         using HttpResponseMessage response = await sdk.AuthenticateAsync("1",
-            new Api.Generated.Model.TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId },
-            new Api.BotApiRequestContext(ApiSecret: _options.ApiSecret), cancellationToken).ConfigureAwait(false);
+            new TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId },
+            new BotApiRequestContext(ApiSecret: _options.ApiSecret), cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode) {
             return null;
         }
 
         await response.Content.LoadIntoBufferAsync(262144, cancellationToken).ConfigureAwait(false);
-        Api.Generated.Model.AuthenticationHttpResponse? authResponse = await response.Content.ReadFromJsonAsync<Api.Generated.Model.AuthenticationHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        AuthenticationHttpResponse? authResponse = await response.Content.ReadFromJsonAsync<AuthenticationHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return authResponse?.AccessToken;
     }
 
@@ -333,13 +337,13 @@ public sealed class TelegramBotWorker(
         }
 
         using HttpClient client = httpClientFactory.CreateClient(BotDiaryClient.ClientName);
-        var request = new Api.Generated.Model.CreateHydrationEntryHttpRequest {
+        var request = new CreateHydrationEntryHttpRequest {
             TimestampUtc = timeProvider.GetUtcNow().UtcDateTime,
             AmountMl = amountMl,
         };
-        var sdk = new Api.Generated.Api.BotHydrationApi(new Api.BotApiTransport(client, baseUri!));
+        var sdk = new BotHydrationApi(new BotApiTransport(client, baseUri!));
         using HttpResponseMessage response = await sdk.AddWaterAsync("1", Guid.NewGuid().ToString("D"), request,
-            new Api.BotApiRequestContext(accessToken), cancellationToken).ConfigureAwait(false);
+            new BotApiRequestContext(accessToken), cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }
 

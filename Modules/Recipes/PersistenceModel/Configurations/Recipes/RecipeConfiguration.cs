@@ -14,7 +14,7 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
         builder.OwnsMany(e => e.Images, images => {
             images.ToTable("RecipeImages");
             images.WithOwner().HasForeignKey("RecipeId");
-            images.Property<FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId>("RecipeId").HasConversion(id => id.Value, value => new FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId(value));
+            images.Property<RecipeId>("RecipeId").HasConversion(id => id.Value, value => new RecipeId(value));
             images.Property(e => e.ImageAssetId).HasConversion(id => id.Value, value => new ImageAssetId(value));
             images.Property(e => e.ImageUrl).HasMaxLength(Recipe.ImageUrlMaxLength);
             images.HasKey("RecipeId", nameof(RecipeImage.ImageAssetId));

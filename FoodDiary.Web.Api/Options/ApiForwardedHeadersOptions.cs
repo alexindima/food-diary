@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Sockets;
 using System.Globalization;
 using System.Net;
 
 namespace FoodDiary.Web.Api.Options;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ApiForwardedHeadersOptions {
     public const string SectionName = "ForwardedHeaders";
 
@@ -49,7 +51,7 @@ public sealed class ApiForwardedHeadersOptions {
             return false;
         }
 
-        int maxPrefixLength = address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+        int maxPrefixLength = address.AddressFamily == AddressFamily.InterNetwork
             ? 32
             : 128;
 

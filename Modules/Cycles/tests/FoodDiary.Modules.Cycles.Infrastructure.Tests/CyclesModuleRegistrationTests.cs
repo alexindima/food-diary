@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Cycles.Application.Abstractions.Common;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence;
@@ -11,7 +12,7 @@ public sealed class CyclesModuleRegistrationTests {
     [Fact]
     public void AddCyclesModule_RegistersRepositoryAndAllNarrowAliases() {
         var services = new ServiceCollection();
-        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddScoped<IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         services.AddCyclesModule();
 

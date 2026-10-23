@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using Npgsql;
 
 namespace FoodDiary.Persistence.Runtime.Persistence.Locking;
@@ -21,7 +22,7 @@ internal sealed class PostgresAdvisoryLockLease : IAsyncDisposable {
             connectionString,
             "SELECT pg_try_advisory_lock(@lock_key)",
             "SELECT pg_advisory_unlock(@lock_key)",
-            command => command.Parameters.AddWithValue("lock_key", NpgsqlTypes.NpgsqlDbType.Bigint, lockKey),
+            command => command.Parameters.AddWithValue("lock_key", NpgsqlDbType.Bigint, lockKey),
             cancellationToken);
 
     public static Task<PostgresAdvisoryLockLease> AcquireAsync(
@@ -32,7 +33,7 @@ internal sealed class PostgresAdvisoryLockLease : IAsyncDisposable {
             connectionString,
             "SELECT pg_try_advisory_lock(hashtextextended(@serialization_key, 0))",
             "SELECT pg_advisory_unlock(hashtextextended(@serialization_key, 0))",
-            command => command.Parameters.AddWithValue("serialization_key", NpgsqlTypes.NpgsqlDbType.Text, serializationKey),
+            command => command.Parameters.AddWithValue("serialization_key", NpgsqlDbType.Text, serializationKey),
             cancellationToken);
 
     public async ValueTask DisposeAsync() {

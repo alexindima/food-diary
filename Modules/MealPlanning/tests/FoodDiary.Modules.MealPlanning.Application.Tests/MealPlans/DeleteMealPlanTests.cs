@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Modules.MealPlanning.Application.MealPlans.Commands.DeleteMealPlan;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
@@ -82,7 +83,7 @@ public sealed class DeleteMealPlanTests {
 
     [Fact]
     public async Task Validator_RejectsEmptyIdentifiers() {
-        FluentValidation.Results.ValidationResult result = await new DeleteMealPlanCommandValidator().ValidateAsync(new DeleteMealPlanCommand(Guid.Empty, Guid.Empty));
+        ValidationResult result = await new DeleteMealPlanCommandValidator().ValidateAsync(new DeleteMealPlanCommand(Guid.Empty, Guid.Empty));
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "MealPlan.InvalidId", StringComparison.Ordinal));

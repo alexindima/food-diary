@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Data.Common;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
@@ -49,7 +51,7 @@ internal static class MailInboxHostConfiguration {
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     internal static async Task ValidateRuntimeDatabaseRoleAsync(
         IServiceProvider services,
         IConfiguration configuration,
@@ -134,7 +136,7 @@ internal static class MailInboxHostConfiguration {
 
             found = true;
             if (string.IsNullOrWhiteSpace(
-                    Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture))) {
+                    Convert.ToString(value, CultureInfo.InvariantCulture))) {
                 return false;
             }
         }
@@ -149,7 +151,7 @@ internal static class MailInboxHostConfiguration {
     private static bool HasLocalPasswordPlaceholder(DbConnectionStringBuilder builder, string key) =>
         builder.TryGetValue(key, out object? value) &&
         string.Equals(
-            Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)!.Trim(),
+            Convert.ToString(value, CultureInfo.InvariantCulture)!.Trim(),
             LocalDatabasePasswordPlaceholder,
             StringComparison.OrdinalIgnoreCase);
 

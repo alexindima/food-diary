@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Primitives;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.BugTriage.Presentation.Options;
@@ -11,7 +12,7 @@ public sealed class BugTriageAuthorizationFilter(IOptions<BugTriageHttpOptions> 
     public void OnAuthorization(AuthorizationFilterContext context) {
         string expected = options.Value.ApiKey;
         if (expected.Length < 32 ||
-            !context.HttpContext.Request.Headers.TryGetValue("X-BugTriage-Key", out Microsoft.Extensions.Primitives.StringValues values) ||
+            !context.HttpContext.Request.Headers.TryGetValue("X-BugTriage-Key", out StringValues values) ||
             values.Count != 1 || values[0] is not { Length: >= 32 and <= 256 } supplied ||
             !CryptographicOperations.FixedTimeEquals(SHA256.HashData(Encoding.UTF8.GetBytes(expected)), SHA256.HashData(Encoding.UTF8.GetBytes(supplied)))) {
             context.Result = new UnauthorizedResult();

@@ -1,3 +1,11 @@
+using FoodDiary.MailInbox.Client.Options;
+using FoodDiary.Modules.Images.Domain.ValueObjects;
+using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
+using FoodDiary.Modules.Products.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Persistence.Abstractions;
+using FoodDiary.ReadModel.Composition.Products;
+using System.Collections.Concurrent;
 using FoodDiary.Modules.Users.Infrastructure;
 using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;
@@ -178,7 +186,7 @@ public sealed class DependencyInjectionTests {
         services.AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration).AddNotificationsProvider(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Modules.Images.Infrastructure.Providers.Options.S3Options>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<S3Options>>().Value);
         Assert.Contains("ServiceUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -204,7 +212,7 @@ public sealed class DependencyInjectionTests {
                 1024,
                 CancellationToken.None));
         ImageObjectValidationResult validation = await imageStorage.ValidateUploadedObjectAsync(
-            FoodDiary.Modules.Images.Domain.ValueObjects.ObjectStorageKey.FromStoredValue("users/test/meal.webp"),
+            ObjectStorageKey.FromStoredValue("users/test/meal.webp"),
             CancellationToken.None);
 
         Assert.Contains("not configured", exception.Message, StringComparison.OrdinalIgnoreCase);
@@ -325,7 +333,7 @@ public sealed class DependencyInjectionTests {
         using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Throws<OptionsValidationException>(() =>
-            provider.GetRequiredService<IOptions<FoodDiary.MailInbox.Client.Options.MailInboxClientOptions>>().Value);
+            provider.GetRequiredService<IOptions<MailInboxClientOptions>>().Value);
     }
 
     [Fact]
@@ -492,12 +500,12 @@ public sealed class DependencyInjectionTests {
         })).AddOutboxProcessing(CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
         })).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddProductsPersistence();
-        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(FoodDiary.Modules.Products.Contracts.Common.IProductOverviewReadService));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IProductOverviewReadService));
         services.AddReadModelComposition();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
-        Assert.IsType<FoodDiary.ReadModel.Composition.Products.ProductOverviewReadService>(
-            scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Products.Contracts.Common.IProductOverviewReadService>());
+        Assert.IsType<ProductOverviewReadService>(
+            scope.ServiceProvider.GetRequiredService<IProductOverviewReadService>());
     }
 
     [Fact]
@@ -597,24 +605,24 @@ public sealed class DependencyInjectionTests {
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
-        FoodDiary.Persistence.Abstractions.IModuleContextFactory factory = scope.ServiceProvider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleContextFactory>();
+        IModuleContextFactory factory = scope.ServiceProvider.GetRequiredService<IModuleContextFactory>();
         FoodDiaryDbContext central = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext hydration = scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>();
+        HydrationDbContext hydration = scope.ServiceProvider.GetRequiredService<HydrationDbContext>();
         Assert.Same(central.Session, factory);
         Assert.Contains(hydration, central.ModuleContexts);
         Assert.Same(central.Database.GetDbConnection(), hydration.Database.GetDbConnection());
-        Assert.Same(hydration, scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
+        Assert.Same(hydration, scope.ServiceProvider.GetRequiredService<HydrationDbContext>());
         using (IServiceScope otherScope = provider.CreateScope()) {
-            Assert.NotSame(factory, otherScope.ServiceProvider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleContextFactory>());
-            Assert.NotSame(hydration, otherScope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationDbContext>());
+            Assert.NotSame(factory, otherScope.ServiceProvider.GetRequiredService<IModuleContextFactory>());
+            Assert.NotSame(hydration, otherScope.ServiceProvider.GetRequiredService<HydrationDbContext>());
         }
 
         IWeightEntryReadModelRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryReadModelRepository>();
         IWaistEntryReadModelRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryReadModelRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
         Assert.IsType<HydrationOperationReceiptRepository>(scope.ServiceProvider.GetRequiredService<IHydrationOperationReceiptRepository>());
-        Assert.IsType<FoodDiary.Modules.Hydration.Infrastructure.Persistence.HydrationIntervalReadService>(
-            scope.ServiceProvider.GetRequiredService<FoodDiary.Modules.Hydration.Application.Abstractions.Common.IHydrationIntervalReadModelRepository>());
+        Assert.IsType<HydrationIntervalReadService>(
+            scope.ServiceProvider.GetRequiredService<IHydrationIntervalReadModelRepository>());
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
 
         Assert.Multiple(
@@ -1107,7 +1115,7 @@ public sealed class DependencyInjectionTests {
     private static IEnumerable<Type> GetUserOwnedEntityTypes() {
         return typeof(AiUsage).Assembly
             .GetTypes()
-            .Concat(typeof(FoodDiary.Modules.Users.Domain.Entities.User).Assembly.GetTypes())
+            .Concat(typeof(User).Assembly.GetTypes())
             .Where(type =>
                 type is { IsClass: true, IsAbstract: false } &&
                 type.Namespace?.StartsWith("FoodDiary.Domain.Entities", StringComparison.Ordinal) == true &&
@@ -1150,7 +1158,7 @@ public sealed class DependencyInjectionTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingLoggerProvider : ILoggerProvider {
-        private readonly System.Collections.Concurrent.ConcurrentQueue<string> _messages = new();
+        private readonly ConcurrentQueue<string> _messages = new();
 
         public IReadOnlyCollection<string> Messages => _messages;
 
@@ -1160,7 +1168,7 @@ public sealed class DependencyInjectionTests {
         }
 
         [ExcludeFromCodeCoverage]
-        private sealed class RecordingLogger(System.Collections.Concurrent.ConcurrentQueue<string> messages) : ILogger {
+        private sealed class RecordingLogger(ConcurrentQueue<string> messages) : ILogger {
             public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
             public bool IsEnabled(LogLevel logLevel) => true;

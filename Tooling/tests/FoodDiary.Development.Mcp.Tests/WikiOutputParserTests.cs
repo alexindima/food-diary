@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
@@ -12,7 +14,7 @@ public sealed class WikiOutputParserTests {
     [InlineData(@"Modules\Users\Application\Queries\GetUser\GetUserQuery.cs")]
     public void Parse_PreservesModernRepositoryRootsInStructuredTraceAndText(string path) {
         string expectedPath = path.Replace('\\', '/');
-        string json = System.Text.Json.JsonSerializer.Serialize(new {
+        string json = JsonSerializer.Serialize(new {
             symbols = new[] { new { path } },
         });
 

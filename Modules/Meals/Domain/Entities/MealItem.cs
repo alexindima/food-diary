@@ -1,3 +1,5 @@
+using ProductIdType = FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId;
+using RecipeIdType = FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -280,13 +282,13 @@ public sealed class MealItem : Entity<MealItemId> {
     }
 
     private static void EnsureProductId(ProductId productId) {
-        if (productId == global::FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids.ProductId.Empty) {
+        if (productId == ProductIdType.Empty) {
             throw new ArgumentException("ProductId is required.", nameof(productId));
         }
     }
 
     private static void EnsureRecipeId(RecipeId recipeId) {
-        if (recipeId == global::FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId.Empty) {
+        if (recipeId == RecipeIdType.Empty) {
             throw new ArgumentException("RecipeId is required.", nameof(recipeId));
         }
     }

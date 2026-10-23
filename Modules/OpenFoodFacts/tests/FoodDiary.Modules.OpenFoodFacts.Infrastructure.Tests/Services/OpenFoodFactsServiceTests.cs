@@ -1,3 +1,8 @@
+using System.Collections;
+using System.Reflection;
+using System.Text;
+using System.Text.Json;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Options;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Providers.Services;
 using System.Diagnostics.Metrics;
@@ -17,7 +22,7 @@ public sealed class OpenFoodFactsServiceTests {
         string query = $"refresh-race-{Guid.NewGuid():N}";
         string key = OpenFoodFactsService.GetSearchCacheKey(query, 10);
         OpenFoodFactsService writer = CreateService(new SuccessHttpMessageHandler("{}"));
-        System.Reflection.MethodInfo cache = typeof(OpenFoodFactsService).GetMethod("CacheSearchResult", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        MethodInfo cache = typeof(OpenFoodFactsService).GetMethod("CacheSearchResult", BindingFlags.Instance | BindingFlags.NonPublic)!;
         IReadOnlyList<OpenFoodFactsProductModel> oldProducts = [CreateProductModel("1", "Old")];
         IReadOnlyList<OpenFoodFactsProductModel> freshProducts = [CreateProductModel("2", "Fresh")];
         cache.Invoke(writer, [key, oldProducts]);
@@ -663,9 +668,9 @@ public sealed class OpenFoodFactsServiceTests {
         await cancellationTokenSource.CancelAsync();
         string query = $"canceled-provider-{Guid.NewGuid():N}";
         string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, 10);
-        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+        MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
             "SearchProviderAsync",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
 
         // SearchAsync always invokes SearchProviderAsync with CancellationToken.None; the
         // "caller cancellation" branch inside SearchProviderAsync's cancellation handling is
@@ -730,7 +735,7 @@ public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task SearchAsync_WhenCacheByteBudgetIsExceeded_EvictsOldEntries() {
         string largeProductName = new('x', 700_000);
-        string json = System.Text.Json.JsonSerializer.Serialize(new {
+        string json = JsonSerializer.Serialize(new {
             products = new[] {
                 new {
                     code = "111",
@@ -756,7 +761,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Theory]
     [InlineData("timeout", false, typeof(TaskCanceledException))]
-    [InlineData("json_error", false, typeof(System.Text.Json.JsonException))]
+    [InlineData("json_error", false, typeof(JsonException))]
     [InlineData("oversized_response", false, typeof(InvalidDataException))]
     [InlineData("response_body_timeout", false, typeof(TimeoutException))]
     [InlineData("transport_error", false, typeof(HttpRequestException))]
@@ -800,13 +805,13 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public void RemoveCachedSearch_WhenEntryWasReplaced_PreservesReplacement() {
-        System.Reflection.FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
+        FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
             "SearchCache",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
-        var cache = (System.Collections.IDictionary)cacheField.GetValue(null)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var cache = (IDictionary)cacheField.GetValue(null)!;
         Type cachedType = typeof(OpenFoodFactsService).GetNestedType(
             "CachedSearchResult",
-            System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.NonPublic)!;
         IReadOnlyList<OpenFoodFactsProductModel> products = Array.Empty<OpenFoodFactsProductModel>();
         object staleEntry = Activator.CreateInstance(cachedType, FixedNow - TimeSpan.FromHours(7), products, 0L)!;
         object replacement = Activator.CreateInstance(cachedType, FixedNow, products, 0L)!;
@@ -814,9 +819,9 @@ public sealed class OpenFoodFactsServiceTests {
         try {
             cache[cacheKey] = staleEntry;
             cache[cacheKey] = replacement;
-            System.Reflection.MethodInfo removeMethod = typeof(OpenFoodFactsService).GetMethod(
+            MethodInfo removeMethod = typeof(OpenFoodFactsService).GetMethod(
                 "RemoveCachedSearch",
-                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+                BindingFlags.Static | BindingFlags.NonPublic)!;
 
             removeMethod.Invoke(null, [cacheKey, staleEntry]);
 
@@ -845,19 +850,19 @@ public sealed class OpenFoodFactsServiceTests {
     public void CacheSearchResult_WhenResultExceedsMaxCacheSize_DoesNotCache() {
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("{}"));
         string key = OpenFoodFactsService.GetSearchCacheKey($"too-large-{Guid.NewGuid():N}", 10);
-        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+        MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
             "CacheSearchResult",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         IReadOnlyList<OpenFoodFactsProductModel> oversizedProducts = [
             CreateProductModel("1", new string('x', (int)OpenFoodFactsService.MaxSearchCacheSizeBytes)),
         ];
 
         method.Invoke(service, [key, oversizedProducts]);
 
-        System.Reflection.FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
+        FieldInfo cacheField = typeof(OpenFoodFactsService).GetField(
             "SearchCache",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
-        var cache = (System.Collections.IDictionary)cacheField.GetValue(null)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var cache = (IDictionary)cacheField.GetValue(null)!;
         Assert.False(cache.Contains(key));
     }
 
@@ -865,9 +870,9 @@ public sealed class OpenFoodFactsServiceTests {
     public void CacheSearchResult_WhenEntryIsReplaced_UpdatesCacheSize() {
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("{}"));
         string key = OpenFoodFactsService.GetSearchCacheKey($"replace-{Guid.NewGuid():N}", 10);
-        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+        MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
             "CacheSearchResult",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
         IReadOnlyList<OpenFoodFactsProductModel> first = [CreateProductModel("1", "A")];
         IReadOnlyList<OpenFoodFactsProductModel> second = [CreateProductModel("2", new string('x', 100))];
 
@@ -897,7 +902,7 @@ public sealed class OpenFoodFactsServiceTests {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
             httpClient,
-            Microsoft.Extensions.Options.Options.Create(new OpenFoodFactsApiOptions()),
+            MsOptions.Create(new OpenFoodFactsApiOptions()),
             FixedTime,
             logger ?? NullLogger<OpenFoodFactsService>.Instance);
     }
@@ -908,15 +913,15 @@ public sealed class OpenFoodFactsServiceTests {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
             httpClient,
-            Microsoft.Extensions.Options.Options.Create(new OpenFoodFactsApiOptions()),
+            MsOptions.Create(new OpenFoodFactsApiOptions()),
             timeProvider,
             NullLogger<OpenFoodFactsService>.Instance);
     }
 
     private static void MakeOpenFoodFactsSearchCacheStale(string query, int limit, TimeSpan age) {
-        System.Reflection.FieldInfo field = typeof(OpenFoodFactsService).GetField(
+        FieldInfo field = typeof(OpenFoodFactsService).GetField(
             "SearchCache",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         object cache = field.GetValue(null)!;
         string cacheKey = OpenFoodFactsService.GetSearchCacheKey(query, Math.Clamp(limit, 1, 50));
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
@@ -928,9 +933,9 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     private static string InvokeResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) {
-        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+        MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
             "ResolveFailureOutcome",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         return (string)method.Invoke(null, [exception, cancellationToken])!;
     }
 
@@ -1002,7 +1007,7 @@ public sealed class OpenFoodFactsServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             });
     }
 
@@ -1035,7 +1040,7 @@ public sealed class OpenFoodFactsServiceTests {
             HttpRequestMessage request, CancellationToken cancellationToken) {
             RequestCount++;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             });
         }
     }
@@ -1055,7 +1060,7 @@ public sealed class OpenFoodFactsServiceTests {
             RequestStarted.TrySetResult();
             await _release.Task.WaitAsync(cancellationToken);
             return new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             };
         }
     }
@@ -1086,7 +1091,7 @@ public sealed class OpenFoodFactsServiceTests {
             try {
                 await _release.Task.WaitAsync(cancellationToken);
                 return new HttpResponseMessage(HttpStatusCode.OK) {
-                    Content = new StringContent("""{"products":[]}""", System.Text.Encoding.UTF8, "application/json"),
+                    Content = new StringContent("""{"products":[]}""", Encoding.UTF8, "application/json"),
                 };
             } finally {
                 Interlocked.Decrement(ref _activeRequests);
@@ -1131,7 +1136,7 @@ public sealed class OpenFoodFactsServiceTests {
             HttpRequestMessage request, CancellationToken cancellationToken) {
             LastRequestUri = request.RequestUri;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json"),
             });
         }
     }

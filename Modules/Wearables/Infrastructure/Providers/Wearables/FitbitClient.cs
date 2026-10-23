@@ -1,3 +1,4 @@
+using System.Net;
 using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
@@ -101,7 +102,7 @@ internal sealed class FitbitClient(
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) {
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+                if (response.StatusCode == HttpStatusCode.BadRequest) {
                     JsonElement error = await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
                         response.Content, JsonOptions, BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                         BoundedHttpContentReader.DefaultReadTimeout, cancellationToken).ConfigureAwait(false);

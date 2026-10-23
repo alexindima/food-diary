@@ -2,7 +2,7 @@ using FoodDiary.MailInbox.Application.Messages.Models;
 
 namespace FoodDiary.MailInbox.Application.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class AdmissionCopyContractTests {
     [Fact]
     public void Copy_CanCarryRelayMetadataWithoutChangingThePublishedUntrustedDefault() {

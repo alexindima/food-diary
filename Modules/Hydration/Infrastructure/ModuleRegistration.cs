@@ -15,7 +15,7 @@ public static class ModuleRegistration {
         services.AddHydrationApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<HydrationDbContext>(static options => new HydrationDbContext(options)));
-        services.AddScoped<FoodDiary.Modules.Hydration.Application.Abstractions.Common.IHydrationIntervalReadModelRepository>(static provider => new HydrationIntervalReadService(
+        services.AddScoped<IHydrationIntervalReadModelRepository>(static provider => new HydrationIntervalReadService(
             provider.GetRequiredService<HydrationDbContext>().HydrationEntries));
         services.AddScoped<IHydrationOperationReceiptRepository>(static provider => new HydrationOperationReceiptRepository(
             provider.GetRequiredService<HydrationDbContext>().HydrationOperationReceipts));

@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -33,7 +35,7 @@ public sealed class ArchitectureSourceDiscoveryTests {
     public void ForeignRepositoryGuard_RejectsEmptyDiscovery() {
         DirectoryInfo root = Directory.CreateTempSubdirectory("fooddiary-empty-guard-");
         try {
-            Assert.Throws<Xunit.Sdk.NotEmptyException>(() =>
+            Assert.Throws<NotEmptyException>(() =>
                 ApplicationConsumerBoundaryTests.FindForeignRepositoryUsages(root.FullName));
         } finally {
             root.Delete(recursive: true);

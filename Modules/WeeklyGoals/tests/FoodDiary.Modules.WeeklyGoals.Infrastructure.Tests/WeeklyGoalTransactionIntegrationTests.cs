@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -105,7 +106,7 @@ public sealed class WeeklyGoalTransactionIntegrationTests(PostgresDatabaseFixtur
         if (pending.Equals("owner", StringComparison.Ordinal)) { await repository.AddAsync(CreateGoal(UserId.New())); }
         if (pending.Equals("shared", StringComparison.Ordinal)) { context.Users.Add(User.Create("pending@example.com", "hash")); }
         if (pending.Equals("queue", StringComparison.Ordinal)) { queue.Enqueue("existing", _ => Task.CompletedTask); }
-        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? outer = pending.Equals("nested", StringComparison.Ordinal)
+        await using IDbContextTransaction? outer = pending.Equals("nested", StringComparison.Ordinal)
             ? await context.Database.BeginTransactionAsync() : null;
         bool called = false;
         await Assert.ThrowsAsync<InvalidOperationException>(() => provider.GetRequiredService<IWeeklyGoalTransactionRunner>()

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Meals.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Meals.Contracts.Common;
 using FoodDiary.Modules.Meals.Contracts.Models;
@@ -6,7 +7,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Meals.Application.Abstractions.Common;
 
 public interface IMealProjectionReadRepository {
-    Task<IReadOnlyList<FoodDiary.Modules.Meals.Application.Abstractions.Models.MealDaySummary>> GetDaySummariesAsync(
+    Task<IReadOnlyList<MealDaySummary>> GetDaySummariesAsync(
         UserId userId, IReadOnlyCollection<DateOnly> dates, TimeZoneInfo timeZone,
         CancellationToken cancellationToken = default);
 

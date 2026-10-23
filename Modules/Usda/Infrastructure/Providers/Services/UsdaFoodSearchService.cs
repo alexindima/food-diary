@@ -1,3 +1,4 @@
+using System.Net;
 using FoodDiary.Modules.Usda.Infrastructure.Providers.Options;
 using System.Globalization;
 using System.Net.Http.Json;
@@ -95,7 +96,7 @@ internal sealed class UsdaFoodSearchService(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
+            if (response.StatusCode == HttpStatusCode.NotFound) {
                 return new UsdaFoodDetailLookupResult(Cacheable: true, Value: null);
             }
 

@@ -1,3 +1,5 @@
+using FoodDiary.Application.Contracts.Common.Models;
+using System.Reflection;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Dietologist.Domain.Enums;
 using FluentValidation.TestHelper;
@@ -25,9 +27,9 @@ namespace FoodDiary.Modules.Dietologist.Application.Tests;
 public sealed class DietologistResidualCoverageTests {
     [Fact]
     public void AttentionSignalSeverityOrdering_UnknownSeverityHasLowestPriority() {
-        System.Reflection.MethodInfo method = typeof(GetAttentionSignalsQueryHandler).GetMethod(
+        MethodInfo method = typeof(GetAttentionSignalsQueryHandler).GetMethod(
             "SeverityOrder",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+            BindingFlags.NonPublic | BindingFlags.Static)!;
 
         object? result = method.Invoke(null, ["Unknown"]);
 
@@ -63,7 +65,7 @@ public sealed class DietologistResidualCoverageTests {
         ];
 
         foreach (object model in models) {
-            foreach (System.Reflection.PropertyInfo property in model.GetType().GetProperties()) {
+            foreach (PropertyInfo property in model.GetType().GetProperties()) {
                 _ = property.GetValue(model);
             }
         }
@@ -160,7 +162,7 @@ public sealed class DietologistResidualCoverageTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             users);
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await handler.Handle(
+        Result<PagedResponse<RecommendationCommentModel>> result = await handler.Handle(
             new GetRecommendationCommentsQuery(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -174,7 +176,7 @@ public sealed class DietologistResidualCoverageTests {
             Substitute.For<IDietologistInvitationReadModelRepository>(),
             Substitute.For<ICurrentUserAccessService>());
 
-        Result<FoodDiary.Application.Contracts.Common.Models.PagedResponse<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
+        Result<PagedResponse<RecommendationCommentModel>> result = await service.Handle(new GetRecommendationCommentsQuery(UserId.New().Value, Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
     }

@@ -35,7 +35,7 @@ public partial class MealsFeatureTests {
             cleanup,
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         var command = new UpdateMealCommand(
             userId.Value,
@@ -80,7 +80,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -124,7 +124,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -162,7 +162,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -251,7 +251,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -297,7 +297,7 @@ public partial class MealsFeatureTests {
             cleanup,
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -336,7 +336,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -376,7 +376,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -418,7 +418,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -461,7 +461,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -502,7 +502,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(
@@ -556,7 +556,7 @@ public partial class MealsFeatureTests {
             cleanup,
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            FoodDiary.Modules.Meals.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            AllowImageAssetAccessService.Instance);
 
         Result<MealModel> result = await handler.Handle(
             new UpdateMealCommand(

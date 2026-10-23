@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;
 using Microsoft.AspNetCore.Http;
@@ -151,7 +152,7 @@ public sealed class RedisIdempotencyStoreTests {
                 new[] { ResponseKey("request-6"), LockKey("request-6") })),
             Arg.Is<RedisValue[]>(values => values != null &&
                 values[0].ToString().StartsWith("hash-6:", StringComparison.Ordinal) &&
-                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(CultureInfo.InvariantCulture)),
             CommandFlags.None);
     }
 
@@ -216,7 +217,7 @@ public sealed class RedisIdempotencyStoreTests {
                 Enumerable.SequenceEqual(keys, new[] { LockKey("request-renew") })),
             Arg.Is<RedisValue[]>(values => values != null &&
                 values[0] == "hash-renew:owner-renew" &&
-                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                values[1] == ((long)ProcessingTtl.TotalMilliseconds).ToString(CultureInfo.InvariantCulture)),
             CommandFlags.None);
     }
 

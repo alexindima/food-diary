@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
@@ -51,9 +52,9 @@ public sealed class GoogleTokenValidatorTests {
 
     [Fact]
     public void ValidIssuers_ContainsGoogleIssuers() {
-        System.Reflection.FieldInfo field = typeof(GoogleTokenValidator).GetField(
+        FieldInfo field = typeof(GoogleTokenValidator).GetField(
             "ValidIssuers",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
 
         string[] issuers = Assert.IsType<string[]>(field.GetValue(null));
 
@@ -169,9 +170,9 @@ public sealed class GoogleTokenValidatorTests {
     }
 
     private static T? InvokePrivateStatic<T>(string methodName, params object[] args) {
-        System.Reflection.MethodInfo method = typeof(GoogleTokenValidator).GetMethod(
+        MethodInfo method = typeof(GoogleTokenValidator).GetMethod(
             methodName,
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+            BindingFlags.Static | BindingFlags.NonPublic)!;
         return (T?)method.Invoke(null, args);
     }
 

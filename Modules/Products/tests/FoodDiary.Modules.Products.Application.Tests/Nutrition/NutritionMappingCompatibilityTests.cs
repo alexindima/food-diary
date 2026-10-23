@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Products.Application.Models;
 using FoodDiary.Modules.Products.Application.Mappings;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -15,7 +16,7 @@ public sealed class NutritionMappingCompatibilityTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Quality sample", MeasurementUnit.G, 100, 100, calories, 0, 0, 0, fiber, 0);
 
-        FoodDiary.Modules.Products.Application.Models.ProductModel productModel = product.ToModel();
+        ProductModel productModel = product.ToModel();
 
         Assert.Multiple(
             () => Assert.Equal(expectedScore, product.GetQualityScore().Score),

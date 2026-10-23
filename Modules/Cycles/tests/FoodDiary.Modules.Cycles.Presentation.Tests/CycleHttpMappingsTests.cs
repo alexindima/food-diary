@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using FoodDiary.Modules.Cycles.Application.Commands.ClearCycleDay;
 using FoodDiary.Modules.Cycles.Application.Commands.CreateCycle;
@@ -23,8 +24,8 @@ public sealed class CycleHttpMappingsTests {
     [Fact]
     public void UpsertCycleFactorRequest_WithoutId_DeserializesLegacyPayload() {
         const string json = """{"type":2,"startDate":"2026-04-01T00:00:00Z","endDate":null,"notes":null,"clearNotes":false}""";
-        UpsertCycleFactorHttpRequest? request = System.Text.Json.JsonSerializer.Deserialize<UpsertCycleFactorHttpRequest>(json,
-            System.Text.Json.JsonSerializerOptions.Web);
+        UpsertCycleFactorHttpRequest? request = JsonSerializer.Deserialize<UpsertCycleFactorHttpRequest>(json,
+            JsonSerializerOptions.Web);
         Assert.NotNull(request);
         Assert.Null(request.FactorId);
         Assert.Null(request.ToCommand(Guid.NewGuid(), Guid.NewGuid()).FactorId);

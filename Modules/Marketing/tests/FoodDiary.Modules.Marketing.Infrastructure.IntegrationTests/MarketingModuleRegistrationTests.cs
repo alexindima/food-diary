@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
 
@@ -12,7 +13,7 @@ public sealed class MarketingModuleRegistrationTests {
     [Fact]
     public async Task AddMarketingModule_RepositoryAliasesResolveThroughSameScopedInstance() {
         var services = new ServiceCollection();
-        services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
+        services.AddScoped<IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseNpgsql("Host=localhost;Database=registration"));
         services.AddMarketingModule();
         await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);

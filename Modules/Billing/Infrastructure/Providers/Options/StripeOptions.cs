@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
+
 namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Options;
 
 public sealed class StripeOptions {
@@ -23,7 +25,7 @@ public sealed class StripeOptions {
         !string.IsNullOrWhiteSpace(options.WebhookSecret) &&
         !string.IsNullOrWhiteSpace(options.PremiumMonthlyPriceId) &&
         !string.IsNullOrWhiteSpace(options.PremiumYearlyPriceId) &&
-        Billing.BillingUrlValidator.IsAbsoluteHttps(options.SuccessUrl) &&
-        Billing.BillingUrlValidator.IsAbsoluteHttps(options.CancelUrl) &&
-        Billing.BillingUrlValidator.IsAbsoluteHttps(options.PortalReturnUrl);
+        BillingUrlValidator.IsAbsoluteHttps(options.SuccessUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.CancelUrl) &&
+        BillingUrlValidator.IsAbsoluteHttps(options.PortalReturnUrl);
 }

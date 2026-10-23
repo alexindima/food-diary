@@ -7,7 +7,7 @@ using NSubstitute;
 
 namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ModuleRegistrationTests {
     [Fact]
     public void AddOpenFoodFactsModule_RegistersCacheRepositoryPorts() {

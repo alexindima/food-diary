@@ -1,3 +1,4 @@
+using FoodDiary.Testing.Assertions;
 using FoodDiary.Modules.Products.Contracts.Common;
 using FoodDiary.Modules.Products.Contracts.Models;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
@@ -26,7 +27,7 @@ public sealed class FavoriteProductSourceReadServiceTests {
 
         Result<FavoriteProductSourceModel> result = await reader.GetAccessibleAsync(item.Id, owner, cancellation.Token);
 
-        FavoriteProductSourceModel model = FoodDiary.Testing.Assertions.ResultAssert.Success(result);
+        FavoriteProductSourceModel model = ResultAssert.Success(result);
         Assert.Multiple(
             () => Assert.Equal(item.Name, model.Name),
             () => Assert.Equal(item.Images.Select(image => image.ImageUrl), model.ImageUrls, StringComparer.Ordinal));

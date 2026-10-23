@@ -1,3 +1,6 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.ValueObjects.Ids;
 using System.Reflection;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities.Tracking;
@@ -237,12 +240,12 @@ public class UserInvariantTests {
     public void EnsureExpiresAfterIssuance_WhenExpiryDoesNotFollowIssuance_Throws() {
         MethodInfo? method = typeof(User).GetMethod(
             "EnsureExpiresAfterIssuance",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Static | BindingFlags.NonPublic);
 
         DateTime issuedAtUtc = DateTime.UtcNow;
         DateTime expiresAtUtc = issuedAtUtc.AddMinutes(-1);
 
-        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
             method!.Invoke(null, [expiresAtUtc, issuedAtUtc, "expiresAtUtc"]));
 
         Assert.IsType<ArgumentOutOfRangeException>(exception.InnerException);
@@ -1089,7 +1092,7 @@ public class UserInvariantTests {
     [Fact]
     public void UpdateProfileMedia_WithValues_UpdatesImageFields() {
         var user = User.Create("test@example.com", "hash");
-        var assetId = FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId.New();
+        var assetId = ImageAssetId.New();
 
         user.UpdateProfileMedia(profileImage: " https://cdn.example.com/avatar.webp ", profileImageAssetId: assetId);
 
@@ -1100,7 +1103,7 @@ public class UserInvariantTests {
     [Fact]
     public void UpdateProfileMedia_WithTypedUpdate_UpdatesImageFields() {
         var user = User.Create("test@example.com", "hash");
-        var assetId = FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId.New();
+        var assetId = ImageAssetId.New();
 
         user.UpdateProfileMedia(new UserProfileMediaUpdate(
             ProfileImage: " https://cdn.example.com/avatar-2.webp ",
@@ -1205,9 +1208,9 @@ public class UserInvariantTests {
     public void GetActivityMultiplier_WithUnsupportedActivityLevel_Throws() {
         MethodInfo? method = typeof(User).GetMethod(
             "GetActivityMultiplier",
-            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            BindingFlags.Static | BindingFlags.NonPublic);
 
-        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
             method!.Invoke(null, [(ActivityLevel)999]));
 
         Assert.IsType<ArgumentOutOfRangeException>(exception.InnerException);
@@ -1255,9 +1258,9 @@ public class UserInvariantTests {
     [Fact]
     public void UserRole_WithEmptyIds_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            new UserRole(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.Empty, FoodDiary.Modules.Users.Domain.ValueObjects.Ids.RoleId.New()));
+            new UserRole(UserId.Empty, RoleId.New()));
         Assert.Throws<ArgumentException>(() =>
-            new UserRole(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), FoodDiary.Modules.Users.Domain.ValueObjects.Ids.RoleId.Empty));
+            new UserRole(UserId.New(), RoleId.Empty));
     }
 
     [Fact]

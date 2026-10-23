@@ -1,3 +1,4 @@
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Outbox.Abstractions;
 using FoodDiary.Persistence.Abstractions;
 using System.Globalization;
@@ -139,7 +140,7 @@ internal static class OutboxMessageClaimer {
 #pragma warning restore EF1002
 
             if (ids.Count == 0) {
-                await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                 return -1;
             }
 
@@ -166,7 +167,7 @@ internal static class OutboxMessageClaimer {
                 .ConfigureAwait(false);
 #pragma warning restore EF1002
 
-            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
             return reclaimedCount;
         }
     }

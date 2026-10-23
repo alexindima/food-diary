@@ -1,3 +1,5 @@
+using System.Text;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.MailRelay.Client.Extensions;
@@ -16,7 +18,7 @@ public sealed class MailRelayJournalClientTests {
         var page = new OutgoingEmailJournalPage([entry], 31);
         using var handler = new RecordingHandler(() => new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(page) });
         using var http = new HttpClient(handler) { BaseAddress = new Uri("https://relay.example.com") };
-        var client = new MailRelayJournalClient(http, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions { ApiKey = "test-key" }));
+        var client = new MailRelayJournalClient(http, MsOptions.Create(new MailRelayClientOptions { ApiKey = "test-key" }));
         OutgoingEmailJournalPage actual = await client.GetPageAsync(2, 10, "welcome", "sent", "to+tag@example.com", CancellationToken.None, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), entry.Id, "trace & id");
         Assert.Equivalent(page, actual, strict: true);
         Assert.Equal("test-key", handler.Key);
@@ -31,9 +33,9 @@ public sealed class MailRelayJournalClientTests {
     [InlineData(HttpStatusCode.Unauthorized, "{}")]
     [InlineData(HttpStatusCode.OK, "null")]
     public async Task GetPage_RejectsHttpFailureAndNullPayload(HttpStatusCode status, string json) {
-        using var handler = new RecordingHandler(() => new HttpResponseMessage(status) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") });
+        using var handler = new RecordingHandler(() => new HttpResponseMessage(status) { Content = new StringContent(json, Encoding.UTF8, "application/json") });
         using var http = new HttpClient(handler) { BaseAddress = new Uri("https://relay.example.com") };
-        var client = new MailRelayJournalClient(http, Microsoft.Extensions.Options.Options.Create(new MailRelayClientOptions { ApiKey = "test-key" }));
+        var client = new MailRelayJournalClient(http, MsOptions.Create(new MailRelayClientOptions { ApiKey = "test-key" }));
         if (status == HttpStatusCode.OK) {
             await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetPageAsync(1, 50, purpose: null, status: null, recipient: null, CancellationToken.None));
         } else {

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.ConfirmPasswordReset;
@@ -20,7 +21,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             CreateUserAuthenticationIdentityService(userRepository),
             sender,
             dateTimeProvider ?? new StubDateTimeProvider(),
-            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+            NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
     private static ConfirmPasswordResetCommandHandler CreateConfirmPasswordResetHandler(
         StubUserRepository userRepository,

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -27,7 +28,7 @@ public sealed class UserAuthenticationRegistrationServiceTests {
 
         Assert.True(activeResult.IsFailure);
         Assert.True(deletedResult.IsFailure);
-        Assert.Equal(System.Text.Json.JsonSerializer.Serialize(activeResult.Error), System.Text.Json.JsonSerializer.Serialize(deletedResult.Error));
+        Assert.Equal(JsonSerializer.Serialize(activeResult.Error), JsonSerializer.Serialize(deletedResult.Error));
         await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
     }
     [Fact]

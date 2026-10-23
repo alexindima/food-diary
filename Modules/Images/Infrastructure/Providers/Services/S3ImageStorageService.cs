@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Integrations.Http.Services;
 using FoodDiary.Modules.Images.Infrastructure.Providers.Options;
@@ -189,7 +190,7 @@ public sealed class S3ImageStorageService(
         return new ImageObjectValidationResult(IsValid: false, errorCode, errorMessage);
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static bool HasValidImageContent(byte[] content, string contentType) {
         using var stream = new SKMemoryStream(content);
         using var codec = SKCodec.Create(stream);

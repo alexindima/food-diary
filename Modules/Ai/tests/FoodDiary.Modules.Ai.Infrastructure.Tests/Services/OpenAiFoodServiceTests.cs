@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Ai.Application.Abstractions.Prompts;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Ai.Domain.ValueObjects;
 using System.Diagnostics.Metrics;
 using System.Net;
@@ -1306,8 +1308,8 @@ public sealed class OpenAiFoodServiceTests {
         }));
         OpenAiFoodClient client = CreateClient(http, new OpenAiOptions { ApiKey = "test-key", VisionModel = "primary", VisionFallbackModel = "fallback" });
         var product = new ProductImageAnalysis([photos[1]]);
-        Result<AiProviderTokenBudget> budget = await client.GetAnalyzeFoodImageTokenBudgetAsync(photos[0], "ru", description: null, FoodDiary.Modules.Ai.Application.Abstractions.Prompts.AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
-        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(photos[0], "ru", description: null, FoodDiary.Modules.Ai.Application.Abstractions.Prompts.AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
+        Result<AiProviderTokenBudget> budget = await client.GetAnalyzeFoodImageTokenBudgetAsync(photos[0], "ru", description: null, AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(photos[0], "ru", description: null, AiPromptCatalog.ProductLabelPrompt, CancellationToken.None, product);
         Assert.True(budget.IsSuccess);
         Assert.True(result.IsSuccess, result.Error.Message);
         Assert.Equal(3, calls);
@@ -1340,7 +1342,7 @@ public sealed class OpenAiFoodServiceTests {
         TimeSpan? overallRequestTimeout = null) {
         return new OpenAiFoodClient(
             httpClient,
-            Microsoft.Extensions.Options.Options.Create(options),
+            MsOptions.Create(options),
             NullLogger<OpenAiFoodClient>.Instance,
             overallRequestTimeout: overallRequestTimeout);
     }

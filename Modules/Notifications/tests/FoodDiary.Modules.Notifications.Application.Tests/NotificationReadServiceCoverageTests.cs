@@ -80,7 +80,7 @@ public sealed class NotificationReadServiceCoverageTests {
 
         await reader.DidNotReceive().GetByUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
         await writer.DidNotReceive().DeleteRangeAsync(
-            Arg.Any<IReadOnlyCollection<FoodDiary.Modules.Notifications.Domain.Entities.WebPushSubscription>>(),
+            Arg.Any<IReadOnlyCollection<WebPushSubscription>>(),
             Arg.Any<CancellationToken>());
     }
 

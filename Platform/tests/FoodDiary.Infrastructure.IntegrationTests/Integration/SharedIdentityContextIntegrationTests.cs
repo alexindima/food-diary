@@ -70,7 +70,7 @@ public sealed class SharedIdentityContextIntegrationTests(PostgresDatabaseFixtur
             string ticket = await provider.GetRequiredService<ITelegramLoginTicketStore>().CreateAsync(
                 "context-test", "browser", "synthetic payload", DateTime.UtcNow.AddMinutes(5), CancellationToken.None);
             Assert.Equal(43, ticket.Length);
-            DateTime assertionDate = await owned.Set<FoodDiary.Modules.Identity.PersistenceModel.Authentication.TelegramAssertionPolicy>()
+            DateTime assertionDate = await owned.Set<TelegramAssertionPolicy>()
                 .Select(policy => policy.NotBeforeUtc).SingleAsync();
             Assert.True(await provider.GetRequiredService<ITelegramAssertionReplayGuard>().TryConsumeAsync("synthetic assertion", assertionDate.AddMinutes(5), assertionDate));
             Assert.NotNull(await provider.GetRequiredService<ITelegramOperationStore>().RegisterAsync(123, 1, user.Id, 0, "synthetic operation", CancellationToken.None));

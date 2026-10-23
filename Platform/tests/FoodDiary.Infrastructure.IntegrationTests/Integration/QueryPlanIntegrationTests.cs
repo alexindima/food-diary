@@ -1,3 +1,4 @@
+using System.Data;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
 using FoodDiary.Modules.Fasting.Domain.Enums;
@@ -345,7 +346,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         bool disableSequentialScan = false,
         params NpgsqlParameter[] parameters) {
         var connection = (NpgsqlConnection)context.Database.GetDbConnection();
-        if (connection.State != System.Data.ConnectionState.Open) {
+        if (connection.State != ConnectionState.Open) {
             await connection.OpenAsync().ConfigureAwait(false);
         }
 

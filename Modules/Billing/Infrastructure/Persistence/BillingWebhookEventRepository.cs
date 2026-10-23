@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
         return Task.FromResult(webhookEvent);
     }
 
-    public async Task<BillingWebhookEvent?> GetByIdAsync(FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingWebhookEventId id, CancellationToken cancellationToken = default) {
+    public async Task<BillingWebhookEvent?> GetByIdAsync(BillingWebhookEventId id, CancellationToken cancellationToken = default) {
         await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         Guid storedId = id.Value;
         return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == storedId, cancellationToken).ConfigureAwait(false);

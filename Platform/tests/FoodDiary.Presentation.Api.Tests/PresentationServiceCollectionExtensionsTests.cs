@@ -55,7 +55,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         services.AddPresentationApi();
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        ApiBehaviorOptions apiBehaviorOptions = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiBehaviorOptions>>().Value;
+        ApiBehaviorOptions apiBehaviorOptions = provider.GetRequiredService<IOptions<ApiBehaviorOptions>>().Value;
         var httpContext = new DefaultHttpContext {
             RequestServices = provider,
             TraceIdentifier = "trace-123",

@@ -1,3 +1,5 @@
+using System.Text;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.MailInbox.Client.Extensions;
@@ -22,7 +24,7 @@ public sealed class MailInboxClientTests {
             Content = JsonContent.Create(new InboundMailMessagePageResponse([], 0, 0, 0)),
         });
         using var http = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
-        var client = new MailInboxClient(http, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        var client = new MailInboxClient(http, MsOptions.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
         var id = Guid.NewGuid();
         await client.GetMessagePageAsync(1, 20, recipient: null, category: null, unread: null, CancellationToken.None,
             DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), " subject & details ", " from+tag@example.com ", id);
@@ -37,9 +39,9 @@ public sealed class MailInboxClientTests {
 
     [Fact]
     public async Task GetMessagePageAsync_RejectsNullResponse() {
-        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null", System.Text.Encoding.UTF8, "application/json") });
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null", Encoding.UTF8, "application/json") });
         using var http = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
-        var client = new MailInboxClient(http, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        var client = new MailInboxClient(http, MsOptions.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetMessagePageAsync(1, 20, recipient: null, category: null, unread: null, CancellationToken.None));
     }
 
@@ -49,7 +51,7 @@ public sealed class MailInboxClientTests {
             Content = JsonContent.Create(new InboundMailMessagePageResponse([], 123)),
         });
         using var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
         InboundMailMessagePageResponse result = await client.GetMessagePageAsync(3, 50, " bugs+one@example.test ", "general", unread: false, CancellationToken.None);
         Assert.Equal(123, result.TotalItems);
         Assert.Empty(result.Items);
@@ -94,7 +96,7 @@ public sealed class MailInboxClientTests {
             Content = JsonContent.Create(Array.Empty<InboundMailMessageSummaryResponse>()),
         });
         using var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
 
         Assert.Empty(await client.GetFilteredMessagesAsync(limit, " bugs+one@example.test ", "a&b", unread, CancellationToken.None));
 
@@ -123,7 +125,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InboundMailMessageSummaryResponse message = Assert.Single(
             await client.GetMessagesAsync(limit: null, CancellationToken.None));
@@ -141,7 +143,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions {
             BaseUrl = "https://inbox.example.test",
             MetadataApiKey = "metadata-secret",
         }));
@@ -158,7 +160,7 @@ public sealed class MailInboxClientTests {
     [Fact]
     public async Task GetMessageAsync_WhenBaseAddressIsMissing_Throws() {
         using var httpClient = new HttpClient(new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK)));
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
     }
@@ -171,7 +173,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
@@ -188,7 +190,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
@@ -202,7 +204,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions {
             ContentApiKey = "content-secret",
         }));
 
@@ -221,7 +223,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
@@ -273,7 +275,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(id, CancellationToken.None);
 
@@ -298,7 +300,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
@@ -313,7 +315,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions {
             StateApiKey = "state-secret",
         }));
 
@@ -332,7 +334,7 @@ public sealed class MailInboxClientTests {
         using var httpClient = new HttpClient(handler) {
             BaseAddress = new Uri("https://inbox.example.test"),
         };
-        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions()));
+        var client = new MailInboxClient(httpClient, MsOptions.Create(new MailInboxClientOptions()));
 
         bool result = await client.MarkMessageReadAsync(Guid.NewGuid(), CancellationToken.None);
 

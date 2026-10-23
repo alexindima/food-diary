@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Options;
+using Npgsql;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Authentication;
 using FoodDiary.Modules.Identity.PersistenceModel.Authentication;
@@ -27,7 +30,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         Assert.False(await guard.TryConsumeAsync("canonical-old-proof", UtcNow.AddDays(1), UtcNow.AddSeconds(-1)));
         Assert.Empty(await context.ConsumedTelegramAssertions.ToArrayAsync());
         string legacyFingerprint = new('d', 64);
-        await Assert.ThrowsAsync<Npgsql.PostgresException>(() => context.Database.ExecuteSqlInterpolatedAsync(
+        await Assert.ThrowsAsync<PostgresException>(() => context.Database.ExecuteSqlInterpolatedAsync(
             $"INSERT INTO \"ConsumedTelegramAssertions\" (\"Fingerprint\", \"ExpiresAtUtc\") VALUES ({legacyFingerprint}, {UtcNow.AddDays(1)})"));
         Assert.True(await guard.TryConsumeAsync("fresh-proof", UtcNow.AddDays(1), UtcNow));
     }
@@ -42,7 +45,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         string hash = Convert.ToHexStringLower(HMACSHA256.HashData(secret, Encoding.UTF8.GetBytes(dataCheck)));
         string raw = string.Create(CultureInfo.InvariantCulture, $"user={Uri.EscapeDataString(user)}&auth_date={authDate}&hash={hash}");
         string alternate = string.Join('&', raw.Split('&').Reverse()).Replace("%20", "+", StringComparison.Ordinal);
-        Microsoft.Extensions.Options.IOptions<TelegramAuthOptions> options = Microsoft.Extensions.Options.Options.Create(new TelegramAuthOptions { BotToken = botToken, AuthTtlSeconds = 172800 });
+        IOptions<TelegramAuthOptions> options = MsOptions.Create(new TelegramAuthOptions { BotToken = botToken, AuthTtlSeconds = 172800 });
         var validator = new TelegramAuthValidator(options, FixedTime);
         TelegramInitData first = validator.ValidateInitData(raw).Value;
         TelegramInitData second = validator.ValidateInitData(alternate).Value;

@@ -1,3 +1,4 @@
+using FoodDiary.Results;
 using FoodDiary.Persistence.Runtime.Persistence.Locking;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
 using FoodDiary.Persistence.Abstractions;
@@ -23,7 +24,7 @@ internal sealed class EfModuleSessionCoordinator(SharedPersistenceDbContext cont
             // SaveChanges owns its atomic transaction and retries. Never replay provider calls.
             return await SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
                 T result = await operation(cancellationToken).ConfigureAwait(false);
-                if (result is not FoodDiary.Results.Result { IsFailure: true }) {
+                if (result is not Result { IsFailure: true }) {
                     await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 }
                 return result;

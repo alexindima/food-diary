@@ -1,3 +1,9 @@
+using FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Images.Domain.Entities.Assets;
+using FoodDiary.Modules.Meals.Domain.Contracts.Enums;
+using FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Meals.Domain.ValueObjects;
+using System.Globalization;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
@@ -54,8 +60,8 @@ public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixtu
         IUnitOfWork unit = provider.GetRequiredService<IUnitOfWork>();
         (IReadOnlyList<FavoriteMealReadModel> before, _) = await query.GetPageReadModelsAsync(owner.Id, 2, 10, "Lunch");
         FavoriteMealReadModel original = before[4];
-        var id = new FoodDiary.Modules.Favorites.Domain.Contracts.ValueObjects.Ids.FavoriteMealId(original.Id);
-        var mealId = new FoodDiary.Modules.Meals.Domain.Contracts.ValueObjects.Ids.MealId(original.MealId);
+        var id = new FavoriteMealId(original.Id);
+        var mealId = new MealId(original.MealId);
         FavoriteMeal favorite = Assert.IsType<FavoriteMeal>(await repository.GetByIdAsync(id, owner.Id, asTracking: true));
         await repository.DeleteAsync(favorite);
         await unit.SaveChangesAsync();
@@ -97,23 +103,23 @@ public sealed class SharedFavoritesContextIntegrationTests(PostgresDatabaseFixtu
         context.Products.Add(product);
         var recipe = Recipe.Create(owner.Id, "Soup", servings: 1, imageUrl: "https://example.com/recipe.jpg");
         context.Recipes.Add(recipe);
-        var cover = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(owner.Id, "favorite-cover", "https://example.com/cover.jpg");
-        var aiCover = FoodDiary.Modules.Images.Domain.Entities.Assets.ImageAsset.Create(owner.Id, "favorite-ai", "https://example.com/ai.jpg");
+        var cover = ImageAsset.Create(owner.Id, "favorite-cover", "https://example.com/cover.jpg");
+        var aiCover = ImageAsset.Create(owner.Id, "favorite-ai", "https://example.com/ai.jpg");
         context.ImageAssets.AddRange(cover, aiCover);
         for (int index = 0; index < 23; index++) {
             var meal = Meal.Create(owner.Id, DateTime.UtcNow, imageUrl: index == 22 ? "https://example.com/meal.jpg" : null,
                 imageAssetId: index == 0 || index == 22 ? cover.Id : null);
-            meal.ApplyNutrition(new FoodDiary.Modules.Meals.Domain.ValueObjects.MealNutritionUpdate(130, 2, 1, 28, 7.5, 0, IsAutoCalculated: true));
+            meal.ApplyNutrition(new MealNutritionUpdate(130, 2, 1, 28, 7.5, 0, IsAutoCalculated: true));
             MealItem mealItem = index == 1 ? meal.AddRecipe(recipe.Id, RecipeServingQuantity.FromServings(1)) : meal.AddProduct(product.Id, ProductUnitQuantity.FromUnits(100));
             if (index > 1) {
                 mealItem.ApplyProductSnapshot("Рис 100%_готовый", imageUrl: "https://example.com/rice.jpg", MeasurementUnit.G, 100, 130, 2, 1, 28, 1, 0);
             }
             if (index == 2) {
-                meal.AddAiSession(imageAssetId: aiCover.Id, FoodDiary.Modules.Meals.Domain.Contracts.Enums.AiRecognitionSource.Text,
+                meal.AddAiSession(imageAssetId: aiCover.Id, AiRecognitionSource.Text,
                     DateTime.UtcNow, notes: null, [new MealAiItemData("Coffee", "Кофе", 100, "ml", 5, 0, 0, 0, 0, 0)]);
             }
             context.Meals.Add(meal);
-            context.FavoriteMeals.Add(FavoriteMeal.Create(owner.Id, meal.Id, "Favorite " + index.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+            context.FavoriteMeals.Add(FavoriteMeal.Create(owner.Id, meal.Id, "Favorite " + index.ToString(CultureInfo.InvariantCulture)));
         }
         var otherMeal = Meal.Create(other.Id, DateTime.UtcNow);
         context.Meals.Add(otherMeal);

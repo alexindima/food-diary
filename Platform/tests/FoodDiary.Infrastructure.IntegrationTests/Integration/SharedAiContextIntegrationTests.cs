@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Ai.PersistenceModel;
+using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.Domain.ValueObjects.Ids;
 using FoodDiary.Outbox.Infrastructure;
@@ -44,7 +46,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
         shared.Users.Add(user);
         AiPromptTemplate prompt = await templates.AddAsync(AiPromptTemplate.Create("vision", "en", "Original"));
         Assert.Equal(7, owned.Model.GetEntityTypes().Count());
-        Assert.NotNull(owned.Model.FindEntityType(typeof(FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJobImage)));
+        Assert.NotNull(owned.Model.FindEntityType(typeof(FoodRecognitionJobImage)));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<AiUsage>());
         Assert.Empty(shared.ChangeTracker.Entries<AiPromptTemplate>());
@@ -57,7 +59,7 @@ public sealed class SharedAiContextIntegrationTests(PostgresDatabaseFixture data
             Assert.NotNull(tracked);
             Assert.Same(transaction.GetDbTransaction(), owned.Database.CurrentTransaction!.GetDbTransaction());
             Assert.Contains(await templateReads.GetAllReadModelsAsync(CancellationToken.None), template => string.Equals(template.Key, "vision", StringComparison.Ordinal));
-            FoodDiary.Results.Result<AiPromptTemplateReadModel> changed = await provider.GetRequiredService<ISender>()
+            Result<AiPromptTemplateReadModel> changed = await provider.GetRequiredService<ISender>()
                 .Send(new UpsertAiPromptCommand("vision", "en", "Changed", IsActive: true));
             Assert.True(changed.IsSuccess);
             Assert.Equal(EntityState.Modified, owned.Entry(tracked).State);

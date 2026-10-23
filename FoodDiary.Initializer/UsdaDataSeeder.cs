@@ -1,3 +1,4 @@
+using NpgsqlTypes;
 using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Infrastructure.Persistence;
@@ -165,15 +166,15 @@ internal static class UsdaDataSeeder {
                     ? catName : null;
 
                 await writer.StartRowAsync().ConfigureAwait(false);
-                await writer.WriteAsync(fdcId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 512), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 512), NpgsqlDbType.Varchar).ConfigureAwait(false);
                 if (foodCategoryId.HasValue) {
-                    await writer.WriteAsync(foodCategoryId.Value, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
+                    await writer.WriteAsync(foodCategoryId.Value, NpgsqlDbType.Integer).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
                 if (foodCategory is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(foodCategory, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(foodCategory, 256), NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
@@ -207,9 +208,9 @@ internal static class UsdaDataSeeder {
                 }
 
                 await writer.StartRowAsync().ConfigureAwait(false);
-                await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[1], 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 32), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[1], 256), NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(fields[2], 32), NpgsqlDbType.Varchar).ConfigureAwait(false);
                 count++;
             }
 
@@ -259,10 +260,10 @@ internal static class UsdaDataSeeder {
                 }
 
                 await writer.StartRowAsync().ConfigureAwait(false);
-                await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(fdcId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(nutrientId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(amount, NpgsqlTypes.NpgsqlDbType.Double).ConfigureAwait(false);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(nutrientId, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(amount, NpgsqlDbType.Double).ConfigureAwait(false);
                 count++;
             }
 
@@ -317,18 +318,18 @@ internal static class UsdaDataSeeder {
                 string measureUnitName = modifier ?? portionDescription ?? "serving";
 
                 await writer.StartRowAsync().ConfigureAwait(false);
-                await writer.WriteAsync(id, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(fdcId, NpgsqlTypes.NpgsqlDbType.Integer).ConfigureAwait(false);
-                await writer.WriteAsync(amount, NpgsqlTypes.NpgsqlDbType.Double).ConfigureAwait(false);
-                await writer.WriteAsync(UsdaCsvReader.Truncate(measureUnitName, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
-                await writer.WriteAsync(gramWeight, NpgsqlTypes.NpgsqlDbType.Double).ConfigureAwait(false);
+                await writer.WriteAsync(id, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(fdcId, NpgsqlDbType.Integer).ConfigureAwait(false);
+                await writer.WriteAsync(amount, NpgsqlDbType.Double).ConfigureAwait(false);
+                await writer.WriteAsync(UsdaCsvReader.Truncate(measureUnitName, 128), NpgsqlDbType.Varchar).ConfigureAwait(false);
+                await writer.WriteAsync(gramWeight, NpgsqlDbType.Double).ConfigureAwait(false);
                 if (portionDescription is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(portionDescription, 256), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(portionDescription, 256), NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }
                 if (modifier is not null) {
-                    await writer.WriteAsync(UsdaCsvReader.Truncate(modifier, 128), NpgsqlTypes.NpgsqlDbType.Varchar).ConfigureAwait(false);
+                    await writer.WriteAsync(UsdaCsvReader.Truncate(modifier, 128), NpgsqlDbType.Varchar).ConfigureAwait(false);
                 } else {
                     await writer.WriteNullAsync().ConfigureAwait(false);
                 }

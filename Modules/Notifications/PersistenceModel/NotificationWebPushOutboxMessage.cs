@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FoodDiary.Modules.Notifications.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Outbox.Abstractions;
@@ -20,12 +21,12 @@ public sealed class NotificationWebPushOutboxMessage : IOutboxMessage {
     public string CompletedSubscriptionIdsJson { get; private set; } = "[]";
 
     public IReadOnlySet<Guid> GetCompletedSubscriptionIds() =>
-        System.Text.Json.JsonSerializer.Deserialize<HashSet<Guid>>(CompletedSubscriptionIdsJson) ?? [];
+        JsonSerializer.Deserialize<HashSet<Guid>>(CompletedSubscriptionIdsJson) ?? [];
 
     public void RecordCompletedSubscriptions(IEnumerable<Guid> subscriptionIds) {
         HashSet<Guid> completed = [.. GetCompletedSubscriptionIds()];
         completed.UnionWith(subscriptionIds);
-        CompletedSubscriptionIdsJson = System.Text.Json.JsonSerializer.Serialize(completed.Order());
+        CompletedSubscriptionIdsJson = JsonSerializer.Serialize(completed.Order());
     }
 
     public Notification Notification { get; } = null!;

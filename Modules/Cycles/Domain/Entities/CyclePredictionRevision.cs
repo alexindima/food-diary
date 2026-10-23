@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.Cycles.Domain.ValueObjects.Ids;
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
@@ -31,7 +32,7 @@ public sealed class CyclePredictionRevision : Entity<CyclePredictionRevisionId> 
     private CyclePredictionRevision(CyclePredictionRevisionId id) : base(id) {
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     internal static CyclePredictionRevision Create(
         CycleProfileId cycleProfileId,
         DateTime generatedAtUtc,

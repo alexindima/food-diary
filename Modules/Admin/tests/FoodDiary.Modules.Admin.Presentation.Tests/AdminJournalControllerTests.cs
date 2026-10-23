@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Marketing.Contracts.Models;
+using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Email.Contracts.Email.Common;
@@ -149,15 +151,15 @@ public sealed class AdminJournalControllerTests {
 
     [Fact]
     public async Task AcquisitionRange_ForwardsFiltersAndMapsDailyComparison() {
-        var summary = new FoodDiary.Modules.Marketing.Contracts.Models.MarketingAttributionSummaryModel(24, DateTime.UnixEpoch, 10, 8, 2, 1, 5, 6, 4, 6, 3, 5, 25, 50, LastEventAtUtc: null, [], [], []);
-        var report = new FoodDiary.Modules.Marketing.Contracts.Models.MarketingAttributionRangeModel(DateTime.UnixEpoch.AddDays(1), DateTime.UnixEpoch.AddDays(2), DateTime.UnixEpoch,
-            summary, summary, [new FoodDiary.Modules.Marketing.Contracts.Models.MarketingAttributionDayModel(DateTime.UnixEpoch.AddDays(1), 8, 2, 1)], 31);
+        var summary = new MarketingAttributionSummaryModel(24, DateTime.UnixEpoch, 10, 8, 2, 1, 5, 6, 4, 6, 3, 5, 25, 50, LastEventAtUtc: null, [], [], []);
+        var report = new MarketingAttributionRangeModel(DateTime.UnixEpoch.AddDays(1), DateTime.UnixEpoch.AddDays(2), DateTime.UnixEpoch,
+            summary, summary, [new MarketingAttributionDayModel(DateTime.UnixEpoch.AddDays(1), 8, 2, 1)], 31);
         CapturedSender sender = SubstituteSender.Capture(Result.Success(report));
         AdminAcquisitionController controller = WithContext(new AdminAcquisitionController(sender));
         var request = new GetMarketingAttributionRangeHttpQuery(DateTimeOffset.UnixEpoch.AddDays(1), DateTimeOffset.UnixEpoch.AddDays(2), 2, 10, "page_landing", "tracked", "source");
         OkObjectResult result = Assert.IsType<OkObjectResult>(await controller.GetRange(request));
         MarketingAttributionRangeHttpResponse response = Assert.IsType<MarketingAttributionRangeHttpResponse>(result.Value);
-        FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange.GetMarketingAttributionRangeQuery query = Assert.IsType<FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange.GetMarketingAttributionRangeQuery>(sender.Request);
+        GetMarketingAttributionRangeQuery query = Assert.IsType<GetMarketingAttributionRangeQuery>(sender.Request);
         Assert.Multiple(() => Assert.Equivalent(report, response, strict: true), () => Assert.Equivalent(request, query, strict: true));
     }
 

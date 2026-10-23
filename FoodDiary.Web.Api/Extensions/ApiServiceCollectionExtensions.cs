@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.Modules.WeeklyGoals.Presentation.Extensions;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.WeeklyCheckIn.Presentation.Extensions;
@@ -96,7 +97,7 @@ using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public static class ApiServiceCollectionExtensions {
     extension(IServiceCollection services) {
         public IServiceCollection AddApiServices(IConfiguration configuration, IHostEnvironment? environment = null) {

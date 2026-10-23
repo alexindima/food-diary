@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Modules.Gamification.Domain.Contracts.Enums;
 using FoodDiary.Testing;
 using FoodDiary.Modules.Gamification.Application.Commands.CreateAchievementDefinition;
@@ -162,7 +163,7 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         var validator = new CreateAdminAchievementDefinitionCommandValidator();
         AchievementDefinitionCreateInput invalid = CreateInput() with { Key = null!, Threshold = 0 };
 
-        FluentValidation.Results.ValidationResult result = validator.Validate(new CreateAdminAchievementDefinitionCommand(invalid));
+        ValidationResult result = validator.Validate(new CreateAdminAchievementDefinitionCommand(invalid));
 
         Assert.Contains(result.Errors, error => error.PropertyName.EndsWith("Key", StringComparison.Ordinal));
         Assert.Contains(result.Errors, error => error.PropertyName.EndsWith("Threshold", StringComparison.Ordinal));
@@ -172,7 +173,7 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
     public void UpdateValidator_RejectsEmptyIdAndVersion() {
         var validator = new UpdateAdminAchievementDefinitionCommandValidator();
 
-        FluentValidation.Results.ValidationResult result = validator.Validate(
+        ValidationResult result = validator.Validate(
             new UpdateAdminAchievementDefinitionCommand(Guid.Empty, UpdateInput(version: 0)));
 
         Assert.Contains(result.Errors, error => string.Equals(error.PropertyName, "Id", StringComparison.Ordinal));

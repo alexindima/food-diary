@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Wiki;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class ContextRoutingTelemetryStore(
     string filePath,
     TimeProvider? timeProvider = null,
@@ -208,7 +210,7 @@ public sealed class ContextRoutingTelemetryStore(
         string temporaryPath = Path.Combine(
             directory,
             string.Create(
-                System.Globalization.CultureInfo.InvariantCulture,
+                CultureInfo.InvariantCulture,
                 $".{Path.GetFileName(_filePath)}.{Environment.ProcessId}.{Guid.NewGuid():N}.tmp"));
         try {
             string json = JsonSerializer.Serialize(

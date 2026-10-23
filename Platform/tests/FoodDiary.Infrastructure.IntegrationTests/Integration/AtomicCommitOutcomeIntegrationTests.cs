@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Data.Common;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
@@ -101,7 +102,7 @@ public sealed class AtomicCommitOutcomeIntegrationTests(PostgresDatabaseFixture 
         var otherOwner = Guid.NewGuid();
         DateTime now = DateTime.UtcNow;
         context.AddRange(Enumerable.Range(0, 1002).Select(index => new AtomicCommandReceipt {
-            Key = index.ToString("D64", System.Globalization.CultureInfo.InvariantCulture),
+            Key = index.ToString("D64", CultureInfo.InvariantCulture),
             UserId = otherOwner,
             RequestHash = new string('B', 64),
             ResponseType = "test",

@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Hydration.Application.Models;
+using FoodDiary.Results;
 using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -19,13 +21,13 @@ public sealed class CreateHydrationFromOperationTests {
         IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
         ICurrentUserAccessService access = Substitute.For<ICurrentUserAccessService>();
         if (string.Equals(scenario, "access", StringComparison.Ordinal)) {
-            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new FoodDiary.Results.Error("User.Denied", "Denied"));
+            access.EnsureCanAccessAsync(owner, Arg.Any<CancellationToken>()).Returns(new Error("User.Denied", "Denied"));
         }
         Guid operation = string.Equals(scenario, "operation", StringComparison.Ordinal) ? Guid.Empty : Guid.NewGuid();
         DateTime timestamp = string.Equals(scenario, "timestamp", StringComparison.Ordinal) ? DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified) : DateTime.UtcNow;
         int amount = string.Equals(scenario, "amount", StringComparison.Ordinal) ? 0 : 250;
 
-        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access, new InlineHydrationTransactionRunner())
+        Result<HydrationOperationModel> result = await new CreateHydrationFromOperationCommandHandler(entries, receipts, access, new InlineHydrationTransactionRunner())
             .Handle(new CreateHydrationFromOperationCommand(owner.Value, operation, timestamp, amount), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -42,7 +44,7 @@ public sealed class CreateHydrationFromOperationTests {
         IHydrationOperationReceiptRepository receipts = Substitute.For<IHydrationOperationReceiptRepository>();
         var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>(), new InlineHydrationTransactionRunner());
 
-        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, 250), CancellationToken.None);
+        Result<HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, 250), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         await entries.Received(1).AddAsync(Arg.Is<HydrationEntry>(entry => entry.Id.Value == result.Value.EntryId && entry.AmountMl == 250 && entry.Timestamp == timestamp), Arg.Any<CancellationToken>());
@@ -63,7 +65,7 @@ public sealed class CreateHydrationFromOperationTests {
         receipts.FindAsync(owner, operationId, Arg.Any<CancellationToken>()).Returns(receipt);
         var handler = new CreateHydrationFromOperationCommandHandler(entries, receipts, Substitute.For<ICurrentUserAccessService>(), new InlineHydrationTransactionRunner());
 
-        FoodDiary.Results.Result<FoodDiary.Modules.Hydration.Application.Models.HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, amount), CancellationToken.None);
+        Result<HydrationOperationModel> result = await handler.Handle(new CreateHydrationFromOperationCommand(owner.Value, operationId, timestamp, amount), CancellationToken.None);
 
         Assert.Equal(matches, result.IsSuccess);
         if (matches) {
@@ -76,6 +78,6 @@ public sealed class CreateHydrationFromOperationTests {
     }
     [ExcludeFromCodeCoverage]
     private sealed class InlineHydrationTransactionRunner : IHydrationOperationTransactionRunner {
-        public Task<T> ExecuteSerializedAsync<T>(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId, Guid operationId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) => operation(cancellationToken);
+        public Task<T> ExecuteSerializedAsync<T>(UserId userId, Guid operationId, Func<CancellationToken, Task<T>> operation, CancellationToken cancellationToken = default) => operation(cancellationToken);
     }
 }

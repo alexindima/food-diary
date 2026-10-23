@@ -1,3 +1,5 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Modules.Hydration.Domain.Entities.Tracking;
 using FoodDiary.Modules.Images.Domain.ValueObjects;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
@@ -51,8 +53,8 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
             await release.Task.WaitAsync(timeout.Token);
             return await actual.FindAsync(user.Id, operationId, call.Arg<CancellationToken>());
         });
-        paused.AddAsync(Arg.Any<FoodDiary.Modules.Hydration.Domain.Entities.Tracking.HydrationOperationReceipt>(), Arg.Any<CancellationToken>())
-            .Returns(call => actual.AddAsync(call.Arg<FoodDiary.Modules.Hydration.Domain.Entities.Tracking.HydrationOperationReceipt>(), call.Arg<CancellationToken>()));
+        paused.AddAsync(Arg.Any<HydrationOperationReceipt>(), Arg.Any<CancellationToken>())
+            .Returns(call => actual.AddAsync(call.Arg<HydrationOperationReceipt>(), call.Arg<CancellationToken>()));
         var firstHandler = new CreateHydrationFromOperationCommandHandler(
             firstProvider.GetRequiredService<IHydrationEntryWriteRepository>(), paused,
             Substitute.For<ICurrentUserAccessService>(), firstProvider.GetRequiredService<IHydrationOperationTransactionRunner>());
@@ -126,6 +128,6 @@ public sealed class SerializedOwnerCommandsIntegrationTests(PostgresDatabaseFixt
 
     [ExcludeFromCodeCoverage]
     private sealed class NoEvents : IDomainEventPublisher {
-        public Task PublishAsync(FoodDiary.Domain.Primitives.IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

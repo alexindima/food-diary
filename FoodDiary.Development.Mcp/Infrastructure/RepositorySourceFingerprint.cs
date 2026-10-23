@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,7 +7,7 @@ using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.Infrastructure;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 internal static class RepositorySourceFingerprint {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(30);
 
@@ -54,7 +55,7 @@ internal static class RepositorySourceFingerprint {
         return Convert.ToHexString(fingerprint.GetHashAndReset()).ToLowerInvariant();
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static async Task<string> RunGitAsync(
         string repositoryRoot,
         IReadOnlyList<string> arguments,
@@ -115,7 +116,7 @@ internal static class RepositorySourceFingerprint {
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     private static void TryKill(Process process) {
         try {
             if (!process.HasExited) {

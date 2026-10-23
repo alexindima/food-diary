@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
@@ -63,7 +64,7 @@ internal static class TelegramMealJourney {
 
     private static async Task VerifyStatisticsAsync(HttpClient client, int expectedMeals, double expectedCalories) {
         foreach (int days in new[] { 1, 7 }) {
-            string url = string.Create(System.Globalization.CultureInfo.InvariantCulture, $"/api/v1/statistics/diary-summary?days={days}");
+            string url = string.Create(CultureInfo.InvariantCulture, $"/api/v1/statistics/diary-summary?days={days}");
             using HttpResponseMessage response = await client.GetAsync(url);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             using var summary = JsonDocument.Parse(await response.Content.ReadAsStringAsync());

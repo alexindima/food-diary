@@ -1,3 +1,6 @@
+using MealPlanIdType = FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanId;
+using MealPlanMealIdType = FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanMealId;
+using RecipeIdType = FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Contracts.Enums;
 using FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids;
@@ -103,19 +106,19 @@ public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
     }
 
     private static void EnsureMealPlanId(MealPlanId mealPlanId) {
-        if (mealPlanId == global::FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanId.Empty) {
+        if (mealPlanId == MealPlanIdType.Empty) {
             throw new ArgumentException("MealPlanId is required.", nameof(mealPlanId));
         }
     }
 
     private static void EnsureMealPlanMealId(MealPlanMealId mealPlanMealId) {
-        if (mealPlanMealId == global::FoodDiary.Modules.MealPlanning.Domain.ValueObjects.Ids.MealPlanMealId.Empty) {
+        if (mealPlanMealId == MealPlanMealIdType.Empty) {
             throw new ArgumentException("MealPlanMealId is required.", nameof(mealPlanMealId));
         }
     }
 
     private static void EnsureRecipeId(RecipeId recipeId) {
-        if (recipeId == global::FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids.RecipeId.Empty) {
+        if (recipeId == RecipeIdType.Empty) {
             throw new ArgumentException("RecipeId is required.", nameof(recipeId));
         }
     }

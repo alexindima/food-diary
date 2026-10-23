@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Persistence.Runtime;
@@ -50,7 +51,7 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
         WeeklyGoalReadModel? projection = await repository.GetReadModelAsync(user.Id, weekStartUtc);
         Assert.Equal(new WeeklyGoalReadModel(goal.Id, weekStartUtc, goal.Type, 5, ReminderEnabled: true, 570, 240), projection);
         Assert.Empty(owned.ChangeTracker.Entries());
-        Assert.Null(await repository.GetReadModelAsync(FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId.New(), weekStartUtc));
+        Assert.Null(await repository.GetReadModelAsync(UserId.New(), weekStartUtc));
         Assert.Null(await repository.GetReadModelAsync(user.Id, weekStartUtc.AddDays(7)));
 
         WeeklyGoal? untracked = await repository.GetAsync(user.Id, weekStartUtc, cancellationToken: CancellationToken.None);
@@ -128,7 +129,7 @@ public sealed class WeeklyGoalRepositoryIntegrationTests(PostgresDatabaseFixture
 
     private static async Task CreateGoalWithRunnerAsync(
         FoodDiaryDbContext context,
-        FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId,
+        UserId userId,
         DateTime weekStartUtc) {
         await using ServiceProvider provider = CreateProvider(context);
         IWeeklyGoalRepository repository = provider.GetRequiredService<IWeeklyGoalRepository>();

@@ -1,3 +1,4 @@
+using ClientJournalPage = FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalPage;
 using FoodDiary.MailRelay.Presentation.Controllers;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
@@ -11,7 +12,7 @@ namespace FoodDiary.MailRelay.Presentation.Features.Email;
 [Route("api/email/messages")]
 public sealed class MailRelayMessagesController(ISender sender) : AuthorizedMailRelayController(sender) {
     [HttpGet]
-    [ProducesResponseType<FoodDiary.MailRelay.Client.Models.OutgoingEmailJournalPage>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ClientJournalPage>(StatusCodes.Status200OK)]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public Task<IActionResult> GetPage([FromQuery] GetOutgoingEmailJournalHttpQuery query) =>
         HandleOk(query.ToQuery(), static value => value.ToJournalHttpResponse());

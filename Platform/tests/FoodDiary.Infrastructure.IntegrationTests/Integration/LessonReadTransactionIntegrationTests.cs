@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Outbox.Infrastructure;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Modules.Users.Contracts.Common;
@@ -112,6 +113,6 @@ public sealed class LessonReadTransactionIntegrationTests(PostgresDatabaseFixtur
 
     [ExcludeFromCodeCoverage]
     private sealed class NoEvents : IDomainEventPublisher {
-        public Task PublishAsync(FoodDiary.Domain.Primitives.IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

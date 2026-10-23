@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Contracts.Commands.CleanupDeletedUsers;
 using FoodDiary.Modules.Notifications.Contracts.Commands.CleanupExpiredNotifications;
 using FoodDiary.Mediator;
@@ -1387,7 +1388,7 @@ public sealed class JobsTests {
         return null;
     }
 
-    private static void AssertExecutionPolicy(System.Reflection.MethodInfo method) {
+    private static void AssertExecutionPolicy(MethodInfo method) {
         AutomaticRetryAttribute? retry = method.GetCustomAttributes(typeof(AutomaticRetryAttribute), inherit: false)
             .Cast<AutomaticRetryAttribute>()
             .SingleOrDefault();
@@ -1409,7 +1410,7 @@ public sealed class JobsTests {
         public List<int> BatchSizes { get; } = [];
         public List<DateTime> OlderThanValues { get; } = [];
 
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(global::FoodDiary.Modules.Images.Contracts.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
+        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(new DeleteImageAssetResult(Deleted: false));
 
         public Task<int> Handle(CleanupOrphanImagesCommand request, CancellationToken cancellationToken) {
@@ -1674,7 +1675,7 @@ public sealed class JobsTests {
                 user.PremiumTrialStartedAtUtc,
                 user.PremiumTrialEndsAtUtc);
 
-        public override Task<TResponse> Send<TResponse>(global::FoodDiary.Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
+        public override Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) => request switch {
             GetUserBillingProfileQuery r => (Task<TResponse>)(object)GetAccessibleProfileAsync(r.UserId, cancellationToken),
             GetUserBillingProfileIncludingDeletedQuery r => (Task<TResponse>)(object)GetProfileIncludingDeletedAsync(r.UserId, cancellationToken),
             StartUserPremiumTrialCommand r => (Task<TResponse>)(object)StartPremiumTrialAsync(r.UserId, r.StartedAtUtc, r.Duration, cancellationToken),

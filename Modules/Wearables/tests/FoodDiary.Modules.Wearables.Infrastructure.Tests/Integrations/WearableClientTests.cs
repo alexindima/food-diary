@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FoodDiary.Modules.Wearables.Infrastructure.Providers.Options;
 using System.Net;
 using System.Text;
@@ -391,7 +392,7 @@ public sealed class WearableClientTests {
             RequestCount++;
             RequestStarted.TrySetResult();
             await Task.Delay(Timeout.InfiniteTimeSpan, TimeProvider.System, cancellationToken);
-            throw new System.Diagnostics.UnreachableException();
+            throw new UnreachableException();
         }
     }
 }

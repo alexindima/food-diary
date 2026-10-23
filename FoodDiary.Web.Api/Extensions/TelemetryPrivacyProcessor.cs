@@ -1,9 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using OpenTelemetry;
 
 namespace FoodDiary.Web.Api.Extensions;
 
-[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage]
 public sealed class TelemetryPrivacyProcessor : BaseProcessor<Activity> {
     public const string UnmatchedRouteLabel = "unmatched";
 
