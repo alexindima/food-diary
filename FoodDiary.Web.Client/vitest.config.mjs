@@ -5,6 +5,31 @@ export default {
         coverage: {
             reportOnFailure: true,
             thresholds: {
+                'src/app/interceptor/retry.interceptor.ts': { lines: 100, statements: 100, functions: 100, branches: 100 },
+                'src/app/features/products/lib/list/product-list-route-state.facade.ts': {
+                    lines: 100,
+                    statements: 100,
+                    functions: 100,
+                    branches: 100,
+                },
+                'src/app/features/premium/pages/premium-access/premium-access-page.ts': {
+                    lines: 88,
+                    statements: 88,
+                    functions: 75,
+                    branches: 84,
+                },
+                'projects/fooddiary-admin/src/app/features/admin-audit/api/admin-audit.service.ts': {
+                    lines: 100,
+                    statements: 100,
+                    functions: 100,
+                    branches: 100,
+                },
+                'projects/fooddiary-admin/src/app/features/admin-moderation/api/admin-moderation.service.ts': {
+                    lines: 100,
+                    statements: 100,
+                    functions: 100,
+                    branches: 100,
+                },
                 'src/app/features/recipes/**/*.ts': { lines: 94, statements: 94, functions: 92, branches: 85 },
                 'src/app/features/recipes/api/*.service.ts': { lines: 100, statements: 100, functions: 100, branches: 100 },
                 'src/app/features/meals/**/*.ts': { lines: 93, statements: 93, functions: 93, branches: 84 },

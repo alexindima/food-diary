@@ -27,7 +27,7 @@ internal sealed class EfModuleTransactionCoordinator(
                     if (processed) {
                         await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                     }
-                    await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                    await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                     return processed;
                 }, cancellationToken).ConfigureAwait(false);
             }
@@ -93,7 +93,7 @@ internal sealed class EfModuleTransactionCoordinator(
                         }
 
                         if (result is not FoodDiary.Results.Result { IsFailure: true }) {
-                            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                         }
                         return result;
                     }, cancellationToken).ConfigureAwait(false);

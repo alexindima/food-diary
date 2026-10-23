@@ -8,6 +8,7 @@ import {
     type UnsavedChangesDialogResult,
 } from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog';
 import { UnsavedChangesService } from '../services/unsaved-changes.service';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 
 const isPromiseLike = (value: unknown): value is PromiseLike<unknown> =>
     typeof value === 'object' && value !== null && 'then' in value && typeof value.then === 'function';
@@ -23,6 +24,9 @@ const toObservable = (value: unknown): Observable<unknown> => {
 };
 
 export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
+    if (inject(SessionEventsService).isSessionEndNavigation) {
+        return true;
+    }
     const unsavedChangesService = inject(UnsavedChangesService);
     const dialogService = inject(FdUiDialogService);
     const handler = unsavedChangesService.getHandler();

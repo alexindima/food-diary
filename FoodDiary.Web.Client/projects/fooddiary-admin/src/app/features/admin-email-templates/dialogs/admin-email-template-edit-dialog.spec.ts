@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { type Observable, of, throwError } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -191,5 +191,50 @@ describe('AdminEmailTemplateEditDialogComponent test send', () => {
 
         expect(component['isSendingTest']()).toBe(false);
         expect(component['testSendStatus']()).toBe('failed');
+    });
+});
+
+describe('AdminEmailTemplateEditDialogComponent pending saves', () => {
+    it('locks draft controls and dismissal while a save is pending, then preserves the draft for retry', async () => {
+        const { component, dialogRef, fixture, service } = await setupEmailTemplateDialogAsync();
+        const pending = new Subject<typeof TEMPLATE>();
+        service.upsert.mockReturnValueOnce(pending);
+        component['testEmailModel'].set({ email: 'test@example.com' });
+        component['formModel'].update(value => ({ ...value, subject: 'Pending subject' }));
+        component['onSave']();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+
+        for (const control of element.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')) {
+            expect(control.disabled).toBe(true);
+        }
+        const cancel = Array.from(element.querySelectorAll<HTMLButtonElement>('button')).find(
+            button => button.textContent.trim() === 'Cancel',
+        );
+        expect(cancel?.disabled).toBe(true);
+        expect(element.querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button')?.disabled).toBe(true);
+        component['onCancel']();
+        component['onSendTest']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+        expect(service.sendTest).not.toHaveBeenCalled();
+
+        pending.error(new Error('offline'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(component['isSaving']()).toBe(false);
+            expect(component['saveFailed']()).toBe(true);
+        });
+        expect(element.querySelector<HTMLTextAreaElement>('textarea')?.disabled).toBe(false);
+        expect(component['formModel']().subject).toBe('Pending subject');
+        component['onSave']();
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(true);
+        });
+        expect(service.upsert).toHaveBeenCalledTimes(2);
+        expect(service.upsert).toHaveBeenLastCalledWith(
+            'email_verification',
+            'en',
+            expect.objectContaining({ subject: 'Pending subject' }),
+        );
     });
 });

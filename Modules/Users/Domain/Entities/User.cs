@@ -113,10 +113,18 @@ public sealed partial class User : AggregateRoot<UserId> {
         return user;
     }
 
+    public static User CreateSystemContentOwner() {
+        User user = CreateCore(SystemContentOwner.Id, normalizedEmail: null, normalizedPassword: string.Empty, hasPassword: false);
+        user.ApplyAccountState(user.GetAccountState().Deactivate());
+        return user;
+    }
+
     private static User CreateCore(string? normalizedEmail, string hashedPassword, bool hasPassword) {
         string normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
+        return CreateCore(UserId.New(), normalizedEmail, normalizedPassword, hasPassword);
+    }
 
-        var userId = UserId.New();
+    private static User CreateCore(UserId userId, string? normalizedEmail, string normalizedPassword, bool hasPassword) {
         var user = new User {
             Id = userId,
             Preferences = UserPreferences.Create(userId),
@@ -217,8 +225,15 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private void EnsureNotDeleted() {
+        EnsureNotSystemContentOwner();
         if (DeletedAt is not null) {
             throw new InvalidOperationException("Deleted user cannot be mutated. Use Restore() first.");
+        }
+    }
+
+    private void EnsureNotSystemContentOwner() {
+        if (Id == SystemContentOwner.Id) {
+            throw new InvalidOperationException("System content owner cannot be mutated.");
         }
     }
 
@@ -593,6 +608,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     public void RecordExternalRoleMembershipChange() {
+        EnsureNotSystemContentOwner();
         AdvanceSecurityVersion();
         SetModified();
     }

@@ -226,6 +226,7 @@ COPY FoodDiary.Initializer/*.csproj FoodDiary.Initializer/
 
 COPY Shared/FoodDiary.Authentication.Infrastructure/FoodDiary.Authentication.Infrastructure.csproj Shared/FoodDiary.Authentication.Infrastructure/
 COPY Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj Shared/FoodDiary.Persistence.Runtime/
+COPY Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj Shared/FoodDiary.Persistence.PostgreSql/
 COPY Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj Shared/FoodDiary.Audit.Infrastructure/
 RUN dotnet restore FoodDiary.Initializer/FoodDiary.Initializer.csproj --locked-mode
@@ -467,6 +468,7 @@ COPY FoodDiary.Initializer/ FoodDiary.Initializer/
 
 COPY Shared/FoodDiary.Authentication.Infrastructure/ Shared/FoodDiary.Authentication.Infrastructure/
 COPY Shared/FoodDiary.Persistence.Runtime/ Shared/FoodDiary.Persistence.Runtime/
+COPY Shared/FoodDiary.Persistence.PostgreSql/ Shared/FoodDiary.Persistence.PostgreSql/
 COPY Shared/FoodDiary.Email.Infrastructure/ Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/ Shared/FoodDiary.Audit.Infrastructure/
 RUN dotnet publish FoodDiary.Initializer/FoodDiary.Initializer.csproj -c Release -o /app/publish --no-restore

@@ -3,6 +3,7 @@ id: system.architecture
 kind: system
 status: current
 sources:
+  - docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md
   - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/adr/0041-owner-requests-for-module-use-cases.md
@@ -60,6 +61,14 @@ runtime coupling. Architecture tests forbid tracked reads and writes in composit
 
 The executable project-reference allowlist is enforced by
 [`ProjectDependencyMatrixTests`](../../Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).
+
+Provider COMMIT verification is shared through
+`Shared/FoodDiary.Persistence.PostgreSql` without moving transaction or retry
+ownership between callers. Visible authenticated clients reconcile notifications
+every 30 seconds and on visibility recovery, supplementing SignalR hints across
+processes. MailRelay can start its PostgreSQL polling fallback while RabbitMQ is
+unavailable; core API startup does not depend on mail readiness. See
+[ADR 0054](../../docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md).
 The folder-module API graph is stored in
 [`module-dependencies.json`](../../docs/architecture/module-dependencies.json).
 The unified inventory, ownership, cross-layer mappings, physical isolation and

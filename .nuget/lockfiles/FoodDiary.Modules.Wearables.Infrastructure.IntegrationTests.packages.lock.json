@@ -1277,6 +1277,7 @@
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -1299,6 +1300,13 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
+      "fooddiary.persistence.postgresql": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
       "fooddiary.persistence.runtime": {
         "type": "Project",
         "dependencies": {
@@ -1312,6 +1320,7 @@
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Outbox.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",

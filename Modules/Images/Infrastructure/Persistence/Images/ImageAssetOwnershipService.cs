@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 
 internal sealed class ImageAssetOwnershipService(ImagesDbContext context) : IImageAssetOwnershipService {
-    public async Task ReassignAsync(IReadOnlyCollection<ImageAssetId> assetIds, UserId targetUserId, CancellationToken cancellationToken) {
+    public async Task ReassignAsync(IReadOnlyCollection<ImageAssetId> assetIds, UserId sourceUserId, UserId targetUserId, CancellationToken cancellationToken) {
         if (assetIds.Count == 0) { return; }
-        await context.ImageAssets.Where(asset => assetIds.Contains(asset.Id))
+        await context.ImageAssets.Where(asset => asset.UserId == sourceUserId && assetIds.Contains(asset.Id))
             .ExecuteUpdateAsync(setters => setters.SetProperty(asset => asset.UserId, targetUserId), cancellationToken).ConfigureAwait(false);
     }
 }

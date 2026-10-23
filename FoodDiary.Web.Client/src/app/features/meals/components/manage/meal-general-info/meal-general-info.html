@@ -46,6 +46,9 @@
                 appearance="tile"
                 [formField]="mealForm().imageUrl"
                 [description]="'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate"
+                (imagePreparationStarted)="photosUploading.emit(true)"
+                (imageChanged)="photosUploading.emit(false)"
+                (imagePreparationFailed)="photosUploading.emit(false)"
             />
         </div>
         <p class="meal-manage__image-description fd-ui-caption">{{ 'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate }}</p>

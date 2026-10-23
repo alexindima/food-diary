@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 
 import { AuthService } from '../../../services/auth.service';
+import { AuthCookieSessionService } from '../../../shared/auth/auth-cookie-session.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../../../shared/auth/telegram-oidc-values';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
@@ -15,6 +16,7 @@ const INTENT_STORAGE_KEY = 'fooddiary.telegram.intent';
 export class TelegramAuthFacade {
     private readonly api = inject(TelegramAuthService);
     private readonly auth = inject(AuthService);
+    private readonly cookieSessions = inject(AuthCookieSessionService);
     private readonly browser = inject(BrowserWindowService);
     private readonly storage = inject(BrowserStorageService);
     private readonly telegram = inject(TelegramWebAppService);
@@ -96,8 +98,15 @@ export class TelegramAuthFacade {
         this.busy.set(true);
         this.errorKey.set(null);
         try {
-            const response = await firstValueFrom(this.api.complete(intent.ticket, action, language, timeZoneId));
-            this.auth.acceptExternalAuthentication(response);
+            await firstValueFrom(
+                this.cookieSessions.run(() =>
+                    this.api.complete(intent.ticket, action, language, timeZoneId).pipe(
+                        tap(response => {
+                            this.auth.acceptExternalAuthentication(response);
+                        }),
+                    ),
+                ),
+            );
             this.clearIntent();
             return true;
         } catch {

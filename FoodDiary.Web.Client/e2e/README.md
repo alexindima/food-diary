@@ -28,8 +28,10 @@ npm run test:e2e:client:smoke:ui
 Notes:
 
 - the suites use mocked HTTP responses and do not depend on a running backend
-- admin smoke starts the Angular admin dev server on `http://127.0.0.1:4300`
+- admin smoke starts the Angular admin dev server on `http://127.0.0.1:4301`
 - client smoke starts the Angular client dev server on `http://127.0.0.1:4201`
 - CI runs both smoke suites after the corresponding unit tests and builds
 - deterministic API fixtures cover public, authenticated user, admin, meal-plan detail, and lesson-detail states
+- `client-smoke/auth-realtime.spec.ts` checks the Telegram callback through the real page/SDK and email verification through the real SignalR client, with HTTP negotiation and WebSocket frames controlled by Playwright. These are frontend contract scenarios; they do not contact Telegram or prove real backend email delivery.
+- `admin-smoke/moderation-workflow.spec.ts` exercises the real moderation dialog, request payloads, cancellation, errors and retry against contract-validated HTTP fixtures.
 - the client network audit covers authenticated routes separately from smoke CI, prints and attaches a route-to-endpoint table and `network-audit.json`, and waits for the intended routed view plus an idle API window before measuring. It rejects redirects, runtime errors, duplicate identical GET requests, transport failures (status 0), and HTTP status 400 and above. The default initial-load budget is 8 requests. Reviewed exceptions: profile uses 9 for overview, latest measurements, billing and sessions plus shell requests; the dietologist client dashboard uses 10 for client selection, dashboard, goals, recommendations, tasks and templates plus shell requests. These limits include the four shared shell requests and must be reviewed when adding endpoints.

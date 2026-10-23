@@ -5,6 +5,8 @@
             fill="outline"
             icon="download"
             [loading]="exportingFormat() !== null"
+            [disabled]="periodValidationError() !== null"
+            [disabledReason]="periodValidationError() === null ? null : ('STATISTICS.PERIOD_TOO_LONG' | translate)"
             [ariaLabel]="'STATISTICS.EXPORT_MENU_LABEL' | translate"
             [fdUiMenuTrigger]="exportMenu"
         >
@@ -57,16 +59,18 @@
             [endPlaceholder]="'STATISTICS.CUSTOM_RANGE_PLACEHOLDER' | translate"
             (rangeChange)="changeRange($event)"
         />
-        @if (hasLoadError()) {
+        @if (periodValidationError(); as error) {
+            <fd-ui-inline-alert role="alert" severity="danger" [message]="error | translate" />
+        } @else if (hasLoadError()) {
             <fd-error-state (retry)="reload()" />
         }
-        @if (!hasLoadError() && isLoading() && !hasStatisticsResponse()) {
+        @if (!hasReportError() && isLoading() && !hasStatisticsResponse()) {
             <div class="statistics__skeleton-grid">
                 <fd-skeleton-card class="statistics__skeleton statistics__skeleton--summary" />
                 <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
                 <fd-skeleton-card class="statistics__skeleton statistics__skeleton--chart" />
             </div>
-        } @else if (!hasLoadError()) {
+        } @else if (!hasReportError()) {
             @let newCards = dashboardCardsView();
             @if (newCards.overview.trackedDays === 0 && !isLoading()) {
                 <fd-ui-empty-state icon="bar_chart" [message]="'STATISTICS.NO_DATA' | translate" />
@@ -77,7 +81,9 @@
                     <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
                         <fd-statistics-overview-card [data]="newCards.overview" />
                         @if (isLoading()) {
-                            <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
+                                {{ 'STATISTICS.LOADING' | translate }}
+                            </div>
                         }
                     </div>
                     <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
@@ -90,7 +96,9 @@
                             (selectedTabChange)="changeNutritionTab($event)"
                         />
                         @if (isLoading()) {
-                            <div class="statistics__card-loading fd-ui-body-sm" role="status">{{ 'STATISTICS.LOADING' | translate }}</div>
+                            <div class="statistics__card-loading fd-ui-body-sm" role="status">
+                                {{ 'STATISTICS.LOADING' | translate }}
+                            </div>
                         }
                     </div>
                 </div>

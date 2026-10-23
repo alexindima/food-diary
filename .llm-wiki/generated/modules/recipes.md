@@ -39,14 +39,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
-- Public contract files: 16
+- Public contract files: 17
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 16
-- Interfaces: 10
+- Public contract types: 17
+- Interfaces: 11
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
@@ -61,6 +61,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IRecipeReadRepository`
 - `interface IRecipeRepository`
 - `interface IRecipeUsageQuery`
+- `interface IRecipeUserPurgeRetentionReadService`
 - `interface IRecipeWriteRepository`
 - `record RecipeImageReadItem`
 - `record RecipeOverviewIngredientReadItem`

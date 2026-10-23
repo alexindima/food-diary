@@ -18,10 +18,16 @@ The runner resolves `ConnectionStrings:DefaultConnection` from these sources:
 
 - `FoodDiary.Web.Api/appsettings.json`
 - `FoodDiary.Web.Api/appsettings.{Environment}.json`
+- Development user secrets
+- ordinary environment variables such as `ConnectionStrings__DefaultConnection`
 - `FOODDIARY_ConnectionStrings__DefaultConnection`
 - `--connection-string "..."`
 
 The last source wins.
+
+Task initialization uses only its validated Development task file and an optional
+explicit `--connection-string`; normal environment and repository settings do not
+participate in that isolated configuration.
 
 Running `update` without a target migration also bootstraps the initial administrator after migrations complete.
 Configure it with `InitialAdmin__Email` and `InitialAdmin__Password`. The bootstrap is idempotent and skips

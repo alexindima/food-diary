@@ -5,9 +5,17 @@ Current ownership is described in [the architecture guide](../ARCHITECTURE.md) a
 [the module map](../BACKEND_MODULE_MAP.md). Projects use FoodDiary.Modules.<Module>.<Layer>;
 shared technical libraries live under Shared. Historical plans remain in Git history.
 
+The [22 October 2026 follow-up review](BACKEND_ARCHITECTURE_REVIEW_2026-10-22.md)
+records fixed failure scenarios, current guarantees and remaining design constraints.
+
 ## Reliability baseline
 
 [ADR 0052](../adr/0052-backend-transaction-and-delivery-reliability.md) defines the protocol:
+
+[ADR 0054](../adr/0054-independent-commit-verification-and-notification-reconciliation.md)
+extends the same verified COMMIT implementation to independent AI operations and
+outbox claiming, defines notification client reconciliation, and keeps MailRelay
+PostgreSQL polling available during RabbitMQ startup failures.
 
 - Uncertain COMMIT is verified with PostgreSQL transaction status. Unknown outcomes
   never replay a handler automatically.

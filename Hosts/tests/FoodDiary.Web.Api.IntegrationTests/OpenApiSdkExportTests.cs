@@ -61,6 +61,34 @@ public sealed class OpenApiSdkExportTests(TransportApiWebApplicationFactory fact
     }
 
     [Fact]
+    public async Task ShoppingListRevisionsAreRequiredNonNullableAndConflictIsDocumentedAsync() {
+        await using WebApplicationFactory<Program> sdkFactory = CreateSdkFactory();
+        using HttpClient client = sdkFactory.CreateClient();
+        using var document = JsonDocument.Parse(await client.GetStringAsync("/swagger/v1/swagger.json", CancellationToken.None));
+        JsonElement schemas = document.RootElement.GetProperty("components").GetProperty("schemas");
+        foreach ((string schemaName, string propertyName) in new[] {
+                     ("UpdateShoppingListHttpRequest", "expectedRevision"),
+                     ("ShoppingListHttpResponse", "revision"),
+                 }) {
+            JsonElement schema = schemas.GetProperty(schemaName);
+            Assert.Contains(schema.GetProperty("required").EnumerateArray(),
+                value => string.Equals(value.GetString(), propertyName, StringComparison.Ordinal));
+            JsonElement property = schema.GetProperty("properties").GetProperty(propertyName);
+            Assert.Equal("string", property.GetProperty("type").GetString());
+            Assert.False(property.TryGetProperty("nullable", out JsonElement nullable) && nullable.GetBoolean());
+        }
+        JsonElement update = schemas.GetProperty("UpdateShoppingListHttpRequest");
+        foreach (string optionalProperty in new[] { "name", "items" }) {
+            Assert.DoesNotContain(update.GetProperty("required").EnumerateArray(),
+                value => string.Equals(value.GetString(), optionalProperty, StringComparison.Ordinal));
+            Assert.True(update.GetProperty("properties").GetProperty(optionalProperty).GetProperty("nullable").GetBoolean());
+        }
+        JsonElement responses = document.RootElement.GetProperty("paths")
+            .GetProperty("/api/v{version}/shopping-lists/{id}").GetProperty("patch").GetProperty("responses");
+        Assert.True(responses.TryGetProperty("409", out _));
+    }
+
+    [Fact]
     public async Task IncludeInternalTelemetryOnlyInSdkViewAsync() {
         await using WebApplicationFactory<Program> sdkFactory = CreateSdkFactory();
         using HttpClient sdkClient = sdkFactory.CreateClient();

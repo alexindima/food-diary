@@ -128,6 +128,7 @@ function createMealPlan(): MealPlan {
 
 function createShoppingList(): ShoppingList {
     return {
+        revision: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         id: entityId<'shopping-list'>('shopping-list-1'),
         name: 'Keto plan',
         items: [],

@@ -202,6 +202,26 @@ describe('FastingRedesignPreviewComponent', () => {
         expect(component['rhythmDays']()[1].durationLabel).toBe('16:8');
     });
 
+    it.each([
+        ['FastDay', 1, 2, 'FASTING.FAST_DAY'],
+        ['FastDay', 2, 2, 'FASTING.EAT_DAY'],
+        ['EatDay', 1, 2, 'FASTING.EAT_DAY'],
+        ['EatDay', 2, 2, 'FASTING.FAST_DAY'],
+    ] as const)('describes the next cyclic day after %s day %s of %s', (occurrenceKind, day, total, expected) => {
+        fixture.componentRef.setInput(
+            'session',
+            createSession({
+                planType: 'Cyclic',
+                occurrenceKind,
+                cyclicFastDays: 2,
+                cyclicEatDays: 2,
+                cyclicPhaseDayNumber: day,
+                cyclicPhaseDayTotal: total,
+            }),
+        );
+        expect(component['nextPhaseLabelKey']()).toBe(expected);
+    });
+
     it('describes the current and next phases of a cyclic session', () => {
         const cyclicSession = createSession({
             planType: 'Cyclic',

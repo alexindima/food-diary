@@ -7,6 +7,7 @@ using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Results;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
 
 namespace FoodDiary.Modules.MealPlanning.Application.Tests.ShoppingLists;
 
@@ -19,7 +20,7 @@ public partial class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", Items: null),
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", Items: null, ExpectedRevision: new string('a', 64)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -35,7 +36,7 @@ public partial class ShoppingListsFeatureTests {
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(UserId: null, Guid.NewGuid(), "Weekly", Items: null),
+            new UpdateShoppingListCommand(UserId: null, Guid.NewGuid(), "Weekly", Items: null, ExpectedRevision: new string('a', 64)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -50,7 +51,7 @@ public partial class ShoppingListsFeatureTests {
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null),
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null, ExpectedRevision: new string('a', 64)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -67,7 +68,7 @@ public partial class ShoppingListsFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(user.Id.Value, Guid.NewGuid(), new string('x', 129), Items: null),
+            new UpdateShoppingListCommand(user.Id.Value, Guid.NewGuid(), new string('x', 129), Items: null, ExpectedRevision: new string('a', 64)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -84,7 +85,7 @@ public partial class ShoppingListsFeatureTests {
 
         var shoppingListId = Guid.NewGuid();
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(user.Id.Value, shoppingListId, "Weekly", Items: null),
+            new UpdateShoppingListCommand(user.Id.Value, shoppingListId, "Weekly", Items: null, ExpectedRevision: new string('a', 64)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -106,7 +107,8 @@ public partial class ShoppingListsFeatureTests {
                 user.Id.Value,
                 list.Id.Value,
                 Name: null,
-                [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)]),
+                [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)],
+                list.ToModel().Revision),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -145,7 +147,7 @@ public partial class ShoppingListsFeatureTests {
                 [
                     new ShoppingListItemInput(Id: null, ProductId: product.Id.Value, Name: null, Amount: 2, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: null, SortOrder: null),
                     new ShoppingListItemInput(Id: null, ProductId: null, Name: "  Apples  ", Amount: 3, Unit: "Pcs", Category: "Fruit", Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 7),
-                ]),
+                ], list.ToModel().Revision),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -192,7 +194,7 @@ public partial class ShoppingListsFeatureTests {
                 Name: null,
                 [
                     new ShoppingListItemInput(existing.Id.Value, ProductId: null, "  Eggs  ", Amount: 12, Unit: "Pcs", Category: "Protein", Aisle: "A1", Note: "organic", IsChecked: true, checkedOnUtc, SortOrder: 3),
-                ]),
+                ], list.ToModel().Revision),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -237,7 +239,7 @@ public partial class ShoppingListsFeatureTests {
                 Name: null,
                 [
                     new ShoppingListItemInput(existing.Id.Value, ProductId: null, "Milk", Amount: 1, Unit: "Ml", Category: "Dairy", Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: null, SortOrder: 1),
-                ]),
+                ], list.ToModel().Revision),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -256,7 +258,7 @@ public partial class ShoppingListsFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", Items: null),
+            new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", Items: null, list.ToModel().Revision),
             CancellationToken.None);
 
         ResultAssert.Success(result);

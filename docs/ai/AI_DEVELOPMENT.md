@@ -384,7 +384,10 @@ loopback ports, migrations, a synthetic account and build output under
 `.artifacts/task-runtime/<name>`. It runs the real API and Angular frontend with a
 task-owned proxy. A task profile uses relative API URLs; normal profiles retain
 their existing behavior. It verifies login, a protected API request and the same
-request through the frontend proxy before reporting readiness.
+request through the frontend proxy before reporting readiness. The rendered
+browser probe signs in through that proxy, restores its real HttpOnly refresh
+cookie session, and verifies the owned profile and visible dashboard. Account
+policy comes from the server response during session restoration.
 
 `runtime.json` records checkout, HEAD, source fingerprint, URLs, owned container
 IDs, process lifetime identities, integration status and the stop command. Generated

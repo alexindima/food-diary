@@ -1,15 +1,17 @@
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, map, type Observable, shareReplay, tap } from 'rxjs';
+import { finalize, map, merge, type Observable, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
+import { SKIP_AUTH } from '../../constants/http-context.tokens';
 import { AuthService } from '../../services/auth.service';
 import { NotificationsSdk } from '../api/sdk/generated/api/notifications.service';
 import { notificationFromSdk, notificationPreferencesFromSdk, webPushSubscriptionFromSdk } from '../api/sdk/notification-sdk.mapper';
 import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connection';
 import { requireSdkFields, sdkNullableFields } from '../api/sdk/sdk-response';
+import { SessionEventsService } from '../auth/session-events.service';
 import type {
     NotificationItem,
     NotificationPreferences,
@@ -40,6 +42,7 @@ type FetchUnreadCountOptions = {
 export class NotificationService {
     private readonly http = inject(HttpClient);
     private readonly authService = inject(AuthService);
+    private readonly sessionEvents = inject(SessionEventsService);
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
@@ -50,30 +53,30 @@ export class NotificationService {
     public readonly notifications = signal<NotificationItem[]>([]);
     public readonly notificationsLoading = signal(false);
     public readonly notificationsLoaded = signal(false);
+    public readonly notificationsRequested = signal(false);
     public readonly notificationsChangedVersion = signal(0);
     private readonly unreadCountLoaded = signal(false);
     private unreadCountRequest$: Observable<{ count: number }> | null = null;
+    private sessionOwner = this.readSessionOwner();
+    private sessionVersion = 0;
 
     public constructor() {
         effect(() => {
-            if (this.authService.isAuthenticated()) {
-                return;
-            }
-
+            const owner = this.readSessionOwner();
             untracked(() => {
-                this.unreadCount.set(0);
-                this.unreadCountLoaded.set(false);
-                this.notifications.set([]);
-                this.notificationsLoading.set(false);
-                this.notificationsLoaded.set(false);
+                this.synchronizeSession(owner);
             });
         });
+        merge(this.sessionEvents.authenticated$, this.sessionEvents.sessionEnded$)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.resetSession();
+            });
     }
 
     public fetchUnreadCount(options: FetchUnreadCountOptions = {}): void {
-        if (!this.authService.isAuthenticated()) {
-            this.unreadCount.set(0);
-            this.unreadCountLoaded.set(false);
+        const session = this.synchronizeSession();
+        if (this.sessionOwner === null) {
             return;
         }
 
@@ -91,24 +94,26 @@ export class NotificationService {
             .pipe(
                 map(value => requireSdkFields(value, ['count'])),
                 finalize(() => {
-                    this.unreadCountRequest$ = null;
+                    if (this.isCurrentSession(session)) {
+                        this.unreadCountRequest$ = null;
+                    }
                 }),
                 shareReplay({ bufferSize: 1, refCount: false }),
             );
 
         this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: response => {
-                this.unreadCount.set(response.count);
-                this.unreadCountLoaded.set(true);
+                if (this.isCurrentSession(session)) {
+                    this.unreadCount.set(response.count);
+                    this.unreadCountLoaded.set(true);
+                }
             },
-            error: () => {
-                this.unreadCount.set(0);
-                this.unreadCountLoaded.set(false);
-            },
+            error: () => {},
         });
     }
 
     public ensureNotificationsLoaded(): void {
+        this.synchronizeSession();
         if (this.notificationsLoaded() || this.notificationsLoading()) {
             return;
         }
@@ -117,18 +122,16 @@ export class NotificationService {
     }
 
     public refreshNotifications(): void {
-        if (!this.authService.isAuthenticated()) {
-            this.notifications.set([]);
-            this.notificationsLoaded.set(false);
-            return;
-        }
-
         this.loadNotifications();
     }
 
     public markAsRead(notificationId: NotificationId): Observable<void> {
+        const session = this.synchronizeSession();
         return this.sdk.client.putNotificationsByNotificationIdRead({ version: this.sdk.version, notificationId }).pipe(
             tap(() => {
+                if (!this.isCurrentSession(session)) {
+                    return;
+                }
                 const notification = this.notifications().find(item => item.id === notificationId);
                 if (notification?.isRead === false) {
                     this.unreadCount.update(count => Math.max(0, count - 1));
@@ -140,8 +143,12 @@ export class NotificationService {
     }
 
     public markAllRead(): Observable<void> {
+        const session = this.synchronizeSession();
         return this.sdk.client.putNotificationsReadAll({ version: this.sdk.version }).pipe(
             tap(() => {
+                if (!this.isCurrentSession(session)) {
+                    return;
+                }
                 this.unreadCount.set(0);
                 this.notifications.update(items => items.map(item => ({ ...item, isRead: true })));
             }),
@@ -183,49 +190,96 @@ export class NotificationService {
         });
     }
 
-    public removeWebPushSubscription(endpoint: string): Observable<void> {
-        return this.sdk.client.deleteNotificationsPushSubscription({
-            version: this.sdk.version,
-            removeWebPushSubscriptionHttpRequest: { endpoint },
-        });
+    public removeWebPushSubscription(endpoint: string, sessionToken?: string): Observable<void> {
+        return this.sdk.client.deleteNotificationsPushSubscription(
+            { version: this.sdk.version, removeWebPushSubscriptionHttpRequest: { endpoint } },
+            'body',
+            false,
+            this.webPushSessionOptions(sessionToken),
+        );
+    }
+
+    private webPushSessionOptions(sessionToken?: string): { context: HttpContext } {
+        return sessionToken === undefined
+            ? sdkRequestOptions()
+            : sdkRequestOptions(new HttpHeaders({ Authorization: `Bearer ${sessionToken}` }), new HttpContext().set(SKIP_AUTH, true));
     }
 
     public updateCount(count: number): void {
+        this.synchronizeSession();
+        if (this.sessionOwner === null) {
+            return;
+        }
         this.unreadCount.set(count);
         this.unreadCountLoaded.set(true);
     }
 
     public notifyNotificationsChanged(): void {
+        this.synchronizeSession();
+        if (this.sessionOwner === null) {
+            return;
+        }
         this.notificationsChangedVersion.update(version => version + 1);
         this.refreshNotifications();
     }
 
     private loadNotifications(): void {
-        if (!this.authService.isAuthenticated()) {
-            this.notifications.set([]);
-            this.notificationsLoading.set(false);
-            this.notificationsLoaded.set(false);
+        const session = this.synchronizeSession();
+        if (this.sessionOwner === null || this.notificationsLoading()) {
             return;
         }
 
+        this.notificationsRequested.set(true);
         this.notificationsLoading.set(true);
         this.sdk.client
             .getNotifications({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
             .pipe(
                 map(values => values.map(notificationFromSdk)),
+                finalize(() => {
+                    if (this.isCurrentSession(session)) {
+                        this.notificationsLoading.set(false);
+                    }
+                }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: notifications => {
-                    this.notifications.set(notifications);
-                    this.notificationsLoaded.set(true);
-                    this.notificationsLoading.set(false);
+                    if (this.isCurrentSession(session)) {
+                        this.notifications.set(notifications);
+                        this.notificationsLoaded.set(true);
+                    }
                 },
-                error: () => {
-                    this.notifications.set([]);
-                    this.notificationsLoaded.set(false);
-                    this.notificationsLoading.set(false);
-                },
+                error: () => {},
             });
+    }
+
+    private readSessionOwner(): string | null {
+        return this.authService.isAuthenticated()
+            ? `${this.authService.getUserId() ?? 'pending'}:${this.authService.isImpersonating() ? 'impersonated' : 'normal'}`
+            : null;
+    }
+
+    private synchronizeSession(owner = this.readSessionOwner()): number {
+        if (owner !== this.sessionOwner) {
+            this.sessionOwner = owner;
+            this.resetSession();
+        }
+        return this.sessionVersion;
+    }
+
+    private isCurrentSession(version: number): boolean {
+        return version === this.sessionVersion && this.sessionOwner !== null && this.sessionOwner === this.readSessionOwner();
+    }
+
+    private resetSession(): void {
+        this.sessionVersion++;
+        this.unreadCountRequest$ = null;
+        this.unreadCount.set(0);
+        this.unreadCountLoaded.set(false);
+        this.notifications.set([]);
+        this.notificationsLoading.set(false);
+        this.notificationsLoaded.set(false);
+        this.notificationsRequested.set(false);
+        this.notificationsChangedVersion.set(0);
     }
 }

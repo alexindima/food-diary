@@ -4,6 +4,7 @@ param(
     [ValidateSet('finish', 'verify')]
     [string]$Action = 'finish',
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
+    [string[]]$ChangedPath,
     [switch]$DryRun,
     [switch]$FailOnInvalid,
     [ValidateSet('Text', 'Json')]
@@ -145,7 +146,13 @@ foreach ($artifactName in $sealedArtifactNames) {
     }
 }
 
-$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'status'; WorkspacePath = $normalizedWorkspacePath; Detailed = $true }
+$statusArguments = @{ Action = 'status'; WorkspacePath = $normalizedWorkspacePath; Detailed = $true }
+$refreshArguments = @{ Action = 'refresh'; WorkspacePath = $normalizedWorkspacePath }
+if ($PSBoundParameters.ContainsKey('ChangedPath')) {
+    $statusArguments.ChangedPath = @($ChangedPath)
+    $refreshArguments.ChangedPath = @($ChangedPath)
+}
+$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments $statusArguments
 if ($status.verdict -ne 'ready') {
     $actionText = @($status.nextActions) -join ' | '
     throw "Task workspace is not ready ($($status.verdict), $($status.score)/100). $actionText"
@@ -167,7 +174,7 @@ if ($DryRun) {
     return
 }
 
-Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'refresh'; WorkspacePath = $normalizedWorkspacePath } | Out-Null
+Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments $refreshArguments | Out-Null
 Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiPlanConformance.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
 Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiImpactSimulation.ps1' -Arguments @{ Action = 'create'; WorkspacePath = $normalizedWorkspacePath; FailOnInvalid = $true } | Out-Null
@@ -257,7 +264,7 @@ if (Test-Path -LiteralPath $planReusePath -PathType Leaf) {
         $sealedArtifactNames += 'verification-plan.json'
     }
 }
-$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments @{ Action = 'status'; WorkspacePath = $normalizedWorkspacePath; Detailed = $true }
+$status = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiTaskWorkspace.ps1' -Arguments $statusArguments
 if ($status.verdict -ne 'ready') {
     throw "Task readiness changed during final refresh: $($status.verdict)."
 }

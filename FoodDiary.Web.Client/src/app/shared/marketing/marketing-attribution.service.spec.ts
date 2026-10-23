@@ -50,7 +50,7 @@ describe('MarketingAttributionService', () => {
             pathname: '/dashboard',
             referrer: '',
         });
-        storage.setJson('local', 'fd_marketing_first_touch', { anonymousId: 'existing' });
+        storage.setJson('local', 'fd_marketing_first_touch', { anonymousId: 'existing', sessionId: 'existing-session', landingPath: '/' });
 
         service.initialize();
 
@@ -138,16 +138,24 @@ describe('MarketingAttributionService identity lifetimes', () => {
 
 describe('MarketingAttributionService equivalent landing URLs', () => {
     it.each([
-        ['utm_campaign=spring+sale&utm_term=x%2By+%26+z', 'utm_campaign=spring%20sale&utm_term=x%2By%20%26%20z'],
-        ['utm_campaign=launch&extra=one+two&extra=three?four', 'utm_campaign=launch&extra=one%20two&extra=three%3Ffour'],
-    ])('does not recapture equivalent query encoding after reload', (original, reencoded) => {
+        [
+            'utm_campaign=spring+sale&utm_term=x%2By+%26+z',
+            'utm_campaign=spring%20sale&utm_term=x%2By%20%26%20z',
+            '/food-diary?utm_campaign=spring+sale&utm_term=x%2By+%26+z',
+        ],
+        [
+            'utm_campaign=launch&extra=one+two&extra=three?four',
+            'utm_campaign=launch&extra=one%20two&extra=three%3Ffour',
+            '/food-diary?utm_campaign=launch',
+        ],
+    ])('does not recapture equivalent query encoding after reload', (original, reencoded, expectedLanding) => {
         const { service, httpMock, storage, browserWindow } = setup({
             href: `https://fooddiary.club/food-diary?${original}`,
             search: `?${original}`,
         });
         service.initialize();
         const first = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
-        expect(first.request.body).toMatchObject({ landingPath: `/food-diary?${original}` });
+        expect(first.request.body).toMatchObject({ landingPath: expectedLanding });
         first.flush(null);
         browserWindow.href = `https://fooddiary.club/food-diary?${reencoded}`;
         browserWindow.search = `?${reencoded}`;
@@ -155,7 +163,7 @@ describe('MarketingAttributionService equivalent landing URLs', () => {
         service.initialize();
 
         httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events`);
-        expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({ landingPath: `/food-diary?${original}` });
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({ landingPath: expectedLanding });
         httpMock.verify();
     });
 
@@ -189,6 +197,103 @@ describe('MarketingAttributionService equivalent landing URLs', () => {
         const second = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
         expect(second.request.body).toMatchObject({ utmCampaign: 'spring sale' });
         second.flush(null);
+        httpMock.verify();
+    });
+});
+
+describe('MarketingAttributionService URL privacy', () => {
+    it.each(['/verify-email', '/reset-password', '/auth/telegram', '/auth/telegram/callback', '/mobile/login'])(
+        'sanitizes %s before either browser store or request',
+        pathname => {
+            const search =
+                '?token=verification-secret&code=oauth-secret&state=oauth-state&returnUrl=%2Fverify-email%3Ftoken%3Dnested&utm_source=telegram';
+            const { service, httpMock, storage } = setup({ href: `https://fooddiary.club${pathname}${search}`, pathname, search });
+
+            service.initialize();
+
+            const request = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+            expect(request.request.body).toMatchObject({
+                landingPath: `${pathname}?utm_source=telegram`,
+                utmSource: 'telegram',
+                referrerHost: 't.me',
+            });
+            expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({ landingPath: `${pathname}?utm_source=telegram` });
+            for (const value of [
+                JSON.stringify(request.request.body),
+                storage.getItem('local', 'fd_marketing_first_touch'),
+                storage.getItem('session', 'fd_marketing_session_capture'),
+            ]) {
+                expect(value).not.toMatch(/verification-secret|oauth-secret|oauth-state|nested/u);
+            }
+            request.flush(null);
+            httpMock.verify();
+        },
+    );
+});
+
+describe('MarketingAttributionService historical URL privacy', () => {
+    it('scrubs historical browser entries even when capture is skipped without attribution signals', () => {
+        const { service, httpMock, storage } = setup({
+            href: 'https://fooddiary.club/dashboard',
+            pathname: '/dashboard',
+            search: '',
+            referrer: '',
+        });
+        storage.setJson('local', 'fd_marketing_first_touch', {
+            anonymousId: 'legacy-visitor',
+            sessionId: 'legacy-session',
+            landingPath: '/verify-email?token=old-secret&utm_source=telegram',
+            utmSource: 'telegram',
+        });
+        storage.setItem('session', 'fd_marketing_session_capture', '/auth/telegram/callback?code=old-code&state=old-state||||||');
+
+        service.initialize();
+
+        httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toMatchObject({
+            landingPath: '/verify-email?utm_source=telegram',
+            anonymousId: 'legacy-visitor',
+        });
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBe('["/auth/telegram/callback","","","","","",""]');
+        httpMock.verify();
+    });
+
+    it('sanitizes historical first touch before signup and removes ambiguous historical session keys', () => {
+        const { service, httpMock, storage } = setup();
+        storage.setJson('local', 'fd_marketing_first_touch', {
+            anonymousId: 'legacy-visitor',
+            sessionId: 'legacy-session',
+            landingPath: '/verify-email?%74oken=old-secret&utm_source=telegram',
+            utmSource: 'telegram',
+        });
+        storage.setItem('session', 'fd_marketing_session_capture', '/verify-email?token=old|secret|t.me|||||');
+
+        service.recordSignupCompleted();
+
+        const request = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(request.request.body).toMatchObject({
+            landingPath: '/verify-email?utm_source=telegram',
+            anonymousId: 'legacy-visitor',
+            sessionId: 'legacy-session',
+        });
+        expect(storage.getItem('local', 'fd_marketing_first_touch')).not.toContain('old-secret');
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBeNull();
+        request.flush(null);
+        httpMock.verify();
+    });
+
+    it('scrubs a historical raw key before returning for an already captured landing', () => {
+        const { service, httpMock, storage } = setup();
+        storage.setItem(
+            'session',
+            'fd_marketing_session_capture',
+            '/food-diary?token=old-secret&utm_source=telegram&utm_medium=social&utm_campaign=launch|t.me|telegram|social|launch||',
+        );
+
+        service.initialize();
+
+        httpMock.expectNone(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).not.toContain('old-secret');
         httpMock.verify();
     });
 });

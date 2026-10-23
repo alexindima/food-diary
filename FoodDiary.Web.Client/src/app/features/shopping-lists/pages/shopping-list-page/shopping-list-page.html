@@ -6,8 +6,8 @@
             fill="solid"
             icon="add"
             data-fd-overflow-primary
-            [disabled]="isCreating()"
-            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            [disabled]="isCreating() || conflictListId() !== null"
+            [disabledReason]="(conflictListId() !== null ? 'SHOPPING_LIST.CONFLICT_MESSAGE' : 'DISABLED_HINTS.OPERATION_BUSY') | translate"
             (click)="createNewList()"
             >{{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}</fd-ui-button
         >
@@ -23,7 +23,15 @@
         />
     </fd-page-header>
     <fd-page-body>
-        @if (saveError()) {
+        @if (conflictListId() !== null) {
+            <fd-ui-inline-alert
+                role="alert"
+                severity="warning"
+                [message]="'SHOPPING_LIST.CONFLICT_MESSAGE' | translate"
+                [primaryActionLabel]="'SHOPPING_LIST.CONFLICT_RELOAD' | translate"
+                (primaryAction)="reloadConflict()"
+            />
+        } @else if (saveError()) {
             <fd-ui-inline-alert
                 role="alert"
                 severity="danger"
@@ -46,7 +54,7 @@
                 [listSelectField]="listSelectForm.id"
                 [lists]="lists()"
                 [initialPage]="initialPage()"
-                [isLoading]="isLoading() || isSaving()"
+                [isLoading]="isLoading() || isSaving() || conflictListId() !== null"
                 [canDeleteList]="canDeleteList()"
                 [isMobile]="isMobileView()"
                 [renameRequestedListId]="renameRequestedListId()"
@@ -59,8 +67,8 @@
                 (renameListById)="renameListById($event.listId, $event.name)"
                 (renameRequestHandled)="clearRenameRequest($event)"
             />
-            <div class="shopping-list__workspace" [attr.aria-busy]="isLoading()">
-                <fieldset class="shopping-list__content" [disabled]="isLoading()">
+            <div class="shopping-list__workspace" [attr.aria-busy]="isLoading() || isClearing()">
+                <fieldset class="shopping-list__content" [disabled]="isLoading() || isClearing()">
                     <fd-shopping-list-items-panel
                         data-tour-id="shopping-list-items"
                         [itemForm]="itemForm"

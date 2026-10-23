@@ -3,6 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
+  - docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md
   - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
   - docs/ai/remaining-consumer-boundaries.md
@@ -61,6 +62,24 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 
 The detailed placement table is canonical in the
 [backend module map](../../docs/BACKEND_MODULE_MAP.md).
+
+`Shared/FoodDiary.Persistence.PostgreSql` owns provider-specific COMMIT outcome
+verification. Coordinated persistence, independent AI transactions and outbox
+claims consume it directly while retaining their context, save and retry
+ownership. This provider-only extraction adds no HTTP contract or schema. See
+[ADR 0054](../../docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md).
+
+Scheduled user cleanup without a valid explicit successor preserves only the
+source-owned recipe dependency closure and products still referenced by surviving
+content. Owner participants transfer those rows and their legacy/gallery images
+to the reserved inactive system principal before deleting unrelated user data.
+The transfer preserves visibility; the principal has no credentials or roles and
+is excluded from human administration. Strict owned-fixture cleanup still refuses
+foreign-linked content. ADR 0054 records the ordering, atomicity and retention limits.
+
+Owner adapters lock source recipe rows and then product rows before authoritative
+reference selection. ADR 0054's RecipeLikes reference migration must run through
+the normal writer-stopped Initializer upgrade before the matching application release.
 
 ## Module Interaction
 

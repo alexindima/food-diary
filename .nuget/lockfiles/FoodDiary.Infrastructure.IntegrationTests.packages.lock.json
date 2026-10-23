@@ -137,6 +137,16 @@
           "System.Diagnostics.EventLog": "6.0.0"
         }
       },
+      "Dapper": {
+        "type": "Transitive",
+        "resolved": "2.0.123",
+        "contentHash": "RDFF4rBLLmbpi6pwkY7q/M6UXHRJEOerplDGE5jwEkP/JGJnBauAClYavNKJPW1yOTWRPIyfj4is3EaJxQXILQ=="
+      },
+      "Dapper.AOT": {
+        "type": "Transitive",
+        "resolved": "1.0.48",
+        "contentHash": "rsLM3yKr4g+YKKox9lhc8D+kz67P7Q9+xdyn1LmCsoYr1kYpJSm+Nt6slo5UrfUrcTiGJ57zUlyO8XUdV7G7iA=="
+      },
       "Docker.DotNet.Enhanced": {
         "type": "Transitive",
         "resolved": "4.2.0",
@@ -196,6 +206,17 @@
         "contentHash": "nMw+FHGwGZieDi7kBgpIVl+E8MzjzXeXHvMQpidLADT06fts2Gw6G+K+p0hMGv7liZULxyYiZnQ1UbE2B9NNQg==",
         "dependencies": {
           "Docker.DotNet.Enhanced.Handler.Abstractions": "4.2.0"
+        }
+      },
+      "Hangfire.NetCore": {
+        "type": "Transitive",
+        "resolved": "1.8.25",
+        "contentHash": "ZfI7gwr7n70r635VS9aKsWSzOodY6U0bSIG0jDrqd5ODRLKvc+e5aXXGCnWHWzjvagvlwtUcRGG/lD0/3C7chA==",
+        "dependencies": {
+          "Hangfire.Core": "[1.8.25]",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.0.0",
+          "Microsoft.Extensions.Hosting.Abstractions": "3.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.0.0"
         }
       },
       "Humanizer.Core": {
@@ -589,6 +610,31 @@
           "System.Security.Cryptography.Pkcs": "10.0.0"
         }
       },
+      "OpenTelemetry": {
+        "type": "Transitive",
+        "resolved": "1.17.0",
+        "contentHash": "rMLOTftlMlTm7+MSrvXDHnJRjVkROFNKXHZrYjOsX+LankaFG7QSflx7qRRGjoqZoirohnxmJQ7GEb9occO4Gg==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "10.0.0",
+          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Logging.Configuration": "10.0.0",
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "1.17.0"
+        }
+      },
+      "OpenTelemetry.Api": {
+        "type": "Transitive",
+        "resolved": "1.17.0",
+        "contentHash": "mSBxzomZgHIJu9CyVNqyDu/n2JHEtqVgfcCD1Br0cV5iLYogjZOMqhlVLt99PEp+0KGBNUR3GXgeOdN2GR3F9g=="
+      },
+      "OpenTelemetry.Api.ProviderBuilderExtensions": {
+        "type": "Transitive",
+        "resolved": "1.17.0",
+        "contentHash": "Xgc3Qf9B9TFMFpx6exTdGqMWuYIT2miNzkdMPutVvT9YuMFaEovXWke1Gb6z8NxYaQbbGF38vYLuSg1JCeui5Q==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "OpenTelemetry.Api": "1.17.0"
+        }
+      },
       "Polly.Core": {
         "type": "Transitive",
         "resolved": "8.4.2",
@@ -880,6 +926,16 @@
           "Microsoft.Extensions.Options": "[10.0.11, )"
         }
       },
+      "fooddiary.email.mailrelay": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
+          "FoodDiary.MailRelay.Client": "[1.0.0, )",
+          "Microsoft.Extensions.Configuration": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
+        }
+      },
       "fooddiary.email.persistencemodel": {
         "type": "Project",
         "dependencies": {
@@ -1041,7 +1097,91 @@
       "fooddiary.integrations.http": {
         "type": "Project"
       },
+      "fooddiary.jobmanager": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Runtime": "[1.0.0, )",
+          "FoodDiary.Audit.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Authentication.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Email.MailRelay": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application": "[1.0.0, )",
+          "FoodDiary.Modules.DailyAdvices.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Exercises.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Gamification.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Service.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Application": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.RecipeCommunity.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Statistics.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Tdee.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Application": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Outbox.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Persistence.Runtime": "[1.0.0, )",
+          "FoodDiary.ReadModel.Composition": "[1.0.0, )",
+          "Hangfire.AspNetCore": "[1.8.25, )",
+          "Hangfire.Core": "[1.8.25, )",
+          "Hangfire.PostgreSql": "[1.21.1, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Microsoft.Extensions.Hosting": "[10.0.11, )",
+          "Newtonsoft.Json": "[13.0.4, )",
+          "Npgsql.OpenTelemetry": "[10.0.3, )",
+          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.17.0, )",
+          "OpenTelemetry.Extensions.Hosting": "[1.17.0, )",
+          "OpenTelemetry.Instrumentation.Http": "[1.17.0, )",
+          "OpenTelemetry.Instrumentation.Runtime": "[1.17.0, )"
+        }
+      },
       "fooddiary.mailinbox.client": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Http": "[10.0.11, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.mailrelay.client": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Http": "[10.0.11, )",
@@ -1145,6 +1285,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
@@ -3286,6 +3427,7 @@
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -3308,6 +3450,13 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
+      "fooddiary.persistence.postgresql": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
       "fooddiary.persistence.runtime": {
         "type": "Project",
         "dependencies": {
@@ -3321,6 +3470,7 @@
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Outbox.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
@@ -3428,6 +3578,36 @@
         "dependencies": {
           "FluentValidation": "12.1.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0"
+        }
+      },
+      "Hangfire.AspNetCore": {
+        "type": "CentralTransitive",
+        "requested": "[1.8.25, )",
+        "resolved": "1.8.25",
+        "contentHash": "IqklPyZDacfrCM6I9vpoTd9n14AvP5tepgR/IfKTUlPzGihLzey9jpL7PTKguJ3CPAA12qz3WCDUfIJ9IsCLQw==",
+        "dependencies": {
+          "Hangfire.NetCore": "[1.8.25]"
+        }
+      },
+      "Hangfire.Core": {
+        "type": "CentralTransitive",
+        "requested": "[1.8.25, )",
+        "resolved": "1.8.25",
+        "contentHash": "BxzXlHwXNrGPHJ7YfAVfeiXC+BHd6uPoyyfV+9bCJVPPGs4z0EQCW1X44Og/IUFM81ENCqAFP1r2rOkQhm4ydA==",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1"
+        }
+      },
+      "Hangfire.PostgreSql": {
+        "type": "CentralTransitive",
+        "requested": "[1.21.1, )",
+        "resolved": "1.21.1",
+        "contentHash": "hFNZAxv+1p72/XCZdImnH6ovCzZ2DKAMTOI8CReT0P3yw/k0b0YJP2teA18agNH1ZYInPzhtxGk8hx5n2cxbbQ==",
+        "dependencies": {
+          "Dapper": "2.0.123",
+          "Dapper.AOT": "1.0.48",
+          "Hangfire.Core": "1.8.0",
+          "Npgsql": "6.0.11"
         }
       },
       "MailKit": {
@@ -3687,8 +3867,57 @@
       "Newtonsoft.Json": {
         "type": "CentralTransitive",
         "requested": "[13.0.4, )",
-        "resolved": "13.0.3",
-        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+        "resolved": "13.0.4",
+        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
+      },
+      "Npgsql.OpenTelemetry": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "ShsdG/FHxJ2VuWM6tebJL/mCWkcxymmvtENN59c85EsJdT4TStWwwtgZoBu/9UvC0qi1jpFZ6bOfl9ijiWD+vA==",
+        "dependencies": {
+          "Npgsql": "10.0.3",
+          "OpenTelemetry.API": "1.15.3"
+        }
+      },
+      "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
+        "type": "CentralTransitive",
+        "requested": "[1.17.0, )",
+        "resolved": "1.17.0",
+        "contentHash": "R1omQOrQpGlS0Cp5UIr/TAiuEA48JrPlgr1NPV5gESiTU7HhWU+ILe2EBSYb1fKdsSavZ7nZkHcUxAzofPqr2A==",
+        "dependencies": {
+          "OpenTelemetry": "1.17.0"
+        }
+      },
+      "OpenTelemetry.Extensions.Hosting": {
+        "type": "CentralTransitive",
+        "requested": "[1.17.0, )",
+        "resolved": "1.17.0",
+        "contentHash": "t1OwL/4qgboGMobYVT+UV5zgWnFqCp4Pw8lcsmzh8m2K8PQsTKkyxrC32tqYTMYny3GOW4q5cltE3dTVzLmRew==",
+        "dependencies": {
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
+          "OpenTelemetry": "1.17.0"
+        }
+      },
+      "OpenTelemetry.Instrumentation.Http": {
+        "type": "CentralTransitive",
+        "requested": "[1.17.0, )",
+        "resolved": "1.17.0",
+        "contentHash": "uTwVtxIJ/xB96wGYTaDsbkJVeCFdUxTwvrlDUn2YJixy0UuKc8DvQMzwKNJMTzNFiiyYO9c40id6tUHTmWs33A==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0",
+          "OpenTelemetry.Api.ProviderBuilderExtensions": "[1.17.0, 2.0.0)"
+        }
+      },
+      "OpenTelemetry.Instrumentation.Runtime": {
+        "type": "CentralTransitive",
+        "requested": "[1.17.0, )",
+        "resolved": "1.17.0",
+        "contentHash": "HyYenisDn/xdtyVXdjImsCl+RNC2gq01N0rvSR7tsYAylXR2sxX/YgMsyTajMXA27+r1vB7lNU8cWRhV0fwL+Q==",
+        "dependencies": {
+          "OpenTelemetry.Api": "[1.17.0, 2.0.0)"
+        }
       },
       "QuestPDF": {
         "type": "CentralTransitive",

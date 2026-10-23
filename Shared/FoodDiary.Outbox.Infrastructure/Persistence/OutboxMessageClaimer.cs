@@ -139,7 +139,7 @@ internal static class OutboxMessageClaimer {
 #pragma warning restore EF1002
 
             if (ids.Count == 0) {
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                 return -1;
             }
 
@@ -166,7 +166,7 @@ internal static class OutboxMessageClaimer {
                 .ConfigureAwait(false);
 #pragma warning restore EF1002
 
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
             return reclaimedCount;
         }
     }

@@ -36,7 +36,9 @@ export class NotificationsDialogComponent {
     private readonly languageVersion = signal(0);
 
     protected readonly notifications = this.notificationService.notifications;
-    protected readonly isLoading = this.notificationService.notificationsLoading;
+    protected readonly isLoading = computed(
+        () => this.notificationService.notificationsLoading() && !this.notificationService.notificationsLoaded(),
+    );
     protected readonly isMarkingAllRead = signal(false);
     protected readonly markAllReadError = signal(false);
     protected readonly hasUnreadNotifications = computed(() => this.notifications().some(item => !item.isRead));

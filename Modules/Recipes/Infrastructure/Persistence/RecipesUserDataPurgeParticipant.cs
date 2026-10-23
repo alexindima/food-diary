@@ -19,13 +19,19 @@ internal sealed class RecipesUserDataPurgeParticipant(
             List<ImageAssetId> assetIds = await context.Recipes
                 .Where(item => item.UserId == userId && item.ImageAssetId != null)
                 .Select(item => item.ImageAssetId!.Value).ToListAsync(cancellationToken).ConfigureAwait(false);
+            assetIds.AddRange(await context.Recipes.Where(item => item.UserId == userId)
+                .SelectMany(item => item.Images).Select(image => image.ImageAssetId)
+                .ToListAsync(cancellationToken).ConfigureAwait(false));
 
             List<ImageAssetId> stepAssets = await context.RecipeSteps
                 .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
                 .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken).ConfigureAwait(false);
+            stepAssets.AddRange(await context.RecipeSteps.Where(step => step.Recipe.UserId == userId)
+                .SelectMany(step => step.Images).Select(image => image.ImageAssetId)
+                .ToListAsync(cancellationToken).ConfigureAwait(false));
             assetIds = [.. assetIds.Concat(stepAssets).Distinct()];
 
-            await imageAssetOwnershipService.ReassignAsync(assetIds, target, cancellationToken).ConfigureAwait(false);
+            await imageAssetOwnershipService.ReassignAsync(assetIds, userId, target, cancellationToken).ConfigureAwait(false);
             await context.Recipes.Where(item => item.UserId == userId)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, target), cancellationToken).ConfigureAwait(false);
         } else {

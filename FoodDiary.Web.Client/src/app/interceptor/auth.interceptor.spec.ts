@@ -20,6 +20,8 @@ type AuthServiceMock = {
     getToken: ReturnType<typeof vi.fn<() => string | null>>;
     refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
     onLogoutAsync: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
+    getUserId: ReturnType<typeof vi.fn<() => string | null>>;
+    isImpersonating: ReturnType<typeof vi.fn<() => boolean>>;
 };
 
 let http: HttpClient;
@@ -27,7 +29,13 @@ let httpTesting: HttpTestingController;
 let authServiceSpy: AuthServiceMock;
 
 beforeEach(() => {
-    authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogoutAsync: vi.fn() };
+    authServiceSpy = {
+        getToken: vi.fn(),
+        refreshToken: vi.fn(),
+        onLogoutAsync: vi.fn(),
+        getUserId: vi.fn(() => 'user-a'),
+        isImpersonating: vi.fn(() => false),
+    };
     authServiceSpy.onLogoutAsync.mockResolvedValue(undefined);
 
     TestBed.configureTestingModule({
@@ -212,6 +220,31 @@ describe('AuthInterceptor credential verification', () => {
 
         expect(onError).toHaveBeenCalledOnce();
         expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('AuthInterceptor locked writer errors', () => {
+    it.each([
+        '/auth/login',
+        '/auth/register',
+        '/auth/restore',
+        '/auth/google',
+        '/auth/password-reset/confirm',
+        '/auth/refresh',
+        '/auth/logout',
+        '/auth/telegram/complete',
+        '/auth/telegram/complete-link',
+        '/auth/telegram/link',
+    ])('propagates a locked writer 401 from %s without recursively acquiring its refresh lock', path => {
+        authServiceSpy.getToken.mockReturnValue('owner-token');
+        const failed = vi.fn();
+        const url = `/api/v1${path}`;
+        http.post(url, {}).subscribe({ error: failed });
+        const request = httpTesting.expectOne(url);
+        expect(request.request.headers.get('Authorization')).toBe('Bearer owner-token');
+        request.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        expect(failed).toHaveBeenCalledOnce();
+        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
     });
 });
 

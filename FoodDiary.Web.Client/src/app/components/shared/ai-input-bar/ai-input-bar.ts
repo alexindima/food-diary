@@ -143,6 +143,7 @@ export class AiInputBarComponent {
         this.destroyRef.onDestroy(() => {
             this.speechRecognition.stop(this.speechOwner);
             this.historyDialogRef()?.close();
+            this.dismissPhotoResult();
         });
         effect(() => {
             const clearToken = this.clearToken();

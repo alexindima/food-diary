@@ -5,9 +5,31 @@ import { firstValueFrom, isObservable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../services/unsaved-changes.service';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 import { unsavedChangesGuard } from './unsaved-changes.guard';
 
 describe('unsavedChangesGuard', () => {
+    it.each(['local', 'logout'])('leaves a %s-ended owner without saving and restores ordinary guest confirmation', async reason => {
+        const handler = createHandler({ hasChanges: true });
+        setupGuard(handler);
+        const openDialog = vi.spyOn(TestBed.inject(FdUiDialogService), 'open');
+        const sessions = TestBed.inject(SessionEventsService);
+        if (reason === 'local') {
+            sessions.notifyLocalSessionInvalidated();
+        } else {
+            sessions.notifySessionEnded();
+        }
+
+        await sessions.runSessionEndNavigationAsync(async () => {
+            expect(await runGuard()).toBe(true);
+        });
+        expect(handler.save).not.toHaveBeenCalled();
+        expect(handler.discard).not.toHaveBeenCalled();
+        expect(openDialog).not.toHaveBeenCalled();
+        expect(await runGuard()).toBe(false);
+        expect(openDialog).toHaveBeenCalledOnce();
+        expect(handler.save).not.toHaveBeenCalled();
+    });
     it('should allow navigation when there is no handler', async () => {
         setupGuard(null);
 

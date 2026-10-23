@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit';
-import { finalize } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
 import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
@@ -22,6 +22,7 @@ export class AdminMealPlansComponent {
     private readonly api = inject(AdminMealPlansFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly translate = inject(TranslateService);
+    private readonly editorSelectionChanged = new Subject<void>();
     protected readonly plans = signal<CatalogPlanSummary[]>([]);
     protected readonly loading = signal(false);
     protected readonly loadFailed = signal(false);
@@ -56,6 +57,7 @@ export class AdminMealPlansComponent {
     }
 
     protected create(): void {
+        this.editorSelectionChanged.next();
         this.selected.set(null);
         this.saved.set(false);
         this.error.set(null);
@@ -63,11 +65,13 @@ export class AdminMealPlansComponent {
     }
 
     protected edit(plan: CatalogPlanSummary): void {
+        this.editorSelectionChanged.next();
         this.loading.set(true);
         this.error.set(null);
         this.api
             .get(plan.id)
             .pipe(
+                takeUntil(this.editorSelectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.loading.set(false);
@@ -86,10 +90,14 @@ export class AdminMealPlansComponent {
     }
 
     protected cancel(): void {
+        this.editorSelectionChanged.next();
+        this.selected.set(null);
         this.editing.set(false);
     }
 
     protected onSaved(): void {
+        this.editorSelectionChanged.next();
+        this.selected.set(null);
         this.editing.set(false);
         this.saved.set(true);
         this.load();

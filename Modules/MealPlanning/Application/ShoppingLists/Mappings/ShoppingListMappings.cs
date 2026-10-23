@@ -1,5 +1,6 @@
 using FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Models;
+using FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Common;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 
 namespace FoodDiary.Modules.MealPlanning.Application.ShoppingLists.Mappings;
@@ -21,11 +22,12 @@ public static class ShoppingListMappings {
                     item.Aisle,
                     item.Note,
                     item.IsChecked,
-                    item.CheckedOnUtc,
+                    ShoppingListRevision.NormalizeTimestamp(item.CheckedOnUtc),
                     item.SortOrder,
                     item.Sources
                         .OrderBy(source => source.DayNumber ?? int.MaxValue)
                         .ThenBy(source => source.Label, StringComparer.Ordinal)
+                        .ThenBy(source => source.Id.Value)
                         .Select(source => new ShoppingListItemSourceModel(
                             source.Id.Value,
                             source.SourceType.ToString(),
@@ -43,7 +45,7 @@ public static class ShoppingListMappings {
             return new ShoppingListModel(
                 list.Id.Value,
                 list.Name,
-                list.CreatedOnUtc,
+                ShoppingListRevision.NormalizeTimestamp(list.CreatedOnUtc),
                 items);
         }
         public ShoppingListSummaryModel ToSummaryModel()
@@ -70,11 +72,12 @@ public static class ShoppingListMappings {
                     item.Aisle,
                     item.Note,
                     item.IsChecked,
-                    item.CheckedOnUtc,
+                    ShoppingListRevision.NormalizeTimestamp(item.CheckedOnUtc),
                     item.SortOrder,
                     item.Sources
                         .OrderBy(source => source.DayNumber ?? int.MaxValue)
                         .ThenBy(source => source.Label, StringComparer.Ordinal)
+                        .ThenBy(source => source.Id)
                         .Select(source => new ShoppingListItemSourceModel(
                             source.Id,
                             source.SourceType,
@@ -92,7 +95,7 @@ public static class ShoppingListMappings {
             return new ShoppingListModel(
                 list.Id,
                 list.Name,
-                list.CreatedAt,
+                ShoppingListRevision.NormalizeTimestamp(list.CreatedAt),
                 items);
         }
     }

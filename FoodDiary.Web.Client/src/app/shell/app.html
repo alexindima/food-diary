@@ -28,9 +28,9 @@
         @if (usesAuthenticatedShell() && isImpersonating()) {
             <div class="fd-impersonation-banner" role="status" aria-live="polite">
                 <span>{{ 'IMPERSONATION.MODE' | translate }}</span>
-                @if (impersonationReason()) {
-                    <span class="fd-impersonation-banner__reason fd-truncate">{{ impersonationReason() }}</span>
-                }
+                <span class="fd-impersonation-banner__reason fd-truncate" [hidden]="!impersonationReason()">{{
+                    impersonationReason()
+                }}</span>
                 <button type="button" class="fd-impersonation-banner__button" (click)="stopImpersonation()">
                     {{ 'IMPERSONATION.END_SESSION' | translate }}
                 </button>
@@ -43,7 +43,9 @@
             tabindex="0"
             [attr.aria-label]="'COMMON.SKIP_TO_MAIN_CONTENT' | translate"
         >
-            <router-outlet class="fd-root__content" />
+            @if (routeContentActive()) {
+                <router-outlet class="fd-root__content" />
+            }
             @if (usesPublicSiteChrome()) {
                 <fd-public-site-footer [path]="currentPath()" />
             }

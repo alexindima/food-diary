@@ -73,7 +73,11 @@ Seal the current result when producing completion evidence:
 The receipt binds the manifest hash, implementation-plan fingerprint,
 task-scoped change packet, workspace policy, diff-snapshot fingerprint,
 classification, and findings. The change packet is refreshed from Git before
-completion; this avoids mixing neighboring task shards from the same dirty
-worktree. Any later packet or metadata change invalidates the receipt. Task
+completion. On a shared dirty worktree, pass the complete owned path array with
+`task-finish -ChangedPath $ownedPaths`; both fresh status checks and refresh keep
+that explicit scope. Without it, the existing whole-diff assessment can include
+neighboring product changes and block readiness. See the
+[shared-worktree review contract](review-diff.md). Any later packet or metadata
+change invalidates the receipt. Task
 finish creates it after the final refresh and includes it in the completion
 artifact hashes. Audit, status, and handoff expose the same classification.

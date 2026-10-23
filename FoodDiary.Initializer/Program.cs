@@ -77,36 +77,8 @@ builder.ConfigureContainer(new DefaultServiceProviderFactory(new ServiceProvider
     ValidateOnBuild = false,
     ValidateScopes = builder.Environment.IsDevelopment(),
 }));
-builder.Configuration.AddEnvironmentVariables("FOODDIARY_");
-
-string webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.Web.Api");
-if (Directory.Exists(webApiSettingsPath)) {
-    builder.Configuration
-        .AddJsonFile(Path.Combine(webApiSettingsPath, "appsettings.json"), optional: true, reloadOnChange: false)
-        .AddJsonFile(
-            Path.Combine(webApiSettingsPath, $"appsettings.{builder.Environment.EnvironmentName}.json"),
-            optional: true,
-            reloadOnChange: false);
-}
-
-if (builder.Environment.IsDevelopment()) {
-    builder.Configuration.AddUserSecrets<Program>();
-}
-
-string? taskConfiguration = Environment.GetEnvironmentVariable("FOODDIARY_TASK_CONFIG");
-if (!string.IsNullOrWhiteSpace(taskConfiguration)) {
-    if (!builder.Environment.IsDevelopment() || !Path.IsPathFullyQualified(taskConfiguration) || !File.Exists(taskConfiguration)) {
-        throw new InvalidOperationException("Task initialization requires Development and an existing absolute task configuration.");
-    }
-    builder.Configuration.Sources.Clear();
-    builder.Configuration.AddJsonFile(taskConfiguration, optional: false, reloadOnChange: false);
-}
-
-if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
-    builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-        ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
-    });
-}
+Program.ConfigureConfiguration(builder, command, Directory.GetCurrentDirectory(),
+    Environment.GetEnvironmentVariable("FOODDIARY_TASK_CONFIG"));
 
 if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("DefaultConnection"))) {
     Console.Error.WriteLine(
@@ -379,6 +351,43 @@ Examples:
 
 [ExcludeFromCodeCoverage]
 public partial class Program {
+    internal static void ConfigureConfiguration(
+        HostApplicationBuilder builder,
+        InitializerCommand command,
+        string workingDirectory,
+        string? taskConfiguration) {
+        string webApiSettingsPath = Path.Combine(workingDirectory, "FoodDiary.Web.Api");
+        if (Directory.Exists(webApiSettingsPath)) {
+            builder.Configuration
+                .AddJsonFile(Path.Combine(webApiSettingsPath, "appsettings.json"), optional: true, reloadOnChange: false)
+                .AddJsonFile(
+                    Path.Combine(webApiSettingsPath, $"appsettings.{builder.Environment.EnvironmentName}.json"),
+                    optional: true,
+                    reloadOnChange: false);
+        }
+
+        if (!string.IsNullOrWhiteSpace(taskConfiguration)) {
+            if (!builder.Environment.IsDevelopment() || !Path.IsPathFullyQualified(taskConfiguration) || !File.Exists(taskConfiguration)) {
+                throw new InvalidOperationException("Task initialization requires Development and an existing absolute task configuration.");
+            }
+            builder.Configuration.Sources.Clear();
+            builder.Configuration.AddJsonFile(taskConfiguration, optional: false, reloadOnChange: false);
+        } else {
+            if (builder.Environment.IsDevelopment()) {
+                builder.Configuration.AddUserSecrets<Program>();
+            }
+
+            // Repository settings are fallbacks; deployment environment values select the target database.
+            builder.Configuration.AddEnvironmentVariables().AddEnvironmentVariables("FOODDIARY_");
+        }
+
+        if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
+            builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = command.ConnectionString,
+            });
+        }
+    }
+
     internal static void ConfigureServices(IServiceCollection services, IConfiguration configuration, InitializerCommand command) {
         services.AddApplicationRuntime();
         services.AddInfrastructure(configuration).AddOutboxProcessing(configuration).AddAuditInfrastructure().AddEmailInfrastructure().AddOutboxReplayManagement().AddSharedAuthentication(configuration).AddIdentityEmailOptions(configuration);

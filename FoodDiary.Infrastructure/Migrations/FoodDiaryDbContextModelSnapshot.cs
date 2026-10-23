@@ -5839,6 +5839,12 @@ namespace FoodDiary.Infrastructure.Migrations
 
             modelBuilder.Entity("FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social.RecipeLike", b =>
                 {
+                    b.HasOne("FoodDiary.Modules.Recipes.Domain.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FoodDiary.Modules.Users.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

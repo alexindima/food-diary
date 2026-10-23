@@ -6,22 +6,22 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
     RabbitMqMailRelayBroker broker,
     IOptions<MailRelayBrokerOptions> brokerOptions,
     ILogger<RabbitMqMailRelayBootstrapHostedService> logger,
-    Func<CancellationToken, Task>? declareTopologyAsync = null) : IHostedService {
+    Func<CancellationToken, Task>? declareTopologyAsync = null) : BackgroundService {
     private readonly MailRelayBrokerOptions _brokerOptions = brokerOptions.Value;
     private readonly Func<CancellationToken, Task> _declareTopologyAsync =
         declareTopologyAsync ?? broker.DeclareTopologyAsync;
 
-    public async Task StartAsync(CancellationToken cancellationToken) {
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         if (!broker.IsEnabled) {
             return;
         }
 
-        while (!cancellationToken.IsCancellationRequested) {
+        while (!stoppingToken.IsCancellationRequested) {
             try {
-                await _declareTopologyAsync(cancellationToken).ConfigureAwait(false);
+                await _declareTopologyAsync(stoppingToken).ConfigureAwait(false);
                 logger.LogInformation("RabbitMQ topology bootstrap completed for MailRelay.");
                 return;
-            } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception exception) {
                 logger.LogWarning(
@@ -29,14 +29,12 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
                     "RabbitMQ topology bootstrap failed. Retrying in {RetryDelaySeconds} seconds.",
                     _brokerOptions.ConnectionRetryDelaySeconds);
 
-                if (!await DelayBeforeRetryAsync(cancellationToken).ConfigureAwait(false)) {
+                if (!await DelayBeforeRetryAsync(stoppingToken).ConfigureAwait(false)) {
                     return;
                 }
             }
         }
     }
-
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     private async Task<bool> DelayBeforeRetryAsync(CancellationToken cancellationToken) {
         try {

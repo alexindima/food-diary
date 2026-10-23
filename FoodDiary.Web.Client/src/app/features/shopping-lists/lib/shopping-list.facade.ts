@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { type Observable, of, switchMap, throwError } from 'rxjs';
 
 import { createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import { createClientId } from '../../../shared/lib/client-id.utils';
@@ -14,6 +16,8 @@ import { entityId } from '../../../shared/models/semantics/entity-id';
 import type { ShoppingList, ShoppingListItem, ShoppingListPage, ShoppingListSummary } from '../../../shared/models/shopping-list.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import { mapShoppingListItemToDto, normalizeShoppingListAmount, rebuildShoppingListSortOrder } from './shopping-list-item.mapper';
+
+const REVISION_CONFLICT_STATUS = 409;
 
 export type ShoppingListDraftItem = {
     name: string;
@@ -31,7 +35,7 @@ export class ShoppingListFacade {
     private readonly destroyRef = inject(DestroyRef);
     private readonly saveQueue = createAutosaveQueue<void>({
         debounceMs: 500,
-        isBusy: () => this.isSaving() || this.isLoading(),
+        isBusy: () => this.isSaving() || this.isLoading() || this.conflictListId() !== null,
         persist: () => {
             this.persistList();
         },
@@ -45,10 +49,13 @@ export class ShoppingListFacade {
     private listLoadSequence = 0;
 
     public hasUnsavedChanges(): boolean {
-        return this.saveQueue.hasPending() || this.isSaving();
+        return this.conflictListId() !== null || this.saveQueue.hasPending() || this.isSaving();
     }
 
     public async saveBeforeLeaveAsync(): Promise<boolean> {
+        if (this.conflictListId() !== null) {
+            return false;
+        }
         while (this.activeSave !== null || this.saveQueue.hasPending()) {
             if (this.activeSave === null) {
                 if (this.isSaving() || this.isLoading()) {
@@ -74,7 +81,9 @@ export class ShoppingListFacade {
     public readonly items = signal<ShoppingListItem[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
+    public readonly isClearing = signal(false);
     public readonly saveError = signal(false);
+    public readonly conflictListId = signal<ShoppingListId | null>(null);
     public readonly initialPage = signal<ShoppingListPage | null>(null);
     private loadingListId: ShoppingListId | null = null;
     public readonly lists = signal<ShoppingListSummary[]>([]);
@@ -122,7 +131,7 @@ export class ShoppingListFacade {
 
     public constructor() {
         effect(() => {
-            if (this.pendingCreate() && !this.isLoading() && !this.isSaving()) {
+            if (this.pendingCreate() && !this.isLoading() && !this.isSaving() && this.conflictListId() === null) {
                 untracked(() => {
                     if (this.saveQueue.hasPending()) {
                         this.saveQueue.flushNow();
@@ -160,7 +169,7 @@ export class ShoppingListFacade {
     }
 
     public selectList(id: ShoppingListId): void {
-        if (id.length === 0 || id === this.lastLoadedListId() || id === this.loadingListId) {
+        if (this.conflictListId() !== null || id.length === 0 || id === this.lastLoadedListId() || id === this.loadingListId) {
             return;
         }
 
@@ -181,13 +190,12 @@ export class ShoppingListFacade {
 
     public renameListById(listId: ShoppingListId, name: string): void {
         const trimmedName = name.trim();
-        if (listId.length === 0 || trimmedName.length === 0) {
+        if (this.conflictListId() !== null || listId.length === 0 || trimmedName.length === 0 || this.isSaving() || this.isLoading()) {
             return;
         }
 
         const current = this.list();
         const previousList = current;
-        const previousItems = this.items();
         const previousLists = this.lists();
         const previousListName = this.listName();
         this.lists.set(previousLists.map(entry => (entry.id === listId ? { ...entry, name: trimmedName } : entry)));
@@ -197,23 +205,36 @@ export class ShoppingListFacade {
         }
 
         this.isSaving.set(true);
-        this.shoppingListService
-            .update(listId, { name: trimmedName })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.readUpdateBaseline(listId, previousList)
+            .pipe(
+                switchMap(baseline => this.shoppingListService.update(listId, { expectedRevision: baseline.revision, name: trimmedName })),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe({
                 next: list => {
                     this.isSaving.set(false);
                     if (this.selectedListId() === list.id) {
-                        this.applyList(list);
+                        this.list.set(list);
+                        if (this.listName() === trimmedName) {
+                            this.listName.set(list.name);
+                        }
                     }
                     this.updateListSummary(list);
+                    this.pendingSave = false;
+                    this.saveQueue.scheduleIfPending();
                 },
-                error: () => {
+                error: (error: unknown) => {
                     this.isSaving.set(false);
+                    if (this.handleRevisionConflict(error, listId)) {
+                        return;
+                    }
                     this.lists.set(previousLists);
                     this.list.set(previousList);
-                    this.items.set(previousItems);
-                    this.listName.set(previousListName);
+                    if (this.listName() === trimmedName) {
+                        this.listName.set(previousListName);
+                    }
+                    this.pendingSave = false;
+                    this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
                 },
             });
@@ -222,7 +243,7 @@ export class ShoppingListFacade {
     private requestedCreateName: string | undefined;
 
     public createNewList(name?: string | void): void {
-        if (this.isCreating()) {
+        if (this.isCreating() || this.conflictListId() !== null) {
             return;
         }
         const trimmedName = name?.trim() ?? '';
@@ -369,24 +390,41 @@ export class ShoppingListFacade {
         const current = this.list();
         const summary = this.lists().find(entry => entry.id === listId);
         const listName = current?.id === listId ? current.name : summary?.name;
-        if (listName === undefined) {
+        if (listName === undefined || this.conflictListId() !== null || this.isSaving() || this.isLoading()) {
             return;
         }
 
         this.isSaving.set(true);
-        this.shoppingListService
-            .update(listId, { name: listName, items: [] })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        this.isClearing.set(true);
+        this.readUpdateBaseline(listId, current)
+            .pipe(
+                switchMap(baseline =>
+                    this.shoppingListService.update(listId, { expectedRevision: baseline.revision, name: baseline.name, items: [] }),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe({
                 next: list => {
                     this.isSaving.set(false);
+                    this.isClearing.set(false);
                     if (this.selectedListId() === list.id) {
                         this.applyList(list);
+                        this.saveQueue.clearPending();
+                        this.pendingSave = false;
+                    } else {
+                        this.pendingSave = false;
+                        this.saveQueue.scheduleIfPending();
                     }
                     this.updateListSummary(list);
                 },
-                error: () => {
+                error: (error: unknown) => {
                     this.isSaving.set(false);
+                    this.isClearing.set(false);
+                    if (this.handleRevisionConflict(error, listId)) {
+                        return;
+                    }
+                    this.pendingSave = false;
+                    this.saveQueue.scheduleIfPending();
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.CLEAR_ERROR'));
                 },
             });
@@ -394,7 +432,7 @@ export class ShoppingListFacade {
 
     public deleteCurrentList(): void {
         const current = this.list();
-        if (current === null) {
+        if (current === null || this.conflictListId() !== null) {
             return;
         }
 
@@ -402,6 +440,9 @@ export class ShoppingListFacade {
     }
 
     public deleteListById(listId: ShoppingListId): void {
+        if (this.conflictListId() !== null) {
+            return;
+        }
         const current = this.list();
         if (current?.id === listId) {
             this.deleteSelectedList(current);
@@ -614,14 +655,14 @@ export class ShoppingListFacade {
     }
 
     public retrySave(): void {
-        if (!this.isSaving() && !this.isLoading() && this.saveQueue.hasPending()) {
+        if (this.conflictListId() === null && !this.isSaving() && !this.isLoading() && this.saveQueue.hasPending()) {
             this.saveQueue.flushNow();
         }
     }
 
     private persistList(): void {
         const current = this.list();
-        if (current === null || this.isSaving() || this.isLoading()) {
+        if (current === null || this.conflictListId() !== null || this.isSaving() || this.isLoading()) {
             return;
         }
 
@@ -638,6 +679,7 @@ export class ShoppingListFacade {
             finishSave = resolve;
         });
         const payload = {
+            expectedRevision: current.revision,
             name,
             items: submittedItems.map((item, index) => mapShoppingListItemToDto(item, index)),
         };
@@ -666,15 +708,17 @@ export class ShoppingListFacade {
                     }
                     finishSave(true);
                 },
-                error: () => {
+                error: (error: unknown) => {
                     this.isSaving.set(false);
                     this.pendingSave = false;
                     this.pendingSelection = null;
                     this.pendingCreate.set(false);
                     this.requestedCreateName = undefined;
                     this.saveQueue.restore();
-                    this.saveError.set(true);
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
+                    if (!this.handleRevisionConflict(error, current.id)) {
+                        this.saveError.set(true);
+                        this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
+                    }
                     finishSave(false);
                 },
             });
@@ -682,5 +726,55 @@ export class ShoppingListFacade {
 
     private createTempId(): string {
         return createClientId('temp');
+    }
+
+    private readUpdateBaseline(listId: ShoppingListId, current: ShoppingList | null): Observable<ShoppingList> {
+        const baseline = current?.id === listId ? of(current) : this.shoppingListService.getById(listId);
+        return baseline.pipe(switchMap(list => (list === null ? throwError(() => new Error('Shopping list unavailable')) : of(list))));
+    }
+
+    private handleRevisionConflict(error: unknown, listId: ShoppingListId): boolean {
+        if (!(error instanceof HttpErrorResponse) || error.status !== REVISION_CONFLICT_STATUS) {
+            return false;
+        }
+        this.conflictListId.set(listId);
+        this.saveError.set(false);
+        this.pendingSave = false;
+        this.pendingSelection = null;
+        this.pendingCreate.set(false);
+        this.requestedCreateName = undefined;
+        this.saveQueue.clearPending();
+        this.saveQueue.restore();
+        return true;
+    }
+
+    public reloadConflict(listId: ShoppingListId): void {
+        if (this.conflictListId() !== listId || this.isLoading() || this.isSaving()) {
+            return;
+        }
+        this.isLoading.set(true);
+        this.shoppingListService
+            .getById(listId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: list => {
+                    this.isLoading.set(false);
+                    if (list === null) {
+                        this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
+                        return;
+                    }
+                    this.saveQueue.clearPending();
+                    this.pendingSave = false;
+                    this.pendingSelection = null;
+                    this.activeSave = null;
+                    this.conflictListId.set(null);
+                    this.applyList(list);
+                    this.updateListSummary(list);
+                },
+                error: () => {
+                    this.isLoading.set(false);
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
+                },
+            });
     }
 }

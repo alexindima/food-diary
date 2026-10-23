@@ -100,7 +100,7 @@
         "sdk:bot:check": "node scripts/generate-bot-api-sdk.mjs --check",
         "sdk:bot:check:api": "node scripts/generate-bot-api-sdk.mjs --export --check",
         "test:fixtures": "node --test scripts/openapi-fixtures.test.mjs scripts/smoke-fixture-contract.test.mjs",
-        "test:ai-development": "node --test ../scripts/ai/generate-feature.test.mjs ../scripts/ai/task-runtime.test.mjs ../scripts/ai/agent-tools.test.mjs ../scripts/ai/trial-comparison.test.mjs ../scripts/ai/trial-settings.test.mjs ../scripts/ai/candidate-contract-check.test.mjs ../scripts/ai/resource-budget.test.mjs ../scripts/ai/recovery-drill.test.mjs ../scripts/ai/recognition-evals.test.mjs ../scripts/ai/load-baseline.test.mjs ../scripts/ai/runtime-check-lease.test.mjs ../scripts/ai/journey-evidence.test.mjs",
+        "test:ai-development": "node --test ../scripts/ai/generate-feature.test.mjs ../scripts/ai/task-runtime.test.mjs ../scripts/ai/task-runtime-browser.test.mjs ../scripts/ai/agent-tools.test.mjs ../scripts/ai/trial-comparison.test.mjs ../scripts/ai/trial-settings.test.mjs ../scripts/ai/candidate-contract-check.test.mjs ../scripts/ai/resource-budget.test.mjs ../scripts/ai/recovery-drill.test.mjs ../scripts/ai/recognition-evals.test.mjs ../scripts/ai/load-baseline.test.mjs ../scripts/ai/runtime-check-lease.test.mjs ../scripts/ai/journey-evidence.test.mjs",
         "test:e2e:client:live": "node ../scripts/ai/verify-user-journeys.mjs",
         "test:nutrition:mutation": "node ../scripts/ai/verify-nutrition-mutation.mjs",
         "test:recognition:reference": "node ../scripts/ai/recognition-evals.mjs self-test",

@@ -25,7 +25,17 @@ import {
     sourceFingerprint,
     stopOwnedProcess,
     stopRuntime,
+    taskFrontendEnvironment,
 } from "./task-runtime.mjs";
+
+test("task frontend SSR always targets its owned API instead of an inherited runtime", () => {
+    const inherited = { SSR_API_ORIGIN: "http://localhost:5300", PATH: "existing-path" };
+    assert.deepEqual(taskFrontendEnvironment("http://127.0.0.1:54512", inherited), {
+        SSR_API_ORIGIN: "http://127.0.0.1:54512",
+        PATH: "existing-path",
+    });
+    assert.equal(inherited.SSR_API_ORIGIN, "http://localhost:5300");
+});
 
 test("runtime freshness includes extracted WebMCP library source", () => {
     const root = mkdtempSync(join(tmpdir(), "fd-webmcp-fingerprint-"));
@@ -235,6 +245,7 @@ test("admin workspace keeps shared sources unchanged and uses separate local aut
         );
         assert.match(adminEnvironment, /http:\/\/127\.0\.0\.1:51002/u);
         assert.match(adminEnvironment, /auth: '\/api\/v1\/auth'/u);
+        assert.match(adminEnvironment, /buildVersion: 'task'/u);
         for (const project of Object.values(generated.projects)) {
             const build = project.architect.build;
             for (const asset of build.options.assets)

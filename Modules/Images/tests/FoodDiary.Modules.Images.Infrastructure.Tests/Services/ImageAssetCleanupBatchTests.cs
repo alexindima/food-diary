@@ -11,7 +11,7 @@ public sealed class ImageAssetCleanupBatchTests {
     [Fact]
     public async Task ReassignAsync_EmptyAssetsDoesNotAccessPersistence() {
         var service = new ImageAssetOwnershipService(null!);
-        await service.ReassignAsync([], UserId.New(), CancellationToken.None);
+        await service.ReassignAsync([], UserId.New(), UserId.New(), CancellationToken.None);
     }
     [Fact]
     public async Task DeleteUnusedAsync_WhenAssetIsRetained_DisposesScopeWithoutSaving() {

@@ -45,7 +45,7 @@ export class RecommendationThreadComponent {
 
     protected submit(): void {
         const text = this.draft().trim();
-        if (text.length === 0 || this.saving()) {
+        if (text.length === 0 || this.loading() || this.loadFailed() || this.saving()) {
             return;
         }
 

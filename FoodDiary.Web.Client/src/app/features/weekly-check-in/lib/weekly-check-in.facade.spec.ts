@@ -105,6 +105,59 @@ async function settleAsync(): Promise<void> {
 
 afterEach(() => vi.useRealTimers());
 
+describe('WeeklyCheckInFacade request lifetime', () => {
+    it('unsubscribes all three resource reads when their owner is destroyed', async () => {
+        const { facade, dataService, goals } = setup();
+        const data = new Subject<WeeklyCheckInData>();
+        const nextGoal = new Subject<WeeklyGoal | null>();
+        const selectedGoal = new Subject<WeeklyGoal | null>();
+        dataService.getData.mockReturnValue(data);
+        goals.getGoal.mockImplementation((week: CalendarDate) => (week === facade.selectedWeekStartIso() ? selectedGoal : nextGoal));
+        await settleAsync();
+        expect([data.observed, nextGoal.observed, selectedGoal.observed]).toEqual([true, true, true]);
+
+        TestBed.resetTestingModule();
+
+        expect([data.observed, nextGoal.observed, selectedGoal.observed]).toEqual([false, false, false]);
+    });
+
+    it('cancels obsolete week reads before accepting the newly selected week', async () => {
+        const { facade, dataService, goals } = setup();
+        const data = new Subject<WeeklyCheckInData>();
+        const nextGoal = new Subject<WeeklyGoal | null>();
+        const selectedGoal = new Subject<WeeklyGoal | null>();
+        dataService.getData.mockReturnValueOnce(data);
+        goals.getGoal.mockReturnValueOnce(nextGoal).mockReturnValueOnce(selectedGoal);
+        await settleAsync();
+        expect(data.observed).toBe(true);
+
+        facade.selectedWeek.set(new Date(TEST_YEAR, 2, PREVIOUS_MONDAY));
+        await settleAsync();
+
+        expect([data.observed, nextGoal.observed, selectedGoal.observed]).toEqual([false, false, false]);
+        expect(facade.selectedWeekStartIso()).toBe('2026-03-09');
+        expect(facade.thisWeek()?.totalCalories).toBe(WEEKLY_CALORIES);
+    });
+
+    it('keeps one pending read when retry is requested before it finishes', async () => {
+        const { facade, dataService } = setup();
+        const pending = new Subject<WeeklyCheckInData>();
+        dataService.getData.mockReturnValueOnce(pending);
+        await settleAsync();
+        expect(pending.observed).toBe(true);
+
+        facade.retryData();
+        await settleAsync();
+
+        expect(pending.observed).toBe(true);
+        expect(dataService.getData).toHaveBeenCalledTimes(1);
+        pending.next(createData());
+        pending.complete();
+        await settleAsync();
+        expect(facade.thisWeek()?.totalCalories).toBe(WEEKLY_CALORIES);
+    });
+});
+
 describe('WeeklyCheckInFacade (1)', () => {
     it('loads the local Monday and separates this week from next week goals', async () => {
         const { facade, dataService, goals } = setup();

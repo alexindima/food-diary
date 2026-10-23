@@ -10,7 +10,7 @@ RUN npm ci
 COPY . .
 
 ARG BUILD_VERSION=dev
-RUN sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.prod.ts src/environments/environment.staging.ts
+RUN sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment.prod.ts src/environments/environment.staging.ts projects/fooddiary-admin/src/environments/environment.prod.ts
 
 RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin && npm run build:storybook
 

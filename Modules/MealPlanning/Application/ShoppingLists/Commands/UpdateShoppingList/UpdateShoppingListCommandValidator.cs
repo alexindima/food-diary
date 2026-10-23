@@ -16,6 +16,15 @@ public sealed class UpdateShoppingListCommandValidator : AbstractValidator<Updat
             .WithErrorCode("Validation.Required")
             .WithMessage("ShoppingListId is required");
 
+        RuleFor(x => x.ExpectedRevision)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithErrorCode("Validation.Required")
+            .WithMessage("ExpectedRevision is required.")
+            .Must(ShoppingListRevision.IsValid)
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("ExpectedRevision must be a 64-character lowercase hexadecimal revision.");
+
         RuleFor(x => x)
             .Must(command => !string.IsNullOrWhiteSpace(command.Name) || command.Items is not null)
             .WithErrorCode("Validation.Required")

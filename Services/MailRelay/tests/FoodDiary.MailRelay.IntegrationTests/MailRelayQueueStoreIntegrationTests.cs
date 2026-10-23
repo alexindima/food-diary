@@ -5,7 +5,6 @@ using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
 using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
-using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 
 namespace FoodDiary.MailRelay.IntegrationTests;
@@ -364,15 +363,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     public async Task MailRelayReadinessChecker_WhenPostgresBackendIsReady_Completes() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
-        var brokerOptions = new MailRelayBrokerOptions {
-            Backend = MailRelayBrokerOptions.PostgresPollingBackend,
-        };
-        var checker = new MailRelayReadinessChecker(
-            dataSource,
-            new RabbitMqMailRelayBroker(
-                Microsoft.Extensions.Options.Options.Create(brokerOptions),
-                NullLogger<RabbitMqMailRelayBroker>.Instance),
-            Microsoft.Extensions.Options.Options.Create(brokerOptions));
+        var checker = new MailRelayReadinessChecker(dataSource);
 
         await checker.CheckReadyAsync(CancellationToken.None);
     }

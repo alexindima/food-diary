@@ -11,7 +11,7 @@ import { buildFastingTimerCardComputedState } from '../../../../shared/lib/fasti
 import { HOURS_PER_DAY, MS_PER_HOUR } from '../../../../shared/lib/time.constants';
 import type { FastingSession, FastingStats } from '../../../../shared/models/fasting.data';
 import type { FastingMessageViewModel } from '../../lib/fasting-page.types';
-import { getFastingDurationDisplay, isFastingEndedEarly } from '../../lib/fasting-session-state';
+import { getFastingDurationDisplay, getNextCyclicDayLabelKey, isFastingEndedEarly } from '../../lib/fasting-session-state';
 
 type RhythmDay = {
     dayKey: string;
@@ -130,6 +130,12 @@ export class FastingRedesignPreviewComponent {
         const session = this.session();
         if (session?.planType === 'Extended') {
             return null;
+        }
+        if (session?.planType === 'Cyclic') {
+            const nextDay = getNextCyclicDayLabelKey(session);
+            if (nextDay !== null) {
+                return nextDay;
+            }
         }
 
         return this.isEatingPhase() ? 'FASTING.FASTING_WINDOW' : 'FASTING.EATING_WINDOW';

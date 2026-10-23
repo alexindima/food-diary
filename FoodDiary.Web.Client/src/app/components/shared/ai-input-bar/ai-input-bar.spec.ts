@@ -13,7 +13,7 @@ import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { UserFacade } from '../../../shared/lib/user.facade';
-import type { FoodNutritionResponse, FoodVisionItem } from '../../../shared/models/ai.data';
+import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../shared/models/food-recognition.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
@@ -647,6 +647,68 @@ describe('AiInputBarComponent repeated photo recognition', () => {
         );
         expect(component['photoSelection']()).toEqual(imageSelection('blob:second-photo', null));
         expect(component['photoDialogRef']()).not.toBeNull();
+    });
+});
+
+describe('AiInputBarComponent photo lifecycle', () => {
+    it.each(['preparation', 'analysis', 'nutrition', 'complete'] as const)(
+        'closes the photo overlay and clears private data on owner destruction during %s',
+        async stage => {
+            const { aiFoodService, component, dialogService, fixture } = await setupAiInputBarAsync();
+            const close = vi.fn();
+            const closed = new Subject<boolean | FoodRecognitionJob | undefined>();
+            const analysis = new Subject<FoodVisionResponse>();
+            const nutrition = new Subject<FoodNutritionResponse>();
+            dialogService.open.mockReturnValueOnce({ componentInstance: null, close, afterClosed: () => closed });
+            if (stage === 'analysis') {
+                aiFoodService.analyzeFoodImage.mockReturnValueOnce(analysis);
+            } else if (stage === 'nutrition') {
+                aiFoodService.calculateNutrition.mockReturnValueOnce(nutrition);
+            }
+            fixture.detectChanges();
+            component['onPhotoPreparationStarted']('blob:private-photo');
+            if (stage !== 'preparation') {
+                component['onPhotoSelected'](imageSelection('https://example.com/private-photo.jpg', 'asset-1'));
+            }
+            const dialogConfig = dialogService.open.mock.calls[0][1] as {
+                data: {
+                    imageUrl: () => string | null;
+                    results: () => FoodVisionItem[];
+                    nutrition: () => FoodNutritionResponse | null;
+                    isPreparing: () => boolean;
+                };
+            };
+
+            fixture.destroy();
+            analysis.next({ items: VISION_ITEMS });
+            nutrition.next(NUTRITION);
+            closed.next(undefined);
+
+            expect(close).toHaveBeenCalledOnce();
+            expect(component['photoDialogRef']()).toBeNull();
+            expect(dialogConfig.data.imageUrl()).toBeNull();
+            expect(dialogConfig.data.results()).toEqual([]);
+            expect(dialogConfig.data.nutrition()).toBeNull();
+            expect(dialogConfig.data.isPreparing()).toBe(false);
+            expect(analysis.observed).toBe(false);
+            expect(nutrition.observed).toBe(false);
+            expect(closed.observed).toBe(false);
+        },
+    );
+
+    it('does not close an already dismissed photo overlay again on owner destruction', async () => {
+        const { component, dialogService, fixture } = await setupAiInputBarAsync();
+        const close = vi.fn();
+        dialogService.open.mockReturnValueOnce({ componentInstance: null, close, afterClosed: () => NEVER });
+        fixture.detectChanges();
+        component['onPhotoPreparationStarted']('blob:private-photo');
+
+        component['dismissPhotoResult']();
+        fixture.destroy();
+
+        expect(close).toHaveBeenCalledOnce();
+        expect(component['photoDialogRef']()).toBeNull();
+        expect(component['hasPhotoResult']()).toBe(false);
     });
 });
 

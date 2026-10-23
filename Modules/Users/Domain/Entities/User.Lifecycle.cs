@@ -23,6 +23,7 @@ public sealed partial class User {
     }
 
     public void Activate(DateTime? changedAtUtc = null) {
+        EnsureNotSystemContentOwner();
         if (DeletedAt is not null) {
             throw new InvalidOperationException("Deleted user cannot be activated directly. Use Restore().");
         }
@@ -40,6 +41,7 @@ public sealed partial class User {
     }
 
     public void MarkDeleted(DateTime deletedAtUtc) {
+        EnsureNotSystemContentOwner();
         if (DeletedAt is not null && !IsActive) {
             return;
         }
@@ -54,6 +56,7 @@ public sealed partial class User {
     }
 
     public void Restore(DateTime? restoredAtUtc = null) {
+        EnsureNotSystemContentOwner();
         if (DeletedAt is null && IsActive) {
             return;
         }

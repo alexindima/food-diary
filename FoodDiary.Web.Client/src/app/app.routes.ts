@@ -3,6 +3,7 @@ import type { Route, Routes } from '@angular/router';
 
 import { PUBLIC_SEO_LANDING_ROUTES, type PublicSeoLandingRouteConfig } from './config/public-seo-landing-routes.config';
 import { localizedPublicPath, PUBLIC_INFORMATION_PAGES, type PublicSiteLocale } from './config/public-site-paths';
+import { requireSessionForGuardedRoutes } from './config/session-route-policy';
 import { authRoutes } from './features/auth/auth.routes';
 import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
@@ -51,7 +52,7 @@ const publicInformationRoutes = (locale: PublicSiteLocale): Routes =>
         },
     }));
 
-export const routes: Routes = [
+const configuredRoutes: Routes = [
     {
         path: '',
         loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
@@ -216,3 +217,5 @@ export const routes: Routes = [
         data: { shell: 'public', seo: { titleKey: 'SEO.NOT_FOUND', noIndex: true } },
     },
 ];
+
+export const routes: Routes = requireSessionForGuardedRoutes(configuredRoutes, [authGuard, dietologistGuard]);

@@ -12,7 +12,10 @@ export function shoppingSummaryFromSdk(value: ShoppingListSummaryHttpResponse): 
 }
 
 export function shoppingListFromSdk(response: ShoppingListHttpResponse): ShoppingList {
-    const value = requireSdkFields(response, ['id', 'name', 'createdAt', 'items']);
+    const value = requireSdkFields(response, ['id', 'revision', 'name', 'createdAt', 'items']);
+    if (typeof value.revision !== 'string' || !/^[0-9a-f]{64}$/.test(value.revision)) {
+        throw new Error('API response contains an invalid shopping list revision.');
+    }
     return {
         ...value,
         items: value.items.map(itemResponse => {

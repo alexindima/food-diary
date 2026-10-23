@@ -43,7 +43,9 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `mailrelay_outbox_messages` provides transactional publish handoff to RabbitMQ
 - RabbitMQ drives near-real-time processing
 - failed attempts schedule the next RabbitMQ publish through the outbox at the same `available_at_utc` used by queue state
-- PostgreSQL polling can remain enabled as an additional recovery path for broker disruptions
+- PostgreSQL polling is required with the RabbitMQ backend and delivers during broker disruptions, including at startup
+- RabbitMQ topology bootstrap and reconnect run in the background; HTTP intake and PostgreSQL delivery do not wait for the broker
+- readiness checks the authoritative PostgreSQL store; broker outages are visible in worker diagnostics without rejecting durable HTTP intake
 
 ## Main Endpoints
 
@@ -88,7 +90,8 @@ MailRelay should use its own PostgreSQL database. The local default is `fooddiar
 - `mailrelay-db-init` runs `Services/MailRelay/FoodDiary.MailRelay.Initializer` to create or update the relay schema before the app starts
 - `mail-relay` runs as a separate application container built from `Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile`
 - `api` calls `mail-relay` through `MailRelayClient__BaseUrl`
-- production deploy must build and push the `mailrelay-initializer` and `mail-relay` images, run `mailrelay-db-init`, then start `rabbitmq`, `mail-relay`, and `api`
+- production deploy must build and push the `mailrelay-initializer` and `mail-relay` images and run `mailrelay-db-init` before starting `mail-relay`
+- `mail-relay` can start while RabbitMQ is unavailable; the primary API starts independently of both mail containers and retains pending mail in its email outbox
 
 ## Build And Run
 

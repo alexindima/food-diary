@@ -1,5 +1,5 @@
 <!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
-<fd-ui-dialog title="Create user" size="sm" [dismissible]="false">
+<fd-ui-dialog title="Create user" size="sm" [dismissible]="false" [disableClose]="isSubmitting()">
     @if (created(); as result) {
         <div class="admin-user-create-dialog fd-grid fd-gap-md" role="status">
             <p>
@@ -45,6 +45,7 @@
                             [label]="role"
                             [id]="`admin-user-create-role-${role}`"
                             [checked]="hasRole(role)"
+                            [disabled]="isSubmitting()"
                             (checkedChange)="toggleRole(role)"
                         />
                     </div>
@@ -73,6 +74,7 @@
                     label="Send login credentials by email"
                     [id]="'admin-user-create-send-credentials'"
                     [checked]="formModel().sendCredentialsEmail"
+                    [disabled]="isSubmitting()"
                     (checkedChange)="onCredentialsOptionChange('sendCredentialsEmail', $event)"
                 />
             </div>
@@ -81,7 +83,7 @@
                     label="Require password change on first sign-in"
                     [id]="'admin-user-create-require-password-change'"
                     [checked]="formModel().requirePasswordChange"
-                    [disabled]="formModel().sendCredentialsEmail"
+                    [disabled]="isSubmitting() || formModel().sendCredentialsEmail"
                     (checkedChange)="onCredentialsOptionChange('requirePasswordChange', $event)"
                 />
             </div>

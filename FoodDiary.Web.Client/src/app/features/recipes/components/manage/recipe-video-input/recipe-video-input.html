@@ -7,15 +7,35 @@
         (checkedChange)="enabledChanged.emit($event)"
     />
     @if (enabled()) {
-        <label for="recipe-video-file" class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.VIDEO_FILE_LABEL' | translate }}</label>
+        <label id="recipe-video-file-label" for="recipe-video-file" class="fd-ui-body-sm">
+            {{ 'RECIPE_MANAGE.IMPORT.VIDEO_FILE_LABEL' | translate }}
+        </label>
         <input
             #fileInput
             id="recipe-video-file"
             type="file"
+            hidden
             accept="video/mp4,video/webm,.mp4,.webm"
             [disabled]="busy()"
             (change)="selectFile(fileInput)"
         />
-        <p class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.VIDEO_LIMITS' | translate }}</p>
+        <div class="fd-ui-actions">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="outline"
+                icon="upload_file"
+                ariaDescribedBy="recipe-video-file-label recipe-video-file-name recipe-video-file-limits"
+                [disabled]="busy()"
+                [disabledReason]="'RECIPE_MANAGE.IMPORT.RECOGNIZING' | translate"
+                (click)="fileInput.click()"
+            >
+                {{ 'RECIPE_MANAGE.IMPORT.VIDEO_SELECT_FILE' | translate }}
+            </fd-ui-button>
+        </div>
+        <p id="recipe-video-file-name" class="recipe-video-input__filename fd-ui-body-sm" role="status">
+            {{ selectedFile()?.name ?? ('RECIPE_MANAGE.IMPORT.VIDEO_NO_FILE' | translate) }}
+        </p>
+        <p id="recipe-video-file-limits" class="fd-ui-body-sm">{{ 'RECIPE_MANAGE.IMPORT.VIDEO_LIMITS' | translate }}</p>
     }
 </div>

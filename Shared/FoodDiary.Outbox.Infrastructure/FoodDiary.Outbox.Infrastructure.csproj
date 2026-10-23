@@ -10,5 +10,6 @@
     <ProjectReference Include="../FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
     <ProjectReference Include="../FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj" />
   </ItemGroup>
 </Project>

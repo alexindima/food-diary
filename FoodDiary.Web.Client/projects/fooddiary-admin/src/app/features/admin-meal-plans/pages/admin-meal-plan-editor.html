@@ -12,10 +12,18 @@
     <div class="fd-row fd-wrap fd-gap-sm">
         <fd-ui-input
             [value]="recipeSearch()"
+            [disabled]="saving()"
             [label]="'ADMIN_MEAL_PLANS.SEARCH_RECIPES' | translate"
             (valueChange)="recipeSearch.set($event === null ? '' : $event.toString())"
         />
-        <fd-ui-button type="button" variant="secondary" (click)="searchRecipes()">{{ 'ADMIN_MEAL_PLANS.SEARCH' | translate }}</fd-ui-button>
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            [disabled]="saving()"
+            [disabledReason]="'ADMIN_MEAL_PLANS.SAVING' | translate"
+            (click)="searchRecipes()"
+            >{{ 'ADMIN_MEAL_PLANS.SEARCH' | translate }}</fd-ui-button
+        >
     </div>
     <p class="fd-ui-helper-text">{{ 'ADMIN_MEAL_PLANS.RECIPE_HELP' | translate }}</p>
     <div class="fd-grid fd-gap-md">
@@ -40,15 +48,25 @@
                                 [formField]="form.days[dayIndex].meals[mealIndex].servings"
                                 [label]="'ADMIN_MEAL_PLANS.SERVINGS' | translate"
                             />
-                            <fd-ui-button type="button" variant="secondary" (click)="removeMeal(dayIndex, mealIndex)">{{
-                                'ADMIN_MEAL_PLANS.REMOVE' | translate
-                            }}</fd-ui-button>
+                            <fd-ui-button
+                                type="button"
+                                variant="secondary"
+                                [disabled]="saving()"
+                                [disabledReason]="'ADMIN_MEAL_PLANS.SAVING' | translate"
+                                (click)="removeMeal(dayIndex, mealIndex)"
+                                >{{ 'ADMIN_MEAL_PLANS.REMOVE' | translate }}</fd-ui-button
+                            >
                         </div>
                     }
                 </div>
-                <fd-ui-button type="button" variant="secondary" (click)="addMeal(dayIndex)">{{
-                    'ADMIN_MEAL_PLANS.ADD_RECIPE' | translate
-                }}</fd-ui-button>
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    [disabled]="saving()"
+                    [disabledReason]="'ADMIN_MEAL_PLANS.SAVING' | translate"
+                    (click)="addMeal(dayIndex)"
+                    >{{ 'ADMIN_MEAL_PLANS.ADD_RECIPE' | translate }}</fd-ui-button
+                >
             </section>
         }
     </div>

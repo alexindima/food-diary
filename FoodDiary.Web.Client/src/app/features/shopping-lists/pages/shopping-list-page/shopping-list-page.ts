@@ -67,7 +67,9 @@ export class ShoppingListPageComponent {
     protected readonly items = this.facade.items;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
+    protected readonly isClearing = this.facade.isClearing;
     protected readonly saveError = this.facade.saveError;
+    protected readonly conflictListId = this.facade.conflictListId;
     protected readonly isCreating = this.facade.isCreating;
     protected readonly initialPage = this.facade.initialPage;
     protected readonly lists = this.facade.navigationLists;
@@ -78,7 +80,9 @@ export class ShoppingListPageComponent {
     protected readonly totalItemsCount = computed(() => this.items().length);
     protected readonly remainingItemsCount = computed(() => this.totalItemsCount() - this.checkedItemsCount());
     protected readonly hasLists = computed(() => this.lists().length > 0);
-    protected readonly canDeleteList = computed(() => this.list() !== null && !this.isSaving() && !this.isLoading());
+    protected readonly canDeleteList = computed(
+        () => this.list() !== null && this.conflictListId() === null && !this.isSaving() && !this.isLoading(),
+    );
     protected readonly canClearList = computed(
         () => this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
@@ -358,6 +362,30 @@ export class ShoppingListPageComponent {
 
     protected retrySave(): void {
         this.facade.retrySave();
+    }
+
+    protected reloadConflict(): void {
+        const listId = this.conflictListId();
+        if (listId === null || this.isLoading() || this.isSaving()) {
+            return;
+        }
+        this.dialogService
+            .open<ConfirmDeleteDialogComponent, ConfirmDeleteDialogData, boolean>(ConfirmDeleteDialogComponent, {
+                preset: 'confirm',
+                data: {
+                    title: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_TITLE'),
+                    message: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD_MESSAGE'),
+                    confirmLabel: this.translateService.instant('SHOPPING_LIST.CONFLICT_RELOAD'),
+                    cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
+                },
+            })
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(confirmed => {
+                if (confirmed === true) {
+                    this.facade.reloadConflict(listId);
+                }
+            });
     }
 
     protected startShoppingListTour(force = true): void {

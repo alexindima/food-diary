@@ -627,7 +627,7 @@ keeps the code graph, compiled helper runtimes, and index caches warm across
 commits and prevents a hook from deleting a SQLite database used by another
 session.
 
-Frontend and C# test-source-only changes select the quality index without
+C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture
 rebuilds. Architecture health remains tied to project/catalog and public-contract
 inputs. Wiki tool and tool-test changes select quality plus downstream

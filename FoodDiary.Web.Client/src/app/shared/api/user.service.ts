@@ -49,6 +49,7 @@ export class UserService {
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly silentLoadingContext = new HttpContext().set(SKIP_GLOBAL_LOADING, true);
     private readonly userSignal = signal<User | null>(null);
+    private sessionVersion = 0;
     public readonly user = this.userSignal.asReadonly();
 
     public constructor() {
@@ -61,6 +62,7 @@ export class UserService {
     }
 
     public clearUser(): void {
+        this.sessionVersion++;
         this.userSignal.set(null);
     }
 
@@ -69,47 +71,51 @@ export class UserService {
     }
 
     public getOverview(): Observable<UserProfileOverview | null> {
+        const session = this.sessionVersion;
         return this.sdk.client.getUsersOverview({ version: this.sdk.version }).pipe(
             map(profileOverviewFromSdk),
             tap(overview => {
-                this.userSignal.set(overview.user);
+                this.setUserForSession(session, overview.user);
             }),
             catchError((error: unknown) => {
-                this.userSignal.set(null);
+                this.setUserForSession(session, null);
                 return fallbackApiError('Get user overview error', error, null);
             }),
         );
     }
 
     public getInfo(): Observable<User | null> {
+        const session = this.sessionVersion;
         return this.sdk.client.getUsersInfo({ version: this.sdk.version }).pipe(
             map(userFromSdk),
             tap(user => {
-                this.userSignal.set(user);
+                this.setUserForSession(session, user);
             }),
             catchError((error: unknown) => {
-                this.userSignal.set(null);
+                this.setUserForSession(session, null);
                 return fallbackApiError('Get user info error', error, null);
             }),
         );
     }
 
     public getInfoSilently(): Observable<User | null> {
+        const session = this.sessionVersion;
         return this.sdk.client
             .getUsersInfo({ version: this.sdk.version }, 'body', false, sdkRequestOptions(undefined, this.silentLoadingContext))
             .pipe(
                 map(userFromSdk),
                 tap(user => {
-                    this.userSignal.set(user);
+                    this.setUserForSession(session, user);
                 }),
                 catchError((error: unknown) => {
-                    this.userSignal.set(null);
+                    this.setUserForSession(session, null);
                     return fallbackApiError('Get user info error', error, null);
                 }),
             );
     }
 
     public update(data: UpdateUserDto): Observable<User | null> {
+        const session = this.sessionVersion;
         return this.sdk.client
             .patchUsersInfo({
                 version: this.sdk.version,
@@ -118,27 +124,29 @@ export class UserService {
             .pipe(
                 map(userFromSdk),
                 tap(user => {
-                    this.userSignal.set(user);
+                    this.setUserForSession(session, user);
                 }),
                 catchError((error: unknown) => fallbackApiError('Update user error', error, null)),
             );
     }
 
     public updateAppearance(data: UpdateUserAppearanceDto): Observable<User | null> {
+        const session = this.sessionVersion;
         return this.sdk.client.patchUsersPreferencesAppearance({ version: this.sdk.version, updateUserAppearanceHttpRequest: data }).pipe(
             map(userFromSdk),
             tap(user => {
-                this.userSignal.set(user);
+                this.setUserForSession(session, user);
             }),
             catchError((error: unknown) => fallbackApiError('Update user appearance error', error, null)),
         );
     }
 
     public updateDashboardLayout(layout: DashboardLayoutSettings): Observable<User | null> {
+        const session = this.sessionVersion;
         return this.sdk.client.patchUsersInfo({ version: this.sdk.version, updateUserHttpRequest: { dashboardLayout: layout } }).pipe(
             map(userFromSdk),
             tap(user => {
-                this.userSignal.set(user);
+                this.setUserForSession(session, user);
             }),
             catchError((error: unknown) => fallbackApiError('Update dashboard layout error', error, null)),
         );
@@ -152,10 +160,11 @@ export class UserService {
     }
 
     public setPassword(request: SetPasswordRequest): Observable<boolean> {
+        const session = this.sessionVersion;
         return this.sdk.client.patchUsersPasswordSet({ version: this.sdk.version, setPasswordHttpRequest: request }).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current !== null) {
+                if (current !== null && session === this.sessionVersion) {
                     this.userSignal.set({ ...current, hasPassword: true });
                 }
             }),
@@ -165,10 +174,11 @@ export class UserService {
     }
 
     public acceptAiConsent(): Observable<void> {
+        const session = this.sessionVersion;
         return this.sdk.client.postUsersAiConsent({ version: this.sdk.version }).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current !== null) {
+                if (current !== null && session === this.sessionVersion) {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: utcInstant(new Date().toISOString()) });
                 }
             }),
@@ -177,10 +187,11 @@ export class UserService {
     }
 
     public revokeAiConsent(): Observable<void> {
+        const session = this.sessionVersion;
         return this.sdk.client.deleteUsersAiConsent({ version: this.sdk.version }).pipe(
             tap(() => {
                 const current = this.userSignal();
-                if (current !== null) {
+                if (current !== null && session === this.sessionVersion) {
                     this.userSignal.set({ ...current, aiConsentAcceptedAt: null });
                 }
             }),
@@ -189,9 +200,10 @@ export class UserService {
     }
 
     public deleteCurrentUser(): Observable<boolean> {
+        const session = this.sessionVersion;
         return this.sdk.client.deleteUsers({ version: this.sdk.version }).pipe(
             tap(() => {
-                this.userSignal.set(null);
+                this.setUserForSession(session, null);
             }),
             map(() => true),
             catchError((error: unknown) => fallbackApiError('Delete user error', error, false)),
@@ -294,5 +306,11 @@ export class UserService {
                 map(waistGoalFromSdk),
                 catchError((error: unknown) => rethrowApiError('Update waist goal error', error)),
             );
+    }
+
+    private setUserForSession(session: number, user: User | null): void {
+        if (session === this.sessionVersion) {
+            this.userSignal.set(user);
+        }
     }
 }

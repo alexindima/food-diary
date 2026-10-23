@@ -75,6 +75,7 @@ describe('FoodDiaryTranslationLoader merging and caching', () => {
         const { loader, httpMock } = setup('/dashboard');
 
         const firstLoad = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
+        flushBundle(httpMock, 'core', {});
         flushBundle(httpMock, 'app', { APP: true });
         await expect(firstLoad).resolves.toEqual({ APP: true });
         httpMock.verify();
@@ -83,20 +84,26 @@ describe('FoodDiaryTranslationLoader merging and caching', () => {
         httpMock.verify();
     });
 
-    it('uses empty dictionary when a bundle request fails', async () => {
+    it('retries a failed bundle and retains successfully loaded core translations', async () => {
         const { loader, httpMock } = setup('/dashboard');
         const resultPromise = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
+        const failed = expect(resultPromise).rejects.toMatchObject({ status: 503 });
+        flushBundle(httpMock, 'core', { COMMON: { SAVE: 'Save' } });
 
         const req = httpMock.expectOne(bundleUrl('app'));
-        req.flush('missing', { status: 404, statusText: 'Not Found' });
+        req.flush('unavailable', { status: 503, statusText: 'Unavailable' });
 
-        await expect(resultPromise).resolves.toEqual({});
+        await failed;
+        const retry = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
+        flushBundle(httpMock, 'app', { DASHBOARD: { TITLE: 'Dashboard' } });
+        await expect(retry).resolves.toEqual({ COMMON: { SAVE: 'Save' }, DASHBOARD: { TITLE: 'Dashboard' } });
         httpMock.verify();
     });
 
     it('uses transferred browser translations without a duplicate request', async () => {
         const { loader, httpMock, transferState } = setup('/dashboard', 'browser');
         transferState.set(translationStateKey('app'), { APP: true });
+        transferState.set(translationStateKey('core'), {});
 
         await expect(firstValueFrom(loader.loadApplicationTranslations(LANGUAGE))).resolves.toEqual({ APP: true });
         expect(transferState.hasKey(translationStateKey('app'))).toBe(false);
@@ -107,10 +114,26 @@ describe('FoodDiaryTranslationLoader merging and caching', () => {
         const { loader, httpMock, transferState } = setup('/dashboard', 'server');
         const resultPromise = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
 
+        flushBundle(httpMock, 'core', {});
         flushBundle(httpMock, 'app', { APP: true });
 
         await expect(resultPromise).resolves.toEqual({ APP: true });
         expect(transferState.get(translationStateKey('app'), {})).toEqual({ APP: true });
+        httpMock.verify();
+    });
+});
+
+describe('FoodDiaryTranslationLoader initial failure recovery', () => {
+    it('recovers a failed initial core bundle during application loading without caching the empty fallback', async () => {
+        const { loader, httpMock } = setup('/dashboard');
+        const initial = firstValueFrom(loader.getTranslation(LANGUAGE));
+        httpMock.expectOne(bundleUrl('core')).flush('offline', { status: 503, statusText: 'Unavailable' });
+        flushBundle(httpMock, 'app', { DASHBOARD: { TITLE: 'Dashboard' } });
+        await expect(initial).resolves.toEqual({});
+
+        const retry = firstValueFrom(loader.loadApplicationTranslations(LANGUAGE));
+        flushBundle(httpMock, 'core', { COMMON: { SAVE: 'Save' } });
+        await expect(retry).resolves.toEqual({ COMMON: { SAVE: 'Save' }, DASHBOARD: { TITLE: 'Dashboard' } });
         httpMock.verify();
     });
 });

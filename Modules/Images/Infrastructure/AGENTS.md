@@ -13,7 +13,7 @@ Runtime writes and normal outbox processing use the owner context registered thr
 CreateModuleContext. Processors retain a shared-scope clean-entry callback before
 claiming. Replay streams use their owner context on the shared connection. The central
 coordinator resets all registered trackers and saves audit plus owner changes through IUnitOfWork. User purge retains its shared transaction scope. Image ownership reassignment uses
-ImagesDbContext on the same connection and executes only the requested-ID bulk update.
+ImagesDbContext on the same connection and updates only requested IDs owned by the supplied source user.
 It must not create, save or commit a transaction. Preserve caller rollback and reuse
 after rollback, including resolving the service before the caller starts a transaction.
 

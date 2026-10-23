@@ -3,6 +3,7 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Common;
 using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.ReadModel.Composition.Admin;
@@ -14,7 +15,7 @@ public sealed class AdminRetentionReader(ICompositionReadContext context) : IAdm
         DateTime cohortEnd = cohortToUtc ?? toUtc;
         DateTime cohortObservedEnd = cohortEnd < asOfUtc ? cohortEnd : asOfUtc;
         IQueryable<User> users = context.Users.AsNoTracking().IgnoreQueryFilters()
-            .Where(user => user.CreatedOnUtc >= cohortStart && user.CreatedOnUtc < cohortObservedEnd);
+            .Where(user => user.Id != SystemContentOwner.Id && user.CreatedOnUtc >= cohortStart && user.CreatedOnUtc < cohortObservedEnd);
         IQueryable<Meal> meals = context.Meals.AsNoTracking().Where(meal => meal.CreatedOnUtc < asOfUtc);
         var cohorts = await users.AsNoTracking().GroupBy(user => user.CreatedOnUtc.Date).OrderBy(group => group.Key)
             .Select(group => new {

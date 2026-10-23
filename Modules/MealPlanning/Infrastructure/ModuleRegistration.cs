@@ -12,9 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Modules.MealPlanning.Infrastructure;
 
 public static class ModuleRegistration {
-    public static IServiceCollection AddMealPlanningModule(this IServiceCollection services) {
+    public static IServiceCollection AddMealPlanningModule(this IServiceCollection services) =>
+        services.AddMealPlanningApplication().AddMealPlanningPersistence();
+
+    public static IServiceCollection AddMealPlanningPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MealPlanningUserDataPurgeParticipant>());
-        services.AddMealPlanningApplication();
         services.AddScoped(static provider => provider.GetRequiredService<IModuleContextFactory>()
             .CreateModuleContext<MealPlanningDbContext>(static options => new MealPlanningDbContext(options)));
         services.AddScoped<IMealPlanRepository>(static provider => new MealPlanRepository(

@@ -40,6 +40,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../../FoodDiary.Initializer/FoodDiary.Initializer.csproj" />
+    <ProjectReference Include="../../../FoodDiary.JobManager/FoodDiary.JobManager.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../../Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj" />
@@ -111,6 +112,7 @@
     <ProjectReference Include="../../../Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
     <ProjectReference Include="../../../Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="../../../Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
     <ProjectReference Include="../../../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../../Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
     <ProjectReference Include="../../../Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
@@ -136,6 +138,7 @@
     <ProjectReference Include="../../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" />
     <ProjectReference Include="../../../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
     <ProjectReference Include="../../../Modules/Usda/Application.Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
@@ -154,6 +157,7 @@
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj" />
     <ProjectReference Include="../../../FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj" />
     <ProjectReference Include="../../../Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj" />

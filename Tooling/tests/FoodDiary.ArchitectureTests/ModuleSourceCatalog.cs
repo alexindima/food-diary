@@ -39,6 +39,7 @@ internal static class ModuleSourceCatalog {
                 .Select(project => project.Value))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure"))
             .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime"))
+            .Prepend(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.PostgreSql"))
             .Prepend(ArchitectureTestPaths.FromRoot("FoodDiary.ReadModel.Composition"));
 
     public static IEnumerable<string> InfrastructureFiles() =>

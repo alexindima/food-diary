@@ -65,3 +65,11 @@ Users current weight/waist providers implement the existing consumer ports with 
 Dashboard body composition implements IDashboardBodyReadService. Preserve two latest measurements, Date/CreatedOnUtc ordering, UTC date normalization for weight/waist, inclusive original instant bounds for hydration, trend buckets and section flags. Register the scoped concrete/interface alias here; AddDashboardModule must not remove it. Dashboard Application has no EF Core or central Infrastructure dependency.
 
 FD0018 rejects EF writes, tracking acquisition, raw SQL, explicit DbContext casts and ADO command/transaction methods during compilation, including method groups. IQueryable itself is not a write-safe type. Recipe nutrition uses the Recipes-owned scalar RecipeNutritionPolicy; SQL composition does not own the formula.
+
+RecipeUserPurgeRetentionReadService and ProductUserPurgeRetentionReadService return
+only IDs for selective system ownership during scheduled account cleanup. Preserve
+foreign-reference roots, global meal plans, favorites/comments/shopping references,
+and the cycle-safe closure of owned nested recipes. Product reads run after recipe
+transfer to retain their dependencies. Preserve visibility and source-user filters;
+owner modules perform all reassignment and deletion. ShoppingLists joins use the
+explicit no-tracking facade, never the concrete context.

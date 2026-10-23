@@ -17,8 +17,10 @@ public sealed class AdminDashboardMetricsIntegrationTests(PostgresDatabaseFixtur
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         DateTime start = new(2031, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var user = User.Create($"dashboard-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.Add(user);
+        var systemOwner = User.CreateSystemContentOwner();
+        context.Users.AddRange(user, systemOwner);
         context.Entry(user).Property(item => item.CreatedOnUtc).CurrentValue = start;
+        context.Entry(systemOwner).Property(item => item.CreatedOnUtc).CurrentValue = start;
         context.BillingPayments.AddRange(Payment(user.Id, start, "USD", 10), Payment(user.Id, start.AddDays(1), "EUR", 20),
             Payment(user.Id, start.AddDays(3), "USD", 999), Payment(user.Id, start, "USD", 100, "failed"));
         var usage = AiUsage.Create(user.Id, "test", "test", 100, 50, 150);

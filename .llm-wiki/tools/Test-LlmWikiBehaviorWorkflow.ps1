@@ -27,18 +27,34 @@ $ownedParent = [IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($fixture))
 try {
     $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $fixtureTools,(Join-Path $fixture '.llm-wiki/policies'),(Join-Path $fixture 'src') -Force
-    foreach ($name in @('Get-LlmWikiPhaseStatus', 'Manage-LlmWikiAcceptanceMatrix', 'Manage-LlmWikiEvidence', 'Test-LlmWikiEvidenceLineage', 'New-LlmWikiEvidenceLineage', 'Test-LlmWikiChangePolicy', 'Get-LlmWikiContentFingerprint', 'LlmWikiCollections', 'LlmWikiEvidenceCommands', 'LlmWikiVerificationReceipts', 'LlmWikiGitPaths', 'LlmWikiGitRenames', 'LlmWikiJson', 'LlmWikiRequirementCriteria', 'LlmWikiSubstantiveReview')) {
+    foreach ($name in @('Get-LlmWikiPhaseStatus', 'Manage-LlmWikiAcceptanceMatrix', 'Manage-LlmWikiEvidence', 'Manage-LlmWikiVerificationReceipts', 'Import-LlmWikiEvidenceReceipts', 'Invoke-LlmWikiTaskChecks', 'Resolve-LlmWikiRecordedCheckResult', 'Test-LlmWikiEvidenceLineage', 'New-LlmWikiEvidenceLineage', 'Test-LlmWikiChangePolicy', 'Get-LlmWikiContentFingerprint', 'LlmWikiCollections', 'LlmWikiEvidenceCommands', 'LlmWikiVerificationReceipts', 'LlmWikiGitPaths', 'LlmWikiGitRenames', 'LlmWikiJson', 'LlmWikiRequirementCriteria', 'LlmWikiSubstantiveReview')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot "$name.ps1") -Destination $fixtureTools
     }
+    # Fault seams exist only in copied fixture scripts. They deterministically
+    # mutate source after command completion and during receipt validation.
+    $factoryPath = Join-Path $fixtureTools 'New-LlmWikiEvidenceLineage.ps1'
+    $factoryText = [IO.File]::ReadAllText($factoryPath).Replace('$ErrorActionPreference = ''Stop''', @'
+$ErrorActionPreference = 'Stop'
+if (Test-Path (Join-Path $PSScriptRoot '../../.artifacts/lineage-drift')) { [IO.File]::WriteAllText((Join-Path $PSScriptRoot '../../src/value.txt'), '5') }
+'@)
+    [IO.File]::WriteAllText($factoryPath, $factoryText)
+    $validatorPath = Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1'
+    $validatorText = [IO.File]::ReadAllText($validatorPath).Replace('$ErrorActionPreference = ''Stop''', @'
+$ErrorActionPreference = 'Stop'
+if (Test-Path (Join-Path $PSScriptRoot '../../.artifacts/publication-drift')) { [IO.File]::WriteAllText((Join-Path $PSScriptRoot '../../src/unrelated.txt'), 'changed-during-publication') }
+'@)
+    [IO.File]::WriteAllText($validatorPath, $validatorText)
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot '../policies/workspace-policies.json') -Destination (Join-Path $fixture '.llm-wiki/policies')
     function Write-FixtureJson([string]$Path, [object]$Value) {
         [IO.File]::WriteAllText((Join-Path $fixture $Path), ($Value | ConvertTo-Json -Depth 30), [Text.UTF8Encoding]::new($false))
     }
     [IO.File]::WriteAllText((Join-Path $fixture '.gitignore'), '.artifacts/')
     [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '1')
-    [IO.File]::WriteAllText((Join-Path $fixture 'src/behavior.ps1'), 'if ([IO.File]::ReadAllText((Join-Path $PSScriptRoot "value.txt")) -cne "2") { throw "Unexpected value" }; Write-Output "Behavior verified"')
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/unrelated.txt'), 'stable')
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/behavior.ps1'), '$countPath = Join-Path $PSScriptRoot "../.artifacts/run-count.txt"; $count = if (Test-Path $countPath) { [int][IO.File]::ReadAllText($countPath) } else { 0 }; [IO.File]::WriteAllText($countPath, [string]($count + 1)); if ([IO.File]::ReadAllText((Join-Path $PSScriptRoot "value.txt")) -cne "2") { throw "Unexpected value" }; if (Test-Path (Join-Path $PSScriptRoot "../.artifacts/drift")) { [IO.File]::WriteAllText((Join-Path $PSScriptRoot "value.txt"), "4") }; Write-Output "Behavior verified"')
     $hostExecutable = (Get-Process -Id $PID).Path
-    $command = '"' + $hostExecutable + '" -NoLogo -NoProfile -File src/behavior.ps1'
+    $command = './.llm-wiki/wiki.ps1 fixture-behavior'
+    [IO.File]::WriteAllText((Join-Path $fixture '.llm-wiki/wiki.ps1'), '& (Join-Path $PSScriptRoot "../src/behavior.ps1")')
     Write-FixtureJson '.llm-wiki/policies/change-policies.json' @{ schemaVersion = 1; rules = @(@{ id = 'fixture'; description = 'Real focused behavior check'; pathPatterns = @('^src/'); excludePatterns = @(); requiredChecks = @(@{ id = 'behavior'; command = $command }); reviewObligations = @() }) }
     & git -C $fixture add .
     & git -C $fixture -c user.name=WikiFixture -c user.email=wiki-fixture@example.invalid commit -qm 'Initialize isolated behavior fixture'
@@ -52,7 +68,7 @@ try {
     Write-FixtureJson "$workspace/change-manifest.json" $manifest
     $matrix = @{ criteria = @(@{ id = 'AC-001'; text = 'The fixture returns the expected value.'; status = 'satisfied'; mapping = @{ changedPaths = @('src/value.txt'); testPaths = @(); checkIds = @('behavior'); reviewIds = @() }; resolution = @{ reason = 'Verified by the focused check.'; evidenceNote = 'The actual check asserts value 2.' } }) }
     Write-FixtureJson "$workspace/acceptance-matrix.json" $matrix
-    $evidence = [pscustomobject]@{ git = @{ base = $base }; change = @{ changedPaths = @('src/value.txt') }; checks = @([pscustomobject]@{ id = 'behavior'; status = 'passed'; command = $command; reason = ''; lineage = $null }); reviews = @() }
+    $evidence = [pscustomobject]@{ git = @{ base = $base }; change = @{ changedPaths = @('src/value.txt') }; checks = @([pscustomobject]@{ id = 'behavior'; status = 'passed'; command = $command; durationSeconds = $null; reason = ''; lineage = $null }); reviews = @() }
     Write-FixtureJson "$workspace/evidence.json" $evidence
     function Read-Phase([string]$Id = 'implementation', [string]$Action = 'complete') {
         & (Join-Path $fixtureTools 'Get-LlmWikiPhaseStatus.ps1') -WorkspacePath $workspace -PhaseId $Id -Action $Action -Format Json | ConvertFrom-Json
@@ -63,29 +79,136 @@ try {
     $evidence.checks[0].lineage = $manual
     Write-FixtureJson "$workspace/evidence.json" $evidence
     Assert-Behavior (-not (Read-Phase).valid) 'Manual passed evidence was mistaken for executed verification.'
-    $logPath = "$workspace/logs/behavior.log"
     Push-Location $fixture
-    try { & $hostExecutable -NoLogo -NoProfile -File src/behavior.ps1 *> (Join-Path $fixture $logPath); $checkExit = $LASTEXITCODE } finally { Pop-Location }
-    Assert-Behavior ($checkExit -eq 0) 'The real focused fixture check failed.'
-    $executed = & (Join-Path $fixtureTools 'New-LlmWikiEvidenceLineage.ps1') -Kind executed-check -EvidencePath "$workspace/evidence.json" -Id behavior -Command $command -Status passed -ExitCode $checkExit -Format Json | ConvertFrom-Json
-    $executed | Add-Member -NotePropertyName artifact -NotePropertyValue @{ path = $logPath; sha256 = (Get-FileHash -LiteralPath (Join-Path $fixture $logPath)).Hash.ToLowerInvariant() }
-    $evidence.checks[0].lineage = $executed
-    Write-FixtureJson "$workspace/evidence.json" $evidence
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } finally { Pop-Location }
+    $evidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
+    Assert-Behavior ($evidence.checks[0].lineage.PSObject.Properties['artifact'] -and $null -ne $evidence.checks[0].lineage.artifact) 'Direct evidence-run did not capture the real execution log.'
+    $logPath = [string]$evidence.checks[0].lineage.artifact.path
+    Assert-Behavior (([IO.File]::ReadAllText((Join-Path $fixture $logPath))) -match 'Behavior verified') 'Direct evidence-run log omitted actual command output.'
     Assert-Behavior (-not (Read-Phase).valid) 'Legacy acceptance without a current criterion resolution completed the phase.'
     & (Join-Path $fixtureTools 'Manage-LlmWikiAcceptanceMatrix.ps1') resolve -Path "$workspace/acceptance-matrix.json" -CriterionId AC-001 -AcceptanceStatus satisfied -EvidenceNote 'src/behavior.ps1 asserts value 2.' | Out-Null
     $matrix = Get-Content -LiteralPath (Join-Path $fixture "$workspace/acceptance-matrix.json") -Raw | ConvertFrom-Json
     Assert-Behavior ((Read-Phase).valid -and (Read-Phase).currentPhase.state -eq 'verified') 'Current executed evidence did not verify the mapped acceptance outcome.'
+    # Inferred phase candidates may overlap another task's changed sources.
+    # Reuse genuine executed evidence while checking only phase ownership here.
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/unrelated.txt'), 'changed-by-another-task')
+    $manifest.plan.phases[0].files = @('src/value.txt', 'src/unrelated.txt')
+    Write-FixtureJson "$workspace/change-manifest.json" $manifest
+    Write-FixtureJson "$workspace/change-packet.json" @{ diff = @{ changedPaths = @('src/value.txt') } }
+    $foreignPhase = Read-Phase
+    Assert-Behavior ($foreignPhase.valid -and $foreignPhase.currentPhase.changedFiles -contains 'src/value.txt' -and $foreignPhase.currentPhase.changedFiles -notcontains 'src/unrelated.txt') 'Another task changed an inferred phase candidate and incorrectly required acceptance mapping in this task.'
+    Write-FixtureJson "$workspace/change-packet.json" @{ diff = @{ changedPaths = @('src/value.txt', 'src/unrelated.txt') } }
+    $unmappedOwnedPhase = Read-Phase
+    Assert-Behavior (-not $unmappedOwnedPhase.valid -and ($unmappedOwnedPhase.currentPhase.issues -join ' ') -match "Map changed phase source 'src/unrelated.txt'") 'An owned observed phase change bypassed acceptance mapping.'
+    [IO.File]::Delete((Join-Path $fixture "$workspace/change-packet.json"))
+    Assert-Behavior ((Read-Phase).valid) 'A legacy packet-less workspace lost its explicit evidence change scope.'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/unrelated.txt'), 'stable')
+    $manifest.plan.phases[0].files = @('src/value.txt')
+    Write-FixtureJson "$workspace/change-manifest.json" $manifest
+    $targetWorkspace = '.artifacts/llm-wiki/tasks/imported-phase'
+    $null = New-Item -ItemType Directory -Path (Join-Path $fixture $targetWorkspace) -Force
+    Write-FixtureJson "$targetWorkspace/change-manifest.json" $manifest
+    Write-FixtureJson "$targetWorkspace/acceptance-matrix.json" $matrix
+    $targetEvidence = $evidence | ConvertTo-Json -Depth 20 | ConvertFrom-Json
+    $targetEvidence.checks[0].status = 'pending'; $targetEvidence.checks[0].lineage = $null
+    Write-FixtureJson "$targetWorkspace/evidence.json" $targetEvidence
+    $runsBeforeImport = [IO.File]::ReadAllText((Join-Path $fixture '.artifacts/run-count.txt'))
+    $import = & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -Format Json | ConvertFrom-Json
+    Assert-Behavior ($import.importedCount -eq 1) 'Actual execution receipt was not imported into another unsealed workspace.'
+    $targetPhase = & (Join-Path $fixtureTools 'Get-LlmWikiPhaseStatus.ps1') -WorkspacePath $targetWorkspace -PhaseId implementation -Action complete -Format Json | ConvertFrom-Json
+    Assert-Behavior ($targetPhase.valid) 'Imported actual execution proof did not complete the target phase.'
+    Assert-Behavior ([IO.File]::ReadAllText((Join-Path $fixture '.artifacts/run-count.txt')) -ceq $runsBeforeImport) 'Import reran the command instead of preserving actual execution proof.'
+    $actualTarget = Get-Content -LiteralPath (Join-Path $fixture "$targetWorkspace/evidence.json") -Raw | ConvertFrom-Json
+    Assert-Behavior ($actualTarget.checks[0].lineage.artifact.path -cne $logPath -and $actualTarget.checks[0].lineage.artifact.sha256 -ceq $evidence.checks[0].lineage.artifact.sha256) 'Import failed to copy the exact actual log into its target boundary.'
+    & (Join-Path $fixtureTools 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record -RepositoryRoot $fixture -Command $command -Format Json | Out-Null
+    Write-FixtureJson "$targetWorkspace/evidence.json" $targetEvidence
+    & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -Format Json | Out-Null
+    $legacyTarget = Get-Content -LiteralPath (Join-Path $fixture "$targetWorkspace/evidence.json") -Raw | ConvertFrom-Json
+    Assert-Behavior ($legacyTarget.checks[0].lineage.kind -eq 'manual-check') 'A schema1 receipt was promoted into executed proof.'
+    $legacyPhase = & (Join-Path $fixtureTools 'Get-LlmWikiPhaseStatus.ps1') -WorkspacePath $targetWorkspace -PhaseId implementation -Action complete -Format Json | ConvertFrom-Json
+    Assert-Behavior (-not $legacyPhase.valid) 'Legacy manual import completed a behavioral phase.'
+    $manualRejected = $false
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record -RepositoryRoot $fixture -Command $command -SourceEvidencePath "$targetWorkspace/evidence.json" -CheckId behavior -Format Json | Out-Null }
+    catch { $manualRejected = $_.Exception.Message -match 'current passing executed check' }
+    Assert-Behavior $manualRejected 'A manual check published a schema2 execution receipt.'
+    & (Join-Path $fixtureTools 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record -RepositoryRoot $fixture -Command $command -SourceEvidencePath "$workspace/evidence.json" -CheckId behavior -Format Json | Out-Null
+    $outsideRejected = $false
+    try { & (Join-Path $fixtureTools 'New-LlmWikiEvidenceLineage.ps1') -Kind executed-check -EvidencePath "$workspace/evidence.json" -Id behavior -Command $command -Status passed -ExitCode 0 -ArtifactPath 'src/value.txt' -Format Json | Out-Null }
+    catch { $outsideRejected = $_.Exception.Message -match 'evidence boundary' }
+    Assert-Behavior $outsideRejected 'Execution binding accepted a log outside the owned evidence boundary.'
+    $scopedProof = & (Join-Path $fixtureTools 'New-LlmWikiEvidenceLineage.ps1') -Kind executed-check -EvidencePath "$targetWorkspace/evidence.json" -Id behavior -Command $command -Status passed -ExitCode 0 -DurationSeconds $evidence.checks[0].durationSeconds -ArtifactPath $actualTarget.checks[0].lineage.artifact.path -Format Json | ConvertFrom-Json
+    $legacyTarget.checks[0].lineage = $scopedProof
+    Write-FixtureJson "$targetWorkspace/evidence.json" $legacyTarget
+    $scopedRejected = $false
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record -RepositoryRoot $fixture -Command $command -SourceEvidencePath "$targetWorkspace/evidence.json" -CheckId behavior -Format Json | Out-Null }
+    catch { $scopedRejected = $_.Exception.Message -match 'whole-repository execution seal' }
+    Assert-Behavior $scopedRejected 'A scoped external binding was promoted to a whole-repository execution receipt.'
+    Write-FixtureJson "$targetWorkspace/evidence.json" $targetEvidence
+    [IO.File]::Move((Join-Path $fixture $logPath), (Join-Path $fixture ($logPath + '.saved')))
+    $missingLogImport = & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -DryRun -Format Json | ConvertFrom-Json
+    Assert-Behavior ($missingLogImport.importedCount -eq 0) 'A missing actual log remained reusable.'
+    [IO.File]::Move((Join-Path $fixture ($logPath + '.saved')), (Join-Path $fixture $logPath))
+    $sourceBeforeTampering = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json"))
+    $substitutedCommand = $sourceBeforeTampering | ConvertFrom-Json
+    $substitutedCommand.checks[0].command = './.llm-wiki/wiki.ps1 different-check'
+    Write-FixtureJson "$workspace/evidence.json" $substitutedCommand
+    $commandImport = & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -DryRun -Format Json | ConvertFrom-Json
+    Assert-Behavior ($commandImport.importedCount -eq 0) 'A substituted source command retained reusable execution proof.'
+    [IO.File]::WriteAllText((Join-Path $fixture "$workspace/evidence.json"), $sourceBeforeTampering)
     $manifest.plan.phases += @{ id = 'generated-artifacts'; order = 2; title = 'Refresh derived artifacts'; files = @('./.llm-wiki/wiki.ps1 update') }
     Write-FixtureJson "$workspace/change-manifest.json" $manifest
     Assert-Behavior ((Read-Phase 'generated-artifacts').valid) 'An artifact phase could not use task-wide acceptance and execution proof.'
     Assert-Behavior (-not (Read-Phase 'unknown').valid) 'An unknown phase ID was accepted.'
     [IO.File]::WriteAllText((Join-Path $fixture $logPath), 'Replaced log')
     Assert-Behavior (-not (Read-Phase).valid) 'A substituted execution log retained phase completion.'
-    # Restore the real log and its recorded hash for the review scenarios.
+    $tamperedImport = & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -DryRun -Format Json | ConvertFrom-Json
+    Assert-Behavior ($tamperedImport.importedCount -eq 0) 'A tampered actual log remained reusable through its receipt.'
+    # Execute again through the public evidence path; never repair proof by hand.
     Push-Location $fixture
-    try { & $hostExecutable -NoLogo -NoProfile -File src/behavior.ps1 *> (Join-Path $fixture $logPath) } finally { Pop-Location }
-    $evidence.checks[0].lineage.artifact.sha256 = (Get-FileHash -LiteralPath (Join-Path $fixture $logPath)).Hash.ToLowerInvariant()
-    Write-FixtureJson "$workspace/evidence.json" $evidence
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } finally { Pop-Location }
+    $evidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
+    # The task runner shares the real execution owner; unrelated telemetry and
+    # workspace refresh are explicit fixture boundaries, not full readiness proof.
+    [IO.File]::WriteAllText((Join-Path $fixtureTools 'Manage-LlmWikiVerificationTelemetry.ps1'), 'param($WorkspacePath, $CheckId, $Status, $DurationSeconds, $Command, $AsOfUtc, [Parameter(Position=0)]$Action); @{ valid = $true }')
+    [IO.File]::WriteAllText((Join-Path $fixtureTools 'Manage-LlmWikiTaskWorkspace.ps1'), 'param([Parameter(Position=0)]$Action, $WorkspacePath); @{ valid = $true }')
+    Push-Location $fixture
+    try { $taskRun = & (Join-Path $fixtureTools 'Invoke-LlmWikiTaskChecks.ps1') -WorkspacePath $workspace -CheckId behavior -IncludePassed -Format Json | ConvertFrom-Json } finally { Pop-Location }
+    $evidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
+    Assert-Behavior ($taskRun.executedCount -eq 1 -and $taskRun.runs[0].logPath -ceq $evidence.checks[0].lineage.artifact.path) 'The task runner replaced the execution owner log.'
+    $currentReceipts = @(& (Join-Path $fixtureTools 'Manage-LlmWikiVerificationReceipts.ps1') -Action List -RepositoryRoot $fixture -Format Json | ConvertFrom-Json)
+    Assert-Behavior (@($currentReceipts | Where-Object { $_.schemaVersion -eq 2 -and $_.validForCurrentState }).Count -eq 1) 'The task runner invalidated its actual execution receipt.'
+    Assert-Behavior ($evidence.checks[0].lineage.artifact.path -cne $logPath) 'A fresh execution overwrote the previous execution artifact.'
+    $currentLog = [string]$evidence.checks[0].lineage.artifact.path
+    [IO.File]::WriteAllText((Join-Path $fixture '.artifacts/drift'), '')
+    $driftRejected = $false
+    Push-Location $fixture
+    try { try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } catch { $driftRejected = $_.Exception.Message -match 'Source changed while check' } } finally { Pop-Location }
+    Assert-Behavior $driftRejected 'Source edits during a passing command published current execution proof.'
+    $historical = @(Get-ChildItem -LiteralPath (Join-Path $fixture "$workspace/logs") -Filter '*.execution.json' | ForEach-Object { Get-Content -LiteralPath $_.FullName -Raw | ConvertFrom-Json } | Where-Object { $_.fingerprintBefore -cne $_.fingerprintAfter })
+    Assert-Behavior ($historical.Count -eq 1 -and $historical[0].exitCode -eq 0 -and (Test-Path -LiteralPath $historical[0].logPath)) 'Rejected source drift lost the actual native outcome or historical log.'
+    [IO.File]::Delete((Join-Path $fixture '.artifacts/drift'))
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '3')
+    Push-Location $fixture
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } finally { Pop-Location }
+    $failedEvidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
+    Assert-Behavior ($failedEvidence.checks[0].status -eq 'failed' -and $failedEvidence.checks[0].lineage.execution.exitCode -ne 0 -and $null -ne $failedEvidence.checks[0].lineage.artifact) 'A failed real command lost its outcome or was recorded as passing.'
+    Assert-Behavior ([IO.File]::ReadAllText((Join-Path $fixture $failedEvidence.checks[0].lineage.artifact.path)) -match 'Unexpected value') 'Failure stderr was missing from the execution log.'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')
+    foreach ($boundary in @('lineage', 'publication')) {
+        $beforeBoundaryEvidence = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json"))
+        [IO.File]::WriteAllText((Join-Path $fixture ".artifacts/$boundary-drift"), '')
+        $boundaryRejected = $false
+        Push-Location $fixture
+        try { try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } catch { $boundaryRejected = $_.Exception.Message -match 'Source changed|Repository inputs changed|execution state|execution seal' } } finally { Pop-Location }
+        Assert-Behavior $boundaryRejected "A source edit at the $boundary binding boundary published current execution proof."
+        Assert-Behavior ([IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json")) -ceq $beforeBoundaryEvidence) 'A rejected execution changed the previous evidence bundle.'
+        [IO.File]::Delete((Join-Path $fixture ".artifacts/$boundary-drift"))
+        [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')
+        [IO.File]::WriteAllText((Join-Path $fixture 'src/unrelated.txt'), 'stable')
+    }
+    Push-Location $fixture
+    try { & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path "$workspace/evidence.json" -Id behavior -NoExitOnFailure | Out-Null } finally { Pop-Location }
+    $evidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
     $review = @{ inspectedPaths = @('src/value.txt'); requirements = @(@{ criterionId = 'AC-001'; conclusion = 'satisfied'; evidence = 'src/behavior.ps1:1 asserts the persisted value is 2.' }); codeQuality = 'Reviewed the complete one-line value change and its focused assertion; no additional I/O or failure path was introduced.'; findings = @() }
     & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') review -Path "$workspace/evidence.json" -Id substantive-code-review -Status completed -Reason 'Independent pass over final fixture sources.' -ReviewContent $review | Out-Null
     $lineage = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
@@ -105,6 +228,8 @@ try {
     & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') review -Path "$workspace/evidence.json" -Id substantive-code-review -Status completed -Reason 'Repeat the clean review.' -ReviewContent $review | Out-Null
     [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '3')
     Assert-Behavior (-not (Read-Phase).valid) 'Changed source retained stale phase verification.'
+    $staleImport = & (Join-Path $fixtureTools 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $targetWorkspace -DryRun -Format Json | ConvertFrom-Json
+    Assert-Behavior ($staleImport.importedCount -eq 0) 'Changed repository inputs retained a reusable execution receipt.'
     $stale = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     Assert-Behavior (-not $stale.substantiveReview.valid -and ($stale.substantiveReview.issues -join ' ') -match 'stale') 'Source edits retained a current substantive review.'
     [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')

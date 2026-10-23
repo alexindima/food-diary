@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -38,4 +38,5 @@ export class MealGeneralInfoComponent {
     public readonly mealForm = input.required<FieldTree<MealFormValues>>();
     public readonly mealTypeSelectOptions = input.required<Array<FdUiSelectOption<string>>>();
     public readonly generalErrors = input.required<MealGeneralFieldErrors>();
+    public readonly photosUploading = output<boolean>();
 }

@@ -60,8 +60,12 @@
                     icon="save"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
-                    [disabledReason]="submitDisabled() && !isSubmitting() ? ('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null"
-                    [loading]="isSubmitting()"
+                    [disabledReason]="
+                        submitDisabled() && !isSubmitting()
+                            ? ((photosUploading() ? 'COMMON.LOADING' : 'MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT') | translate)
+                            : null
+                    "
+                    [loading]="isSubmitting() || photosUploading()"
                 >
                     {{ 'MEAL_MANAGE.SAVE_BUTTON' | translate }}
                 </fd-ui-button>
@@ -73,8 +77,12 @@
                     icon="add"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
-                    [disabledReason]="submitDisabled() && !isSubmitting() ? ('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null"
-                    [loading]="isSubmitting()"
+                    [disabledReason]="
+                        submitDisabled() && !isSubmitting()
+                            ? ((photosUploading() ? 'COMMON.LOADING' : 'MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT') | translate)
+                            : null
+                    "
+                    [loading]="isSubmitting() || photosUploading()"
                 >
                     {{ 'MEAL_MANAGE.ADD_BUTTON' | translate }}
                 </fd-ui-button>
@@ -82,7 +90,7 @@
         </div>
         @if (globalError()) {
             <fd-ui-form-error class="meal-manage__footer-error" [error]="globalError()" />
-        } @else if (submitDisabled() && !isSubmitting()) {
+        } @else if (submitDisabled() && !isSubmitting() && !photosUploading()) {
             <p class="meal-manage__submit-hint fd-ui-body-sm">{{ 'MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate }}</p>
         }
     </div>

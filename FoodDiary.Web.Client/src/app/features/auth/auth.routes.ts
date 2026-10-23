@@ -39,7 +39,7 @@ export const authRoutes: Routes = [
         canActivate: [requiredPasswordChangeGuard],
         loadComponent: async () =>
             import('./pages/required-password-change/required-password-change').then(m => m.RequiredPasswordChangeComponent),
-        data: { shell: 'public', seo: { titleKey: 'SEO.RESET_PASSWORD', noIndex: true } },
+        data: { shell: 'public', requiresSession: true, seo: { titleKey: 'SEO.RESET_PASSWORD', noIndex: true } },
     },
     {
         path: 'reset-password',

@@ -2,6 +2,7 @@
     subtitle="Manage localized subjects, bodies, and the rendered preview."
     size="xl"
     bodyScrollInset="edge"
+    [disableClose]="isSaving()"
     [title]="isNew ? 'Create email template' : 'Edit email template'"
 >
     <form class="email-template-edit-dialog fd-grid fd-gap-md" [formRoot]="form">
@@ -58,7 +59,7 @@
                     <fd-ui-button
                         type="button"
                         variant="secondary"
-                        [disabled]="form().invalid() || testEmailForm().invalid() || isSendingTest()"
+                        [disabled]="form().invalid() || testEmailForm().invalid() || isSendingTest() || isSaving()"
                         [disabledReason]="form().invalid() || testEmailForm().invalid() ? 'Complete the required fields first.' : null"
                         (click)="onSendTest()"
                     >
@@ -81,6 +82,7 @@
 
         <fd-admin-template-history
             kind="email-templates"
+            [hidden]="isSaving()"
             [templateKey]="data.key"
             [locale]="data.locale"
             (restored)="restoreRevision($event)"
@@ -89,7 +91,7 @@
             <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_TEMPLATES.SAVE_ERROR' | translate }}</p>
         }
         <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
-            <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
+            <fd-ui-button type="button" variant="secondary" [loading]="isSaving()" (click)="onCancel()">Cancel</fd-ui-button>
             <fd-ui-button
                 type="submit"
                 [disabled]="form().invalid() || isSaving()"

@@ -23,10 +23,10 @@ describe('TokenStorageService getToken', () => {
         expect(service.getToken()).toBe('session-token');
     });
 
-    it('should prefer localStorage over sessionStorage', () => {
+    it('should prefer the tab token over the shared remembered token', () => {
         localStorage.setItem('authToken', 'local');
         sessionStorage.setItem('authToken', 'session');
-        expect(service.getToken()).toBe('local');
+        expect(service.getToken()).toBe('session');
     });
 
     it('should return null when no token stored', () => {
@@ -38,7 +38,7 @@ describe('TokenStorageService setToken', () => {
     it('should store in localStorage when rememberMe is true', () => {
         service.setToken('test-token', true);
         expect(localStorage.getItem('authToken')).toBe('test-token');
-        expect(sessionStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('test-token');
     });
 
     it('should store in sessionStorage when rememberMe is false', () => {
@@ -70,6 +70,55 @@ describe('TokenStorageService clearToken', () => {
 });
 
 describe('TokenStorageService refreshToken', () => {
+    it('migrates an unbound legacy credential with only a historical user id', () => {
+        localStorage.setItem('userId', 'historical-alice');
+        localStorage.setItem('refreshToken', 'legacy-alice');
+
+        expect(service.peekLegacyRefreshTokenForBootstrap()).toBe('legacy-alice');
+        expect(localStorage.getItem('refreshToken')).toBe('legacy-alice');
+        expect(service.getToken()).toBeNull();
+        expect(service.loadEmailConfirmed()).toBeNull();
+    });
+
+    it.each(['local', 'session'])('preserves a legacy credential when an unbound %s token already has an identity', area => {
+        localStorage.setItem('userId', 'historical-alice');
+        localStorage.setItem('refreshToken', 'legacy-alice');
+        const storage = area === 'local' ? localStorage : sessionStorage;
+        storage.setItem('authToken', `header.${btoa(JSON.stringify({ sub: 'bob' }))}.signature`);
+
+        expect(service.peekLegacyRefreshTokenForBootstrap()).toBeNull();
+        expect(localStorage.getItem('refreshToken')).toBe('legacy-alice');
+    });
+
+    it('does not treat historical account hints as a verified owner during guest migration', () => {
+        localStorage.setItem('userId', 'historical-alice');
+        localStorage.setItem('accountAccess', JSON.stringify(['historical-alice', 'Premium']));
+        localStorage.setItem('emailConfirmed', 'true');
+        localStorage.setItem('refreshSession', 'true');
+        localStorage.setItem('refreshToken', 'legacy-alice');
+
+        expect(service.peekLegacyRefreshTokenForBootstrap()).toBe('legacy-alice');
+        expect(service.getToken()).toBeNull();
+        expect(service.loadEmailConfirmed()).toBeNull();
+    });
+
+    it('clears only the captured legacy credential and preserves its replacement', () => {
+        localStorage.setItem('refreshToken', 'legacy-bob');
+        service.clearLegacyRefreshTokenIfMatches('legacy-alice');
+        expect(localStorage.getItem('refreshToken')).toBe('legacy-bob');
+        service.clearLegacyRefreshTokenIfMatches('legacy-bob');
+        expect(localStorage.getItem('refreshToken')).toBeNull();
+    });
+
+    it('requires both an origin owner and refresh-session hint before preserving guest push', () => {
+        localStorage.setItem('refreshSession', 'true');
+        sessionStorage.setItem('userId', 'old-tab-owner');
+        expect(service.hasPublishedSession()).toBe(false);
+        localStorage.setItem('userId', 'current-owner');
+        expect(service.hasPublishedSession()).toBe(true);
+        localStorage.removeItem('refreshSession');
+        expect(service.hasPublishedSession()).toBe(false);
+    });
     it('should persist only a non-sensitive refresh-session marker', () => {
         service.markRefreshSession();
         expect(service.hasRefreshSession()).toBe(true);
@@ -116,6 +165,9 @@ describe('TokenStorageService userId', () => {
 });
 
 describe('TokenStorageService emailConfirmed', () => {
+    beforeEach(() => {
+        service.setUserId('user-123');
+    });
     it('should load true', () => {
         localStorage.setItem('emailConfirmed', 'true');
         expect(service.loadEmailConfirmed()).toBe(true);
@@ -144,6 +196,7 @@ describe('TokenStorageService clearAll', () => {
         localStorage.setItem('refreshToken', 'refresh');
         localStorage.setItem('userId', 'user');
         localStorage.setItem('emailConfirmed', 'true');
+        service.bindOwner('user');
 
         service.clearAll();
 
@@ -151,5 +204,75 @@ describe('TokenStorageService clearAll', () => {
         expect(localStorage.getItem('refreshToken')).toBeNull();
         expect(localStorage.getItem('userId')).toBeNull();
         expect(localStorage.getItem('emailConfirmed')).toBeNull();
+    });
+});
+
+describe('TokenStorageService owner boundaries', () => {
+    function token(owner: string): string {
+        return `${btoa('{}')}.${btoa(JSON.stringify({ sub: owner }))}.signature`;
+    }
+
+    function rememberBob(): void {
+        localStorage.setItem('authToken', token('bob'));
+        localStorage.setItem('userId', 'bob');
+        localStorage.setItem('emailConfirmed', 'false');
+        localStorage.setItem('mustChangePassword', 'true');
+        localStorage.setItem('accountAccess', JSON.stringify(['bob', 'User']));
+        localStorage.setItem('refreshSession', 'true');
+        localStorage.setItem('refreshToken', 'legacy-bob');
+    }
+
+    it('preserves another remembered owner during refresh persistence and cleanup', () => {
+        service.bindOwner('alice');
+        service.setToken(token('alice'), true);
+        service.setUserId('alice');
+        rememberBob();
+        const shared = Object.fromEntries(Object.entries(localStorage));
+
+        service.setToken(token('alice'));
+        service.setUserId('alice');
+        service.setEmailConfirmed(true);
+        service.setMustChangePassword(false);
+        service.markRefreshSession();
+        service.saveAccountAccess('alice', ['Premium']);
+        expect(service.consumeLegacyRefreshToken()).toBeNull();
+        expect(service.loadEmailConfirmed()).toBe(true);
+        expect(service.loadMustChangePassword()).toBe(false);
+        expect(sessionStorage.getItem('authToken')).toBe(token('alice'));
+        expect(Object.fromEntries(Object.entries(localStorage))).toEqual(shared);
+
+        service.clearAll();
+
+        expect(sessionStorage.getItem('authToken')).toBeNull();
+        expect(Object.fromEntries(Object.entries(localStorage))).toEqual(shared);
+    });
+
+    it('refreshes the remembered token for the same owner', () => {
+        service.bindOwner('alice');
+        service.setToken(token('alice'), true);
+        service.setUserId('alice');
+        service.setToken(`${token('alice')}updated`);
+
+        expect(service.isRemembered()).toBe(true);
+        expect(localStorage.getItem('authToken')).toBe(`${token('alice')}updated`);
+        expect(sessionStorage.getItem('authToken')).toBe(`${token('alice')}updated`);
+    });
+
+    it('does not infer account metadata from a foreign shared user', () => {
+        rememberBob();
+        service.bindOwner('alice');
+        expect(service.loadEmailConfirmed()).toBeNull();
+        expect(service.loadMustChangePassword()).toBeNull();
+    });
+
+    it('keeps a tokenless guest from erasing an identified cookie session', () => {
+        rememberBob();
+        localStorage.removeItem('authToken');
+        const shared = Object.fromEntries(Object.entries(localStorage));
+
+        service.clearAll();
+
+        expect(Object.fromEntries(Object.entries(localStorage))).toEqual(shared);
+        expect(service.hasRefreshSession()).toBe(true);
     });
 });

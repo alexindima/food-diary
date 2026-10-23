@@ -405,10 +405,25 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(recipe.Id, comment.RecipeId);
         await context.Recipes.Where(item => item.Id == recipe.Id).ExecuteDeleteAsync();
         Assert.False(await context.RecipeComments.AnyAsync());
-        // Likes deliberately have no Recipe FK in the existing schema.
-        Assert.True(await context.RecipeLikes.AnyAsync());
-        await context.Users.Where(item => item.Id == user.Id).ExecuteDeleteAsync();
         Assert.False(await context.RecipeLikes.AnyAsync());
+
+        var survivingAuthor = User.Create($"surviving-social-{Guid.NewGuid():N}@example.com", "hash");
+        var survivingRecipe = Recipe.Create(survivingAuthor.Id, "Surviving recipe", servings: 1);
+        context.Users.Add(survivingAuthor);
+        context.Recipes.Add(survivingRecipe);
+        context.RecipeLikes.AddRange(
+            RecipeLike.Create(user.Id, survivingRecipe.Id),
+            RecipeLike.Create(survivingAuthor.Id, survivingRecipe.Id));
+        await context.SaveChangesAsync();
+        Assert.Equal(2, await context.RecipeLikes.CountAsync());
+
+        await context.Users.Where(item => item.Id == user.Id).ExecuteDeleteAsync();
+        Assert.True(await context.Recipes.AnyAsync(item => item.Id == survivingRecipe.Id));
+        RecipeLike survivingLike = Assert.Single(await context.RecipeLikes.AsNoTracking().ToListAsync());
+        Assert.Multiple(() => {
+            Assert.Equal(survivingAuthor.Id, survivingLike.UserId);
+            Assert.Equal(survivingRecipe.Id, survivingLike.RecipeId);
+        });
     }
 
     [RequiresDockerFact]

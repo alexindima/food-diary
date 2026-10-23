@@ -1,5 +1,6 @@
-import { computed, effect, inject, Injectable, resource, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { firstValueFrom, map } from 'rxjs';
 
 import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import { type CalendarDate, calendarDate } from '../../../shared/models/semantics/date-value';
@@ -23,25 +24,22 @@ export class WeeklyCheckInFacade {
     private readonly lastLoadedData = signal<LoadedWeekData | null>(null);
     public readonly selectedWeek = signal(startOfLocalWeek(new Date()));
     private readonly currentWeekStart = startOfLocalWeek(new Date());
-    private readonly dataResource = resource({
+    private readonly dataResource = rxResource({
         params: () => formatLocalDate(this.selectedWeek()),
-        loader: async ({ params }): Promise<LoadedWeekData> => ({
-            weekStart: params,
-            data: await firstValueFrom(this.service.getData(params)),
-        }),
+        stream: ({ params }) => this.service.getData(params).pipe(map(data => ({ weekStart: params, data }))),
     });
     public readonly goalWeekStart = computed(() => addLocalDays(this.selectedWeek(), DAYS_PER_WEEK));
     public readonly isSelectedWeekPast = computed(() => this.selectedWeek().getTime() < this.currentWeekStart.getTime());
     public readonly isGoalPeriodClosed = computed(() => this.goalWeekStart().getTime() < this.currentWeekStart.getTime());
     public readonly goalWeekStartIso = computed(() => formatLocalDate(this.goalWeekStart()));
     public readonly selectedWeekStartIso = computed(() => formatLocalDate(this.selectedWeek()));
-    private readonly goalResource = resource({
+    private readonly goalResource = rxResource({
         params: () => formatLocalDate(this.goalWeekStart()),
-        loader: async ({ params }): Promise<WeeklyGoal | null> => firstValueFrom(this.goalService.getGoal(params)),
+        stream: ({ params }) => this.goalService.getGoal(params),
     });
-    private readonly selectedWeekGoalResource = resource({
+    private readonly selectedWeekGoalResource = rxResource({
         params: () => formatLocalDate(this.selectedWeek()),
-        loader: async ({ params }): Promise<WeeklyGoal | null> => firstValueFrom(this.goalService.getGoal(params)),
+        stream: ({ params }) => this.goalService.getGoal(params),
     });
 
     public readonly data = computed(() => {

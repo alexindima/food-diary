@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -45,6 +45,7 @@ export class AdminUserSetPasswordDialogComponent {
     protected readonly form = form(
         this.formModel,
         path => {
+            disabled(path, { when: () => this.isSubmitting() });
             required(path.newPassword);
             minLength(path.newPassword, PASSWORD_MIN_LENGTH);
             required(path.confirmPassword);

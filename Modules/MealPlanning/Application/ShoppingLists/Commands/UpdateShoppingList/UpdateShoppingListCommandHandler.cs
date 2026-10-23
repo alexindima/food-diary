@@ -52,6 +52,10 @@ public sealed class UpdateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(command.ShoppingListId));
         }
 
+        if (!string.Equals(command.ExpectedRevision, list.ToModel().Revision, StringComparison.Ordinal)) {
+            return Result.Failure<ShoppingListModel>(ShoppingListErrors.RevisionConflict());
+        }
+
         if (!string.IsNullOrWhiteSpace(command.Name)) {
             list.UpdateName(command.Name);
         }
@@ -73,6 +77,14 @@ public sealed class UpdateShoppingListCommandHandler(
         if (command.Name?.Trim().Length > ShoppingListInputLimits.NameMaxLength) {
             return Result.Failure(
                 Errors.Validation.Invalid(nameof(command.Name), $"Name must be at most {ShoppingListInputLimits.NameMaxLength} characters."));
+        }
+
+        if (string.IsNullOrWhiteSpace(command.ExpectedRevision)) {
+            return Result.Failure(Errors.Validation.Required(nameof(command.ExpectedRevision)));
+        }
+
+        if (!ShoppingListRevision.IsValid(command.ExpectedRevision)) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(command.ExpectedRevision), "ExpectedRevision must be a 64-character lowercase hexadecimal revision."));
         }
 
         return Result.Success();

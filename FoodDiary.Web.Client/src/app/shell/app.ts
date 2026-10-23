@@ -26,6 +26,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { filter, from, mergeMap } from 'rxjs';
 
 import { AppUpdateNoticeComponent } from '../components/shared/app-update-notice/app-update-notice';
@@ -37,6 +38,7 @@ import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
 import { type SeoData, SeoService } from '../services/seo.service';
+import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
@@ -86,12 +88,15 @@ export class AppComponent {
     private readonly pageViewport = viewChild<ElementRef<HTMLElement>>('pageViewport');
     private readonly outletContexts = inject(ChildrenOutletContexts);
     private readonly installPromotion = inject(PwaInstallPromotionService);
+    private readonly sessionEvents = inject(SessionEventsService);
+    private readonly dialogService = inject(FdUiDialogService);
     private publicScrollNavigationId: number | null = null;
 
     protected isAuthenticated = this.authService.isAuthenticated;
     protected isImpersonating = this.authService.isImpersonating;
     protected impersonationReason = this.authService.impersonationReason;
     protected readonly shellMode = signal<AppShellMode>(this.getShellMode());
+    protected readonly routeContentActive = signal(true);
     protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
     protected readonly currentPath = signal(this.getCurrentPath());
@@ -113,6 +118,14 @@ export class AppComponent {
     );
 
     public constructor() {
+        this.sessionEvents.localSessionInvalidating$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.routeContentActive.set(false);
+            this.dialogService.closeAll();
+        });
+        this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.routeContentActive.set(false);
+            this.dialogService.closeAll();
+        });
         effect(() => {
             const active = this.usesAuthenticatedShell() && !this.isImpersonating();
             untracked(() => {
@@ -136,6 +149,10 @@ export class AppComponent {
                 this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
                 this.currentPath.set(nextPath);
                 this.shellMode.set(this.getShellMode());
+                const requiresSession = this.getDeepestRoute(this.activatedRoute).pathFromRoot.some(
+                    route => route.snapshot.data['requiresSession'] === true,
+                );
+                this.routeContentActive.set(!requiresSession || this.isAuthenticated());
             });
 
         // Router Scroll arrives after the new view renders. Desktop scrolls inside

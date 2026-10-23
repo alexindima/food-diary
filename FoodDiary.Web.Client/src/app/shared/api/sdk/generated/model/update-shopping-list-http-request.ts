@@ -10,6 +10,7 @@
 import { ShoppingListItemHttpRequest } from './shopping-list-item-http-request';
 
 export interface UpdateShoppingListHttpRequest {
+    expectedRevision: string;
     items?: Array<ShoppingListItemHttpRequest> | null;
     name?: string | null;
 }

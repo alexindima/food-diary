@@ -105,6 +105,40 @@ const MILK_CALORIES_PER_BASE = 60;
 const MILK_LARGE_PORTION_AMOUNT = 500;
 const MILK_ORIGINAL_PORTION_CALORIES = 150;
 
+describe('Product editor pending save', () => {
+    it.each([false, true])('locks all editable controls until save settles, failure=%s', async fail => {
+        const { component, fixture, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        component['productForm']().markAsDirty();
+        let settle: (() => void) | undefined;
+        productManageFacade.submitProductAsync.mockReturnValue(
+            new Promise(resolve => {
+                settle = (): void => {
+                    resolve(fail ? { product: null, error: new HttpErrorResponse({ status: 503 }) } : { product: PRODUCT, error: null });
+                };
+            }),
+        );
+        const draft = component['productFormModel']();
+        const saving = component['onSubmitAsync']();
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        const controls = [...element.querySelectorAll('form input, form textarea, form select, form button')];
+        expect(controls.length).toBeGreaterThan(0);
+        expect(controls.every(control => control.matches(':disabled'))).toBe(true);
+        expect(element.querySelector('fd-page-header')?.hasAttribute('inert')).toBe(true);
+
+        settle?.();
+        await saving;
+        fixture.detectChanges();
+        expect(controls.some(control => !control.matches(':disabled'))).toBe(true);
+        if (fail) {
+            expect(component['productFormModel']()).toEqual(draft);
+            expect(component['hasUnsavedChanges']()).toBe(true);
+        }
+    });
+});
+
 type ProductManageFacadeMock = {
     committed$: Subject<void>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;

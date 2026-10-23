@@ -12,6 +12,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidenceCache.ps1
   - .llm-wiki/tools/Import-LlmWikiEvidenceReceipts.ps1
+  - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1
   - .llm-wiki/tools/Resolve-LlmWikiRecordedCheckResult.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
@@ -126,8 +128,18 @@ receipts that match the current repository fingerprint and canonical command. Us
 `-DryRun` to preview the import. Task refresh performs the same import
 automatically after evidence invalidation.
 
+Direct `evidence-run` captures an immutable execution log and the repository
+fingerprint measured before and after the command. A schema 2 verification
+receipt binds that original execution record, current executed-check lineage,
+canonical command and log hash. Import copies the verified log and preserves
+the actual exit status and duration without rerunning the command. The source
+workspace need not be sealed for this receipt import. Changed execution inputs,
+commands or logs prevent reuse; schema 1 manual receipts remain manual checks
+and cannot prove a behavioral phase.
+
 Executed task checks bind lineage to the SHA-256 hash of their captured log.
-Cross-task reuse is deliberately narrower than general lineage compatibility:
+The separate task-cache reuse route is deliberately narrower than verification
+receipt import and general lineage compatibility:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 task-cache-find `

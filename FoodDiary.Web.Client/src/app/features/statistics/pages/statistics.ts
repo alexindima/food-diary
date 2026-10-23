@@ -29,6 +29,7 @@ import { StatisticsOverviewCardComponent } from '../components/statistics-overvi
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { connectStatisticsDevelopmentScreen } from '../lib/statistics-development';
+import { connectStatisticsRouteState } from '../lib/statistics-route-state';
 import { STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
 import { STATISTICS_TOUR } from './statistics-tour';
 
@@ -69,6 +70,7 @@ export class StatisticsComponent {
 
     public constructor() {
         connectStatisticsDevelopmentScreen(this.facade);
+        connectStatisticsRouteState(this.facade);
         this.facade.initialize();
     }
 
@@ -83,6 +85,8 @@ export class StatisticsComponent {
     protected readonly isBodyLoading = this.facade.isBodyLoading;
     protected readonly hasStatisticsResponse = this.facade.hasStatisticsResponse;
     protected readonly hasLoadError = this.facade.hasLoadError;
+    protected readonly hasReportError = this.facade.hasReportError;
+    protected readonly periodValidationError = this.facade.periodValidationError;
     protected readonly hasBodyLoadError = this.facade.hasBodyLoadError;
     protected readonly hasStatisticsData = this.facade.hasStatisticsData;
     protected readonly hasBodyData = this.facade.hasBodyData;

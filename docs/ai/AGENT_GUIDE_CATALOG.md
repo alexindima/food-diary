@@ -300,3 +300,4 @@ This catalog carries navigation only; architectural and operational rules remain
 - Billing consumer contracts: `Modules/Billing/Contracts/AGENTS.md`
 - Dietologist consumer contracts: `Modules/Dietologist/Contracts/AGENTS.md`
 - Shared outbox runtime: `Shared/FoodDiary.Outbox.Infrastructure/AGENTS.md`
+- Shared PostgreSQL commit verification: `Shared/FoodDiary.Persistence.PostgreSql/AGENTS.md`

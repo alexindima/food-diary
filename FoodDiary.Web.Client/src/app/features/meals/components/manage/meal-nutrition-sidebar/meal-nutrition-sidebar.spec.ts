@@ -46,6 +46,17 @@ describe('MealNutritionSidebarComponent state', () => {
 });
 
 describe('MealNutritionSidebarComponent actions', () => {
+    it.each([false, true])('shows upload loading without an invalid-items hint and keeps Cancel available, edit=%s', async editing => {
+        const { fixture } = await setupComponentAsync({ submitDisabled: true });
+        fixture.componentRef.setInput('photosUploading', true);
+        fixture.componentRef.setInput('isEditMode', editing);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+
+        expect(element.querySelector('button[type="submit"]')?.hasAttribute('disabled')).toBe(true);
+        expect(element.querySelector('.meal-manage__cancel-button button')?.matches(':disabled')).toBe(false);
+        expect(element.textContent).not.toContain('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
+    });
     it('should disable submit action when requested', async () => {
         const { fixture } = await setupComponentAsync({ submitDisabled: true });
         const submitButton = (fixture.nativeElement as HTMLElement).querySelector('button[type="submit"]');

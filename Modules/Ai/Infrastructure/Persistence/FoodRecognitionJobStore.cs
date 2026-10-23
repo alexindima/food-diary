@@ -192,7 +192,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using ConfiguredAsyncDisposable transactionDisposal = transaction.ConfigureAwait(false);
             T result = await action(context, cancellationToken).ConfigureAwait(false);
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
             return result;
         }).ConfigureAwait(false);
     }

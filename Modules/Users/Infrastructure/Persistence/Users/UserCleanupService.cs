@@ -10,13 +10,16 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
-public sealed class UserCleanupService(
+public sealed partial class UserCleanupService(
     UsersDbContext dbContext,
     IEnumerable<IUserDataPurgeParticipant> participants,
     ILogger<UserCleanupService> logger,
     IModuleTransactionCoordinator transactionCoordinator,
-    IModuleScopeGuard scopeGuard) : IUserCleanupService {
+    IModuleScopeGuard scopeGuard,
+    IEnumerable<IUserContentRetentionParticipant>? contentRetentionParticipants = null) : IUserCleanupService {
     private readonly IReadOnlyList<IUserDataPurgeParticipant> _participants = ValidateParticipants(participants);
+    private readonly IReadOnlyList<IUserContentRetentionParticipant> _contentRetentionParticipants =
+        ValidateContentRetentionParticipants(contentRetentionParticipants ?? []);
 
     public async Task<int> CleanupOwnedFixtureUsersAsync(Guid runId, IReadOnlyList<Guid> userIds, DateTime olderThanUtc, CancellationToken cancellationToken) {
         if (runId == Guid.Empty || userIds.Count is < 1 or > 20 || userIds.Any(id => id == Guid.Empty) || userIds.Distinct().Count() != userIds.Count) {
@@ -25,7 +28,7 @@ public sealed class UserCleanupService(
         cancellationToken.ThrowIfCancellationRequested();
         scopeGuard.EnsureCleanEntry();
         UserId[] ids = [.. userIds.Select(id => new UserId(id))];
-        var candidates = await dbContext.Users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
+        var candidates = await dbContext.Users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id)).OrderBy(user => user.Id)
             .Select(user => new { user.Id, user.Email, user.DeletedAt, user.IsActive })
             .ToListAsync(cancellationToken).ConfigureAwait(false);
         string[] allowedEmails = [$"webmcp-fixture-{runId:D}-client@example.test", $"webmcp-fixture-{runId:D}-dietologist@example.test"];
@@ -35,9 +38,18 @@ public sealed class UserCleanupService(
             throw new InvalidOperationException("Fixture purge refuses foreign or active accounts.");
         }
         int removed = 0;
-        foreach (var candidate in candidates) {
-            if (await CleanupUserAsync(candidate.Id, reassignTarget: null, threshold, cancellationToken).ConfigureAwait(false)) {
-                removed++;
+        var remaining = candidates.ToList();
+        for (int pass = 0; pass < candidates.Count && remaining.Count > 0; pass++) {
+            bool progress = false;
+            foreach (var candidate in remaining.ToArray()) {
+                if (await CleanupUserAsync(candidate.Id, reassignTarget: null, threshold, cancellationToken).ConfigureAwait(false)) {
+                    remaining.Remove(candidate);
+                    removed++;
+                    progress = true;
+                }
+            }
+            if (!progress) {
+                break;
             }
         }
         return removed;
@@ -75,7 +87,10 @@ public sealed class UserCleanupService(
             cancellationToken.ThrowIfCancellationRequested();
             UserId userId = candidate.UserId;
             try {
-                if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken).ConfigureAwait(false)) {
+                UserId? retainedContentOwner = reassignTarget is null
+                    ? await ResolveRetainedContentOwnerAsync(userId, cancellationToken).ConfigureAwait(false)
+                    : null;
+                if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken, retainedContentOwner).ConfigureAwait(false)) {
                     removed++;
                 }
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
@@ -104,7 +119,7 @@ public sealed class UserCleanupService(
         }
 
         logger.LogWarning(
-            "User cleanup reassign target {UserId} was not found or is not active. Proceeding without reassignment.",
+            "User cleanup reassign target {UserId} was not found or is not active. Proceeding without full catalog reassignment.",
             reassignUserId);
         return null;
     }
@@ -137,7 +152,8 @@ public sealed class UserCleanupService(
         UserId userId,
         UserId? reassignTarget,
         DateTime thresholdUtc,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        UserId? retainedContentOwner = null) {
         return transactionCoordinator.ExecuteItemAsync(async (transaction, token) => {
             await dbContext.Database.UseTransactionAsync(transaction, token).ConfigureAwait(false);
             FormattableString eligibilitySql = $"""
@@ -155,6 +171,24 @@ public sealed class UserCleanupService(
                 .ConfigureAwait(false);
             if (eligible != 1) {
                 return false;
+            }
+
+            if (reassignTarget is null) {
+                foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
+                    await participant.LockOwnedContentAsync(userId, token).ConfigureAwait(false);
+                }
+                if (retainedContentOwner is { } contentOwner) {
+                    foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
+                        await participant.RetainReferencedContentAsync(userId, contentOwner, token).ConfigureAwait(false);
+                    }
+                } else {
+                    foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
+                        if (await participant.HasReferencedContentAsync(userId, token).ConfigureAwait(false)) {
+                            // Scheduled cleanup retries in the next full pass; strict fixture cleanup refuses transfer.
+                            return false;
+                        }
+                    }
+                }
             }
 
             await dbContext.Users.Where(user => user.Id == userId)

@@ -7,7 +7,7 @@ export async function probeRenderedRuntime(
     frontendUrl,
     accessToken,
     expectedUserId,
-    { onDiagnostics = () => {}, probeFailure = false } = {},
+    { onDiagnostics = () => {}, probeFailure = false, credentials } = {},
 ) {
     const { chromium } = createRequire(
         join(root, "FoodDiary.Web.Client/package.json"),
@@ -20,10 +20,36 @@ export async function probeRenderedRuntime(
     };
     try {
         const context = await browser.newContext();
-        await context.addInitScript(
-            (token) => localStorage.setItem("authToken", token),
-            accessToken,
-        );
+        if (credentials) {
+            let login;
+            try {
+                login = await context.request.post(`${frontendUrl}/api/v1/auth/login`, {
+                    data: credentials,
+                    maxRedirects: 0,
+                    timeout: 30_000,
+                });
+            } catch {
+                // Playwright transport errors can include response cookies in their call log.
+                throw new Error("Rendered runtime sign-in request failed");
+            }
+            if (login.status() !== 200)
+                throw new Error(`Rendered runtime sign-in failed with status ${login.status()}`);
+            let identity;
+            try {
+                identity = await login.json();
+            } catch {
+                throw new Error("Rendered runtime sign-in returned invalid JSON");
+            }
+            if (identity?.user?.id !== expectedUserId)
+                throw new Error("Rendered runtime sign-in did not match the owned account");
+            // Restore policy and identity from the server using the real HttpOnly cookie.
+            await context.addInitScript(() => localStorage.setItem("refreshSession", "true"));
+        } else {
+            await context.addInitScript(
+                (token) => localStorage.setItem("authToken", token),
+                accessToken,
+            );
+        }
         const page = await context.newPage();
         page.on("pageerror", (error) =>
             record({
@@ -81,6 +107,8 @@ export async function probeRenderedRuntime(
                 response.status() === 200,
             { timeout: 45_000 },
         );
+        // Navigation can take longer than the response wait; still await and surface its error below.
+        void userResponse.catch(() => {});
         await page.goto(`${frontendUrl}/dashboard`, {
             waitUntil: "domcontentloaded",
             timeout: 60_000,

@@ -84,3 +84,6 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0051: Canonical project namespaces](0051-canonical-project-namespaces.md)
 - [0052: Transaction outcomes, delivery ownership and independent user state](0052-backend-transaction-and-delivery-reliability.md)
 - [0053: USDA links support the full provider catalog](0053-live-usda-reference-identifiers.md)
+- [0054: Independent commit verification and notification reconciliation](0054-independent-commit-verification-and-notification-reconciliation.md)
+- [0055: Atomic frontend publication and asset retention](0055-atomic-frontend-publication-and-asset-retention.md)
+- [0056: Required content revisions for shopping-list updates](0056-shopping-list-content-revisions.md)

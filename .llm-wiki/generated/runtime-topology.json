@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "58f4d02b6b77e509c53ffede725565ce3b9e9605237a21a6da6a432eff17e949",
-    "sourceFileCount": 4600
+    "sourceFingerprint": "a4b9fd15c3fd79b284b7acdb1d56cf35afde4be92b3d97bdfee1b35c976063b3",
+    "sourceFileCount": 4612
   },
   "summary": {
     "composeServices": 18,
@@ -28,8 +28,6 @@
       "dockerfile": "FoodDiary.Web.Api/Dockerfile",
       "dependsOn": [
         "db-init",
-        "mail-relay",
-        "rabbitmq",
         "redis"
       ],
       "ports": [
@@ -207,8 +205,7 @@
       "image": "${MAIL_RELAY_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-relay:local}",
       "dockerfile": "Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
       "dependsOn": [
-        "mailrelay-db-init",
-        "rabbitmq"
+        "mailrelay-db-init"
       ],
       "ports": [
         "${MAIL_RELAY_HOST_BIND:-127.0.0.1}:${MAIL_RELAY_PORT:-5088}:5088"
@@ -604,7 +601,7 @@
     },
     {
       "name": "RabbitMqMailRelayBootstrapHostedService",
-      "baseType": "IHostedService",
+      "baseType": "BackgroundService",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",

@@ -56,9 +56,11 @@ export class FdUiEmojiPickerComponent {
         return classes.join(' ');
     });
 
-    private readonly firstEnabledValue = computed<FdUiEmojiPickerValue | null>(() => {
-        const option = this.options().find(item => item.disabled !== true);
-        return option?.value ?? null;
+    private readonly tabStopValue = computed<FdUiEmojiPickerValue | null>(() => {
+        const options = this.options();
+        const selectedValue = this.selectedValue();
+        const selectedOption = options.find(item => item.value === selectedValue && item.disabled !== true);
+        return selectedOption?.value ?? options.find(item => item.disabled !== true)?.value ?? null;
     });
 
     protected isSelected(value: FdUiEmojiPickerValue): boolean {
@@ -66,12 +68,7 @@ export class FdUiEmojiPickerComponent {
     }
 
     protected getTabIndex(value: FdUiEmojiPickerValue): number {
-        const selectedValue = this.selectedValue();
-        if (selectedValue !== null) {
-            return selectedValue === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
-        }
-
-        return this.firstEnabledValue() === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
+        return this.tabStopValue() === value ? FOCUSABLE_TAB_INDEX : NOT_FOCUSABLE_TAB_INDEX;
     }
 
     protected select(option: FdUiEmojiPickerOption): void {

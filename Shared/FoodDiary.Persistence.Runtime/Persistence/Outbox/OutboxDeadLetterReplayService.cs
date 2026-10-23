@@ -3,6 +3,7 @@ using FoodDiary.Outbox.Abstractions;
 using FoodDiary.Outbox.PersistenceModel;
 using FoodDiary.Outbox.Infrastructure.Persistence;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Outbox.Management.Contracts.Common.Abstractions.Outbox;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
@@ -139,7 +140,7 @@ internal sealed class OutboxDeadLetterReplayService(
                 message.MarkReplayed(nowUtc);
                 await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 if (transaction is not null) {
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                 }
                 return ToModel(audit);
             } finally {

@@ -25,6 +25,7 @@ type NotificationsDialogTestContext = {
         markAsRead: ReturnType<typeof vi.fn>;
         notifications: ReturnType<typeof signal<NotificationItem[]>>;
         notificationsLoading: ReturnType<typeof signal<boolean>>;
+        notificationsLoaded: ReturnType<typeof signal<boolean>>;
     };
     router: { navigateByUrl: ReturnType<typeof vi.fn> };
 };
@@ -35,6 +36,7 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
     const notificationService = {
         notifications: signal(notifications),
         notificationsLoading: signal(false),
+        notificationsLoaded: signal(true),
         ensureNotificationsLoaded: vi.fn(),
         markAsRead: vi.fn().mockReturnValue(of(void 0)),
         markAllRead: vi.fn().mockReturnValue(of(void 0)),
@@ -56,6 +58,46 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
 
     return { component, dialogRef, fixture, notificationService, router };
 }
+
+describe('NotificationsDialogComponent background reconciliation', () => {
+    it('preserves the rendered card while a loaded feed refresh is pending and after it fails', () => {
+        const { fixture, notificationService } = setupNotificationsDialog([createInvitationNotification()]);
+        const host = fixture.nativeElement as HTMLElement;
+        const originalCard = host.querySelector('.notifications-dialog__item');
+        expect(originalCard).not.toBeNull();
+
+        notificationService.notificationsLoading.set(true);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.notifications-dialog__item')).toBe(originalCard);
+        expect(host.querySelector('.notifications-dialog__state')).toBeNull();
+
+        notificationService.notificationsLoading.set(false);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.notifications-dialog__item')).toBe(originalCard);
+        expect(host.querySelector('.notifications-dialog__state')).toBeNull();
+    });
+
+    it('shows initial loading until the first feed load completes', () => {
+        const { fixture, notificationService } = setupNotificationsDialog([]);
+        const host = fixture.nativeElement as HTMLElement;
+        notificationService.notificationsLoaded.set(false);
+        notificationService.notificationsLoading.set(true);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.notifications-dialog__state')).not.toBeNull();
+        expect(host.querySelector('fd-notifications-dialog-list')).toBeNull();
+
+        notificationService.notifications.set([createInvitationNotification()]);
+        notificationService.notificationsLoaded.set(true);
+        notificationService.notificationsLoading.set(false);
+        fixture.detectChanges();
+
+        expect(host.querySelector('.notifications-dialog__item')).not.toBeNull();
+        expect(host.querySelector('.notifications-dialog__state')).toBeNull();
+    });
+});
 
 describe('NotificationsDialogComponent invitations', () => {
     it('keeps a future notification generic and follows its server target rather than its reference', () => {

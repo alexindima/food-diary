@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { FavoriteProductsSdk } from '../../../shared/api/sdk/generated/api/favorite-products.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteProduct } from '../../../shared/models/product.data';
 import type { FavoriteProductId, ProductId } from '../../../shared/models/semantics/entity-id';
@@ -32,14 +32,14 @@ export class FavoriteProductService {
         return this.getPage(1, LOOKUP_PAGE_SIZE).pipe(
             expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, LOOKUP_PAGE_SIZE) : EMPTY)),
             reduce((items, page) => [...items, ...page.data], [] as FavoriteProduct[]),
-            catchError((error: unknown) => fallbackApiError('Get favorite products error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Get favorite products error', error)),
         );
     }
 
     public isFavorite(productId: ProductId): Observable<boolean> {
         return this.sdk.client
             .getFavoriteProductsCheckByProductId({ version: this.sdk.version, productId })
-            .pipe(catchError((error: unknown) => fallbackApiError('Check favorite product error', error, false)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Check favorite product error', error)));
     }
 
     public add(productId: ProductId, name?: string, preferredPortionAmount?: number): Observable<FavoriteProduct> {

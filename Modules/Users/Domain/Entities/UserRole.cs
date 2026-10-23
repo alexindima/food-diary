@@ -18,6 +18,10 @@ public sealed class UserRole {
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        if (userId == SystemContentOwner.Id) {
+            throw new InvalidOperationException("System content owner cannot have roles.");
+        }
+
         if (roleId == RoleId.Empty) {
             throw new ArgumentException("RoleId is required.", nameof(roleId));
         }

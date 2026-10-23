@@ -959,6 +959,7 @@
           "FoodDiary.Modules.Marketing.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
@@ -1108,6 +1109,7 @@
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
@@ -2126,6 +2128,24 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.mealplanning.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Application": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.mealplanning.persistencemodel": {
         "type": "Project",
         "dependencies": {
@@ -3004,6 +3024,7 @@
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
@@ -3026,6 +3047,13 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
+      "fooddiary.persistence.postgresql": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
       "fooddiary.persistence.runtime": {
         "type": "Project",
         "dependencies": {
@@ -3039,6 +3067,7 @@
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
           "FoodDiary.Outbox.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
+          "FoodDiary.Persistence.PostgreSql": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",

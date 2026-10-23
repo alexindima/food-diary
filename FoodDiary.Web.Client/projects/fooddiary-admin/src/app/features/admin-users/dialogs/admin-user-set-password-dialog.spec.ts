@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminUsersFacade } from '../lib/admin-users.facade';
@@ -17,31 +17,31 @@ const user = {
     roles: [],
 };
 
+let component: AdminUserSetPasswordDialogComponent;
+let fixture: ComponentFixture<AdminUserSetPasswordDialogComponent>;
+let usersService: { setPassword: ReturnType<typeof vi.fn> };
+let dialogRef: { close: ReturnType<typeof vi.fn> };
+
+beforeEach(async () => {
+    usersService = { setPassword: vi.fn() };
+    dialogRef = { close: vi.fn() };
+    usersService.setPassword.mockReturnValue(of(null));
+
+    await TestBed.configureTestingModule({
+        imports: [AdminUserSetPasswordDialogComponent],
+        providers: [
+            { provide: AdminUsersFacade, useValue: usersService },
+            { provide: FdUiDialogRef, useValue: dialogRef },
+            { provide: FD_UI_DIALOG_DATA, useValue: user },
+        ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AdminUserSetPasswordDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+});
+
 describe('AdminUserSetPasswordDialogComponent', () => {
-    let component: AdminUserSetPasswordDialogComponent;
-    let fixture: ComponentFixture<AdminUserSetPasswordDialogComponent>;
-    let usersService: { setPassword: ReturnType<typeof vi.fn> };
-    let dialogRef: { close: ReturnType<typeof vi.fn> };
-
-    beforeEach(async () => {
-        usersService = { setPassword: vi.fn() };
-        dialogRef = { close: vi.fn() };
-        usersService.setPassword.mockReturnValue(of(null));
-
-        await TestBed.configureTestingModule({
-            imports: [AdminUserSetPasswordDialogComponent],
-            providers: [
-                { provide: AdminUsersFacade, useValue: usersService },
-                { provide: FdUiDialogRef, useValue: dialogRef },
-                { provide: FD_UI_DIALOG_DATA, useValue: user },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(AdminUserSetPasswordDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
     it('should require a new password', () => {
         component['submit']();
 
@@ -112,5 +112,32 @@ describe('AdminUserSetPasswordDialogComponent', () => {
         component['close']();
 
         expect(dialogRef.close).toHaveBeenCalledWith(false);
+    });
+});
+
+describe('AdminUserSetPasswordDialogComponent pending saves', () => {
+    it('locks both password fields and cancellation during a pending request, then permits retry', async () => {
+        const pending = new Subject<null>();
+        usersService.setPassword.mockReturnValueOnce(pending);
+        component['formModel'].set({ newPassword: 'QaPassword123!', confirmPassword: 'QaPassword123!' });
+        component['submit']();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        for (const control of element.querySelectorAll<HTMLInputElement>('input')) {
+            expect(control.disabled).toBe(true);
+        }
+        component['close']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        pending.error(new Error('offline'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(element.querySelector<HTMLInputElement>('input')?.disabled).toBe(false);
+        });
+        expect(component['formModel']().newPassword).toBe('QaPassword123!');
+        component['submit']();
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(true);
+        });
     });
 });

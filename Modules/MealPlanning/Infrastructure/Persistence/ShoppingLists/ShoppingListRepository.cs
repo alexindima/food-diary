@@ -133,7 +133,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
 
     private static IQueryable<ShoppingList> IncludeItemsAndSources(IQueryable<ShoppingList> query) =>
         query
-            .AsSplitQuery()
+            .AsSingleQuery()
             .Include(list => list.Items)
             .ThenInclude(item => item.Sources);
 
@@ -175,6 +175,6 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
                                 source.Unit == null ? null : source.Unit.ToString()))
                             .ToList()))
                     .ToList()))
-            .AsSplitQuery();
+            .AsSingleQuery();
     }
 }

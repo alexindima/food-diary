@@ -1,8 +1,9 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 const TEST_PLAN_DURATION_DAYS = 7;
@@ -19,6 +20,29 @@ import { planDurationDaysFromStored } from '../../models/meal-plan-values';
 import { MealPlanDetailPageComponent } from './meal-plan-detail-page';
 
 describe('MealPlanDetailPageComponent', () => {
+    it('loads and acts on the current plan when Angular reuses the detail route', async () => {
+        const facade = createFacadeStub(null);
+        facade.loadPlan.mockImplementation(id => {
+            facade.selectedPlan.set({ ...createMealPlan(), id: entityId<'meal-plan'>(id), name: id });
+        });
+        TestBed.configureTestingModule({
+            imports: [MealPlanDetailPageComponent],
+            providers: [provideTranslateTesting(), provideRouter([{ path: 'meal-plans/:id', component: MealPlanDetailPageComponent }])],
+        });
+        TestBed.overrideComponent(MealPlanDetailPageComponent, {
+            set: { providers: [{ provide: MealPlanFacade, useValue: facade }], template: '' },
+        });
+        const harness = await RouterTestingHarness.create();
+        const first = await harness.navigateByUrl('/meal-plans/plan-1', MealPlanDetailPageComponent);
+        const second = await harness.navigateByUrl('/meal-plans/plan-2', MealPlanDetailPageComponent);
+
+        expect(second).toBe(first);
+        expect(facade.loadPlan.mock.calls).toEqual([['plan-1'], ['plan-2']]);
+        second['adopt']();
+        expect(facade.adopt).toHaveBeenCalledWith('plan-2', expect.any(Function));
+        await harness.navigateByUrl('/meal-plans/plan-2?from=notice', MealPlanDetailPageComponent);
+        expect(facade.loadPlan).toHaveBeenCalledTimes(2);
+    });
     it('loads plan from route param and maps detail view', () => {
         const facade = createFacadeStub(createMealPlan());
         const component = createComponent(facade, 'plan-1');
@@ -112,6 +136,7 @@ function createComponent(
             {
                 provide: ActivatedRoute,
                 useValue: {
+                    paramMap: of(convertToParamMap(routeId === null ? {} : { id: routeId })),
                     snapshot: {
                         paramMap: convertToParamMap(routeId === null ? {} : { id: routeId }),
                     },

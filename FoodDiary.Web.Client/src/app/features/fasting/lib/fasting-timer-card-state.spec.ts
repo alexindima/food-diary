@@ -24,8 +24,10 @@ const HOURS_3 = 3;
 const HOURS_13 = 13;
 const HOURS_16 = 16;
 const HOURS_18 = 18;
+const HOURS_24 = 24;
 const HOURS_25 = 25;
 const HOURS_30 = 30;
+const HOURS_36 = 36;
 const HOURS_72 = 72;
 const MINUTES_30 = 30;
 const CYCLIC_EAT_ELAPSED_MS = MINUTES_30 * MS_PER_MINUTE;
@@ -39,6 +41,8 @@ describe('buildFastingTimerCardComputedState', () => {
     registerIntermittentWindowTests();
     registerIntermittentProtocolTests();
     registerExtendedTests();
+    registerExtendedBoundaryTests();
+    registerIntermittentBoundaryTests();
     registerCyclicTests();
 });
 
@@ -231,6 +235,57 @@ function registerExtendedTests(): void {
 
             expect(state.detailLabel).toBe('48 FASTING.HOURS');
         });
+    });
+}
+
+function registerExtendedBoundaryTests(): void {
+    it.each([
+        [HOURS_24, -1, '23:59:59', false],
+        [HOURS_24, 0, '24:00:00', false],
+        [HOURS_24, 1, '24:00:00', true],
+        [HOURS_36, -1, '35:59:59', false],
+        [HOURS_36, 0, '36:00:00', false],
+        [HOURS_36, 1, '36:00:00', true],
+    ] as const)('keeps a %ih extended timer bounded at target offset %ims', (targetHours, offsetMs, elapsed, overtime) => {
+        const state = buildFastingTimerCardComputedState({
+            session: createSession({
+                planType: 'Extended',
+                protocol: `Fast${targetHours}`,
+                initialPlannedDurationHours: targetHours,
+                plannedDurationHours: targetHours,
+                occurrenceKind: 'FastDay',
+            }),
+            elapsedMs: hours(targetHours) + offsetMs,
+            translate,
+        });
+
+        expect(state.elapsedFormatted).toBe(elapsed);
+        expect(state.remainingFormatted).toBe('00:00:00');
+        expect(state.isOvertime).toBe(overtime);
+        if (offsetMs < 0) {
+            expect(state.progressPercent).toBeLessThan(PROGRESS_FULL);
+        } else {
+            expect(state.progressPercent).toBe(PROGRESS_FULL);
+        }
+    });
+}
+
+function registerIntermittentBoundaryTests(): void {
+    it.each([
+        [hours(HOURS_16) - 1, 'FASTING.FASTING_WINDOW', 1, { elapsed: '15:59:59', remaining: '00:00:00' }],
+        [hours(HOURS_16), 'FASTING.EATING_WINDOW', 1, { elapsed: '00:00:00', remaining: '08:00:00' }],
+        [hours(HOURS_16) + 1, 'FASTING.EATING_WINDOW', 1, { elapsed: '00:00:00', remaining: '07:59:59' }],
+        [hours(HOURS_24) - 1, 'FASTING.EATING_WINDOW', 1, { elapsed: '07:59:59', remaining: '00:00:00' }],
+        [hours(HOURS_24), 'FASTING.FASTING_WINDOW', 2, { elapsed: '00:00:00', remaining: '16:00:00' }],
+        [hours(HOURS_24) + 1, 'FASTING.FASTING_WINDOW', 2, { elapsed: '00:00:00', remaining: '15:59:59' }],
+    ] as const)('switches the 16:8 timer at elapsed %ims', (elapsedMs, window, day, expected) => {
+        const state = buildFastingTimerCardComputedState({ session: createSession(), elapsedMs, translate });
+
+        expect(state.stateLabel).toBe(window);
+        expect(state.metaLabel).toBe(`FASTING.DAY_LABEL:{"day":${day}}`);
+        expect(state.elapsedFormatted).toBe(expected.elapsed);
+        expect(state.remainingFormatted).toBe(expected.remaining);
+        expect(state.isOvertime).toBe(false);
     });
 }
 

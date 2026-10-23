@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -14,11 +15,18 @@ import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingListTarget } from '../dialogs/shopping-list-picker/shopping-list-picker';
 import { ShoppingListAddFacade } from './shopping-list-add.facade';
 
+const REVISION_LENGTH = 64;
 const authenticated = signal(true);
 const api = { getSelectionPage: vi.fn(), getById: vi.fn(), create: vi.fn(), update: vi.fn() };
 const dialogs = { open: vi.fn() };
 const authDialog = { openAsync: vi.fn() };
-const list: ShoppingList = { id: entityId<'shopping-list'>('list-1'), name: 'Soup', createdAt: utcInstant(''), items: [] };
+const list: ShoppingList = {
+    id: entityId<'shopping-list'>('list-1'),
+    revision: 'a'.repeat(REVISION_LENGTH),
+    name: 'Soup',
+    createdAt: utcInstant(''),
+    items: [],
+};
 let facade: ShoppingListAddFacade;
 beforeEach(() => {
     vi.resetAllMocks();
@@ -56,6 +64,7 @@ describe('recipe shopping additions', () => {
         ];
         await facade.addAllAsync(entries);
         expect(api.update).toHaveBeenCalledExactlyOnceWith('list-1', {
+            expectedRevision: list.revision,
             items: [
                 expect.objectContaining({ id: 'rice', isChecked: true }),
                 { name: 'Salt', note: 'to taste', sortOrder: 2 },
@@ -84,11 +93,44 @@ describe('recipe shopping additions', () => {
             name: 'Soup',
             items: [{ name: 'Rice', amount: 200, unit: 'g', sortOrder: 1 }],
         });
-        expect(api.update).toHaveBeenCalledExactlyOnceWith('list-1', { items: [{ name: 'Salt', note: 'to taste', sortOrder: 1 }] });
+        expect(api.update).toHaveBeenCalledExactlyOnceWith('list-1', {
+            expectedRevision: list.revision,
+            items: [{ name: 'Salt', note: 'to taste', sortOrder: 1 }],
+        });
         expect(dialogs.open).toHaveBeenCalledTimes(1);
         expect(facade.isAdded(0)).toBe(true);
         expect(facade.isAdded(1)).toBe(true);
     });
+});
+
+describe('recipe shopping conditional append', () => {
+    it.each([HttpStatusCode.Conflict, HttpStatusCode.TooManyRequests])(
+        'does not mark a failed append (%s) as added and rebuilds the merge from a fresh detail on explicit retry',
+        async status => {
+            dialogs.open.mockReturnValue({ afterClosed: () => of({ id: list.id, name: list.name }) });
+            api.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status })));
+            await facade.addAsync(0, { name: 'Rice' });
+            expect(facade.isAdded(0)).toBe(false);
+            expect(api.update).toHaveBeenCalledExactlyOnceWith(list.id, {
+                expectedRevision: list.revision,
+                items: [{ name: 'Rice', sortOrder: 1 }],
+            });
+            const fresh = {
+                ...list,
+                revision: 'b'.repeat(REVISION_LENGTH),
+                items: [{ id: 'new-server-item', shoppingListId: list.id, name: 'Milk', isChecked: true, sortOrder: 1 }],
+            };
+            api.getById.mockReturnValueOnce(of(fresh));
+            api.update.mockReturnValueOnce(of({ ...fresh, revision: 'c'.repeat(REVISION_LENGTH) }));
+            await facade.addAsync(0, { name: 'Rice' });
+            expect(api.getById).toHaveBeenCalledTimes(2);
+            expect(api.update).toHaveBeenLastCalledWith(list.id, {
+                expectedRevision: fresh.revision,
+                items: [expect.objectContaining({ id: 'new-server-item', name: 'Milk', isChecked: true }), { name: 'Rice', sortOrder: 2 }],
+            });
+            expect(facade.isAdded(0)).toBe(true);
+        },
+    );
 });
 
 describe('recipe shopping target state', () => {
@@ -103,6 +145,7 @@ describe('recipe shopping target state', () => {
         await facade.addAsync(0, { name: 'Rice' });
         expect(api.create).not.toHaveBeenCalled();
         expect(api.update).toHaveBeenCalledWith('list-1', {
+            expectedRevision: list.revision,
             items: [
                 expect.objectContaining({ id: 'existing', name: 'Milk', isChecked: true, note: 'Keep' }),
                 { name: 'Rice', sortOrder: 2 },

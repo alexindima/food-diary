@@ -58,7 +58,8 @@ describe('FavoriteRecipeService lookup pagination', () => {
 
     it('does not expose a partial lookup when a later favorites page fails', () => {
         const next = vi.fn();
-        service.getLookupPage().subscribe(next);
+        const error = vi.fn();
+        service.getLookupPage().subscribe({ next, error });
         httpMock
             .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '1')
             .flush({ data: [createFavoriteRecipe()], page: 1, limit: 100, totalPages: 2, totalItems: 101 });
@@ -66,7 +67,8 @@ describe('FavoriteRecipeService lookup pagination', () => {
         httpMock
             .expectOne(req => req.url === `${BASE_URL}/page` && req.params.get('page') === '2')
             .flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
-        expect(next).toHaveBeenCalledExactlyOnceWith([]);
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.ServiceUnavailable }));
     });
 });
 
@@ -112,13 +114,15 @@ describe('FavoriteRecipeService', () => {
         req.flush({ data: favorites, page: 1, limit: 100, totalPages: 1, totalItems: 1 });
     });
 
-    it('returns an empty list when get all fails', () => {
-        service.getLookupPage().subscribe(result => {
-            expect(result).toEqual([]);
-        });
+    it('propagates lookup failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getLookupPage().subscribe({ next, error });
 
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
 
     it('checks favorite state', () => {
@@ -131,13 +135,15 @@ describe('FavoriteRecipeService', () => {
         req.flush(true);
     });
 
-    it('returns false when favorite check fails', () => {
-        service.isFavorite(entityId<'recipe'>('recipe-1')).subscribe(result => {
-            expect(result).toBe(false);
-        });
+    it('propagates favorite check failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.isFavorite(entityId<'recipe'>('recipe-1')).subscribe({ next, error });
 
         const req = httpMock.expectOne(`${BASE_URL}/check/recipe-1`);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
 
     it('adds favorite recipe with optional name', () => {

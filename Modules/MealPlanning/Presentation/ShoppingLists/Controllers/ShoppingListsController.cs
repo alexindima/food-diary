@@ -63,6 +63,7 @@ public sealed class ShoppingListsController(ISender mediator) : AuthorizedContro
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
     public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateShoppingListHttpRequest request) =>
         HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());

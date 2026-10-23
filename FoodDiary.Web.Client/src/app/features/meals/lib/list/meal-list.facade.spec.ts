@@ -13,6 +13,7 @@ import { entityId, optionalEntityId } from '../../../../shared/models/semantics/
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
+import { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 import { MealListFacade, type MealListStructuredFilters } from './meal-list.facade';
 
@@ -166,6 +167,8 @@ describe('MealListFacade', () => {
     registerListFailureTests();
     registerListRaceTests();
     registerDetailActionTests();
+    registerDetailFavoriteRefreshTests();
+    registerDetailDepartureTests();
 });
 
 function registerLoadTests(): void {
@@ -529,7 +532,83 @@ function registerDetailActionTests(): void {
             expect(mealService.deleteById).toHaveBeenCalledWith('meal-1');
         }
         if (action === 'FavoriteChanged') {
-            expect(favoriteMealService.getPage).toHaveBeenCalledWith(1, 1);
+            expect(mealService.queryOverview).toHaveBeenCalledWith(
+                DEFAULT_PAGE,
+                MEAL_LIST_PAGE_SIZE,
+                {},
+                { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, include: true },
+            );
+            expect(favoriteMealService.getPage).not.toHaveBeenCalled();
         }
+    });
+}
+
+function registerDetailFavoriteRefreshTests(): void {
+    it.each(['FavoriteChanged', 'Edit', 'Repeat', 'Delete'] as const)(
+        'refreshes favorites changed before detail action %s',
+        async action => {
+            const favorite = createFavorite();
+            const meal = createMeal({ isFavorite: true, favoriteMealId: favorite.id });
+            const dialogs = TestBed.inject(FdUiDialogService);
+            vi.spyOn(dialogs, 'open').mockReturnValue({
+                afterClosed: () => of(new MealDetailActionResult(meal.id, action, true)),
+            } as unknown as ReturnType<typeof dialogs.open>);
+            mealService.queryOverview.mockReturnValue(of(createOverview([meal], [favorite])));
+
+            await facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
+
+            expect(facade.favoriteTotalCount()).toBe(1);
+            expect(facade.favorites()).toEqual([favorite]);
+            expect(facade.mealData.items()[0].isFavorite).toBe(true);
+            expect(mealService.queryOverview).toHaveBeenCalledExactlyOnceWith(
+                DEFAULT_PAGE,
+                MEAL_LIST_PAGE_SIZE,
+                {},
+                { limit: MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, include: true },
+            );
+            expect(favoriteMealService.getPage).not.toHaveBeenCalled();
+        },
+    );
+
+    it.each(['Repeat', 'Delete'] as const)('reconciles saved favorites when subsequent %s fails', async action => {
+        const favorite = createFavorite();
+        const dialogs = TestBed.inject(FdUiDialogService);
+        vi.spyOn(dialogs, 'open').mockReturnValue({
+            afterClosed: () => of(new MealDetailActionResult(createMeal().id, action, true)),
+        } as unknown as ReturnType<typeof dialogs.open>);
+        mealService.repeat.mockReturnValue(throwError(() => new Error('offline')));
+        mealService.deleteById.mockReturnValue(throwError(() => new Error('offline')));
+        mealService.queryOverview.mockReturnValue(of(createOverview([createMeal()], [favorite])));
+
+        await expect(facade.handleMealDetailsAsync(createMeal(), emptyMealFilters())).resolves.toBe(false);
+
+        expect(facade.favoriteTotalCount()).toBe(1);
+        expect(facade.favorites()).toEqual([favorite]);
+        expect(mealService.queryOverview).toHaveBeenCalledOnce();
+        expect(favoriteMealService.getPage).not.toHaveBeenCalled();
+        expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
+    });
+}
+
+function registerDetailDepartureTests(): void {
+    it('does not navigate back to editing after leaving during a favorite refresh', async () => {
+        const dialogs = TestBed.inject(FdUiDialogService);
+        const navigation = TestBed.inject(NavigationService);
+        const navigate = vi.spyOn(navigation, 'navigateToMealEditAsync');
+        vi.spyOn(dialogs, 'open').mockReturnValue({
+            afterClosed: () => of(new MealDetailActionResult(createMeal().id, 'Edit', true)),
+        } as unknown as ReturnType<typeof dialogs.open>);
+        const overview = new Subject<MealOverview>();
+        mealService.queryOverview.mockReturnValue(overview);
+        const pending = facade.handleMealDetailsAsync(createMeal(), emptyMealFilters());
+        await vi.waitFor(() => {
+            expect(overview.observed).toBe(true);
+        });
+
+        TestBed.resetTestingModule();
+
+        await expect(pending).resolves.toBe(false);
+        expect(navigate).not.toHaveBeenCalled();
+        expect(overview.observed).toBe(false);
     });
 }

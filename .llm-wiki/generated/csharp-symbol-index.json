@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4599,
-    "symbols": 4534,
-    "interfaceImplementationLinks": 201,
+    "sourceFiles": 4611,
+    "symbols": 4546,
+    "interfaceImplementationLinks": 204,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2340,
+      "class": 2349,
       "enum": 71,
-      "interface": 415,
+      "interface": 418,
       "record": 1567,
       "record struct": 141
     },
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1869,
+      "Other": 1875,
       "Query": 301,
       "QueryHandler": 215,
       "ReadModelRepository": 33,
@@ -40,9 +40,9 @@
       "Repository": 99,
       "Request": 178,
       "Response": 267,
-      "Service": 168,
+      "Service": 173,
       "Validator": 236,
-      "ValueObject": 177,
+      "ValueObject": 178,
       "WriteRepository": 47
     }
   },
@@ -759,7 +759,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
-      "line": 23
+      "line": 25
     },
     {
       "name": "FoodDiaryDbContext",
@@ -801,7 +801,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 24
+      "line": 26
     },
     {
       "name": "InitialAdminBootstrapOptions",
@@ -843,7 +843,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 381
+      "line": 353
     },
     {
       "name": "UsdaCsvReader",
@@ -1046,7 +1046,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "JobManagerTelemetry",
@@ -1543,7 +1543,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminDashboardMetricsReader.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "AdminImpersonationSessionQuery",
@@ -1557,7 +1557,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminRetentionReader.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AdminUserRoleAuditRepository",
@@ -1749,6 +1749,13 @@
       "line": 9
     },
     {
+      "name": "ProductUserPurgeRetentionReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Products/ProductUserPurgeRetentionReadService.cs",
+      "line": 8
+    },
+    {
       "name": "ReadModelCompositionRegistration",
       "kind": "class",
       "role": "Other",
@@ -1768,6 +1775,13 @@
       "role": "Query",
       "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
       "line": 9
+    },
+    {
+      "name": "RecipeUserPurgeRetentionReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.ReadModel.Composition/Recipes/RecipeUserPurgeRetentionReadService.cs",
+      "line": 8
     },
     {
       "name": "UserCurrentWaistProvider",
@@ -16929,7 +16943,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AdminSsoController.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "AuthImpersonationController",
@@ -17237,6 +17251,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "SuppressRefreshTokenCookieAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Filters/SuppressRefreshTokenCookieAttribute.cs",
       "line": 7
     },
     {
@@ -18290,6 +18311,13 @@
       "line": 2
     },
     {
+      "name": "MarketingLandingPath",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Common/MarketingLandingPath.cs",
+      "line": 2
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -18301,7 +18329,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Application/Mappings/MarketingAttributionMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "GetMarketingAttributionRangeQueryHandler",
@@ -19025,11 +19053,18 @@
       "line": 4
     },
     {
+      "name": "ShoppingListRevision",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListRevision.cs",
+      "line": 9
+    },
+    {
       "name": "ShoppingListMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Mappings/ShoppingListMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ShoppingListItemModel",
@@ -19050,7 +19085,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListModel.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ShoppingListOverviewModel",
@@ -19561,14 +19596,14 @@
       "kind": "record",
       "role": "Request",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Requests/UpdateShoppingListHttpRequest.cs",
-      "line": 2
+      "line": 5
     },
     {
       "name": "ShoppingListHttpResponse",
       "kind": "record",
       "role": "Response",
       "path": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListHttpResponse.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ShoppingListItemHttpResponse",
@@ -21923,6 +21958,13 @@
       "line": 5
     },
     {
+      "name": "IProductUserPurgeRetentionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Application.Abstractions/Common/IProductUserPurgeRetentionReadService.cs",
+      "line": 7
+    },
+    {
       "name": "IProductWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -22586,6 +22628,13 @@
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/ProductsDbContext.cs",
       "line": 6
+    },
+    {
+      "name": "ProductsUserContentRetentionParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs",
+      "line": 12
     },
     {
       "name": "ProductsUserDataPurgeParticipant",
@@ -23307,6 +23356,13 @@
       "role": "Query",
       "path": "Modules/Recipes/Application.Abstractions/Common/IRecipeUsageQuery.cs",
       "line": 5
+    },
+    {
+      "name": "IRecipeUserPurgeRetentionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Recipes/Application.Abstractions/Common/IRecipeUserPurgeRetentionReadService.cs",
+      "line": 7
     },
     {
       "name": "IRecipeWriteRepository",
@@ -24098,6 +24154,13 @@
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesDbContext.cs",
       "line": 6
+    },
+    {
+      "name": "RecipesUserContentRetentionParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserContentRetentionParticipant.cs",
+      "line": 12
     },
     {
       "name": "RecipesUserDataPurgeParticipant",
@@ -25469,7 +25532,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/SetUserPasswordByAdministrator/SetUserPasswordByAdministratorCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "StartUserPremiumTrialCommandHandler",
@@ -25588,7 +25651,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateUserByAdministrator/UpdateUserByAdministratorCommandHandler.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "CurrentUserAccessPolicy",
@@ -26044,6 +26107,13 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Common/IUserCommentAuthorReadService.cs",
       "line": 5
+    },
+    {
+      "name": "IUserContentRetentionParticipant",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IUserContentRetentionParticipant.cs",
+      "line": 6
     },
     {
       "name": "IUserCredentialVerificationService",
@@ -26564,6 +26634,13 @@
       "line": 2
     },
     {
+      "name": "SystemContentOwner",
+      "kind": "class",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/Ids/SystemContentOwner.cs",
+      "line": 2
+    },
+    {
       "name": "UserId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -26996,6 +27073,13 @@
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "line": 12
+    },
+    {
+      "name": "UserCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
+      "line": 7
     },
     {
       "name": "UserProfileProjectionService",
@@ -30117,7 +30201,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "MailRelayReplyHeaders",
@@ -31478,6 +31562,20 @@
       "line": 4
     },
     {
+      "name": "CommitOutcomeUnknownException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.PostgreSql/CommitOutcomeUnknownException.cs",
+      "line": 2
+    },
+    {
+      "name": "VerifiedTransactionCommit",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Persistence.PostgreSql/VerifiedTransactionCommit.cs",
+      "line": 7
+    },
+    {
       "name": "DomainEventNotification",
       "kind": "record",
       "role": "Other",
@@ -31531,7 +31629,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "AtomicCommandReceipt",
@@ -31560,13 +31658,6 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/AtomicResultJsonConverter.cs",
       "line": 6
-    },
-    {
-      "name": "CommitOutcomeUnknownException",
-      "kind": "class",
-      "role": "Other",
-      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/CommitOutcomeUnknownException.cs",
-      "line": 2
     },
     {
       "name": "EfAtomicCommandExecutor",
@@ -31644,13 +31735,6 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/SharedTransactionBoundary.cs",
       "line": 8
-    },
-    {
-      "name": "VerifiedTransactionCommit",
-      "kind": "class",
-      "role": "Other",
-      "path": "Shared/FoodDiary.Persistence.Runtime/Persistence/Shared/VerifiedTransactionCommit.cs",
-      "line": 7
     },
     {
       "name": "SharedPersistenceDbContext",
@@ -32796,6 +32880,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IProductUserPurgeRetentionReadService",
+      "interfacePath": "Modules/Products/Application.Abstractions/Common/IProductUserPurgeRetentionReadService.cs",
+      "implementation": "ProductUserPurgeRetentionReadService",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Products/ProductUserPurgeRetentionReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IProfileNotificationReadService",
       "interfacePath": "Modules/Users/Contracts/Common/IProfileNotificationReadService.cs",
       "implementation": "ProfileNotificationReadService",
@@ -32870,6 +32961,13 @@
       "interfacePath": "Modules/Recipes/Application.Abstractions/Common/IRecipeUsageQuery.cs",
       "implementation": "RecipeUsageQuery",
       "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IRecipeUserPurgeRetentionReadService",
+      "interfacePath": "Modules/Recipes/Application.Abstractions/Common/IRecipeUserPurgeRetentionReadService.cs",
+      "implementation": "RecipeUserPurgeRetentionReadService",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Recipes/RecipeUserPurgeRetentionReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -33045,6 +33143,13 @@
       "interfacePath": "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs",
       "implementation": "UserCleanupService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserCleanupService",
+      "interfacePath": "Modules/Users/Application.Abstractions/Common/IUserCleanupService.cs",
+      "implementation": "UserCleanupService",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs",
       "confidence": "naming-convention"
     },
     {
@@ -33236,14 +33341,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 423
+      "line": 432
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 424
+      "line": 433
     },
     {
       "service": "IRecurringJobRegistrationVerifier",
@@ -33257,28 +33362,28 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 98
+      "line": 100
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "UnavailableNotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 99
+      "line": 101
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 100
+      "line": 102
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 122
+      "line": 124
     },
     {
       "service": "IIdempotencyStore",

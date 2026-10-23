@@ -18,8 +18,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
     public async Task CleanDatabase_MigrateToLatest_AppliesBaselineAndReferenceData() {
         await using FoodDiaryDbContext context = await CreateBaselineDatabaseAsync();
         Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
-        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
-        Assert.False(context.Database.HasPendingModelChanges());
+        Assert.Equal(context.Database.GetMigrations().Skip(1), await context.Database.GetPendingMigrationsAsync(), StringComparer.Ordinal);
         Assert.Equal(5, await context.Database.SqlQuery<int>($"""
             SELECT count(*)::integer AS "Value" FROM "Roles"
             """).SingleAsync());
@@ -39,6 +38,8 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await AdoptAsync(context);
         await context.Database.MigrateAsync();
         Assert.Equal(context.Database.GetMigrations(), await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        Assert.False(context.Database.HasPendingModelChanges());
     }
 
     [RequiresDockerTheory]
@@ -123,7 +124,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await context.Database.MigrateAsync();
 
         Assert.Equal(before, await ReadApplicationDataAsync(context));
-        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        Assert.Equal(context.Database.GetMigrations(), await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
         Assert.Empty(await context.Database.GetPendingMigrationsAsync());
     }
 
@@ -157,7 +158,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
         Assert.Equal(before, await ReadApplicationDataAsync(context));
         Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
-        Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        Assert.Equal(context.Database.GetMigrations().Skip(1), await context.Database.GetPendingMigrationsAsync(), StringComparer.Ordinal);
     }
 
     [RequiresDockerTheory]

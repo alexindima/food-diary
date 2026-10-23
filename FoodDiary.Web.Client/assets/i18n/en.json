@@ -4672,6 +4672,7 @@
         "SEARCH_HELP": "Search covers products in this catalogue. Try a shorter name, another spelling or reset filters. If nothing matches, create a product using its label, or switch to recipes."
     },
     "STATISTICS": {
+        "PERIOD_TOO_LONG": "Choose a period of no more than 366 days, including the start and end dates.",
         "TITLE": "Statistics",
         "SUBTITLE": "Trends overview",
         "EXPORT_MENU_LABEL": "Export",
@@ -4949,6 +4950,8 @@
             "VIDEO_LABEL": "Recognize speech from video",
             "VIDEO_HINT": "Paste a public YouTube link (including Shorts) or a direct video link above, or upload a saved video. Only audio is sent to AI; text shown on screen is not read.",
             "VIDEO_FILE_LABEL": "Video file (optional when using a URL)",
+            "VIDEO_SELECT_FILE": "Choose video",
+            "VIDEO_NO_FILE": "No video selected",
             "VIDEO_LIMITS": "Videos up to 5 minutes. Uploaded files: MP4 or WebM, up to 50 MB. If the site blocks access, upload a saved file.",
             "VIDEO_REQUIRED": "Add a public video URL or choose a video file.",
             "VIDEO_INVALID": "Check that the video has an audio track and is no longer than 5 minutes. Uploaded files must be MP4 or WebM, up to 50 MB; additional text must be at most 8,000 characters.",
@@ -5922,6 +5925,10 @@
         "DELETE_ERROR": "Failed to delete shopping list.",
         "CLEAR_ERROR": "Failed to clear shopping list.",
         "SAVE_ERROR": "Failed to save shopping list.",
+        "CONFLICT_MESSAGE": "This list was changed elsewhere. Your edits are still here. Reload the saved list before continuing.",
+        "CONFLICT_RELOAD": "Reload saved list",
+        "CONFLICT_RELOAD_TITLE": "Reload the saved list?",
+        "CONFLICT_RELOAD_MESSAGE": "This will open the latest saved list and discard your unsaved changes. Cancel to keep your draft.",
         "TOUR": {
             "START_TOUR": "Show shopping list tour",
             "SUMMARY_TITLE": "Current list summary",

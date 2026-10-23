@@ -3,8 +3,14 @@
     <fd-admin-load-error (retry)="reload()" />
 } @else if (user(); as account) {
     <header class="admin-user-details__header">
-        @if (account.profileImage) {
-            <img class="admin-user-details__avatar" alt="" [src]="account.profileImage" />
+        @if (avatarUrl(); as imageUrl) {
+            <img
+                class="admin-user-details__avatar"
+                alt=""
+                referrerpolicy="no-referrer"
+                [src]="imageUrl"
+                (error)="onAvatarError(account.id, imageUrl)"
+            />
         } @else {
             <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
         }

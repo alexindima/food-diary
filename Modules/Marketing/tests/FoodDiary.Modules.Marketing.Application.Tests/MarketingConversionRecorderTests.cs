@@ -48,7 +48,7 @@ public sealed class MarketingConversionRecorderTests {
                 new UserId(userId),
                 new AnonymousVisitorId("anon-1"),
                 new MarketingSessionId("session-1"),
-                "/?utm_source=telegram",
+                "/verify-email?token=historical-secret&utm_source=telegram",
                 "t.me",
                 "telegram",
                 "social",
@@ -69,6 +69,7 @@ public sealed class MarketingConversionRecorderTests {
         Assert.Equal("2026_07_launch", premiumEvent.UtmCampaign);
         Assert.Equal("anon-1", premiumEvent.AnonymousId.Value);
         Assert.Equal("session-1", premiumEvent.SessionId.Value);
+        Assert.Equal("/verify-email?utm_source=telegram", premiumEvent.LandingPath);
     }
 
     [Fact]

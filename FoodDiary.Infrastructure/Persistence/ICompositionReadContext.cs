@@ -6,9 +6,11 @@ using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteMeals;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteProducts;
 using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Modules.MealPlanning.Domain.Entities.MealPlans;
+using FoodDiary.Modules.MealPlanning.Domain.Entities.Shopping;
 using FoodDiary.Modules.Meals.Domain.Entities;
 using FoodDiary.Modules.Products.Domain.Entities;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Recipes;
+using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Modules.Recipes.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Admin.Domain.Entities;
@@ -43,8 +45,10 @@ public interface ICompositionReadContext {
     IQueryable<Product> Products { get; }
     IQueryable<RecipeComment> RecipeComments { get; }
     IQueryable<RecipeIngredient> RecipeIngredients { get; }
+    IQueryable<RecipeLike> RecipeLikes { get; }
     IQueryable<RecipeStep> RecipeSteps { get; }
     IQueryable<Recipe> Recipes { get; }
+    IQueryable<ShoppingList> ShoppingLists { get; }
     IQueryable<RecommendationComment> RecommendationComments { get; }
     IQueryable<Recommendation> Recommendations { get; }
     IQueryable<UserLessonProgress> UserLessonProgress { get; }

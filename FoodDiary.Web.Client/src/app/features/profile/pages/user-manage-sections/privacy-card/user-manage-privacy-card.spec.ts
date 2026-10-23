@@ -1,10 +1,30 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { UserManagePrivacyCardComponent } from './user-manage-privacy-card';
 
 describe('UserManagePrivacyCardComponent', () => {
+    it('opens the privacy policy in the current interface language after a language change', async () => {
+        const fixture = await createComponentAsync();
+        const translate = TestBed.inject(TranslateService);
+        const policyLink = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('.user-manage__privacy-link');
+
+        await firstValueFrom(translate.use('ru'));
+        fixture.detectChanges();
+
+        expect(policyLink?.getAttribute('href')).toBe('/ru/privacy-policy');
+
+        await firstValueFrom(translate.use('en'));
+        fixture.detectChanges();
+
+        expect(policyLink?.getAttribute('href')).toBe('/privacy-policy');
+        expect(policyLink?.target).toBe('_blank');
+        expect(policyLink?.rel).toContain('noopener');
+    });
+
     it('emits privacy actions', async () => {
         const fixture = await createComponentAsync({ hasAiConsent: true });
         const component = fixture.componentInstance;

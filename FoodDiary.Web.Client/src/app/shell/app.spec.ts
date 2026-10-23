@@ -1,24 +1,198 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
-import { type Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, NO_ERRORS_SCHEMA, type Signal, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router, Scroll } from '@angular/router';
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    provideRouter,
+    type Route,
+    RouteConfigLoadEnd,
+    RouteConfigLoadStart,
+    Router,
+    RouterOutlet,
+    Scroll,
+} from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { Subject } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../testing/async-testing';
+import { provideTranslateTesting } from '../../testing/translate-testing.module';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
 import { SeoService } from '../services/seo.service';
+import { SessionEventsService } from '../shared/auth/session-events.service';
+import { editorUnsavedChangesGuard } from '../shared/forms/editor-unsaved-changes.guard';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
+import { PwaInstallPromotionService } from '../shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { AppComponent } from './app';
 
 const NAVIGATION_ID = 1;
 const SHELL_TEST_TIMEOUT_MS = 15000;
+const disposePrivateEditor = vi.fn();
+const createLatePrivateEditor = vi.fn();
+const disposeRootDialog = vi.fn();
+const saveRootDialog = vi.fn();
+let allowPrivateEditorDeparture = false;
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+});
+
+@Component({ template: 'Private Alice draft', changeDetection: ChangeDetectionStrategy.OnPush })
+class SessionPrivateEditor {
+    public constructor() {
+        inject(DestroyRef).onDestroy(disposePrivateEditor);
+    }
+
+    public async canLeaveAsync(): Promise<boolean> {
+        return new Promise<boolean>(resolve => {
+            resolve(allowPrivateEditorDeparture);
+        });
+    }
+}
+
+@Component({ template: 'Late private draft', changeDetection: ChangeDetectionStrategy.OnPush })
+class SessionLatePrivateEditor {
+    public constructor() {
+        createLatePrivateEditor();
+    }
+}
+
+@Component({ template: 'Public sign in', changeDetection: ChangeDetectionStrategy.OnPush })
+class SessionPublicLogin {}
+
+@Component({
+    template: '<p>Private Alice overlay draft</p><button type="button" (click)="save()">Save draft</button>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SessionRootDialog {
+    public constructor() {
+        inject(DestroyRef).onDestroy(disposeRootDialog);
+    }
+
+    protected save(): void {
+        saveRootDialog();
+    }
+}
+
+describe('AppComponent session-owned route lifetime', () => {
+    it.each(['local', 'logout'])(
+        'destroys a dirty owner even when %s departure cannot load the public destination',
+        async reason => {
+            const { fixture, rootElement, authenticated, sessions, router } = await createSessionShellAsync();
+            expect(rootElement.textContent).toContain('Private Alice draft');
+            const dialog = TestBed.inject(FdUiDialogService).open(SessionRootDialog);
+            dialog.acquireDismissalLock();
+            fixture.detectChanges();
+            const overlayElement = dialog.overlayRef.overlayElement;
+            const backdrop = dialog.overlayRef.backdropElement;
+            if (backdrop === null) {
+                throw new Error('Dialog backdrop is missing');
+            }
+            backdrop.click();
+            expect(overlayElement.isConnected).toBe(true);
+            expect(disposeRootDialog).not.toHaveBeenCalled();
+            authenticated.set(false);
+            if (reason === 'local') {
+                sessions.notifyLocalSessionInvalidating();
+                sessions.notifyLocalSessionInvalidated();
+            } else {
+                sessions.notifySessionEnded();
+            }
+            fixture.detectChanges();
+            expect(disposePrivateEditor).toHaveBeenCalledOnce();
+            expect(overlayElement.isConnected).toBe(false);
+            expect(disposeRootDialog).toHaveBeenCalledOnce();
+            expect(saveRootDialog).not.toHaveBeenCalled();
+
+            await sessions.runSessionEndNavigationAsync(async () => {
+                await expect(router.navigateByUrl('/login')).rejects.toThrow('Public destination is unavailable');
+            });
+            fixture.detectChanges();
+            expect(rootElement.textContent).not.toContain('Private Alice draft');
+            expect(disposePrivateEditor).toHaveBeenCalledOnce();
+
+            await router.navigateByUrl('/explore');
+            fixture.detectChanges();
+            expect(rootElement.textContent).toContain('Public sign in');
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+});
+
+describe('AppComponent pending private navigation lifetime', () => {
+    it.each(['dietologist', 'change-password-required'])(
+        'keeps a late pre-invalidation %s navigation closed without a session',
+        async path => {
+            let release = (): void => {};
+            let loading = (): void => {};
+            const started = new Promise<void>(resolve => {
+                loading = resolve;
+            });
+            const destination = new Promise<typeof SessionLatePrivateEditor>(resolve => {
+                release = (): void => {
+                    resolve(SessionLatePrivateEditor);
+                };
+            });
+            const { fixture, rootElement, authenticated, sessions, router } = await createSessionShellAsync({
+                path,
+                loadComponent: async () => {
+                    loading();
+                    return destination;
+                },
+                data: { requiresSession: true, ...(path === 'change-password-required' ? { shell: 'public' } : {}) },
+            });
+            allowPrivateEditorDeparture = true;
+            const navigation = router.navigateByUrl(`/${path}`);
+            await started;
+            authenticated.set(false);
+            sessions.notifyLocalSessionInvalidated();
+            fixture.detectChanges();
+            release();
+            await navigation;
+            fixture.detectChanges();
+
+            expect(createLatePrivateEditor).not.toHaveBeenCalled();
+            expect(disposePrivateEditor).toHaveBeenCalledOnce();
+            expect(rootElement.textContent).not.toContain('private draft');
+            await expect(router.navigateByUrl('/login')).rejects.toThrow('Public destination is unavailable');
+            await router.navigateByUrl('/explore');
+            fixture.detectChanges();
+            expect(rootElement.textContent).toContain('Public sign in');
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
+});
+
+describe('AppComponent guest dialog lifetime', () => {
+    it('preserves a locked guest dialog across ordinary router navigation', async () => {
+        const { fixture, authenticated, router } = await createSessionShellAsync();
+        allowPrivateEditorDeparture = true;
+        await router.navigateByUrl('/explore');
+        authenticated.set(false);
+        fixture.detectChanges();
+        const dialog = TestBed.inject(FdUiDialogService).open(SessionRootDialog);
+        dialog.acquireDismissalLock();
+        fixture.detectChanges();
+        const overlayElement = dialog.overlayRef.overlayElement;
+
+        await router.navigateByUrl('/explore?section=guest');
+        fixture.detectChanges();
+
+        expect(overlayElement.isConnected).toBe(true);
+        expect(disposeRootDialog).not.toHaveBeenCalled();
+        expect(saveRootDialog).not.toHaveBeenCalled();
+        dialog.close();
+        expect(disposeRootDialog).toHaveBeenCalledOnce();
+    });
+});
 
 describe('AppComponent shell behavior', () => {
     beforeEach(() => {
@@ -197,6 +371,102 @@ describe('AppComponent public navigation', () => {
         expect(viewportScroller.scrollToPosition).not.toHaveBeenCalled();
     });
 });
+
+function stubMatchMedia(): void {
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn((query: string): MediaQueryList => ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(() => true),
+        })),
+    );
+}
+
+async function createSessionShellAsync(lateRoute?: Route): Promise<{
+    fixture: ComponentFixture<AppComponent>;
+    rootElement: HTMLElement;
+    authenticated: ReturnType<typeof signal<boolean>>;
+    sessions: SessionEventsService;
+    router: Router;
+}> {
+    TestBed.resetTestingModule();
+    disposePrivateEditor.mockClear();
+    createLatePrivateEditor.mockClear();
+    disposeRootDialog.mockClear();
+    saveRootDialog.mockClear();
+    allowPrivateEditorDeparture = false;
+    stubMatchMedia();
+    const authenticated = signal(true);
+    TestBed.configureTestingModule({
+        imports: [AppComponent],
+        providers: [
+            provideTranslateTesting(),
+            provideRouter([
+                {
+                    path: 'editor',
+                    component: SessionPrivateEditor,
+                    data: { requiresSession: true },
+                    canDeactivate: [editorUnsavedChangesGuard],
+                },
+                {
+                    path: 'login',
+                    data: { shell: 'public' },
+                    loadComponent: async (): Promise<typeof SessionPublicLogin> =>
+                        new Promise((_resolve, reject) => {
+                            reject(new Error('Public destination is unavailable'));
+                        }),
+                },
+                { path: 'explore', component: SessionPublicLogin },
+                ...(lateRoute === undefined ? [] : [lateRoute]),
+            ]),
+            {
+                provide: AuthService,
+                useValue: {
+                    isAuthenticated: authenticated,
+                    isImpersonating: signal(false),
+                    impersonationReason: signal<string | null>(null),
+                    onLogoutAsync: vi.fn(),
+                },
+            },
+            { provide: SeoService, useValue: { update: vi.fn() } },
+            { provide: LocalizationService, useValue: { loadTranslationsForRouteAsync: vi.fn().mockResolvedValue(undefined) } },
+            { provide: GlobalLoadingService, useValue: { isVisible: signal(false) } },
+            { provide: RouteLoadingService, useValue: { isVisible: signal(false), beginLoad: vi.fn(), endLoad: vi.fn() } },
+            { provide: ThemeService, useValue: { applyThemeForRoute: vi.fn() } },
+            { provide: ViewportScroller, useValue: { scrollToPosition: vi.fn(), setHistoryScrollRestoration: vi.fn() } },
+            { provide: BrowserWindowService, useValue: createBrowserWindowStub(false) },
+            { provide: NotificationRealtimeService, useValue: {} },
+            { provide: PushNotificationService, useValue: {} },
+            { provide: PwaInstallPromotionService, useValue: { setActive: vi.fn(), shouldShowBanner: signal(false) } },
+        ],
+    });
+    TestBed.overrideComponent(AppComponent, {
+        set: { imports: [RouterOutlet, TranslatePipe], schemas: [NO_ERRORS_SCHEMA] },
+    });
+    await TestBed.compileComponents();
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/editor');
+    fixture.detectChanges();
+    const rootElement: unknown = fixture.nativeElement;
+    if (!(rootElement instanceof HTMLElement)) {
+        throw new Error('Shell root element is missing');
+    }
+    return {
+        fixture,
+        rootElement,
+        authenticated,
+        sessions: TestBed.inject(SessionEventsService),
+        router,
+    };
+}
 
 async function createComponentAsync(
     options: { isAuthenticated?: boolean; shell?: 'authenticated' | 'public'; reducedMotion?: boolean } = {},

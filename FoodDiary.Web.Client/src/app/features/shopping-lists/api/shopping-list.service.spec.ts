@@ -15,8 +15,10 @@ import type {
 import { ShoppingListService } from './shopping-list.service';
 
 const BASE_URL = environment.apiUrls.shoppingLists;
+const REVISION_LENGTH = 64;
 const MOCK_LIST: ShoppingList = {
     id: entityId<'shopping-list'>('abc-123'),
+    revision: 'a'.repeat(REVISION_LENGTH),
     name: 'My List',
     createdAt: utcInstant('2026-01-01T00:00:00Z'),
     items: [],
@@ -98,7 +100,7 @@ describe('ShoppingListService mutations', () => {
     });
 
     it('should update shopping list', () => {
-        const updateData: ShoppingListUpdateDto = { name: 'Updated List' };
+        const updateData: ShoppingListUpdateDto = { expectedRevision: MOCK_LIST.revision, name: 'Updated List' };
         const response: ShoppingList = { ...MOCK_LIST, name: 'Updated List' };
 
         service.update(entityId<'shopping-list'>('abc-123'), updateData).subscribe(result => {
@@ -121,6 +123,15 @@ describe('ShoppingListService mutations', () => {
 });
 
 describe('ShoppingListService failures', () => {
+    it('preserves a stale-revision conflict without retrying the PATCH', () => {
+        const error = vi.fn();
+        service.update(MOCK_LIST.id, { expectedRevision: MOCK_LIST.revision, items: [] }).subscribe({ error });
+        const request = httpMock.expectOne(`${BASE_URL}/${MOCK_LIST.id}`);
+        expect(request.request.body).toEqual({ expectedRevision: MOCK_LIST.revision, items: [] });
+        request.flush({ code: 'ShoppingList.RevisionConflict' }, { status: HttpStatusCode.Conflict, statusText: 'Conflict' });
+        expect(error).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ status: HttpStatusCode.Conflict }));
+        httpMock.expectNone(`${BASE_URL}/${MOCK_LIST.id}`);
+    });
     it('should return null on getCurrent failure', () => {
         service.getCurrent().subscribe(result => {
             expect(result).toBeNull();

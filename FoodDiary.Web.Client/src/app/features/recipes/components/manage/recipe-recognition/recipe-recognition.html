@@ -2,6 +2,7 @@
     <fd-recipe-video-input
         [enabled]="videoMode()"
         [busy]="facade.busy()"
+        [selectedFile]="videoFile()"
         (enabledChanged)="setVideoMode($event)"
         (fileSelected)="selectVideo($event)"
     />

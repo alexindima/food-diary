@@ -93,6 +93,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionCalendar.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.NutritionSummary.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.SettingsCommands.cs`
+- [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.SparseHistory.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/CyclesValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FeatureErrorContractTests.cs`
@@ -109,7 +110,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleProfileInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/CycleSettingsAtomicityTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/FertilitySignalTextTests.cs`
-- [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/PredictionValueTests.cs`
 
 ## Working Rule
 

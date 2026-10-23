@@ -123,6 +123,7 @@ export class ShoppingListAddFacade {
         }
         return firstValueFrom(
             this.api.update(id, {
+                expectedRevision: list.revision,
                 items: appendShoppingItems(list.items.map(mapShoppingListItemToDto), items),
             }),
         );

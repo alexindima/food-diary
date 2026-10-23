@@ -6,6 +6,8 @@ status: current
 generated_by: .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
 sources:
   - .llm-wiki/generated/frontend-contract-index.json
+  - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
+  - .llm-wiki/wiki.ps1
 ---
 
 # Frontend contract index
@@ -18,6 +20,7 @@ Use `./.llm-wiki/wiki.ps1 ui -FrontendView consumers -Query <selector>` to inspe
 
 Regenerate with `./.llm-wiki/wiki.ps1 frontend-contract`; freshness is enforced by `verify` and CI.
 
-Local `verify-fast` may reuse a content-addressed receipt when TypeScript and
-template inputs, generator/helper implementation, and generated output are
-unchanged. Strict `wiki verify` always recomputes the index.
+Local `verify-fast` and ordinary `wiki verify` may reuse a content-addressed
+receipt when TypeScript and template inputs, generator/helper implementation,
+and generated output are unchanged. `wiki verify-strict-affected` recomputes
+the selected affected checks without cache reuse.

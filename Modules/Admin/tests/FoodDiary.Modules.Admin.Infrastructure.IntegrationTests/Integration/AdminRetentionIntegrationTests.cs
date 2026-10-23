@@ -17,7 +17,9 @@ public sealed class AdminRetentionIntegrationTests(PostgresDatabaseFixture datab
         var active = User.Create($"retention-active-{Guid.NewGuid():N}@example.com", "hash");
         var inactive = User.Create($"retention-inactive-{Guid.NewGuid():N}@example.com", "hash");
         var recent = User.Create($"retention-recent-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.AddRange(active, inactive, recent);
+        var systemOwner = User.CreateSystemContentOwner();
+        context.Users.AddRange(active, inactive, recent, systemOwner);
+        context.Entry(systemOwner).Property(user => user.CreatedOnUtc).CurrentValue = start;
         context.Entry(active).Property(user => user.CreatedOnUtc).CurrentValue = start;
         context.Entry(inactive).Property(user => user.CreatedOnUtc).CurrentValue = start;
         context.Entry(recent).Property(user => user.CreatedOnUtc).CurrentValue = start.AddDays(31);

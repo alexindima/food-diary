@@ -14,6 +14,7 @@ param(
     [string]$Status,
     [Nullable[int]]$ExitCode,
     [Nullable[double]]$DurationSeconds,
+    [string]$ArtifactPath,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -114,5 +115,19 @@ $lineage = [pscustomobject][ordered]@{
     }
     attestation = [pscustomobject][ordered]@{ reason = $Reason }
     compatibilityFingerprint = Get-Hash $compatibilityPayload
+}
+if ($PSBoundParameters.ContainsKey('ArtifactPath')) {
+    if ($Kind -ne 'executed-check' -or $null -eq $ExitCode) { throw 'An execution artifact requires executed-check and an actual exit code.' }
+    $artifactAbsolute = [IO.Path]::GetFullPath($(if ([IO.Path]::IsPathRooted($ArtifactPath)) { $ArtifactPath } else { Join-Path $repositoryRoot $ArtifactPath }))
+    $repositoryPrefix = $repositoryRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    if (-not $artifactAbsolute.StartsWith($repositoryPrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Execution artifact must remain inside the repository.' }
+    $artifactRelative = $artifactAbsolute.Substring($repositoryPrefix.Length).Replace('\', '/')
+    $evidenceRelative = [IO.Path]::GetFullPath($absoluteEvidencePath).Substring($repositoryPrefix.Length).Replace('\', '/')
+    $artifactPrefix = if ($evidenceRelative -match '^(\.artifacts/llm-wiki/tasks/[^/]+)/[^/]+\.json$') { "$($Matches[1])/logs/" } else { '.artifacts/llm-wiki/' }
+    if (-not $artifactRelative.StartsWith($artifactPrefix, [StringComparison]::Ordinal) -or -not (Test-Path -LiteralPath $artifactAbsolute -PathType Leaf)) { throw 'Execution artifact must be an existing log inside its evidence boundary.' }
+    $lineage | Add-Member -NotePropertyName artifact -NotePropertyValue ([pscustomobject][ordered]@{
+        path = $artifactRelative
+        sha256 = (Get-FileHash -LiteralPath $artifactAbsolute -Algorithm SHA256).Hash.ToLowerInvariant()
+    })
 }
 if ($Format -eq 'Json') { $lineage | ConvertTo-Json -Depth 10 } else { $lineage }

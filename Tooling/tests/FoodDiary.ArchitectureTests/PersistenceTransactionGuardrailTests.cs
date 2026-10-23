@@ -65,7 +65,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             // ADR 0052 shared runtime owns bounded read snapshots and uncertain COMMIT verification.
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "EfReadSnapshotExecutor.cs"),
-            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "VerifiedTransactionCommit.cs"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.PostgreSql", "VerifiedTransactionCommit.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "FoodRecognitionJobStore.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "AiQuotaRepository.cs"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Persistence.Runtime", "Persistence", "Shared", "ModuleContextSaveCoordinator.cs"),
@@ -125,8 +125,11 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Infrastructure", "Persistence", "MealPlanningUserDataPurgeParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Meals", "Infrastructure", "Persistence", "MealsUserDataPurgeParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "ProductsUserDataPurgeParticipant.cs"),
+            // ADR 0054: selective retention changes only source-owned catalog rows in the shared cleanup transaction.
+            ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "ProductsUserContentRetentionParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItemsUserDataPurgeParticipant.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "RecipesUserDataPurgeParticipant.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "RecipesUserContentRetentionParticipant.cs"),
         ];
         string[] forbiddenPatterns = [
             "ExecuteDeleteAsync(",

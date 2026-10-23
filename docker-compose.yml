@@ -245,10 +245,6 @@ services:
     depends_on:
       db-init:
         condition: service_completed_successfully
-      mail-relay:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
       redis:
         condition: service_healthy
     profiles:
@@ -292,8 +288,6 @@ services:
     depends_on:
       mailrelay-db-init:
         condition: service_completed_successfully
-      rabbitmq:
-        condition: service_healthy
     profiles:
       - full
       - backend

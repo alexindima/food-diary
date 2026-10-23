@@ -5,6 +5,7 @@ status: current
 sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/LlmWikiGitPaths.ps1
+  - .llm-wiki/wiki.ps1
   - FoodDiary.Web.Client/angular.json
   - FoodDiary.Web.Client/AGENTS.md
 ---
@@ -34,6 +35,7 @@ exported classes may require direct source inspection.
 ./.llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1 -Check
 ```
 
-Local `verify-fast` may reuse a content-addressed receipt when TypeScript and
-locale inputs, generator/helper implementation, and generated output are
-unchanged. Strict `wiki verify` always recomputes the index.
+Local `verify-fast` and ordinary `wiki verify` may reuse a content-addressed
+receipt when TypeScript and locale inputs, generator/helper implementation,
+and generated output are unchanged. `wiki verify-strict-affected` recomputes
+the selected affected checks without cache reuse.

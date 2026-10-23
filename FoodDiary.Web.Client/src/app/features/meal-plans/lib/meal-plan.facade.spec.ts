@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { EMPTY, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -15,6 +15,8 @@ import type { MealPlan, MealPlanMeal, MealPlanSummary } from '../models/meal-pla
 import { planDurationDaysFromStored } from '../models/meal-plan-values';
 import { plannedServingsFromStored } from '../models/meal-plan-values';
 import { plannedMealTypeFromStored } from '../models/meal-plan-values';
+import type { MealPlanListQuery } from './list/meal-plan-list-query';
+import { MEAL_PLAN_LIST_QUERY_STATE } from './list/meal-plan-list-query-state';
 import { MealPlanFacade } from './meal-plan.facade';
 
 const PAGE_SIZE = 50;
@@ -62,6 +64,119 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(MealPlanFacade);
+});
+
+describe('MealPlanFacade request lifetime', () => {
+    it('unsubscribes catalogue and detail reads on owner destruction', async () => {
+        const page = new Subject<PageOf<MealPlanSummary>>();
+        const detail = new Subject<MealPlan>();
+        mealPlanService.getPage.mockReturnValue(page);
+        mealPlanService.getById.mockReturnValue(detail);
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
+        await waitForAsync(() => page.observed && detail.observed);
+        expect([page.observed, detail.observed]).toEqual([true, true]);
+
+        TestBed.resetTestingModule();
+
+        expect([page.observed, detail.observed]).toEqual([false, false]);
+    });
+
+    it('unsubscribes obsolete catalogue and detail reads after selection changes', async () => {
+        const page = new Subject<PageOf<MealPlanSummary>>();
+        const detail = new Subject<MealPlan>();
+        mealPlanService.getPage.mockReturnValueOnce(page);
+        mealPlanService.getById
+            .mockReturnValueOnce(detail)
+            .mockReturnValueOnce(of({ ...createMealPlan(), id: entityId<'meal-plan'>('plan-2') }));
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
+        await waitForAsync(() => page.observed && detail.observed);
+        facade.loadPlans('Vegan');
+        facade.loadPlan(entityId<'meal-plan'>('plan-2'));
+        await waitForAsync(() => facade.selectedPlan()?.id === 'plan-2' && !facade.isLoading());
+
+        expect([page.observed, detail.observed]).toEqual([false, false]);
+        expect(facade.selectedPlan()?.id).toBe('plan-2');
+    });
+
+    it('does not normalize a late catalogue response after its owner is destroyed', async () => {
+        TestBed.resetTestingModule();
+        const query: MealPlanListQuery = { page: OUT_OF_RANGE_PAGE, dietType: null, source: 'all' };
+        const pending = new Subject<PageOf<MealPlanSummary>>();
+        mealPlanService.getPage.mockReturnValue(pending);
+        const writeAsync = vi.fn().mockResolvedValue(true);
+        TestBed.configureTestingModule({
+            providers: [
+                MealPlanFacade,
+                { provide: MealPlanService, useValue: mealPlanService },
+                { provide: RECIPE_LOOKUP, useValue: recipeLookup },
+                { provide: QuickMealService, useValue: quickMeal },
+                {
+                    provide: MEAL_PLAN_LIST_QUERY_STATE,
+                    useValue: {
+                        initial: query,
+                        current: signal(query),
+                        changes: EMPTY,
+                        writeAsync,
+                        normalizePageAsync: vi.fn().mockResolvedValue(false),
+                    },
+                },
+            ],
+        });
+        facade = TestBed.inject(MealPlanFacade);
+        await waitForAsync(() => pending.observed);
+        expect(pending.observed).toBe(true);
+        writeAsync.mockClear();
+        TestBed.resetTestingModule();
+        pending.next(createPage(OUT_OF_RANGE_PAGE, 1));
+        pending.complete();
+        await waitForAsyncTasksAsync();
+
+        expect(writeAsync).not.toHaveBeenCalled();
+    });
+});
+
+describe('MealPlanFacade selection action lifetime', () => {
+    it.each(['adopt', 'generateShoppingList', 'deletePlan'] as const)(
+        'cancels %s callbacks when another plan is selected',
+        async action => {
+            mealPlanService.getById.mockReturnValueOnce(of({ ...createMealPlan(), isCurated: false }));
+            facade.loadPlan(entityId<'meal-plan'>('plan-1'));
+            await waitForAsync(() => facade.selectedPlan() !== null);
+            const pending = new Subject<MealPlan | ShoppingList | void>();
+            mealPlanService[action].mockReturnValueOnce(pending);
+            const success = vi.fn();
+            facade[action](entityId<'meal-plan'>('plan-1'), success);
+            mealPlanService.getById.mockReturnValueOnce(of({ ...createMealPlan(), id: entityId<'meal-plan'>('plan-2') }));
+            facade.loadPlan(entityId<'meal-plan'>('plan-2'));
+            await waitForAsync(() => facade.selectedPlan()?.id === 'plan-2');
+
+            expect(pending.observed).toBe(false);
+            expect(facade.pendingAction()).toBeNull();
+            pending.next(action === 'adopt' ? createMealPlan() : action === 'generateShoppingList' ? createShoppingList() : undefined);
+            pending.complete();
+            expect(success).not.toHaveBeenCalled();
+            expect(facade.selectedPlan()?.id).toBe('plan-2');
+            expect(facade.actionErrorKey()).toBeNull();
+        },
+    );
+
+    it('cancels an old recipe lookup without applying its error to the new plan', async () => {
+        facade.loadPlan(entityId<'meal-plan'>('plan-1'));
+        await waitForAsync(() => facade.selectedPlan() !== null);
+        const pending = new Subject<null>();
+        recipeLookup.getById.mockReturnValueOnce(pending);
+        facade.addMealToDiary(createPlannedMeal());
+        mealPlanService.getById.mockReturnValueOnce(of({ ...createMealPlan(), id: entityId<'meal-plan'>('plan-2') }));
+        facade.loadPlan(entityId<'meal-plan'>('plan-2'));
+        await waitForAsync(() => facade.selectedPlan()?.id === 'plan-2');
+
+        expect(pending.observed).toBe(false);
+        expect(facade.addingMealId()).toBeNull();
+        pending.next(null);
+        pending.complete();
+        expect(quickMeal.addRecipe).not.toHaveBeenCalled();
+        expect(facade.actionErrorKey()).toBeNull();
+    });
 });
 
 describe('MealPlanFacade personal deletion', () => {
@@ -305,6 +420,7 @@ function createMealPlan(): MealPlan {
 
 function createShoppingList(): ShoppingList {
     return {
+        revision: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         id: entityId<'shopping-list'>('shopping-list-1'),
         name: 'Keto plan',
         items: [],

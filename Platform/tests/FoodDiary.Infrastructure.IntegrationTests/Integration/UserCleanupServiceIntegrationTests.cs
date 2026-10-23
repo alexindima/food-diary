@@ -52,6 +52,7 @@ using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Images.Application.Abstractions.Common;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.ReadModel.Composition;
 using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -349,7 +350,8 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         }
     }
 
-    private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service, IUserDataPurgeParticipant? extra = null) {
+    private static ServiceProvider CreateServiceProvider(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, out UserCleanupService service,
+        IUserDataPurgeParticipant? extra = null, Action<IServiceCollection>? configureMealPlanning = null) {
         var services = new ServiceCollection();
         services.AddPersistenceRuntime(new ConfigurationBuilder().Build());
         services.AddSingleton(context);
@@ -367,12 +369,17 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         services.AddHydrationModule();
         services.AddIdentityPersistence();
         services.AddImagesInfrastructure();
-        services.AddMealPlanningModule();
+        if (configureMealPlanning is null) {
+            services.AddMealPlanningModule();
+        } else {
+            configureMealPlanning(services);
+        }
         services.AddMealsPersistence();
         services.AddProductsPersistence();
         services.AddRecentItemsModule();
         services.AddMarketingModule();
         services.AddRecipesPersistence();
+        services.AddReadModelComposition();
         services.AddSingleton(outbox);
         if (extra is not null) { services.AddSingleton(extra); }
         ServiceProvider provider = services.BuildServiceProvider();
@@ -380,7 +387,8 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
         Assert.Equal(extra is null ? 15 : 16, participants.Length);
         service = new UserCleanupService(provider.GetRequiredService<UsersDbContext>(), participants, NullLogger<UserCleanupService>.Instance,
             provider.GetRequiredService<FoodDiary.Persistence.Abstractions.IModuleTransactionCoordinator>(),
-            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context));
+            new FoodDiary.Persistence.Runtime.Persistence.Shared.EfModuleScopeGuard(context),
+            provider.GetServices<IUserContentRetentionParticipant>());
         return provider;
     }
 

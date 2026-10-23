@@ -97,6 +97,31 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
     }
 
     [RequiresDockerFact]
+    public async Task Startup_WhenRabbitMqIsUnavailable_AcceptsAndDeliversUsingPostgresPolling() {
+        fixture.EnsureAvailable();
+        var transport = new RecordingRelayDeliveryTransport();
+        await using var factory = new MailRelayWebApplicationFactory(fixture, transport, rabbitMqPort: 1);
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        using HttpClient client = await Task.Run(() => factory.CreateClient(), deadline.Token).WaitAsync(deadline.Token);
+        AddRelayApiKey(client);
+
+        using HttpResponseMessage readiness = await client.GetAsync("/health/ready", deadline.Token);
+        readiness.EnsureSuccessStatusCode();
+        using HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
+            "noreply@example.com", "FoodDiary", ["user@example.com"], "Polling fallback", "<p>Hello</p>", "Hello"), deadline.Token);
+        response.EnsureSuccessStatusCode();
+        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>(deadline.Token);
+        Assert.NotNull(payload);
+
+        await WaitForAsync(async () => {
+            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload.Id}", deadline.Token).ConfigureAwait(false);
+            return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
+        });
+
+        Assert.Single(transport.SentMessages);
+    }
+
+    [RequiresDockerFact]
     public async Task SendEndpoint_WhenRecipientIsSuppressed_DoesNotDeliverAndMarksMessageSuppressed() {
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport();

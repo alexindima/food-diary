@@ -37,19 +37,11 @@ public sealed class RabbitMqMailRelayBrokerIntegrationTests(MailRelayEnvironment
     }
 
     [RequiresDockerFact]
-    public async Task ReadinessChecker_WhenRabbitMqBackendIsReady_CompletesPostgresAndRabbitChecks() {
+    public async Task ReadinessChecker_WhenDatabaseIsReady_Completes() {
         fixture.EnsureAvailable();
-        MailRelayBrokerOptions options = CreateOptions();
-        var broker = new RabbitMqMailRelayBroker(
-            Microsoft.Extensions.Options.Options.Create(options),
-            NullLogger<RabbitMqMailRelayBroker>.Instance);
-        await broker.DeclareTopologyAsync(CancellationToken.None).ConfigureAwait(false);
         var dataSource = NpgsqlDataSource.Create(await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false));
         await using (dataSource.ConfigureAwait(false)) {
-            var checker = new MailRelayReadinessChecker(
-                dataSource,
-                broker,
-                Microsoft.Extensions.Options.Options.Create(options));
+            var checker = new MailRelayReadinessChecker(dataSource);
 
             await checker.CheckReadyAsync(CancellationToken.None).ConfigureAwait(false);
         }

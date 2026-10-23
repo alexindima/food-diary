@@ -3,6 +3,7 @@ using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Users.Contracts.Commands.SetUserPasswordByAdministrator;
 using FoodDiary.Mediator;
@@ -16,6 +17,9 @@ public sealed class SetUserPasswordByAdministratorCommandHandler(IUserLookupRepo
         FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId userId = request.UserId;
         FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids.UserId actorUserId = request.ActorUserId;
         string newPassword = request.NewPassword;
+        if (userId == SystemContentOwner.Id) {
+            return Result.Failure(UserErrors.NotFound(userId));
+        }
         User? user = await userLookupRepository
             .GetByIdIncludingDeletedAsync(userId, cancellationToken)
             .ConfigureAwait(false);

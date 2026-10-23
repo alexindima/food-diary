@@ -4,6 +4,7 @@ import type { ProductId, ShoppingListId, ShoppingListItemId } from './semantics/
 
 export type ShoppingList = {
     id: ShoppingListId;
+    revision: string;
     name: string;
     createdAt: UtcInstant;
     items: ShoppingListItem[];
@@ -53,6 +54,7 @@ export type ShoppingListCreateDto = {
 };
 
 export type ShoppingListUpdateDto = {
+    expectedRevision: string;
     name?: string | null;
     items?: ShoppingListItemDto[];
 };

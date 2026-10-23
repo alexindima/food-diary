@@ -13,7 +13,7 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 457,
+    "dotnetProjects": 458,
     "testProjects": 159,
     "frontendProjects": 5,
     "applicationModules": 0,
@@ -21,8 +21,8 @@
     "backendBusinessModules": 34,
     "controllers": 10,
     "endpoints": 23,
-    "agentGuides": 296,
-    "documentationPages": 234
+    "agentGuides": 297,
+    "documentationPages": 238
   },
   "dotnet": {
     "projects": [
@@ -322,6 +322,7 @@
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
+          "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
           "Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj",
@@ -1611,7 +1612,8 @@
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj",
-          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
+          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj"
         ],
         "packageReferences": [
           {
@@ -12459,6 +12461,7 @@
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+          "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
           "FoodDiary.ReadModel.Composition/FoodDiary.ReadModel.Composition.csproj",
           "Modules/Admin/Application.Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
@@ -12530,6 +12533,7 @@
           "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/MealPlanning/Application.Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
@@ -12555,6 +12559,7 @@
           "Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj",
           "Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj",
           "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
+          "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
           "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj",
           "Modules/Usda/Application.Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
@@ -12583,6 +12588,7 @@
           "Shared/FoodDiary.Outbox.Infrastructure/FoodDiary.Outbox.Infrastructure.csproj",
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -12729,6 +12735,7 @@
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj",
           "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj",
           "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -14275,7 +14282,8 @@
         "projectReferences": [
           "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj",
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
-          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj"
+          "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj"
         ],
         "packageReferences": [
           {
@@ -14350,6 +14358,28 @@
         ]
       },
       {
+        "name": "FoodDiary.Persistence.PostgreSql",
+        "assemblyName": "FoodDiary.Persistence.PostgreSql",
+        "path": "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Persistence.Runtime",
         "assemblyName": "FoodDiary.Persistence.Runtime",
         "path": "Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj",
@@ -14370,6 +14400,7 @@
           "Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj",
           "Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj",
           "Shared/FoodDiary.Persistence.Abstractions/FoodDiary.Persistence.Abstractions.csproj",
+          "Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
@@ -15836,6 +15867,7 @@
       "Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md",
       "Shared/FoodDiary.Outbox.PersistenceModel/AGENTS.md",
       "Shared/FoodDiary.Persistence.Abstractions/AGENTS.md",
+      "Shared/FoodDiary.Persistence.PostgreSql/AGENTS.md",
       "Shared/FoodDiary.Persistence.Runtime/AGENTS.md",
       "Shared/FoodDiary.Results/AGENTS.md",
       "Shared/tests/AGENTS.md",
@@ -15903,6 +15935,9 @@
       "docs/adr/0051-canonical-project-namespaces.md",
       "docs/adr/0052-backend-transaction-and-delivery-reliability.md",
       "docs/adr/0053-live-usda-reference-identifiers.md",
+      "docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md",
+      "docs/adr/0055-atomic-frontend-publication-and-asset-retention.md",
+      "docs/adr/0056-shopping-list-content-revisions.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",
@@ -16017,6 +16052,7 @@
       "docs/backend/AI_RECOGNITION_JOBS.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
+      "docs/backend/BACKEND_ARCHITECTURE_REVIEW_2026-10-22.md",
       "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",
       "docs/backend/BACKEND_DEFINITION_OF_DONE.md",
       "docs/backend/BACKEND_EVENT_TAXONOMY.md",

@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
-namespace FoodDiary.Persistence.Runtime.Persistence.Shared;
+namespace FoodDiary.Persistence.PostgreSql;
 
-/// <summary>Replays a transaction only when PostgreSQL confirms that its COMMIT did not succeed.</summary>
-internal static class VerifiedTransactionCommit {
+/// <summary>Verifies PostgreSQL COMMIT so only a confirmed abort permits the caller to retry.</summary>
+public static class VerifiedTransactionCommit {
     public static async Task CommitAsync(IDbContextTransaction transaction, CancellationToken cancellationToken) {
         var providerTransaction = transaction.GetDbTransaction() as NpgsqlTransaction;
         NpgsqlConnection? source = providerTransaction?.Connection;

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -24,32 +24,32 @@ const response = {
     reason: 'Support case investigation',
 };
 
+let component: AdminUserImpersonationDialogComponent;
+let fixture: ComponentFixture<AdminUserImpersonationDialogComponent>;
+let usersService: { startImpersonation: ReturnType<typeof vi.fn> };
+let dialogRef: { close: ReturnType<typeof vi.fn> };
+
+beforeEach(async () => {
+    usersService = { startImpersonation: vi.fn() };
+    dialogRef = { close: vi.fn() };
+    usersService.startImpersonation.mockReturnValue(of(response));
+
+    await TestBed.configureTestingModule({
+        imports: [AdminUserImpersonationDialogComponent],
+        providers: [
+            provideTranslateTesting(),
+            { provide: AdminUsersFacade, useValue: usersService },
+            { provide: FdUiDialogRef, useValue: dialogRef },
+            { provide: FD_UI_DIALOG_DATA, useValue: user },
+        ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AdminUserImpersonationDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+});
+
 describe('AdminUserImpersonationDialogComponent', () => {
-    let component: AdminUserImpersonationDialogComponent;
-    let fixture: ComponentFixture<AdminUserImpersonationDialogComponent>;
-    let usersService: { startImpersonation: ReturnType<typeof vi.fn> };
-    let dialogRef: { close: ReturnType<typeof vi.fn> };
-
-    beforeEach(async () => {
-        usersService = { startImpersonation: vi.fn() };
-        dialogRef = { close: vi.fn() };
-        usersService.startImpersonation.mockReturnValue(of(response));
-
-        await TestBed.configureTestingModule({
-            imports: [AdminUserImpersonationDialogComponent],
-            providers: [
-                provideTranslateTesting(),
-                { provide: AdminUsersFacade, useValue: usersService },
-                { provide: FdUiDialogRef, useValue: dialogRef },
-                { provide: FD_UI_DIALOG_DATA, useValue: user },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(AdminUserImpersonationDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
     it('should require a reason', () => {
         component['submit']();
 
@@ -101,6 +101,30 @@ describe('AdminUserImpersonationDialogComponent', () => {
             expect(component['submitError']()).toBe('Could not start impersonation. Please try again.');
         });
         expect(component['isSubmitting']()).toBe(false);
+    });
+
+    it('locks the reason and dismissal during a pending request, then preserves the reason for retry', async () => {
+        const pending = new Subject<typeof response>();
+        usersService.startImpersonation.mockReturnValueOnce(pending);
+        component['formModel'].set({ reason: 'Support case investigation' });
+        component['submit']();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector<HTMLTextAreaElement>('textarea')?.disabled).toBe(true);
+        expect(element.querySelector<HTMLButtonElement>('.fd-ui-dialog__close-button')?.disabled).toBe(true);
+        component['close']();
+        expect(dialogRef.close).not.toHaveBeenCalled();
+
+        pending.error(new Error('offline'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(element.querySelector<HTMLTextAreaElement>('textarea')?.disabled).toBe(false);
+        });
+        expect(component['formModel']().reason).toBe('Support case investigation');
+        component['submit']();
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(response);
+        });
     });
 
     it('should close with null on cancel', () => {

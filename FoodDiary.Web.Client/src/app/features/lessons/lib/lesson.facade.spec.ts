@@ -1,7 +1,8 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of, Subject, throwError } from 'rxjs';
+import { EMPTY, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
@@ -9,9 +10,12 @@ import { entityId } from '../../../shared/models/semantics/entity-id';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonPage, LessonSummary } from '../models/lesson.data';
 import { LessonFacade } from './lesson.facade';
+import type { LessonListQuery } from './list/lesson-list-query';
+import { LESSON_LIST_QUERY_STATE } from './list/lesson-list-query-state';
 
 const WAIT_ATTEMPTS = 20;
 const READ_MINUTES = 5;
+const OUT_OF_RANGE_PAGE = 99;
 
 type LessonServiceMock = {
     getAll: ReturnType<typeof vi.fn>;
@@ -25,6 +29,94 @@ let translateService: {
     getCurrentLang: ReturnType<typeof vi.fn>;
     getFallbackLang: ReturnType<typeof vi.fn>;
 };
+
+describe('LessonFacade request lifetime', () => {
+    beforeEach(setupFacade);
+
+    it('unsubscribes catalogue and detail reads on owner destruction', async () => {
+        const page = new Subject<LessonPage>();
+        const detail = new Subject<LessonDetail>();
+        lessonService.getAll.mockReturnValue(page);
+        lessonService.getById.mockReturnValue(detail);
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
+        await waitForAsync(() => page.observed && detail.observed);
+        expect([page.observed, detail.observed]).toEqual([true, true]);
+
+        TestBed.resetTestingModule();
+
+        expect([page.observed, detail.observed]).toEqual([false, false]);
+    });
+
+    it('unsubscribes old catalogue and detail requests when their parameters change', async () => {
+        const page = new Subject<LessonPage>();
+        const detail = new Subject<LessonDetail>();
+        lessonService.getAll.mockReturnValueOnce(page);
+        lessonService.getById
+            .mockReturnValueOnce(detail)
+            .mockReturnValueOnce(of({ ...createDetail(), id: entityId<'lesson'>('lesson-2') }));
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
+        await waitForAsync(() => page.observed && detail.observed);
+        facade.loadLessons('Micronutrients');
+        facade.loadLesson(entityId<'lesson'>('lesson-2'));
+        await waitForAsync(() => facade.selectedLesson()?.id === 'lesson-2' && !facade.isLoading());
+
+        expect([page.observed, detail.observed]).toEqual([false, false]);
+        expect(facade.selectedLesson()?.id).toBe('lesson-2');
+    });
+
+    it('does not normalize a late catalogue response after its owner is destroyed', async () => {
+        TestBed.resetTestingModule();
+        const query: LessonListQuery = { page: OUT_OF_RANGE_PAGE, search: '', category: null, difficulty: null, sort: 'recommended' };
+        const pending = new Subject<LessonPage>();
+        lessonService.getAll.mockReturnValue(pending);
+        const writeAsync = vi.fn().mockResolvedValue(true);
+        TestBed.configureTestingModule({
+            providers: [
+                LessonFacade,
+                { provide: LessonService, useValue: lessonService },
+                { provide: TranslateService, useValue: translateService },
+                {
+                    provide: LESSON_LIST_QUERY_STATE,
+                    useValue: {
+                        initial: query,
+                        current: signal(query),
+                        changes: EMPTY,
+                        writeAsync,
+                        normalizePageAsync: vi.fn().mockResolvedValue(false),
+                    },
+                },
+            ],
+        });
+        facade = TestBed.inject(LessonFacade);
+        await waitForAsync(() => pending.observed);
+        expect(pending.observed).toBe(true);
+        writeAsync.mockClear();
+        TestBed.resetTestingModule();
+        pending.next(createPage());
+        pending.complete();
+        await waitForAsyncTasksAsync();
+
+        expect(writeAsync).not.toHaveBeenCalled();
+    });
+
+    it('cancels an old read-progress action and leaves the new lesson usable', async () => {
+        facade.loadLesson(entityId<'lesson'>('lesson-1'));
+        await waitForAsync(() => facade.selectedLesson() !== null);
+        const pending = new Subject<void>();
+        lessonService.markRead.mockReturnValueOnce(pending);
+        facade.markRead(entityId<'lesson'>('lesson-1'));
+        lessonService.getById.mockReturnValue(of({ ...createDetail(), id: entityId<'lesson'>('lesson-2') }));
+        facade.loadLesson(entityId<'lesson'>('lesson-2'));
+        await waitForAsync(() => facade.selectedLesson()?.id === 'lesson-2');
+
+        expect(pending.observed).toBe(false);
+        expect(facade.isMarkingRead()).toBe(false);
+        pending.error(new Error('Late old request'));
+        expect(facade.markReadFailed()).toBe(false);
+        facade.markRead(entityId<'lesson'>('lesson-2'));
+        expect(facade.selectedLesson()?.isRead).toBe(true);
+    });
+});
 
 describe('LessonFacade', () => {
     beforeEach(setupFacade);

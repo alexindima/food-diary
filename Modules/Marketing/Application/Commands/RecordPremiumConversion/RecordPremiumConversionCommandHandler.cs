@@ -35,6 +35,7 @@ public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionE
                 EventType = MarketingAttributionEventTypes.PremiumStarted,
                 OccurredAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime,
                 UserId = userId,
+                LandingPath = MarketingLandingPath.Sanitize(sourceEvent.LandingPath),
                 EventId = CreateStableEventId(userId, MarketingAttributionEventTypes.PremiumStarted),
             },
             cancellationToken).ConfigureAwait(false);

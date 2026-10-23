@@ -6,6 +6,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiImpact.ps1
   - .llm-wiki/tools/Add-LlmWikiSourceReview.ps1
+  - .llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1
+  - .llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/wiki.ps1
   - AGENTS.md
 ---
@@ -30,6 +32,29 @@ explicit `-ChangedPath` still includes it. For a committed change set:
   -BaseRef origin/master `
   -HeadRef HEAD
 ```
+
+The `wiki.ps1 diff`, `impact`, and `verify` facade commands use the captured task
+delta when the current session has a baseline and no explicit `-ChangedPath`.
+`start` and `develop` capture pre-existing working changes in that baseline, so a
+new task can have an empty delta while other chats still have uncommitted work.
+For a shared-master review, pass the complete reviewed path set explicitly with
+`-ChangedPath $sharedPaths`. An empty task delta does not establish that the full
+shared working tree was reviewed.
+
+For a task that owns only part of a shared working tree, pass its complete owned
+path array to `task-status`, `task-refresh`, and `task-finish` explicitly:
+
+```powershell
+./.llm-wiki/wiki.ps1 task-finish -WorkspacePath $taskWorkspace -ChangedPath $ownedPaths
+```
+
+Finish preserves that array through both fresh status checks and refresh. It
+still enforces every readiness gate and rejects explicit foreign paths. Without
+`-ChangedPath`, finish keeps the task contract's existing Git comparison: the
+default working-tree comparison includes the whole diff, while an explicitly
+declared committed comparison remains intact. It does not infer scope from
+allowed-path patterns or the session baseline. This bounded task completion
+does not replace the full shared-master Wiki review above.
 
 The result identifies:
 
@@ -96,8 +121,9 @@ records the applicable rationale only for still-pending pages. A single
 the left side of `-ReviewAreaReason`; pass an ID array to `review` when pages need
 fully separate handling.
 
-The receipt ledger is append-only review evidence. Adding a receipt records a
-decision; it does not by itself change the review workflow documented here.
+The receipt ledger stores current per-page review evidence. Adding or replacing
+a receipt records a decision; it does not by itself change the review workflow
+documented here.
 
 Freshness output prints both the page path and its internal ID:
 

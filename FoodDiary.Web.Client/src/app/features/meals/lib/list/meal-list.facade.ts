@@ -84,24 +84,34 @@ export class MealListFacade {
             return false;
         }
         if (result.action === 'FavoriteChanged') {
-            this.loadFavorites();
-            await firstValueFrom(this.loadMeals(this.currentPageIndex() + 1, filters), { defaultValue: undefined });
+            await firstValueFrom(this.loadOverview(this.currentPageIndex() + 1, filters, true), { defaultValue: undefined });
             return false;
         }
         if (result.action === 'Edit') {
+            if (result.favoriteChanged) {
+                await firstValueFrom(this.loadOverview(this.currentPageIndex() + 1, filters, true), { defaultValue: undefined });
+            }
+            if (this.destroyRef.destroyed) {
+                return false;
+            }
             await this.navigationService.navigateToMealEditAsync(result.id);
             return false;
         }
         if (result.action === 'Repeat') {
             const targetDate = new Date();
             return firstValueFrom(
-                this.repeatMeal(result.id, utcInstant(targetDate.toISOString()), resolveMealTypeByTime(targetDate), filters),
+                this.repeatMealAndReload(
+                    result.id,
+                    { date: utcInstant(targetDate.toISOString()), mealType: resolveMealTypeByTime(targetDate) },
+                    filters,
+                    result.favoriteChanged,
+                ),
                 {
                     defaultValue: false,
                 },
             );
         }
-        return firstValueFrom(this.deleteMeal(result.id, filters), { defaultValue: false });
+        return firstValueFrom(this.deleteMeal(result.id, filters, result.favoriteChanged), { defaultValue: false });
     }
 
     public loadInitialOverview(filtersModel: MealListStructuredFilters, page = 1): Observable<void> {
@@ -160,31 +170,39 @@ export class MealListFacade {
         mealType: string,
         filtersModel: MealListStructuredFilters,
     ): Observable<boolean> {
-        return this.mealService.repeat(mealId, targetDate, mealType).pipe(
+        return this.repeatMealAndReload(mealId, { date: targetDate, mealType }, filtersModel, false);
+    }
+
+    private repeatMealAndReload(
+        mealId: MealId,
+        target: { date: UtcInstant; mealType: string },
+        filtersModel: MealListStructuredFilters,
+        refreshFavorites: boolean,
+    ): Observable<boolean> {
+        return this.mealService.repeat(mealId, target.date, target.mealType).pipe(
             tap(() => {
                 this.invalidation.reportMealMutation();
             }),
-            switchMap(() => this.loadMeals(this.currentPageIndex() + 1, filtersModel)),
+            switchMap(() => this.loadOverview(this.currentPageIndex() + 1, filtersModel, refreshFavorites)),
             map(() => true),
-            catchError(() => {
-                this.showOperationError();
-                return of(false);
-            }),
+            catchError(() => this.handleDetailMutationError(filtersModel, refreshFavorites)),
         );
     }
 
-    public deleteMeal(mealId: MealId, filtersModel: MealListStructuredFilters): Observable<boolean> {
+    public deleteMeal(mealId: MealId, filtersModel: MealListStructuredFilters, refreshFavorites = false): Observable<boolean> {
         return this.mealService.deleteById(mealId).pipe(
             tap(() => {
                 this.invalidation.reportMealMutation();
             }),
-            switchMap(() => this.loadMeals(this.currentPageIndex() + 1, filtersModel)),
+            switchMap(() => this.loadOverview(this.currentPageIndex() + 1, filtersModel, refreshFavorites)),
             map(() => true),
-            catchError(() => {
-                this.showOperationError();
-                return of(false);
-            }),
+            catchError(() => this.handleDetailMutationError(filtersModel, refreshFavorites)),
         );
+    }
+
+    private handleDetailMutationError(filters: MealListStructuredFilters, refreshFavorites: boolean): Observable<boolean> {
+        this.showOperationError();
+        return refreshFavorites ? this.loadOverview(this.currentPageIndex() + 1, filters, true).pipe(map(() => false)) : of(false);
     }
 
     public removeFavorite(favorite: FavoriteMeal): void {

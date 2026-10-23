@@ -11,7 +11,8 @@ public static class ShoppingListHttpResponseMappings {
                 model.Id,
                 model.Name,
                 model.CreatedAt,
-                model.Items.ToHttpResponseList(ToHttpResponse)
+                model.Items.ToHttpResponseList(ToHttpResponse),
+                model.Revision
             );
         }
     }

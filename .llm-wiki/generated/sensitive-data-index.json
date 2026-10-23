@@ -36,7 +36,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 113
+      "line": 85
     },
     {
       "category": "credential",
@@ -736,21 +736,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 386
+      "line": 401
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 392
+      "line": 407
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 394
+      "line": 409
     },
     {
       "category": "credential",
@@ -1135,21 +1135,21 @@
       "name": "BillingPayments",
       "type": "IQueryable<BillingPayment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 28
+      "line": 30
     },
     {
       "category": "financial",
       "name": "BillingSubscriptions",
       "type": "IQueryable<BillingSubscription>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 29
+      "line": 31
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvents",
       "type": "IQueryable<BillingWebhookEvent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 30
+      "line": 32
     },
     {
       "category": "financial",
@@ -2094,21 +2094,21 @@
       "name": "HydrationEntries",
       "type": "IQueryable<HydrationEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 36
+      "line": 38
     },
     {
       "category": "health",
       "name": "WaistEntries",
       "type": "IQueryable<WaistEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 54
+      "line": 58
     },
     {
       "category": "health",
       "name": "WeightEntries",
       "type": "IQueryable<WeightEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 55
+      "line": 59
     },
     {
       "category": "health",
@@ -6693,98 +6693,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 251
+      "line": 266
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 253
+      "line": 268
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 255
+      "line": 270
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 268
+      "line": 283
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 270
+      "line": 285
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 272
+      "line": 287
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 274
+      "line": 289
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 276
+      "line": 291
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 311
+      "line": 326
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 323
+      "line": 338
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 325
+      "line": 340
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 327
+      "line": 342
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 335
+      "line": 350
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 337
+      "line": 352
     },
     {
       "category": "health",
@@ -8758,14 +8758,14 @@
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 388
+      "line": 403
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 390
+      "line": 405
     },
     {
       "category": "identity",
@@ -8933,28 +8933,28 @@
       "name": "FoodRecognitionImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 27
+      "line": 29
     },
     {
       "category": "privateContent",
       "name": "ImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 37
+      "line": 39
     },
     {
       "category": "privateContent",
       "name": "RecipeComments",
       "type": "IQueryable<RecipeComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 44
+      "line": 46
     },
     {
       "category": "privateContent",
       "name": "RecommendationComments",
       "type": "IQueryable<RecommendationComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 48
+      "line": 52
     },
     {
       "category": "privateContent",
@@ -11824,7 +11824,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "Modules/Users/Domain/Entities/User.cs",
-      "line": 329
+      "line": 344
     },
     {
       "category": "privateContent",

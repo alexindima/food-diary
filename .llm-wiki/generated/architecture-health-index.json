@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1669,
+    "productionProjectEdges": 1673,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 112,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 130,
+    "componentsWithoutDirectSpecs": 124,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 12
   },
@@ -1765,16 +1765,6 @@
       "specPath": null
     },
     {
-      "class": "AdminAuditPageComponent",
-      "selector": "fd-admin-audit",
-      "feature": "admin-audit",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
       "class": "AdminBillingFiltersComponent",
       "selector": "fd-admin-billing-filters",
       "feature": "admin-billing",
@@ -1906,26 +1896,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminMealPlansComponent",
-      "selector": "fd-admin-meal-plans",
-      "feature": "admin-meal-plans",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/pages/admin-meal-plans.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminModerationComponent",
-      "selector": "fd-admin-moderation",
-      "feature": "admin-moderation",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -2163,16 +2133,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "TelegramAuthComponent",
-      "selector": "fd-telegram-auth",
-      "feature": "auth",
-      "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -3871,57 +3831,6 @@
       "specPath": null
     },
     {
-      "class": "FdUiEmojiPickerComponent",
-      "selector": "fd-ui-emoji-picker",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.html",
-      "inputs": [
-        {
-          "name": "options",
-          "type": "FdUiEmojiPickerOption[]",
-          "required": false
-        },
-        {
-          "name": "selectedValue",
-          "type": "FdUiEmojiPickerValue | null",
-          "required": false
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "size",
-          "type": "FdUiEmojiPickerSize",
-          "required": false
-        },
-        {
-          "name": "fullWidth",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "showLabels",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "showDescriptions",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "selectedValueChange",
-          "type": "FdUiEmojiPickerValue | null"
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "FdUiHintOverlayComponent",
       "selector": "fd-ui-hint-overlay",
       "feature": "fd-ui-kit",
@@ -5277,6 +5186,11 @@
           "name": "busy",
           "type": "",
           "required": false
+        },
+        {
+          "name": "selectedFile",
+          "type": "File | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -5546,16 +5460,6 @@
           "required": true
         }
       ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "WeeklyCheckInPageComponent",
-      "selector": "fd-weekly-check-in-page",
-      "feature": "weekly-check-in",
-      "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/weekly-check-in/pages/weekly-check-in-page/weekly-check-in-page.html",
-      "inputs": [],
       "outputs": [],
       "specPath": null
     }

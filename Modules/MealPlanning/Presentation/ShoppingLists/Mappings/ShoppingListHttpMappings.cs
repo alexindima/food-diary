@@ -40,7 +40,8 @@ public static class ShoppingListHttpMappings {
                     userId,
                     shoppingListId,
                     request.Name,
-                    request.Items?.Select(ToInput).ToList());
+                    request.Items?.Select(ToInput).ToList(),
+                    request.ExpectedRevision);
     }
 
     private static ShoppingListItemInput ToInput(ShoppingListItemHttpRequest request) =>

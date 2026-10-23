@@ -323,8 +323,9 @@ from completing.
 
 ### Frontend coverage and state isolation
 
-CI runs `test:coverage:app`, `test:coverage:tour`, `test:coverage:admin`, and
-`test:coverage:ui-kit`. `npm run test:coverage` runs the same four projects locally.
+CI runs `test:coverage:app`, `test:coverage:tour`, `test:coverage:webmcp`,
+`test:coverage:admin`, and `test:coverage:ui-kit`. `npm run test:coverage` runs the
+same five projects locally.
 Each project's `coverage` configuration in `FoodDiary.Web.Client/angular.json`
 explicitly includes its own TypeScript source tree, including files that no test
 imports. Specs, declarations, and Storybook stories are excluded; runtime facades
@@ -352,6 +353,19 @@ The main app enables test-file isolation, with four workers configured in
 the jsdom window before and after every test. Seed storage in each test or its
 `beforeEach`, never rely on another test's persisted state. Keep time-dependent
 facade tests deterministic and restore fake timers after each test.
+
+The retry interceptor, product-list URL adapter, Premium checkout page, and Admin
+audit/moderation API adapters have file-specific floors too. Their regressions
+cover retry timing/exhaustion/cancellation, real-router query ownership, delayed
+entitlement activation and Paddle return failures, and exact administrative HTTP
+contracts including invalid responses and rejected mutations.
+
+Admin and all three libraries also enforce project-wide minimums in their Angular
+coverage configurations. These floors preserve the measured baseline; they do
+not imply that every important scenario has a test. In lines/statements/branches/
+functions order, the minimums are Admin 75/76/72/67, UI kit 85/86/84/87, tour
+75/76/69/73, and WebMCP 96/96/96/95. Raise the relevant floor after closing a
+meaningful gap rather than compensating for a regression in another project.
 
 Dashboard facade regressions include meal mutations/favorites, initial and silent
 load failures, language/day changes, stale responses, and destruction. Water tests

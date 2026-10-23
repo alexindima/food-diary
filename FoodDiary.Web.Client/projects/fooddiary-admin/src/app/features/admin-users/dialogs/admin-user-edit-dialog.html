@@ -1,5 +1,5 @@
 <!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
-<fd-ui-dialog title="Edit user">
+<fd-ui-dialog title="Edit user" [disableClose]="isSaving()">
     <div class="admin-user-edit-dialog fd-grid fd-gap-md">
         <div>
             <fd-ui-checkbox label="Active" [id]="'admin-user-edit-is-active'" [formField]="form.isActive" />
@@ -17,6 +17,7 @@
                         [label]="role"
                         [id]="`admin-user-edit-role-${role}`"
                         [checked]="hasRole(role)"
+                        [disabled]="isSaving()"
                         (checkedChange)="toggleRole(role)"
                     />
                 </div>

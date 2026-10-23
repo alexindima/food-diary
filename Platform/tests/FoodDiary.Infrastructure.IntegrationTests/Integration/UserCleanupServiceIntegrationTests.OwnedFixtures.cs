@@ -6,7 +6,6 @@ using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -75,7 +74,7 @@ public sealed partial class UserCleanupServiceIntegrationTests {
     }
 
     [RequiresDockerFact]
-    public async Task CleanupOwnedFixtures_DoesNotRemoveForeignNestedReferences_AndRollsBackOnConflict() {
+    public async Task CleanupOwnedFixtures_DoesNotRemoveForeignNestedReferences_AndRefusesCleanup() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var runId = Guid.NewGuid();
         var owned = User.Create($"webmcp-fixture-{runId:D}-client@example.test", "hash");
@@ -92,10 +91,10 @@ public sealed partial class UserCleanupServiceIntegrationTests {
         context.ChangeTracker.Clear();
         await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service);
 
-        PostgresException error = await Assert.ThrowsAsync<PostgresException>(() => service.CleanupOwnedFixtureUsersAsync(runId, [owned.Id.Value], DateTime.UtcNow, CancellationToken.None));
+        int removed = await service.CleanupOwnedFixtureUsersAsync(runId, [owned.Id.Value], DateTime.UtcNow, CancellationToken.None);
         await using FoodDiaryDbContext verification = CreateVerificationContext(context);
         Assert.Multiple(
-            () => Assert.Equal(PostgresErrorCodes.ForeignKeyViolation, error.SqlState, StringComparer.Ordinal),
+            () => Assert.Equal(0, removed),
             () => Assert.True(verification.Users.Any(user => user.Id == owned.Id)),
             () => Assert.Equal(3, verification.Recipes.Count()),
             () => Assert.Equal(2, verification.RecipeIngredients.Count()));

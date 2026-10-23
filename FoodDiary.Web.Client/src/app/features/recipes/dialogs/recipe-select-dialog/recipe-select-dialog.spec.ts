@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
@@ -71,6 +71,57 @@ describe('RecipeSelectDialogComponent', () => {
 
         expect(scrollSpy).toHaveBeenCalled();
         expect(recipeService.query).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, { search: undefined }, true);
+    });
+});
+
+describe('RecipeSelectDialogComponent query ownership', () => {
+    it('cancels a pending initial query when a debounced search starts', async () => {
+        const initial = new Subject<PageOf<Recipe>>();
+        const search = new Subject<PageOf<Recipe>>();
+        const { component, fixture, recipeService } = setupComponent([], initial);
+        recipeService.query.mockReturnValueOnce(search);
+        component['searchForm'].search().value.set('Soup');
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(recipeService.query).toHaveBeenLastCalledWith(1, PAGE_SIZE, { search: 'Soup' }, true);
+        });
+        expect(initial.observed).toBe(false);
+        search.next(createPage([createRecipe({ name: 'Soup' })]));
+        search.complete();
+        initial.error(new Error('late initial failure'));
+        expect(readRecipeItems(component)[0]?.recipe.name).toBe('Soup');
+    });
+    it('cancels the initial request when pagination begins and ignores its late response', () => {
+        const initial = new Subject<PageOf<Recipe>>();
+        const page = new Subject<PageOf<Recipe>>();
+        const { component, recipeService } = setupComponent([], initial);
+        recipeService.query.mockReturnValueOnce(page);
+
+        component['onPageChange'](SECOND_PAGE_INDEX);
+        expect(initial.observed).toBe(false);
+        expect(component['recipeData'].isLoading()).toBe(true);
+        initial.next(createPage([createRecipe({ name: 'Stale initial result' })]));
+        expect(readRecipeItems(component)).toEqual([]);
+        page.next({ ...createPage([createRecipe({ name: 'New page' })]), page: SECOND_PAGE });
+        page.complete();
+        expect(readRecipeItems(component)[0]?.recipe.name).toBe('New page');
+        expect(component['currentPageIndex']).toBe(SECOND_PAGE_INDEX);
+        expect(component['recipeData'].isLoading()).toBe(false);
+    });
+
+    it('cancels a pending page when filters change and cancels the replacement on destroy', () => {
+        const pending = new Subject<PageOf<Recipe>>();
+        const filtered = new Subject<PageOf<Recipe>>();
+        const { component, fixture, recipeService } = setupComponent([], pending);
+        recipeService.openFilters.mockReturnValueOnce(of({ ...component['searchModel'](), onlyMine: true }));
+        recipeService.query.mockReturnValueOnce(filtered);
+        component['openFilters']();
+        expect(pending.observed).toBe(false);
+        expect(filtered.observed).toBe(true);
+        fixture.destroy();
+        expect(filtered.observed).toBe(false);
+        filtered.next(createPage([createRecipe()]));
+        expect(readRecipeItems(component)).toEqual([]);
     });
 });
 
@@ -147,7 +198,10 @@ describe('RecipeSelectDialogComponent filters and actions', () => {
     });
 });
 
-function setupComponent(recipes: Recipe[]): {
+function setupComponent(
+    recipes: Recipe[],
+    initial?: Observable<PageOf<Recipe>>,
+): {
     component: RecipeSelectDialogComponent;
     dialogRef: { close: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<RecipeSelectDialogComponent>;
@@ -155,7 +209,7 @@ function setupComponent(recipes: Recipe[]): {
 } {
     const recipeService = {
         openFilters: vi.fn().mockReturnValue(of(null)),
-        query: vi.fn().mockReturnValue(of(createPage(recipes))),
+        query: vi.fn().mockReturnValue(initial ?? of(createPage(recipes))),
     };
     const dialogRef = { close: vi.fn() };
 

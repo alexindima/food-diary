@@ -106,6 +106,10 @@ internal sealed class UserRoleMembershipService(Microsoft.EntityFrameworkCore.In
             throw new ArgumentException("UserId is required.", nameof(userId));
         }
 
+        if (userId == SystemContentOwner.Id) {
+            throw new InvalidOperationException("System content owner cannot have roles.");
+        }
+
         ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
     }
 }

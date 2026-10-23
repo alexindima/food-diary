@@ -39,14 +39,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 97
+- Public contract files: 98
 - Observed external consumer groups: 33
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 97
-- Interfaces: 35
+- Public contract types: 98
+- Interfaces: 36
 - DTO/read-model/projection types: 37
 - Enums: 2
 - Exported repository-shaped contracts: 7
@@ -70,6 +70,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserBodyMetricHistoryReadService`
 - `interface IUserCleanupService`
 - `interface IUserCommentAuthorReadService`
+- `interface IUserContentRetentionParticipant`
 - `interface IUserCredentialVerificationService`
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
@@ -80,8 +81,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserGamificationProfileReadService`
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
-- `interface IUserLookupRepository`
-- ... 67 more type(s)
+- ... 68 more type(s)
 
 ## Extraction Readiness
 
@@ -109,6 +109,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/AllowImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/RecordingImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/SystemContentOwnerAdministrationTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/TelegramIdentityRecoveryTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UpdateUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserApplicationServiceDelegationTests.cs`
@@ -130,7 +131,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/FastingReminderSettingsTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/MiscDomainInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/PremiumTrialOverflowTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ProfileBirthDateMeaningTests.cs`
 
 ## Working Rule
 

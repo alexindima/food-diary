@@ -60,6 +60,9 @@ export class AdminModerationActionDialogComponent {
     );
 
     protected onConfirm(): void {
+        if (this.isSubmitting()) {
+            return;
+        }
         this.actionError.set(false);
         this.isSubmitting.set(true);
         const adminNote = this.adminNote().trim();
@@ -82,10 +85,14 @@ export class AdminModerationActionDialogComponent {
     }
 
     protected onCancel(): void {
-        this.dialogRef.close({ confirmed: false });
+        if (!this.isSubmitting()) {
+            this.dialogRef.close({ confirmed: false });
+        }
     }
 
     protected updateAdminNote(value: FdUiInputValue): void {
-        this.adminNote.set(fdUiCoerceInputTextValue(value));
+        if (!this.isSubmitting()) {
+            this.adminNote.set(fdUiCoerceInputTextValue(value));
+        }
     }
 }

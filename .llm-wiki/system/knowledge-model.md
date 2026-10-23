@@ -57,8 +57,10 @@ A page should be reviewed when:
 - architecture tests change a boundary described by the page.
 
 The freshness check compares a Git change set with every page's declared
-`sources`. An affected page passes when it is updated in the same change set or
-is explicitly marked `stale`.
+`sources`. An affected page passes when it is updated in the same change set,
+has a review receipt matching the current source SHA-256 hashes, or is explicitly
+marked `stale`. Generated projections and coordinate-only changes use their
+separate freshness rules.
 
 An update may:
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { applyEach, form, FormField, FormRoot, max, maxLength, min, pattern, required } from '@angular/forms/signals';
+import { applyEach, disabled, form, FormField, FormRoot, max, maxLength, min, pattern, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiCheckboxComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent } from 'fd-ui-kit';
 import { finalize, type Subscription } from 'rxjs';
@@ -63,6 +63,7 @@ export class AdminMealPlanEditorComponent {
     protected readonly model = signal<EditorModel>(emptyModel());
     private readonly duration = computed(() => this.model().durationDays);
     protected readonly form = form(this.model, path => {
+        disabled(path, { when: () => this.saving() });
         required(path.name);
         maxLength(path.name, NAME_LENGTH);
         pattern(path.name, /\S/);
@@ -148,6 +149,9 @@ export class AdminMealPlanEditorComponent {
         this.updateMeals(dayIndex, day => ({ ...day, meals: day.meals.filter((_, index) => index !== mealIndex) }));
     }
     private updateMeals(dayIndex: number, update: (day: CatalogDay) => CatalogDay): void {
+        if (this.saving()) {
+            return;
+        }
         this.model.update(model => ({ ...model, days: model.days.map((day, index) => (index === dayIndex ? update(day) : day)) }));
     }
     protected dietOptions(): Array<{ value: string; label: string }> {
@@ -167,6 +171,9 @@ export class AdminMealPlanEditorComponent {
     }
 
     protected searchRecipes(): void {
+        if (this.saving()) {
+            return;
+        }
         this.recipeRequest?.unsubscribe();
         this.recipeRequest = this.api
             .recipes(this.recipeSearch())
@@ -186,7 +193,9 @@ export class AdminMealPlanEditorComponent {
             });
     }
     protected cancel(): void {
-        this.cancelled.emit();
+        if (!this.saving()) {
+            this.cancelled.emit();
+        }
     }
 
     protected save(): void {

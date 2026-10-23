@@ -62,8 +62,10 @@ public static class ReadModelCompositionRegistration {
         services.AddScoped<IMealProductNutritionQuery, MealProductNutritionQuery>();
         services.AddScoped<IMealItemDisplayReadService, MealItemDisplayReadService>();
         services.AddScoped<IProductUsageQuery, ProductUsageQuery>();
+        services.AddScoped<IProductUserPurgeRetentionReadService, ProductUserPurgeRetentionReadService>();
         services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
         services.AddScoped<IRecipeUsageQuery, RecipeUsageQuery>();
+        services.AddScoped<IRecipeUserPurgeRetentionReadService, RecipeUserPurgeRetentionReadService>();
         services.AddScoped<IRecipeOverviewReadService, RecipeOverviewReadService>();
         services.RemoveAll<IDashboardBodyReadService>();
         services.AddScoped<DashboardBodyReadService>();

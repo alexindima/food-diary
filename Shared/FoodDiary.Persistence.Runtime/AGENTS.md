@@ -5,6 +5,12 @@ read-only snapshots, named save priorities and the participant enlistment cutoff
 Unknown commit outcomes must never replay handlers. Shared receipts contain private
 result data, expire within seven days and are removed through the owner purge port.
 
+Provider COMMIT verification and its unknown-outcome exception belong to the narrow
+FoodDiary.Persistence.PostgreSql library (ADR 0054). Use it directly for coordinated
+commits; never duplicate the verification algorithm here. Independent AI/outbox
+consumers use that provider library without referencing this runtime or joining its
+scoped unit of work.
+
 Own the module-independent runtime context, scoped persistence session, coordinated
 saves, transactions, shared record mappings, replay coordination and database
 telemetry. Use canonical `FoodDiary.Persistence.Runtime` namespaces.

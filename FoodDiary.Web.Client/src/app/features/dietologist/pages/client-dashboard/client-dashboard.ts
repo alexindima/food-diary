@@ -1,7 +1,7 @@
 import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -14,7 +14,20 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
+import {
+    catchError,
+    distinctUntilChanged,
+    finalize,
+    firstValueFrom,
+    forkJoin,
+    map,
+    type Observable,
+    of,
+    Subject,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs';
 
 import { devDay, devEnum, devRecord, devText } from '../../../../shared/development/development-input';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
@@ -146,6 +159,8 @@ export class ClientDashboardComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly measurements = inject(MeasurementSystemService);
+    private readonly clientChanged = new Subject<void>();
+    private clientRevision = 0;
     private dashboardReloadSequence = 0;
     private loadedMealPage = 1;
 
@@ -213,6 +228,8 @@ export class ClientDashboardComponent {
         path => {
             required(path.text);
             maxLength(path.text, RECOMMENDATION_MAX_LENGTH);
+            disabled(path.text, { when: () => this.savingRecommendation() || this.savingTemplate() });
+            disabled(path.templateName, { when: () => this.savingTemplate() });
         },
         {
             submission: {
@@ -226,6 +243,8 @@ export class ClientDashboardComponent {
     );
     protected readonly templateInvalid = computed(
         () =>
+            this.savingRecommendation() ||
+            this.savingTemplate() ||
             this.recommendationModel().templateName.trim().length === 0 ||
             this.recommendationModel().text.trim().length === 0 ||
             this.templateNameTooLong() ||
@@ -244,6 +263,9 @@ export class ClientDashboardComponent {
             });
             maxLength(path.title, TASK_TITLE_MAX_LENGTH);
             maxLength(path.details, TASK_DETAILS_MAX_LENGTH);
+            disabled(path.title, { when: () => this.savingTask() });
+            disabled(path.details, { when: () => this.savingTask() });
+            disabled(path.dueDate, { when: () => this.savingTask() });
         },
         {
             submission: {
@@ -267,7 +289,7 @@ export class ClientDashboardComponent {
         return client !== null && Object.values(client.permissions).some(Boolean);
     });
     protected readonly recommendationDisabled = computed(
-        () => !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation(),
+        () => !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation() || this.savingTemplate(),
     );
     protected readonly recommendationDisabledReason = computed(() => {
         this.translateService.currentLang();
@@ -341,32 +363,81 @@ export class ClientDashboardComponent {
 
     public constructor() {
         this.connectDevelopmentTools();
-        const clientId = this.route.snapshot.paramMap.get('clientId');
-        this.openDiscussionId.set(this.route.snapshot.queryParamMap.get('recommendationId'));
-        this.dietologistFacade
-            .getMyClients()
+        this.route.queryParamMap
             .pipe(
-                switchMap(clients => {
-                    const found = clients.find(c => c.userId === clientId) ?? null;
-                    this.client.set(found);
-                    this.loading.set(false);
-
-                    if (found === null) {
-                        return of(null);
-                    }
-
-                    this.detailsLoading.set(true);
-                    return this.loadClientDetails(found);
-                }),
+                map(params => params.get('recommendationId')),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                error: () => {
-                    this.loading.set(false);
-                    this.detailsLoading.set(false);
-                    this.error.set('DIETOLOGIST.CLIENT_DASHBOARD.LOAD_ERROR');
-                },
+            .subscribe(id => {
+                this.openDiscussionId.set(id);
             });
+        this.route.paramMap
+            .pipe(
+                map(params => params.get('clientId')),
+                distinctUntilChanged(),
+                switchMap(clientId => {
+                    this.resetClientState();
+                    return this.loadRouteClient(clientId);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
+    }
+
+    private loadRouteClient(clientId: string | null): Observable<ClientDashboardDetails | null> {
+        return this.dietologistFacade.getMyClients().pipe(
+            switchMap(clients => {
+                const found = clients.find(client => client.userId === clientId) ?? null;
+                this.client.set(found);
+                this.loading.set(false);
+                if (found === null) {
+                    return of(null);
+                }
+                this.detailsLoading.set(true);
+                return this.loadClientDetails(found);
+            }),
+            catchError(() => {
+                this.loading.set(false);
+                this.detailsLoading.set(false);
+                this.error.set('DIETOLOGIST.CLIENT_DASHBOARD.LOAD_ERROR');
+                return of(null);
+            }),
+        );
+    }
+
+    private resetClientState(): void {
+        this.clientRevision++;
+        this.dashboardReloadSequence++;
+        this.clientChanged.next();
+        this.client.set(null);
+        this.dashboard.set(null);
+        this.goals.set(null);
+        this.recommendations.set([]);
+        this.tasks.set([]);
+        this.recommendationTemplates.set([]);
+        this.loading.set(true);
+        this.detailsLoading.set(false);
+        this.loadingMoreMeals.set(false);
+        this.moreMealsError.set(false);
+        this.savingRecommendation.set(false);
+        this.savingTask.set(false);
+        this.savingTemplate.set(false);
+        this.changingTaskIds.set(new Set());
+        this.loadedMealPage = 1;
+        this.error.set(null);
+        this.sectionLoadError.set(null);
+        this.openDiscussionId.set(this.route.snapshot.queryParamMap.get('recommendationId'));
+        this.recommendationForm().reset({ text: '', templateName: '' });
+        this.taskForm().reset({ title: '', details: '', dueDate: '' });
+    }
+
+    private isCurrentClient(revision: number): boolean {
+        return !this.destroyRef.destroyed && revision === this.clientRevision;
+    }
+
+    private isCurrentClientResult<T>(value: T, revision: number): value is NonNullable<T> {
+        return value !== null && value !== undefined && this.isCurrentClient(revision);
     }
 
     protected goBack(): void {
@@ -437,6 +508,7 @@ export class ClientDashboardComponent {
             const result = await firstValueFrom(
                 this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService), nextPage).pipe(
                     catchError(() => of(null)),
+                    takeUntil(this.clientChanged),
                     takeUntilDestroyed(this.destroyRef),
                 ),
                 { defaultValue: null },
@@ -472,6 +544,9 @@ export class ClientDashboardComponent {
     }
 
     protected useRecommendationTemplate(template: RecommendationTemplate): void {
+        if (this.savingRecommendation() || this.savingTemplate()) {
+            return;
+        }
         this.recommendationModel.update(model => ({ ...model, text: template.text }));
     }
 
@@ -484,7 +559,8 @@ export class ClientDashboardComponent {
             name.length > TEMPLATE_NAME_MAX_LENGTH ||
             text.length === 0 ||
             text.length > RECOMMENDATION_MAX_LENGTH ||
-            this.savingTemplate()
+            this.savingTemplate() ||
+            this.savingRecommendation()
         ) {
             return;
         }
@@ -492,7 +568,7 @@ export class ClientDashboardComponent {
         this.savingTemplate.set(true);
         this.dietologistFacade
             .createRecommendationTemplate({ name, text })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: template => {
                     this.recommendationTemplates.update(templates =>
@@ -512,7 +588,7 @@ export class ClientDashboardComponent {
     protected archiveRecommendationTemplate(template: RecommendationTemplate): void {
         this.dietologistFacade
             .archiveRecommendationTemplate(template.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
                     this.recommendationTemplates.update(templates => templates.filter(item => item.id !== template.id));
@@ -531,7 +607,7 @@ export class ClientDashboardComponent {
         this.changingTaskIds.update(ids => new Set(ids).add(task.id));
         this.dietologistFacade
             .cancelTask(task.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: updated => {
                     this.tasks.update(tasks => tasks.map(item => (item.id === updated.id ? updated : item)));
@@ -546,7 +622,7 @@ export class ClientDashboardComponent {
 
     private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
-        if (client === null || !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation()) {
+        if (client === null || this.recommendationDisabled()) {
             this.recommendationForm().markAsTouched();
             return;
         }
@@ -559,15 +635,25 @@ export class ClientDashboardComponent {
         }
 
         this.savingRecommendation.set(true);
+        const revision = this.clientRevision;
         try {
             const recommendation = await firstValueFrom(
-                this.dietologistFacade.createRecommendation(client.userId, { text }).pipe(takeUntilDestroyed(this.destroyRef)),
+                this.dietologistFacade
+                    .createRecommendation(client.userId, { text })
+                    .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
             );
+            if (!this.isCurrentClientResult(recommendation, revision)) {
+                return;
+            }
             this.recommendations.update(items => [recommendation, ...items]);
             this.recommendationModel.update(model => ({ ...model, text: '' }));
             this.savingRecommendation.set(false);
             this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
         } catch {
+            if (!this.isCurrentClient(revision)) {
+                return;
+            }
             this.savingRecommendation.set(false);
             this.toastService.error(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR'));
         }
@@ -583,6 +669,7 @@ export class ClientDashboardComponent {
         const value = this.taskModel();
         const dueDate = parseLocalDateInputValue(value.dueDate);
         this.savingTask.set(true);
+        const revision = this.clientRevision;
         try {
             const task = await firstValueFrom(
                 this.dietologistFacade
@@ -591,15 +678,23 @@ export class ClientDashboardComponent {
                         details: value.details.trim() === '' ? null : value.details.trim(),
                         dueAtUtc: dueDate === null ? null : normalizeEndOfLocalDay(dueDate).toISOString(),
                     })
-                    .pipe(takeUntilDestroyed(this.destroyRef)),
+                    .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef)),
+                { defaultValue: null },
             );
+            if (!this.isCurrentClientResult(task, revision)) {
+                return;
+            }
             this.tasks.update(tasks => [task, ...tasks]);
             this.taskModel.set({ title: '', details: '', dueDate: '' });
             this.toastService.success(this.translateService.instant('CLIENT_TASKS.CREATED'));
         } catch {
-            this.toastService.error(this.translateService.instant('CLIENT_TASKS.CREATE_ERROR'));
+            if (this.isCurrentClient(revision)) {
+                this.toastService.error(this.translateService.instant('CLIENT_TASKS.CREATE_ERROR'));
+            }
         } finally {
-            this.savingTask.set(false);
+            if (this.isCurrentClient(revision)) {
+                this.savingTask.set(false);
+            }
         }
     }
 
@@ -609,19 +704,32 @@ export class ClientDashboardComponent {
             return;
         }
 
-        this.dialogService
-            .open(FdUiConfirmDialogComponent, {
-                preset: 'confirm',
-                data: {
-                    title: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_TITLE'),
-                    message: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_MESSAGE'),
-                    confirmLabel: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_CONFIRM'),
-                    cancelLabel: this.translateService.instant('COMMON.CANCEL'),
-                    danger: true,
-                },
-            })
+        const dialogRef = this.dialogService.open(FdUiConfirmDialogComponent, {
+            preset: 'confirm',
+            data: {
+                title: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_TITLE'),
+                message: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_MESSAGE'),
+                confirmLabel: this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT_CONFIRM'),
+                cancelLabel: this.translateService.instant('COMMON.CANCEL'),
+                danger: true,
+            },
+        });
+        const unregisterCleanup = this.destroyRef.onDestroy(() => {
+            dialogRef.close();
+        });
+        const clientChange = this.clientChanged.subscribe(() => {
+            dialogRef.close();
+        });
+        dialogRef
             .afterClosed()
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                takeUntil(this.clientChanged),
+                takeUntilDestroyed(this.destroyRef),
+                finalize(() => {
+                    clientChange.unsubscribe();
+                    unregisterCleanup();
+                }),
+            )
             .subscribe(confirmed => {
                 if (confirmed === true) {
                     this.executeDisconnectClient(client);
@@ -632,7 +740,7 @@ export class ClientDashboardComponent {
     private executeDisconnectClient(client: ClientSummary): void {
         this.dietologistFacade
             .disconnectClient(client.userId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(takeUntil(this.clientChanged), takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
                     this.toastService.info(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECTED'));
@@ -659,6 +767,7 @@ export class ClientDashboardComponent {
 
     private loadClientDetails(client: ClientSummary): Observable<ClientDashboardDetails> {
         const reloadSequence = ++this.dashboardReloadSequence;
+        const revision = this.clientRevision;
         const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
 
@@ -682,6 +791,9 @@ export class ClientDashboardComponent {
                 .pipe(this.handleSectionLoadError<RecommendationTemplate[], RecommendationTemplate[]>([])),
         }).pipe(
             tap(result => {
+                if (!this.isCurrentClient(revision)) {
+                    return;
+                }
                 this.applyDashboardIfCurrent(result.dashboard, reloadSequence);
                 this.goals.set(result.goals);
                 this.recommendations.update(items => this.mergeInitialItems(result.recommendations, items));
@@ -711,6 +823,7 @@ export class ClientDashboardComponent {
         const result = await firstValueFrom(
             this.loadDietologistDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
                 .pipe(this.handleSectionLoadError<DietologistDashboardSnapshot, null>(null, reloadSequence))
+                .pipe(takeUntil(this.clientChanged))
                 .pipe(takeUntilDestroyed(this.destroyRef)),
             { defaultValue: null },
         );

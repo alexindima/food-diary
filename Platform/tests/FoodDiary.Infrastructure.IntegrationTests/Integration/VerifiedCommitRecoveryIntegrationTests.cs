@@ -2,7 +2,7 @@ using System.Data.Common;
 using System.Net;
 using System.Net.Sockets;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;

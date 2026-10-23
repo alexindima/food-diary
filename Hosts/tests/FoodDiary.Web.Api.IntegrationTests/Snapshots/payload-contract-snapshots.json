@@ -174,7 +174,8 @@
       "createdAt",
       "id",
       "items",
-      "name"
+      "name",
+      "revision"
     ],
     "name": "Weekend Shopping",
     "itemsCount": 1,

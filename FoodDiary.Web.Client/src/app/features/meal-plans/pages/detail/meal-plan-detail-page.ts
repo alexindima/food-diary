@@ -8,7 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
-import { finalize } from 'rxjs';
+import { distinctUntilChanged, finalize, map } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -58,10 +58,18 @@ export class MealPlanDetailPageComponent {
 
     public constructor() {
         this.destroyRef.onDestroy(() => this.deleteDialog?.close());
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id !== null && id.length > 0) {
-            this.facade.loadPlan(entityId<'meal-plan'>(id));
-        }
+        this.route.paramMap
+            .pipe(
+                map(params => params.get('id')),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(id => {
+                this.deleteDialog?.close();
+                if (id !== null && id.trim().length > 0) {
+                    this.facade.loadPlan(entityId<'meal-plan'>(id));
+                }
+            });
     }
 
     protected confirmDeletePlan(): void {

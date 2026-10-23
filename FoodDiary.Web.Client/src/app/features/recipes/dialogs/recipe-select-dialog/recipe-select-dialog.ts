@@ -18,7 +18,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, skip, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
@@ -53,6 +53,7 @@ export class RecipeSelectDialogComponent {
     private readonly recipeSelectFacade = inject(RecipeSelectFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
+    private readonly queryChanges = new Subject<void>();
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
         optional: true,
     });
@@ -114,14 +115,15 @@ export class RecipeSelectDialogComponent {
         toObservable(this.searchValue)
             .pipe(
                 skip(1),
-                takeUntilDestroyed(this.destroyRef),
                 debounceTime(this.searchDebounceMs),
                 switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
     }
 
     protected loadRecipes(page: number): Observable<void> {
+        this.queryChanges.next();
         this.recipeData.setLoading(true);
         const includePublic = !this.onlyMineFilter();
         const filters = this.buildRecipeFilters();
@@ -136,6 +138,8 @@ export class RecipeSelectDialogComponent {
                 this.recipeData.clearData();
                 return of(void 0);
             }),
+            takeUntil(this.queryChanges),
+            takeUntilDestroyed(this.destroyRef),
             finalize(() => {
                 this.recipeData.setLoading(false);
             }),

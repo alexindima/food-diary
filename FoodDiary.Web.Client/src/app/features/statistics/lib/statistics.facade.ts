@@ -32,6 +32,8 @@ import {
 import { buildStatisticsExportRequest } from './statistics-export.mapper';
 import { mapStatistics } from './statistics-statistics.mapper';
 
+const MAX_STATISTICS_PERIOD_DAYS = 366;
+
 @Injectable()
 export class StatisticsFacade {
     private readonly statisticsService = inject(StatisticsService);
@@ -79,6 +81,10 @@ export class StatisticsFacade {
 
         return getCurrentDateRange(selectedRange, selectedRange === 'custom' ? this.customRangeModel().range : null);
     });
+    public readonly periodValidationError = computed(() =>
+        getDateRangeDayCount(this.currentRange()) > MAX_STATISTICS_PERIOD_DAYS ? 'STATISTICS.PERIOD_TOO_LONG' : null,
+    );
+    public readonly hasReportError = computed(() => this.hasLoadError() || this.periodValidationError() !== null);
     public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
     public readonly hasBodyData = computed(() => {
         return (
@@ -172,7 +178,7 @@ export class StatisticsFacade {
     }
 
     public exportDiary(format: ExportFormat): void {
-        if (this.exportingFormat() !== null) {
+        if (this.exportingFormat() !== null || this.periodValidationError() !== null) {
             return;
         }
 
@@ -202,6 +208,10 @@ export class StatisticsFacade {
     }
 
     private loadAllData(): void {
+        if (this.periodValidationError() !== null) {
+            this.lastLoadedRangeKey = null;
+            return;
+        }
         const range = getCurrentDateRange(this.selectedRange(), this.customRangeModel().range);
         const normalizedStart = normalizeStartOfDay(range.start);
         const normalizedEnd = normalizeEndOfDay(range.end);
@@ -244,6 +254,9 @@ export class StatisticsFacade {
     }
 
     private initializeCustomRange(): void {
+        if (this.customRangeModel().range !== null) {
+            return;
+        }
         const end = new Date();
         const start = new Date(end);
         start.setMonth(start.getMonth() - 1);

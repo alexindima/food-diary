@@ -2501,13 +2501,15 @@ switch ($Command) {
         }
     }
     { $_ -in @('task-finish', 'task-verify') } {
-        Invoke-WikiTool 'Complete-LlmWikiTaskWorkspace.ps1' @{
+        $finishArguments = @{
             Action = $(if ($Command -eq 'task-verify') { 'verify' } else { 'finish' })
             WorkspacePath = $WorkspacePath
             DryRun = $DryRun
             FailOnInvalid = $FailOnInvalid
             Format = $Format
         }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $finishArguments.ChangedPath = @($ChangedPath) }
+        Invoke-WikiTool 'Complete-LlmWikiTaskWorkspace.ps1' $finishArguments
     }
     'topology' {
         Invoke-WikiTool 'Find-LlmWikiRuntimeTopology.ps1' @{ Query = $Query; Limit = $Limit; CompiledIndexSource = $CompiledIndexSource; Format = $Format }

@@ -8,10 +8,10 @@ import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
 import { SessionEventsService } from '../auth/session-events.service';
 import { imageSelection } from '../models/image-upload.data';
-import { calendarDate } from '../models/semantics/date-value';
+import { calendarDate, utcInstant } from '../models/semantics/date-value';
 import { entityId } from '../models/semantics/entity-id';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
-import { UserService } from './user.service';
+import { type UserProfileOverview, UserService } from './user.service';
 
 const DESIRED_WAIST = 80;
 
@@ -154,6 +154,132 @@ describe('UserService info', () => {
         expect(service.user()).toBeNull();
     });
 });
+
+describe('UserService session ownership', () => {
+    const reads = ['getInfo', 'getInfoSilently', 'getOverview'] as const;
+
+    it.each(reads)('does not repopulate cleared user state from a late %s success', method => {
+        const next = vi.fn();
+        const request: Observable<unknown> = service[method]();
+        request.subscribe(next);
+        const pending = httpMock.expectOne(`${BASE_URL}/${method === 'getOverview' ? 'overview' : 'info'}`);
+
+        sessionEvents.notifySessionEnded();
+        const response = method === 'getOverview' ? overviewForUser(MOCK_USER) : MOCK_USER;
+        pending.flush(response);
+
+        expect(next).toHaveBeenCalledWith(response);
+        expect(service.user()).toBeNull();
+    });
+
+    it.each(reads)('keeps the new session user after a late %s success', method => {
+        const request: Observable<unknown> = service[method]();
+        request.subscribe();
+        const pending = httpMock.expectOne(`${BASE_URL}/${method === 'getOverview' ? 'overview' : 'info'}`);
+
+        sessionEvents.notifyAuthenticated();
+        const newSessionUser: User = { ...MOCK_USER, username: 'new-session-user' };
+        setCurrentUser(newSessionUser);
+        pending.flush(method === 'getOverview' ? overviewForUser(MOCK_USER) : MOCK_USER);
+
+        expect(service.user()).toEqual(newSessionUser);
+    });
+
+    it.each(reads)('keeps the same account relogin state after a late %s error', method => {
+        const next = vi.fn();
+        const request: Observable<unknown> = service[method]();
+        request.subscribe(next);
+        const pending = httpMock.expectOne(`${BASE_URL}/${method === 'getOverview' ? 'overview' : 'info'}`);
+
+        sessionEvents.notifySessionEnded();
+        sessionEvents.notifyAuthenticated();
+        const newSessionUser: User = { ...MOCK_USER, username: 'relogged-in-user' };
+        setCurrentUser(newSessionUser);
+        pending.flush('offline', { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+
+        expect(next).toHaveBeenCalledWith(null);
+        expect(service.user()).toEqual(newSessionUser);
+    });
+
+    it('invalidates an outstanding user read when the cache is explicitly cleared', () => {
+        service.getInfo().subscribe();
+        const pending = httpMock.expectOne(`${BASE_URL}/info`);
+
+        service.clearUser();
+        pending.flush(MOCK_USER);
+
+        expect(service.user()).toBeNull();
+    });
+});
+
+describe('UserService mutation session ownership', () => {
+    it.each([
+        { action: 'update', endpoint: 'info', response: MOCK_USER },
+        { action: 'updateAppearance', endpoint: 'preferences/appearance', response: MOCK_USER },
+        { action: 'updateDashboardLayout', endpoint: 'info', response: MOCK_USER },
+        { action: 'setPassword', endpoint: 'password/set', response: null },
+        { action: 'acceptAiConsent', endpoint: 'ai-consent', response: null },
+        { action: 'revokeAiConsent', endpoint: 'ai-consent', response: null },
+        { action: 'deleteCurrentUser', endpoint: '', response: null },
+    ] as const)('ignores old-session cache effects from $action after the same account logs in again', ({ action, endpoint, response }) => {
+        const next = vi.fn();
+        let request: Observable<unknown>;
+        switch (action) {
+            case 'update': {
+                request = service.update(new UpdateUserDto({ username: 'old-session-edit' }));
+                break;
+            }
+            case 'updateAppearance': {
+                request = service.updateAppearance(new UpdateUserAppearanceDto({ theme: 'dark' }));
+                break;
+            }
+            case 'updateDashboardLayout': {
+                request = service.updateDashboardLayout({ web: ['summary'], mobile: ['summary'] });
+                break;
+            }
+            case 'setPassword': {
+                request = service.setPassword({ newPassword: 'test-only-password' });
+                break;
+            }
+            case 'acceptAiConsent':
+            case 'revokeAiConsent':
+            case 'deleteCurrentUser': {
+                request = service[action]();
+            }
+        }
+        request.subscribe(next);
+        const pending = httpMock.expectOne(endpoint.length > 0 ? `${BASE_URL}/${endpoint}` : BASE_URL);
+
+        sessionEvents.notifySessionEnded();
+        sessionEvents.notifyAuthenticated();
+        const newSessionUser: User = {
+            ...MOCK_USER,
+            username: 'relogged-in-user',
+            hasPassword: false,
+            aiConsentAcceptedAt: utcInstant('2026-10-21T12:00:00Z'),
+        };
+        setCurrentUser(newSessionUser);
+        pending.flush(response);
+
+        expect(next).toHaveBeenCalledOnce();
+        expect(service.user()).toEqual(newSessionUser);
+    });
+});
+
+function overviewForUser(user: User): UserProfileOverview {
+    return {
+        user,
+        notificationPreferences: {
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: false,
+            socialPushNotificationsEnabled: true,
+            fastingCheckInReminderHours: FASTING_CHECK_IN_REMINDER_HOURS,
+            fastingCheckInFollowUpReminderHours: FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+        },
+        webPushSubscriptions: [],
+        dietologistRelationship: null,
+    };
+}
 
 describe('UserService optional profile names', () => {
     it.each([

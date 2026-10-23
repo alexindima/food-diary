@@ -1,7 +1,22 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FdUiSelectComponent, type FdUiSelectOption } from './fd-ui-select';
+
+const originalScrollIntoView = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollIntoView');
+const scrollIntoView = vi.fn<Element['scrollIntoView']>();
+beforeEach(() => {
+    scrollIntoView.mockClear();
+    Object.defineProperty(Element.prototype, 'scrollIntoView', { configurable: true, value: scrollIntoView });
+});
+
+afterEach(() => {
+    if (originalScrollIntoView === undefined) {
+        Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+    } else {
+        Object.defineProperty(Element.prototype, 'scrollIntoView', originalScrollIntoView);
+    }
+});
 
 const TEST_OPTIONS: Array<FdUiSelectOption<string>> = [
     { value: 'apple', label: 'Apple' },
@@ -44,6 +59,31 @@ describe('FdUiSelectComponent', () => {
         const { component } = await setupSelectAsync();
 
         expect(component).toBeTruthy();
+    });
+});
+
+describe('FdUiSelectComponent active option accessibility', () => {
+    it.each(['label', 'ariaLabel'] as const)('names the focused listbox with %s and tracks its active option', async labelInput => {
+        const { fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput(labelInput, 'Fruit');
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+        const control = requireElement('.fd-ui-select__control');
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        fixture.detectChanges();
+        const listbox = document.querySelector<HTMLElement>('[role="listbox"]');
+        expect(listbox).not.toBeNull();
+        listbox?.focus();
+        expect(document.activeElement).toBe(listbox);
+        expect(listbox?.getAttribute('aria-label')).toBe('Fruit');
+        expect(listbox?.getAttribute('aria-activedescendant')).toBe(`${control.id}-option-0`);
+        listbox?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        fixture.detectChanges();
+        expect(listbox?.getAttribute('aria-activedescendant')).toBe(`${control.id}-option-1`);
+        expect(control.hasAttribute('aria-activedescendant')).toBe(false);
+        listbox?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(control);
     });
 });
 
@@ -352,10 +392,11 @@ describe('FdUiSelectComponent classes', () => {
 describe('FdUiSelectComponent overlay', () => {
     it('should focus listbox when overlay attaches', async () => {
         const { component, fixture } = await setupSelectAsync();
-        const focus = vi.fn();
+        const listbox = document.createElement('ul');
+        const focus = vi.spyOn(listbox, 'focus');
         Object.defineProperty(component, 'listboxRef', {
             value: vi.fn(() => ({
-                nativeElement: { focus },
+                nativeElement: listbox,
             })),
         });
 

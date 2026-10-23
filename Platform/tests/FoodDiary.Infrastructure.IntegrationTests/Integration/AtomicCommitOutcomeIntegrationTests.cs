@@ -7,6 +7,7 @@ using FoodDiary.Modules.Meals.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

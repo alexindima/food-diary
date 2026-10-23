@@ -55,6 +55,7 @@
     <ProjectReference Include="../Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
     <ProjectReference Include="../Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/MealPlanning/Application/FoodDiary.Modules.MealPlanning.Application.csproj" />
+    <ProjectReference Include="../Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Notifications/Application.Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Notifications/Application/FoodDiary.Modules.Notifications.Application.csproj" />

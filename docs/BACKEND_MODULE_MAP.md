@@ -4,6 +4,12 @@ Users owns separate account, preferences and nutrition records. The shared runti
 also owns AtomicCommandReceipts; Dashboard composes a bounded read-only snapshot.
 See [ADR 0052](adr/0052-backend-transaction-and-delivery-reliability.md).
 
+`Shared/FoodDiary.Persistence.PostgreSql` owns provider COMMIT verification used
+directly by Persistence.Runtime, Ai.Infrastructure and Outbox.Infrastructure.
+It does not enlist independent operations in the shared unit of work. Notification
+clients reconcile across process boundaries; MailRelay's PostgreSQL fallback starts
+without RabbitMQ. See [ADR 0054](adr/0054-independent-commit-verification-and-notification-reconciliation.md).
+
 Shared persistence runtime is now physically separate from the full migration
 model. Composed readers consume an IQueryable-only facade on the same scoped
 context. See [ADR 0043](adr/0043-persistence-runtime-assembly-and-read-facade.md).
@@ -36,8 +42,8 @@ Users Contracts owns semantic capabilities/models/errors; Users Application/Abst
 owns aggregate/repository ports. Identity Application/Abstractions owns Authentication
 and email-template contracts. Admin owns role-audit reader ports; Billing owns its
 Marketing-implemented conversion recorder; Dietologist owns its two parsing helpers.
-Central Application.Abstractions retains shared interfaces and compatibility references,
-not copies of these declarations. CurrentUserAccessResolver and the shared single-use
+The former central Application.Abstractions aggregator is retired; generic technical
+contracts live in narrow Shared projects. CurrentUserAccessResolver and the shared single-use
 SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md`.
 
 ## Outbox stream model ownership
@@ -61,7 +67,7 @@ Use this file when deciding where backend code belongs.
 | Product identity and units | `Modules/Products/Domain.Contracts` | ProductId, ProductType, MeasurementUnit | Aggregate dependencies and calculations |
 | Nutrient health scoring | `Modules/Usda/Domain` | HealthAreaScore, HealthAreaGrade, HealthAreaScores | Reverse Products dependencies |
 | Domain model | Owning `Modules/<Feature>/Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, central shared domain buckets |
-| Application ports/models | Owning module Contracts or Application/Abstractions; central shared compatibility seams | Semantic consumer contracts separated from owner repository ports | Foreign aggregates/repositories in public contracts, ASP.NET, EF Core, provider SDKs |
+| Application ports/models | Owning module Contracts or Application/Abstractions; narrow Shared technical contracts | Semantic consumer contracts separated from owner repository ports | Foreign aggregates/repositories in public contracts, ASP.NET, EF Core, provider SDKs |
 | Application runtime | `Shared/FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |
 | Shared audit adapter | `Shared/FoodDiary.Audit.Infrastructure` | Audit logging and read/write adapters over the shared persistence session; explicit host registration | Module business rules, persistence coordination, migrations |
 | Shared email adapter | `Shared/FoodDiary.Email.Infrastructure` | Email outbox enqueue/processing and email replay stream; explicit host registration | Email templates, token protocols, persistence coordination, migrations |

@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { distinctUntilChanged, map } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -40,10 +42,17 @@ export class LessonDetailPageComponent {
     protected readonly lesson = computed(() => buildLessonDetailView(this.facade.selectedLesson()));
 
     public constructor() {
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id !== null && id.trim().length > 0) {
-            this.facade.loadLesson(entityId<'lesson'>(id));
-        }
+        this.route.paramMap
+            .pipe(
+                map(params => params.get('id')),
+                distinctUntilChanged(),
+                takeUntilDestroyed(),
+            )
+            .subscribe(id => {
+                if (id !== null && id.trim().length > 0) {
+                    this.facade.loadLesson(entityId<'lesson'>(id));
+                }
+            });
     }
 
     protected markRead(): void {

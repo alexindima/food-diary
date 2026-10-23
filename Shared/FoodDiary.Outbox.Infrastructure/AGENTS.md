@@ -7,6 +7,9 @@
 - Keep the existing FoodDiary.Infrastructure meter name, instrument names, tags, units and OutboxProcessing configuration key. The meter here owns only outbox instruments.
 - Shared replay coordination remains in Persistence.Runtime; email adapters are in Email.Infrastructure. Do not move stream-specific records or provider adapters here.
 - Existing central outbox unit/provider tests retain coverage across adapters; generic internal helpers are visible only to those test assemblies.
+- Claims use FoodDiary.Persistence.PostgreSql COMMIT verification. Preserve the
+  original claimed result after a confirmed commit with a lost acknowledgement;
+  only a confirmed abort permits the provider strategy to repeat claiming.
 
 The technical replay-stream extension contract and tracked-record metadata live here as well; the central coordinator retains all replay transaction, audit and save ownership.
 

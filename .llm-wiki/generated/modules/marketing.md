@@ -80,6 +80,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionRangeTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingLandingPathTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingAttributionEventInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingAttributionSnapshotTests.cs`
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingIdConversionTests.cs`

@@ -50,6 +50,42 @@ foreach ($contract in @(
 }
 
 $facadeSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') -Raw
+# Execute the actual finish dispatch body with a capturing tool boundary. This
+# checks omitted versus explicit scope without running lifecycle mutations.
+$facadeAst = [Management.Automation.Language.Parser]::ParseInput($facadeSource, [ref]$null, [ref]$null)
+$finishClauses = @($facadeAst.FindAll({ param($Node)
+    $Node -is [Management.Automation.Language.SwitchStatementAst]
+}, $true) | ForEach-Object { $_.Clauses } | Where-Object {
+    $_.Item1.Extent.Text -match "'task-finish'" -and $_.Item1.Extent.Text -match "'task-verify'"
+})
+Assert-CriticalTool ($finishClauses.Count -eq 1) 'Unable to locate the unique task-finish facade dispatch.'
+$finishDispatch = [scriptblock]::Create(@'
+[CmdletBinding()]
+param([string[]]$ChangedPath, [string]$Command = 'task-finish')
+'@ + [Environment]::NewLine + (($finishClauses[0].Item2.Statements | ForEach-Object { $_.Extent.Text }) -join [Environment]::NewLine))
+& {
+    function Invoke-WikiTool([string]$ToolName, [hashtable]$Arguments) {
+        [pscustomobject]@{ tool = $ToolName; arguments = $Arguments }
+    }
+    $WorkspacePath = '.artifacts/llm-wiki/tasks/finish-contract'
+    $DryRun = $true
+    $FailOnInvalid = $true
+    $Format = 'Json'
+    $defaultFinish = & $finishDispatch
+    Assert-CriticalTool ($defaultFinish.tool -eq 'Complete-LlmWikiTaskWorkspace.ps1' -and
+        $defaultFinish.arguments.Action -eq 'finish' -and
+        -not $defaultFinish.arguments.ContainsKey('ChangedPath')) 'Default finish dispatch invented an explicit path scope.'
+    $scopedFinish = & $finishDispatch -ChangedPath @('owned-a.txt', 'owned-b.txt')
+    Assert-CriticalTool (($scopedFinish.arguments.ChangedPath -join ',') -eq 'owned-a.txt,owned-b.txt' -and
+        $scopedFinish.arguments.WorkspacePath -eq $WorkspacePath -and $scopedFinish.arguments.DryRun -and
+        $scopedFinish.arguments.FailOnInvalid) 'Finish dispatch lost explicit paths or existing lifecycle arguments.'
+    $verifyFinish = & $finishDispatch -Command task-verify
+    Assert-CriticalTool ($verifyFinish.arguments.Action -eq 'verify' -and
+        -not $verifyFinish.arguments.ContainsKey('ChangedPath')) 'Finish verification dispatch changed its default contract.'
+}
+$deltaCommands = [regex]::Match($facadeSource, '(?s)\$deltaAwareCommands\s*=\s*@\((?<commands>.*?)\)')
+Assert-CriticalTool ($deltaCommands.Success -and $deltaCommands.Groups['commands'].Value -notmatch "'task-finish'") `
+    'Task finish must not substitute the session delta for its default working-tree assessment.'
 $eagerGraphCommands = [regex]::Match(
     $facadeSource,
     '(?s)\$compiledIndexReadOnlyCommands\s*=\s*@\((?<commands>.*?)\)')

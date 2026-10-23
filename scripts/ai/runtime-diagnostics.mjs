@@ -224,6 +224,7 @@ export async function collectRuntimeDiagnostics(
             auth.accessToken,
             identity.id,
             {
+                credentials,
                 probeFailure,
                 onDiagnostics: (events) =>
                     writeFileSync(

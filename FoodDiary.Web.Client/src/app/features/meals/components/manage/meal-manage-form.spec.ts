@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { EMPTY, of, Subject } from 'rxjs';
@@ -7,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { ImageUploadFieldComponent } from '../../../../components/shared/image-upload-field/image-upload-field';
 import { NavigationService } from '../../../../services/navigation.service';
 import {
     createEmptyProductSnapshot,
@@ -22,6 +24,7 @@ import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmentTools } from '../../contracts/meal-development-tools';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
+import { MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import { MealManageFormComponent } from './meal-manage-form';
 import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
 import { createMealItemValue, getDateInputValue, getTimeInputValue } from './meal-manage-lib/meal-manage-form.mapper';
@@ -328,6 +331,79 @@ describe('MealManageFormComponent duplicate submit guard', () => {
         await firstSubmit;
 
         expect(component['isSubmitting']()).toBe(false);
+    });
+});
+
+describe('Meal editor pending save', () => {
+    it.each([false, true])('locks all editable controls until save settles, failure=%s', async fail => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        setValidManualMeal(component);
+        component['mealSignalForm'].mealType().markAsDirty();
+        let settle: (() => void) | undefined;
+        mealManageFacade.submitMealAsync.mockReturnValue(
+            new Promise<Meal>((resolve, reject) => {
+                settle = (): void => {
+                    if (fail) {
+                        reject(new Error('Temporary save failure'));
+                    } else {
+                        resolve(createMeal({ totalCalories: TOTAL_CALORIES }));
+                    }
+                };
+            }),
+        );
+        const draft = component['mealFormModel']();
+        const saving = component['onSubmitAsync']();
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        const controls = [...element.querySelectorAll('form input, form textarea, form select, form button')];
+        expect(controls.length).toBeGreaterThan(0);
+        expect(controls.every(control => control.matches(':disabled'))).toBe(true);
+        expect(element.querySelector('fd-page-header')?.hasAttribute('inert')).toBe(true);
+
+        settle?.();
+        await saving;
+        fixture.detectChanges();
+        expect(controls.some(control => !control.matches(':disabled'))).toBe(true);
+        if (fail) {
+            expect(component['mealFormModel']()).toEqual(draft);
+            expect(component['mealSignalForm']().dirty()).toBe(true);
+            expect(mealManageFacade.showSuccessToastAndRedirectAsync).not.toHaveBeenCalled();
+        }
+    });
+});
+
+describe('Meal editor photo readiness', () => {
+    it.each([false, true])('blocks submission while uploading and re-enables it after failure or replacement, edit=%s', async editing => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        if (editing) {
+            fixture.componentRef.setInput('meal', createMeal());
+            fixture.detectChanges();
+        }
+        setValidManualMeal(component);
+        component['mealSignalForm'].mealType().markAsDirty();
+        fixture.detectChanges();
+        const generalInfo = fixture.debugElement.query(By.directive(MealGeneralInfoComponent));
+        const uploader = generalInfo.query(By.directive(ImageUploadFieldComponent)).componentInstance as ImageUploadFieldComponent;
+        const draft = component['mealFormModel']();
+
+        uploader.imagePreparationStarted.emit('blob:owned-photo');
+        fixture.detectChanges();
+        expect(component['isSubmitDisabled']()).toBe(true);
+        await component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        expect((fixture.nativeElement as HTMLElement).querySelector('textarea')?.matches(':disabled')).toBe(false);
+
+        uploader.imagePreparationFailed.emit();
+        fixture.detectChanges();
+        expect(component['isSubmitDisabled']()).toBe(false);
+        expect(component['mealFormModel']()).toEqual(draft);
+        uploader.imagePreparationStarted.emit('blob:replacement-photo');
+        fixture.detectChanges();
+        expect(component['isSubmitDisabled']()).toBe(true);
+        uploader.imageChanged.emit(null);
+        fixture.detectChanges();
+        expect(component['isSubmitDisabled']()).toBe(false);
     });
 });
 

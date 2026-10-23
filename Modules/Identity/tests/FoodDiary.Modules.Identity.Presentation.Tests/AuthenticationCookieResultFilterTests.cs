@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -11,6 +12,39 @@ namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthenticationCookieResultFilterTests {
+    [Fact]
+    public async Task OnResultExecutionAsync_WithAdminSsoActionPolicy_PreservesExistingMainRefreshSession() {
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Scheme = "https";
+        httpContext.Request.Headers.Cookie = $"{RefreshTokenCookieService.CookieName}=main-session";
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+        var response = new AuthenticationHttpResponse("admin-access-token", "admin-refresh-token", null!);
+        var result = new OkObjectResult(response);
+        object controller = new();
+        // MVC composes IFilterMetadata attributes from the actual action into this list.
+        var filters = typeof(AdminSsoController).GetMethod(nameof(AdminSsoController.AdminSsoExchange))!
+            .GetCustomAttributes(inherit: true).OfType<IFilterMetadata>().ToList();
+        Assert.Single(filters.OfType<SuppressRefreshTokenCookieAttribute>());
+        var context = new ResultExecutingContext(actionContext, filters, result, controller);
+        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(TimeProvider.System));
+        bool continued = false;
+
+        await filter.OnResultExecutionAsync(context, () => {
+            continued = true;
+            Assert.Same(result, context.Result);
+            return Task.FromResult(new ResultExecutedContext(actionContext, filters, result, controller));
+        });
+
+        Assert.True(continued);
+        Assert.Equal(0, httpContext.Response.Headers.SetCookie.Count);
+        Assert.Equal("main-session", new RefreshTokenCookieService(TimeProvider.System).Read(httpContext));
+        Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+        Assert.Equal("admin-access-token", Assert.IsType<AuthenticationHttpResponse>(result.Value).AccessToken);
+        string json = System.Text.Json.JsonSerializer.Serialize(response, System.Text.Json.JsonSerializerOptions.Web);
+        Assert.DoesNotContain("refreshToken", json, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("admin-refresh-token", json, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task OnResultExecutionAsync_WithAuthenticationResponse_SetsSecureHttpOnlyRefreshCookie() {
         var httpContext = new DefaultHttpContext();

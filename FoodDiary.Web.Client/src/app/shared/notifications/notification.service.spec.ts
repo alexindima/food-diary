@@ -1,11 +1,16 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpStatusCode, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
+import { SKIP_AUTH } from '../../constants/http-context.tokens';
+import { AuthInterceptor } from '../../interceptor/auth.interceptor';
 import { AuthService } from '../../services/auth.service';
+import { SessionEventsService } from '../auth/session-events.service';
+import type { NotificationItem } from '../models/notification.data';
 import { decodeNotificationKind } from '../models/notification-kind';
 import { utcInstant } from '../models/semantics/date-value';
 import { entityId } from '../models/semantics/entity-id';
@@ -20,12 +25,23 @@ const UNREAD_COUNT_ALREADY_READ = 3;
 const baseUrl = environment.apiUrls.auth.replace('/auth', '/notifications');
 
 let service: NotificationService;
+let sessionEvents: SessionEventsService;
 let httpMock: HttpTestingController;
-let authService: { isAuthenticated: ReturnType<typeof vi.fn> };
+let authService: {
+    isAuthenticated: ReturnType<typeof vi.fn>;
+    getUserId: ReturnType<typeof vi.fn>;
+    isImpersonating: ReturnType<typeof vi.fn>;
+    getToken: ReturnType<typeof vi.fn>;
+    refreshToken: ReturnType<typeof vi.fn>;
+};
 
 beforeEach(() => {
     authService = {
         isAuthenticated: vi.fn(() => true),
+        getUserId: vi.fn(() => 'user-a'),
+        isImpersonating: vi.fn(() => false),
+        getToken: vi.fn(() => 'expired-token'),
+        refreshToken: vi.fn(() => of('refreshed-token')),
     };
 
     TestBed.configureTestingModule({
@@ -33,6 +49,7 @@ beforeEach(() => {
     });
 
     service = TestBed.inject(NotificationService);
+    sessionEvents = TestBed.inject(SessionEventsService);
     httpMock = TestBed.inject(HttpTestingController);
 });
 
@@ -143,6 +160,136 @@ describe('NotificationService loading', () => {
     });
 });
 
+describe('NotificationService session ownership', () => {
+    it.each([
+        { boundary: 'authentication', result: 'success' },
+        { boundary: 'authentication', result: 'error' },
+        { boundary: 'session end', result: 'success' },
+        { boundary: 'session end', result: 'error' },
+        { boundary: 'account change', result: 'success' },
+        { boundary: 'account change', result: 'error' },
+    ] as const)('ignores old read $result and finalization after $boundary', ({ boundary, result }) => {
+        service.fetchUnreadCount();
+        service.ensureNotificationsLoaded();
+        const oldCount = httpMock.expectOne(`${baseUrl}/unread-count`);
+        const oldList = httpMock.expectOne(baseUrl);
+
+        if (boundary === 'authentication') {
+            sessionEvents.notifyAuthenticated();
+        } else if (boundary === 'session end') {
+            sessionEvents.notifySessionEnded();
+        } else {
+            authService.getUserId.mockReturnValue('user-b');
+        }
+        service.fetchUnreadCount();
+        service.ensureNotificationsLoaded();
+        const currentCount = httpMock.expectOne(`${baseUrl}/unread-count`);
+        const currentList = httpMock.expectOne(baseUrl);
+
+        if (result === 'success') {
+            oldCount.flush({ count: UNREAD_COUNT_INITIAL });
+            oldList.flush([notificationForSession('Old session')]);
+        } else {
+            oldCount.flush(null, { status: 500, statusText: 'Server Error' });
+            oldList.flush(null, { status: 500, statusText: 'Server Error' });
+        }
+
+        expect(service.unreadCount()).toBe(0);
+        expect(service.notifications()).toEqual([]);
+        expect(service.notificationsLoaded()).toBe(false);
+        expect(service.notificationsLoading()).toBe(true);
+        service.fetchUnreadCount({ force: true });
+        service.ensureNotificationsLoaded();
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+        httpMock.expectNone(baseUrl);
+
+        currentCount.flush({ count: UNREAD_COUNT_FORCED });
+        currentList.flush([notificationForSession('Current session')]);
+
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
+        expect(service.notifications()[0].title).toBe('Current session');
+        expect(service.notificationsLoaded()).toBe(true);
+        expect(service.notificationsLoading()).toBe(false);
+    });
+
+    it('keeps current data when the previous account succeeds after current reads finish', () => {
+        service.fetchUnreadCount();
+        service.ensureNotificationsLoaded();
+        const oldCount = httpMock.expectOne(`${baseUrl}/unread-count`);
+        const oldList = httpMock.expectOne(baseUrl);
+
+        sessionEvents.notifySessionEnded();
+        sessionEvents.notifyAuthenticated();
+        service.fetchUnreadCount();
+        service.ensureNotificationsLoaded();
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: UNREAD_COUNT_FORCED });
+        httpMock.expectOne(baseUrl).flush([notificationForSession('Relogged-in session')]);
+
+        oldCount.flush({ count: UNREAD_COUNT_INITIAL });
+        oldList.flush([notificationForSession('Old session')]);
+
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
+        expect(service.notifications()[0].title).toBe('Relogged-in session');
+        service.fetchUnreadCount();
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+    });
+});
+
+describe('NotificationService mutation session ownership', () => {
+    it.each(['one', 'all'] as const)('ignores late mark-%s-read effects after same-account relogin', action => {
+        const request = action === 'one' ? service.markAsRead(entityId<'notification'>('n1')) : service.markAllRead();
+        request.subscribe();
+        const pending = httpMock.expectOne(`${baseUrl}/${action === 'one' ? 'n1/read' : 'read-all'}`);
+
+        sessionEvents.notifySessionEnded();
+        sessionEvents.notifyAuthenticated();
+        service.notifications.set([notificationForSession('Relogged-in session')]);
+        service.updateCount(UNREAD_COUNT_FORCED);
+        pending.flush(null);
+
+        expect(service.unreadCount()).toBe(UNREAD_COUNT_FORCED);
+        expect(service.notifications()[0].isRead).toBe(false);
+    });
+
+    it('clears all loaded state and ignores in-flight results after logout', () => {
+        service.notifications.set([notificationForSession('Old session')]);
+        service.notificationsLoaded.set(true);
+        service.updateCount(UNREAD_COUNT_INITIAL);
+        service.notifyNotificationsChanged();
+        service.fetchUnreadCount({ force: true });
+        const pendingList = httpMock.expectOne(baseUrl);
+        const pendingCount = httpMock.expectOne(`${baseUrl}/unread-count`);
+
+        sessionEvents.notifySessionEnded();
+        authService.isAuthenticated.mockReturnValue(false);
+        pendingList.flush([notificationForSession('Late old session')]);
+        pendingCount.flush({ count: UNREAD_COUNT_CONCURRENT });
+
+        expect(service.notifications()).toEqual([]);
+        expect(service.unreadCount()).toBe(0);
+        expect(service.notificationsLoading()).toBe(false);
+        expect(service.notificationsLoaded()).toBe(false);
+        expect(service.notificationsChangedVersion()).toBe(0);
+        service.ensureNotificationsLoaded();
+        service.fetchUnreadCount();
+        httpMock.expectNone(baseUrl);
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+    });
+});
+
+function notificationForSession(title: string): NotificationItem {
+    return {
+        id: entityId<'notification'>('n1'),
+        type: decodeNotificationKind('info'),
+        title,
+        body: null,
+        targetUrl: null,
+        referenceId: null,
+        isRead: false,
+        createdAtUtc: utcInstant('2026-01-01T00:00:00Z'),
+    };
+}
+
 describe('NotificationService read state', () => {
     it('should mark notification as read and update local state', () => {
         service.notifications.set([
@@ -227,6 +374,90 @@ describe('NotificationService read state', () => {
 
         expect(service.unreadCount()).toBe(0);
         expect(service.notifications().every(x => x.isRead)).toBe(true);
+    });
+});
+
+describe('NotificationService push request session ownership', () => {
+    it('uses the captured session token for logout cleanup after the account changes', () => {
+        const endpoint = 'https://push.example.com/subscriptions/account-a';
+        const pending = service.removeWebPushSubscription(endpoint, 'token-a');
+
+        authService.getUserId.mockReturnValue('user-b');
+        sessionEvents.notifyAuthenticated();
+        pending.subscribe();
+
+        const request = httpMock.expectOne(`${baseUrl}/push/subscription`);
+        expect(request.request.method).toBe('DELETE');
+        expect(request.request.headers.get('Authorization')).toBe('Bearer token-a');
+        expect(request.request.context.get(SKIP_AUTH)).toBe(true);
+        request.flush(null);
+    });
+
+    it.each(['upsert', 'remove'] as const)('preserves the normal authentication path for push %s without a captured token', action => {
+        const endpoint = 'https://push.example.com/subscriptions/current';
+        const request$ =
+            action === 'upsert'
+                ? service.upsertWebPushSubscription({
+                      endpoint,
+                      expirationTime: null,
+                      keys: { p256dh: 'p256', auth: 'auth' },
+                      locale: 'en',
+                      userAgent: 'Chrome',
+                  })
+                : service.removeWebPushSubscription(endpoint);
+        request$.subscribe();
+
+        const request = httpMock.expectOne(`${baseUrl}/push/subscription`);
+        expect(request.request.headers.has('Authorization')).toBe(false);
+        expect(request.request.context.get(SKIP_AUTH)).toBe(false);
+        request.flush(null);
+    });
+});
+
+describe('NotificationService push token refresh', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [
+                NotificationService,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+                { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+                { provide: AuthService, useValue: authService },
+            ],
+        });
+        service = TestBed.inject(NotificationService);
+        sessionEvents = TestBed.inject(SessionEventsService);
+        httpMock = TestBed.inject(HttpTestingController);
+    });
+
+    it.each(['upsert', 'remove'] as const)('refreshes an expired token and retries a normal push %s request', action => {
+        const endpoint = 'https://push.example.com/subscriptions/current';
+        const request$ =
+            action === 'upsert'
+                ? service.upsertWebPushSubscription({
+                      endpoint,
+                      expirationTime: null,
+                      keys: { p256dh: 'p256', auth: 'auth' },
+                      locale: 'en',
+                      userAgent: 'Chrome',
+                  })
+                : service.removeWebPushSubscription(endpoint);
+        const completed = vi.fn();
+        request$.subscribe({ complete: completed });
+
+        const initial = httpMock.expectOne(`${baseUrl}/push/subscription`);
+        expect(initial.request.headers.get('Authorization')).toBe('Bearer expired-token');
+        expect(initial.request.context.get(SKIP_AUTH)).toBe(false);
+        initial.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(authService.refreshToken).toHaveBeenCalledTimes(1);
+        const retried = httpMock.expectOne(`${baseUrl}/push/subscription`);
+        expect(retried.request.method).toBe(action === 'upsert' ? 'PUT' : 'DELETE');
+        expect(retried.request.headers.get('Authorization')).toBe('Bearer refreshed-token');
+        expect(retried.request.context.get(SKIP_AUTH)).toBe(false);
+        retried.flush(null);
+        expect(completed).toHaveBeenCalledTimes(1);
     });
 });
 

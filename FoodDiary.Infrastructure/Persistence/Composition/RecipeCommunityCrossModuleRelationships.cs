@@ -13,6 +13,11 @@ internal static class RecipeCommunityCrossModuleRelationships {
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<RecipeLike>().HasOne<Recipe>()
+            .WithMany()
+            .HasForeignKey(x => x.RecipeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<RecipeComment>().HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.UserId)

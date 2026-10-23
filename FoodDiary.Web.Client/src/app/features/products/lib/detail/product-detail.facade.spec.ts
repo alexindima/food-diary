@@ -284,3 +284,25 @@ describe('Product detail pending requests', () => {
         expect(facade.isFavoriteLoading()).toBe(false);
     });
 });
+
+describe('ProductDetailFacade failed favorite discovery', () => {
+    it('preserves the known favorite state when the status check fails', () => {
+        favoriteProductService.isFavorite.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.initialize(createProduct({ isFavorite: true }));
+        expect(facade.isFavorite()).toBe(true);
+    });
+
+    it('preserves favorite state after a failed lookup and permits retrying removal', () => {
+        const item = createProduct({ isFavorite: true, favoriteProductId: null });
+        favoriteProductService.isFavorite.mockReturnValueOnce(of(true));
+        facade.initialize(item);
+        favoriteProductService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.toggleFavorite(item);
+        expect(facade.isFavorite()).toBe(true);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        expect(favoriteProductService.remove).not.toHaveBeenCalled();
+        facade.toggleFavorite(item);
+        expect(favoriteProductService.remove).toHaveBeenCalledTimes(1);
+        expect(facade.isFavorite()).toBe(false);
+    });
+});

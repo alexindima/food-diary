@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { disabled, form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -53,12 +53,16 @@ export class AdminUserEditDialogComponent {
         roles: this.data.roles,
         language: this.normalizeLanguage(this.data.language) ?? 'en',
     });
-    protected readonly form = form(this.formModel);
+    protected readonly form = form(this.formModel, path => {
+        disabled(path, { when: () => this.isSaving() });
+    });
 
     protected readonly user = this.data;
 
     protected close(): void {
-        this.dialogRef.close(false);
+        if (!this.isSaving()) {
+            this.dialogRef.close(false);
+        }
     }
 
     protected save(): void {
@@ -91,6 +95,9 @@ export class AdminUserEditDialogComponent {
     }
 
     protected toggleRole(role: string): void {
+        if (this.isSaving()) {
+            return;
+        }
         const current = this.formModel().roles;
         const hasRole = current.includes(role);
         const next = hasRole ? current.filter(item => item !== role) : [...current, role];

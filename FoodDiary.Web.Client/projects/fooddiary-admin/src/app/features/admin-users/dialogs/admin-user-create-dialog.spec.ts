@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FdUiDialogRef } from 'fd-ui-kit';
+import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AdminUsersFacade } from '../lib/admin-users.facade';
@@ -112,5 +113,43 @@ describe('AdminUserCreateDialogComponent manual password maximum', () => {
         component['form'].generatePassword().value.set(true);
         fixture.detectChanges();
         expect(component['form']().invalid()).toBe(false);
+    });
+});
+
+describe('AdminUserCreateDialogComponent pending creation', () => {
+    it('locks fields and manual credential options until a failed request returns', async () => {
+        const pending = new Subject<never>();
+        const createUser = vi.fn().mockReturnValue(pending);
+        const close = vi.fn();
+        await TestBed.configureTestingModule({
+            imports: [AdminUserCreateDialogComponent],
+            providers: [
+                { provide: FdUiDialogRef, useValue: { close } },
+                { provide: AdminUsersFacade, useValue: { createUser } },
+            ],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(AdminUserCreateDialogComponent);
+        const component = fixture.componentInstance;
+        component['formModel'].update(value => ({ ...value, email: 'admin-qa@example.com', sendCredentialsEmail: false }));
+        component['submit']();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        for (const control of element.querySelectorAll<HTMLInputElement>('input')) {
+            expect(control.disabled).toBe(true);
+        }
+        component['toggleRole']('Admin');
+        component['onCredentialsOptionChange']('sendCredentialsEmail', true);
+        component['close']();
+        expect(component['hasRole']('Admin')).toBe(false);
+        expect(component['formModel']().sendCredentialsEmail).toBe(false);
+        expect(close).not.toHaveBeenCalled();
+
+        pending.error(new Error('offline'));
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(element.querySelector<HTMLInputElement>('input')?.disabled).toBe(false);
+        });
+        expect(component['formModel']().email).toBe('admin-qa@example.com');
+        expect(component['submitError']()).not.toBeNull();
     });
 });

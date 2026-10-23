@@ -14,6 +14,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
 
     private IQueryable<User> UsersWithRoles() =>
         users
+            .Where(user => user.Id != SystemContentOwner.Id)
             .AsSplitQuery()
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
@@ -71,7 +72,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         UserAdministrationFilter filter, CancellationToken cancellationToken) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
-        IQueryable<User> filteredQuery = users.AsNoTracking();
+        IQueryable<User> filteredQuery = users.AsNoTracking().Where(user => user.Id != SystemContentOwner.Id);
         if (filter.RegisteredFrom is { } registeredFrom) {
             var start = registeredFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
             filteredQuery = filteredQuery.Where(user => user.CreatedOnUtc >= start);
@@ -160,6 +161,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
         var userCounts = await users
+            .Where(user => user.Id != SystemContentOwner.Id)
             .GroupBy(_ => 1)
             .Select(group => new {
                 TotalUsers = group.Count(),
@@ -169,7 +171,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
         int premiumUsers = await userRoles
-            .Where(ur => ur.Role.Name == RoleNames.Premium)
+            .Where(ur => ur.UserId != SystemContentOwner.Id && ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
             .CountAsync(cancellationToken).ConfigureAwait(false);

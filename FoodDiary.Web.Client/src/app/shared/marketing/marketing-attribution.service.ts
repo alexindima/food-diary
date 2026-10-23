@@ -10,6 +10,7 @@ import { ClientTelemetrySessionService } from '../observability/client-telemetry
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { type AnonymousVisitorId, anonymousVisitorId, type MarketingAttributionIdentity, marketingSessionId } from './marketing-identity';
+import { sanitizeMarketingLandingPath } from './marketing-landing-path';
 
 type MarketingAttributionPayload = MarketingAttributionIdentity & {
     timestamp: string;
@@ -33,6 +34,7 @@ type MarketingUtmFields = Pick<MarketingAttributionPayload, 'utmSource' | 'utmMe
 const ANONYMOUS_ID_STORAGE_KEY = 'fd_marketing_anonymous_id';
 const FIRST_TOUCH_STORAGE_KEY = 'fd_marketing_first_touch';
 const SESSION_CAPTURE_STORAGE_KEY = 'fd_marketing_session_capture';
+const CAPTURE_PART_COUNT = 7;
 const ANONYMOUS_ID_PREFIX = 'fd-anon';
 const RANDOM_RADIX = 36;
 
@@ -52,6 +54,7 @@ export class MarketingAttributionService {
             return;
         }
 
+        this.sanitizeStoredAttribution();
         const payload = this.createPayload();
         if (payload === null || this.wasCapturedInSession(payload)) {
             return;
@@ -78,6 +81,7 @@ export class MarketingAttributionService {
             return;
         }
 
+        this.sanitizeStoredAttribution();
         const source = this.readFirstTouch() ?? this.createOrganicPayload();
         const payload = this.createSignupPayload(source);
         this.sdk.client
@@ -144,24 +148,22 @@ export class MarketingAttributionService {
     private readFirstTouch(): MarketingAttributionPayload | null {
         const value = this.storage.getJson('local', FIRST_TOUCH_STORAGE_KEY);
         if (!this.isStoredAttributionPayload(value)) {
+            this.storage.removeItem('local', FIRST_TOUCH_STORAGE_KEY);
             return null;
         }
 
-        return { ...value, anonymousId: anonymousVisitorId(value.anonymousId), sessionId: marketingSessionId(value.sessionId) };
+        const payload = {
+            ...value,
+            landingPath: sanitizeMarketingLandingPath(value.landingPath),
+            anonymousId: anonymousVisitorId(value.anonymousId),
+            sessionId: marketingSessionId(value.sessionId),
+        };
+        this.storage.setJson('local', FIRST_TOUCH_STORAGE_KEY, payload);
+        return payload;
     }
 
     private getLandingPath(): string {
-        const href = this.browserWindow.getHref();
-        if (href === null) {
-            return this.browserWindow.getPathname() ?? '/';
-        }
-
-        try {
-            const url = new URL(href);
-            return `${url.pathname}${url.search}`;
-        } catch {
-            return this.browserWindow.getPathname() ?? '/';
-        }
+        return sanitizeMarketingLandingPath(this.browserWindow.getHref() ?? this.browserWindow.getPathname() ?? '/');
     }
 
     private readUtmParams(params: URLSearchParams): Partial<MarketingUtmFields> {
@@ -220,14 +222,7 @@ export class MarketingAttributionService {
     }
 
     private wasCapturedInSession(payload: MarketingAttributionPayload): boolean {
-        const captured = this.storage.getItem('session', SESSION_CAPTURE_STORAGE_KEY);
-        // The unchanged metadata suffix also identifies URLs in legacy raw keys.
-        const metadata = `|${this.getCaptureMetadata(payload)}`;
-        return (
-            captured !== null &&
-            captured.endsWith(metadata) &&
-            this.captureLandingPath(captured.slice(0, -metadata.length)) === this.captureLandingPath(payload.landingPath)
-        );
+        return this.storage.getItem('session', SESSION_CAPTURE_STORAGE_KEY) === this.getCaptureKey(payload);
     }
 
     private markCapturedInSession(payload: MarketingAttributionPayload): void {
@@ -235,20 +230,38 @@ export class MarketingAttributionService {
     }
 
     private getCaptureKey(payload: MarketingAttributionPayload): string {
-        return `${this.captureLandingPath(payload.landingPath)}|${this.getCaptureMetadata(payload)}`;
+        return JSON.stringify([sanitizeMarketingLandingPath(payload.landingPath), ...this.getCaptureMetadata(payload)]);
     }
 
-    private captureLandingPath(landingPath: string): string {
-        const queryStart = landingPath.indexOf('?');
-        if (queryStart === -1) {
-            return landingPath;
+    private sanitizeStoredAttribution(): void {
+        this.readFirstTouch();
+        const captured = this.storage.getItem('session', SESSION_CAPTURE_STORAGE_KEY);
+        if (captured === null) {
+            return;
         }
-        const path = landingPath.slice(0, queryStart);
-        const query = new URLSearchParams(landingPath.slice(queryStart + 1)).toString();
-        return query.length > 0 ? `${path}?${query}` : path;
+
+        let parts: unknown;
+        try {
+            parts = captured.startsWith('[') ? (JSON.parse(captured) as unknown) : captured.split('|');
+        } catch {
+            parts = null;
+        }
+
+        // Legacy delimiter keys containing a literal pipe have no unambiguous URL boundary.
+        if (!Array.isArray(parts) || parts.length !== CAPTURE_PART_COUNT || !parts.every((part: unknown) => typeof part === 'string')) {
+            this.storage.removeItem('session', SESSION_CAPTURE_STORAGE_KEY);
+            return;
+        }
+
+        const values = parts;
+        this.storage.setItem(
+            'session',
+            SESSION_CAPTURE_STORAGE_KEY,
+            JSON.stringify([sanitizeMarketingLandingPath(values[0]), ...values.slice(1)]),
+        );
     }
 
-    private getCaptureMetadata(payload: MarketingAttributionPayload): string {
+    private getCaptureMetadata(payload: MarketingAttributionPayload): string[] {
         return [
             payload.referrerHost ?? '',
             payload.utmSource ?? '',
@@ -256,7 +269,7 @@ export class MarketingAttributionService {
             payload.utmCampaign ?? '',
             payload.utmContent ?? '',
             payload.utmTerm ?? '',
-        ].join('|');
+        ];
     }
 
     private hasAttributionSignal(payload: MarketingAttributionPayload): boolean {

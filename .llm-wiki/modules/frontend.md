@@ -12,6 +12,9 @@ sources:
   - FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md
   - docs/frontend/FRONTEND_ARCHITECTURE.md
   - docs/frontend/API_SDK.md
+  - docs/adr/0055-atomic-frontend-publication-and-asset-retention.md
+  - docs/adr/0056-shopping-list-content-revisions.md
+  - docs/frontend/PUBLIC_RECIPES.md
   - FoodDiary.Web.Client/src/app/shared/api/sdk/products-sdk.ts
   - FoodDiary.Web.Client/src/app/features/products/api/product.service.ts
 ---
@@ -87,3 +90,21 @@ check the live contract and generated output. Use the corresponding
 `sdk:bot:update` and `sdk:bot:check:api` for the bot. See
 [`API_SDK.md`](../../docs/frontend/API_SDK.md) for scope, prerequisites, CI
 checks and the separate requirement for mobile API compatibility.
+
+Shopping-list detail responses carry an opaque `revision`; every PATCH requires
+the editable snapshot's `expectedRevision`. Invalid or missing values return 400,
+and stale values return 409 with `ShoppingList.RevisionConflict`. Clients preserve
+the draft and require explicit reload or reconciliation after conflict.
+[ADR 0056](../../docs/adr/0056-shopping-list-content-revisions.md) requires older
+packaged clients to update before editing; other endpoint compatibility rules
+remain unchanged. Release the matching API and web bundle together.
+
+Both Angular sites publish complete immutable releases inside stable Nginx bind
+roots, then atomically switch the internal `current` pointer. Only content-hashed
+JS/CSS/media may fall back to retained assets. HTML, workers and service-worker
+manifests come from the selected release and never use that fallback. Publish
+static assets before the matching SSR image.
+[ADR 0055](../../docs/adr/0055-atomic-frontend-publication-and-asset-retention.md)
+and the [public-recipes runbook](../../docs/frontend/PUBLIC_RECIPES.md) define
+migration, coordinated rollback and the separate decision required before pruning
+retained data.

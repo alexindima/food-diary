@@ -268,6 +268,46 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
         Assert.Single(await seed.OutboxReplayAudits.ToListAsync());
     }
 
+    [RequiresDockerFact]
+    public async Task Replay_SuccessfulCommitWithLostAcknowledgement_ReturnsOriginalAuditWithoutRepeatingReplay() {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        ImageObjectDeletionOutboxMessage message = await SeedImageAsync(seed);
+        var fault = new LostReplayCommitAcknowledgement();
+        await using FoodDiaryDbContext context = CreateContext(seed.Database.GetConnectionString()!, fault);
+        using var scope = new OutboxReplayTestScope(context, Clock);
+
+        OutboxReplayAuditModel result = await scope.Service.ReplayAsync("image_object_deletion", message.Id, "operator", "retry after inspection", 1);
+
+        seed.ChangeTracker.Clear();
+        var savedAudit = Assert.Single(await seed.OutboxReplayAudits.AsNoTracking()
+            .Select(audit => new { audit.Id, audit.RequestedBy, audit.Reason }).ToListAsync());
+        ImageObjectDeletionOutboxMessage savedMessage = await seed.ImageObjectDeletionOutbox.AsNoTracking().SingleAsync();
+        Assert.Multiple(
+            () => Assert.Equal(1, fault.CommitCount),
+            () => Assert.Equal(savedAudit.Id, result.Id),
+            () => Assert.Equal(message.Id, result.MessageId),
+            () => Assert.Equal("operator", savedAudit.RequestedBy),
+            () => Assert.Equal("retry after inspection", savedAudit.Reason),
+            () => Assert.Equal("failure", result.PreviousError),
+            () => Assert.Equal(1, result.PreviousAttemptCount),
+            () => Assert.Null(savedMessage.DeadLetteredOnUtc),
+            () => Assert.Equal(1, savedMessage.AttemptCount),
+            () => Assert.Null(context.Database.CurrentTransaction));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class LostReplayCommitAcknowledgement : DbTransactionInterceptor {
+        public int CommitCount { get; private set; }
+
+        public override Task TransactionCommittedAsync(DbTransaction transaction, TransactionEndEventData eventData,
+            CancellationToken cancellationToken = default) {
+            if (++CommitCount == 1) {
+                throw new TimeoutException("The replay COMMIT succeeded before its acknowledgement was lost.");
+            }
+            return Task.CompletedTask;
+        }
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class TransientCommitFault : DbTransactionInterceptor {
         public int Attempts { get; private set; }

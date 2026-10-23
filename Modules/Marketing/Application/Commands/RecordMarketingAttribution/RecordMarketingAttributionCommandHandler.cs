@@ -16,7 +16,6 @@ public sealed class RecordMarketingAttributionCommandHandler(
     private const int EventTypeMaxLength = 32;
     private const int AnonymousIdMaxLength = 96;
     private const int SessionIdMaxLength = 96;
-    private const int LandingPathMaxLength = 512;
     private const int ReferrerHostMaxLength = 128;
     private const int UtmValueMaxLength = 160;
     private const int BuildVersionMaxLength = 64;
@@ -77,7 +76,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
             request.UserId,
             trustedLanding?.AnonymousId ?? new AnonymousVisitorId(NormalizeRequired(request.AnonymousId.Value, AnonymousIdMaxLength, "unknown")),
             trustedLanding?.SessionId ?? new MarketingSessionId(NormalizeRequired(request.SessionId.Value, SessionIdMaxLength, "unknown")),
-            trustedLanding?.LandingPath ?? NormalizeRequired(request.LandingPath, LandingPathMaxLength, "/"),
+            MarketingLandingPath.Sanitize(trustedLanding?.LandingPath ?? request.LandingPath),
             trustedLanding?.ReferrerHost ?? NormalizeOptional(request.ReferrerHost, ReferrerHostMaxLength),
             trustedLanding?.UtmSource ?? NormalizeOptional(request.UtmSource, UtmValueMaxLength),
             trustedLanding?.UtmMedium ?? NormalizeOptional(request.UtmMedium, UtmValueMaxLength),

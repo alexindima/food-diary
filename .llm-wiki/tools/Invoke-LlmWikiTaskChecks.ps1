@@ -93,10 +93,9 @@ if (-not $DryRun -and $plans.Count -gt 0) {
         $exitCode = [int]$recordedResult.exitCode
         $finishedAt = [DateTime]::UtcNow
         $durationSeconds = [Math]::Round(($finishedAt - $startedAt).TotalSeconds, 2)
-        [System.IO.File]::WriteAllLines(
-            $logAbsolutePath,
-            @($runOutput | ForEach-Object { [string]$_ }),
-            [System.Text.UTF8Encoding]::new($false))
+        # The execution owner captured the actual command output already. Keep its
+        # immutable log/lineage so published execution receipts remain reusable.
+        $plan.logPath = [string]$recordedResult.entry.lineage.artifact.path
         $status = [string]$recordedResult.status
         if ($exitCode -ne 0) { $failureCount++ }
 
@@ -111,10 +110,6 @@ if (-not $DryRun -and $plans.Count -gt 0) {
         } else {
             $updatedEntry.lastRunAtUtc = $startedAt.ToString('o')
         }
-        $updatedEntry.lineage | Add-Member -NotePropertyName artifact -NotePropertyValue ([pscustomobject][ordered]@{
-            path = $plan.logPath
-            sha256 = (Get-FileHash -LiteralPath $logAbsolutePath -Algorithm SHA256).Hash.ToLowerInvariant()
-        }) -Force
         [System.IO.File]::WriteAllText(
             $evidenceAbsolutePath,
             (($updatedEvidence | ConvertTo-Json -Depth 15) + [Environment]::NewLine),

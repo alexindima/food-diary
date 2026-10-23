@@ -34,3 +34,15 @@ Public request slices live under Commands and Queries; other contracts live unde
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.
 
 Callers dispatch CleanupDeletedUsersCommand through ISender. Do not expose IUserCleanupService here. The cleanup request is an IRequest<int> without the automatic transactional command marker, preserving independently committed per-user work.
+
+IUserContentRetentionParticipant is an owner-side lifecycle extension used only by
+scheduled account purge. It detects retained references and transfers selected
+owned content inside Users' coordinated transaction; it must not save, commit or
+mutate foreign aggregates. Explicit configured successors retain existing full
+content reassignment behavior; automatic system ownership is selective.
+
+All retention participants first lock their source-owned rows in participant/ID
+order before any authoritative reference read or transfer. Their locks share the
+caller's per-user transaction. A negative external preflight does not authorize
+deletion after new references appear: scheduled cleanup defers the item until a
+later full pass, and strict fixture cleanup refuses transfer and deletion.

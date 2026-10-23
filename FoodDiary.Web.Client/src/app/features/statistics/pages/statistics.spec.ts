@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
@@ -23,17 +23,20 @@ type StatisticsFacadeMock = {
     currentRange: ReturnType<typeof signal<DateRange>>;
     dashboardCardsView: ReturnType<typeof signal<StatisticsDashboardCardsView>>;
     customRangeForm: FieldTree<{ range: { start: Date | null; end: Date | null } | null }>;
+    customRangeModel: ReturnType<typeof signal<{ range: { start: Date | null; end: Date | null } | null }>>;
     exportDiary: ReturnType<typeof vi.fn>;
     exportError: ReturnType<typeof signal<boolean>>;
     exportingFormat: ReturnType<typeof signal<ExportFormat | null>>;
     hasBodyData: ReturnType<typeof signal<boolean>>;
     hasBodyLoadError: ReturnType<typeof signal<boolean>>;
     hasLoadError: ReturnType<typeof signal<boolean>>;
+    hasReportError: ReturnType<typeof computed<boolean>>;
     hasStatisticsData: ReturnType<typeof signal<boolean>>;
     hasStatisticsResponse: ReturnType<typeof signal<boolean>>;
     initialize: ReturnType<typeof vi.fn>;
     isBodyLoading: ReturnType<typeof signal<boolean>>;
     isLoading: ReturnType<typeof signal<boolean>>;
+    periodValidationError: ReturnType<typeof signal<string | null>>;
     reload: ReturnType<typeof vi.fn>;
     selectedNutritionTab: ReturnType<typeof signal<NutritionChartTab>>;
     selectedRange: ReturnType<typeof signal<StatisticsRange>>;
@@ -42,6 +45,8 @@ type StatisticsFacadeMock = {
 function createStatisticsFacadeMock(): StatisticsFacadeMock {
     const customRangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
     const customRangeForm = form(customRangeModel);
+    const hasLoadError = signal(false);
+    const periodValidationError = signal<string | null>(null);
     const dashboardCardsView: StatisticsDashboardCardsView = {
         overview: {
             daysWithinGoal: 0,
@@ -75,11 +80,14 @@ function createStatisticsFacadeMock(): StatisticsFacadeMock {
         selectedRange: signal('week'),
         selectedNutritionTab: signal('calories'),
         customRangeForm,
+        customRangeModel,
         currentRange: signal(RANGE),
         dashboardCardsView: signal(dashboardCardsView),
         isLoading: signal(false),
+        periodValidationError,
         isBodyLoading: signal(false),
-        hasLoadError: signal(false),
+        hasLoadError,
+        hasReportError: computed(() => hasLoadError() || periodValidationError() !== null),
         hasBodyLoadError: signal(false),
         hasStatisticsData: signal(false),
         hasStatisticsResponse: signal(true),

@@ -172,6 +172,40 @@ describe('NotificationRealtimeService connection guards', () => {
     });
 });
 
+describe('NotificationRealtimeService pending disconnect lifetime', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+        signalrMock.reset();
+    });
+
+    it('reconnects when the same user signs in while the previous connection is stopping', async () => {
+        let completeStop: (() => void) | undefined;
+        signalrMock.connection.stop.mockImplementationOnce(
+            async () =>
+                new Promise<void>(resolve => {
+                    completeStop = resolve;
+                }),
+        );
+        const { authenticated, service } = setup(true, AUTH_TOKEN);
+        await waitForAsync(() => service.connected());
+        try {
+            authenticated.set(false);
+            TestBed.tick();
+            await waitForAsync(() => completeStop !== undefined);
+            authenticated.set(true);
+            TestBed.tick();
+            completeStop?.();
+            await waitForAsync(() => signalrMock.connection.start.mock.calls.length === 2);
+
+            expect(signalrMock.connection.stop).toHaveBeenCalledOnce();
+            expect(signalrMock.connection.start).toHaveBeenCalledTimes(2);
+            expect(service.connected()).toBe(true);
+        } finally {
+            completeStop?.();
+        }
+    });
+});
+
 describe('NotificationRealtimeService impersonation lifecycle', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
@@ -250,6 +284,18 @@ describe('NotificationRealtimeService expired sessions', () => {
         const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
         expect(await options.accessTokenFactory()).toBe('');
     });
+
+    it('ignores late hub events owned by a previous account', async () => {
+        const { notificationService, service } = setup(true, AUTH_TOKEN);
+        await waitForAsync(() => service.connected());
+        vi.spyOn(TestBed.inject(AuthService), 'getUserId').mockReturnValue('another-user');
+
+        signalrMock.handlers.get('UnreadCountUpdated')?.(UNREAD_COUNT);
+        signalrMock.handlers.get('NotificationsChanged')?.();
+
+        expect(notificationService.updateCount).not.toHaveBeenCalled();
+        expect(notificationService.notifyNotificationsChanged).not.toHaveBeenCalled();
+    });
 });
 
 function setup(
@@ -270,6 +316,7 @@ function setup(
         fetchUnreadCount: ReturnType<typeof vi.fn>;
         refreshNotifications: ReturnType<typeof vi.fn>;
         ensureNotificationsLoaded: ReturnType<typeof vi.fn>;
+        notificationsRequested: WritableSignal<boolean>;
     };
 } {
     const authenticated = signal(isAuthenticated);
@@ -280,6 +327,7 @@ function setup(
         fetchUnreadCount: vi.fn(),
         refreshNotifications: vi.fn(),
         ensureNotificationsLoaded: vi.fn(),
+        notificationsRequested: signal(false),
     };
     const logger = { warn: vi.fn(), error: vi.fn() };
 
@@ -291,6 +339,7 @@ function setup(
                 useValue: {
                     isAuthenticated: authenticated,
                     isImpersonating: impersonating,
+                    getUserId: vi.fn(() => 'user-a'),
                     getToken: vi.fn(() => token),
                     refreshToken: vi.fn(() => of(null)),
                 },

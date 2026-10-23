@@ -49,6 +49,42 @@ public sealed class MarketingAttributionCoverageTests {
     }
 
     [Fact]
+    public async Task Handle_WithAuthLanding_SanitizesBeforeWriting() {
+        var repository = new RecordingRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            LandingPath = "/auth/telegram/callback?code=oauth-secret&state=oauth-state&utm_source=telegram",
+            UtmSource = "telegram",
+            ReferrerHost = "t.me",
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("/auth/telegram/callback?utm_source=telegram", repository.Record?.LandingPath);
+        Assert.Equal("telegram", repository.Record?.UtmSource);
+        Assert.Equal("t.me", repository.Record?.ReferrerHost);
+    }
+
+    [Fact]
+    public async Task Handle_WithHistoricalTrustedLanding_SanitizesSignupCopy() {
+        var repository = new RecordingRepository {
+            Landing = CreateLandingRecord() with { LandingPath = "/verify-email?%74oken=old-secret&returnUrl=%2Freset-password%3Ftoken%3Dnested&utm_source=trusted" },
+        };
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());
+        RecordMarketingAttributionCommand command = CreateCommand("2026-04-02T12:00:00Z") with {
+            EventType = MarketingAttributionEventTypes.SignupCompleted,
+            UserId = UserId.New(),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("/verify-email?utm_source=trusted", repository.Record?.LandingPath);
+        Assert.Equal("trusted", repository.Record?.UtmSource);
+    }
+
+    [Fact]
     public async Task Handle_WithUnsupportedEventType_ReturnsValidationFailure() {
         var repository = new RecordingRepository();
         var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider());

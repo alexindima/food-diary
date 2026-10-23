@@ -14,4 +14,5 @@ export interface ShoppingListHttpResponse {
     id?: string;
     items?: Array<ShoppingListItemHttpResponse>;
     name?: string;
+    revision: string;
 }

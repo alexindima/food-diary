@@ -7,7 +7,7 @@ import { favoriteMealFromSdk } from '../../../shared/api/sdk/favorite-sdk.mapper
 import { FavoriteMealsSdk } from '../../../shared/api/sdk/generated/api/favorite-meals.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { FavoriteMeal } from '../../../shared/models/meal.data';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteMealId, MealId } from '../../../shared/models/semantics/entity-id';
@@ -32,14 +32,14 @@ export class FavoriteMealService {
         return this.getPage(1, LOOKUP_PAGE_SIZE).pipe(
             expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, LOOKUP_PAGE_SIZE) : EMPTY)),
             reduce((items, page) => [...items, ...page.data], [] as FavoriteMeal[]),
-            catchError((error: unknown) => fallbackApiError('Get favorite meals error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Get favorite meals error', error)),
         );
     }
 
     public isFavorite(mealId: MealId): Observable<boolean> {
         return this.sdk.client
             .getFavoriteMealsCheckByMealId({ version: this.sdk.version, mealId })
-            .pipe(catchError((error: unknown) => fallbackApiError('Check favorite meal error', error, false)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Check favorite meal error', error)));
     }
 
     public add(mealId: MealId, name?: string): Observable<FavoriteMeal> {

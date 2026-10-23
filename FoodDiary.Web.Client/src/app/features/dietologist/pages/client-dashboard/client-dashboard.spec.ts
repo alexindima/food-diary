@@ -726,6 +726,84 @@ describe('ClientDashboardComponent template limits', () => {
     });
 });
 
+describe('ClientDashboardComponent pending drafts', () => {
+    it('locks recommendation text and template actions until a failed send restores the draft', async () => {
+        const pending = new Subject<never>();
+        dietologistService.createRecommendation.mockReturnValueOnce(pending);
+        createComponent('client-1', true);
+        component['recommendationModel'].set({ text: 'Keep this recommendation', templateName: 'My template' });
+
+        const submission = component['submitRecommendationAsync']();
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector<HTMLTextAreaElement>('.client-dashboard__recommendation-form textarea')?.disabled).toBe(true);
+        expect(component['templateInvalid']()).toBe(true);
+        component['createRecommendationTemplate']();
+        expect(dietologistService.createRecommendationTemplate).not.toHaveBeenCalled();
+
+        pending.error(new Error('save failed'));
+        await submission;
+        fixture.detectChanges();
+
+        expect(host.querySelector<HTMLTextAreaElement>('.client-dashboard__recommendation-form textarea')?.disabled).toBe(false);
+        expect(component['recommendationModel']()).toEqual({ text: 'Keep this recommendation', templateName: 'My template' });
+    });
+
+    it('locks every task field until a failed save restores the complete draft', async () => {
+        const pending = new Subject<ClientTask>();
+        dietologistService.createTask.mockReturnValueOnce(pending);
+        createComponent('client-1');
+        const draft = { title: 'Keep this task', details: 'Keep these details', dueDate: '2026-10-25' };
+        component['taskModel'].set(draft);
+
+        const submission = component['submitTaskAsync']();
+        fixture.detectChanges();
+
+        const fields = Array.from(
+            (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+                '[aria-labelledby="dietologist-client-tasks-title"] input, [aria-labelledby="dietologist-client-tasks-title"] textarea',
+            ),
+        );
+        expect(fields).toHaveLength(Object.keys(draft).length);
+        expect(fields.every(field => field.disabled)).toBe(true);
+
+        pending.error(new Error('save failed'));
+        await submission;
+        fixture.detectChanges();
+
+        expect(fields.every(field => !field.disabled)).toBe(true);
+        expect(component['taskModel']()).toEqual(draft);
+    });
+
+    it('locks the shared recommendation draft and prevents sending while its template is saving', async () => {
+        const pending = new Subject<RecommendationTemplate>();
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(pending);
+        createComponent('client-1', true);
+        component['recommendationModel'].set({ text: 'Template content', templateName: 'Template name' });
+
+        component['createRecommendationTemplate']();
+        fixture.detectChanges();
+
+        const fields = Array.from(
+            (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+                '.client-dashboard__recommendation-form input, .client-dashboard__recommendation-form textarea',
+            ),
+        );
+        expect(fields).toHaveLength(2);
+        expect(fields.every(field => field.disabled)).toBe(true);
+        expect(component['recommendationDisabled']()).toBe(true);
+        await component['submitRecommendationAsync']();
+        expect(dietologistService.createRecommendation).not.toHaveBeenCalled();
+
+        pending.error(new Error('save failed'));
+        fixture.detectChanges();
+
+        expect(fields.every(field => !field.disabled)).toBe(true);
+        expect(component['recommendationModel']()).toEqual({ text: 'Template content', templateName: 'Template name' });
+    });
+});
+
 describe('ClientDashboardComponent recommendation permissions', () => {
     it.each([
         'shareProfile',
@@ -789,6 +867,8 @@ function createComponent(clientId: string, fullAccess = false): void {
             {
                 provide: ActivatedRoute,
                 useValue: {
+                    paramMap: of(convertToParamMap({ clientId })),
+                    queryParamMap: of(convertToParamMap({})),
                     snapshot: {
                         paramMap: convertToParamMap({ clientId }),
                         queryParamMap: convertToParamMap({}),

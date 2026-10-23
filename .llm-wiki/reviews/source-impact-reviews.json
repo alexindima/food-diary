@@ -17,15 +17,25 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "a017096e94842a03a50b1accf6b74516ded9ea901777e004d82534149c80b9e6",
+          "reviewReason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result."
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "94275383b3bd26d58b1f56aaa6f9633e69e95e2d4a850d6baa57e85fb9254de8",
+          "reviewReason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result."
+        },
+        {
           "path": "docs/README.md",
           "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956",
           "reviewReason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities."
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:02:59.7361957Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:16.731771Z"
     },
     {
       "pageId": "module.frontend",
@@ -83,7 +93,7 @@
       "reason": "Reviewed the final ProjectDependencyMatrixTests delta: only the existing Lessons Application test project gains its own narrow Lessons.Contracts reference, matching its existing LessonAdminReadModel use and new default reader calls. Production matrix, ownership, transaction and host boundaries remain unchanged; exact reference-list equality is preserved. Full architecture suite2274passed, complete backend build0warnings0errors. The architecture overview remains accurate.",
       "baseRef": "HEAD",
       "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-21T22:20:15.5753140Z"
+      "reviewedAtUtc": "2026-10-21T22:20:15.575314Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -112,14 +122,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "1ebac73a65f9a80a51083b2460e7b4a01d66fd331736e44c93a0744d41dddfc4",
-          "reviewReason": "The generator still discovers Git-visible Angular projects and classes. Current output includes fd-webmcp; no extraction algorithm changed."
+          "sha256": "e9f8edd68a0d68cc0a2543fa7f98bf8fa847c679b7c3d37181cf2259134bfa1c",
+          "reviewReason": "Reviewed current workspace coverage configuration and regenerated frontend-index.json. Added regression specs and coverage thresholds preserve all project roots, test builders, feature discovery and locale-count semantics documented by this page."
         }
       ],
-      "reason": "The generator still discovers Git-visible Angular projects and classes. Current output includes fd-webmcp; no extraction algorithm changed.",
+      "reason": "Reviewed current workspace coverage configuration and regenerated frontend-index.json. Added regression specs and coverage thresholds preserve all project roots, test builders, feature discovery and locale-count semantics documented by this page.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:10.7255013Z"
+      "gitHead": "da34fd3a85aad65b1aae11e0ce2c97c4612c1963",
+      "reviewedAtUtc": "2026-10-22T18:17:52.7732269Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -154,14 +164,14 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "1ebac73a65f9a80a51083b2460e7b4a01d66fd331736e44c93a0744d41dddfc4",
-          "reviewReason": "Regenerated catalog recognizes the fifth Angular project and its scoped guide through existing Git-visible inventory; no catalog semantics changed."
+          "sha256": "284cd97370ec8cee85449fa6d414f36b16a5fbb14a95f8b7da4a6f588c9cebd3",
+          "reviewReason": "The angular.json delta changes serve:staging and per-project coverage settings, while the catalog still inventories the same workspace projects/build-target families. The generic Git-visible inventory, literal-route limitations and reproducibility instructions remain accurate and contain no frozen count or claim that staging/coverage checks actually passed."
         }
       ],
-      "reason": "Regenerated catalog recognizes the fifth Angular project and its scoped guide through existing Git-visible inventory; no catalog semantics changed.",
+      "reason": "The angular.json delta changes serve:staging and per-project coverage settings, while the catalog still inventories the same workspace projects/build-target families. The generic Git-visible inventory, literal-route limitations and reproducibility instructions remain accurate and contain no frozen count or claim that staging/coverage checks actually passed.",
       "baseRef": "HEAD",
-      "gitHead": "4885ff0f5632e1a5ae8993efaa56b42379ab593a",
-      "reviewedAtUtc": "2026-10-19T08:49:14.545907Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:32.7047489Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -175,14 +185,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
+          "reviewReason": "ManageEvidence changes only how canonical checks acquire trusted execution provenance: actual native output, exact outcome and source-bound log/seal. Explicit acceptance mapping, evidence notes and not-applicable reasons remain separate from phase execution proof. The matrix still prevents a green infrastructure check from standing in for every requested behavior; manual resolution is not newly promoted to executed phase evidence."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "ManageEvidence changes only how canonical checks acquire trusted execution provenance: actual native output, exact outcome and source-bound log/seal. Explicit acceptance mapping, evidence notes and not-applicable reasons remain separate from phase execution proof. The matrix still prevents a green infrastructure check from standing in for every requested behavior; manual resolution is not newly promoted to executed phase evidence.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:39.4692894Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:32.9524089Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -206,14 +216,14 @@
         },
         {
           "path": "scripts/ai/task-runtime.mjs",
-          "sha256": "3b897dafc06157c228050c7b30c1f792124d46e52df299f18b6d7c020986a8bc",
-          "reviewReason": "Only the task-runtime source-fingerprint scope adds the extracted library; isolated regression proves edits invalidate readiness while specs do not. Workflow routing is unchanged."
+          "sha256": "9fca15f4f012f4aca4efa67607d5c0b7d78425c15de94af70c7245e0350b95d8",
+          "reviewReason": "task-runtime.mjs now supplies SSR_API_ORIGIN from the owned API URL and passes owned credentials internally to its browser identity probe. This does not change the documented safe runtime-list contract or justify treating a record as ready without observed checks. The page already correctly states that start/develop capture pre-existing dirt and later delta-aware facades use the task delta unless explicit ChangedPath overrides it."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "task-runtime.mjs now supplies SSR_API_ORIGIN from the owned API URL and passes owned credentials internally to its browser identity probe. This does not change the documented safe runtime-list contract or justify treating a record as ready without observed checks. The page already correctly states that start/develop capture pre-existing dirt and later delta-aware facades use the task delta unless explicit ChangedPath overrides it.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:39.6026479Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:33.2322694Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -238,19 +248,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d92e10d085e0c4fea17c5bb83ed85074d16f26ff32ee0ee6576ef2a235a2cea4",
-          "reviewReason": "Read the workflow and checked the generated diff against the final component and rendered spec. The direct-spec gap count drops from 131 to 130 because RecipeRecognitionComponent now has executable tests; dependency edges, routed-component classification and removal guidance are unchanged."
+          "sha256": "46fb27bcb59d9d1e283ba5ea8c306e948ec2ca611cec4544d1730681316508d1",
+          "reviewReason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf95fa1d391ad059512fc7d06d9dd2582b5942b92bc83eeb8e4d08cc07b556a8",
-          "reviewReason": "Inspected the one intentional same-owner test dependency and its exact allowlist update. All runtime edges and architecture assertions remain intact; no new production project, cycle or policy exception.2274architecture tests and full solution build pass. Workflow instruction to justify and record intentional dependencies remains valid; no deletion or dead-code policy change."
+          "sha256": "b3e0e6c76f364481e4a6fe2d71b829d727af4d957096c152482b49600a0738a8",
+          "reviewReason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof."
         }
       ],
-      "reason": "Read the workflow and checked the generated diff against the final component and rendered spec. The direct-spec gap count drops from 131 to 130 because RecipeRecognitionComponent now has executable tests; dependency edges, routed-component classification and removal guidance are unchanged.",
+      "reason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof.",
       "baseRef": "HEAD",
-      "gitHead": "a09333d00e8cb10a18387fd10c096c51aee64c25",
-      "reviewedAtUtc": "2026-10-22T19:10:52.1337667Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:33.5190291Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -279,14 +289,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
+          "reviewReason": "The canonical policy is resolved again and exact required ID/command plus the narrow execution allowlist are still checked before the native child. Added owned logs and execution seals do not alter manifest scope, required checks or structural policy; failed/drifting execution remains historical and cannot satisfy current scope. Therefore the documented frozen manifest and out-of-scope/unresolved-evidence rejection remain accurate."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "The canonical policy is resolved again and exact required ID/command plus the narrow execution allowlist are still checked before the native child. Added owned logs and execution seals do not alter manifest scope, required checks or structural policy; failed/drifting execution remains historical and cannot satisfy current scope. Therefore the documented frozen manifest and out-of-scope/unresolved-evidence rejection remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:39.7635509Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:33.8015737Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -320,8 +330,8 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
-          "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
+          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
+          "reviewReason": "The wiki.ps1 delta is confined to optional ChangedPath forwarding in task-finish/task-verify. The page's context preparation, graph command routing, fast trace and explicit graph-impact examples use other unchanged clauses. It makes no finish-scope or automatic completion claim. Its SQLite/source-freshness boundaries therefore need no text update for this delta."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
@@ -334,10 +344,10 @@
           "reviewReason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged."
         }
       ],
-      "reason": "Reviewed the current SqliteFlowScopeReader diff and its complete521-case MCP ordinary/profile owner results plus both current context-search/retrieval smoke groups. SQL text, seed12/depth2/node16/row40/link80 bounds, read-only non-pooled transaction,2-second SQL timeouts, exact fingerprint and explicit unavailable/truncation semantics are unchanged. The same results are assigned before disposal and returned after all five configured async disposals. Node remains the sole projection writer; this page makes no claim about async-disposal syntax, so its flow guidance remains accurate.",
+      "reason": "The wiki.ps1 delta is confined to optional ChangedPath forwarding in task-finish/task-verify. The page's context preparation, graph command routing, fast trace and explicit graph-impact examples use other unchanged clauses. It makes no finish-scope or automatic completion claim. Its SQLite/source-freshness boundaries therefore need no text update for this delta.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-22T05:50:41.7635730Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:34.2895161Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -346,8 +356,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Complete still creates confidence-ledger.json, refuses verdict blocked, includes its hash in the seal and leaves conditional confidence visible. Optional ChangedPath changes the upstream fresh packet scope without changing confidence weights, caps or the completion blocker described by this page."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
@@ -360,10 +370,10 @@
           "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
+      "reason": "Complete still creates confidence-ledger.json, refuses verdict blocked, includes its hash in the seal and leaves conditional confidence visible. Optional ChangedPath changes the upstream fresh packet scope without changing confidence weights, caps or the completion blocker described by this page.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:06.48654Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:34.6419978Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -457,14 +467,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "The successful finish path still creates the retrospective before invoking Manage-LlmWikiContextOutcome observe and exposes the outcome count/event hash. The page's strategy-outcome learning and idempotent completed-task lifecycle assertions are unchanged; the new path-scope input neither skips the seal/readiness gates nor creates observations during DryRun."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
+      "reason": "The successful finish path still creates the retrospective before invoking Manage-LlmWikiContextOutcome observe and exposes the outcome count/event hash. The page's strategy-outcome learning and idempotent completed-task lifecycle assertions are unchanged; the new path-scope input neither skips the seal/readiness gates nor creates observations during DryRun.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:06.8763493Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:35.0540484Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -473,19 +483,19 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "5b4aea38f98d03621963cb2809b98c5b06a15fe4251310752d7fba237239a431",
-          "reviewReason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries."
+          "sha256": "7f03462a15276b1f381e8172e51ed979a85fdab98173ba01c71f67c5f1906bd2",
+          "reviewReason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
-      "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:07.2739944Z"
+      "reason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure.",
+      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-23T02:36:00.641494Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -494,8 +504,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "The existing optional repair-loop registry is still independently verified, active/unresolved attempt chains still throw before completion, and the registry is added to sealed artifacts when present. The new explicit scope is forwarded to workspace assessments and does not relax repair limits, fresh-evidence requirements or promotion boundaries described here."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
@@ -503,10 +513,10 @@
           "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
+      "reason": "The existing optional repair-loop registry is still independently verified, active/unresolved attempt chains still throw before completion, and the registry is added to sealed artifacts when present. The new explicit scope is forwarded to workspace assessments and does not relax repair limits, fresh-evidence requirements or promotion boundaries described here.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:07.5801537Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:35.8748986Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -531,14 +541,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "aea3400da4c2f3892203b59365fa5506089193718e113db3ccfe6a634c9a89f2",
-          "reviewReason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks."
+          "sha256": "ed015e4ac06f2c0a7f8cbe46d85bdde326c720394c4c0a73f15bcdf621ff0ea1",
+          "reviewReason": "ADR README now lists accepted decisions 0054, 0055 and 0056. Its lifecycle and durable ownership/deployment/consistency/public-contract criteria are unchanged. This command guide names neither a fixed ADR inventory nor an automatic requirement to create a new record, so no narrative update follows from those additions."
         }
       ],
-      "reason": "Expanded release QA verifies current authentication and nutrition behavior, external USDA references and bounded provider resolution, schema migration and rollback, fasting controls, export feedback, locale pairs, dialog names and native keyboard navigation through actual local browser scenarios and focused plus full regression checks.",
+      "reason": "ADR README now lists accepted decisions 0054, 0055 and 0056. Its lifecycle and durable ownership/deployment/consistency/public-contract criteria are unchanged. This command guide names neither a fixed ADR inventory nor an automatic requirement to create a new record, so no narrative update follows from those additions.",
       "baseRef": "HEAD",
-      "gitHead": "a2937b8c404635803fbfbb2a74eab5f71bb7ade2",
-      "reviewedAtUtc": "2026-10-06T13:13:06.8216281Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:36.2420546Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -562,15 +572,30 @@
       "pageSha256": "18768e80b7ce7ade081889468ff188251cdc88d950819155fc3992d5eac6faae",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1",
+          "sha256": "c35ededb501fa6b1077bf7e294e27d6c58bc0e54d2d42718a167da5ac5b7880a",
+          "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
           "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2",
           "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1",
+          "sha256": "8bc4bee4d36d5c907177ac51ec23a3552498d8f745563056d745c0ce5a31ae4d",
+          "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
+          "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
-      "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:07.8735509Z"
+      "reason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case.",
+      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-23T02:36:49.7373226Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -579,14 +604,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "4ef1c241b14ec6d022b8aa3d382dc711861ef581000bebb70c348fd83d66ef96",
-          "reviewReason": "Reviewed the regenerated domain-data index against all39 changed production sources. The19 EF inverse navigation getters retain their backing field names and established field-access mappings; prior real-provider model/schema proofs and57 provider cases preserve seven schemas. Fasting closed variants, recent-item defined guard/empty sentinels, manual nutrition validation/service ordering and rounding, and Billing raw ordinal storage codes retain their contracts. No mapping, nullability, key, index or physical schema changed; the existing constructor/mutation/provider-review workflow remains accurate."
+          "sha256": "23e1037f0b2ac4769e7895395bf8fcbcacfc4a960c6aff62bfd132bac927f985",
+          "reviewReason": "The refreshed domain/data schema remains version 1 with the same invariant/mapping/index/relationship families, including the new RecipeLikes FK evidence. The page correctly requires comparing EF key/nullability/delete/concurrency behavior and exercising physical schema changes against the real provider. It asserts no changing record count or actual migration/test success."
         }
       ],
-      "reason": "Reviewed the regenerated domain-data index against all39 changed production sources. The19 EF inverse navigation getters retain their backing field names and established field-access mappings; prior real-provider model/schema proofs and57 provider cases preserve seven schemas. Fasting closed variants, recent-item defined guard/empty sentinels, manual nutrition validation/service ordering and rounding, and Billing raw ordinal storage codes retain their contracts. No mapping, nullability, key, index or physical schema changed; the existing constructor/mutation/provider-review workflow remains accurate.",
+      "reason": "The refreshed domain/data schema remains version 1 with the same invariant/mapping/index/relationship families, including the new RecipeLikes FK evidence. The page correctly requires comparing EF key/nullability/delete/concurrency behavior and exercising physical schema changes against the real provider. It asserts no changing record count or actual migration/test success.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-22T05:50:42.5729496Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:37.0333457Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -648,14 +673,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ae41f2e1007b10e7828ed1b9b3d764fb6ba29c07d2c4718760076d7f51da934d",
-          "reviewReason": "Reviewed package.json: only test:performance-build adds startup-document.test.mjs. Existing visual evidence tooling, capture commands and acceptance requirements remain unchanged."
+          "sha256": "5aaf9efa5f6454aa397c91569b9654011ee8955d468d92f11c19bb72edb4357b",
+          "reviewReason": "The package.json delta only adds task-runtime-browser.test.mjs to the existing AI-development Node test command. It does not change browser selection, headed task-owned identity, required rendered interaction/console/screenshot evidence, or the distinction between plan-only and executed visual QA. No actual browser or package test result is inferred."
         }
       ],
-      "reason": "Reviewed package.json: only test:performance-build adds startup-document.test.mjs. Existing visual evidence tooling, capture commands and acceptance requirements remain unchanged.",
+      "reason": "The package.json delta only adds task-runtime-browser.test.mjs to the existing AI-development Node test command. It does not change browser selection, headed task-owned identity, required rendered interaction/console/screenshot evidence, or the distinction between plan-only and executed visual QA. No actual browser or package test result is inferred.",
       "baseRef": "HEAD",
-      "gitHead": "a09333d00e8cb10a18387fd10c096c51aee64c25",
-      "reviewedAtUtc": "2026-10-22T14:13:53.3835004Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:37.6160014Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -676,17 +701,18 @@
     {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
-      "pageSha256": "afe53d54c25e32851bd4696c4fc162d497360f95a6b31a95aa557991f57dc840",
+      "pageSha256": "0cd6495e8bf721712da9279eb1eaa3ced3e3219eee93783274ad8ff8f8f8f2bb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         }
       ],
-      "reason": "No impact rules or ownership models changed; optimized graph recovery preserves the complete source-backed projection, with unchanged scope and consumer assertions.",
+      "reason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d8871639c8553673ed25ffc5274883c34615b555",
-      "reviewedAtUtc": "2026-10-14T21:58:07.1191774Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:37.8536328Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -710,15 +736,25 @@
       "pageSha256": "8ec418b11d977d6b8bd9c4751053b37736493274bae8ba290d59a08554e3ef1a",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Complete still creates a critique, refuses reject/request-changes, hashes change-critique.json, and requires final detailed readiness. ChangedPath does not replace the independent automatic assessment or a required source-bound substantive review. The page's distinction between automatic assessment and semantic review, replay lineage and non-compensating critique blockers is preserved. BehaviorWorkflow retains actual source/acceptance-fingerprint checks, tampered reviewer payload rejection and blocking major-finding closure. Added execution/import/native-log and post-run drift cases strengthen the evidence supplied to critique without changing critique scoring, independent review requirements or sealing authority. Current review text is not accepted from historical receipts merely because the fixture passes. Current final delta reviewed: The added BehaviorWorkflow assertions concern which Git-observed phase candidates belong to the current task; they do not change critique computation or the substantive-review contract. The same fixture retains its source-bound reviewer-content integrity, open-major finding, changed-source and changed-requirement rejection controls, while the production phase checker keeps required review IDs and current lineage validation unchanged. Excluding another task’s inferred candidate from the changedFiles mapping check does not waive a required semantic review or convert automatic critique into an independent source judgment. The page’s independent-attestation, stale-proof and read-only dependency claims remain unchanged; there is no new test-count or final-pass assertion to update."
+        },
+        {
           "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
           "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
           "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1",
+          "sha256": "8bc4bee4d36d5c907177ac51ec23a3552498d8f745563056d745c0ce5a31ae4d",
+          "reviewReason": "Complete still creates a critique, refuses reject/request-changes, hashes change-critique.json, and requires final detailed readiness. ChangedPath does not replace the independent automatic assessment or a required source-bound substantive review. The page's distinction between automatic assessment and semantic review, replay lineage and non-compensating critique blockers is preserved. BehaviorWorkflow retains actual source/acceptance-fingerprint checks, tampered reviewer payload rejection and blocking major-finding closure. Added execution/import/native-log and post-run drift cases strengthen the evidence supplied to critique without changing critique scoring, independent review requirements or sealing authority. Current review text is not accepted from historical receipts merely because the fixture passes. Current final delta reviewed: The added BehaviorWorkflow assertions concern which Git-observed phase candidates belong to the current task; they do not change critique computation or the substantive-review contract. The same fixture retains its source-bound reviewer-content integrity, open-major finding, changed-source and changed-requirement rejection controls, while the production phase checker keeps required review IDs and current lineage validation unchanged. Excluding another task’s inferred candidate from the changedFiles mapping check does not waive a required semantic review or convert automatic critique into an independent source judgment. The page’s independent-attestation, stale-proof and read-only dependency claims remain unchanged; there is no new test-count or final-pass assertion to update."
         }
       ],
-      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
-      "baseRef": "HEAD",
-      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
-      "reviewedAtUtc": "2026-10-21T10:35:33.8150797Z"
+      "reason": "Complete still creates a critique, refuses reject/request-changes, hashes change-critique.json, and requires final detailed readiness. ChangedPath does not replace the independent automatic assessment or a required source-bound substantive review. The page's distinction between automatic assessment and semantic review, replay lineage and non-compensating critique blockers is preserved. BehaviorWorkflow retains actual source/acceptance-fingerprint checks, tampered reviewer payload rejection and blocking major-finding closure. Added execution/import/native-log and post-run drift cases strengthen the evidence supplied to critique without changing critique scoring, independent review requirements or sealing authority. Current review text is not accepted from historical receipts merely because the fixture passes. Current final delta reviewed: The added BehaviorWorkflow assertions concern which Git-observed phase candidates belong to the current task; they do not change critique computation or the substantive-review contract. The same fixture retains its source-bound reviewer-content integrity, open-major finding, changed-source and changed-requirement rejection controls, while the production phase checker keeps required review IDs and current lineage validation unchanged. Excluding another task’s inferred candidate from the changedFiles mapping check does not waive a required semantic review or convert automatic critique into an independent source judgment. The page’s independent-attestation, stale-proof and read-only dependency claims remain unchanged; there is no new test-count or final-pass assertion to update.",
+      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-23T02:36:50.0317663Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -740,11 +776,17 @@
       "pageId": "workflow-instruction-effectiveness",
       "pagePath": ".llm-wiki/workflows/instruction-effectiveness.md",
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
-      "sources": [],
-      "reason": "Reviewed the appended focused-closure instruction outcome: completion, retrospective, instruction fingerprints and previous-event hash are preserved. No instruction, scoring policy or adoption threshold changed. The current workflow describes this append-only integrity model and does not treat an observation as authority to rewrite AGENTS.md.",
-      "baseRef": "origin/master",
-      "gitHead": "2f849bba5fbe425f167ca90764c2fffb81b787d5",
-      "reviewedAtUtc": "2026-10-16T15:06:36.8972303Z"
+      "sources": [
+        {
+          "path": ".llm-wiki/knowledge/instruction-outcomes.json",
+          "sha256": "03c326f37e5ea35051e68a1ae575924ed50ae9a80439118598a4a0a185923ac2",
+          "reviewReason": "Actual append records exact root/scoped AGENTS versions, sealed completion/retrospective and correct cohort attribution. Composite scores combine readiness/confidence/critique with failure-prediction calibration; a false thresholded success signal is not a failed test or unsuccessful task. Samples can be related and do not establish a causal instruction effect. No instruction edit, experimental look, adoption or rollback was performed; current normative correlation/governed-adoption text remains accurate. Final reviewed append is5 observations (11 to16) with exact completion provenance. Scores71.25 for the first2 and68.75 for coverage reflect the current failure-prediction calibration formula; actual task/test validity remains separately true. Email93.75 and F09 95 are also observational scores."
+        }
+      ],
+      "reason": "Actual append records exact root/scoped AGENTS versions, sealed completion/retrospective and correct cohort attribution. Composite scores combine readiness/confidence/critique with failure-prediction calibration; a false thresholded success signal is not a failed test or unsuccessful task. Samples can be related and do not establish a causal instruction effect. No instruction edit, experimental look, adoption or rollback was performed; current normative correlation/governed-adoption text remains accurate. Final reviewed append is5 observations (11 to16) with exact completion provenance. Scores71.25 for the first2 and68.75 for coverage reflect the current failure-prediction calibration formula; actual task/test validity remains separately true. Email93.75 and F09 95 are also observational scores.",
+      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-23T02:36:50.3066867Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -769,19 +811,19 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "9769eac303b05e9a30e69ee32b8260e7656e8e9cbe8f99efa89ca7a325ff6405",
-          "reviewReason": "Task completion added its own learning, eval and instruction-outcome observations through the existing managed workflow. Reviewed the observation-only diffs and verified all three registries with their native validators; no promotion approval, applied policy, instruction scope or eval execution contract changed. Existing guides continue to describe the same review and promotion boundaries."
+          "sha256": "2589e0e03a9fbc581430c954a8360d7e8d629f567f014ea38efc0c7dd284123f",
+          "reviewReason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
-      "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:08.8005142Z"
+      "reason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0.",
+      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-23T02:36:50.6349054Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -864,14 +906,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Every successful non-DryRun finish still creates and validates retrospective.json after producing the completion seal, and returns its hash/candidate count. The new path argument does not bypass readiness or convert hypotheses into durable truth. The page's sealed-outcome versus future-learning boundary and source-bound retrospective description remain accurate."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
+      "reason": "Every successful non-DryRun finish still creates and validates retrospective.json after producing the completion seal, and returns its hash/candidate count. The new path argument does not bypass readiness or convert hypotheses into durable truth. The page's sealed-outcome versus future-learning boundary and source-bound retrospective description remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:09.5802508Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:38.7003798Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -880,14 +922,19 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d796304a1c16a3dadbf894a08b6bebb0bcd786c832cbb2d475bd7376d13a6a19",
-          "reviewReason": "Reviewed the regenerated sensitive-data index and current provider/mail/MCP diffs. Changes update derived locations/member metadata and remove unused code; they introduce no credential, query, payload, provider-transfer, export, retention or authentication path. Existing bounded HTTP/process diagnostics and type-only MailRelay renewal logging remain. SqliteFlowScopeReader still reads a scoped snapshot without telemetry payload writes. The page correctly treats generated entries as source-review leads and needs no text change."
+          "sha256": "596e904bd2131e0ad04c9e6fee94de5a35913ec94a459312430a6b7143c3bfc0",
+          "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
+        },
+        {
+          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+          "sha256": "4be671940bc2027438306b21f9eeb678a1645c52c5612992df6928eaa6203875",
+          "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed the regenerated sensitive-data index and current provider/mail/MCP diffs. Changes update derived locations/member metadata and remove unused code; they introduce no credential, query, payload, provider-transfer, export, retention or authentication path. Existing bounded HTTP/process diagnostics and type-only MailRelay renewal logging remain. SqliteFlowScopeReader still reads a scoped snapshot without telemetry payload writes. The page correctly treats generated entries as source-review leads and needs no text change.",
+      "reason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-22T05:50:43.3292960Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:38.9963186Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -912,8 +959,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Finish still creates proof-of-change.json from the refreshed workspace and includes it in completion artifact hashes. Explicit ChangedPath retains the selected packet through all workspace calls but does not weaken criterion mapping, existing-path evidence or final readiness. The page's proof/evidence and drift assertions therefore need no change."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
@@ -926,10 +973,10 @@
           "reviewReason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion."
         }
       ],
-      "reason": "Reviewed criterion-text-bound acceptance resolutions and packet-content invalidation; proof still requires current mappings and evidence, with no new path to satisfy a criterion.",
+      "reason": "Finish still creates proof-of-change.json from the refreshed workspace and includes it in completion artifact hashes. Explicit ChangedPath retains the selected packet through all workspace calls but does not weaken criterion mapping, existing-path evidence or final readiness. The page's proof/evidence and drift assertions therefore need no change.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:50:21.5958138Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:39.2737552Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -958,14 +1005,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "d734ef4370f3d49bf4ee1bf565b90d73bb2a3b6597891b7b24d2b6f726f0fa5d",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
+          "reviewReason": "ManageEvidence now records genuine executed logs and rejects source drift before publishing current evidence; it does not modify readiness dimensions or non-compensating verdicts. Actual execution proof and manual/review attestation remain distinct. The repaired runner removes a false missing-artifact rejection while retaining failed checks, scope and acceptance requirements; it supplies no readiness or publication PASS by itself."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "ManageEvidence now records genuine executed logs and rejects source drift before publishing current evidence; it does not modify readiness dimensions or non-compensating verdicts. Actual execution proof and manual/review attestation remain distinct. The repaired runner removes a false missing-artifact rejection while retaining failed checks, scope and acceptance requirements; it supplies no readiness or publication PASS by itself.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:41.0244861Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:39.9873372Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -974,8 +1021,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "Complete still explicitly creates the requirement model after refresh, seals its hash, and later runs confidence/critique plus detailed readiness. Its optional scope input does not mutate acceptance criteria or change read-only requirement assessment semantics. The page's distinction between assessment, explicit expansion and completion sealing remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
@@ -988,10 +1035,10 @@
           "reviewReason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative."
         }
       ],
-      "reason": "Reviewed acceptance fingerprint stamps and refreshed requirement/proof receipts; atomicity rules and explicit acceptance resolution remain authoritative.",
+      "reason": "Complete still explicitly creates the requirement model after refresh, seals its hash, and later runs confidence/critique plus detailed readiness. Its optional scope input does not mutate acceptance criteria or change read-only requirement assessment semantics. The page's distinction between assessment, explicit expansion and completion sealing remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:50:24.2935316Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:40.2429208Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -1000,8 +1047,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "10993117c99872e15ff882a8c81eba05c0eb231ab3f7084e6abeb6bcba435c9c",
-          "reviewReason": "The added PWA test does not change CI comparison refs, review report generation, provenance or step-summary publication."
+          "sha256": "ac9360e57b1ad572208be95ebfc103071cdc7919ed17ecc627931737bda46138",
+          "reviewReason": "CI still runs the complete focused Wiki gate, API compatibility, dependency inspection and report publication in that order; non-PR events additionally run independent Core/Workspace/Orchestration Full shards and the stable final gate requires their aggregate result. The new atomic-publication unit step does not change report provenance, optional governance handling or shard ownership. No current CI result is asserted."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1014,10 +1061,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "The added PWA test does not change CI comparison refs, review report generation, provenance or step-summary publication.",
+      "reason": "CI still runs the complete focused Wiki gate, API compatibility, dependency inspection and report publication in that order; non-PR events additionally run independent Core/Workspace/Orchestration Full shards and the stable final gate requires their aggregate result. The new atomic-publication unit step does not change report provenance, optional governance handling or shard ownership. No current CI result is asserted.",
       "baseRef": "HEAD",
-      "gitHead": "c0efa29dc32a4193718d27abaa2c8870ffcf5322",
-      "reviewedAtUtc": "2026-10-22T11:50:50.1724380Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:40.5564389Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1042,14 +1089,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "b2c63dc1ff60f8b4858833dbce75fd6bea3bd50dc53775a44e7989c85fc15d0a",
-          "reviewReason": "Reviewed refreshed runtime topology against current COMMIT, Node, mail and video code. No host, endpoint, worker registration, schedule or provider was added. Node120-second deadline/output bounds/owned-tree kill, mail renewal cancellation/attempt ownership, media limits/redirect caps and independent15-second PostgreSQL verification remain; unknown outcomes never authorize replay. The actual346 unit and10 real recovery cases pass ordinary/profile with original exception/throw-site preservation. The topology remains an inventory of review leads; its guidance is accurate."
+          "sha256": "d89cd2b9593a07bf4beacd346b092159e5d9bfb3cec3fcfd16d7fb05199695e6",
+          "reviewReason": "The refreshed topology keeps schema 1 and explicit declaration/inference limitations; provider COMMIT sharing and changed mail startup evidence do not turn static behavior signals into resilience proof. The guide still scopes behaviorSignals to class/registration windows and requires provider-backed recovery evidence after failed EF transactions. It asserts neither changing runtime counts nor successful deployed readiness/delivery."
         }
       ],
-      "reason": "Reviewed refreshed runtime topology against current COMMIT, Node, mail and video code. No host, endpoint, worker registration, schedule or provider was added. Node120-second deadline/output bounds/owned-tree kill, mail renewal cancellation/attempt ownership, media limits/redirect caps and independent15-second PostgreSQL verification remain; unknown outcomes never authorize replay. The actual346 unit and10 real recovery cases pass ordinary/profile with original exception/throw-site preservation. The topology remains an inventory of review leads; its guidance is accurate.",
+      "reason": "The refreshed topology keeps schema 1 and explicit declaration/inference limitations; provider COMMIT sharing and changed mail startup evidence do not turn static behavior signals into resilience proof. The guide still scopes behaviorSignals to class/registration windows and requires provider-backed recovery evidence after failed EF transactions. It asserts neither changing runtime counts nor successful deployed readiness/delivery.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-22T05:50:45.0455951Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:40.8423231Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1073,14 +1120,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ff72c9c018b4e5415162af714ca2910d7a7c40cc59db7006a6ca078dc0a7a32b",
-          "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "The existing optional plan-reuse receipt is still verified before the final status and included in sealed artifacts when present, with its verification-plan artifact when available. ChangedPath does not copy successful execution evidence, weaken source completion lineage or remove target drift gates. The page's separation of reusable implementation experience from newly executed verification remains accurate."
         }
       ],
-      "reason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering.",
+      "reason": "The existing optional plan-reuse receipt is still verified before the final status and included in sealed artifacts when present, with its verification-plan artifact when available. ChangedPath does not copy successful execution evidence, weaken source completion lineage or remove target drift gates. The page's separation of reusable implementation experience from newly executed verification remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:46:10.9990792Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:41.4492264Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1135,14 +1182,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
+          "reviewReason": "The new argument forwarding belongs only to the finish/verify clause and does not enter task-dispatch lifecycle payloads, leases, event chains or packet fingerprints. Existing dispatch routes are unchanged. The page already treats independent facade options separately and preserves the difference between scoped checks and full verification, so no text update is needed for this source delta."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "The new argument forwarding belongs only to the finish/verify clause and does not enter task-dispatch lifecycle payloads, leases, event chains or packet fingerprints. Existing dispatch routes are unchanged. The page already treats independent facade options separately and preserves the difference between scoped checks and full verification, so no text update is needed for this source delta.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:42.4224443Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:41.7454271Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1166,20 +1213,45 @@
       "pageSha256": "6d6c49062f2889a7efda36d7303df57f2e74e1a8685c938de9d29e78e5f4f661",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
+          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
+          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
+        },
+        {
           "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
           "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
           "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         },
         {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
+          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1",
           "sha256": "e755743dbdefd49e1965dab97e097a257f19786c451bed9928e8bd41d0c26612",
           "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+          "sha256": "1a192afd32c68c922ce69e02eb4902e49f4a5b35dc3725acd1cbcdb546bb0635",
+          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
+        },
+        {
+          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+          "sha256": "789b738019919ba1dd4f04bd971a1087e82f8524d3c3dc0c91a071ff47909be7",
+          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
         }
       ],
-      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
+      "reason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched.",
       "baseRef": "HEAD",
-      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
-      "reviewedAtUtc": "2026-10-21T10:35:34.2650443Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:42.0664782Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1187,15 +1259,30 @@
       "pageSha256": "914d14e38ad1ef6a56865d712a904fa6180b69a232aeb6e9bc2e6f20455dbba4",
       "sources": [
         {
+          "path": ".llm-wiki/tools/LlmWikiVerificationReceipts.ps1",
+          "sha256": "13749d04ee349c55ebd64c4055171e79369b977669f4dde55e451e9aa1e830cf",
+          "reviewReason": "The manual verification-record example still produces schema1 planning receipts and can mark an unchanged command satisfied in the test plan; it does not become executed behavioral phase proof. Schema2 records are published only from a current executed source with immutable native seal/log, matching command, measured outcome/duration and pinned original global fingerprint. Source/head or artifact drift makes these receipts ineligible. Planning groups and coverage scope are unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1",
+          "sha256": "56923a48ba3e71e8e738d4d2ef896eea7321ee450fd8b2e9059496b760706327",
+          "reviewReason": "The manual verification-record example still produces schema1 planning receipts and can mark an unchanged command satisfied in the test plan; it does not become executed behavioral phase proof. Schema2 records are published only from a current executed source with immutable native seal/log, matching command, measured outcome/duration and pinned original global fingerprint. Source/head or artifact drift makes these receipts ineligible. Planning groups and coverage scope are unchanged."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1",
           "sha256": "95ffa0abb18533f74df6e0e7b9856c4953931c4d60ca0d13542ae5887d2d4499",
           "reviewReason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion."
+        },
+        {
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "b81fa913497b02b086323248e2ea405d3177ed099756574cc15fe3aee6d86af1",
+          "reviewReason": "The manual verification-record example still produces schema1 planning receipts and can mark an unchanged command satisfied in the test plan; it does not become executed behavioral phase proof. Schema2 records are published only from a current executed source with immutable native seal/log, matching command, measured outcome/duration and pinned original global fingerprint. Source/head or artifact drift makes these receipts ineligible. Planning groups and coverage scope are unchanged."
         }
       ],
-      "reason": "CI repair changes only verification fixtures: hidden entries use dot names plus Windows attributes, preserving scanner exclusion/count guarantees; Core audit accepts the documented module-page cache opt-in while retaining its exact allowlist and gating assertion.",
+      "reason": "The manual verification-record example still produces schema1 planning receipts and can mark an unchanged command satisfied in the test plan; it does not become executed behavioral phase proof. Schema2 records are published only from a current executed source with immutable native seal/log, matching command, measured outcome/duration and pinned original global fingerprint. Source/head or artifact drift makes these receipts ineligible. Planning groups and coverage scope are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "01ccc7bf347e67e63db2fd76bd1d29fd8d4d1e2f",
-      "reviewedAtUtc": "2026-10-15T09:10:09.424925Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:42.3590502Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1225,12 +1312,17 @@
           "path": ".llm-wiki/policies/change-policies.json",
           "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb",
           "reviewReason": "The planner still derives and integrity-binds its checks from the current policy. Only mail-service data-access path selection changed; check IDs, supersedence and commands are preserved, and both item-ID projections passed consolidated strict-mode regressions."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
+          "reviewReason": "InvokeTaskChecks still enforces the current policy ID, exact command and allowlist and derives failure from recorded terminal evidence. The change retains the real execution-owner log and artifact lineage rather than overwriting it with wrapper stdout. It does not change plan coverage, supersedence, fail-fast ordering or canonical plan verification, so the documented planner invariants remain accurate."
         }
       ],
-      "reason": "The planner still derives and integrity-binds its checks from the current policy. Only mail-service data-access path selection changed; check IDs, supersedence and commands are preserved, and both item-ID projections passed consolidated strict-mode regressions.",
+      "reason": "InvokeTaskChecks still enforces the current policy ID, exact command and allowlist and derives failure from recorded terminal evidence. The change retains the real execution-owner log and artifact lineage rather than overwriting it with wrapper stdout. It does not change plan coverage, supersedence, fail-fast ordering or canonical plan verification, so the documented planner invariants remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:49.15693Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:42.6933899Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1241,12 +1333,17 @@
           "path": ".llm-wiki/policies/workspace-policies.json",
           "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
           "reviewReason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
+          "reviewReason": "The task runner still records actual status, elapsed time and command after resolving the executed check result; the wiki-verify self-telemetry exception remains. Only replacement of the execution log/lineage is removed. Telemetry cohort/input hashing, locking, dry-run exclusion and failure history are not changed, so the page operational-history and flakiness limitations remain accurate."
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:45.3905648Z"
+      "reason": "The task runner still records actual status, elapsed time and command after resolving the executed check result; the wiki-verify self-telemetry exception remains. Only replacement of the execution log/lineage is removed. Telemetry cohort/input hashing, locking, dry-run exclusion and failure history are not changed, so the page operational-history and flakiness limitations remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:43.0675697Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1291,17 +1388,18 @@
     {
       "pageId": "workflow.frontend-contract-review",
       "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
-      "pageSha256": "31a43fb31fa630969babe869c21458771cfbe6ed2e9b0234c47cc7e1511d5725",
+      "pageSha256": "a7c6bb766eefff33e7e78ac2bac25d9c532b58e4d20f42c104c6daec9b0cf3e4",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c1531f03ad0cadb7cf0a5bcc9c5ca9b482abf285e2ef78106bb79ee96e21ab58"
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "edacb126059bbe3177997e6ba7588a902efbdaaf898da4f7efec102b3350c849",
+          "reviewReason": "API_SDK now documents independent admin SSO cookie policy and the narrow required-shopping-revision compatibility exception. Existing guide instructions trace transient authentication state and feature adapter to the concrete generated method, schema and scope manifest; they keep UI/error normalization and behavior checks separate from generated drift. Nothing in the current page promises revision-less PATCH or a shared admin/main-app session."
         }
       ],
-      "reason": "Reviewed unchanged notice inputs and both shell consumers, paired English/Russian recovery copy and regenerated locale aggregates. Chrome keyboard checks and component tests prove explicit reload, public-route recovery, profile draft blocking and nested recipe cancellation. Telemetry uses the server-supported global-error event with fixed PWA outcome codes; real API responses are 204.",
+      "reason": "API_SDK now documents independent admin SSO cookie policy and the narrow required-shopping-revision compatibility exception. Existing guide instructions trace transient authentication state and feature adapter to the concrete generated method, schema and scope manifest; they keep UI/error normalization and behavior checks separate from generated drift. Nothing in the current page promises revision-less PATCH or a shared admin/main-app session.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:55:43.2839573Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:37.3308259Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1310,8 +1408,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "79f4fb585d31aabd87fc86d1425566bbcb6f0511f601e8540a6297904f4cc916",
-          "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
+          "sha256": "23fb15eafcd2cc85a1d69fdddf5f0e75b00ba1324f2449a3127bcbd74fba0307",
+          "reviewReason": "The repository catalog remains schema 1 with the same generator and inventory families; new provider edges and current project/guide/document records change retrieval inputs, not this generic CLI/MCP query/cache/ranking contract. The page contains no current catalog total or final freshness claim and explicitly separates source/index drift from ranking failure and retrieval references from execution evidence. Final retrieval/freshness checks remain separate obligations."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1324,10 +1422,10 @@
           "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
         }
       ],
-      "reason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance.",
+      "reason": "The repository catalog remains schema 1 with the same generator and inventory families; new provider edges and current project/guide/document records change retrieval inputs, not this generic CLI/MCP query/cache/ranking contract. The page contains no current catalog total or final freshness claim and explicitly separates source/index drift from ranking failure and retrieval references from execution evidence. Final retrieval/freshness checks remain separate obligations.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-22T05:50:44.2139215Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:39.7248299Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1371,14 +1469,14 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
+          "reviewReason": "The wiki.ps1 change only forwards ChangedPath in task-finish/task-verify. It does not change Wiki health diagnosis, deliberate repair-verify writers, graph freshness, source-link repair or the read-only/reader table documented here. In particular task-finish was not added to delta-aware commands, and this page makes no promise that a clean delta completes a task or repairs the Wiki automatically."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "The wiki.ps1 change only forwards ChangedPath in task-finish/task-verify. It does not change Wiki health diagnosis, deliberate repair-verify writers, graph freshness, source-link repair or the read-only/reader table documented here. In particular task-finish was not added to delta-aware commands, and this page makes no promise that a clean delta completes a task or repairs the Wiki automatically.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:42.2035209Z"
+      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+      "reviewedAtUtc": "2026-10-22T23:42:41.1816992Z"
     }
   ]
 }

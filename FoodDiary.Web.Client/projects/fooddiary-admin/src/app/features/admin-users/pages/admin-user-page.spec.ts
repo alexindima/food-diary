@@ -159,6 +159,54 @@ async function createContextAsync(configure?: (usersFacade: UsersFacadeMock) => 
     return { component, fixture, usersFacade, dialogs, routeParams };
 }
 
+describe('AdminUserPageComponent avatars', () => {
+    it('renders an external HTTPS avatar and falls back to initials after a loading error', async () => {
+        const account = { ...baseUser, profileImage: 'https://images.example.test/avatar.png' };
+        const { fixture, component } = await createContextAsync(users => {
+            users.getUser.mockReturnValue(of(account));
+        });
+        const image = host(fixture).querySelector<HTMLImageElement>('img.admin-user-details__avatar');
+        expect(image?.src).toBe(account.profileImage);
+        expect(image?.getAttribute('referrerpolicy')).toBe('no-referrer');
+
+        image?.dispatchEvent(new Event('error'));
+        fixture.detectChanges();
+
+        expect(host(fixture).querySelector('img.admin-user-details__avatar')).toBeNull();
+        expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('JD');
+
+        component['reload']();
+        fixture.detectChanges();
+        expect(host(fixture).querySelector<HTMLImageElement>('img.admin-user-details__avatar')?.src).toBe(account.profileImage);
+    });
+
+    it('does not request an insecure remote avatar', async () => {
+        const { fixture } = await createContextAsync(users => {
+            users.getUser.mockReturnValue(of({ ...baseUser, profileImage: 'http://images.example.test/avatar.png' }));
+        });
+
+        expect(host(fixture).querySelector('img.admin-user-details__avatar')).toBeNull();
+        expect(host(fixture).querySelector('.admin-user-details__avatar--initials')?.textContent).toBe('JD');
+    });
+
+    it('does not apply an old avatar error to a different account', async () => {
+        const avatar = 'https://images.example.test/avatar.png';
+        const first = { ...baseUser, profileImage: avatar };
+        const { component, fixture, usersFacade, routeParams } = await createContextAsync(users => {
+            users.getUser.mockReturnValueOnce(of(first));
+        });
+        const next = { ...baseUser, id: adminId<'user'>('next-user'), profileImage: avatar };
+        usersFacade.getUser.mockReturnValueOnce(of(next));
+        routeParams.next(convertToParamMap({ id: next.id }));
+        fixture.detectChanges();
+
+        component['onAvatarError'](first.id, avatar);
+        fixture.detectChanges();
+
+        expect(host(fixture).querySelector<HTMLImageElement>('img.admin-user-details__avatar')?.src).toBe(avatar);
+    });
+});
+
 describe('AdminUserPageComponent', () => {
     it('renders a Telegram-only account without email or names', async () => {
         const telegramUser: AdminUser = {

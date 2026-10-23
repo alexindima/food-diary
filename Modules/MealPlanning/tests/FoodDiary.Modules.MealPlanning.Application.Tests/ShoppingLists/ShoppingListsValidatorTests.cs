@@ -101,28 +101,28 @@ public class ShoppingListsValidatorTests {
     [Fact]
     public async Task UpdateShoppingList_WithEmptyId_HasError() {
         TestValidationResult<UpdateShoppingListCommand> result = await new UpdateShoppingListCommandValidator().TestValidateAsync(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, Name: null, Items: null));
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, Name: null, Items: null, ExpectedRevision: new string('a', 64)));
         result.ShouldHaveValidationErrorFor(c => c.ShoppingListId);
     }
 
     [Fact]
     public async Task UpdateShoppingList_WithNothingToUpdate_HasError() {
         TestValidationResult<UpdateShoppingListCommand> result = await new UpdateShoppingListCommandValidator().TestValidateAsync(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null));
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null, ExpectedRevision: new string('a', 64)));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task UpdateShoppingList_WithName_NoErrors() {
         TestValidationResult<UpdateShoppingListCommand> result = await new UpdateShoppingListCommandValidator().TestValidateAsync(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), "Updated", Items: null));
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), "Updated", Items: null, ExpectedRevision: new string('a', 64)));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task UpdateShoppingList_WithNameOverDomainLimit_HasError() {
         TestValidationResult<UpdateShoppingListCommand> result = await new UpdateShoppingListCommandValidator().TestValidateAsync(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 129), Items: null));
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 129), Items: null, ExpectedRevision: new string('a', 64)));
 
         result.ShouldHaveValidationErrorFor(c => c.Name);
     }

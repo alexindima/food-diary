@@ -10,6 +10,7 @@ $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRo
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 $productPath = 'FoodDiary.Application/Fasting/Commands/FastingCommand.cs'
 $generatedPath = '.llm-wiki/generated/quality-index.json'
+$finishFixtureRoot = $null
 
 function Assert-Regression([bool]$Condition, [string]$Message) {
     if (-not $Condition) { throw $Message }
@@ -109,7 +110,118 @@ try {
         -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     Assert-Regression (-not $tamperedManualLineage.valid) 'Supplemental lineage accepted a tampered fingerprint without policy-required checks.'
 
-    Write-Host 'LLM Wiki governed-delivery regression passed: generated scope isolation, contract-synchronized replan and supplemental lineage work.'
+    # Exercise the real finish script against isolated assessment boundaries. The
+    # projection uses fresh Git-visible fixture paths; unrelated readiness tools
+    # are stubs. Stop at final status so no fixture can write learning records.
+    $finishFixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'task-finish-scope' -IndependentRepository
+    $finishTools = Join-Path $finishFixtureRoot '.llm-wiki/tools'
+    $null = New-Item -ItemType Directory -Path $finishTools -Force
+    [IO.File]::Copy((Join-Path $toolsRoot 'Complete-LlmWikiTaskWorkspace.ps1'), (Join-Path $finishTools 'Complete-LlmWikiTaskWorkspace.ps1'))
+    [IO.File]::WriteAllText((Join-Path $finishFixtureRoot '.gitignore'), ".artifacts/`nassessment-calls.json`n", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText((Join-Path $finishTools 'Get-LlmWikiWorkspacePolicy.ps1'), @'
+[CmdletBinding()]
+param([Parameter(Position = 0)][string]$Action, [switch]$WithFingerprint, [string]$Format)
+@{ fingerprint = ('1' * 64) } | ConvertTo-Json
+'@, [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText((Join-Path $finishTools 'LlmWikiAssessmentRunner.ps1'), @'
+function Invoke-LlmWikiAssessment {
+    param([string]$ToolName, [hashtable]$Arguments)
+    $fixtureRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+    if ($ToolName -ne 'Manage-LlmWikiTaskWorkspace.ps1') {
+        $expectedTools = @('Manage-LlmWikiPlanConformance.ps1', 'Manage-LlmWikiRequirementModel.ps1',
+            'Manage-LlmWikiImpactSimulation.ps1', 'Manage-LlmWikiProofOfChange.ps1',
+            'Manage-LlmWikiFailurePrediction.ps1', 'Manage-LlmWikiVerificationCost.ps1',
+            'Manage-LlmWikiConfidenceLedger.ps1', 'Manage-LlmWikiChangeCritique.ps1')
+        if ($ToolName -notin $expectedTools) { throw "Unexpected fixture assessment: $ToolName" }
+        return [pscustomobject]@{ valid = $true; ledger = @{ verdict = 'ready' }; critique = @{ verdict = 'accept' } }
+    }
+    $paths = if ($Arguments.ContainsKey('ChangedPath')) { @($Arguments.ChangedPath) } else {
+        @(& git -C $fixtureRoot diff --name-only --) + @(& git -C $fixtureRoot ls-files --others --exclude-standard)
+    }
+    $paths = @($paths | Where-Object { $_ } | Sort-Object -Unique)
+    $logPath = Join-Path $fixtureRoot 'assessment-calls.json'
+    $calls = @(Get-Content -LiteralPath $logPath -Raw | ConvertFrom-Json)
+    $calls += [pscustomobject]@{ action = $Arguments.Action; paths = $paths; explicit = $Arguments.ContainsKey('ChangedPath') }
+    [IO.File]::WriteAllText($logPath, (ConvertTo-Json -InputObject @($calls) -Depth 6), [Text.UTF8Encoding]::new($false))
+    $workspaceRoot = Join-Path $fixtureRoot $Arguments.WorkspacePath
+    $outOfScope = @($paths | Where-Object { $_ -notin @('owned-a.txt', 'owned-b.txt') })
+    if ($outOfScope.Count -gt 0 -or (Test-Path -LiteralPath (Join-Path $workspaceRoot 'block-readiness'))) {
+        return [pscustomobject]@{ verdict = 'blocked'; score = 0; nextActions = @('Resolve scope or readiness.'); objective = 'scope fixture' }
+    }
+    if ($Arguments.Action -eq 'refresh') {
+        [IO.File]::WriteAllText((Join-Path $workspaceRoot 'change-packet.json'),
+            (ConvertTo-Json -InputObject @{ diff = @{ changedPaths = $paths } } -Depth 5), [Text.UTF8Encoding]::new($false))
+        return [pscustomobject]@{ valid = $true }
+    }
+    if (@($calls | Where-Object action -eq 'status').Count -eq 2) { throw 'Fixture reached final scoped readiness.' }
+    return [pscustomobject]@{ verdict = 'ready'; score = 100; nextActions = @(); objective = 'scope fixture' }
+}
+'@, [Text.UTF8Encoding]::new($false))
+    & git -C $finishFixtureRoot add -- .llm-wiki .gitignore
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare isolated finish fixture index.' }
+    foreach ($name in @('owned-a.txt', 'owned-b.txt', 'foreign.txt')) {
+        [IO.File]::WriteAllText((Join-Path $finishFixtureRoot $name), $name, [Text.UTF8Encoding]::new($false))
+    }
+    $finishWorkspace = '.artifacts/llm-wiki/tasks/finish-scope'
+    $finishWorkspaceRoot = Join-Path $finishFixtureRoot $finishWorkspace
+    $null = New-Item -ItemType Directory -Path $finishWorkspaceRoot -Force
+    foreach ($name in @('workspace.json', 'change-packet.json', 'task-contract.json', 'change-manifest.json',
+        'acceptance-matrix.json', 'evidence.json', 'journal.json', 'review-report.md')) {
+        [IO.File]::WriteAllText((Join-Path $finishWorkspaceRoot $name), '{}', [Text.UTF8Encoding]::new($false))
+    }
+    $finishScript = Join-Path $finishTools 'Complete-LlmWikiTaskWorkspace.ps1'
+    $finishLog = Join-Path $finishFixtureRoot 'assessment-calls.json'
+    foreach ($explicit in @($false, $true)) {
+        [IO.File]::WriteAllText($finishLog, '[]', [Text.UTF8Encoding]::new($false))
+        $arguments = @{ WorkspacePath = $finishWorkspace; DryRun = $true; Format = 'Json' }
+        if ($explicit) { $arguments.ChangedPath = @('owned-a.txt', 'foreign.txt') }
+        $rejected = $false
+        $finishError = ''
+        try { & $finishScript @arguments | Out-Null } catch {
+            $finishError = $_.Exception.Message
+            $rejected = $finishError -match 'is not ready'
+        }
+        Assert-Regression $rejected "Default or explicitly foreign scope did not block task finish (explicit=$explicit): $finishError"
+        $calls = @(Get-Content -LiteralPath $finishLog -Raw | ConvertFrom-Json)
+        Assert-Regression (@($calls[0].paths) -contains 'foreign.txt') 'Finish silently removed a foreign path from its requested scope.'
+        Assert-Regression (-not (Test-Path -LiteralPath (Join-Path $finishWorkspaceRoot 'completion.json'))) 'Rejected finish created a seal.'
+    }
+    [IO.File]::WriteAllText($finishLog, '[]', [Text.UTF8Encoding]::new($false))
+    $ownedPaths = @('owned-a.txt', 'owned-b.txt')
+    $preview = & $finishScript -WorkspacePath $finishWorkspace -ChangedPath $ownedPaths -DryRun -Format Json | ConvertFrom-Json
+    Assert-Regression ($preview.valid -and $preview.dryRun) 'Explicit owned scope failed finish preview.'
+    [IO.File]::WriteAllText((Join-Path $finishWorkspaceRoot 'block-readiness'), '', [Text.UTF8Encoding]::new($false))
+    $notReadyRejected = $false
+    try { & $finishScript -WorkspacePath $finishWorkspace -ChangedPath $ownedPaths -DryRun | Out-Null }
+    catch { $notReadyRejected = $_.Exception.Message -match 'is not ready' }
+    Assert-Regression $notReadyRejected 'Explicit scope bypassed an unresolved readiness gate.'
+    [IO.File]::Delete((Join-Path $finishWorkspaceRoot 'block-readiness'))
+    [IO.File]::WriteAllText($finishLog, '[]', [Text.UTF8Encoding]::new($false))
+    $finalStatusReached = $false
+    try { & $finishScript -WorkspacePath $finishWorkspace -ChangedPath $ownedPaths -Format Json | Out-Null }
+    catch { $finalStatusReached = $_.Exception.Message -eq 'Fixture reached final scoped readiness.' }
+    Assert-Regression $finalStatusReached 'Finish did not preserve owned scope through its fresh final status.'
+    $calls = @(Get-Content -LiteralPath $finishLog -Raw | ConvertFrom-Json)
+    Assert-Regression (($calls.action -join ',') -eq 'status,refresh,status') 'Finish skipped a fresh workspace assessment.'
+    foreach ($call in $calls) {
+        Assert-Regression ($call.explicit -and (@($call.paths) -join ',') -eq ($ownedPaths -join ',')) 'A finish assessment lost the explicit owned path array.'
+    }
+    $refreshedPacket = Get-Content -LiteralPath (Join-Path $finishWorkspaceRoot 'change-packet.json') -Raw | ConvertFrom-Json
+    Assert-Regression ((@($refreshedPacket.diff.changedPaths) -join ',') -eq ($ownedPaths -join ',')) 'Fresh finish refresh acquired foreign paths.'
+    Assert-Regression (-not (Test-Path -LiteralPath (Join-Path $finishWorkspaceRoot 'completion.json'))) 'The final-status fixture boundary allowed a seal.'
+    # Run the standalone mapping fixture natively so an exit failure cannot be hidden.
+    $mappingRegressionHost = (Get-Process -Id $PID).Path
+    & $mappingRegressionHost -NoProfile -File (Join-Path $toolsRoot 'Test-LlmWikiTaskEvidenceMappingRetention.ps1')
+    if ($LASTEXITCODE -ne 0) { throw "Mapping retention regression failed with native exit code $LASTEXITCODE." }
+    Write-Host 'LLM Wiki governed-delivery regression passed: generated scope isolation, replan, lineage and explicit finish scope work.'
 } finally {
+    if ($finishFixtureRoot -and (Test-Path -LiteralPath $finishFixtureRoot)) {
+        $finishParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository)).TrimEnd('\', '/')
+        $finishTarget = [IO.Path]::GetFullPath($finishFixtureRoot)
+        if (-not $finishTarget.StartsWith($finishParent + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Finish fixture cleanup escaped its owned parent.' }
+        Remove-Item -LiteralPath $finishTarget -Recurse -Force
+    }
+    $taskParent = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/tasks')).TrimEnd('\', '/')
+    if (-not ([IO.Path]::GetFullPath($absoluteWorkspace)).StartsWith($taskParent + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Governed fixture cleanup escaped its task parent.' }
     if (Test-Path -LiteralPath $absoluteWorkspace) { Remove-Item -LiteralPath $absoluteWorkspace -Recurse -Force }
 }

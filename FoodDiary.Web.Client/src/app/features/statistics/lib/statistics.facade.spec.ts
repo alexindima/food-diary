@@ -66,6 +66,29 @@ beforeEach(() => {
 });
 
 describe('StatisticsFacade loading', () => {
+    it('preserves a URL-restored custom period and rejects more than 366 inclusive calendar days before loading or exporting', () => {
+        facade.selectedRange.set('custom');
+        facade.customRangeModel.set({ range: { start: new Date('2024-01-01T00:00:00'), end: new Date('2024-12-31T00:00:00') } });
+        facade.initialize();
+        TestBed.tick();
+
+        expect(facade.currentRange().start).toEqual(new Date('2024-01-01T00:00:00'));
+        expect(facade.periodValidationError()).toBeNull();
+        expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+
+        facade.customRangeModel.set({ range: { start: new Date('2024-01-01T00:00:00'), end: new Date('2025-01-01T00:00:00') } });
+        TestBed.tick();
+        facade.exportDiary('csv');
+        expect(facade.periodValidationError()).toBe('STATISTICS.PERIOD_TOO_LONG');
+        expect(statisticsService.getSummary).toHaveBeenCalledOnce();
+        expect(exportService.exportDiary).not.toHaveBeenCalled();
+
+        facade.customRangeModel.set({ range: { start: new Date('2024-01-01T00:00:00'), end: new Date('2024-12-31T00:00:00') } });
+        TestBed.tick();
+        expect(facade.periodValidationError()).toBeNull();
+        expect(statisticsService.getSummary).toHaveBeenCalledTimes(2);
+    });
+
     it('loads nutrition and body summaries in one request and reuses bootstrapped user profile', () => {
         facade.initialize();
         TestBed.tick();

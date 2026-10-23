@@ -2,7 +2,7 @@ import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import type { Observable } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { FavoriteProduct } from '../../../shared/models/product.data';
 import { utcInstant } from '../../../shared/models/semantics/date-value';
@@ -70,13 +70,15 @@ describe('FavoriteProductService', () => {
         req.flush({ data: favorites, page: 1, limit: 100, totalPages: 1, totalItems: 1 });
     });
 
-    it('should return an empty list when get all fails', () => {
-        service.getLookupPage().subscribe(result => {
-            expect(result).toEqual([]);
-        });
+    it('propagates lookup failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getLookupPage().subscribe({ next, error });
 
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
 
     it('should check favorite state', () => {
@@ -89,15 +91,19 @@ describe('FavoriteProductService', () => {
         req.flush(true);
     });
 
-    it('should return false when favorite check fails', () => {
-        service.isFavorite(entityId<'product'>('product-1')).subscribe(result => {
-            expect(result).toBe(false);
-        });
+    it('propagates favorite check failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.isFavorite(entityId<'product'>('product-1')).subscribe({ next, error });
 
         const req = httpMock.expectOne(`${BASE_URL}/check/product-1`);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
+});
 
+describe('FavoriteProductService writes', () => {
     it('should add favorite product', () => {
         const favorite = createFavoriteProduct();
 

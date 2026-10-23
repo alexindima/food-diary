@@ -17288,6 +17288,7 @@
             "401",
             "403",
             "404",
+            "409",
             "413",
             "500"
           ],
@@ -34880,6 +34881,12 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "revision",
+          "Required": true,
+          "Type": "string",
+          "Nullable": true
         }
       ]
     },
@@ -36658,6 +36665,12 @@
     {
       "Name": "UpdateShoppingListHttpRequest",
       "Properties": [
+        {
+          "Name": "expectedRevision",
+          "Required": true,
+          "Type": "string",
+          "Nullable": true
+        },
         {
           "Name": "items",
           "Required": false,

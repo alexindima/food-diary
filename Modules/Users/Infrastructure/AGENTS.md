@@ -37,6 +37,32 @@ saves, caches or transactions; empty input performs no SQL and cancellation is h
 
 UserCleanupService delegates successful item saving to IModuleTransactionCoordinator.ExecuteItemAsync, so image-deletion outbox entries tracked in ImagesDbContext commit or roll back with user cleanup. Participants still never save or commit.
 
+When no active configured content successor exists, owner-side content retention
+participants preserve only content still referenced by surviving consumers. Recipes
+run before Products so transitive product dependencies remain visible. Retention,
+ordinary deletion of the remainder, image ownership and final account deletion share
+the existing per-user transaction. Synthetic fixture cleanup deliberately retains
+its strict foreign-reference rejection behavior.
+
+Before authoritative retention selection, lock all source Recipes then Products
+through their owner participants, with stable ID ordering inside each owner.
+Foreign consumer FK inserts either commit before selection or wait for content
+disposition; scalar RecipeLike references require the central Recipe FK as well.
+If references appear after negative preflight, return false before all purge
+side effects and reconsider scheduled cleanup in the next full pass. Its cursor
+still records the examined account. Strict fixture cleanup uses the same locks
+and refusal check, without provisioning or transferring content. Validate the
+whole explicit fixture set first, then retry remaining IDs only while progress
+is made, at most the initial candidate count, so dependencies between owned
+fixtures do not make successful cleanup depend on account ordering.
+
+The reserved, permanently inactive system content owner is provisioned lazily in a
+separate coordinated transaction before content FK updates. A transaction-scoped
+advisory lock serializes its fixed identity and existing rows must match all
+non-authentication invariants. This permanent infrastructure principal may remain
+after a later account purge rolls back; content changes must not. Do not introduce
+raw account inserts, participant saves, nested content transactions or early flushes.
+
 Current weight and waist implementations live in host ReadModel.Composition, reading only scalar BodyMetrics values through the existing Users consumer ports. AddUsersPersistence no longer registers these cross-module readers; hosts register AddReadModelComposition. Preserve date/creation ordering and nullable empty results.
 
 UsersDbContext owns User, Role, UserRole, UserRoleAuditEvent, WeightGoal and WaistGoal. Runtime adapters receive only owner sets (and DatabaseFacade for role SQL), synchronizing the live shared transaction before operations. Save through IUnitOfWork. Users saves at priority -100 before the central context and dependent modules, independently of DI resolution order. Its options explicitly include TelegramIdentityConflictInterceptor; provider uniqueness details must remain hidden. UserCleanupService performs owner SQL through UsersDbContext, including the profile-image unlink, and invokes ordered foreign-owner purge participants.

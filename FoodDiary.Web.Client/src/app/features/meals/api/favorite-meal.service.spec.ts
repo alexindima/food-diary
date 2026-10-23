@@ -1,7 +1,7 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FavoriteMeal } from '../../../shared/models/meal.data';
@@ -95,13 +95,15 @@ describe('FavoriteMealService mutations and legacy reads', () => {
             .flush({ data: [secondFavorite], page: 2, limit: 100, totalPages: 2, totalItems: 2 });
     });
 
-    it('should return empty array when favorite list request fails', () => {
-        service.getLookupPage().subscribe(result => {
-            expect(result).toEqual([]);
-        });
+    it('propagates lookup failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getLookupPage().subscribe({ next, error });
 
         const req = httpMock.expectOne(request => request.url === `${BASE_URL}/page` && request.params.get('limit') === '100');
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
 
     it('should check favorite state by meal id', () => {
@@ -114,13 +116,15 @@ describe('FavoriteMealService mutations and legacy reads', () => {
         req.flush(true);
     });
 
-    it('should return false when favorite check fails', () => {
-        service.isFavorite(entityId<'meal'>('meal-1')).subscribe(result => {
-            expect(result).toBe(false);
-        });
+    it('propagates favorite check failures', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.isFavorite(entityId<'meal'>('meal-1')).subscribe({ next, error });
 
         const req = httpMock.expectOne(`${BASE_URL}/check/meal-1`);
         req.flush('Server Error', { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.InternalServerError }));
     });
 
     it('should add favorite meal with optional name', () => {

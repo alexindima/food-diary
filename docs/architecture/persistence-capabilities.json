@@ -2,6 +2,38 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "FoodDiary.ReadModel.Composition/Recipes/RecipeUserPurgeRetentionReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteRecipe",
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:MealPlan",
+        "entity:MealPlanDay",
+        "entity:MealPlanMeal",
+        "entity:Recipe",
+        "entity:RecipeComment",
+        "entity:RecipeIngredient",
+        "entity:RecipeLike",
+        "entity:RecipeStep"
+      ],
+      "reason": "No-tracking scalar retention roots owned by the exact purged user and referenced by foreign meals, global/foreign plans, nested recipes, favorites, likes or comments. Iterative owned nested closure preserves private dependencies without changing visibility; visited IDs terminate cycles. Shared caller transaction; no writes or aggregate results. ADR 0054."
+    },
+    "FoodDiary.ReadModel.Composition/Products/ProductUserPurgeRetentionReadService.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:FavoriteProduct",
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:Product",
+        "entity:Recipe",
+        "entity:RecipeIngredient",
+        "entity:RecipeStep",
+        "entity:ShoppingList",
+        "entity:ShoppingListItem"
+      ],
+      "reason": "No-tracking scalar product IDs owned by the exact purged user and referenced by foreign recipes, meals, favorites or shopping lists. Runs after recipe retention so dependencies of transferred recipes are retained. Shared caller transaction, unchanged visibility, no writes or entity results. ADR 0054."
+    },
     "Modules/Products/Infrastructure/Services/ProductCatalogIdReadService.cs": {
       "module": "Products",
       "capabilities": [
@@ -178,8 +210,8 @@
         "tracked:MealPlan",
         "tracked:ShoppingList"
       ],
-      "reason": "Owned runtime sets use shared UoW coordination; central composed reads and purge remain unchanged. ADR 0040.",
-      "technicalSourceSha256": "d67b74076b36ec3adbb0b4a3196829b3cacdb421af7e66f1d136fc717d208082"
+      "reason": "Owned runtime sets use shared UoW coordination. A separate persistence registration lets JobManager enlist MealPlanning purge before Recipes without registering application handlers. Central composed reads and owner write capabilities remain unchanged. ADR 0040 and ADR 0054.",
+      "technicalSourceSha256": "f1df21fb582ff9b42483d53fb744fb1e465ab72b6b3466f2a57985eac23f45d0"
     },
     "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs": {
       "module": "RecipeCommunity",
@@ -360,8 +392,8 @@
         "write:AiQuotaReservation",
         "write:AiUsage"
       ],
-      "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. Reviewed token-group migration only: usage creation now consumes validated counts; SQL, reservation checks, lock order, reconciliation/save/rollback, orphan and compensation semantics are unchanged.",
-      "technicalSourceSha256": "6028b3e075065105ee4e7a5ff85d5da6cbbbbf281d847791249ba0fe453a785c"
+      "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. The provider-only verified COMMIT helper preserves the original Reserve result on confirmed commit and forbids replay on unknown outcome. SQL, validated usage counts, reservation checks, lock order, reconciliation/save/rollback, orphan and compensation semantics are unchanged. ADR 0054.",
+      "technicalSourceSha256": "fac845378e9d64a8236b9e2f0aec6c02a6a926b58262064dfde68c2bce21de71"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -887,7 +919,7 @@
         "tracked:ImageAsset",
         "write:ImageAsset"
       ],
-      "reason": "ImagesDbContext reassigns only requested asset IDs for catalog-owner cleanup on the shared connection within the caller transaction; it does not save or commit."
+      "reason": "Images owner updates only requested IDs whose persisted UserId matches the explicit source owner. Uses the shared caller transaction without saving/committing; linked foreign assets cannot change ownership. ADR 0054."
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs": {
       "module": "Images",
@@ -1137,7 +1169,7 @@
         "write:Product"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "f63220617df8093446b926b19caeca07c963fa3b8c48fa6af84cbab1f1d9b564"
+      "technicalSourceSha256": "3b27bf38eeca97b8d6edf5659a9edbb966e4f82ea084df7044fc2d693b1d2353"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -1211,16 +1243,18 @@
         "context:CurrentTransaction",
         "context:Database",
         "entity:Recipe",
+        "entity:RecipeImage",
         "entity:RecipeIngredient",
         "entity:RecipeStep",
         "tracked:Recipe",
+        "tracked:RecipeImage",
         "tracked:RecipeIngredient",
         "tracked:RecipeStep",
         "write:Recipe",
         "write:RecipeIngredient"
       ],
-      "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Own outgoing nested ingredient edges are removed before recipes; foreign incoming references remain restrictive, and PostgreSQL verifies rollback.",
-      "technicalSourceSha256": "176ac3302a385ee3a7265eb21638ec829a56d6716243c608bd5bc18e3553adaa"
+      "reason": "Binds the live owner transaction. Explicit successor transfers legacy and recipe/step gallery assets with source filtering before owned recipes. Otherwise selective retention preserves referenced closure and ordinary purge deletes remaining own outgoing ingredient edges and recipes. Strict fixture cleanup still rejects foreign references. Users owns save/commit and all-owner rollback. ADR 0054.",
+      "technicalSourceSha256": "823523886cbfabd309ea195d48dfc6a18a724c3ea00921dd6500db1c357d2650"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1269,8 +1303,8 @@
         "write:User",
         "write:UserRole"
       ],
-      "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. The shared item coordinator owns per-account retries, unconditional successful UoW save, commit and all-owner tracker reset. Ordered owner participants never save. Scope guard rejects pending caller state; post-commit actions retain their existing untouched policy.",
-      "technicalSourceSha256": "870ef95e7d0eda11c79768c8e64f59afbb4a568f5df0ffd6b2a3d13b9bd4796a"
+      "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. Ordered owner participants lock all source-owned content before fresh reference selection; a late reference after negative preflight defers deletion without side effects. Strict fixture cleanup refuses transfer and retries only remaining validated fixtures for bounded progress. The shared item coordinator owns retries, UoW save, verified commit and tracker reset. Participants never save or commit; no foreign aggregate writes. ADR 0054.",
+      "technicalSourceSha256": "7498e11bac942c93d7c2aa769ce1a38d935e3d081ab4fadb53cb288c882c9942"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
@@ -1328,7 +1362,7 @@
         "write:UserRole"
       ],
       "reason": "Users owns atomic role changes and security-version updates; SQL is restricted to UserRoles/Roles/Users.",
-      "technicalSourceSha256": "062933a4c94a3f20056e22532f2b0600f1c6f529c32130646c2e68ab19bacab9"
+      "technicalSourceSha256": "d11af4fef6b3b55c25a77128b8b389cb4e8058a72fe72a0cc4d84b7c66de6ba5"
     },
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
@@ -1405,8 +1439,8 @@
         "tracked:FoodRecognitionJob",
         "write:FoodRecognitionJob"
       ],
-      "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. Explicit collection loading reads only Ai-owned job images after the row lock, avoiding nullable joins in FOR UPDATE. History pagination counts and reads the same owner-scoped, seven-day no-tracking query with optional label filtering and deterministic CreatedOnUtc/Id ordering. No foreign aggregate writes.",
-      "technicalSourceSha256": "06a58b9c4abdf3fbdd3ec08fee5394456b4149dae75675de115d1cb53f35631b"
+      "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. Provider-only verified COMMIT preserves the original claimed job on confirmed commit and forbids replay on unknown outcome. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. Explicit collection loading reads only Ai-owned job images after the row lock, avoiding nullable joins in FOR UPDATE. History pagination counts and reads the same owner-scoped, seven-day no-tracking query with optional label filtering and deterministic CreatedOnUtc/Id ordering. No foreign aggregate writes.",
+      "technicalSourceSha256": "aabbc3cc62aa27435df5146d7ed290b4cb6d7a40899d92564a2dd06c634b44eb"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1691,7 +1725,7 @@
         "tracked:Product"
       ],
       "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "ad42dc1a0a1300651dd111055863b552f4326cf16d0e7909e356e935224dc708"
+      "technicalSourceSha256": "133c79613468b70aba2657c2970b3f4df330b671be136e2df629a2b78e4fd5e8"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1712,7 +1746,7 @@
         "context:Database"
       ],
       "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "fcafd9cc0ae8aa9dbbae6c27f009b6a170ace89d360661e1959c08812e94beb9"
+      "technicalSourceSha256": "e7341f002e9e43f0127abef833a5f332d3cf1497bb19da25cfbc315e343c00bb"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1827,6 +1861,49 @@
         "entity:ImageObjectDeletionOutboxMessage"
       ],
       "module": "Images"
+    },
+    "Modules/Recipes/Infrastructure/Persistence/RecipesUserContentRetentionParticipant.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
+        "entity:Recipe",
+        "entity:RecipeImage",
+        "entity:RecipeStep",
+        "tracked:Recipe",
+        "tracked:RecipeImage",
+        "tracked:RecipeStep",
+        "write:Recipe"
+      ],
+      "reason": "Recipes owner locks all source-owned Recipe rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. Re-reads the owned closure, transfers legacy/gallery images through source-filtered Images ownership, then changes only selected own recipes. No foreign aggregate writes, save or commit. ADR 0054.",
+      "technicalSourceSha256": "9cdf1f42b2fa3f687018595c57ca52c0585635f245335dd53c61564dc07c845b"
+    },
+    "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs": {
+      "module": "Products",
+      "capabilities": [
+        "context:CurrentTransaction",
+        "context:Database",
+        "entity:Product",
+        "entity:ProductImage",
+        "tracked:Product",
+        "tracked:ProductImage",
+        "write:Product"
+      ],
+      "reason": "Products owner locks all source-owned Product rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. After recipe retention, re-reads surviving foreign references, transfers source-owned legacy/gallery assets through Images and changes only selected own products. No foreign aggregate writes, save or commit. ADR 0054.",
+      "technicalSourceSha256": "ec2ec2f1ada6730bb8ab25876165933de0f444f93f2a140953c6a95aff4707da"
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:User.CreateSystemContentOwner",
+        "context:Database",
+        "context:ExecuteItemAsync",
+        "entity:User",
+        "tracked:User",
+        "write:User"
+      ],
+      "reason": "Read-only preflight determines whether a successor is needed. Separate coordinated provisioning serializes the fixed infrastructure principal by advisory lock, validates non-auth state and stages the Users factory result. The coordinator saves and verifies COMMIT. The permanent empty principal can survive a later content-item rollback; content transfer and deletion remain atomic. ADR 0054.",
+      "technicalSourceSha256": "98382972aa38bf3617025136949b51f818345caa138b9ca5be1ef90d565a52a0"
     }
   }
 }

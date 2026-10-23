@@ -6767,8 +6767,12 @@
                     },
                     "name": {
                         "type": "string"
+                    },
+                    "revision": {
+                        "type": "string"
                     }
                 },
+                "required": ["revision"],
                 "type": "object"
             },
             "ShoppingListItemHttpRequest": {
@@ -7998,6 +8002,9 @@
             "UpdateShoppingListHttpRequest": {
                 "additionalProperties": false,
                 "properties": {
+                    "expectedRevision": {
+                        "type": "string"
+                    },
                     "items": {
                         "items": {
                             "$ref": "#/components/schemas/ShoppingListItemHttpRequest"
@@ -8010,6 +8017,7 @@
                         "type": "string"
                     }
                 },
+                "required": ["expectedRevision"],
                 "type": "object"
             },
             "UpdateUserAppearanceHttpRequest": {
@@ -37562,6 +37570,26 @@
                             }
                         },
                         "description": "Not Found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Conflict"
                     },
                     "413": {
                         "content": {

@@ -1,7 +1,7 @@
 # MealPlanning persistence adapters
 
 Own MealPlans and ShoppingLists repositories and complete AddMealPlanningModule
-registration. Use canonical repository namespaces and rebuild consumers together. Use the owned runtime sets for writes; do not save or begin a transaction inside
+registration. `AddMealPlanningPersistence` is the persistence-only composition path used by JobManager; it must not register application handlers. Use canonical repository namespaces and rebuild consumers together. Use the owned runtime sets for writes; do not save or begin a transaction inside
 these repositories. Keep user filters and tracking/projection behavior unchanged.
 Central Infrastructure references Model, never this adapter project.
 
@@ -11,4 +11,4 @@ MealPlanRepository receives only its owned DbSet and IMealPlanCompositionReader.
 Cross-module SQL joins and immutable recipe snapshots are implemented by the host
 ReadModel.Composition adapter. Keep aggregate loading and snapshot attachment in
 this owner. Never reference the composition implementation from this assembly.
-ShoppingList repositories receive only their owned set. User purge uses MealPlanningDbContext and binds the live coordinator transaction on every call, preserving order 60 and ShoppingList child cascades. Users owns saving and transaction completion; this adapter no longer references central Infrastructure.
+ShoppingList repositories receive only their owned set. User purge uses MealPlanningDbContext and binds the live coordinator transaction on every call, preserving order 6 before Recipes at 7 and ShoppingList child cascades. Users owns saving and transaction completion; this adapter no longer references central Infrastructure.

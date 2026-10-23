@@ -11,7 +11,8 @@ namespace FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
 public sealed class MailRelayWebApplicationFactory(
     MailRelayEnvironmentFixture fixture,
     RecordingRelayDeliveryTransport recordingTransport,
-    bool enablePollingFallback = true) : WebApplicationFactory<Program> {
+    bool enablePollingFallback = true,
+    ushort? rabbitMqPort = null) : WebApplicationFactory<Program> {
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         string databaseConnectionString = fixture.CreateIsolatedDatabaseAsync().GetAwaiter().GetResult();
 
@@ -25,7 +26,7 @@ public sealed class MailRelayWebApplicationFactory(
                 ["MailRelay:MailgunWebhookSigningKey"] = "integration-mailgun-signing-key",
                 ["MailRelayBroker:Backend"] = "RabbitMq",
                 ["MailRelayBroker:HostName"] = fixture.RabbitMqHostName,
-                ["MailRelayBroker:Port"] = fixture.RabbitMqPort.ToString(),
+                ["MailRelayBroker:Port"] = (rabbitMqPort ?? fixture.RabbitMqPort).ToString(),
                 ["MailRelayBroker:UserName"] = "guest",
                 ["MailRelayBroker:Password"] = "guest",
                 ["MailRelayBroker:VirtualHost"] = "/",

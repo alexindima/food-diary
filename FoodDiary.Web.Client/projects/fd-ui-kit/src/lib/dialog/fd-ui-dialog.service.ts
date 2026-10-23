@@ -39,6 +39,10 @@ export class FdUiDialogService {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly compactViewportQuery = inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY);
 
+    public closeAll(): void {
+        this.dialog.closeAll();
+    }
+
     public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
         const layout = this.resolveDialogLayout(config);
         const size = this.resolveDialogSize(config);

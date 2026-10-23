@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { catchError, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -33,13 +33,18 @@ export class ProductDetailFacade {
     private favoriteProductId: string | null = null;
 
     public initialize(product: Product): void {
+        this.favoriteChanges.next();
         this.initialFavoriteState = product.isFavorite ?? false;
         this.isFavorite.set(this.initialFavoriteState);
         this.favoriteProductId = product.favoriteProductId ?? null;
 
         this.favoriteProductService
             .isFavorite(product.id)
-            .pipe(takeUntil(this.favoriteChanges), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                catchError(() => of(this.initialFavoriteState)),
+                takeUntil(this.favoriteChanges),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe(isFav => {
                 this.initialFavoriteState = isFav;
                 this.isFavorite.set(isFav);

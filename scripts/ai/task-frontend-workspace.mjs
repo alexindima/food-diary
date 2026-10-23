@@ -84,7 +84,7 @@ export function prepareTaskFrontendWorkspace(root, directory, urls) {
     );
     writeFileSync(
         adminEnvironment,
-        `export const environment = { apiUrls: { auth: '/api/v1/auth' }, mainAppUrl: ${JSON.stringify(frontendUrl)}, enableGlobalErrorHandler: false };\n`,
+        `export const environment = { apiUrls: { auth: '/api/v1/auth' }, mainAppUrl: ${JSON.stringify(frontendUrl)}, buildVersion: 'task', enableGlobalErrorHandler: false };\n`,
     );
     const projects = {};
     for (const name of ["food-diary-web-client", "fooddiary-admin"]) {

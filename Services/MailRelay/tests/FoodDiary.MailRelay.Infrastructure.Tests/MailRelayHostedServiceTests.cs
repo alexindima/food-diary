@@ -6,6 +6,7 @@ using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using RabbitMQ.Client;
@@ -233,6 +234,7 @@ public sealed class MailRelayHostedServiceTests {
         using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
 
         await service.StartAsync(cancellationTokenSource.Token);
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
     [Fact]
@@ -247,6 +249,7 @@ public sealed class MailRelayHostedServiceTests {
             _ => throw new InvalidOperationException("should not run"));
 
         await service.StartAsync(cancellationTokenSource.Token);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.ExecuteTask!);
     }
 
     [Fact]
@@ -263,6 +266,7 @@ public sealed class MailRelayHostedServiceTests {
             });
 
         await service.StartAsync(cancellationTokenSource.Token);
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
     }
 
     [Fact]
@@ -285,8 +289,52 @@ public sealed class MailRelayHostedServiceTests {
             });
 
         await service.StartAsync(cancellationTokenSource.Token);
+        await service.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(5));
 
         Assert.Equal(2, attempts);
+    }
+
+    [Fact]
+    public async Task Host_WhenRabbitMqBootstrapCannotConnect_StartsFollowingServicesAndSignalsReady() {
+        var attempted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var followingService = new RecordingHostedService();
+        MailRelayBrokerOptions options = CreateRabbitOptions();
+        using IHost host = new HostBuilder()
+            .ConfigureServices(services => {
+                services.AddSingleton<IHostedService>(new RabbitMqMailRelayBootstrapHostedService(
+                    CreateBroker(options),
+                    Microsoft.Extensions.Options.Options.Create(options),
+                    NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
+                    _ => {
+                        attempted.TrySetResult();
+                        return Task.FromException(new InvalidOperationException("broker unavailable"));
+                    }));
+                services.AddSingleton<IHostedService>(followingService);
+            })
+            .Build();
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+        await host.StartAsync(deadline.Token).WaitAsync(deadline.Token);
+        await attempted.Task.WaitAsync(deadline.Token);
+
+        Assert.Multiple(
+            () => Assert.False(deadline.IsCancellationRequested),
+            () => Assert.True(followingService.Started),
+            () => Assert.True(host.Services.GetRequiredService<IHostApplicationLifetime>().ApplicationStarted.IsCancellationRequested));
+        await host.StopAsync(deadline.Token);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingHostedService : IHostedService {
+        public bool Started { get; private set; }
+
+        public Task StartAsync(CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            Started = true;
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     [Fact]

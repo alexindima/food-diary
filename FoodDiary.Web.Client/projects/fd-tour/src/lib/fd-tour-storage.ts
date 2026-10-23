@@ -15,7 +15,11 @@ export class FdTourLocalStorage implements FdTourStorage {
     private readonly platformId = inject(PLATFORM_ID);
 
     public isCompleted(tourId: string, version: number): boolean {
-        return this.getStorage()?.getItem(this.buildKey(tourId)) === String(version);
+        try {
+            return this.getStorage()?.getItem(this.buildKey(tourId)) === String(version);
+        } catch {
+            return false;
+        }
     }
 
     public markCompleted(tourId: string, version: number): void {

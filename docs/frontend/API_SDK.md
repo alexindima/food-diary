@@ -87,6 +87,10 @@ SSO tokens and state remain in `AdminAuthService`. Presigned admin image uploads
 continue through the existing `HttpBackend` client. Import/test idempotency keys
 are created once per invocation and survive re-subscription.
 
+Admin SSO exchange issues an independent admin bearer and preserves the main
+application's refresh cookie. The owning action declares this cookie policy;
+ordinary main-app authentication still sets its HttpOnly refresh cookie.
+
 Admin meal-plan lists use `CatalogPlanSummary`, matching the actual summary
 response. Detail/editor flows still fetch `CatalogPlan` with days and meals.
 No placeholder days or extra detail requests are introduced into list loading.
@@ -196,3 +200,16 @@ the existing breaking-change API checks and integration snapshots; generated
 types do not prove runtime business semantics or compatibility with an already
 installed mobile client. Capacitor bundles the Angular SDK with the app. Old
 mobile versions still require backward-compatible server contracts.
+
+The explicitly approved exception is shopping-list conditional updates
+([ADR 0056](../adr/0056-shopping-list-content-revisions.md)). Every detailed list
+response includes `revision`; every shopping-list PATCH must send the original
+snapshot's `expectedRevision`. Omitted, blank or malformed revisions return 400;
+stale revisions return 409 with `ShoppingList.RevisionConflict`. Clients preserve
+their unsaved draft on a conflict and require explicit reload or reconciliation.
+They must not retry an old replacement body with a newly fetched revision.
+Older packaged applications need an update before editing shopping lists. Web
+users with an older open tab need the normal application update/reload; manual
+cache clearing is unnecessary and does not solve concurrent writes. Release the
+server and updated web bundle together. This exception does not relax the
+compatibility policy for any other endpoint.

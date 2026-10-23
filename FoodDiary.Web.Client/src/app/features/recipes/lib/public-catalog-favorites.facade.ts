@@ -17,6 +17,7 @@ export class PublicCatalogFavorites {
     private readonly destroyRef = inject(DestroyRef);
     private ids = new Map<string, string>();
     private session = 0;
+    private ownerId: string | null = null;
     private ready: Promise<void> | undefined;
     public readonly savedIds = signal<ReadonlySet<string>>(new Set());
     public readonly busyIds = signal<ReadonlySet<string>>(new Set());
@@ -25,11 +26,20 @@ export class PublicCatalogFavorites {
     public constructor() {
         effect(() => {
             const authenticated = this.auth.isAuthenticated();
+            const ownerId = this.auth.getUserId();
             const session = ++this.session;
+            this.ownerId = authenticated ? ownerId : null;
             this.ids = new Map();
             this.savedIds.set(new Set());
+            this.busyIds.set(new Set());
             this.message.set(null);
-            this.ready = authenticated ? this.loadAsync(session) : undefined;
+            this.ready = authenticated && ownerId !== null ? this.loadAsync(session) : undefined;
+            void this.ready?.catch(() => {
+                if (this.isCurrent(session)) {
+                    this.ready = undefined;
+                    this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
+                }
+            });
         });
     }
 
@@ -39,28 +49,37 @@ export class PublicCatalogFavorites {
         }
         this.busyIds.update(ids => new Set([...ids, recipe.id]));
         this.message.set(null);
+        let session = this.session;
         try {
-            if (!(await this.authenticateAsync())) {
+            const authenticatedSession = await this.authenticateAsync();
+            if (authenticatedSession === null) {
                 return;
             }
-            await this.ready;
-            const session = this.session;
-            if (this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
+            session = authenticatedSession;
+            if (!this.isCurrent(session)) {
+                return;
+            }
+            this.busyIds.update(ids => new Set([...ids, recipe.id]));
+            await (this.ready ??= this.loadAsync(session));
+            if (!this.isCurrent(session)) {
                 return;
             }
             await this.changeAsync(recipe, session);
         } catch {
-            if (!this.destroyRef.destroyed) {
+            if (this.isCurrentSession(session)) {
+                this.ready = undefined;
                 this.message.set('PUBLIC_RECIPES.ACTION_ERROR');
             }
         } finally {
-            this.busyIds.update(ids => new Set([...ids].filter(id => id !== recipe.id)));
+            if (this.isCurrentSession(session)) {
+                this.busyIds.update(ids => new Set([...ids].filter(id => id !== recipe.id)));
+            }
         }
     }
 
-    private async authenticateAsync(): Promise<boolean> {
+    private async authenticateAsync(): Promise<number | null> {
         if (this.auth.isAuthenticated()) {
-            return true;
+            return this.session;
         }
         const ref = await this.dialog.openAsync({
             mode: 'login',
@@ -72,10 +91,11 @@ export class PublicCatalogFavorites {
             await firstValueFrom(ref.afterClosed());
         }
         if (this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
-            return false;
+            return null;
         }
-        await this.loadAsync(this.session);
-        return true;
+        const session = this.session;
+        await this.loadAsync(session);
+        return this.isCurrent(session) ? session : null;
     }
 
     private async changeAsync(recipe: PublicRecipe, session: number): Promise<void> {
@@ -98,12 +118,18 @@ export class PublicCatalogFavorites {
     }
 
     private isCurrent(session: number): boolean {
-        return session === this.session && !this.destroyRef.destroyed && this.auth.isAuthenticated();
+        return (
+            this.isCurrentSession(session) && this.ownerId !== null && this.ownerId === this.auth.getUserId() && this.auth.isAuthenticated()
+        );
+    }
+
+    private isCurrentSession(session: number): boolean {
+        return session === this.session && !this.destroyRef.destroyed;
     }
 
     private async loadAsync(session: number): Promise<void> {
         const favorites = await firstValueFrom(this.api.getLookupPage());
-        if (session !== this.session || this.destroyRef.destroyed || !this.auth.isAuthenticated()) {
+        if (!this.isCurrent(session)) {
             return;
         }
         this.ids = new Map(favorites.map(favorite => [favorite.recipeId, favorite.id]));

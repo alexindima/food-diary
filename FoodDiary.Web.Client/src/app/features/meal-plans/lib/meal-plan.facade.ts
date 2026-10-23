@@ -1,6 +1,6 @@
-import { computed, DestroyRef, effect, inject, Injectable, resource, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, firstValueFrom } from 'rxjs';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, map, type Observable, of, Subject, takeUntil } from 'rxjs';
 
 import { normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { PageOf } from '../../../shared/models/page-of.data';
@@ -24,6 +24,7 @@ export class MealPlanFacade {
     public readonly hasMealDraft = this.quickMeal.hasItems;
     public readonly addingMealId = signal<MealPlanMealId | null>(null);
     private readonly selectedPlanId = signal<MealPlanId | null>(null);
+    private readonly selectionChanged = new Subject<void>();
 
     public readonly dietTypeFilter = signal(this.initialQuery.dietType);
     public readonly sourceFilter = signal(this.initialQuery.source);
@@ -34,18 +35,18 @@ export class MealPlanFacade {
     );
     public readonly pendingAction = signal<'adopt' | 'shopping' | 'delete' | null>(null);
     public readonly actionErrorKey = signal<string | null>(null);
-    private readonly plansResource = resource({
+    private readonly plansResource = rxResource({
         params: () => this.currentListQuery(),
-        loader: async ({ params }): Promise<{ key: string; page: PageOf<MealPlanSummary> }> => this.loadListPageAsync(params),
+        stream: ({ params }) => this.loadListPage(params),
     });
-    private readonly selectedPlanResource = resource({
+    private readonly selectedPlanResource = rxResource({
         params: () => this.selectedPlanId(),
-        loader: async ({ params }): Promise<MealPlan | null> => {
+        stream: ({ params }): Observable<MealPlan | null> => {
             if (params === null || params.trim().length === 0) {
-                return null;
+                return of(null);
             }
 
-            return firstValueFrom(this.service.getById(params));
+            return this.service.getById(params);
         },
     });
 
@@ -131,18 +132,21 @@ export class MealPlanFacade {
         return loaded?.dietType === query.dietType && loaded.source === query.source ? loaded.page : null;
     }
 
-    private async loadListPageAsync(query: MealPlanListQuery): Promise<{ key: string; page: PageOf<MealPlanSummary> }> {
+    private loadListPage(query: MealPlanListQuery): Observable<{ key: string; page: PageOf<MealPlanSummary> }> {
         const key = mealPlanListQueryKey(query);
         const isCurated = query.source === 'all' ? undefined : query.source === 'curated';
-        const page = await firstValueFrom(this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize, isCurated));
-        if (key === mealPlanListQueryKey(this.currentListQuery())) {
-            const resolved = resolvePaginationPage(query.page, page.totalPages);
-            if (resolved !== query.page) {
-                this.pageIndex.set(resolved - 1);
-                this.writeListQuery({ ...query, page: resolved }, true);
-            }
-        }
-        return { key, page };
+        return this.service.getPage(query.dietType ?? undefined, query.page, this.pageSize, isCurated).pipe(
+            map(page => {
+                if (!this.destroyRef.destroyed && key === mealPlanListQueryKey(this.currentListQuery())) {
+                    const resolved = resolvePaginationPage(query.page, page.totalPages);
+                    if (resolved !== query.page) {
+                        this.pageIndex.set(resolved - 1);
+                        this.writeListQuery({ ...query, page: resolved }, true);
+                    }
+                }
+                return { key, page };
+            }),
+        );
     }
 
     private writeListQuery(query: MealPlanListQuery, replaceUrl = false): void {
@@ -154,6 +158,10 @@ export class MealPlanFacade {
     }
 
     public loadPlan(id: MealPlanId): void {
+        if (id !== this.selectedPlanId()) {
+            this.selectionChanged.next();
+            this.actionErrorKey.set(null);
+        }
         this.selectedPlanId.set(id);
     }
 
@@ -166,6 +174,7 @@ export class MealPlanFacade {
         this.recipeLookup
             .getById(meal.recipeId)
             .pipe(
+                takeUntil(this.selectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.addingMealId.set(null);
@@ -195,6 +204,7 @@ export class MealPlanFacade {
         this.service
             .adopt(id)
             .pipe(
+                takeUntil(this.selectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.pendingAction.set(null);
@@ -219,6 +229,7 @@ export class MealPlanFacade {
         this.service
             .generateShoppingList(id)
             .pipe(
+                takeUntil(this.selectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.pendingAction.set(null);
@@ -244,6 +255,7 @@ export class MealPlanFacade {
         this.service
             .deletePlan(id)
             .pipe(
+                takeUntil(this.selectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.pendingAction.set(null);

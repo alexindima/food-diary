@@ -10,6 +10,11 @@ Usage readers consume IAiUsageQuery directly, implemented by host ReadModel.Comp
 
 AiDbContext owns five root mappings and prompt revisions. Scoped template writes join the shared connection through CreateModuleContext and synchronize the live transaction before each owner operation. Independent quota/job contexts receive copied provider options and preserve per-operation contexts, execution strategy, locks and local commits; never bind them to the scoped owner context. Keep five-minute prompt caching and built-in fallback texts unchanged.
 
+Independent quota/job commits use the provider-only FoodDiary.Persistence.PostgreSql
+verification helper (ADR 0054). A confirmed commit returns the originally computed
+Reserve/Claim result; unknown outcomes cannot replay those operations. The shared
+unit of work and live scoped connection remain outside these transactions.
+
 Register the concrete scoped AiPromptTemplateRepository once and map its read-model and write ports to that same instance. Declare direct references to AI Domain and Images.Contracts for the entity and image-ID types used here.
 
 Prompt selection uses LanguageCode.FromPreferred: active requested locale, active English, then the built-in fallback. Cache keys include normalized locale; retain the five-minute TTL. Register one scoped FoodRecognitionJobStore and map its reader and writer ports to the same instance.

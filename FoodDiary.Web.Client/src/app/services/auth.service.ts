@@ -1,6 +1,6 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
-import { catchError, defer, finalize, firstValueFrom, from, map, type Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
@@ -17,6 +17,7 @@ import type {
     RegisterRequest,
     RestoreAccountRequest,
 } from '../shared/auth/auth.data';
+import { AuthCookieSessionService } from '../shared/auth/auth-cookie-session.service';
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
@@ -33,13 +34,14 @@ import { NavigationService } from './navigation.service';
 import { ACCOUNT_ACCESS_STORAGE_KEY, TokenStorageService } from './token-storage.service';
 
 const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
-const AUTH_REFRESH_LOCK_NAME = 'fooddiary.auth.refresh';
+type SessionIdentity = { userId: string; impersonating: boolean };
 
 @Service()
 export class AuthService {
     private readonly navigationService = inject(NavigationService);
     private readonly emailVerificationCooldown = inject(EmailVerificationCooldownService);
     private readonly sessionEvents = inject(SessionEventsService);
+    private readonly cookieSessions = inject(AuthCookieSessionService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
@@ -52,9 +54,16 @@ export class AuthService {
     private readonly telegram = createSdkConnection(TelegramAuthSdk, this.baseUrl, this.http);
 
     private readonly authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
-    private readonly userSignal = signal<string | null>(this.tokenStorage.loadUserId());
-    private readonly emailConfirmedSignal = signal<boolean | null>(this.tokenStorage.loadEmailConfirmed());
-    private readonly mustChangePasswordSignal = signal<boolean>(this.tokenStorage.loadMustChangePassword() ?? false);
+    private sessionIdentity = this.readSessionIdentity(this.authTokenSignal());
+    private initialized = false;
+    private restoredPolicyUnknown = false;
+    private readonly userSignal = signal<string | null>(this.sessionIdentity?.userId ?? null);
+    private readonly emailConfirmedSignal = signal<boolean | null>(
+        this.tokenStorage.loadEmailConfirmed(this.sessionIdentity?.userId ?? null),
+    );
+    private readonly mustChangePasswordSignal = signal<boolean>(
+        this.tokenStorage.loadMustChangePassword(this.sessionIdentity?.userId ?? null) ?? false,
+    );
     private refreshInFlight$: Observable<string | null> | null = null;
     private pendingLegacyRefreshToken: string | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
@@ -75,33 +84,58 @@ export class AuthService {
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public constructor() {
+        const token = this.authTokenSignal();
+        if (token !== null && this.sessionIdentity !== null) {
+            this.tokenStorage.pinToken(token, this.sessionIdentity.userId);
+        }
         const stopListening = this.browserWindow.onLocalStorageChange(event => {
-            const sessionRemoved = event.key === 'refreshSession' && event.newValue === null;
-            const storageCleared = event.key === null;
-            if ((sessionRemoved || storageCleared) && this.isAuthenticated() && !this.tokenStorage.hasRefreshSession()) {
-                void this.onLogoutAsync(true);
-            }
-            if (event.key === ACCOUNT_ACCESS_STORAGE_KEY && this.hasUpdatedAccountAccess()) {
-                // The snapshot is only an invalidation hint; roles always come from the server.
-                void firstValueFrom(this.refreshToken());
-            }
+            this.onSharedStorageChange(event);
         });
         inject(DestroyRef).onDestroy(stopListening);
     }
 
+    private onSharedStorageChange(event: StorageEvent): void {
+        if (this.sessionIdentity?.impersonating === true) {
+            return;
+        }
+        const owner = this.sessionIdentity?.userId;
+        if (owner !== undefined && this.tokenStorage.hasForeignSession(owner)) {
+            this.invalidateLocalSession();
+            return;
+        }
+        if (this.isSharedSessionRemoved(event)) {
+            void this.onLogoutAsync(true);
+        }
+        if (event.key === ACCOUNT_ACCESS_STORAGE_KEY && this.hasUpdatedAccountAccess()) {
+            // The snapshot is only an invalidation hint; roles always come from the server.
+            void firstValueFrom(this.refreshToken());
+        }
+    }
+
+    private isSharedSessionRemoved(event: StorageEvent): boolean {
+        const sessionRemoved = event.key === 'refreshSession' && event.newValue === null;
+        return (sessionRemoved || event.key === null) && this.isAuthenticated() && !this.tokenStorage.hasRefreshSession();
+    }
+
     public initializeAuth(): void {
-        let token = this.tokenStorage.getToken();
+        let token = this.authTokenSignal() ?? (this.initialized ? null : this.tokenStorage.getToken());
+        this.initialized = true;
         if (token === null || token.length === 0) {
-            this.clearStoredIdentity();
+            if (this.sessionIdentity === null) {
+                this.clearStoredIdentity();
+            }
             return;
         }
 
-        if (this.jwtDecoder.decodePayload(token) === null) {
+        const identity = this.readSessionIdentity(token);
+        if (identity === null) {
             this.authTokenSignal.set(null);
             this.tokenStorage.clearToken();
             this.clearStoredIdentity();
             return;
         }
+
+        this.restoreTokenIdentity(token, identity);
 
         if (this.clearExpiredToken(token)) {
             token = null;
@@ -112,21 +146,25 @@ export class AuthService {
         }
 
         this.authTokenSignal.set(token);
-        this.restoreUserIdFromToken(token);
-        if (this.emailConfirmedSignal() === null) {
-            const stored = this.tokenStorage.loadEmailConfirmed();
-            this.emailConfirmedSignal.set(stored ?? true);
-        }
     }
 
-    private restoreUserIdFromToken(token: string): void {
-        if (this.userSignal() !== null) {
-            return;
-        }
+    private restoreTokenIdentity(token: string, identity: SessionIdentity): void {
+        this.sessionIdentity = identity;
+        this.tokenStorage.pinToken(token, identity.userId);
+        const emailConfirmed = this.tokenStorage.loadEmailConfirmed(identity.userId);
+        const mustChangePassword = this.tokenStorage.loadMustChangePassword(identity.userId);
+        this.restoredPolicyUnknown = !identity.impersonating && (emailConfirmed === null || mustChangePassword === null);
+        this.emailConfirmedSignal.set(emailConfirmed ?? identity.impersonating);
+        this.mustChangePasswordSignal.set(mustChangePassword ?? !identity.impersonating);
+        this.restoreUserIdFromToken(token, !this.restoredPolicyUnknown);
+    }
 
+    private restoreUserIdFromToken(token: string, persistMetadata: boolean): void {
         const resolvedUserId = this.jwtDecoder.extractUserId(token);
         if (resolvedUserId !== null && resolvedUserId.length > 0) {
-            this.tokenStorage.setUserId(resolvedUserId);
+            if (persistMetadata) {
+                this.tokenStorage.setUserId(resolvedUserId);
+            }
             this.userSignal.set(resolvedUserId);
         }
     }
@@ -158,43 +196,58 @@ export class AuthService {
             password: data.password,
             rememberMe: data.rememberMe,
         };
-        return this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
-            map(authResponseFromSdk),
-            tap(response => {
-                this.onLogin(response, data.rememberMe || false);
-            }),
-            catchError((error: unknown) => rethrowApiError('Login error', error)),
+        return this.cookieSessions.run(() =>
+            this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
+                map(authResponseFromSdk),
+                tap(response => {
+                    this.onLogin(response, data.rememberMe || false);
+                }),
+                catchError((error: unknown) => rethrowApiError('Login error', error)),
+            ),
         );
     }
 
     public register(data: RegisterRequest): Observable<AuthResponse> {
-        return this.sdk.client
-            .postAuthRegister({
-                version: this.sdk.version,
-                registerHttpRequest: {
-                    email: data.email,
-                    password: data.password,
-                    language: data.language,
-                    clientOrigin: this.getClientOrigin(),
-                },
-            })
-            .pipe(
-                map(authResponseFromSdk),
-                tap(response => {
-                    this.onLogin(response, false);
-                    this.emailVerificationCooldown.markSent(response.user.id);
-                }),
-                catchError((error: unknown) => rethrowApiError('Register error', error)),
-            );
+        return this.cookieSessions.run(() =>
+            this.sdk.client
+                .postAuthRegister({
+                    version: this.sdk.version,
+                    registerHttpRequest: {
+                        email: data.email,
+                        password: data.password,
+                        language: data.language,
+                        clientOrigin: this.getClientOrigin(),
+                    },
+                })
+                .pipe(
+                    map(authResponseFromSdk),
+                    tap(response => {
+                        this.onLogin(response, false);
+                        this.emailVerificationCooldown.markSent(response.user.id);
+                    }),
+                    catchError((error: unknown) => rethrowApiError('Register error', error)),
+                ),
+        );
     }
 
     public verifyEmail(userId: string, token: string): Observable<void> {
-        return this.sdk.client.postAuthVerifyEmail({ version: this.sdk.version, verifyEmailHttpRequest: { userId, token } }).pipe(
-            tap(() => {
-                this.setEmailConfirmed(true);
-            }),
-            catchError((error: unknown) => rethrowApiError('Verify email error', error)),
-        );
+        return defer(() => {
+            const verificationVersion = this.sessionVersion;
+            const owner = this.getUserId();
+            return this.sdk.client.postAuthVerifyEmail({ version: this.sdk.version, verifyEmailHttpRequest: { userId, token } }).pipe(
+                tap(() => {
+                    if (
+                        owner === userId &&
+                        verificationVersion === this.sessionVersion &&
+                        this.getUserId() === userId &&
+                        this.isAuthenticated()
+                    ) {
+                        this.setEmailConfirmed(true);
+                    }
+                }),
+                catchError((error: unknown) => rethrowApiError('Verify email error', error)),
+            );
+        });
     }
 
     public resendEmailVerification(): Observable<void> {
@@ -212,31 +265,35 @@ export class AuthService {
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {
-        return this.sdk.client
-            .postAuthRestore({
-                version: this.sdk.version,
-                restoreAccountHttpRequest: {
-                    email: data.email,
-                    password: data.password,
-                    rememberMe,
-                },
-            })
-            .pipe(
-                map(authResponseFromSdk),
-                tap(response => {
-                    this.onLogin(response, rememberMe);
-                }),
-                catchError((error: unknown) => rethrowApiError('Restore account error', error)),
-            );
+        return this.cookieSessions.run(() =>
+            this.sdk.client
+                .postAuthRestore({
+                    version: this.sdk.version,
+                    restoreAccountHttpRequest: {
+                        email: data.email,
+                        password: data.password,
+                        rememberMe,
+                    },
+                })
+                .pipe(
+                    map(authResponseFromSdk),
+                    tap(response => {
+                        this.onLogin(response, rememberMe);
+                    }),
+                    catchError((error: unknown) => rethrowApiError('Restore account error', error)),
+                ),
+        );
     }
 
     public loginWithGoogle(data: GoogleLoginRequest): Observable<AuthResponse> {
-        return this.sdk.client.postAuthGoogle({ version: this.sdk.version, googleLoginHttpRequest: data }).pipe(
-            map(authResponseFromSdk),
-            tap(response => {
-                this.onLogin(response, data.rememberMe ?? false);
-            }),
-            catchError((error: unknown) => rethrowApiError('Google login error', error)),
+        return this.cookieSessions.run(() =>
+            this.sdk.client.postAuthGoogle({ version: this.sdk.version, googleLoginHttpRequest: data }).pipe(
+                map(authResponseFromSdk),
+                tap(response => {
+                    this.onLogin(response, data.rememberMe ?? false);
+                }),
+                catchError((error: unknown) => rethrowApiError('Google login error', error)),
+            ),
         );
     }
 
@@ -284,12 +341,14 @@ export class AuthService {
     }
 
     public confirmPasswordReset(data: ConfirmPasswordResetRequest): Observable<AuthResponse> {
-        return this.sdk.client.postAuthPasswordResetConfirm({ version: this.sdk.version, confirmPasswordResetHttpRequest: data }).pipe(
-            map(authResponseFromSdk),
-            tap(response => {
-                this.onLogin(response, false);
-            }),
-            catchError((error: unknown) => rethrowApiError('Password reset confirm error', error)),
+        return this.cookieSessions.run(() =>
+            this.sdk.client.postAuthPasswordResetConfirm({ version: this.sdk.version, confirmPasswordResetHttpRequest: data }).pipe(
+                map(authResponseFromSdk),
+                tap(response => {
+                    this.onLogin(response, false);
+                }),
+                catchError((error: unknown) => rethrowApiError('Password reset confirm error', error)),
+            ),
         );
     }
 
@@ -300,6 +359,13 @@ export class AuthService {
     }
 
     public refreshToken(): Observable<string | null> {
+        if (this.sessionEvents.isLocalSessionInvalidated) {
+            return of(null);
+        }
+        if (this.sessionIdentity?.impersonating === true) {
+            this.invalidateLocalSession();
+            return of(null);
+        }
         if (this.refreshInFlight$ !== null) {
             return this.refreshInFlight$;
         }
@@ -310,85 +376,151 @@ export class AuthService {
         }
 
         const refreshVersion = this.sessionVersion;
-        // Refresh cookies are shared by tabs, so their rotation must also be shared.
-        const refreshRequest$ = defer(() =>
-            from(this.browserWindow.runWithLockAsync(AUTH_REFRESH_LOCK_NAME, async () => this.refreshSessionAsync(refreshVersion))),
-        ).pipe(
-            finalize(() => {
-                if (this.refreshInFlight$ === refreshRequest$) {
-                    this.refreshInFlight$ = null;
-                }
-            }),
-            shareReplay(1),
-        );
+        const expectedOwner = this.sessionIdentity?.userId ?? null;
+        const refreshRequest$ = this.cookieSessions
+            .run(() => this.createRefreshRequest(refreshVersion, expectedOwner))
+            .pipe(
+                finalize(() => {
+                    if (this.refreshInFlight$ === refreshRequest$) {
+                        this.refreshInFlight$ = null;
+                    }
+                }),
+                shareReplay(1),
+            );
 
         this.refreshInFlight$ = refreshRequest$;
         return refreshRequest$;
     }
 
-    private async refreshSessionAsync(refreshVersion: number): Promise<string | null> {
+    private createRefreshRequest(refreshVersion: number, expectedOwner: string | null): Observable<string | null> {
         if (refreshVersion !== this.sessionVersion || !this.tokenStorage.hasRefreshSession()) {
-            return null;
+            return of(null);
         }
 
-        this.pendingLegacyRefreshToken ??= this.tokenStorage.consumeLegacyRefreshToken();
+        if (expectedOwner !== null && this.tokenStorage.hasForeignSession(expectedOwner)) {
+            this.invalidateLocalSession();
+            return of(null);
+        }
+
+        this.pendingLegacyRefreshToken ??=
+            expectedOwner === null ? this.tokenStorage.peekLegacyRefreshTokenForBootstrap() : this.tokenStorage.consumeLegacyRefreshToken();
         const legacyRefreshToken = this.pendingLegacyRefreshToken;
-        if (legacyRefreshToken !== null) {
+        if (legacyRefreshToken !== null && expectedOwner !== null) {
             this.tokenStorage.markRefreshSession();
         }
         const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
-        return firstValueFrom(
-            this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
-                map(authResponseFromSdk),
-                map(response => {
-                    if (refreshVersion !== this.sessionVersion) {
-                        return null;
+        return this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
+            map(authResponseFromSdk),
+            map(response => {
+                if (refreshVersion !== this.sessionVersion) {
+                    return null;
+                }
+                if (!this.isValidSessionResponse(response, expectedOwner)) {
+                    this.invalidateLocalSession();
+                    return null;
+                }
+                const accessToken = response.accessToken;
+                if (accessToken.length > 0) {
+                    if (expectedOwner === null) {
+                        this.sessionVersion++;
+                        this.sessionEvents.notifyAuthenticated();
                     }
-                    const accessToken = response.accessToken;
-                    if (accessToken.length > 0) {
-                        this.applyAuthenticatedSession(response);
-                    }
-                    return accessToken;
-                }),
-                catchError((error: unknown) => {
-                    if (refreshVersion === this.sessionVersion && getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
-                        void this.onLogoutAsync(true);
-                    }
-                    return fallbackApiError('refreshToken error', error, null);
-                }),
-            ),
+                    this.applyAuthenticatedSession(response, expectedOwner === null ? this.tokenStorage.isRemembered() : undefined);
+                }
+                return accessToken;
+            }),
+            catchError((error: unknown) => {
+                if (refreshVersion === this.sessionVersion && getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
+                    void this.onLogoutAsync(true);
+                }
+                return fallbackApiError('refreshToken error', error, null);
+            }),
         );
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
-        this.sessionVersion++;
+        if (this.sessionEvents.isLocalSessionInvalidated) {
+            await this.navigateAfterSessionEndAsync(redirectToAuth);
+            return;
+        }
+        if (this.requiresLocalLogout()) {
+            this.invalidateLocalSession(redirectToAuth);
+            return;
+        }
+        const logoutVersion = ++this.sessionVersion;
+        const logoutOwner = this.sessionIdentity === null ? null : this.sessionIdentity.userId;
         const hasRefreshSession = this.tokenStorage.hasRefreshSession();
         const legacyRefreshToken = this.pendingLegacyRefreshToken ?? this.tokenStorage.consumeLegacyRefreshToken();
         this.pendingLegacyRefreshToken = null;
+        const cleanup = this.sessionEvents.prepareSessionEnd();
+        if (cleanup !== null) {
+            await cleanup.catch(() => {});
+        }
+        if (logoutVersion !== this.sessionVersion) {
+            return;
+        }
         if (hasRefreshSession) {
-            const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
             await firstValueFrom(
-                this.sdk.client
-                    .postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: request })
-                    .pipe(catchError(() => of(undefined))),
+                this.cookieSessions.run(() => this.createLogoutRequest(logoutVersion, logoutOwner, legacyRefreshToken, redirectToAuth)),
             );
+        } else {
+            this.completeSessionEnd(logoutVersion, legacyRefreshToken);
+        }
+        if (logoutVersion !== this.sessionVersion) {
+            return;
+        }
+        await this.navigateAfterSessionEndAsync(redirectToAuth);
+    }
+
+    private requiresLocalLogout(): boolean {
+        return (
+            this.sessionIdentity !== null &&
+            (this.sessionIdentity.impersonating || this.tokenStorage.hasForeignSession(this.sessionIdentity.userId))
+        );
+    }
+
+    private createLogoutRequest(
+        logoutVersion: number,
+        owner: string | null,
+        legacyToken: string | null,
+        redirectToAuth: boolean,
+    ): Observable<void> {
+        if (logoutVersion !== this.sessionVersion) {
+            return of(undefined);
+        }
+        if (owner !== null && this.tokenStorage.hasForeignSession(owner)) {
+            this.invalidateLocalSession(redirectToAuth);
+            return of(undefined);
+        }
+        const request = legacyToken === null ? {} : { refreshToken: legacyToken };
+        return this.sdk.client.postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
+            catchError(() => of(undefined)),
+            tap(() => {
+                this.completeSessionEnd(logoutVersion, legacyToken);
+            }),
+        );
+    }
+
+    private completeSessionEnd(logoutVersion: number, legacyToken: string | null): void {
+        if (logoutVersion !== this.sessionVersion) {
+            return;
+        }
+        if (legacyToken !== null) {
+            this.tokenStorage.clearLegacyRefreshTokenIfMatches(legacyToken);
         }
         this.sessionEvents.notifySessionEnded();
+        this.sessionIdentity = null;
+        this.restoredPolicyUnknown = false;
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
         this.mustChangePasswordSignal.set(false);
         this.tokenStorage.clearAll();
         this.localizationService.clearStoredLanguage();
-        if (redirectToAuth) {
-            await this.navigationService.navigateToAuthAsync('login');
-            return;
-        }
-        await this.navigationService.navigateToLandingAsync();
     }
 
     public getToken(): string | null {
-        return this.tokenStorage.getToken();
+        return this.authTokenSignal();
     }
 
     public getUserId(): string | null {
@@ -411,6 +543,10 @@ export class AuthService {
     }
 
     private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
+        if (!this.isValidSessionResponse(authResponse, null)) {
+            this.invalidateLocalSession();
+            throw new Error('Authentication response identity mismatch');
+        }
         this.sessionVersion++;
         this.refreshInFlight$ = null;
         this.sessionEvents.notifyAuthenticated();
@@ -423,8 +559,17 @@ export class AuthService {
 
     private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
         this.pendingLegacyRefreshToken = null;
+        this.restoredPolicyUnknown = false;
+        this.initialized = true;
+        this.sessionIdentity = this.readSessionIdentity(authResponse.accessToken);
+        this.tokenStorage.bindOwner(authResponse.user.id);
         this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
-        this.tokenStorage.markRefreshSession();
+        this.tokenStorage.saveAccountAccess(
+            authResponse.user.id,
+            this.jwtDecoder.extractRoles(authResponse.accessToken),
+            rememberMe !== undefined,
+        );
+        this.tokenStorage.markRefreshSession(rememberMe !== undefined);
         this.authTokenSignal.set(authResponse.accessToken);
 
         const preferredLanguage = authResponse.user.language;
@@ -447,7 +592,7 @@ export class AuthService {
         if (userId.length > 0) {
             this.tokenStorage.setUserId(userId);
             this.userSignal.set(userId);
-            this.tokenStorage.saveAccountAccess(userId, this.jwtDecoder.extractRoles(authResponse.accessToken));
+            this.tokenStorage.saveAccountAccess(userId, this.jwtDecoder.extractRoles(authResponse.accessToken), rememberMe !== undefined);
         } else {
             this.logger.warn('Auth response did not include user ID');
             this.tokenStorage.clearUserId();
@@ -472,8 +617,13 @@ export class AuthService {
         }
         this.initializeAuth();
         if (this.isAuthenticated()) {
-            if (this.hasUpdatedAccountAccess()) {
+            if (this.restoredPolicyUnknown && !this.tokenStorage.hasRefreshSession()) {
+                this.invalidateLocalSession();
+            } else if (this.restoredPolicyUnknown || this.hasUpdatedAccountAccess()) {
                 await firstValueFrom(this.refreshToken());
+                if (this.restoredPolicyUnknown) {
+                    this.invalidateLocalSession();
+                }
             }
             return;
         }
@@ -499,13 +649,53 @@ export class AuthService {
     }
 
     private clearStoredIdentity(): void {
+        // A guest may still restore the shared HttpOnly cookie. Clearing local
+        // identity must not erase its marker or another tab's persisted owner.
+        this.tokenStorage.clearTabSession();
+        this.sessionIdentity = null;
+        this.restoredPolicyUnknown = false;
         this.authTokenSignal.set(null);
         this.userSignal.set(null);
         this.emailConfirmedSignal.set(null);
         this.mustChangePasswordSignal.set(false);
-        this.tokenStorage.clearUserId();
-        this.tokenStorage.clearEmailConfirmed();
-        this.tokenStorage.clearMustChangePassword();
+    }
+
+    private readSessionIdentity(token: string | null): SessionIdentity | null {
+        const userId = this.jwtDecoder.extractUserId(token);
+        return userId === null ? null : { userId, impersonating: this.jwtDecoder.isImpersonation(token) };
+    }
+
+    private isValidSessionResponse(response: AuthResponse, expectedOwner: string | null): boolean {
+        const identity = this.readSessionIdentity(response.accessToken);
+        return (
+            identity !== null &&
+            !identity.impersonating &&
+            identity.userId === response.user.id &&
+            (expectedOwner === null || identity.userId === expectedOwner)
+        );
+    }
+
+    private invalidateLocalSession(redirectToAuth = true): void {
+        this.sessionEvents.notifyLocalSessionInvalidating();
+        this.sessionVersion++;
+        this.initialized = true;
+        this.refreshInFlight$ = null;
+        this.pendingLegacyRefreshToken = null;
+        this.tokenStorage.clearTabSession();
+        this.sessionIdentity = null;
+        this.restoredPolicyUnknown = false;
+        this.authTokenSignal.set(null);
+        this.userSignal.set(null);
+        this.emailConfirmedSignal.set(null);
+        this.mustChangePasswordSignal.set(false);
+        this.sessionEvents.notifyLocalSessionInvalidated();
+        void this.navigateAfterSessionEndAsync(redirectToAuth);
+    }
+
+    private async navigateAfterSessionEndAsync(redirectToAuth: boolean): Promise<void> {
+        await this.sessionEvents.runSessionEndNavigationAsync(async () =>
+            redirectToAuth ? this.navigationService.navigateToAuthAsync('login') : this.navigationService.navigateToLandingAsync(),
+        );
     }
 
     private hasRole(role: string): boolean {
@@ -548,9 +738,16 @@ export class AuthService {
                 return;
             }
 
-            this.tokenStorage.clearAll();
-            this.tokenStorage.setToken(token, false);
+            this.sessionVersion++;
+            this.tokenStorage.clearTabSession();
+            this.sessionIdentity = this.readSessionIdentity(token);
+            this.tokenStorage.bindOwner(this.sessionIdentity?.userId ?? null);
+            this.tokenStorage.setToken(token, false, false);
             this.authTokenSignal.set(token);
+            this.userSignal.set(this.sessionIdentity?.userId ?? null);
+            this.emailConfirmedSignal.set(null);
+            this.mustChangePasswordSignal.set(false);
+            this.sessionEvents.notifyAuthenticated();
         });
     }
 }

@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
+using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Modules.Marketing.Contracts.Models;
 
 namespace FoodDiary.Modules.Marketing.Application.Mappings;
@@ -28,7 +29,7 @@ internal static class MarketingAttributionMappings {
                     x.EventType,
                     x.AnonymousId.Value,
                     x.SessionId.Value,
-                    x.LandingPath,
+                    MarketingLandingPath.Sanitize(x.LandingPath),
                     x.ReferrerHost,
                     x.UtmSource,
                     x.UtmMedium,

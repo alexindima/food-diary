@@ -1,6 +1,7 @@
 using System.Data.Common;
 using System.Text.Json;
 using FoodDiary.Persistence.Runtime.Persistence.Shared;
+using FoodDiary.Persistence.PostgreSql;
 using FoodDiary.Persistence.Runtime.Persistence;
 using FoodDiary.Persistence.Abstractions;
 using FoodDiary.Application.Contracts.Common.Abstractions.Persistence;

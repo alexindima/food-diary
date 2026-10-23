@@ -1,6 +1,7 @@
 <div class="meal-manage fd-stack" fdPageContainer [fdUiPreventUnload]="mealSignalForm().dirty()">
     <fd-page-header
         class="meal-manage__header"
+        [attr.inert]="isBusy() ? '' : null"
         [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'MEAL_MANAGE.SUBTITLE' | translate"
         [backVisible]="true"
@@ -15,8 +16,10 @@
             [ariaLabel]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
             [fdUiHint]="(meal() !== null ? 'MEAL_MANAGE.SAVE_BUTTON' : 'MEAL_MANAGE.ADD_BUTTON') | translate"
             [disabled]="isSubmitDisabled()"
-            [disabledReason]="(isLoadingRecipeAmounts() ? 'COMMON.LOADING' : 'DISABLED_HINTS.FORM_INVALID') | translate"
-            [loading]="isBusy()"
+            [disabledReason]="
+                (isLoadingRecipeAmounts() || photosUploading() ? 'COMMON.LOADING' : 'DISABLED_HINTS.FORM_INVALID') | translate
+            "
+            [loading]="isSubmitBusy()"
             (click)="manageForm.requestSubmit()"
         />
         <fd-ui-button
@@ -45,7 +48,12 @@
             [style.display]="isLoadingRecipeAmounts() ? 'none' : null"
         >
             @let generalErrors = generalFieldErrors();
-            <div class="meal-manage__grid fd-grid">
+            <fieldset
+                class="meal-manage__grid fd-grid"
+                [disabled]="isBusy()"
+                [attr.inert]="isBusy() ? '' : null"
+                [attr.aria-label]="manageHeaderState().titleKey | translate"
+            >
                 <div class="meal-manage__column meal-manage__column--primary fd-stack">
                     <fd-meal-items-section
                         data-tour-id="meal-manage-items"
@@ -69,6 +77,7 @@
                         [mealForm]="mealSignalForm"
                         [mealTypeSelectOptions]="mealTypeSelectOptions"
                         [generalErrors]="generalErrors"
+                        (photosUploading)="photosUploading.set($event)"
                     />
 
                     <fd-meal-satiety-card
@@ -91,13 +100,14 @@
                         [macrosError]="macrosError()"
                         [isEditMode]="meal() !== null"
                         [isSubmitting]="isSubmitting()"
+                        [photosUploading]="photosUploading()"
                         [submitDisabled]="isSubmitDisabled()"
                         [globalError]="globalError()"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (cancelRequested)="onCancelAsync()"
                     />
                 </div>
-            </div>
+            </fieldset>
         </form>
     </fd-page-body>
 </div>

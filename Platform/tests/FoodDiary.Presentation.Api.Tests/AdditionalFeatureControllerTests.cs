@@ -111,7 +111,7 @@ public sealed class AdditionalFeatureControllerTests {
 
         CapturedSender updateSender = SubstituteSender.Capture(Result.Success(list));
         ShoppingListsController updateController = CreateController(new ShoppingListsController(updateSender));
-        var request = new UpdateShoppingListHttpRequest("Updated", []);
+        var request = new UpdateShoppingListHttpRequest("Updated", [], new string('a', 64));
         Assert.IsType<ShoppingListHttpResponse>(Assert.IsType<OkObjectResult>(await updateController.Update(listId, userId, request)).Value);
         Assert.Equal(listId, Assert.IsType<UpdateShoppingListCommand>(updateSender.Request).ShoppingListId);
 

@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -13,6 +14,7 @@ import { ShoppingListService } from '../api/shopping-list.service';
 import { ShoppingListFacade } from './shopping-list.facade';
 
 const AUTOSAVE_DEBOUNCE_MS = 500;
+const REVISION_LENGTH = 64;
 
 type ShoppingListServiceMock = {
     create: ReturnType<typeof vi.fn>;
@@ -244,13 +246,19 @@ describe('ShoppingListFacade item persistence and errors', () => {
         addMilk(facade);
         const draft = facade.items()[0];
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', expect.objectContaining({ expectedRevision: list.revision }));
         facade.toggleItemChecked(draft.id, true);
-        response.next({ ...list, items: [{ ...draft, id: entityId<'shopping-list-item'>('saved-item') }] });
+        response.next({
+            ...list,
+            revision: 'b'.repeat(REVISION_LENGTH),
+            items: [{ ...draft, id: entityId<'shopping-list-item'>('saved-item') }],
+        });
         expect(facade.items()[0]).toMatchObject({ id: 'saved-item', isChecked: true });
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
         expect(shoppingListService.update).toHaveBeenLastCalledWith(
             'list-1',
             expect.objectContaining({
+                expectedRevision: 'b'.repeat(REVISION_LENGTH),
                 items: [expect.objectContaining({ id: 'saved-item', isChecked: true })],
             }),
         );
@@ -437,10 +445,43 @@ describe('ShoppingListFacade persistence operations', () => {
         addMilk(facade);
         facade.clearCurrentList();
 
-        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', { name: 'Main list', items: [] });
+        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', {
+            expectedRevision: 'a'.repeat(REVISION_LENGTH),
+            name: 'Main list',
+            items: [],
+        });
         expect(facade.items()).toHaveLength(1);
         expect(facade.isSaving()).toBe(false);
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.CLEAR_ERROR');
+    });
+});
+
+describe('ShoppingListFacade pending clear', () => {
+    it.each(['success', 'failure'])('locks item editing until a pending clear finishes with %s', outcome => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const cleared = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(cleared);
+        facade.initialize();
+        addMilk(facade);
+        const items = facade.items();
+
+        facade.clearListById(list.id);
+        expect(facade.isClearing()).toBe(true);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        if (outcome === 'success') {
+            cleared.next(list);
+            expect(facade.items()).toEqual([]);
+            expect(facade.hasUnsavedChanges()).toBe(false);
+        } else {
+            cleared.error(new Error('offline'));
+            expect(facade.items()).toEqual(items);
+            vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+            expect(shoppingListService.update).toHaveBeenLastCalledWith(
+                list.id,
+                expect.objectContaining({ items: [expect.objectContaining({ name: 'Milk' })] }),
+            );
+        }
+        expect(facade.isClearing()).toBe(false);
     });
 });
 
@@ -464,14 +505,63 @@ describe('ShoppingListFacade autosave', () => {
 
         facade.renameListById(entityId<'shopping-list'>('list-1'), ' Inline rename ');
 
-        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', { name: 'Inline rename' });
+        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', { expectedRevision: list.revision, name: 'Inline rename' });
         expect(facade.listName()).toBe('Inline rename');
     });
 
+    it.each(['before', 'during'])('preserves item edits made %s an inline rename and saves them afterward', timing => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        const renamed = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(renamed);
+        facade.initialize();
+        if (timing === 'before') {
+            addMilk(facade);
+        }
+
+        facade.renameListById(list.id, 'Renamed');
+        if (timing === 'during') {
+            addMilk(facade);
+        }
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        renamed.next({ ...list, name: 'Renamed' });
+
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
+        expect(facade.listName()).toBe('Renamed');
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(
+            list.id,
+            expect.objectContaining({ name: 'Renamed', items: [expect.objectContaining({ name: 'Milk' })] }),
+        );
+    });
+
+    it('keeps newer item edits and resumes their save when an inline rename fails', () => {
+        const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
+        const renamed = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(renamed);
+        facade.initialize();
+        facade.renameListById(list.id, 'Renamed');
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+
+        renamed.error(new Error('offline'));
+
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
+        expect(facade.listName()).toBe(list.name);
+        expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.SAVE_ERROR');
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(
+            list.id,
+            expect.objectContaining({ name: list.name, items: [expect.objectContaining({ name: 'Milk' })] }),
+        );
+    });
+});
+
+describe('ShoppingListFacade new list summaries', () => {
     it('should expose a newly created list summary before the list reload finishes', () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         const createdList: ShoppingList = {
             id: entityId<'shopping-list'>('list-2'),
+            revision: 'a'.repeat(REVISION_LENGTH),
             name: 'New list',
             createdAt: utcInstant('2026-06-06T00:00:00Z'),
             items: [],
@@ -515,6 +605,7 @@ function setupShoppingListFacade(language = 'ru'): ShoppingListFacadeContext {
 
     const list: ShoppingList = {
         id: entityId<'shopping-list'>('list-1'),
+        revision: 'a'.repeat(REVISION_LENGTH),
         name: 'Main list',
         createdAt: utcInstant('2026-01-01T00:00:00Z'),
         items: [],
@@ -647,7 +738,219 @@ describe('Named creation and purchased cleanup', () => {
 function makeOverview(items: ShoppingListSummary[]): ShoppingListOverview {
     const first = items.at(0);
     return {
-        selectedList: first === undefined ? null : { id: first.id, name: first.name, createdAt: first.createdAt, items: [] },
+        selectedList:
+            first === undefined
+                ? null
+                : { id: first.id, revision: 'a'.repeat(REVISION_LENGTH), name: first.name, createdAt: first.createdAt, items: [] },
         lists: { items, hasMore: false, nextPage: null },
     };
 }
+
+describe('ShoppingListFacade conditional updates', () => {
+    it('resumes the selected draft autosave after a nonselected clear finishes past the debounce', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        const other = { ...list, id: entityId<'shopping-list'>('list-2'), revision: 'b'.repeat(REVISION_LENGTH) };
+        facade.lists.update(lists => [...lists, { id: other.id, name: other.name, createdAt: other.createdAt, itemsCount: 1 }]);
+        shoppingListService.getById.mockReturnValueOnce(of(other));
+        const cleared = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(cleared);
+        addMilk(facade);
+        facade.clearListById(other.id);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenCalledTimes(1);
+        cleared.next({ ...other, revision: 'c'.repeat(REVISION_LENGTH) });
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(
+            list.id,
+            expect.objectContaining({ expectedRevision: list.revision, items: [expect.objectContaining({ name: 'Milk' })] }),
+        );
+        expect(shoppingListService.update).toHaveBeenCalledTimes(2);
+    });
+    it.each(['rename', 'clear'] as const)('loads the target detail revision before a nonselected %s', operation => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        const target = {
+            ...list,
+            id: entityId<'shopping-list'>('list-2'),
+            name: 'Other saved list',
+            revision: 'b'.repeat(REVISION_LENGTH),
+        };
+        facade.lists.update(lists => [...lists, { id: target.id, name: 'Old summary name', createdAt: target.createdAt, itemsCount: 1 }]);
+        const baseline = new Subject<ShoppingList>();
+        shoppingListService.getById.mockReturnValueOnce(baseline);
+        shoppingListService.update.mockReturnValueOnce(of({ ...target, revision: 'c'.repeat(REVISION_LENGTH) }));
+
+        if (operation === 'rename') {
+            facade.renameListById(target.id, 'Renamed target');
+        } else {
+            facade.clearListById(target.id);
+        }
+        expect(shoppingListService.getById).toHaveBeenCalledExactlyOnceWith(target.id);
+        expect(shoppingListService.update).not.toHaveBeenCalled();
+        baseline.next(target);
+        expect(shoppingListService.update).toHaveBeenCalledExactlyOnceWith(
+            target.id,
+            operation === 'rename'
+                ? { expectedRevision: target.revision, name: 'Renamed target' }
+                : { expectedRevision: target.revision, name: target.name, items: [] },
+        );
+        expect(facade.list()).toEqual(list);
+    });
+
+    it('adopts a rename response revision while retaining newer local name and items', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        const response = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(response);
+        facade.renameListById(list.id, 'First rename');
+        addMilk(facade);
+        facade.setListName('Newer draft name');
+        response.next({ ...list, name: 'First rename', revision: 'b'.repeat(REVISION_LENGTH) });
+        expect(facade.listName()).toBe('Newer draft name');
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk' })]);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(
+            list.id,
+            expect.objectContaining({
+                expectedRevision: 'b'.repeat(REVISION_LENGTH),
+                name: 'Newer draft name',
+                items: [expect.objectContaining({ name: 'Milk' })],
+            }),
+        );
+    });
+});
+
+describe('ShoppingListFacade unavailable update baseline', () => {
+    it.each(['rename', 'clear'] as const)(
+        'does not borrow the selected revision for a nonselected %s when detail loading fails',
+        operation => {
+            const { facade, list, shoppingListService } = setupShoppingListFacade();
+            facade.initialize();
+            const otherId = entityId<'shopping-list'>('list-2');
+            facade.lists.update(lists => [...lists, { id: otherId, name: 'Other', createdAt: list.createdAt, itemsCount: 1 }]);
+            shoppingListService.getById.mockReturnValueOnce(of(null));
+            if (operation === 'rename') {
+                facade.renameListById(otherId, 'Draft rename');
+            } else {
+                facade.clearListById(otherId);
+            }
+            expect(shoppingListService.update).not.toHaveBeenCalled();
+            expect(facade.list()).toEqual(list);
+            expect(facade.isSaving()).toBe(false);
+            expect(facade.isClearing()).toBe(false);
+        },
+    );
+});
+
+describe('ShoppingListFacade revision conflict recovery', () => {
+    it('keeps the nonselected conflict target distinct and reloads that target after confirmation', () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        const other = { ...list, id: entityId<'shopping-list'>('list-2'), name: 'Other', revision: 'b'.repeat(REVISION_LENGTH) };
+        facade.lists.update(lists => [...lists, { id: other.id, name: other.name, createdAt: other.createdAt, itemsCount: 0 }]);
+        shoppingListService.getById.mockReturnValueOnce(of(other));
+        shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
+        facade.renameListById(other.id, 'Draft other name');
+        expect(facade.conflictListId()).toBe(other.id);
+        expect(facade.list()).toEqual(list);
+        expect(facade.lists().find(summary => summary.id === other.id)?.name).toBe('Draft other name');
+        facade.reloadConflict(list.id);
+        expect(shoppingListService.getById).toHaveBeenCalledTimes(1);
+        const fresh = { ...other, name: 'Other client name', revision: 'c'.repeat(REVISION_LENGTH) };
+        shoppingListService.getById.mockReturnValueOnce(of(fresh));
+        facade.reloadConflict(other.id);
+        expect(facade.list()).toEqual(fresh);
+        expect(facade.selectedListId()).toBe(other.id);
+        expect(facade.hasUnsavedChanges()).toBe(false);
+        expect(facade.conflictListId()).toBeNull();
+    });
+    it('retains a conflicted draft and stops autosave, retries, navigation and queued creation', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        const response = new Subject<ShoppingList>();
+        shoppingListService.update.mockReturnValueOnce(response);
+        addMilk(facade);
+        facade.setListName('Draft name');
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        facade.toggleItemChecked(facade.items()[0].id, true);
+        facade.createNewList('Next');
+        response.error(new HttpErrorResponse({ status: HttpStatusCode.Conflict }));
+        TestBed.tick();
+        facade.retrySave();
+        facade.selectList(entityId<'shopping-list'>('list-2'));
+        facade.createNewList('Blocked');
+        expect(await facade.saveBeforeLeaveAsync()).toBe(false);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS * 2);
+
+        expect(facade.conflictListId()).toBe(list.id);
+        expect(facade.listName()).toBe('Draft name');
+        expect(facade.items()).toEqual([expect.objectContaining({ name: 'Milk', isChecked: true })]);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        expect(facade.saveError()).toBe(false);
+        expect(facade.isCreating()).toBe(false);
+        expect(shoppingListService.create).not.toHaveBeenCalled();
+        expect(shoppingListService.getById).not.toHaveBeenCalled();
+        expect(shoppingListService.update).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('ShoppingListFacade conflicted mutations', () => {
+    it.each(['rename', 'clear'] as const)('retains selected draft after a %s conflict', operation => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        addMilk(facade);
+        shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
+        if (operation === 'rename') {
+            facade.renameListById(list.id, 'Draft rename');
+        } else {
+            facade.clearListById(list.id);
+        }
+        const draft = facade.items();
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(facade.conflictListId()).toBe(list.id);
+        expect(facade.items()).toEqual(draft);
+        expect(facade.items()).toHaveLength(1);
+        expect(facade.listName()).toBe(operation === 'rename' ? 'Draft rename' : list.name);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        expect(shoppingListService.update).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([null, 'error'] as const)('keeps the draft and conflict when confirmed reload returns %s', result => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        const draft = facade.items();
+        shoppingListService.getById.mockReturnValueOnce(result === null ? of(null) : throwError(() => new Error('offline')));
+        facade.reloadConflict(list.id);
+        expect(facade.items()).toEqual(draft);
+        expect(facade.conflictListId()).toBe(list.id);
+        expect(facade.hasUnsavedChanges()).toBe(true);
+        expect(facade.isLoading()).toBe(false);
+    });
+
+    it('replaces a draft only after a successful confirmed reload and uses the returned revision', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        facade.initialize();
+        shoppingListService.update.mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: HttpStatusCode.Conflict })));
+        addMilk(facade);
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        const fresh = { ...list, name: 'Other client saved', revision: 'b'.repeat(REVISION_LENGTH) };
+        shoppingListService.getById.mockReturnValueOnce(of(fresh));
+        facade.reloadConflict(list.id);
+        expect(facade.items()).toEqual([]);
+        expect(facade.listName()).toBe(fresh.name);
+        expect(facade.conflictListId()).toBeNull();
+        expect(facade.hasUnsavedChanges()).toBe(false);
+        expect(await facade.saveBeforeLeaveAsync()).toBe(true);
+        facade.setListName('Next edit');
+        vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
+        expect(shoppingListService.update).toHaveBeenLastCalledWith(list.id, {
+            expectedRevision: fresh.revision,
+            name: 'Next edit',
+            items: [],
+        });
+    });
+});

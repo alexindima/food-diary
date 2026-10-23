@@ -107,8 +107,13 @@ export class PublicRecipeDetailComponent {
                 const subscription = this.facade
                     .isFavorite(entityId<'recipe'>(recipe.id))
                     .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe(saved => {
-                        this.saved.update(current => current || saved);
+                    .subscribe({
+                        next: saved => {
+                            this.saved.update(current => current || saved);
+                        },
+                        error: () => {
+                            this.actionMessage.set('PUBLIC_RECIPES.ACTION_ERROR');
+                        },
                     });
                 onCleanup(() => {
                     subscription.unsubscribe();

@@ -40,6 +40,16 @@ $evidence = Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json
 $acceptance = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
 $now = [DateTime]::UtcNow.ToString('o')
 
+function Test-ExistingMappedTestPath([string]$Path) {
+    if ([string]::IsNullOrWhiteSpace($Path) -or [IO.Path]::IsPathRooted($Path)) { return $false }
+    try {
+        $rootPrefix = [IO.Path]::GetFullPath($repositoryRoot).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+        $candidate = [IO.Path]::GetFullPath((Join-Path $repositoryRoot $Path))
+        $comparison = if ([IO.Path]::DirectorySeparatorChar -eq '\') { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
+        return $candidate.StartsWith($rootPrefix, $comparison) -and
+            (Test-Path -LiteralPath $candidate -PathType Leaf)
+    } catch { return $false }
+}
 function Get-RulePaths([object]$Packet, [string]$RuleId) {
     @($Packet.policy.matchedRules | Where-Object id -eq $RuleId | Select-Object -First 1).matchedPaths |
         ForEach-Object { [string]$_ } |
@@ -252,10 +262,13 @@ foreach ($criterion in @($acceptance.criteria)) {
     $mappedReviews = @($criterion.mapping.reviewIds)
     $mappedScenarios = @($criterion.mapping.scenarioIds)
     $mappedTests = @($criterion.mapping.testPaths)
+    # Explicit acceptance links are broader than the inferred focused-test candidates.
+    # Keeping a file reference does not claim that its test was executed or passed.
+    $retainedTests = @($mappedTests | Where-Object { $_ -in $newTestPaths -or (Test-ExistingMappedTestPath ([string]$_)) })
     $mappingChanged = @($mappedChecks | Where-Object { $_ -in $invalidatedCheckIds }).Count -gt 0 -or
         @($mappedReviews | Where-Object { $_ -in $invalidatedReviewIds }).Count -gt 0 -or
         @($mappedScenarios | Where-Object { $_ -in $changedScenarioIds }).Count -gt 0 -or
-        @($mappedTests | Where-Object { $_ -notin $newTestPaths }).Count -gt 0 -or
+        @($mappedTests | Where-Object { $_ -notin $retainedTests }).Count -gt 0 -or
         @($mappedChangedPaths | Where-Object { $_ -notin @($newPacket.diff.changedPaths) }).Count -gt 0
     $hasMapping = $mappedChangedPaths.Count + $mappedChecks.Count + $mappedReviews.Count + $mappedScenarios.Count + $mappedTests.Count -gt 0
     $unanchoredResolution = -not $hasMapping -and [string]$criterion.status -ne 'pending' -and
@@ -264,7 +277,7 @@ foreach ($criterion in @($acceptance.criteria)) {
     $retainedChecks = @($mappedChecks | Where-Object { $_ -in $newCheckIds -and $_ -notin $invalidatedCheckIds })
     $retainedReviews = @($mappedReviews | Where-Object { $_ -in $newReviewIds -and $_ -notin $invalidatedReviewIds })
     $retainedScenarios = @($mappedScenarios | Where-Object { $newScenarios.ContainsKey([string]$_) -and $_ -notin $changedScenarioIds })
-    $retainedTests = @($mappedTests | Where-Object { $_ -in $newTestPaths })
+
     $hasDirectEvidence = $retainedChangedPaths.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$criterion.resolution.evidenceNote)
     $hasRetainedEvidence = $hasDirectEvidence -or
         $retainedChecks.Count + $retainedReviews.Count + $retainedScenarios.Count + $retainedTests.Count -gt 0
@@ -335,19 +348,7 @@ if ($Apply) {
     try {
         [System.IO.File]::WriteAllText($evidencePath, (($evidence | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($acceptancePath, (($acceptance | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
-        $validReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot | Where-Object validForCurrentState)
-        foreach ($check in @($newChecks | Where-Object status -eq 'pending')) {
-            $normalized = Normalize-LlmWikiVerificationCommand ([string]$check.command)
-            $receipt = $validReceipts | Where-Object normalizedCommand -eq $normalized | Select-Object -First 1
-            if ($null -eq $receipt) { continue }
-            & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') check `
-                -Path "$normalizedWorkspacePath/evidence.json" `
-                -Id ([string]$check.id) `
-                -Status passed `
-                -Command ([string]$check.command) `
-                -DurationSeconds ([double]$receipt.durationSeconds) `
-                -Reason "Imported from content-addressed verification receipt recorded at $($receipt.recordedAtUtc)." | Out-Null
-        }
+        & (Join-Path $PSScriptRoot 'Import-LlmWikiEvidenceReceipts.ps1') -WorkspacePath $normalizedWorkspacePath | Out-Null
     } catch {
         [System.IO.File]::WriteAllText($evidencePath, $evidenceRaw, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($acceptancePath, $acceptanceRaw, [System.Text.UTF8Encoding]::new($false))

@@ -111,14 +111,15 @@ public sealed class ShoppingListHttpMappingsTests {
                 IsChecked: true,
                 CheckedOnUtc: null,
                 SortOrder: 2),
-        });
+        }, new string('a', 64));
 
         UpdateShoppingListCommand command = request.ToCommand(userId, listId);
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(listId, command.ShoppingListId),
-            () => Assert.Equal("Updated Name", command.Name));
+            () => Assert.Equal("Updated Name", command.Name),
+            () => Assert.Equal(request.ExpectedRevision, command.ExpectedRevision));
         Assert.NotNull(command.Items);
         Assert.Single(command.Items!);
     }
@@ -166,6 +167,7 @@ public sealed class ShoppingListHttpMappingsTests {
 
         Assert.Equal(listId, response.Id);
         Assert.Equal("Shopping", response.Name);
+        Assert.Equal(model.Revision, response.Revision);
         Assert.Single(response.Items);
         Assert.Multiple(
             () => Assert.Equal(itemId, response.Items[0].Id),

@@ -25,7 +25,7 @@ describe('TelegramAuthFacade', () => {
         complete: vi.fn(),
     };
     const auth = { acceptExternalAuthentication: vi.fn() };
-    const browser = { getTelegramInitData: vi.fn(), getHref: vi.fn(), open: vi.fn() };
+    const browser = { getTelegramInitData: vi.fn(), getHref: vi.fn(), open: vi.fn(), runWithLockAsync };
     const storage = { getJson: vi.fn(), setJson: vi.fn(), removeItem: vi.fn() };
     let facade: TelegramAuthFacade;
 
@@ -100,3 +100,7 @@ describe('TelegramAuthFacade', () => {
         expect(facade.intent()).toBeNull();
     });
 });
+
+async function runWithLockAsync<T>(_name: string, operation: () => Promise<T>): Promise<T> {
+    return operation();
+}

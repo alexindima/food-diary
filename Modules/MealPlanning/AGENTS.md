@@ -10,6 +10,7 @@ aggregate boundary through `IShoppingListCreationService`, never its repository.
   their IDs, events and enum with canonical project and folder namespaces. MealPlanId and
   MealPlanMealId are module-owned source-provenance IDs.
 - Infrastructure owns both repositories and complete `AddMealPlanningModule` DI.
+  `AddMealPlanningPersistence` registers owner persistence and ordered user purge without application handlers; JobManager composes it through its production service registration.
 - PersistenceModel owns all six mappings; shared DbContext explicitly applies
   them. Historical migrations and the model snapshot remain central.
 - HTTP controllers live in Presentation/MealPlans/Controllers and Presentation/ShoppingLists/Controllers.

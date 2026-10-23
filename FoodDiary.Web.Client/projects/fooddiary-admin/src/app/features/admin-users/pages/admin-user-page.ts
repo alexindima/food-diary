@@ -13,6 +13,7 @@ import { AdminUserDetailsBodyComponent } from '../components/admin-user-details-
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
 import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
+import { resolveAdminAvatarUrl } from '../lib/admin-avatar-url';
 import { buildAdminUserSections } from '../lib/admin-user-sections';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type {
@@ -56,6 +57,16 @@ export class AdminUserPageComponent {
         const user = this.user();
         return user === null ? '?' : this.buildInitials(user);
     });
+    private readonly avatarLoadFailure = signal<{ userId: AdminUser['id']; url: string } | null>(null);
+    protected readonly avatarUrl = computed(() => {
+        const user = this.user();
+        if (user === null) {
+            return null;
+        }
+        const url = resolveAdminAvatarUrl(user.profileImage, this.document.baseURI);
+        const failure = this.avatarLoadFailure();
+        return failure?.userId === user.id && failure.url === url ? null : url;
+    });
     protected readonly canImpersonate = computed(() => {
         const user = this.user();
         return user !== null && (user.deletedAt === null || user.deletedAt === undefined) && !user.roles.includes('Admin');
@@ -66,6 +77,7 @@ export class AdminUserPageComponent {
             .pipe(
                 switchMap(([params]) => {
                     this.user.set(null);
+                    this.avatarLoadFailure.set(null);
                     this.failed.set(false);
                     this.activityLoading.set(true);
                     this.activityFailed.set(false);
@@ -93,6 +105,12 @@ export class AdminUserPageComponent {
 
     protected reload(): void {
         this.refresh.next();
+    }
+
+    protected onAvatarError(userId: AdminUser['id'], url: string): void {
+        if (this.user()?.id === userId && this.avatarUrl() === url) {
+            this.avatarLoadFailure.set({ userId, url });
+        }
     }
 
     protected edit(user: AdminUser): void {

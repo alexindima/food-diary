@@ -1,8 +1,8 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { computed, DestroyRef, effect, inject, Injectable, resource, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { computed, DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, finalize, firstValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, type Observable, of, Subject, takeUntil } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import type { LessonId } from '../../../shared/models/semantics/entity-id';
@@ -29,6 +29,7 @@ export class LessonFacade {
         sort: 'recommended',
     };
     private readonly selectedLessonId = signal<LessonId | null>(null);
+    private readonly selectionChanged = new Subject<void>();
     private readonly markedReadIds = signal<Set<LessonId>>(new Set());
     private readonly lastLoadedPage = signal<{ key: string; page: LessonPage } | null>(null);
 
@@ -41,18 +42,18 @@ export class LessonFacade {
         toObservable(this.searchQuery).pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged()),
         { initialValue: this.initialQuery.search },
     );
-    private readonly lessonsResource = resource({
+    private readonly lessonsResource = rxResource({
         params: () => ({ ...this.currentListQuery(), locale: this.getCurrentLocale() }),
-        loader: async ({ params }): Promise<{ key: string; page: LessonPage }> => this.loadListPageAsync(params),
+        stream: ({ params }) => this.loadListPage(params),
     });
-    private readonly selectedLessonResource = resource({
+    private readonly selectedLessonResource = rxResource({
         params: () => this.selectedLessonId(),
-        loader: async ({ params }): Promise<LessonDetail | null> => {
+        stream: ({ params }): Observable<LessonDetail | null> => {
             if (params === null || params.length === 0) {
-                return null;
+                return of(null);
             }
 
-            return firstValueFrom(this.service.getById(params));
+            return this.service.getById(params);
         },
     });
 
@@ -123,6 +124,9 @@ export class LessonFacade {
     }
 
     public loadLesson(id: LessonId): void {
+        if (id !== this.selectedLessonId()) {
+            this.selectionChanged.next();
+        }
         this.markReadFailed.set(false);
         this.selectedLessonId.set(id);
     }
@@ -140,6 +144,7 @@ export class LessonFacade {
         this.service
             .markRead(id)
             .pipe(
+                takeUntil(this.selectionChanged),
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
                     this.isMarkingRead.set(false);
@@ -207,28 +212,32 @@ export class LessonFacade {
         return loaded?.key === this.listRequestKey(this.currentListQuery(), this.getCurrentLocale()) ? loaded.page : null;
     }
 
-    private async loadListPageAsync(query: LessonListQuery & { locale: string }): Promise<{ key: string; page: LessonPage }> {
+    private loadListPage(query: LessonListQuery & { locale: string }): Observable<{ key: string; page: LessonPage }> {
         const key = this.listRequestKey(query, query.locale);
-        const page = await firstValueFrom(
-            this.service.getAll({
+        return this.service
+            .getAll({
                 ...query,
                 category: query.category ?? undefined,
                 difficulty: query.difficulty ?? undefined,
                 search: query.search.length > 0 ? query.search : undefined,
                 pageSize: LESSON_PAGE_SIZE,
-            }),
-        );
-        if (
-            key === this.listRequestKey(this.currentListQuery(), this.getCurrentLocale()) &&
-            this.searchQuery().trim() === this.debouncedSearchQuery().trim()
-        ) {
-            const resolved = resolvePaginationPage(query.page, page.totalPages);
-            if (resolved !== query.page) {
-                this.pageIndex.set(resolved - 1);
-                this.writeListQuery({ ...this.currentListQuery(), page: resolved }, true);
-            }
-        }
-        return { key, page };
+            })
+            .pipe(
+                map(page => {
+                    if (
+                        !this.destroyRef.destroyed &&
+                        key === this.listRequestKey(this.currentListQuery(), this.getCurrentLocale()) &&
+                        this.searchQuery().trim() === this.debouncedSearchQuery().trim()
+                    ) {
+                        const resolved = resolvePaginationPage(query.page, page.totalPages);
+                        if (resolved !== query.page) {
+                            this.pageIndex.set(resolved - 1);
+                            this.writeListQuery({ ...this.currentListQuery(), page: resolved }, true);
+                        }
+                    }
+                    return { key, page };
+                }),
+            );
     }
 
     private applyListQuery(query: LessonListQuery): void {

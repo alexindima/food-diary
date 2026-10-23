@@ -22,7 +22,7 @@ internal sealed class ProductsUserDataPurgeParticipant(
 
             assetIds.AddRange(await context.Products.Where(item => item.UserId == userId)
                 .SelectMany(item => item.Images).Select(image => image.ImageAssetId).ToListAsync(cancellationToken).ConfigureAwait(false));
-            await imageAssetOwnershipService.ReassignAsync(assetIds, target, cancellationToken).ConfigureAwait(false);
+            await imageAssetOwnershipService.ReassignAsync(assetIds, userId, target, cancellationToken).ConfigureAwait(false);
             await context.Products.Where(item => item.UserId == userId)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.UserId, target), cancellationToken).ConfigureAwait(false);
         } else {

@@ -38,3 +38,5 @@ Fasting notification scheduling and telemetry cleanup dispatch Contracts request
 WeeklyGoals reminders dispatch SendWeeklyGoalRemindersCommand through ISender. Preserve scheduling, retries, concurrency exclusion, options and telemetry. The handler retains per-batch saves; no automatic whole-job transaction.
 
 UserCleanupJob dispatches one CleanupDeletedUsersCommand through ISender. Users Application owns paging; Users Infrastructure retains independent per-user transactions. Do not inject its internal cleanup port into the job.
+
+AddJobManagerServices composes AddMealPlanningPersistence so ordered user purge removes owned meal plans before Recipes. Preserve this persistence-only dependency; scheduled workers do not require MealPlanning application handlers.

@@ -238,6 +238,7 @@ Multi-line input.
 #### `fd-ui-select`
 
 Dropdown select based on the design-system menu/overlay primitives.
+The open listbox receives keyboard focus, uses `ariaLabel` or `label` as its accessible name, and exposes the active option through `aria-activedescendant` as keyboard navigation moves it.
 Selecting an option with Enter, Space, or a pointer closes the menu and returns focus to the trigger so keyboard navigation can continue.
 Tab and Shift+Tab dismiss the open menu without changing the value and continue to the next or previous control in the normal tab order.
 
@@ -505,6 +506,8 @@ Header slot for `fd-ui-entity-card`.
 #### `fd-ui-dialog`
 
 Dialog wrapper used with `FdUiDialogService`.
+
+`FdUiDialogService.closeAll()` synchronously destroys all open dialogs for application lifecycle cleanup. It closes without a result even when dismissal is locked; Escape, backdrop, and user close controls keep their ordinary dismissal policy.
 
 Service-opened dialogs expose one dialog role on the CDK container. The wrapper associates that container with its visible heading, including an `h1`–`h6` or `[role="heading"]` inside a custom header. A supplied `title` provides the accessible name when a custom header has no heading. Explicit service `ariaLabel` and `ariaLabelledBy` values take precedence. Standalone wrappers retain their own dialog role and modal semantics. Supply a heading, title, or explicit service name for every dialog.
 

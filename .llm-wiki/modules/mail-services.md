@@ -3,6 +3,7 @@ id: module.mail-services
 kind: module
 status: current
 sources:
+  - docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md
   - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
@@ -33,6 +34,12 @@ with its attempt number and unexpired ownership. Polling claims only the bounded
 parallel delivery capacity. Stable Message-Id supports at-least-once SMTP after
 a crash between provider acceptance and local acknowledgement. See
 [ADR 0052](../../docs/adr/0052-backend-transaction-and-delivery-reliability.md).
+
+MailRelay's HTTP readiness depends on its durable PostgreSQL store. RabbitMQ
+topology bootstrap retries in the background, so broker outages leave the
+PostgreSQL polling fallback available. Compose does not make mail or broker health
+a prerequisite for the primary API. See
+[ADR 0054](../../docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md).
 
 ## MailInbox
 

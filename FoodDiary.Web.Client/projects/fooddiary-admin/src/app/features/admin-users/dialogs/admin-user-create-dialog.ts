@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { applyWhen, email, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
+import { applyWhen, disabled, email, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
 import { FdUiCheckboxComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -66,6 +66,7 @@ export class AdminUserCreateDialogComponent {
         requirePasswordChange: true,
     });
     protected readonly form = form(this.formModel, path => {
+        disabled(path, { when: () => this.isSubmitting() });
         required(path.email);
         email(path.email);
         applyWhen(
@@ -83,10 +84,15 @@ export class AdminUserCreateDialogComponent {
     protected readonly submitLabel = computed(() => (this.isSubmitting() ? 'Creating...' : 'Create user'));
 
     protected close(): void {
-        this.dialogRef.close(this.created() !== null);
+        if (!this.isSubmitting()) {
+            this.dialogRef.close(this.created() !== null);
+        }
     }
 
     protected toggleRole(role: string): void {
+        if (this.isSubmitting()) {
+            return;
+        }
         this.formModel.update(value => ({
             ...value,
             roles: value.roles.includes(role) ? value.roles.filter(item => item !== role) : [...value.roles, role],
@@ -98,6 +104,9 @@ export class AdminUserCreateDialogComponent {
     }
 
     protected onCredentialsOptionChange(field: 'sendCredentialsEmail' | 'requirePasswordChange', checked: boolean): void {
+        if (this.isSubmitting()) {
+            return;
+        }
         this.formModel.update(value => {
             const updated = { ...value, [field]: checked };
             return { ...updated, requirePasswordChange: updated.sendCredentialsEmail || updated.requirePasswordChange };

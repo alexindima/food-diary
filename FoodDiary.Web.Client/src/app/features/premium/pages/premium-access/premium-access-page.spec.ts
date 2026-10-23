@@ -5,8 +5,9 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { NEVER, type Observable, of, throwError } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../../../../environments/environment';
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { AuthService } from '../../../../services/auth.service';
 import type {
@@ -24,6 +25,10 @@ import { PremiumAccessPageComponent } from './premium-access-page';
 const CHECKOUT_URL = 'https://checkout.example/session';
 const PORTAL_URL = 'https://portal.example/session';
 const ASYNC_SETTLE_TURNS = 8;
+const CHECKOUT_POLL_DELAY_MS = 1500;
+const CHECKOUT_POLL_ATTEMPTS = 6;
+const DELAYED_ACTIVATION_OVERVIEW_READS = 3;
+const DEFAULT_PADDLE_CLIENT_TOKEN = environment.paddleClientToken;
 
 type BillingServiceMock = {
     getOverview: ReturnType<typeof vi.fn<() => Observable<BillingOverview>>>;
@@ -62,6 +67,7 @@ let fakeDocument: FakeDocument;
 let queryParams: Record<string, string>;
 let paddlePreview: ReturnType<typeof vi.fn<PaddleCheckoutService['previewPlanPricesAsync']>>;
 let paddleOpen: ReturnType<typeof vi.fn<PaddleCheckoutService['openTransactionCheckoutAsync']>>;
+let currentLanguage: string;
 
 describe('PremiumAccessPageComponent checkout', () => {
     beforeEach(resetMocks);
@@ -324,7 +330,164 @@ describe('PremiumAccessPageComponent checkout return', () => {
     });
 });
 
+describe('PremiumAccessPageComponent delayed checkout activation', () => {
+    beforeEach(() => {
+        resetMocks();
+        vi.useFakeTimers();
+        queryParams = { checkout: 'success' };
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('waits for the next activation poll before refreshing newly granted access', async () => {
+        const premiumOverview = { ...createOverview(), isPremium: true, subscriptionStatus: 'active' };
+        billingService.getOverview.mockReturnValueOnce(of(createOverview())).mockReturnValue(of(premiumOverview));
+        authService.refreshToken.mockImplementation(() => {
+            authService.isPremium.set(true);
+            return of('premium-session');
+        });
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(billingService.getOverview).toHaveBeenCalledTimes(1);
+        expect(authService.refreshToken).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_DELAY_MS - 1);
+        expect(billingService.getOverview).toHaveBeenCalledTimes(1);
+        await vi.advanceTimersByTimeAsync(1);
+        await settleAsync();
+        expect(authService.refreshToken).toHaveBeenCalledOnce();
+        expect(billingService.getOverview).toHaveBeenCalledTimes(DELAYED_ACTIVATION_OVERVIEW_READS);
+        expect(component['overview']()).toEqual(premiumOverview);
+        expect(component['isLoading']()).toBe(false);
+        expect(router.navigate).toHaveBeenCalledWith([], { relativeTo: routeStub, queryParams: {}, replaceUrl: true });
+    });
+});
+
+describe('PremiumAccessPageComponent activation polling recovery', () => {
+    beforeEach(() => {
+        resetMocks();
+        vi.useFakeTimers();
+        queryParams = { checkout: 'success' };
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('stops activation polling at its limit and refreshes the session once before the normal overview load', async () => {
+        const { component } = setupComponent();
+        await settleAsync();
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_DELAY_MS * (CHECKOUT_POLL_ATTEMPTS - 1));
+        expect(billingService.getOverview).toHaveBeenCalledTimes(CHECKOUT_POLL_ATTEMPTS);
+        expect(authService.refreshToken).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_DELAY_MS);
+        await settleAsync();
+        expect(authService.refreshToken).toHaveBeenCalledOnce();
+        expect(billingService.getOverview).toHaveBeenCalledTimes(CHECKOUT_POLL_ATTEMPTS + 1);
+        expect(component['isPremium']()).toBe(false);
+        expect(component['isLoading']()).toBe(false);
+        expect(router.navigate).toHaveBeenCalledOnce();
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_DELAY_MS * CHECKOUT_POLL_ATTEMPTS);
+        expect(billingService.getOverview).toHaveBeenCalledTimes(CHECKOUT_POLL_ATTEMPTS + 1);
+    });
+
+    it('falls back to one session refresh after a polling read fails and then reloads the overview', async () => {
+        billingService.getOverview.mockReturnValueOnce(throwError(() => new Error('Activation read failed')));
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(authService.refreshToken).toHaveBeenCalledOnce();
+        expect(billingService.getOverview).toHaveBeenCalledTimes(2);
+        expect(component['overview']()).toEqual(createOverview());
+        expect(component['errorMessage']()).toBeNull();
+        expect(router.navigate).toHaveBeenCalledWith([], { relativeTo: routeStub, queryParams: {}, replaceUrl: true });
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_DELAY_MS * CHECKOUT_POLL_ATTEMPTS);
+        expect(billingService.getOverview).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('PremiumAccessPageComponent Paddle transaction return', () => {
+    beforeEach(() => {
+        resetMocks();
+        queryParams = { _ptxn: 'txn_returned' };
+    });
+    afterEach(() => {
+        environment.paddleClientToken = DEFAULT_PADDLE_CLIENT_TOKEN;
+    });
+
+    it.each([
+        { token: ' test_checkout ', expectedEnvironment: 'sandbox', language: 'ru' },
+        { token: ' live_checkout ', expectedEnvironment: 'production', language: 'en' },
+    ])(
+        'opens the returned transaction in $expectedEnvironment with its token and locale',
+        async ({ token, expectedEnvironment, language }) => {
+            currentLanguage = language;
+            environment.paddleClientToken = 'test_environment_fallback';
+            billingService.getOverview.mockReturnValue(of({ ...createOverview(), paddleClientToken: token }));
+            setupComponent();
+            await settleAsync();
+            expect(paddleOpen).toHaveBeenCalledExactlyOnceWith('txn_returned', {
+                token: token.trim(),
+                environment: expectedEnvironment,
+                locale: language,
+            });
+            expect(router.navigate).toHaveBeenCalledWith([], { relativeTo: routeStub, queryParams: {}, replaceUrl: true });
+            expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+        },
+    );
+
+    it('uses the configured client token when the overview has no client token', async () => {
+        environment.paddleClientToken = ' live_fallback ';
+        setupComponent();
+        await settleAsync();
+        expect(paddleOpen).toHaveBeenCalledExactlyOnceWith('txn_returned', {
+            token: 'live_fallback',
+            environment: 'production',
+            locale: 'en',
+        });
+        expect(router.navigate).toHaveBeenCalledOnce();
+    });
+
+    it('shows a recoverable error without opening checkout or clearing the transaction when no client token exists', async () => {
+        environment.paddleClientToken = '';
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(paddleOpen).not.toHaveBeenCalled();
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(toastService.error).toHaveBeenCalledWith('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
+});
+
+describe('PremiumAccessPageComponent Paddle transaction failures and SSR', () => {
+    beforeEach(() => {
+        resetMocks();
+        queryParams = { _ptxn: 'txn_returned' };
+        billingService.getOverview.mockReturnValue(of({ ...createOverview(), paddleClientToken: 'test_checkout' }));
+    });
+
+    it('reports provider failure and retains the returned transaction for retry', async () => {
+        paddleOpen.mockRejectedValue(new Error('Paddle unavailable'));
+        const { component } = setupComponent();
+        await settleAsync();
+        expect(paddleOpen).toHaveBeenCalledOnce();
+        expect(component['errorMessage']()).toBe('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(toastService.error).toHaveBeenCalledWith('PREMIUM_PAGE.ERROR_CHECKOUT');
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('does not open a Paddle transaction or rewrite its URL during server rendering', async () => {
+        const { component } = setupComponent('server');
+        await settleAsync();
+        expect(billingService.getOverview).toHaveBeenCalledOnce();
+        expect(paddleOpen).not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+        expect(component['errorMessage']()).toBeNull();
+    });
+});
+
 function resetMocks(): void {
+    currentLanguage = 'en';
     paddlePreview = vi.fn().mockResolvedValue({
         monthly: { formattedTotal: '$8.00', currencyCode: 'USD' },
         yearly: { formattedTotal: '$80.00', currencyCode: 'USD' },
@@ -409,7 +572,7 @@ function createTranslateServiceStub(): {
 } {
     return {
         onLangChange: NEVER,
-        getCurrentLang: (): string => 'en',
+        getCurrentLang: (): string => currentLanguage,
         getFallbackLang: (): string => 'en',
         instant: (key: string): string => key,
     };

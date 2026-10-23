@@ -93,11 +93,13 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/SaveCatalogMealPlanTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListOverviewAccessTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListRevisionTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.ItemBuilder.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Mapping.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Revision.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
@@ -110,8 +112,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanPersistenceShapeTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanRecipeSnapshotTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanningExtractedInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanningIdConversionTests.cs`
-- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/PlannedQuantityTests.cs`
 
 ## Working Rule
 

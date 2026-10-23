@@ -303,6 +303,10 @@ export function stopOwnedProcess(owner) {
     else process.kill(-owner.pid, "SIGTERM");
 }
 
+export function taskFrontendEnvironment(apiUrl, environment = process.env) {
+    return { ...environment, SSR_API_ORIGIN: apiUrl };
+}
+
 function background(file, args, cwd, env, logPath) {
     const log = openSync(logPath, "a", 0o600);
     const child = spawn(file, args, {
@@ -653,7 +657,7 @@ export async function startRuntime(name, root = repositoryRoot) {
             "owned local S3-compatible storage and two initialized buckets";
         persist();
         const env = {
-            ...process.env,
+            ...taskFrontendEnvironment(configuration.apiUrl),
             ASPNETCORE_ENVIRONMENT: "Development",
             DOTNET_ENVIRONMENT: "Development",
             FOODDIARY_TASK_CONFIG: join(directory, "appsettings.json"),
@@ -837,6 +841,7 @@ export async function startRuntime(name, root = repositoryRoot) {
             auth.accessToken,
             ownedUser.id,
             {
+                credentials: { email: configuration.email, password: configuration.accountPassword },
                 onDiagnostics: (events) =>
                     save(join(directory, "browser-diagnostics.json"), {
                         observedAtUtc: new Date().toISOString(),
@@ -935,7 +940,7 @@ export async function startAdminRuntime(name, root = repositoryRoot) {
                 join(directory, "proxy.json"),
             ],
             workspace,
-            process.env,
+            taskFrontendEnvironment(state.apiUrl),
             logPath,
         );
     try {

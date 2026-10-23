@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
+using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
@@ -27,6 +28,7 @@ public sealed class AdminSsoController(ISender mediator) : BaseApiController(med
 
     [AllowAnonymous]
     [HttpPost("exchange")]
+    [SuppressRefreshTokenCookie]
     [RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
     [RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
     [ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]

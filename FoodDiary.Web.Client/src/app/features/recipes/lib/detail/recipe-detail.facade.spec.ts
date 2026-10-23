@@ -265,3 +265,25 @@ describe('RecipeDetailFacade favorite failures', () => {
         expect(facade.isFavorite()).toBe(false);
     });
 });
+
+describe('RecipeDetailFacade failed favorite discovery', () => {
+    it('preserves the known favorite state when the status check fails', () => {
+        favoriteRecipeService.isFavorite.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.initialize(createRecipe({ isFavorite: true }));
+        expect(facade.isFavorite()).toBe(true);
+    });
+
+    it('preserves favorite state after a failed lookup and permits retrying removal', () => {
+        const item = createRecipe({ isFavorite: true, favoriteRecipeId: null });
+        favoriteRecipeService.isFavorite.mockReturnValueOnce(of(true));
+        facade.initialize(item);
+        favoriteRecipeService.getLookupPage.mockReturnValueOnce(throwError(() => new Error('offline')));
+        facade.toggleFavorite(item);
+        expect(facade.isFavorite()).toBe(true);
+        expect(facade.isFavoriteLoading()).toBe(false);
+        expect(favoriteRecipeService.remove).not.toHaveBeenCalled();
+        facade.toggleFavorite(item);
+        expect(favoriteRecipeService.remove).toHaveBeenCalledTimes(1);
+        expect(facade.isFavorite()).toBe(false);
+    });
+});

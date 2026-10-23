@@ -573,7 +573,7 @@ jobs:
           SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
-          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/Services/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"
+          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/Services/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts/deploy /var/www/storybook.fooddiary.club /var/log/nginx"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
           $SSH_CMD "install -d -m 0700 /opt/fooddiary/bugtriage"
           $SCP_CMD Services/BugTriage/deployment/compose.yml Services/BugTriage/deployment/deploy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/bugtriage/
@@ -585,6 +585,7 @@ jobs:
           $SCP_CMD nginx/sites-enabled/storybook.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/storybook.fooddiary.club
           $SCP_CMD nginx/sites-enabled/techradar.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/techradar.fooddiary.club
           $SCP_CMD scripts/bootstrap-tech-radar-tls.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
+          $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
           DEPLOY_COMMIT_SHA="${{ env.SOURCE_COMMIT_SHA }}"
@@ -682,6 +683,33 @@ jobs:
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
+          # Publish assets before SSR can return HTML referencing the new image.
+          # TemporaryDirectory removes only its own extraction; releases remain.
+          id=$(docker create "$CLIENT_IMAGE_REF")
+          trap 'docker rm "$id" >/dev/null 2>&1 || true' EXIT
+          python3 - "$id" "$CLIENT_IMAGE_REF" <<'PYTHON_EOF'
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+
+          container, image_reference = sys.argv[1:]
+          release_id = "sha256-" + image_reference.rpartition("@sha256:")[2]
+          with tempfile.TemporaryDirectory(prefix="fooddiary-frontend-") as temporary:
+              for image_path, site, flags in (
+                  ("html", "fooddiary.club", ["--require-ngsw"]),
+                  ("html-admin", "admin.fooddiary.club", []),
+              ):
+                  source = Path(temporary) / site
+                  source.mkdir()
+                  subprocess.run(["docker", "cp", f"{container}:/usr/share/nginx/{image_path}/.", str(source)], check=True)
+                  subprocess.run([
+                      "python3", "/opt/fooddiary/scripts/deploy/publish_frontend.py", "publish",
+                      "--source", str(source), "--root", f"/var/www/{site}",
+                      "--release-id", release_id, *flags,
+                  ], check=True)
+          PYTHON_EOF
+
           docker compose --profile full up -d --force-recreate --no-deps client-ssr
           for _ in $(seq 1 20); do
             if curl -fsS "http://127.0.0.1:4000/health/ssr" >/dev/null; then
@@ -709,16 +737,12 @@ jobs:
             exit 1
           fi
 
-          id=$(docker create "$CLIENT_IMAGE_REF")
-          rm -rf /var/www/fooddiary.club/*
-          docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
-          rm -rf /var/www/admin.fooddiary.club/*
-          docker cp $id:/usr/share/nginx/html-admin/. /var/www/admin.fooddiary.club/
           mkdir -p /var/www/storybook.fooddiary.club
           rm -rf /var/www/storybook.fooddiary.club/*
           docker cp $id:/usr/share/nginx/html-storybook/. /var/www/storybook.fooddiary.club/
           chmod -R a+rX /var/www/storybook.fooddiary.club
-          docker rm $id
+          docker rm "$id"
+          trap - EXIT
 
           # The hardened container drops DAC_OVERRIDE. Keep existing host log
           # files owned by root so nginx can open them after every recreate.

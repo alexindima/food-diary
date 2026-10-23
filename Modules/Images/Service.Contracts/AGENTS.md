@@ -11,6 +11,8 @@ consumer-side input adapters over IImageAssetAccessService; they preserve valida
 and optional-image behavior without exposing Images Application to consumers.
 Images.Contracts remains the legacy ID-only package. Preserve owner
 checks, confirmation requirements, null behavior and existing error codes.
+Image ownership reassignment requires both source and target users; the owner adapter
+must preserve linked assets owned by another account.
 
 IImageAssetContentService supplies transient data URLs for provider requests after
 owner and confirmation checks. Consumers must not log, persist or enqueue image

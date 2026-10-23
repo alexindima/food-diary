@@ -133,9 +133,11 @@ export class MealManageFormComponent implements UnsavedEditor {
     });
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
+    protected readonly photosUploading = signal(false);
     protected readonly isLoadingRecipeAmounts = signal(false);
     protected readonly isBusy = computed(() => this.isSubmitting() || this.isLoadingRecipeAmounts());
-    protected readonly isSubmitDisabled = computed(() => this.isBusy() || !this.hasSelectedItems());
+    protected readonly isSubmitBusy = computed(() => this.isBusy() || this.photosUploading());
+    protected readonly isSubmitDisabled = computed(() => this.isSubmitBusy() || !this.hasSelectedItems());
     protected readonly aiSessions = signal<MealAiSessionManageDto[]>([]);
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),
@@ -629,7 +631,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     // --- Submit ---
 
     protected async onSubmitAsync(): Promise<void> {
-        if (this.isBusy()) {
+        if (this.isSubmitBusy()) {
             return;
         }
 

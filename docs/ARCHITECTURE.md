@@ -31,6 +31,15 @@ Other deployable adapters are kept separate:
 Transaction outcomes, HTTP operation receipts, delivery ownership, independent
 Users state and bounded Dashboard snapshots follow [ADR 0052](adr/0052-backend-transaction-and-delivery-reliability.md).
 
+The provider-only `Shared/FoodDiary.Persistence.PostgreSql` library supplies the
+same verified COMMIT policy to coordinated persistence, independent AI quota/job
+transactions and outbox claims. It owns no contexts, callbacks or retry strategy.
+Visible authenticated clients reconcile notifications every 30 seconds and on
+visibility recovery, complementing best-effort SignalR hints across JobManager
+and API processes. MailRelay starts PostgreSQL polling independently of RabbitMQ;
+mail infrastructure is not a cold-start prerequisite for the core API. See
+[ADR 0054](adr/0054-independent-commit-verification-and-notification-reconciliation.md).
+
 Shared persistence separates its three-record runtime model from the complete
 migration and composed-read model. PersistenceSession coordinates owner contexts
 on one connection and transaction; see [ADR 0042](adr/0042-shared-runtime-persistence-session.md).

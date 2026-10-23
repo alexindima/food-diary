@@ -2,7 +2,7 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, makeStateKey, PLATFORM_ID, Service, type StateKey, TransferState } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
-import { catchError, forkJoin, map, type Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, forkJoin, map, type Observable, of, shareReplay, tap, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
@@ -27,11 +27,11 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly serverTranslations = inject(SERVER_TRANSLATIONS, { optional: true });
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, this.getInitialBundles(this.browserWindow.getPathname() ?? '/'));
+        return this.loadBundles(lang, this.getInitialBundles(this.browserWindow.getPathname() ?? '/')).pipe(catchError(() => of({})));
     }
 
     public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, ['app']);
+        return this.loadBundles(lang, ['core', 'app']);
     }
 
     public loadRouteTranslations(lang: string, pathname: string): Observable<TranslationDictionary> {
@@ -72,11 +72,14 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
 
         const url = `./assets/i18n/${lang}/${bundle}.json?v=${environment.buildVersion ?? 'dev'}`;
         const request = this.http.get<TranslationDictionary>(url).pipe(
-            catchError(() => of({})),
             tap(translations => {
                 if (isPlatformServer(this.platformId)) {
                     this.transferState.set(transferStateKey, translations);
                 }
+            }),
+            catchError((error: unknown) => {
+                this.cache.delete(key);
+                return throwError(() => error);
             }),
             shareReplay({ bufferSize: 1, refCount: false }),
         );

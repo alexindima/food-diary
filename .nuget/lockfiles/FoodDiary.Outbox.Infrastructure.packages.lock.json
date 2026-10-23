@@ -121,6 +121,13 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
+      "fooddiary.persistence.postgresql": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
       "Microsoft.EntityFrameworkCore": {
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",

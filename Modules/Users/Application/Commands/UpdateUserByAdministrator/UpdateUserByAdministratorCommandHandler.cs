@@ -7,6 +7,7 @@ using FoodDiary.Modules.Users.Application.Common;
 
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Results;
@@ -20,6 +21,9 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
     IUserRoleCatalogService roleCatalogService) : IRequestHandler<UpdateUserByAdministratorCommand, Result<UserAdminReadModel>> {
     public async Task<Result<UserAdminReadModel>> Handle(UpdateUserByAdministratorCommand request, CancellationToken cancellationToken) {
         UserAdminUpdateModel input = request.Request;
+        if (input.UserId == SystemContentOwner.Id) {
+            return Result.Failure<UserAdminReadModel>(UserErrors.NotFound(input.UserId));
+        }
         User? user = await userLookupRepository
             .GetByIdIncludingDeletedAsync(input.UserId, cancellationToken)
             .ConfigureAwait(false);

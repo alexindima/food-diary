@@ -157,7 +157,7 @@ public sealed class AiQuotaRepository(
                 .ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 T result = await operation(context, cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await FoodDiary.Persistence.PostgreSql.VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
                 return result;
             }
         }).ConfigureAwait(false);

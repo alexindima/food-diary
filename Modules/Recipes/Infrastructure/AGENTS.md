@@ -8,4 +8,14 @@ RecipeRepository delegates usage counts to the owner IRecipeUsageQuery port. Hos
 
 RecipeRepository uses RecipesDbContext for all owned tracking and mutations. Registration shares the central connection and joins the live shared transaction before owner operations, including after intermediate UOW saves. Preserve aliases, split graph queries, xmin row locks and product snapshot hydration. The Serializable runner delegates to the host coordinator; the user-purge participant uses its owner context.
 
+RecipesUserContentRetentionParticipant retains only the source user's reader-selected
+recipe closure before ordinary account purge. The composed reader owns surviving-reference
+selection; the owner adapter transfers legacy covers and all galleries through the
+source-filtered Images capability inside the existing per-user transaction. It never saves or commits.
+
+Its lock phase selects all source-owned Recipe IDs in stable order FOR UPDATE
+before any authoritative retention read. Preserve these locks until the caller
+commits or rolls back, so incoming consumer FK inserts cannot succeed unnoticed
+between reference selection and deletion. Product locks follow Recipe locks.
+
 Current module convention: all projects use `FoodDiary.Modules.Recipes.<Project>` assembly identities and namespaces matching their folders, including tests. Preserve historical migration metadata and database/HTTP contracts during namespace moves.

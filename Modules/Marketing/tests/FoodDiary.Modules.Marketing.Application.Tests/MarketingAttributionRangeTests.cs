@@ -4,11 +4,35 @@ using FoodDiary.Modules.Marketing.Application.Queries.GetMarketingAttributionRan
 using FoodDiary.Modules.Marketing.Contracts.Queries.GetMarketingAttributionRange;
 using FoodDiary.Results;
 using FoodDiary.Application.Contracts.Common.Validation;
+using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 
 namespace FoodDiary.Modules.Marketing.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionRangeTests {
+    [Fact]
+    public async Task Handle_WithHistoricalLanding_SanitizesReportProjection() {
+        TimeProvider clock = Substitute.For<TimeProvider>();
+        var to = new DateTimeOffset(2026, 9, 9, 12, 0, 0, TimeSpan.Zero);
+        clock.GetUtcNow().Returns(to);
+        IMarketingAttributionRangeReadRepository repository = Substitute.For<IMarketingAttributionRangeReadRepository>();
+        var historical = new MarketingAttributionEventRecord("page_landing", to.AddMinutes(-5).UtcDateTime,
+            UserId: null, new AnonymousVisitorId("visitor"), new MarketingSessionId("session"),
+            "/verify-email?token=historical-secret&utm_source=telegram", "t.me", "telegram",
+            UtmMedium: null, UtmCampaign: null, UtmContent: null, UtmTerm: null, BuildVersion: null);
+        var summary = new MarketingAttributionSummaryRecord(1, 1, 0, 0, 1, 1, 1, 1, historical.OccurredAtUtc, [], [], [historical]);
+        repository.GetRangeAsync(Arg.Any<MarketingAttributionRangeFilter>(), CancellationToken.None)
+            .Returns(new MarketingAttributionRangeRecord(summary, summary, [], 1));
+
+        Result<MarketingAttributionRangeModel> result = await new GetMarketingAttributionRangeQueryHandler(repository, clock)
+            .Handle(new GetMarketingAttributionRangeQuery(to.AddDays(-1), to), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal("/verify-email?utm_source=telegram", Assert.Single(result.Value.Current.RecentEvents).LandingPath);
+        Assert.Equal("/verify-email?utm_source=telegram", Assert.Single(result.Value.Previous.RecentEvents).LandingPath);
+        Assert.Equal("/verify-email?token=historical-secret&utm_source=telegram", historical.LandingPath);
+    }
+
     [Fact]
     public async Task Handle_UsesUtcRangePreviousPeriodAndRoundedWindow() {
         using var cancellation = new CancellationTokenSource();

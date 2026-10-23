@@ -1,4 +1,5 @@
-import { computed, effect, inject, Service, signal, untracked } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { computed, effect, inject, PLATFORM_ID, Service, signal, untracked } from '@angular/core';
 import type { HubConnection } from '@microsoft/signalr';
 import { firstValueFrom } from 'rxjs';
 
@@ -9,29 +10,39 @@ import { JwtDecoderService } from '../../services/jwt-decoder.service';
 import { buildRealtimeHubUrl } from '../lib/realtime-hub-url.utils';
 import { NotificationService } from './notification.service';
 
+const RECONCILIATION_INTERVAL_MS = 30_000;
+
 function toNotificationHubUrl(authBaseUrl: string): string {
     return buildRealtimeHubUrl(authBaseUrl, '/hubs/notifications');
 }
 
 @Service()
 export class NotificationRealtimeService {
+    private readonly document = inject(DOCUMENT);
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly authService = inject(AuthService);
     private readonly notificationService = inject(NotificationService);
     private readonly logger = inject(FrontendLoggerService);
     private readonly jwtDecoder = inject(JwtDecoderService);
     private connection: HubConnection | null = null;
+    private connectionUserId: string | null = null;
     private disconnecting = false;
+    private disconnectingTask: Promise<void> | null = null;
     private readonly connecting = signal(false);
     private readonly connectedSignal = signal(false);
-    private readonly canConnect = computed(() => this.authService.isAuthenticated() && !this.authService.isImpersonating());
+    private readonly canConnect = computed(
+        () => this.isBrowser && this.authService.isAuthenticated() && !this.authService.isImpersonating(),
+    );
+    private readonly sessionOwner = computed(() => (this.canConnect() ? this.authService.getUserId() : null));
+    private readonly tokenAvailable = computed(() => this.hasSessionToken());
 
     public readonly connected = this.connectedSignal.asReadonly();
 
     public constructor() {
         effect(() => {
-            if (this.canConnect()) {
+            if (this.sessionOwner() !== null) {
                 untracked(() => {
-                    void this.connectAsync();
+                    void this.synchronizeConnectionAsync();
                 });
                 return;
             }
@@ -40,6 +51,81 @@ export class NotificationRealtimeService {
                 void this.disconnectAsync();
             });
         });
+
+        effect(onCleanup => {
+            if (this.sessionOwner() !== null && this.tokenAvailable()) {
+                onCleanup(this.startReconciliation());
+            }
+        });
+    }
+
+    private startReconciliation(): () => void {
+        const view = this.document.defaultView;
+        if (view === null) {
+            return () => {};
+        }
+
+        let visible = this.document.visibilityState !== 'hidden';
+        let interval: number | null = null;
+        const reconcile = (): void => {
+            this.reconcileNotifications(this.notificationService.notificationsRequested());
+        };
+        const stop = (): void => {
+            if (interval !== null) {
+                view.clearInterval(interval);
+                interval = null;
+            }
+        };
+        const start = (): void => {
+            interval = view.setInterval(reconcile, RECONCILIATION_INTERVAL_MS);
+        };
+        const resume = (): void => {
+            const nextVisible = this.document.visibilityState !== 'hidden';
+            if (visible === nextVisible) {
+                return;
+            }
+            visible = nextVisible;
+            stop();
+            if (visible) {
+                reconcile();
+                start();
+            }
+        };
+        if (visible) {
+            start();
+        }
+        this.document.addEventListener('visibilitychange', resume);
+        return () => {
+            stop();
+            this.document.removeEventListener('visibilitychange', resume);
+        };
+    }
+
+    private reconcileNotifications(refreshFeed: boolean): void {
+        if (!this.canConnect() || !this.hasSessionToken() || this.document.visibilityState === 'hidden') {
+            return;
+        }
+
+        // SignalR is a hint: jobs and other API replicas can commit without reaching this connection.
+        this.notificationService.fetchUnreadCount({ force: true });
+        if (refreshFeed && !this.notificationService.notificationsLoading()) {
+            this.notificationService.refreshNotifications();
+        }
+    }
+
+    private hasSessionToken(): boolean {
+        const token = this.authService.getToken();
+        return typeof token === 'string' && token.trim().length > 0;
+    }
+
+    private async synchronizeConnectionAsync(): Promise<void> {
+        if (this.disconnectingTask !== null) {
+            await this.disconnectingTask;
+        }
+        if (this.connection !== null && this.connectionUserId !== this.authService.getUserId()) {
+            await this.disconnectAsync();
+        }
+        await this.connectAsync();
     }
 
     private async connectAsync(): Promise<void> {
@@ -69,22 +155,34 @@ export class NotificationRealtimeService {
             .configureLogging(LogLevel.Warning)
             .build();
         const connection = this.connection;
+        const userId = this.authService.getUserId();
+        this.connectionUserId = userId;
 
         this.connection.on('UnreadCountUpdated', (count: number) => {
-            this.notificationService.updateCount(count);
+            if (this.isCurrentConnection(connection, userId)) {
+                this.notificationService.updateCount(count);
+            }
         });
 
         this.connection.on('NotificationsChanged', () => {
-            this.notificationService.notifyNotificationsChanged();
+            if (this.isCurrentConnection(connection, userId)) {
+                this.notificationService.notifyNotificationsChanged();
+            }
         });
 
         this.connection.onreconnected(() => {
+            if (!this.isCurrentConnection(connection, userId)) {
+                return;
+            }
             this.notificationService.fetchUnreadCount({ force: true });
             this.notificationService.refreshNotifications();
             this.connectedSignal.set(true);
         });
 
         this.connection.onclose(error => {
+            if (this.connection !== connection) {
+                return;
+            }
             this.connectedSignal.set(false);
             if (!this.disconnecting && this.canConnect()) {
                 this.logger.warn('Notification SignalR connection closed', error, { devOnly: true });
@@ -93,7 +191,7 @@ export class NotificationRealtimeService {
 
         try {
             await connection.start();
-            if (this.connection !== connection || !this.canConnect()) {
+            if (!this.isCurrentConnection(connection, userId)) {
                 return;
             }
             this.connectedSignal.set(true);
@@ -111,30 +209,54 @@ export class NotificationRealtimeService {
         return this.canConnect() && this.connection === null && !this.connecting();
     }
 
+    private isCurrentConnection(connection: HubConnection, userId: string | null): boolean {
+        return this.connection === connection && this.canConnect() && this.authService.getUserId() === userId;
+    }
+
     private handleConnectionFailure(error: unknown, connection: HubConnection): void {
         if (this.canConnect()) {
             this.logger.error('Notification SignalR connection failed', error, { devOnly: true });
         }
         if (this.connection === connection) {
             this.connection = null;
+            this.connectionUserId = null;
         }
     }
 
     private async disconnectAsync(): Promise<void> {
-        if (this.connection === null) {
+        if (this.disconnectingTask !== null) {
+            return this.disconnectingTask;
+        }
+        const connection = this.connection;
+        if (connection === null) {
             this.connectedSignal.set(false);
             this.connecting.set(false);
             return;
         }
 
+        this.disconnecting = true;
+        const task = this.stopConnectionAsync(connection);
+        this.disconnectingTask = task;
         try {
-            this.disconnecting = true;
-            await this.connection.stop();
+            await task;
+        } finally {
+            if (this.disconnectingTask === task) {
+                this.disconnectingTask = null;
+            }
+        }
+    }
+
+    private async stopConnectionAsync(connection: HubConnection): Promise<void> {
+        try {
+            await connection.stop();
         } finally {
             this.disconnecting = false;
-            this.connection = null;
-            this.connectedSignal.set(false);
-            this.connecting.set(false);
+            if (this.connection === connection) {
+                this.connection = null;
+                this.connectionUserId = null;
+                this.connectedSignal.set(false);
+                this.connecting.set(false);
+            }
         }
     }
 

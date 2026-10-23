@@ -5,6 +5,22 @@ import type { FastingSession } from '../../../shared/models/fasting.data';
 
 const DURATION_ROUNDING_FACTOR = 10;
 
+export function getNextCyclicDayLabelKey(session: FastingSession): string | null {
+    const continuesPhase = (session.cyclicPhaseDayNumber ?? 1) < (session.cyclicPhaseDayTotal ?? 1);
+    switch (session.occurrenceKind) {
+        case 'FastDay': {
+            return continuesPhase ? 'FASTING.FAST_DAY' : 'FASTING.EAT_DAY';
+        }
+        case 'EatDay': {
+            return continuesPhase ? 'FASTING.EAT_DAY' : 'FASTING.FAST_DAY';
+        }
+        case 'FastingWindow':
+        case 'EatingWindow': {
+            return null;
+        }
+    }
+}
+
 export function getFastingDurationDisplay(session: FastingSession, now = new Date()): { value: number; unitKey: string } {
     const hours = calculateFastingElapsedMs(session, now) / MS_PER_HOUR;
     return hours < 1 ? { value: hours * MINUTES_PER_HOUR, unitKey: 'FASTING.MINUTES' } : { value: hours, unitKey: 'FASTING.HOURS' };

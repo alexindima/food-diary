@@ -326,6 +326,11 @@ Validation after recovery:
 
 ## Unavailable S3-Compatible Storage
 
+The API's current `/health/ready` requires S3 as well as PostgreSQL and distributed
+cache. A storage outage can therefore fail readiness and block a rollout even when
+an already running API still serves features without images. Image degradation
+below describes functional impact; it does not mean readiness remains healthy.
+
 Symptoms:
 
 - upload URL generation fails
@@ -636,6 +641,11 @@ Current poison-case behavior:
 
 - `images.cleanup` skips failing orphan assets and continues the batch
 - `users.cleanup` now isolates each deleted user in its own transaction, logs the failing user, and continues with the next deleted user instead of failing the whole batch
+- without a valid configured successor, referenced catalog content moves to the
+  reserved inactive system owner before unrelated content is deleted; see
+  `PERSONAL_DATA_LIFECYCLE.md` and ADR 0054
+- a conflicting reserved system-owner row is a safe failure: investigate the
+  account state rather than overwriting it or disabling the foreign-key checks
 
 Validation after recovery:
 

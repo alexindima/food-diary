@@ -17,6 +17,8 @@ sources:
   - .llm-wiki/tools/LlmWikiGitPaths.ps1
   - .llm-wiki/tools/LlmWikiApiAcceptance.ps1
   - .llm-wiki/policies/api-compatibility-acceptance.json
+  - docs/adr/0056-shopping-list-content-revisions.md
+  - docs/frontend/API_SDK.md
 ---
 
 # Review API compatibility
@@ -50,17 +52,20 @@ different baseline, either changed snapshot, changed identity, missing payload
 or stale change list cannot inherit the acceptance; malformed records fail closed.
 Synthetic comparisons never load a repository release decision.
 
-The 2026-10-12 audit fix narrows the client-goals response from `UserHttpResponse`
-to `ClientGoalsHttpResponse`, retaining goal data while removing unrelated private
-profile data. The user authorized the audit fixes and publication of all current
-changes. The acceptance record covers only the three response media types of
-`GET /api/v{version}/dietologist/clients/{clientuserid}/goals`, compared with the
-last successful ancestral CI commit. Publish the regenerated web SDK and assets
-with the API through the existing CI-gated deployment. Consumers that need profile
-data must use separately authorized profile operations; unrelated profile fields
-from the goals response are no longer supported. The normal successful ancestral
-CI baseline takes over after release; later incompatible changes require a new
-review.
+The current shopping-list acceptance records the coordinated required-revision
+transition described in [ADR 0056](../../docs/adr/0056-shopping-list-content-revisions.md)
+and the [SDK guide](../../docs/frontend/API_SDK.md). It accepts exactly four
+required-property changes: `ShoppingListHttpResponse.revision` and
+`UpdateShoppingListHttpRequest.expectedRevision`, each in the component schema
+and serialized HTTP DTO comparison, against commit
+`536c7a767ca451f2bf2840f9e5007c40bc1fb0af` and the two exact snapshot pairs.
+Every client must send the revision it read; a missing revision returns 400,
+and a stale revision returns 409. Release the regenerated SDK and web assets
+with the API through the existing CI-gated deployment. Older packaged clients
+need an update, open web tabs must reload, and installed PWAs must activate the
+new version. The acceptance record does not establish that deployment occurred.
+The normal successful ancestral CI baseline takes over after release; later
+incompatible changes require a new review.
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. Property presence determines the format, so a

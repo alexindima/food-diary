@@ -202,6 +202,7 @@ switch ($Action) {
             throw 'run requires -Id.'
         }
         $evidence = Read-EvidenceFile
+        $evidenceBeforeRun = [IO.File]::ReadAllText($absolutePath)
         $entry = @($evidence.checks | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
         if ($entry.Count -eq 0) {
             throw "Required check is not present in the evidence bundle: $Id"
@@ -233,23 +234,45 @@ switch ($Action) {
         }
 
         Write-Host "Running evidence check '$Id': $commandToRun"
+        $beforeExecution = Get-LlmWikiVerificationFingerprint $repositoryRoot
+        $logsDirectory = Join-Path (Split-Path -Parent $absolutePath) 'logs'
+        $null = New-Item -ItemType Directory -Path $logsDirectory -Force
+        $safeId = $Id -replace '[^A-Za-z0-9_.-]', '_'
+        $executionLog = Join-Path $logsDirectory "$safeId-$([guid]::NewGuid().ToString('N')).log"
+        $executionStartedAt = [DateTime]::UtcNow
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         $global:LASTEXITCODE = 0
+        $savedErrorPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        Push-Location $repositoryRoot
+        try {
         if ($env:OS -eq 'Windows_NT' -and $commandToRun -match '^\./\.llm-wiki/wiki\.ps1\s+') {
             $commandParts = @($commandToRun -split '\s+' | Where-Object { $_ })
             $scriptPath = $commandParts[0]
             $scriptArguments = @($commandParts | Select-Object -Skip 1)
             $hostExecutable = (Get-Process -Id $PID).Path
-            & $hostExecutable -NoLogo -NoProfile -File $scriptPath @scriptArguments
+            & $hostExecutable -NoLogo -NoProfile -File $scriptPath @scriptArguments *> $executionLog
         } elseif ($env:OS -eq 'Windows_NT') {
-            & cmd.exe /d /s /c $commandToRun
+            & cmd.exe /d /s /c $commandToRun *> $executionLog
         } else {
-            & bash -lc $commandToRun
+            & bash -lc $commandToRun *> $executionLog
         }
         $exitCode = $LASTEXITCODE
+        } finally { Pop-Location; $ErrorActionPreference = $savedErrorPreference }
         $stopwatch.Stop()
+        $afterExecution = Get-LlmWikiVerificationFingerprint $repositoryRoot
+        $historicalExecution = [ordered]@{
+            command = $commandToRun; checkout = $repositoryRoot
+            startedAtUtc = $executionStartedAt.ToString('o'); completedAtUtc = [DateTime]::UtcNow.ToString('o')
+            exitCode = $exitCode; durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+            fingerprintBefore = $beforeExecution.fingerprint; fingerprintAfter = $afterExecution.fingerprint
+            logPath = $executionLog; logSha256 = (Get-FileHash -LiteralPath $executionLog -Algorithm SHA256).Hash.ToLowerInvariant()
+        }
+        [IO.File]::WriteAllText($executionLog + '.execution.json', (($historicalExecution | ConvertTo-Json -Depth 6) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        if ($beforeExecution.fingerprint -cne $afterExecution.fingerprint) { throw "Source changed while check '$Id' executed; actual outcome/log retained at '$executionLog' but passing evidence cannot be recorded." }
         $entry[0].status = if ($exitCode -eq 0) { 'passed' } else { 'failed' }
         $entry[0].command = $commandToRun
+        $entry[0] | Add-Member -NotePropertyName executionCommand -NotePropertyValue $commandToRun -Force
         $entry[0].durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
         $entry[0].reason = if ($exitCode -eq 0) { '' } else { "Command exited with code $exitCode." }
         $lineage = & (Join-Path $PSScriptRoot 'New-LlmWikiEvidenceLineage.ps1') `
@@ -261,9 +284,27 @@ switch ($Action) {
             -Status $entry[0].status `
             -ExitCode $exitCode `
             -DurationSeconds $entry[0].durationSeconds `
+            -ArtifactPath $executionLog `
             -Format Json | ConvertFrom-Json
+        if ((Get-LlmWikiVerificationFingerprint $repositoryRoot).fingerprint -cne $beforeExecution.fingerprint) { throw "Source changed while check '$Id' execution lineage was bound; its actual historical outcome/log is retained." }
+        $executionRecordRelative = ($executionLog + '.execution.json').Substring($repositoryRoot.TrimEnd('\', '/').Length + 1).Replace('\', '/')
+        $lineage.execution | Add-Member -NotePropertyName verification -NotePropertyValue ([pscustomobject][ordered]@{
+            fingerprint = $beforeExecution.fingerprint
+            recordPath = $executionRecordRelative
+            recordSha256 = (Get-FileHash -LiteralPath ($executionLog + '.execution.json') -Algorithm SHA256).Hash.ToLowerInvariant()
+        })
         $entry[0] | Add-Member -NotePropertyName lineage -NotePropertyValue $lineage -Force
-        Write-EvidenceFile $evidence
+        try {
+            Write-EvidenceFile $evidence
+            if ($exitCode -eq 0) {
+                & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record `
+                    -RepositoryRoot $repositoryRoot -Command $commandToRun -SourceEvidencePath $Path -CheckId $Id -ExpectedFingerprint $beforeExecution.fingerprint -Format Json | Out-Null
+                if ((Get-LlmWikiVerificationFingerprint $repositoryRoot).fingerprint -cne $beforeExecution.fingerprint) { throw 'Repository inputs changed while execution proof was published.' }
+            }
+        } catch {
+            [IO.File]::WriteAllText($absolutePath, $evidenceBeforeRun, [Text.UTF8Encoding]::new($false))
+            throw
+        }
         Write-Host "Recorded check '$Id' as '$($entry[0].status)' in $($entry[0].durationSeconds)s."
         if ($exitCode -ne 0 -and -not $NoExitOnFailure) {
             exit $exitCode

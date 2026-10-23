@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
+[Collection(PostgresPerformanceCollection.Name)]
 public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFactory factory)
     : IClassFixture<PostgresApiWebApplicationFactory> {
     private const int SeedCount = 1500;

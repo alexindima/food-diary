@@ -33,6 +33,14 @@ $changed = @(
     @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', 'HEAD', '--')) +
     @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard'))
 ) | Sort-Object -Unique
+# Phase candidates can include unchanged downstream files owned by another task.
+# Require acceptance links only for observed changes in this task's current scope.
+$packet = Read-PhaseArtifact 'change-packet.json'
+$taskChange = if ($null -ne $packet -and $packet.PSObject.Properties['diff']) { $packet.diff } elseif ($null -ne $evidence -and $evidence.PSObject.Properties['change']) { $evidence.change } else { $null }
+if ($null -ne $taskChange -and $taskChange.PSObject.Properties['changedPaths']) {
+    $taskChangedPaths = @(Get-PhaseValues $taskChange 'changedPaths' | ForEach-Object { ([string]$_).Replace('\', '/') })
+    $changed = @($changed | Where-Object { $_ -in $taskChangedPaths })
+}
 $checks = @(@(Get-PhaseValues $evidence 'checks') + @(Get-PhaseValues $evidence 'supplementalChecks'))
 $reviews = @(Get-PhaseValues $evidence 'reviews')
 $executedIds = @($checks | Where-Object {

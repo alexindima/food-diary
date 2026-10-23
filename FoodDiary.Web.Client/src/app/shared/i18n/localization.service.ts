@@ -81,10 +81,12 @@ export class LocalizationService {
             return;
         }
 
-        return firstValueFrom(this.translationLoader.loadApplicationTranslations(currentLang)).then(translations => {
-            this.translateService.setTranslation(currentLang, translations, true);
-            this.applicationTranslationLanguages.add(currentLang);
-        });
+        return firstValueFrom(this.translationLoader.loadApplicationTranslations(currentLang))
+            .then(translations => {
+                this.translateService.setTranslation(currentLang, translations, true);
+                this.applicationTranslationLanguages.add(currentLang);
+            })
+            .catch(() => {});
     }
 
     public async loadTranslationsForRouteAsync(pathname: string): Promise<void> {
@@ -101,10 +103,12 @@ export class LocalizationService {
             return;
         }
 
-        return firstValueFrom(this.translationLoader.loadRouteTranslations(currentLang, pathname)).then(translations => {
-            this.translateService.setTranslation(currentLang, translations, true);
-            this.routeTranslationKeys.add(cacheKey);
-        });
+        return firstValueFrom(this.translationLoader.loadRouteTranslations(currentLang, pathname))
+            .then(translations => {
+                this.translateService.setTranslation(currentLang, translations, true);
+                this.routeTranslationKeys.add(cacheKey);
+            })
+            .catch(() => {});
     }
 
     public clearStoredLanguage(): void {

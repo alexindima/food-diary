@@ -150,8 +150,13 @@ server {
     add_header Alt-Svc 'h3=":443"; ma=86400' always;
     add_header_inherit merge;
 
-    root /var/www/fooddiary.club;
+    root /var/www/fooddiary.club/current;
     index index.html;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
 
     # Russian IDN prerender disabled.
     # set $seo_prerender_root "";
@@ -220,6 +225,20 @@ server {
     }
 
     location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~ "^/(?:[^/]+/)*[^/]+(?:-[A-Za-z0-9_-]{8}|[.][a-f0-9]{16,64})[.](?:js|css|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|ico|webp|avif)$" {
+        # Retained Angular assets are immutable; HTML, manifests and workers never fall back.
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri @retained_public_asset;
+    }
+
+    location @retained_public_asset {
+        root /var/www/fooddiary.club/retained-assets;
         expires 1y;
         add_header Cache-Control "public, immutable";
         try_files $uri =404;
@@ -309,34 +328,61 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
-    add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://fooddiary.club https://cloudflareinsights.com; worker-src 'self' blob:; manifest-src 'self'" always;
+    add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://fooddiary.club https://cloudflareinsights.com; worker-src 'self' blob:; manifest-src 'self'" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header_inherit merge;
 
     location = /index.html {
-        root /var/www/admin.fooddiary.club;
+        root /var/www/admin.fooddiary.club/current;
         expires -1;
         add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
         try_files $uri =404;
     }
 
-    location /assets/ {
+    location ^~ /.well-known/acme-challenge/ {
         root /var/www/admin.fooddiary.club;
+        default_type text/plain;
+    }
+
+    location = /ngsw.json {
+        root /var/www/admin.fooddiary.club/current;
+        expires -1;
+        add_header Cache-Control "no-store" always;
+        try_files $uri =404;
+    }
+
+    location /assets/ {
+        root /var/www/admin.fooddiary.club/current;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~ "^/(?:[^/]+/)*[^/]+(?:-[A-Za-z0-9_-]{8}|[.][a-f0-9]{16,64})[.](?:js|css|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|ico|webp|avif)$" {
+        # Retained Angular assets are immutable; HTML, manifests and workers never fall back.
+        root /var/www/admin.fooddiary.club/current;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri @retained_admin_asset;
+    }
+
+    location @retained_admin_asset {
+        root /var/www/admin.fooddiary.club/retained-assets;
         expires 1y;
         add_header Cache-Control "public, immutable";
         try_files $uri =404;
     }
 
     location ~* \.(?:js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|gif|ico|webp)$ {
-        root /var/www/admin.fooddiary.club;
+        root /var/www/admin.fooddiary.club/current;
         expires 1y;
         add_header Cache-Control "public, immutable";
         try_files $uri =404;
     }
 
     location / {
-        root /var/www/admin.fooddiary.club;
+        root /var/www/admin.fooddiary.club/current;
         index index.html;
         try_files $uri /index.html;
     }

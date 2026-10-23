@@ -30,7 +30,6 @@
             [attr.aria-label]="ariaLabel()"
             [attr.aria-haspopup]="'listbox'"
             [attr.aria-controls]="`${id()}-listbox`"
-            [attr.aria-activedescendant]="activeOptionId()"
             [attr.title]="selectedLabel() || null"
             (focus)="onFocus()"
             (blur)="onBlur()"
@@ -61,6 +60,8 @@
                 role="listbox"
                 tabindex="-1"
                 [id]="`${id()}-listbox`"
+                [attr.aria-label]="ariaLabel() || label()"
+                [attr.aria-activedescendant]="activeOptionId()"
                 (keydown)="onListboxKeydown($event)"
             >
                 @for (option of options(); track option.value) {

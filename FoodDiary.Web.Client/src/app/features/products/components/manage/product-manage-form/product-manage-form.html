@@ -1,6 +1,7 @@
 <div class="product-manage fd-stack" fdPageContainer [fdUiPreventUnload]="hasUnsavedChanges()">
     <fd-page-header
         class="product-manage__header"
+        [attr.inert]="isSubmitting() || isDeleting() ? '' : null"
         [title]="manageHeaderState().titleKey | translate"
         [subtitle]="(product() ? 'PRODUCT_MANAGE.EDIT_SUBTITLE' : 'PRODUCT_MANAGE.CREATE_SUBTITLE') | translate"
         [backVisible]="true"
@@ -27,7 +28,12 @@
             [formRoot]="productForm"
             [attr.aria-busy]="isSubmitting() || isDeleting()"
         >
-            <div class="product-manage__grid fd-grid">
+            <fieldset
+                class="product-manage__grid fd-grid"
+                [disabled]="isSubmitting() || isDeleting()"
+                [attr.inert]="isSubmitting() || isDeleting() ? '' : null"
+                [attr.aria-label]="manageHeaderState().titleKey | translate"
+            >
                 <div class="product-manage__column product-manage__column--primary fd-stack">
                     <fd-product-basic-info
                         [form]="productForm"
@@ -96,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </fieldset>
         </form>
     </fd-page-body>
 </div>

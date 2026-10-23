@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
 import { type LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { type Observable, of, Subject } from 'rxjs';
+import { type Observable, of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
@@ -193,6 +193,20 @@ describe('LocalizationService language preference', () => {
 });
 
 describe('LocalizationService translation loading', () => {
+    it.each(['application', 'route'] as const)('retries failed %s translations before marking them loaded', async kind => {
+        const load = kind === 'application' ? translationLoaderSpy.loadApplicationTranslations : translationLoaderSpy.loadRouteTranslations;
+        load.mockReturnValueOnce(throwError(() => new Error('offline')));
+        const requestAsync = async (): Promise<void> =>
+            kind === 'application' ? service.loadApplicationTranslationsAsync() : service.loadRouteTranslationsAsync('/food-diary');
+
+        await requestAsync();
+        expect(translateSpy.setTranslation).not.toHaveBeenCalled();
+        await requestAsync();
+        expect(load).toHaveBeenCalledTimes(2);
+        expect(translateSpy.setTranslation).toHaveBeenCalledTimes(1);
+        await requestAsync();
+        expect(load).toHaveBeenCalledTimes(2);
+    });
     it('should extend current language with application translations', async () => {
         await service.loadApplicationTranslationsAsync();
 

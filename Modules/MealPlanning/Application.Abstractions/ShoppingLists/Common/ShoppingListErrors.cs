@@ -3,6 +3,11 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.MealPlanning.Application.Abstractions.ShoppingLists.Common;
 
 public static class ShoppingListErrors {
+    public static Error RevisionConflict() => new(
+        "ShoppingList.RevisionConflict",
+        "The shopping list has changed. Reload it before applying your changes.",
+        Kind: ErrorKind.Conflict);
+
     public static Error NotFound(Guid id) => new(
         "ShoppingList.NotFound",
         $"Shopping list with ID {id} was not found.",

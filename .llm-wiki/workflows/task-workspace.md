@@ -388,7 +388,10 @@ journal is never rewritten by refresh.
 A resolved criterion is reopened only when its relevant evidence is no longer
 valid. Scope expansion may invalidate a shared check, but the criterion is
 retained when it still has an unchanged mapped path plus an evidence note, or
-another retained check, review, scenario, or focused test. Refresh reports both
+another retained check, review, scenario, or mapped test reference. Explicit
+references to existing repository tests survive changes to inferred focused-test
+candidates; retaining a reference does not establish execution or a passing result.
+Refresh reports both
 `invalidatedCriteria` and `retainedCriteria`, making preservation auditable.
 
 Resolved evidence is retained only when its lineage still matches the content

@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.ReadModel.Composition.Admin;
 
 public sealed class AdminDashboardMetricsReader(ICompositionReadContext context) : IAdminDashboardMetricsReader {
     public async Task<AdminDashboardMetrics> GetAsync(DateTime fromUtc, DateTime toUtc, bool monthly, CancellationToken cancellationToken) {
-        IQueryable<User> users = context.Users.AsNoTracking().Where(user => user.CreatedOnUtc >= fromUtc && user.CreatedOnUtc < toUtc);
+        IQueryable<User> users = context.Users.AsNoTracking()
+            .Where(user => user.Id != SystemContentOwner.Id && user.CreatedOnUtc >= fromUtc && user.CreatedOnUtc < toUtc);
         IQueryable<BillingPayment> payments = context.BillingPayments.AsNoTracking().Where(payment =>
             (payment.OccurredAtUtc ?? payment.CreatedOnUtc) >= fromUtc &&
             (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc &&

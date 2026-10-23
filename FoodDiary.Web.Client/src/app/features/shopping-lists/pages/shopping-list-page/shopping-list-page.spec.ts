@@ -17,6 +17,7 @@ import { ShoppingListFacade } from '../../lib/shopping-list.facade';
 import { ShoppingListPageComponent } from './shopping-list-page';
 
 const FIRST_LIST_ID = 'list-1';
+const REVISION_LENGTH = 64;
 const SECOND_LIST_ID = 'list-2';
 const INVALID_SHOPPING_AMOUNT_ABOVE_MAXIMUM = 1_000_001;
 const SHOPPING_ITEM_API_LIMITS = { name: 256, category: 128, note: 512 };
@@ -38,6 +39,7 @@ const SHOPPING_LIST_ITEM: ShoppingListItem = {
 
 const SHOPPING_LIST: ShoppingList = {
     id: entityId<'shopping-list'>(FIRST_LIST_ID),
+    revision: 'a'.repeat(REVISION_LENGTH),
     name: 'Groceries',
     createdAt: utcInstant('2026-05-17T00:00:00Z'),
     items: [SHOPPING_LIST_ITEM],
@@ -61,7 +63,10 @@ type ShoppingListFacadeMock = {
     isLoading: ReturnType<typeof signal<boolean>>;
     isCreating: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
+    isClearing: ReturnType<typeof signal<boolean>>;
     saveError: ReturnType<typeof signal<boolean>>;
+    conflictListId: ReturnType<typeof signal<ShoppingList['id'] | null>>;
+    reloadConflict: ReturnType<typeof vi.fn>;
     retrySave: ReturnType<typeof vi.fn>;
     items: ReturnType<typeof signal<ShoppingListItem[]>>;
     list: ReturnType<typeof signal<ShoppingList | null>>;
@@ -92,7 +97,10 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
         items: signal([SHOPPING_LIST_ITEM]),
         isLoading: signal(false),
         isSaving: signal(false),
+        isClearing: signal(false),
         saveError: signal(false),
+        conflictListId: signal(null),
+        reloadConflict: vi.fn(),
         retrySave: vi.fn(),
         isCreating: signal(false),
         lists: signal(SHOPPING_LISTS),
@@ -141,6 +149,28 @@ async function setupShoppingListPageAsync(initialUnsaved = false): Promise<Shopp
 
     return { component, dialogService, facade, fixture, isMobile };
 }
+
+describe('ShoppingListPageComponent pending clear', () => {
+    it('blocks item controls during clearing while allowing edits during ordinary autosave', async () => {
+        const { facade, fixture } = await setupShoppingListPageAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const fieldset = host.querySelector('fieldset');
+        if (fieldset === null) {
+            throw new Error('Expected item controls fieldset.');
+        }
+        facade.isSaving.set(true);
+        fixture.detectChanges();
+        expect(fieldset.disabled).toBe(false);
+
+        facade.isClearing.set(true);
+        fixture.detectChanges();
+        expect(fieldset.disabled).toBe(true);
+
+        facade.isClearing.set(false);
+        fixture.detectChanges();
+        expect(fieldset.disabled).toBe(false);
+    });
+});
 
 describe('ShoppingListPageComponent form and item actions', () => {
     it('passes the product link to the item editor', async () => {
@@ -478,5 +508,27 @@ describe('Shopping list merge preview', () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
         component['mergeDuplicates']();
         expect(facade.applyConsolidation).not.toHaveBeenCalled();
+    });
+});
+
+describe('Shopping list conflict confirmation', () => {
+    it('shows a reload action and preserves the draft when confirmation is cancelled', async () => {
+        const { fixture, facade, dialogService } = await setupShoppingListPageAsync();
+        facade.conflictListId.set(SHOPPING_LIST.id);
+        dialogService.open.mockReturnValueOnce({ afterClosed: () => of(false) });
+        fixture.detectChanges();
+        const alert = fixture.debugElement.query(By.css('fd-ui-inline-alert[role="alert"]'));
+        expect(alert).not.toBeNull();
+        alert.triggerEventHandler('primaryAction');
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(facade.reloadConflict).not.toHaveBeenCalled();
+        expect(facade.items()).toEqual([SHOPPING_LIST_ITEM]);
+    });
+
+    it('reloads the captured conflict target only after confirmation', async () => {
+        const { component, facade } = await setupShoppingListPageAsync();
+        facade.conflictListId.set(SHOPPING_LIST.id);
+        component['reloadConflict']();
+        expect(facade.reloadConflict).toHaveBeenCalledExactlyOnceWith(SHOPPING_LIST.id);
     });
 });

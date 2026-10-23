@@ -7,7 +7,7 @@ import { favoriteRecipeFromSdk } from '../../../shared/api/sdk/favorite-sdk.mapp
 import { FavoriteRecipesSdk } from '../../../shared/api/sdk/generated/api/favorite-recipes.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
-import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
+import { rethrowApiError } from '../../../shared/lib/api-error.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
 import type { FavoriteRecipe } from '../../../shared/models/recipe.data';
 import type { FavoriteRecipeId, RecipeId } from '../../../shared/models/semantics/entity-id';
@@ -32,14 +32,14 @@ export class FavoriteRecipeService {
         return this.getPage(1, LOOKUP_PAGE_SIZE).pipe(
             expand(page => (page.page < page.totalPages ? this.getPage(page.page + 1, LOOKUP_PAGE_SIZE) : EMPTY)),
             reduce((items, page) => [...items, ...page.data], [] as FavoriteRecipe[]),
-            catchError((error: unknown) => fallbackApiError('Get favorite recipes error', error, [])),
+            catchError((error: unknown) => rethrowApiError('Get favorite recipes error', error)),
         );
     }
 
     public isFavorite(recipeId: RecipeId): Observable<boolean> {
         return this.sdk.client
             .getFavoriteRecipesCheckByRecipeId({ version: this.sdk.version, recipeId })
-            .pipe(catchError((error: unknown) => fallbackApiError('Check favorite recipe error', error, false)));
+            .pipe(catchError((error: unknown) => rethrowApiError('Check favorite recipe error', error)));
     }
 
     public add(recipeId: RecipeId, name?: string): Observable<FavoriteRecipe> {

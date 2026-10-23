@@ -10,28 +10,28 @@ import { AdminMealPlansFacade } from '../lib/admin-meal-plans.facade';
 import type { CatalogPlan, CatalogRecipe } from '../models/admin-meal-plan.data';
 import { AdminMealPlanEditorComponent } from './admin-meal-plan-editor';
 
-describe('AdminMealPlanEditorComponent', () => {
-    const plan: CatalogPlan = {
-        id: adminId<'meal-plan'>('plan-id'),
-        name: 'Weekly plan',
-        description: null,
-        dietType: 'Balanced',
-        durationDays: 1,
-        targetCaloriesPerDay: null,
-        isCurated: true,
-        days: [{ dayNumber: 1, meals: [{ mealType: 'Lunch', recipeId: adminId<'recipe'>('recipe-id'), recipeName: 'Rice', servings: 2 }] }],
-    };
-    const api = { recipes: vi.fn(), save: vi.fn() };
-    beforeEach(async () => {
-        vi.clearAllMocks();
-        api.recipes.mockReturnValue(of([]));
-        api.save.mockReturnValue(of(plan));
-        await TestBed.configureTestingModule({
-            imports: [AdminMealPlanEditorComponent],
-            providers: [...provideTranslateTesting(), { provide: AdminMealPlansFacade, useValue: api }],
-        }).compileComponents();
-    });
+const plan: CatalogPlan = {
+    id: adminId<'meal-plan'>('plan-id'),
+    name: 'Weekly plan',
+    description: null,
+    dietType: 'Balanced',
+    durationDays: 1,
+    targetCaloriesPerDay: null,
+    isCurated: true,
+    days: [{ dayNumber: 1, meals: [{ mealType: 'Lunch', recipeId: adminId<'recipe'>('recipe-id'), recipeName: 'Rice', servings: 2 }] }],
+};
+const api = { recipes: vi.fn(), save: vi.fn() };
+beforeEach(async () => {
+    vi.clearAllMocks();
+    api.recipes.mockReturnValue(of([]));
+    api.save.mockReturnValue(of(plan));
+    await TestBed.configureTestingModule({
+        imports: [AdminMealPlanEditorComponent],
+        providers: [...provideTranslateTesting(), { provide: AdminMealPlansFacade, useValue: api }],
+    }).compileComponents();
+});
 
+describe('AdminMealPlanEditorComponent', () => {
     it('preserves an edited plan after a failed save and allows retry', () => {
         const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
         fixture.componentRef.setInput('plan', plan);
@@ -89,5 +89,49 @@ describe('AdminMealPlanEditorComponent', () => {
         ]);
         expect(component['error']()).toBeNull();
         expect(api.recipes).toHaveBeenLastCalledWith('new search');
+    });
+});
+
+describe('AdminMealPlanEditorComponent pending saves', () => {
+    it('locks the editor during a pending save and restores the draft controls after a failure', () => {
+        const fixture = TestBed.createComponent(AdminMealPlanEditorComponent);
+        fixture.componentRef.setInput('plan', plan);
+        fixture.detectChanges();
+        const pending = new Subject<CatalogPlan>();
+        api.save.mockReturnValueOnce(pending);
+        const component = fixture.componentInstance;
+        const cancelled = vi.fn();
+        component.cancelled.subscribe(cancelled);
+        const element = fixture.nativeElement as HTMLElement;
+        const originalDays = JSON.stringify(component['model']().days);
+
+        component['save']();
+        fixture.detectChanges();
+
+        for (const control of element.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')) {
+            expect(control.disabled).toBe(true);
+        }
+        for (const button of element.querySelectorAll<HTMLButtonElement>('button')) {
+            expect(button.disabled).toBe(true);
+        }
+        component['addMeal'](0);
+        component['removeMeal'](0, 0);
+        component['cancel']();
+        component['searchRecipes']();
+        expect(JSON.stringify(component['model']().days)).toBe(originalDays);
+        expect(cancelled).not.toHaveBeenCalled();
+        expect(api.recipes).toHaveBeenCalledOnce();
+
+        pending.error(new Error('offline'));
+        fixture.detectChanges();
+
+        expect(element.querySelector<HTMLInputElement>('input')?.disabled).toBe(false);
+        expect(element.querySelector<HTMLInputElement>('input')?.value).toBe(plan.name);
+        expect(element.textContent).toContain('ADMIN_MEAL_PLANS.SAVE_ERROR');
+        component['save']();
+        expect(api.save).toHaveBeenCalledTimes(2);
+        expect(api.save).toHaveBeenLastCalledWith(plan.id, expect.objectContaining({ name: plan.name }));
+        const request = api.save.mock.lastCall?.[1] as { days: unknown };
+        expect(JSON.parse(JSON.stringify(request.days))).toEqual(plan.days);
     });
 });

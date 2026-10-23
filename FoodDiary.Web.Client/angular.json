@@ -203,6 +203,9 @@
                         "development": {
                             "buildTarget": "food-diary-web-client:build:development"
                         },
+                        "staging": {
+                            "buildTarget": "food-diary-web-client:build:staging"
+                        },
                         "tunnel": {
                             "buildTarget": "food-diary-web-client:build:tunnel",
                             "allowedHosts": ["dev.fooddiary.club"]
@@ -268,7 +271,13 @@
                             "coverage": true,
                             "coverageInclude": ["projects/fd-ui-kit/src/**/*.ts"],
                             "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
-                            "runnerConfig": "vitest.config.mjs"
+                            "runnerConfig": "vitest.config.mjs",
+                            "coverageThresholds": {
+                                "statements": 86,
+                                "lines": 85,
+                                "branches": 84,
+                                "functions": 87
+                            }
                         }
                     }
                 },
@@ -431,7 +440,13 @@
                                 "**/*.d.ts",
                                 "projects/fooddiary-admin/src/app/shared/api/sdk/generated/**"
                             ],
-                            "runnerConfig": "vitest.config.mjs"
+                            "runnerConfig": "vitest.config.mjs",
+                            "coverageThresholds": {
+                                "statements": 76,
+                                "lines": 75,
+                                "branches": 72,
+                                "functions": 67
+                            }
                         }
                     }
                 }
@@ -465,7 +480,13 @@
                             "coverage": true,
                             "coverageInclude": ["projects/fd-tour/src/**/*.ts"],
                             "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
-                            "runnerConfig": "vitest.config.mjs"
+                            "runnerConfig": "vitest.config.mjs",
+                            "coverageThresholds": {
+                                "statements": 76,
+                                "lines": 75,
+                                "branches": 69,
+                                "functions": 73
+                            }
                         }
                     }
                 }
@@ -499,7 +520,13 @@
                             "coverage": true,
                             "coverageInclude": ["projects/fd-webmcp/src/**/*.ts"],
                             "coverageExclude": ["**/*.spec.ts", "**/*.stories.ts", "**/*.d.ts"],
-                            "runnerConfig": "vitest.config.mjs"
+                            "runnerConfig": "vitest.config.mjs",
+                            "coverageThresholds": {
+                                "statements": 96,
+                                "lines": 96,
+                                "branches": 96,
+                                "functions": 95
+                            }
                         }
                     }
                 }

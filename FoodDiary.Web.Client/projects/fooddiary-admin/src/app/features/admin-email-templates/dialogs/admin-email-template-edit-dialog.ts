@@ -64,6 +64,7 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly previewLink = computed(() => this.getDefaultPreviewLink(this.formModel().key));
     protected readonly testEmailModel = signal<TestEmailFormModel>({ email: '' });
     protected readonly testEmailForm = form(this.testEmailModel, path => {
+        disabled(path, { when: () => this.isSaving() });
         required(path.email);
         email(path.email);
     });
@@ -81,6 +82,7 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly form = form(
         this.formModel,
         path => {
+            disabled(path, { when: () => this.isSaving() });
             required(path.key);
             required(path.locale);
             required(path.subject);
@@ -113,10 +115,15 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly supportedVariables = computed(() => emailTemplateVariables(this.formModel().key));
 
     protected onCancel(): void {
-        this.dialogRef.close(false);
+        if (!this.isSaving()) {
+            this.dialogRef.close(false);
+        }
     }
 
     protected restoreRevision(revision: AdminTemplateRevision): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.formModel.update(value => ({
             ...value,
             subject: revision.subject ?? '',
@@ -164,6 +171,9 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     protected onSendTest(): void {
+        if (this.isSaving()) {
+            return;
+        }
         this.testSendStatus.set('idle');
         if (this.form().invalid() || this.testEmailForm().invalid() || this.isSendingTest()) {
             this.form().markAsTouched();

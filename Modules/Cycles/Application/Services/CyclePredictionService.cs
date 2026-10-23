@@ -129,16 +129,27 @@ public static class CyclePredictionService {
             calibration.MeanAbsoluteErrorDays);
     }
 
-    private static DateOnly[] BuildInferredEpisodeStarts(IEnumerable<DateOnly> bleedingDates) {
+    private static DateOnly[] BuildInferredEpisodeStarts(
+        IEnumerable<DateOnly> bleedingDates,
+        IReadOnlyCollection<(DateOnly Start, DateOnly End)> confirmedRanges) {
         DateOnly[] dates = [.. bleedingDates.Distinct().Order()];
         if (dates.Length == 0) {
             return [];
         }
 
-        var starts = new List<DateOnly> { dates[0] };
-        for (int index = 1; index < dates.Length; index++) {
-            if (dates[index].DayNumber - dates[index - 1].DayNumber > 2) {
-                starts.Add(dates[index]);
+        var starts = new List<DateOnly>();
+        for (int index = 0; index < dates.Length;) {
+            DateOnly start = dates[index];
+            DateOnly end = start;
+            while (++index < dates.Length && dates[index].DayNumber - end.DayNumber <= 2) {
+                end = dates[index];
+            }
+
+            // Match the aggregate's episode reconciliation, including its two-day tolerance.
+            bool overlapsConfirmed = confirmedRanges.Any(range =>
+                start.DayNumber <= range.End.DayNumber + 2 && end.DayNumber >= range.Start.DayNumber - 2);
+            if (!overlapsConfirmed) {
+                starts.Add(start);
             }
         }
 
@@ -155,8 +166,12 @@ public static class CyclePredictionService {
         DateOnly[] excluded = [.. episodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
+        (DateOnly Start, DateOnly End)[] confirmedRanges = [.. episodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed)
+            .Select(static episode => (episode.StartDate, episode.EndDate ?? episode.StartDate))];
         DateOnly[] inferred = BuildInferredEpisodeStarts(
-            bleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
+            bleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date),
+            confirmedRanges);
         return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 
@@ -167,8 +182,12 @@ public static class CyclePredictionService {
         DateOnly[] excluded = [.. profile.MenstrualEpisodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
+        (DateOnly Start, DateOnly End)[] confirmedRanges = [.. profile.MenstrualEpisodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed)
+            .Select(static episode => (episode.StartDate, episode.EndDate ?? episode.StartDate))];
         DateOnly[] inferred = BuildInferredEpisodeStarts(
-            profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
+            profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date),
+            confirmedRanges);
         return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 

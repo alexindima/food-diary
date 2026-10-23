@@ -7,7 +7,8 @@ namespace FoodDiary.Modules.Identity.Presentation.Filters;
 
 public sealed class AuthenticationCookieResultFilter(RefreshTokenCookieService refreshTokenCookies) : IAsyncResultFilter {
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next) {
-        if (context.Result is ObjectResult { Value: AuthenticationHttpResponse authentication }) {
+        if (context.Result is ObjectResult { Value: AuthenticationHttpResponse authentication } &&
+            !context.Filters.OfType<SuppressRefreshTokenCookieAttribute>().Any()) {
             refreshTokenCookies.Set(context.HttpContext, authentication.RefreshToken);
         }
 

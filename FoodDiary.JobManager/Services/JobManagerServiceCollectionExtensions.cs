@@ -1,11 +1,13 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
+using FoodDiary.Modules.MealPlanning.Infrastructure;
 
 namespace FoodDiary.JobManager.Services;
 
 public static class JobManagerServiceCollectionExtensions {
     extension(IServiceCollection services) {
         public void AddJobManagerServices(IConfiguration configuration) {
+            services.AddMealPlanningPersistence();
             services.AddJobManagerOptions(configuration);
             services.AddJobManagerJobs();
             services.AddJobExecutionState();
