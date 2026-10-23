@@ -247,10 +247,10 @@ test.describe('client auth smoke', () => {
     test('renders and updates email verification pending state on mobile', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'false');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'false');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
         await page.route('**/hubs/**', async route => {
             await route.abort('failed');
@@ -324,10 +324,10 @@ test.describe('authenticated client smoke', () => {
 
     test('redirects authenticated user from landing to dashboard', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
@@ -358,10 +358,10 @@ test.describe('authenticated accessibility', () => {
             await page.addInitScript(
                 (tokens: { user: string; dietologist: string }) => {
                     const token = window.location.pathname === '/dietologist' ? tokens.dietologist : tokens.user;
-                    window.localStorage.setItem('authToken', token);
-                    window.localStorage.setItem('refreshToken', 'refresh-token');
-                    window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-                    window.localStorage.setItem('emailConfirmed', 'true');
+                    window.sessionStorage.setItem('authToken', token);
+                    window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+                    window.sessionStorage.setItem('emailConfirmed', 'true');
+                    window.sessionStorage.setItem('mustChangePassword', 'false');
                 },
                 { user: createAuthenticatedUserJwt(), dietologist: createAuthenticatedUserJwt('Dietologist') },
             );
@@ -587,7 +587,9 @@ test.describe('session routing smoke', () => {
     test('keeps the recipe catalog hidden until the authenticated shell is ready', async ({ page }) => {
         await page.addInitScript((token: string) => {
             window.sessionStorage.setItem('authToken', token);
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
         await mockAuthenticatedClientApiAsync(page);
         await page.route('**/api/v1/users/info', async route => {
@@ -607,10 +609,10 @@ test.describe('session routing smoke', () => {
 
     test('keeps prerendered landing hidden while an authenticated root route initializes', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
         await mockAuthenticatedClientApiAsync(page);
         await page.route('**/api/v1/users/info', async route => {
@@ -659,10 +661,10 @@ test.describe('mobile navigation keyboard regression', () => {
 test.describe('authenticated feature smoke', () => {
     test('renders privacy policy without the authenticated shell', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
@@ -687,10 +689,10 @@ test.describe('authenticated feature smoke', () => {
     test('renders products page for authenticated user on mobile viewport', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
@@ -707,10 +709,10 @@ test.describe('authenticated feature smoke', () => {
 
     test('renders recommendations and marks selected item as read', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
@@ -727,10 +729,10 @@ test.describe('authenticated feature smoke', () => {
     test('keeps meal collage thumbnails inside the media slot', async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.addInitScript((token: string) => {
-            window.localStorage.setItem('authToken', token);
-            window.localStorage.setItem('refreshToken', 'refresh-token');
-            window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.localStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('authToken', token);
+            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('emailConfirmed', 'true');
+            window.sessionStorage.setItem('mustChangePassword', 'false');
         }, createAuthenticatedUserJwt());
 
         await mockAuthenticatedClientApiAsync(page);
@@ -1152,10 +1154,10 @@ function createDashboardRegressionFast(planType: 'Intermittent' | 'Extended' | '
 
 async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
     await page.addInitScript((token: string) => {
-        window.localStorage.setItem('authToken', token);
-        window.localStorage.setItem('refreshToken', 'refresh-token');
-        window.localStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-        window.localStorage.setItem('emailConfirmed', 'true');
+        window.sessionStorage.setItem('authToken', token);
+        window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
+        window.sessionStorage.setItem('emailConfirmed', 'true');
+        window.sessionStorage.setItem('mustChangePassword', 'false');
     }, createAuthenticatedUserJwt(role));
 }
 

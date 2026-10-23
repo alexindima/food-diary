@@ -185,14 +185,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
-          "reviewReason": "ManageEvidence changes only how canonical checks acquire trusted execution provenance: actual native output, exact outcome and source-bound log/seal. Explicit acceptance mapping, evidence notes and not-applicable reasons remain separate from phase execution proof. The matrix still prevents a green infrastructure check from standing in for every requested behavior; manual resolution is not newly promoted to executed phase evidence."
+          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
+          "reviewReason": "Reviewed the one-line PowerShell invocation fix against acceptance mapping and validation: required check IDs, execution evidence and criterion resolution remain unchanged; Test-LlmWikiBehaviorWorkflow passes on Linux."
         }
       ],
-      "reason": "ManageEvidence changes only how canonical checks acquire trusted execution provenance: actual native output, exact outcome and source-bound log/seal. Explicit acceptance mapping, evidence notes and not-applicable reasons remain separate from phase execution proof. The matrix still prevents a green infrastructure check from standing in for every requested behavior; manual resolution is not newly promoted to executed phase evidence.",
+      "reason": "Reviewed the one-line PowerShell invocation fix against acceptance mapping and validation: required check IDs, execution evidence and criterion resolution remain unchanged; Test-LlmWikiBehaviorWorkflow passes on Linux.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:32.9524089Z"
+      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
+      "reviewedAtUtc": "2026-10-23T10:11:02.5980737Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -289,14 +289,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
-          "reviewReason": "The canonical policy is resolved again and exact required ID/command plus the narrow execution allowlist are still checked before the native child. Added owned logs and execution seals do not alter manifest scope, required checks or structural policy; failed/drifting execution remains historical and cannot satisfy current scope. Therefore the documented frozen manifest and out-of-scope/unresolved-evidence rejection remain accurate."
+          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
+          "reviewReason": "Reviewed manifest scope and required-check contracts against Manage-LlmWikiEvidence: only the interpreter for canonical Wiki PowerShell commands changes; manifest schema, drift detection and obligation checks are unchanged."
         }
       ],
-      "reason": "The canonical policy is resolved again and exact required ID/command plus the narrow execution allowlist are still checked before the native child. Added owned logs and execution seals do not alter manifest scope, required checks or structural policy; failed/drifting execution remains historical and cannot satisfy current scope. Therefore the documented frozen manifest and out-of-scope/unresolved-evidence rejection remain accurate.",
+      "reason": "Reviewed manifest scope and required-check contracts against Manage-LlmWikiEvidence: only the interpreter for canonical Wiki PowerShell commands changes; manifest schema, drift detection and obligation checks are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:33.8015737Z"
+      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
+      "reviewedAtUtc": "2026-10-23T10:11:03.7009800Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -1005,14 +1005,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
-          "reviewReason": "ManageEvidence now records genuine executed logs and rejects source drift before publishing current evidence; it does not modify readiness dimensions or non-compensating verdicts. Actual execution proof and manual/review attestation remain distinct. The repaired runner removes a false missing-artifact rejection while retaining failed checks, scope and acceptance requirements; it supplies no readiness or publication PASS by itself."
+          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
+          "reviewReason": "Checked release-readiness claims against the interpreter correction: no readiness dimension or blocking rule changed, and failed execution still yields failed evidence in the Linux behavior regression."
         }
       ],
-      "reason": "ManageEvidence now records genuine executed logs and rejects source drift before publishing current evidence; it does not modify readiness dimensions or non-compensating verdicts. Actual execution proof and manual/review attestation remain distinct. The repaired runner removes a false missing-artifact rejection while retaining failed checks, scope and acceptance requirements; it supplies no readiness or publication PASS by itself.",
+      "reason": "Checked release-readiness claims against the interpreter correction: no readiness dimension or blocking rule changed, and failed execution still yields failed evidence in the Linux behavior regression.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:39.9873372Z"
+      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
+      "reviewedAtUtc": "2026-10-23T10:11:06.1484325Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -1210,48 +1210,18 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "6d6c49062f2889a7efda36d7303df57f2e74e1a8685c938de9d29e78e5f4f661",
+      "pageSha256": "617ec5d81374f609d0742badfc5065ef186a86f4c7119c1bffb2cca1ae3f46a4",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
-          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
-          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
-          "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
-          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "6c500d9f874044639ab6ddbb42d5277e6f7c0e06cc2eb178f84c9c1c69f3c2f4",
-          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1",
-          "sha256": "e755743dbdefd49e1965dab97e097a257f19786c451bed9928e8bd41d0c26612",
-          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "1a192afd32c68c922ce69e02eb4902e49f4a5b35dc3725acd1cbcdb546bb0635",
-          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
-        },
-        {
-          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-          "sha256": "789b738019919ba1dd4f04bd971a1087e82f8524d3c3dc0c91a071ff47909be7",
-          "reviewReason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched."
+          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
+          "reviewReason": "Checked task execution and workspace receipt claims: Wiki checks use PowerShell consistently on Windows and Linux while preserving canonical commands, log-backed evidence, failure handling and source drift rejection; the governed-delivery smoke group passed on Windows."
         }
       ],
-      "reason": "The page's completion contract still matches current code: both status calls are Detailed, non-ready workspaces are refused, refresh occurs before derived receipts, an existing seal is rejected, and verification recomputes sealed hashes. The new ChangedPath option is opt-in; no text here promises automatic task-baseline or allowed-pattern narrowing. The added governed-delivery fixture truthfully stubs unrelated assessments, checks default/explicit foreign and blocked-readiness rejection, preserves the two-element scope through status/refresh/status, and stops at the final-status sentinel before seal/learning. The page claims coverage of governed-delivery boundaries, not a full fixture-created completion. Workspace refresh now delegates the canonical receipt importer instead of restating every matching receipt as a manual passed check. The direct execution owner supplies the unique hashed log; task-run keeps that artifact unchanged while still recording terminal status and telemetry. Actual receipt imports preserve measured command/outcome/duration and target-specific lineage, reject sealed targets and do not reexecute. Workspace scope, acceptance invalidation and completion gates are untouched.",
+      "reason": "Checked task execution and workspace receipt claims: Wiki checks use PowerShell consistently on Windows and Linux while preserving canonical commands, log-backed evidence, failure handling and source drift rejection; the governed-delivery smoke group passed on Windows.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:42.0664782Z"
+      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
+      "reviewedAtUtc": "2026-10-23T10:11:07.2754129Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1373,17 +1343,18 @@
     {
       "pageId": "workflow.evidence-bundle",
       "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
-      "pageSha256": "0f2c3adec01aa78529e1a7a3995187983647637bec611575386f695fdf8ac9b1",
+      "pageSha256": "d89efe68338a7097f521477db778654ddb4179261e504db7379368d84cea4467",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "f008b85f7cf0bbfcf2853e73a1b7d4c94e30d0427ee8e0f6487e4380c0afb34a"
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
+          "reviewReason": "Canonical Wiki commands now run through the current PowerShell host on Linux as on Windows, fixing permission denied for non-executable .ps1 files. The command allowlist, captured output, exit code, hashes and lineage remain enforced; the Linux behavior regression passed."
         }
       ],
-      "reason": "Reviewed supplemental lineage with zero required checks. The existing collection helper now reads IDs safely from the empty policy array. The new governed-delivery regression proves a valid manual supplemental proof remains reusable and a tampered compatibility fingerprint still fails. Required checks, cache eligibility, source hashing and policy semantics are unchanged. Focused regression passed in .artifacts/master-baseline-preflight-lineage-regression.log.",
+      "reason": "Canonical Wiki commands now run through the current PowerShell host on Linux as on Windows, fixing permission denied for non-executable .ps1 files. The command allowlist, captured output, exit code, hashes and lineage remain enforced; the Linux behavior regression passed.",
       "baseRef": "HEAD",
-      "gitHead": "554c18fc9091c83452cca7b41c934e390bf1ab78",
-      "reviewedAtUtc": "2026-10-19T10:01:10.6801665Z"
+      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
+      "reviewedAtUtc": "2026-10-23T10:11:04.7668034Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",

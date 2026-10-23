@@ -246,7 +246,7 @@ switch ($Action) {
         $ErrorActionPreference = 'Continue'
         Push-Location $repositoryRoot
         try {
-        if ($env:OS -eq 'Windows_NT' -and $commandToRun -match '^\./\.llm-wiki/wiki\.ps1\s+') {
+        if ($commandToRun -match '^\./\.llm-wiki/wiki\.ps1\s+') {
             $commandParts = @($commandToRun -split '\s+' | Where-Object { $_ })
             $scriptPath = $commandParts[0]
             $scriptArguments = @($commandParts | Select-Object -Skip 1)
