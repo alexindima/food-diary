@@ -13,6 +13,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$wikiUtf8Encoding = [Text.UTF8Encoding]::new($false)
+[Console]::InputEncoding = $wikiUtf8Encoding
+[Console]::OutputEncoding = $wikiUtf8Encoding
+$OutputEncoding = $wikiUtf8Encoding
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
 $json = if ($ArgumentsPath) {

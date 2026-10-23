@@ -38,6 +38,15 @@ type FetchUnreadCountOptions = {
     force?: boolean;
 };
 
+type NotificationState = {
+    unreadCount: number | null;
+    items: readonly NotificationItem[];
+    loading: boolean;
+    loaded: boolean;
+    requested: boolean;
+    version: number;
+};
+
 @Service()
 export class NotificationService {
     private readonly http = inject(HttpClient);
@@ -110,6 +119,18 @@ export class NotificationService {
             },
             error: () => {},
         });
+    }
+
+    public readState(): NotificationState {
+        this.synchronizeSession();
+        return {
+            unreadCount: this.unreadCountLoaded() ? this.unreadCount() : null,
+            items: [...this.notifications()],
+            loading: this.notificationsLoading(),
+            loaded: this.notificationsLoaded(),
+            requested: this.notificationsRequested(),
+            version: this.notificationsChangedVersion(),
+        };
     }
 
     public ensureNotificationsLoaded(): void {

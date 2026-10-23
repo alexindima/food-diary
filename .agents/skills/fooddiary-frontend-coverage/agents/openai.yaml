@@ -1,0 +1,4 @@
+interface:
+  display_name: "FoodDiary frontend coverage"
+  short_description: "Improve Angular and Vitest behavior coverage"
+  default_prompt: "Use $fooddiary-frontend-coverage to inspect frontend coverage gaps and verify meaningful tests."

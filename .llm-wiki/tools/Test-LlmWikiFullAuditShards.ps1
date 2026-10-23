@@ -16,8 +16,10 @@ $expected = @{
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     # CI repair retains tamper rejection and adds separate stale-metadata and
     # genuine unexpected-module cases, increasing Workspace coverage by one.
-    Governed = @{ count = 377; hash = '1b49f8793e5a99120837e1932607a4a05e15ffd3f1e861dfe772fb8d6c73cce5' }
-    Workspace = @{ count = 280; hash = '08a9be46530b81413aa11512cf7a4a3681064181fe231d7fbb5fc4a4d471af79' }
+    # Add the real empty-check retrospective regression; all prior assertions
+    # remain unchanged. This assertion belongs to both Governed and Workspace.
+    Governed = @{ count = 378; hash = '22902b963a1a4a1b0fa39fc2892ebacbb71bfe2dbe1870956eb0748824c56a95' }
+    Workspace = @{ count = 281; hash = 'fe3356e1a851610b131dc4cd5f36214f008cc18703576e9f8b620091aaceeca8' }
     Orchestration = @{ count = 97; hash = 'fdd52d1221307232c0a905826fd28e98c22428d303ffe571b91210a1a2c2aac4' }
     # Retain durable-memory preservation and add canonical model-outcome
     # registry preservation for every shard; all earlier assertions remain.

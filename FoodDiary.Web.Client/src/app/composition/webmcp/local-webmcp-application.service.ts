@@ -12,6 +12,7 @@ import {
     devText,
 } from '../../shared/development/development-input';
 import { type DevelopmentScreen, DevelopmentToolError } from '../../shared/development/development-tools';
+import { NotificationService } from '../../shared/notifications/notification.service';
 import type { LocalTool } from './local-webmcp.types';
 import { LocalWebmcpCatalogService } from './local-webmcp-catalog.service';
 import { LocalWebmcpPushService } from './local-webmcp-push.service';
@@ -27,6 +28,7 @@ export type LocalToolOperation = Omit<LocalTool, 'execute'> & { run: (input: unk
 const MAX_KIND_LENGTH = 80;
 const MAX_SEARCH_LENGTH = 200;
 const MAX_ID_LENGTH = 100;
+const NOTIFICATION_FEED_LIMIT = 25;
 const SECTIONS = [
     'dashboard',
     'meals',
@@ -71,6 +73,35 @@ export class LocalWebmcpApplicationService {
             return diagnostics;
         };
         return [
+            {
+                name: 'fooddiary_' + 'read_notification_feed',
+                description:
+                    'Read up to 25 cached notification IDs, kinds, read flags and timestamps plus loading/count state. No content, fetching, mutation or delivery proof.',
+                inputSchema: DEV_EMPTY_SCHEMA,
+                annotations: { readOnlyHint: true },
+                run: (input: unknown): unknown => {
+                    devRecord(input, []);
+                    requireSession();
+                    const state = this.injector.get(NotificationService).readState();
+                    return {
+                        dataSource: 'live-cache',
+                        capturedAtUtc: new Date().toISOString(),
+                        unreadCount: state.unreadCount,
+                        loading: state.loading,
+                        loaded: state.loaded,
+                        requested: state.requested,
+                        version: state.version,
+                        cachedCount: state.items.length,
+                        truncated: state.items.length > NOTIFICATION_FEED_LIMIT,
+                        items: state.items.slice(0, NOTIFICATION_FEED_LIMIT).map(({ id, type, isRead, createdAtUtc }) => ({
+                            id,
+                            type: type.kind === 'known' ? type.code : 'unknown',
+                            isRead,
+                            createdAtUtc,
+                        })),
+                    };
+                },
+            },
             this.openSectionOperation(context),
             this.selectClientOperation(context),
             this.openEntityOperation(context),

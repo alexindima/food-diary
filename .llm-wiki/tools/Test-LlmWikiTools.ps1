@@ -1749,6 +1749,20 @@ try {
                 [string]::IsNullOrWhiteSpace([string]$_.id) -or $_.id -eq 'impact-'
             }).Count -eq 0
         ) 'Post-task retrospective did not convert observed misses into learning candidates.'
+        $retrospectiveEvidencePath = Join-Path $absoluteTaskWorkspacePath 'evidence.json'
+        $retrospectiveEvidenceText = [IO.File]::ReadAllText($retrospectiveEvidencePath)
+        $retrospectiveArtifactPath = Join-Path $absoluteTaskWorkspacePath 'retrospective.json'
+        $retrospectiveArtifactText = [IO.File]::ReadAllText($retrospectiveArtifactPath)
+        try {
+            $withoutChecks = $retrospectiveEvidenceText | ConvertFrom-Json
+            $withoutChecks.checks = @()
+            [IO.File]::WriteAllText($retrospectiveEvidencePath, ($withoutChecks | ConvertTo-Json -Depth 30), [Text.UTF8Encoding]::new($false))
+            $emptyChecksRetrospective = & (Join-Path $toolsRoot 'Manage-LlmWikiRetrospective.ps1') create -WorkspacePath $taskWorkspacePath -AsOfUtc ([DateTime]'2026-01-01T00:04:50Z') -Format Json | ConvertFrom-Json
+            Assert-Wiki ($emptyChecksRetrospective.valid -and @($emptyChecksRetrospective.retrospective.inputs.telemetrySnapshot).Count -eq 0) 'Retrospective with no required checks must not require global telemetry or fail property projection.'
+        } finally {
+            [IO.File]::WriteAllText($retrospectiveEvidencePath, $retrospectiveEvidenceText, [Text.UTF8Encoding]::new($false))
+            [IO.File]::WriteAllText($retrospectiveArtifactPath, $retrospectiveArtifactText, [Text.UTF8Encoding]::new($false))
+        }
         $impactArtifactPath = Join-Path $absoluteTaskWorkspacePath 'impact-simulation.json'
         $currentImpactArtifactRaw = Get-Content -LiteralPath $impactArtifactPath -Raw
         try {

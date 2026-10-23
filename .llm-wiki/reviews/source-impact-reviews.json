@@ -17,6 +17,11 @@
       "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
+          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+        },
+        {
           "path": "docs/ARCHITECTURE.md",
           "sha256": "a017096e94842a03a50b1accf6b74516ded9ea901777e004d82534149c80b9e6",
           "reviewReason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result."
@@ -32,10 +37,10 @@
           "reviewReason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities."
         }
       ],
-      "reason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result.",
+      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:16.731771Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:23.6997830Z"
     },
     {
       "pageId": "module.frontend",
@@ -98,54 +103,55 @@
     {
       "pageId": "system.csharp-symbol-index",
       "pagePath": ".llm-wiki/system/csharp-symbol-index.md",
-      "pageSha256": "15c3aae30eea5af15e394eb2f30ec80f4df604a9c718089e987afaf25f2d1dac",
+      "pageSha256": "75a7f7a7c5b8d962c119d7377e6853191ada9b256c25d457347a6aafa7ebf393",
       "sources": [
         {
-          "path": "Directory.Build.props",
-          "sha256": "de6204a7f5a4aeac7f9791a9bac3f361870863d612dc271b342bb16c2d09068d"
+          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+          "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         }
       ],
-      "reason": "Reviewed affected navigation and workflow pages against canonical namespace migration and ADR 0051. Existing module ownership, runtime behavior, API contracts and workflow descriptions remain accurate. Generated indexes were refreshed; solution build and dependency matrix checks passed. The 26 direct shared-owner references only make existing transitive dependencies explicit.",
+      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "19dac184840c82424a17c8ec73f5ab413b927a77",
-      "reviewedAtUtc": "2026-09-26T22:55:46.4874Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:24.1851757Z"
     },
     {
       "pageId": "system.frontend-index",
       "pagePath": ".llm-wiki/system/frontend-index.md",
-      "pageSha256": "ffe52aa56bac185d19cfbca9407b7807223ca7f5ad4dcf3e5eb4b37c742c7d5e",
+      "pageSha256": "938f08206922cef9b8b6a264c2b7d6170ea950522bd5207e30506d356d2752c8",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "ce7df6c2ba83faf486313b534f8cda990cf8acb56622f3c14e8df279c9bc677b",
-          "reviewReason": "The generator still discovers Git-visible Angular projects and classes. Current output includes fd-webmcp; no extraction algorithm changed."
+          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+          "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         },
         {
-          "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "e9f8edd68a0d68cc0a2543fa7f98bf8fa847c679b7c3d37181cf2259134bfa1c",
-          "reviewReason": "Reviewed current workspace coverage configuration and regenerated frontend-index.json. Added regression specs and coverage thresholds preserve all project roots, test builders, feature discovery and locale-count semantics documented by this page."
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         }
       ],
-      "reason": "Reviewed current workspace coverage configuration and regenerated frontend-index.json. Added regression specs and coverage thresholds preserve all project roots, test builders, feature discovery and locale-count semantics documented by this page.",
+      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "da34fd3a85aad65b1aae11e0ce2c97c4612c1963",
-      "reviewedAtUtc": "2026-10-22T18:17:52.7732269Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:24.7000015Z"
     },
     {
       "pageId": "system.knowledge-model",
       "pagePath": ".llm-wiki/system/knowledge-model.md",
-      "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
+      "pageSha256": "f042da388443879435bad9d779615b7a7a1202d90fee0211112b58835bac1998",
       "sources": [
         {
-          "path": "docs/README.md",
-          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956",
-          "reviewReason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities."
+          "path": "AGENTS.md",
+          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
+          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
         }
       ],
-      "reason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities.",
+      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "8d934c24e069b389efb2d1888c7a80c8be237dc7",
-      "reviewedAtUtc": "2026-10-11T02:03:01.1830676Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:25.1377400Z"
     },
     {
       "pageId": "system.quality-index",
@@ -163,15 +169,20 @@
       "pageSha256": "7368eca730254aab949bddc9e5d05a260ac6f0b1a97793c1a08c7fcb1a68366f",
       "sources": [
         {
+          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+          "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+        },
+        {
           "path": "FoodDiary.Web.Client/angular.json",
           "sha256": "284cd97370ec8cee85449fa6d414f36b16a5fbb14a95f8b7da4a6f588c9cebd3",
           "reviewReason": "The angular.json delta changes serve:staging and per-project coverage settings, while the catalog still inventories the same workspace projects/build-target families. The generic Git-visible inventory, literal-route limitations and reproducibility instructions remain accurate and contain no frozen count or claim that staging/coverage checks actually passed."
         }
       ],
-      "reason": "The angular.json delta changes serve:staging and per-project coverage settings, while the catalog still inventories the same workspace projects/build-target families. The generic Git-visible inventory, literal-route limitations and reproducibility instructions remain accurate and contain no frozen count or claim that staging/coverage checks actually passed.",
+      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:32.7047489Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:25.5845924Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -185,14 +196,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
-          "reviewReason": "Reviewed the one-line PowerShell invocation fix against acceptance mapping and validation: required check IDs, execution evidence and criterion resolution remain unchanged; Test-LlmWikiBehaviorWorkflow passes on Linux."
+          "sha256": "94aadf5a374cba342aaec7828483aee5133988420c4a0ea7f3afa474be337b1c",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the one-line PowerShell invocation fix against acceptance mapping and validation: required check IDs, execution evidence and criterion resolution remain unchanged; Test-LlmWikiBehaviorWorkflow passes on Linux.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
-      "reviewedAtUtc": "2026-10-23T10:11:02.5980737Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:26.0800330Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -211,8 +222,8 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "4e3b8d0f24bc302f711919ae8fa9795c001b6b48cb6db6a620fb91a5fef4d4e4",
-          "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
+          "sha256": "eb29cee0b8c29d09a92aa3ec977fcce823dcc394d705f3637eec370d0af0526a",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         },
         {
           "path": "scripts/ai/task-runtime.mjs",
@@ -220,10 +231,10 @@
           "reviewReason": "task-runtime.mjs now supplies SSR_API_ORIGIN from the owned API URL and passes owned credentials internally to its browser identity probe. This does not change the documented safe runtime-list contract or justify treating a record as ready without observed checks. The page already correctly states that start/develop capture pre-existing dirt and later delta-aware facades use the task delta unless explicit ChangedPath overrides it."
         }
       ],
-      "reason": "task-runtime.mjs now supplies SSR_API_ORIGIN from the owned API URL and passes owned credentials internally to its browser identity probe. This does not change the documented safe runtime-list contract or justify treating a record as ready without observed checks. The page already correctly states that start/develop capture pre-existing dirt and later delta-aware facades use the task delta unless explicit ChangedPath overrides it.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:33.2322694Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:26.5592846Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -231,15 +242,20 @@
       "pageSha256": "f21a78ea954e7adc60acb8bc9bd7e4372c4a0ac6e8f779783486dd19db08d1a0",
       "sources": [
         {
+          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+          "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
           "sha256": "70630ab9a45809960e13ae1b31a02bc5b8c8cdb4c6113097d11128f627e51c18",
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
+      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
-      "reviewedAtUtc": "2026-10-23T20:36:46.0374472Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:26.9948423Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -265,17 +281,18 @@
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "58810bcafe9de0e6e09ec7ce44659b61c6c2d807da6b207e95a00aa681b51685",
+      "pageSha256": "8664196b6d1442b2391d9fef19cc036cfedfb17cc79ab95fec330ce54e7ced0c",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "f96a4e17d71d8d56cf6c0f0f44291453ffb296bbf7ef2469ac762fa55e9ce8a9"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
         }
       ],
-      "reason": "Read current workflow and reviewed IAuditEntryReadService implementers/callers and SQL latest-per-target contract in final-independent-review.json. Full solution build0errors, PostgreSQL persistence tests green; no HTTP/message/client-package changes, no new project edges or transaction marker changes. Existing in-process versus wire guidance remains accurate.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:54:06.3911367Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:27.4715381Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -289,14 +306,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
-          "reviewReason": "Reviewed manifest scope and required-check contracts against Manage-LlmWikiEvidence: only the interpreter for canonical Wiki PowerShell commands changes; manifest schema, drift detection and obligation checks are unchanged."
+          "sha256": "94aadf5a374cba342aaec7828483aee5133988420c4a0ea7f3afa474be337b1c",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed manifest scope and required-check contracts against Manage-LlmWikiEvidence: only the interpreter for canonical Wiki PowerShell commands changes; manifest schema, drift detection and obligation checks are unchanged.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
-      "reviewedAtUtc": "2026-10-23T10:11:03.7009800Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:27.9399441Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -520,12 +537,22 @@
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+          "sha256": "41297718b1e74a2751170d6fb4a9b4bda681460c121d825b5b2a7fa920c7f63a",
+          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "b6de79034b6ec1e8b8b7a8f7074dd8798c28cc52faa650f9275ec1d3194da12a",
+          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the session-lifecycle task-finish additions: six hash-chained retrospective cost observations were appended. They are hypotheses only; no approval, experiment, application, policy or durable guidance changed. The page accurately describes this observation boundary and automatic task-finish recording.",
+      "reason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T20:06:46.7374851Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:28.9237760Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -554,15 +581,20 @@
       "pageSha256": "d6a287a6000b102cd9e007a1630184aabad98def8c1ced3ede421ebff7fe4c37",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "b6de79034b6ec1e8b8b7a8f7074dd8798c28cc52faa650f9275ec1d3194da12a",
+          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
           "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313",
           "reviewReason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged."
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:07.8085495Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:29.3823028Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -607,25 +639,30 @@
           "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
         },
         {
+          "path": ".llm-wiki/tools/LlmWikiSubstantiveReview.ps1",
+          "sha256": "5a73eddf46be86afb2ed1cdaf31a081ec3f1ca6f61a319f1db37e1e9d75e14fa",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
           "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2",
           "reviewReason": "Reviewed the affected workflow contracts against the final sources: generic query guides now depend on generators; packet contents and dependent receipt invalidation are synchronized; completion uses observed stages and content-bound successful assessment reuse. Required checks, substantive review, independent saved-critique verification, final seals and learning hooks retain their gates. Regression evidence covers source/log/policy drift, cache corruption and failures, metadata refresh and verdict tampering."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1",
-          "sha256": "8bc4bee4d36d5c907177ac51ec23a3552498d8f745563056d745c0ce5a31ae4d",
-          "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
+          "sha256": "3e1c12cf52dbdce77298184e20b176bec856aedb61c6b7aad7a442474c837e05",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
-          "reviewReason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case."
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "The optional finish scope is an administrative lifecycle argument within an already supported facade route. It does not add/remove a command, replace the compact develop/next/phase/validate/handoff experience, change phase proof, or alter context/query caching. The page's statement that detailed help retains administrative commands and its separation of semantic evidence from automatic assessment remain accurate. The changed BehaviorWorkflow test now invokes the real direct evidence runner, imports exact actual proof without rerunning the child, and asserts that missing/tampered/stale/manual proof cannot verify the phase. It retains behavior-specification, mapped acceptance and substantive-review assertions. Developer-facing phase/design/review commands and their strict completion contract are preserved; these stronger fixture assertions supply no new full-repository PASS. Current final delta reviewed: Get-LlmWikiPhaseStatus continues to observe actual Git changes, then intersects that set with current packet.diff.changedPaths when available. For packet-less legacy workspaces it uses evidence.change.changedPaths; absence of either scope descriptor retains the previous global observation behavior. Only the phase changed-file/mapping obligation set is narrowed, so an inferred focused-test candidate changed by another task no longer requires an unrelated acceptance link here. A file observed in Git and included in this task scope still triggers the unmapped-source error. Criteria selection, criterion fingerprints, required/check/review IDs, current valid executed-check lineage with zero exit and bound log, task-wide verification/artifact/release acceptance and final delivery gates are unchanged. New BehaviorWorkflow cases reuse real native executed evidence and independently reject the owned-unmapped case.",
-      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-23T02:36:49.7373226Z"
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:29.9225954Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -703,8 +740,8 @@
       "sources": [
         {
           "path": ".agents/skills/fooddiary-browser-qa/SKILL.md",
-          "sha256": "8b12253565e650404b1a2401972727803163e757f685f6937723ebac436a8c84",
-          "reviewReason": "Reviewed the final browser QA skill and WebMCP reference against the local adapters and current browser API. The workflow page still correctly delegates browser selection, session ownership and verification details to that skill; Chrome remains the default, explicit browser requests are preserved, and WebMCP preparation does not replace UI evidence."
+          "sha256": "177ef8afa953d9d2eda936121d45ec911185e4cd13beac7da5eecc5a32f15c33",
+          "reviewReason": "Reviewed the browser skill references: actual WebMCP availability and bounded cached notification metadata are distinguished from API, browser and delivery proof. Current source/build/session provenance remains explicit, and no credential or content projection was added."
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
@@ -712,10 +749,10 @@
           "reviewReason": "The package.json delta only adds task-runtime-browser.test.mjs to the existing AI-development Node test command. It does not change browser selection, headed task-owned identity, required rendered interaction/console/screenshot evidence, or the distinction between plan-only and executed visual QA. No actual browser or package test result is inferred."
         }
       ],
-      "reason": "The package.json delta only adds task-runtime-browser.test.mjs to the existing AI-development Node test command. It does not change browser selection, headed task-owned identity, required rendered interaction/console/screenshot evidence, or the distinction between plan-only and executed visual QA. No actual browser or package test result is inferred.",
+      "reason": "Reviewed the browser skill references: actual WebMCP availability and bounded cached notification metadata are distinguished from API, browser and delivery proof. Current source/build/session provenance remains explicit, and no credential or content projection was added.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:37.6160014Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:30.4531012Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -739,15 +776,20 @@
       "pageSha256": "0cd6495e8bf721712da9279eb1eaa3ced3e3219eee93783274ad8ff8f8f8f2bb",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+        },
+        {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         }
       ],
-      "reason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:37.8536328Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:30.9148123Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -781,21 +823,36 @@
           "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
         },
         {
+          "path": ".llm-wiki/tools/LlmWikiSubstantiveReview.ps1",
+          "sha256": "5a73eddf46be86afb2ed1cdaf31a081ec3f1ca6f61a319f1db37e1e9d75e14fa",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiBehaviorWorkflow.ps1",
-          "sha256": "8bc4bee4d36d5c907177ac51ec23a3552498d8f745563056d745c0ce5a31ae4d",
-          "reviewReason": "Complete still creates a critique, refuses reject/request-changes, hashes change-critique.json, and requires final detailed readiness. ChangedPath does not replace the independent automatic assessment or a required source-bound substantive review. The page's distinction between automatic assessment and semantic review, replay lineage and non-compensating critique blockers is preserved. BehaviorWorkflow retains actual source/acceptance-fingerprint checks, tampered reviewer payload rejection and blocking major-finding closure. Added execution/import/native-log and post-run drift cases strengthen the evidence supplied to critique without changing critique scoring, independent review requirements or sealing authority. Current review text is not accepted from historical receipts merely because the fixture passes. Current final delta reviewed: The added BehaviorWorkflow assertions concern which Git-observed phase candidates belong to the current task; they do not change critique computation or the substantive-review contract. The same fixture retains its source-bound reviewer-content integrity, open-major finding, changed-source and changed-requirement rejection controls, while the production phase checker keeps required review IDs and current lineage validation unchanged. Excluding another task’s inferred candidate from the changedFiles mapping check does not waive a required semantic review or convert automatic critique into an independent source judgment. The page’s independent-attestation, stale-proof and read-only dependency claims remain unchanged; there is no new test-count or final-pass assertion to update."
+          "sha256": "3e1c12cf52dbdce77298184e20b176bec856aedb61c6b7aad7a442474c837e05",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Complete still creates a critique, refuses reject/request-changes, hashes change-critique.json, and requires final detailed readiness. ChangedPath does not replace the independent automatic assessment or a required source-bound substantive review. The page's distinction between automatic assessment and semantic review, replay lineage and non-compensating critique blockers is preserved. BehaviorWorkflow retains actual source/acceptance-fingerprint checks, tampered reviewer payload rejection and blocking major-finding closure. Added execution/import/native-log and post-run drift cases strengthen the evidence supplied to critique without changing critique scoring, independent review requirements or sealing authority. Current review text is not accepted from historical receipts merely because the fixture passes. Current final delta reviewed: The added BehaviorWorkflow assertions concern which Git-observed phase candidates belong to the current task; they do not change critique computation or the substantive-review contract. The same fixture retains its source-bound reviewer-content integrity, open-major finding, changed-source and changed-requirement rejection controls, while the production phase checker keeps required review IDs and current lineage validation unchanged. Excluding another task’s inferred candidate from the changedFiles mapping check does not waive a required semantic review or convert automatic critique into an independent source judgment. The page’s independent-attestation, stale-proof and read-only dependency claims remain unchanged; there is no new test-count or final-pass assertion to update.",
-      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-23T02:36:50.0317663Z"
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
+      "baseRef": "HEAD",
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:31.3400338Z"
     },
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
       "pageSha256": "e6c3d19bcc8aca497afb641900f09134ca03b753f43adf6ea52ef46b72483250",
       "sources": [
+        {
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "9471c65b1a16abf1d3d131bf3db02dd839c019c3592a1cb0dec8c452bb224d32",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1",
+          "sha256": "a2f9600b8d80a6f44e6a962a3ad0c6701bb902ca079ad4890fc352df89d357ab",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
+        },
         {
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
           "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
@@ -805,12 +862,32 @@
           "path": ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
           "sha256": "8eb3616ee2d1968494a827a73af7c28b3b6ec34ac19162ab8f0981167fa068cb",
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
+          "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "7d391e1bda8247ce30c432375fc7428b1ad55f07e5cb57874d3be76973b01574",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "a4efe13cc6340b71f6e853e9c74a46297ce9e7e427bec388355433ec7086550d",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
         }
       ],
-      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
+      "reason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates.",
       "baseRef": "HEAD",
-      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
-      "reviewedAtUtc": "2026-10-23T20:36:47.5237390Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:55:35.4511640Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -858,12 +935,17 @@
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+          "sha256": "41297718b1e74a2751170d6fb4a9b4bda681460c121d825b5b2a7fa920c7f63a",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended session-lifecycle observed eval candidate with its retrospective, changed paths and cost signals. No candidate was approved or applied, and no active eval case changed. The page accurately preserves separate observation, review and activation steps.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T20:06:48.2629731Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:32.3346009Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -948,12 +1030,17 @@
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
           "sha256": "2d0f6d452b22a63060675943d14ae6a0878c575c4609668371352c65e3dc8dc0",
           "reviewReason": "Every successful non-DryRun finish still creates and validates retrospective.json after producing the completion seal, and returns its hash/candidate count. The new path argument does not bypass readiness or convert hypotheses into durable truth. The page's sealed-outcome versus future-learning boundary and source-bound retrospective description remain accurate."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+          "sha256": "41297718b1e74a2751170d6fb4a9b4bda681460c121d825b5b2a7fa920c7f63a",
+          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Every successful non-DryRun finish still creates and validates retrospective.json after producing the completion seal, and returns its hash/candidate count. The new path argument does not bypass readiness or convert hypotheses into durable truth. The page's sealed-outcome versus future-learning boundary and source-bound retrospective description remain accurate.",
+      "reason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:38.7003798Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:32.7933578Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -966,15 +1053,20 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+        },
+        {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
           "sha256": "4be671940bc2027438306b21f9eeb678a1645c52c5612992df6928eaa6203875",
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
-      "reviewedAtUtc": "2026-10-23T20:36:47.9523075Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:33.2747347Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1045,14 +1137,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
-          "reviewReason": "Checked release-readiness claims against the interpreter correction: no readiness dimension or blocking rule changed, and failed execution still yields failed evidence in the Linux behavior regression."
+          "sha256": "94aadf5a374cba342aaec7828483aee5133988420c4a0ea7f3afa474be337b1c",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
         }
       ],
-      "reason": "Checked release-readiness claims against the interpreter correction: no readiness dimension or blocking rule changed, and failed execution still yields failed evidence in the Linux behavior regression.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
-      "reviewedAtUtc": "2026-10-23T10:11:06.1484325Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:34.2120578Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -1222,14 +1314,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
-          "reviewReason": "The new argument forwarding belongs only to the finish/verify clause and does not enter task-dispatch lifecycle payloads, leases, event chains or packet fingerprints. Existing dispatch routes are unchanged. The page already treats independent facade options separately and preserves the difference between scoped checks and full verification, so no text update is needed for this source delta."
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "The new argument forwarding belongs only to the finish/verify clause and does not enter task-dispatch lifecycle payloads, leases, event chains or packet fingerprints. Existing dispatch routes are unchanged. The page already treats independent facade options separately and preserves the difference between scoped checks and full verification, so no text update is needed for this source delta.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:41.7454271Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:35.6096962Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1254,14 +1346,19 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "c5040216722f05ed65d9d7cc3d40f92eea9acf737cc4dc31435f62b1e8a5214f",
-          "reviewReason": "Checked task execution and workspace receipt claims: Wiki checks use PowerShell consistently on Windows and Linux while preserving canonical commands, log-backed evidence, failure handling and source drift rejection; the governed-delivery smoke group passed on Windows."
+          "sha256": "94aadf5a374cba342aaec7828483aee5133988420c4a0ea7f3afa474be337b1c",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFeedbackReliability.ps1",
+          "sha256": "842465848411fc5c373f4b1215a53eda30e195455ede75936edb68999e314d7b",
+          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Checked task execution and workspace receipt claims: Wiki checks use PowerShell consistently on Windows and Linux while preserving canonical commands, log-backed evidence, failure handling and source drift rejection; the governed-delivery smoke group passed on Windows.",
+      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
       "baseRef": "HEAD",
-      "gitHead": "ed95ef1f77cfc95730209f8ad6d23856b30b4335",
-      "reviewedAtUtc": "2026-10-23T10:11:07.2754129Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:36.0990678Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1348,22 +1445,33 @@
           "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
           "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
           "reviewReason": "The task runner still records actual status, elapsed time and command after resolving the executed check result; the wiki-verify self-telemetry exception remains. Only replacement of the execution log/lineage is removed. Telemetry cohort/input hashing, locking, dry-run exclusion and failure history are not changed, so the page operational-history and flakiness limitations remain accurate."
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "b6de79034b6ec1e8b8b7a8f7074dd8798c28cc52faa650f9275ec1d3194da12a",
+          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "The task runner still records actual status, elapsed time and command after resolving the executed check result; the wiki-verify self-telemetry exception remains. Only replacement of the execution log/lineage is removed. Telemetry cohort/input hashing, locking, dry-run exclusion and failure history are not changed, so the page operational-history and flakiness limitations remain accurate.",
+      "reason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:43.0675697Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:36.5663650Z"
     },
     {
       "pageId": "workflow.change-policy",
       "pagePath": ".llm-wiki/workflows/change-policy.md",
       "pageSha256": "f6340562c9cb1b9400acafcbeba632603a678221b6481c07dda81d8fd55d8714",
-      "sources": [],
-      "reason": "Root Wiki commands moved verbatim into the linked AI_WORKFLOW guide; indexed documentation is current and regenerated for the development dependencies.",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
+          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+        }
+      ],
+      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "d28faabf6dfb8a0b629c84d62907237854287a88",
-      "reviewedAtUtc": "2026-10-10T08:41:16.7242376Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:28.3836138Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1428,6 +1536,16 @@
           "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
           "sha256": "b9af72c787c5e8c94171005dbd084aa7a558bff4d387c0d85b3591a81090e023",
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
@@ -1443,25 +1561,31 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
-      "reviewedAtUtc": "2026-10-23T20:36:48.4483481Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:33.7648836Z"
     },
     {
       "pageId": "workflow.review-diff",
       "pagePath": ".llm-wiki/workflows/review-diff.md",
-      "pageSha256": "7023047356e2bba7ad98e23c670c27159e08fbbf5d5ee242cf860fd1bbecc46e",
+      "pageSha256": "5e3bc6ea47423e2b12ec954a542075875d76516f80ca6d6bdf23afe401a33b70",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3edc96c6c09a714d1182d329d75e7e6a10d9802a7a14a7966abde7aa5ffe850e"
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
+          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         }
       ],
-      "reason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions.",
+      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T01:55:41.4417561Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:34.6968482Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1485,19 +1609,19 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "1c6dc45df7d4946f95a99225fa0e0bd39a4f3074cfb380c734890573fe1f8b45",
-          "reviewReason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry."
+          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
-          "reviewReason": "The wiki.ps1 change only forwards ChangedPath in task-finish/task-verify. It does not change Wiki health diagnosis, deliberate repair-verify writers, graph freshness, source-link repair or the read-only/reader table documented here. In particular task-finish was not added to delta-aware commands, and this page makes no promise that a clean delta completes a task or repairs the Wiki automatically."
+          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
+          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
         }
       ],
-      "reason": "The wiki.ps1 change only forwards ChangedPath in task-finish/task-verify. It does not change Wiki health diagnosis, deliberate repair-verify writers, graph freshness, source-link repair or the read-only/reader table documented here. In particular task-finish was not added to delta-aware commands, and this page makes no promise that a clean delta completes a task or repairs the Wiki automatically.",
+      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:41.1816992Z"
+      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
+      "reviewedAtUtc": "2026-10-23T22:20:35.1461936Z"
     }
   ]
 }

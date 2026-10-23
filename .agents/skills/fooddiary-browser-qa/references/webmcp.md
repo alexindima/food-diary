@@ -58,10 +58,30 @@ Re-fetch after resolving the cause. Record the observed reason (for example,
 production mode, signed-out session, missing browser capability or unsupported
 screen), then continue through the supported UI route. Do not inject a polyfill,
 replace `document.modelContext`, call Angular internals or change production to
-make a tool appear. A normal Playwright CLI session does not itself provide the
-built-in Browser's Site tools bridge.
+make a tool appear. Check installed Playwright CLI help for `webmcp-list` and
+`webmcp-call`: support depends on the CLI and the actual browser API. A command
+in help does not establish page support. The built-in Browser has a separate
+Site tools bridge and tab session; use its helper route when needed without
+replacing the verification tab.
+
+In local development, inspect `meta[name="fooddiary-webmcp"]` through the normal
+DOM when the catalog is empty. Its JSON distinguishes browser API, host, build,
+authentication, registration progress/failure and tool count, without account
+IDs or tokens. Production and remote hosts publish no such metadata.
+
+Fresh screen context includes provenance: capture time, per-context identity,
+session revision, live data source and a reason for an absent published screen.
+`not-compared-to-worktree` does not prove that a build matches current files.
+`apiRuntimeStatus: not-observed` means no qualifying API response headers have
+been observed; frontend identity alone cannot establish backend revision.
 
 ## Choose tools by the QA task
+
+`fooddiary_read_notification_feed` reads only the current session's cached IDs,
+kinds, read flags and timestamps (up to 25), with loading/count state. It does not
+fetch, mark read, send a notification or prove delivery. `unreadCount: null` means
+the count has not been observed. Combine it with the rendered panel and existing
+push diagnostics when verifying a notification scenario.
 
 | Need | Use when listed | Still verify through the UI |
 | --- | --- | --- |

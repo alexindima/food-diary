@@ -7,6 +7,26 @@ function Assert-Reliability([bool]$Condition, [string]$Message) { if (-not $Cond
 $repository = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 
 if ($Group -in @('Pure', 'All')) {
+    & {
+        Set-StrictMode -Version Latest
+        $calibrationFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repository -Name 'empty-cost-calibration'
+        try {
+            $evidencePath = Join-Path $calibrationFixture 'evidence.json'
+            $repairPath = Join-Path $calibrationFixture 'no-repairs.json'
+            $costSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1'))
+            $costAst = [Management.Automation.Language.Parser]::ParseInput($costSource, [ref]$null, [ref]$null)
+            $calibrationFunction = $costAst.Find({ param($node) $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Get-Calibration' }, $true)
+            . ([scriptblock]::Create($calibrationFunction.Extent.Text))
+            [IO.File]::WriteAllText($evidencePath, '{"checks":[]}')
+            $estimate = [pscustomobject]@{ checkId = 'removed-check'; expectedTotalSeconds = 20 }
+            Assert-Reliability ((Get-Calibration @($estimate)).resolvedCount -eq 0) 'A stale estimate for a removed check broke empty-check calibration.'
+            [IO.File]::WriteAllText($evidencePath, '{"checks":[{"id":"removed-check","status":"passed","durationSeconds":10}]}')
+            $measured = Get-Calibration @($estimate)
+            Assert-Reliability ($measured.resolvedCount -eq 1 -and $measured.outcomes[0].actualTotalSeconds -eq 10) 'Current measured verification stopped contributing to cost calibration.'
+        } finally {
+            Remove-Item -LiteralPath $evidencePath -ErrorAction SilentlyContinue
+        }
+    }
     $packet = [pscustomobject]@{ fingerprint = 'same-task'; brief = @{ contract = 'original'; compiledIndex = @{ sqlDurationMs = 1; roundTripDurationMs = 2; sourceHashes = @{ frontend = 'first' } } } }
     $original = Get-LlmWikiPacketContentFingerprint $packet
     $packet.brief.compiledIndex.sqlDurationMs = 100

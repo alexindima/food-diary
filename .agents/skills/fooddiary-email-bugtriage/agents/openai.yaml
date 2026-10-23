@@ -1,0 +1,4 @@
+interface:
+  display_name: "FoodDiary email BugTriage"
+  short_description: "Process email reports with owned BugTriage leases"
+  default_prompt: "Use $fooddiary-email-bugtriage to process authorized queued email bug reports safely and idempotently."

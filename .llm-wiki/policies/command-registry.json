@@ -123,6 +123,7 @@
         "evidence-init",
         "evidence-review",
         "evidence-run",
+        "evidence-recover",
         "evidence-validate",
         "manifest-init",
         "manifest-show",

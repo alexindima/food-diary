@@ -27,6 +27,10 @@ After a timed-out push, inspect local Git state and the remote branch before ret
 
 ## Follow the intended revision
 
+For recovery after interruption, shared-checkout commits or a worktree transfer,
+read [recovery and scope](references/recovery-and-scope.md). Reuse current executed
+evidence through the supported commands before considering another long run.
+
 Associate every CI and deployment observation with the exact published SHA. Distinguish queued, running, failed, successful, and checks for superseded revisions. Use existing scheduled monitoring when applicable; create future monitoring only when requested, and keep notifications limited to meaningful changes under the user's stated preferences.
 
 On a failure, inspect the failed job logs before proposing a fix. Record a verified reusable resolution in Wiki failures when appropriate rather than making one historical symptom a permanent skill rule. After a fix, follow the new revision and state whether CI, deployment, and application health have each been verified.

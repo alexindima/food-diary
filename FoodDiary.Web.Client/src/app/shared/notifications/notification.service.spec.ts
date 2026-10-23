@@ -161,6 +161,17 @@ describe('NotificationService loading', () => {
 });
 
 describe('NotificationService session ownership', () => {
+    it('reads cached state without HTTP and clears the previous owner synchronously', () => {
+        service.notifications.set([notificationForSession('Private title')]);
+        service.notificationsLoaded.set(true);
+        service.updateCount(UNREAD_COUNT_INITIAL);
+        expect(service.readState()).toMatchObject({ unreadCount: UNREAD_COUNT_INITIAL, loaded: true });
+        authService.getUserId.mockReturnValue('user-b');
+        expect(service.readState()).toMatchObject({ unreadCount: null, items: [], loaded: false, requested: false });
+        httpMock.expectNone(baseUrl);
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+    });
+
     it.each([
         { boundary: 'authentication', result: 'success' },
         { boundary: 'authentication', result: 'error' },

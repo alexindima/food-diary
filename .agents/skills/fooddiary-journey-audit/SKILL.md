@@ -56,4 +56,12 @@ When fixes are authorized, reproduce, make the bounded change, and recheck the o
 
 ## Report completion precisely
 
+Bind each completed ledger row to its checked frontend build/source capture,
+observed API identity when available, browser context and evidence artifact.
+Keep unknown identities explicit. On resume, compare those identities with the
+current runtime and sources: retain still-applicable rows and rerun affected
+rows rather than treating the entire pass as either lost or automatically fresh.
+Record the remaining scenarios and owned fixture cleanup so a continuation can
+resume without reconstructing the audit from chat history.
+
 Report checked scenarios and roles, confirmed defects and fixes, verification on the final revision, blocked integrations, remaining scenarios, and cleanup state. A route count, an accessibility scan, or a unit-test total is evidence for that check, not proof of complete journey coverage. Keep the ledger usable for the next pass so the audit need not be rebuilt from screenshots or chat history.

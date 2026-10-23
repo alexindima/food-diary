@@ -74,6 +74,9 @@ Running `test:ci:webmcp` alone is library verification, not use of the page tool
 
 ## Verify the requested outcome
 
+For isolated component styling, auth/SignalR race fixtures, account switching or
+startup/PWA behavior, read [controlled scenarios](references/controlled-scenarios.md).
+
 For a focused change, reproduce the failing interaction, make the bounded fix,
 and recheck its observable result with a current DOM snapshot or screenshot.
 Check page identity, meaningful rendered content, framework error overlays,

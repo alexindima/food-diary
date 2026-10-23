@@ -40,6 +40,7 @@ public sealed class McpServerTests {
     public async Task ConfiguredServer_ListsExpectedToolsAndAccurateWriteAnnotations(bool usePortableLauncher) {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot, usePortableLauncher);
+        Assert.Equal(Path.GetFullPath(repositoryRoot), configuration.WorkingDirectory);
         if (usePortableLauncher) {
             Assert.False(configuration.UsesConfiguredLauncher);
         }

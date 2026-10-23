@@ -2,6 +2,8 @@
 param([switch]$PreservedTimestampOnly)
 
 $ErrorActionPreference = 'Stop'
+& node --test (Join-Path $PSScriptRoot 'code-graph-dotnet-runtime.test.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Code graph .NET runtime recovery regression failed.' }
 if ($PreservedTimestampOnly -and [string]::IsNullOrWhiteSpace($env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
     & (Join-Path $PSScriptRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $PSCommandPath -ToolArguments @{ PreservedTimestampOnly = $true } -PrepareCodeGraph
     return

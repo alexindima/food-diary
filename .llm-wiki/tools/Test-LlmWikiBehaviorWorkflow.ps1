@@ -27,7 +27,7 @@ $ownedParent = [IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($fixture))
 try {
     $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
     $null = New-Item -ItemType Directory -Path $fixtureTools,(Join-Path $fixture '.llm-wiki/policies'),(Join-Path $fixture 'src') -Force
-    foreach ($name in @('Get-LlmWikiPhaseStatus', 'Manage-LlmWikiAcceptanceMatrix', 'Manage-LlmWikiEvidence', 'Manage-LlmWikiVerificationReceipts', 'Import-LlmWikiEvidenceReceipts', 'Invoke-LlmWikiTaskChecks', 'Resolve-LlmWikiRecordedCheckResult', 'Test-LlmWikiEvidenceLineage', 'New-LlmWikiEvidenceLineage', 'Test-LlmWikiChangePolicy', 'Get-LlmWikiContentFingerprint', 'LlmWikiCollections', 'LlmWikiEvidenceCommands', 'LlmWikiVerificationReceipts', 'LlmWikiGitPaths', 'LlmWikiGitRenames', 'LlmWikiJson', 'LlmWikiRequirementCriteria', 'LlmWikiSubstantiveReview')) {
+    foreach ($name in @('Get-LlmWikiPhaseStatus', 'Manage-LlmWikiAcceptanceMatrix', 'Manage-LlmWikiEvidence', 'Manage-LlmWikiVerificationReceipts', 'Import-LlmWikiEvidenceReceipts', 'Invoke-LlmWikiTaskChecks', 'Resolve-LlmWikiRecordedCheckResult', 'Recover-LlmWikiEvidenceExecution', 'Test-LlmWikiEvidenceLineage', 'New-LlmWikiEvidenceLineage', 'Test-LlmWikiChangePolicy', 'Get-LlmWikiContentFingerprint', 'LlmWikiCollections', 'LlmWikiEvidenceCommands', 'LlmWikiVerificationReceipts', 'LlmWikiGitPaths', 'LlmWikiGitRenames', 'LlmWikiJson', 'LlmWikiRequirementCriteria', 'LlmWikiSubstantiveReview')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot "$name.ps1") -Destination $fixtureTools
     }
     # Fault seams exist only in copied fixture scripts. They deterministically
@@ -213,6 +213,64 @@ if (Test-Path (Join-Path $PSScriptRoot '../../.artifacts/publication-drift')) { 
     & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') review -Path "$workspace/evidence.json" -Id substantive-code-review -Status completed -Reason 'Independent pass over final fixture sources.' -ReviewContent $review | Out-Null
     $lineage = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     Assert-Behavior ($lineage.valid -and $lineage.substantiveReview.present) 'A complete substantive review did not validate through the existing evidence route.'
+    $originalMatrixText = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/acceptance-matrix.json"))
+    $equivalentMatrix = $originalMatrixText | ConvertFrom-Json
+    $equivalentMatrix.criteria[0].mapping.checkIds = 'behavior'
+    $equivalentMatrix.criteria[0].mapping.testPaths = $null
+    $equivalentMatrix.criteria[0].mapping.reviewIds = $null
+    Write-FixtureJson "$workspace/acceptance-matrix.json" $equivalentMatrix
+    $equivalentReview = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Behavior $equivalentReview.substantiveReview.valid 'Equivalent scalar, duplicate and null mapping representations invalidated a completed review.'
+    $equivalentMatrix.criteria[0].mapping.checkIds = @('behavior', 'behavior')
+    Write-FixtureJson "$workspace/acceptance-matrix.json" $equivalentMatrix
+    $duplicateMappingReview = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Behavior $duplicateMappingReview.substantiveReview.valid 'A duplicate reference to the same check invalidated a completed review.'
+    $originalReviewEvidence = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json"))
+    $legacyReviewEvidence = $originalReviewEvidence | ConvertFrom-Json
+    $legacyReviewEvidence.substantiveReview.payload.binding.requirements[0].mapping.checkIds = 'behavior'
+    $legacyReviewEvidence.substantiveReview.payload.binding.requirements[0].mapping.testPaths = $null
+    $legacyReviewEvidence.substantiveReview.payload.binding.requirements[0].mapping.PSObject.Properties.Remove('scenarioIds')
+    $legacyReviewEvidence.substantiveReview.fingerprint = Get-LlmWikiJsonFingerprint $legacyReviewEvidence.substantiveReview.payload
+    Write-FixtureJson "$workspace/evidence.json" $legacyReviewEvidence
+    $legacyReview = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Behavior $legacyReview.substantiveReview.valid 'An intact legacy attestation with equivalent mapping formatting required another review.'
+    [IO.File]::WriteAllText((Join-Path $fixture "$workspace/evidence.json"), $originalReviewEvidence)
+    $equivalentMatrix.criteria[0].mapping.checkIds = @('different-check')
+    Write-FixtureJson "$workspace/acceptance-matrix.json" $equivalentMatrix
+    $changedMappingReview = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Behavior (-not $changedMappingReview.substantiveReview.valid) 'Changing the actual required check preserved review approval.'
+    [IO.File]::WriteAllText((Join-Path $fixture "$workspace/acceptance-matrix.json"), $originalMatrixText)
+    $recoveryEvidence = Get-Content -LiteralPath (Join-Path $fixture "$workspace/evidence.json") -Raw | ConvertFrom-Json
+    $executionRecord = [string]$recoveryEvidence.checks[0].lineage.execution.verification.recordPath
+    $executionLogPath = Join-Path $fixture ([string]$recoveryEvidence.checks[0].lineage.artifact.path)
+    $originalLog = [IO.File]::ReadAllText($executionLogPath)
+    $recoveryEvidence.checks[0].status = 'pending'
+    $recoveryEvidence.checks[0].lineage = $null
+    Write-FixtureJson "$workspace/evidence.json" $recoveryEvidence
+    $pendingEvidence = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json"))
+    $executionCount = @(Get-ChildItem -LiteralPath (Join-Path $fixture "$workspace/logs") -Filter '*.execution.json').Count
+    $liveExecutionLease = [IO.File]::Open((Join-Path $fixture "$workspace/evidence.json.execution.lock"), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+    try {
+        $rejected = $false
+        try { & (Join-Path $fixtureTools 'Recover-LlmWikiEvidenceExecution.ps1') -EvidencePath "$workspace/evidence.json" -Id behavior -ExecutionRecordPath $executionRecord -Format Json | Out-Null } catch { $rejected = $_.Exception.Message -match 'Cannot acquire evidence execution lease' }
+        Assert-Behavior $rejected 'Recovery raced a still-live evidence publisher.'
+    } finally { $liveExecutionLease.Dispose() }
+    [IO.File]::AppendAllText($executionLogPath, 'tampered')
+    $rejected = $false
+    try { & (Join-Path $fixtureTools 'Recover-LlmWikiEvidenceExecution.ps1') -EvidencePath "$workspace/evidence.json" -Id behavior -ExecutionRecordPath $executionRecord -Format Json | Out-Null } catch { $rejected = $_.Exception.Message -match 'log hash changed' }
+    Assert-Behavior $rejected 'Recovery accepted a tampered execution log.'
+    Assert-Behavior ([IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json")) -ceq $pendingEvidence) 'Rejected recovery modified evidence.'
+    [IO.File]::WriteAllText($executionLogPath, $originalLog)
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '3')
+    $rejected = $false
+    try { & (Join-Path $fixtureTools 'Recover-LlmWikiEvidenceExecution.ps1') -EvidencePath "$workspace/evidence.json" -Id behavior -ExecutionRecordPath $executionRecord -Format Json | Out-Null } catch { $rejected = $_.Exception.Message -match 'current repository inputs' }
+    Assert-Behavior $rejected 'Recovery promoted an execution against changed source.'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')
+    $recovered = & (Join-Path $fixtureTools 'Recover-LlmWikiEvidenceExecution.ps1') -EvidencePath "$workspace/evidence.json" -Id behavior -ExecutionRecordPath $executionRecord -Format Json | ConvertFrom-Json
+    Assert-Behavior ($recovered.status -eq 'passed' -and $recovered.commandExitCode -eq 0 -and -not $recovered.commandRerun) 'Original successful execution was not recovered.'
+    Assert-Behavior (@(Get-ChildItem -LiteralPath (Join-Path $fixture "$workspace/logs") -Filter '*.execution.json').Count -eq $executionCount) 'Recovery reran the command.'
+    $recoveredLineage = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
+    Assert-Behavior $recoveredLineage.valid 'Recovered execution could not satisfy the real lineage validator.'
     $recordedText = [IO.File]::ReadAllText((Join-Path $fixture "$workspace/evidence.json"))
     $tampered = $recordedText | ConvertFrom-Json
     $tampered.substantiveReview.payload.content.codeQuality = 'Substituted review conclusion.'

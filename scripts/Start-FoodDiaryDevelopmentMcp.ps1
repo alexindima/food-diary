@@ -10,6 +10,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$mcpUtf8Encoding = [Text.UTF8Encoding]::new($false)
+[Console]::InputEncoding = $mcpUtf8Encoding
+[Console]::OutputEncoding = $mcpUtf8Encoding
+$OutputEncoding = $mcpUtf8Encoding
 $systemTemp = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar)
 $sessionRoot = [IO.Path]::GetFullPath((Join-Path $systemTemp 'fooddiary-development-mcp'))
 if ($CleanupSession) {

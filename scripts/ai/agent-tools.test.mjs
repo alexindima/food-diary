@@ -9,6 +9,7 @@ import {
     existsSync,
     mkdtempSync,
     rmSync,
+    utimesSync,
 } from "node:fs";
 import { join, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
@@ -22,6 +23,7 @@ import {
     nextTaskAction,
     startCheck,
     cancelCheck,
+    taskDiagnostics,
 } from "./task-tools.mjs";
 import { repositoryRoot } from "./generate-feature.mjs";
 import {
@@ -30,6 +32,33 @@ import {
 } from "./runtime-diagnostics.mjs";
 import { processIdentity } from "./task-runtime.mjs";
 import { checkAgentRegressions, promoteRegression } from "./agent-feedback.mjs";
+
+test("quiet live checks remain running and expose actual command and wrapper exits separately", () => {
+    const id = randomUUID();
+    const directory = join(repositoryRoot, ".artifacts/agent-checks", id);
+    const logRelative = `.artifacts/llm-wiki/tasks/diagnostics-${id}/logs/check.log`;
+    const canonicalLog = join(repositoryRoot, logRelative);
+    mkdirSync(directory, { recursive: true });
+    mkdirSync(join(repositoryRoot, `.artifacts/llm-wiki/tasks/diagnostics-${id}/logs`), { recursive: true });
+    writeFileSync(canonicalLog, "Still executing a canonical test\n");
+    const quietTime = new Date(Date.now() - 90000);
+    utimesSync(canonicalLog, quietTime, quietTime);
+    const record = { id, checkout: repositoryRoot, status: "running", startedAtUtc: new Date(Date.now() - 120000).toISOString(), worker: { pid: process.pid, identity: processIdentity(process.pid) }, executionLogPath: logRelative };
+    writeFileSync(join(directory, "job.json"), JSON.stringify(record));
+    const live = taskDiagnostics(undefined, id).job;
+    assert.equal(live.status, "running");
+    assert.equal(live.workerAlive, true);
+    assert.equal(live.progress.stage, "executing-check");
+    assert.ok(live.progress.secondsSinceLastOutput >= 90);
+    assert.equal(live.progress.silenceMeansHung, false);
+    writeFileSync(`${canonicalLog}.execution.json`, JSON.stringify({ exitCode: 1 }));
+    writeFileSync(join(directory, "job.json"), JSON.stringify({ ...record, status: "failed", exitCode: 0, finishedAtUtc: new Date().toISOString() }));
+    const failed = taskDiagnostics(undefined, id).job;
+    assert.equal(failed.status, "failed");
+    assert.equal(failed.progress.stage, "finished");
+    assert.equal(failed.progress.wrapperExitCode, 0);
+    assert.equal(failed.progress.commandExitCode, 1);
+});
 
 test("dead worker recovery releases only its own lock and retains unverified status", () => {
     const id = randomUUID();

@@ -1,5 +1,24 @@
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 
+function ConvertTo-LlmWikiReviewRequirements([object[]]$Criteria) {
+    foreach ($criterion in @($Criteria | Sort-Object -Property id -CaseSensitive)) {
+        $mapping = [ordered]@{}
+        foreach ($name in @('changedPaths', 'checkIds', 'reviewIds', 'scenarioIds', 'testPaths')) {
+            $property = if ($null -ne $criterion.mapping) { $criterion.mapping.PSObject.Properties[$name] } else { $null }
+            $values = if ($null -ne $property) { @($property.Value) } else { @() }
+            $mapping[$name] = @($values | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object {
+                if ($name -in @('changedPaths', 'testPaths')) { ([string]$_).Replace('\', '/') } else { [string]$_ }
+            } | Sort-Object -Unique -CaseSensitive)
+        }
+        if ($null -ne $criterion.mapping) {
+            foreach ($property in @($criterion.mapping.PSObject.Properties | Sort-Object -Property Name -CaseSensitive)) {
+                if (-not $mapping.Contains($property.Name)) { $mapping[$property.Name] = $property.Value }
+            }
+        }
+        [pscustomobject][ordered]@{ id = [string]$criterion.id; text = [string]$criterion.text; mapping = [pscustomobject]$mapping }
+    }
+}
+
 function Get-LlmWikiReviewProductPaths([object]$Evidence) {
     @($Evidence.change.changedPaths | Where-Object {
         $_ -notmatch '^\.llm-wiki/(generated|reviews)/|^\.artifacts/' -and $_ -ne '.llm-wiki/knowledge/verification-telemetry.json'
@@ -13,7 +32,7 @@ function Get-LlmWikiReviewBinding([object]$Evidence, [string]$EvidencePath, [str
     $absoluteAcceptance = if ([IO.Path]::IsPathRooted($acceptancePath)) { $acceptancePath } else { Join-Path $repositoryRoot $acceptancePath }
     $acceptance = if (Test-Path -LiteralPath $absoluteAcceptance -PathType Leaf) { Get-Content -LiteralPath $absoluteAcceptance -Raw | ConvertFrom-LlmWikiJson } else { $null }
     # Bind requirements and their mappings, not mutable satisfaction bookkeeping.
-    $requirements = @(if ($null -ne $acceptance) { @($acceptance.criteria | ForEach-Object { [pscustomobject][ordered]@{ id = $_.id; text = $_.text; mapping = $_.mapping } }) })
+    $requirements = @(if ($null -ne $acceptance) { ConvertTo-LlmWikiReviewRequirements @($acceptance.criteria) })
     $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path @($paths + $InspectedPath | Sort-Object -Unique) -Format Json | ConvertFrom-LlmWikiJson
     [pscustomobject][ordered]@{
         head = ([string](& git -C $repositoryRoot rev-parse HEAD)).Trim()
@@ -104,7 +123,11 @@ function Test-LlmWikiSubstantiveReview([object]$Evidence, [string]$EvidencePath,
             $codeQuality = [string]$payload.content.codeQuality
             if ([string]$payload.kind -cne 'substantive-review-attestation' -or [string]$record.fingerprint -cne (Get-LlmWikiJsonFingerprint $payload)) { $issues.Add('Substantive review integrity is invalid.') }
             $current = Get-LlmWikiReviewBinding $Evidence $EvidencePath @($payload.content.inspectedPaths)
-            if ((Get-LlmWikiJsonFingerprint $current) -cne (Get-LlmWikiJsonFingerprint $payload.binding)) { $issues.Add('Substantive review is stale: sources, scope, HEAD or acceptance requirements changed.') }
+            # Keep the original integrity check above. Normalize a copy so legacy
+            # attestations survive equivalent scalar/null/collection formatting.
+            $recordedBinding = $payload.binding | ConvertTo-Json -Depth 30 | ConvertFrom-LlmWikiJson
+            $recordedBinding.requirements = @(ConvertTo-LlmWikiReviewRequirements @($recordedBinding.requirements))
+            if ((Get-LlmWikiJsonFingerprint $current) -cne (Get-LlmWikiJsonFingerprint $recordedBinding)) { $issues.Add('Substantive review is stale: sources, scope, HEAD or acceptance requirements changed.') }
             foreach ($issue in @(Get-LlmWikiReviewContentIssues $payload.content $current)) { $issues.Add($issue) }
             foreach ($item in @($payload.content.requirements | Where-Object conclusion -eq 'gap')) { $issues.Add("Requirement '$($item.criterionId)' has an unresolved behavior gap.") }
             foreach ($finding in @($payload.content.findings | Where-Object { $_.severity -in @('critical', 'major') -and $_.status -ne 'resolved' })) { $issues.Add("Blocking code finding '$($finding.id)' remains open.") }

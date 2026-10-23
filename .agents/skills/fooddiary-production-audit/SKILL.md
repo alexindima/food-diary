@@ -19,6 +19,11 @@ Produce a repeatable account of what happened in production, what changed since 
 
 ## Complete collection in a fixed window
 
+Use [the reusable collector](references/collector.md) for bounded Grafana/Loki
+aggregation and a sanitized coverage manifest instead of rewriting collection
+loops each run. Keep the existing authenticated transport and supplement its
+result with host, interval-metric and incident evidence required below.
+
 Fix the analysis end once in UTC and use the preceding 24 hours unless the task specifies otherwise. Keep that same window across Loki, Prometheus and host logs. State `[start, end)` precisely and show Asia/Tbilisi time in the report. Separate current health snapshots from observations inside the historical window.
 
 Discover sources and labels first. Cover current FoodDiary application services, supporting mail/BugTriage services and frontend telemetry where available. Record unavailable sources separately from services that emitted no events; an empty query does not establish service health.

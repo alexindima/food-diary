@@ -11,6 +11,27 @@ const tool = (name: string): WebmcpTool => ({
     execute: vi.fn<WebmcpTool['execute']>().mockResolvedValue(null),
 });
 
+describe('WebMCP registration diagnostics', () => {
+    it('reports completion and failure without letting diagnostics break tool cleanup', async () => {
+        const states = vi.fn();
+        const dispose = registerWebmcpTools({ registerTool: vi.fn() }, [tool('screen')], states);
+        await vi.waitFor(() => {
+            expect(states).toHaveBeenLastCalledWith({ registration: 'ready', registeredToolCount: 1 });
+        });
+        dispose();
+        expect(states).toHaveBeenLastCalledWith({ registration: 'disposed', registeredToolCount: 0 });
+        const failures = vi.fn();
+        registerWebmcpTools({ registerTool: vi.fn().mockRejectedValue(new Error('unsupported')) }, [tool('broken')], failures);
+        await vi.waitFor(() => {
+            expect(failures).toHaveBeenLastCalledWith({ registration: 'failed', registeredToolCount: 0 });
+        });
+        const cleanup = registerWebmcpTools({ registerTool: vi.fn() }, [tool('safe')], () => {
+            throw new Error('diagnostics only');
+        });
+        expect(cleanup).not.toThrow();
+    });
+});
+
 describe('WebMCP registration lifecycle', () => {
     it('registers in order with a shared abort signal and disposes once', async () => {
         const registerTool = vi.fn<WebmcpModelContext['registerTool']>();

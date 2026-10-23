@@ -4,6 +4,7 @@ kind: workflow
 status: current
 sources:
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
+  - .llm-wiki/tools/Recover-LlmWikiEvidenceExecution.ps1
   - .llm-wiki/tools/LlmWikiEvidenceCommands.ps1
   - .llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1
   - .llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1
@@ -25,6 +26,14 @@ sources:
 Evidence bundles record what a change required, what was verified, and which
 review decisions remain unresolved. They live under ignored `.artifacts/` and
 are not committed.
+
+If a command finished but publication was interrupted, retain its original log
+and `.log.execution.json`. Use `wiki.ps1 evidence-recover -EvidencePath <bundle>
+-Id <check> -ExecutionRecordPath <original-record>` to restore its actual outcome
+without rerunning it. Recovery checks the canonical command, checkout, original
+log hash and unchanged whole-repository fingerprints. It preserves failed exit
+codes, rejects stale or modified artifacts and rolls back evidence if publication
+fails. A manually written pass label does not recover an execution.
 
 `evidence-review -Id substantive-code-review -Status completed -Reason <scope>
 -ReviewContent <object>` records requirement conclusions and code-quality findings

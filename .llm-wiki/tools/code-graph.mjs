@@ -12,6 +12,7 @@ import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
 import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { createContextSourceReader, replaceContextSearchRecords, repairMissingContextMirrors } from './code-graph-context-projection.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
+import { ensureDotnetToolRuntime } from './code-graph-dotnet-runtime.mjs';
 import { collectGraphInputs } from './code-graph-inputs.mjs';
 import { discoverProjectOwnership, createProjectOwnershipResolver, inspectProjectionOwnership, inspectProjectionCompleteness } from './code-graph-maintenance.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
@@ -128,11 +129,11 @@ function isProcessAlive(pid) {
 }
 
 function ensureRoslynExtractor() {
-  const sources = [roslynProject, resolve(dirname(roslynProject), 'Program.cs')];
-  const requiresBuild = !existsSync(roslynDll)
-    || sources.some((path) => statSync(path).mtimeMs > statSync(roslynDll).mtimeMs);
-  if (requiresBuild) runGraphProcess('dotnet', ['build', roslynProject, '-c', 'Release', '--nologo', '--verbosity', 'quiet'], {
-    cwd: repositoryRoot,
+  ensureDotnetToolRuntime({
+    repositoryRoot,
+    projectPath: roslynProject,
+    assemblyPath: roslynDll,
+    sourcePaths: [resolve(dirname(roslynProject), 'Program.cs')],
   });
 }
 

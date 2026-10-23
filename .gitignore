@@ -63,6 +63,7 @@ Thumbs.db
 /FoodDiary.Web.Client/dist-admin/
 /coverage-results/
 /.artifacts/
+__pycache__/
 .playwright-cli/
 /.codex-remote-attachments/
 /output/playwright/

@@ -104,8 +104,11 @@ function New-Retrospective([string]$CreatedAtUtc, [object[]]$TelemetrySnapshot =
         Get-Content -LiteralPath $contextPath -Raw | ConvertFrom-Json
     } else { $null }
     if ($null -eq $TelemetrySnapshot) {
-        $telemetry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
-        $TelemetrySnapshot = @($telemetry.metrics | Where-Object checkId -in @($evidence.checks.id) | Sort-Object checkId)
+        $checkIds = @($evidence.checks | ForEach-Object { [string]$_.id })
+        $TelemetrySnapshot = @(if ($checkIds.Count -gt 0) {
+            $telemetry = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
+            $telemetry.metrics | Where-Object checkId -in $checkIds | Sort-Object checkId
+        })
     }
 
     $failedRepairs = @($repair.registry.attempts | Where-Object state -eq 'failed')

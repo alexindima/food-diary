@@ -93,6 +93,40 @@ try {
         'tracked.md' -in $inventory -or 'node_modules/ignored.cs' -in $inventory) {
         throw 'Source inventory lost an untracked Unicode source or included ignored/deleted files.'
     }
+    $linkedRoot = Join-Path $overlayRepository 'linked-checkout'
+    & git -C $overlayRepository worktree add --quiet --detach $linkedRoot HEAD
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to prepare the linked-worktree regression.' }
+    [IO.File]::WriteAllText((Join-Path $linkedRoot 'linked-only.txt'), 'linked')
+    $inherited = @{}
+    try {
+        foreach ($name in @('GIT_DIR', 'GIT_WORK_TREE', 'GIT_COMMON_DIR', 'GIT_INDEX_FILE')) {
+            $inherited[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+            $value = switch ($name) {
+                'GIT_WORK_TREE' { $overlayRepository }
+                'GIT_INDEX_FILE' { Join-Path $overlayRepository '.git/index' }
+                default { Join-Path $overlayRepository '.git' }
+            }
+            [Environment]::SetEnvironmentVariable($name, $value, 'Process')
+        }
+        $actualRoot = Invoke-LlmWikiGitCommand -RepositoryRoot $linkedRoot -Arguments @('rev-parse', '--show-toplevel')
+        if ([IO.Path]::GetFullPath($actualRoot.StandardOutput.Trim()) -ne [IO.Path]::GetFullPath($linkedRoot)) {
+            throw 'Inherited Git environment redirected the linked checkout.'
+        }
+        $linkedInventory = @(Get-LlmWikiSourceInventory -RepositoryRoot $linkedRoot)
+        if ('linked-only.txt' -notin $linkedInventory -or $overlayFixtureName -in $linkedInventory) {
+            throw 'Linked-worktree inventory included another checkout or lost its own untracked source.'
+        }
+        if ([Environment]::GetEnvironmentVariable('GIT_WORK_TREE', 'Process') -ne $overlayRepository) {
+            throw 'Git helper modified the calling process environment.'
+        }
+    } finally {
+        foreach ($name in $inherited.Keys) {
+            if ($null -eq $inherited[$name]) { Remove-Item -LiteralPath "Env:$name" -ErrorAction SilentlyContinue }
+            else { [Environment]::SetEnvironmentVariable($name, $inherited[$name], 'Process') }
+        }
+    }
+    & git -C $overlayRepository worktree remove --force $linkedRoot
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to remove the owned linked-worktree fixture.' }
 } finally {
     Remove-Item -LiteralPath $overlayRepository -Recurse -Force -ErrorAction SilentlyContinue
 }

@@ -1,7 +1,16 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, ApplicationRef, effect, inject, Injector, isDevMode, Service, untracked } from '@angular/core';
 import { Router } from '@angular/router';
-import { localWebmcpContext, registerWebmcpTools, WebmcpExecutor, WebmcpScreenRegistry, type WebmcpTool as AdminTool } from 'fd-webmcp';
+import {
+    createWebmcpContextId,
+    inspectWebmcpAvailability,
+    localWebmcpContext,
+    publishWebmcpDiagnostics,
+    registerWebmcpTools,
+    WebmcpExecutor,
+    WebmcpScreenRegistry,
+    type WebmcpTool as AdminTool,
+} from 'fd-webmcp';
 
 import { environment } from '../../../environments/environment';
 import { AdminAuthService } from '../../features/admin-auth/lib/admin-auth.service';
@@ -37,6 +46,8 @@ export class AdminWebmcpService {
     private readonly injector = inject(Injector);
     private readonly screens = new WebmcpScreenRegistry<AdminDevelopmentScreen>();
     private readonly executor = new WebmcpExecutor();
+    private readonly contextId = createWebmcpContextId(this.document);
+    private sessionRevision = 0;
 
     public attach(screen: AdminDevelopmentScreen): () => void {
         return this.screens.attach(screen);
@@ -45,17 +56,29 @@ export class AdminWebmcpService {
     public initialize(): void {
         afterNextRender(() => {
             const context = localWebmcpContext(this.document, isDevMode());
-            if (context === undefined) {
-                return;
-            }
+            const availability = inspectWebmcpAvailability(this.document, isDevMode());
             effect(
                 onCleanup => {
-                    if (!this.auth.isAuthenticated() || !this.auth.isAdmin()) {
+                    const authenticated = this.auth.isAuthenticated() && this.auth.isAdmin();
+                    publishWebmcpDiagnostics(this.document, availability, {
+                        authenticated,
+                        registration: authenticated ? 'not-registered' : 'signed-out',
+                        registeredToolCount: 0,
+                    });
+                    if (!authenticated || context === undefined) {
                         return;
                     }
                     const session = this.auth.getToken();
+                    this.sessionRevision++;
                     const tools = untracked(() => this.tools(session));
-                    onCleanup(registerWebmcpTools(context, tools));
+                    onCleanup(
+                        registerWebmcpTools(context, tools, state => {
+                            publishWebmcpDiagnostics(this.document, availability, {
+                                authenticated: this.auth.isAuthenticated() && this.auth.isAdmin(),
+                                ...state,
+                            });
+                        }),
+                    );
                 },
                 { injector: this.injector },
             );
@@ -201,6 +224,15 @@ export class AdminWebmcpService {
             timeZone: new Intl.DateTimeFormat().resolvedOptions().timeZone,
             configuredApiUrls: environment.apiUrls,
             buildRevision: null,
+            provenance: {
+                dataSource: 'live',
+                capturedAtUtc: new Date().toISOString(),
+                contextId: this.contextId,
+                sessionRevision: this.sessionRevision,
+                screenUnavailableReason: screen === undefined ? 'no-published-screen' : null,
+                sourceFreshness: 'not-compared-to-worktree',
+                apiRuntimeStatus: 'not-observed',
+            },
             blockingDialog: this.document.querySelector('[role="dialog"]') !== null,
             screen:
                 screen === undefined

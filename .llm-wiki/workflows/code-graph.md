@@ -8,6 +8,8 @@ sources:
   - .llm-wiki/tools/roslyn-extractor/Program.cs
   - .llm-wiki/tools/Test-LlmWikiRoslynExtractor.ps1
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-dotnet-runtime.mjs
+  - .llm-wiki/tools/code-graph-dotnet-runtime.test.mjs
   - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs
   - Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs
   - .llm-wiki/tools/code-graph-inputs.mjs
@@ -187,6 +189,11 @@ validate exact source hashes, select bounded records in SQL, and report explicit
 recovery errors when preparation fails. Backend-only preparation works without
 TypeScript; frontend code-graph discovery requires the locked npm dependencies.
 Direct behavior tests cover identity, selection, scope, freshness and output bounds.
+
+Roslyn runtime preparation hashes its project, sources and shared build inputs,
+then checks the managed DLLs declared by its dependency manifest. A missing or
+changed dependency forces a fresh Release build, including in a read-only
+snapshot. A cache marker alone or a newer executable timestamp is insufficient.
 
 The public `context` facade delegates graph preparation to the resolver rather
 than eagerly forcing a full graph build. A backend request can therefore create

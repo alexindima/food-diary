@@ -25,6 +25,15 @@ Use the root guide's standard frontend build, frontend start, and backend run co
 
 ## Prove readiness
 
+After interruption, discover existing owned runtimes with
+`node scripts/ai/task-runtime.mjs list`. Reconcile each process PID and start
+identity, checkout, lease and fixture ownership against live state before
+relaunching or stopping it. A saved record or quiet log alone is insufficient.
+Retain verified results whose source identity is still current; restore an
+interrupted evidence publication through the existing Wiki recovery command.
+Reconnect an owned browser tab only after confirming its account and context;
+another tab's sign-in or unsaved draft does not transfer to it.
+
 Check the requested frontend and API endpoints, then verify a real request from the rendered application reaches the intended backend. Do not substitute a successful health check for frontend-to-API connectivity. Confirm the checkout or revision serving the browser when multiple copies exist.
 
 Use [fooddiary-browser-qa](../fooddiary-browser-qa/SKILL.md) when opening or checking

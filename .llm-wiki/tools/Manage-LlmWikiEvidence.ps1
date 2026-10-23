@@ -198,6 +198,10 @@ switch ($Action) {
         Write-Host "Checks: $(@($evidence.checks).Count); reviews: $(@($evidence.reviews).Count); structural violations: $(@($evidence.structuralViolations).Count)"
     }
     'run' {
+        if (-not [IO.File]::Exists($absolutePath)) { throw "Evidence bundle does not exist: $Path. Run evidence init first." }
+        try { $executionLease = [IO.File]::Open($absolutePath + '.execution.lock', [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None) }
+        catch { throw "Cannot acquire evidence execution lease: $($_.Exception.Message) A live execution or recovery may own it; inspect before retrying." }
+        try {
         if ([string]::IsNullOrWhiteSpace($Id)) {
             throw 'run requires -Id.'
         }
@@ -239,6 +243,7 @@ switch ($Action) {
         $null = New-Item -ItemType Directory -Path $logsDirectory -Force
         $safeId = $Id -replace '[^A-Za-z0-9_.-]', '_'
         $executionLog = Join-Path $logsDirectory "$safeId-$([guid]::NewGuid().ToString('N')).log"
+        Write-Host "Canonical execution log: $executionLog"
         $executionStartedAt = [DateTime]::UtcNow
         $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
         $global:LASTEXITCODE = 0
@@ -309,6 +314,7 @@ switch ($Action) {
         if ($exitCode -ne 0 -and -not $NoExitOnFailure) {
             exit $exitCode
         }
+        } finally { $executionLease.Dispose() }
     }
     'check' {
         if ([string]::IsNullOrWhiteSpace($Id) -or [string]::IsNullOrWhiteSpace($Status)) {

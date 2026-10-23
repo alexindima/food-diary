@@ -11,6 +11,7 @@ import { isRecord } from '../../shared/lib/unknown-value.utils';
 import { createEmptyProductSnapshot } from '../../shared/models/meal.data';
 import type { PageOf } from '../../shared/models/page-of.data';
 import type { Product } from '../../shared/models/product.data';
+import { NotificationService } from '../../shared/notifications/notification.service';
 import { LocalWebmcpPilotService } from './local-webmcp-pilot.service';
 
 const SEARCH_LIMIT = 25;
@@ -32,6 +33,7 @@ let auth: {
     isEmailConfirmed: ReturnType<typeof vi.fn>;
 };
 let catalog: { query: ReturnType<typeof vi.fn> };
+let notificationState: ReturnType<typeof vi.fn>;
 const product = { ...createEmptyProductSnapshot(), name: 'Apple' };
 const page: PageOf<Product> = { data: [product], page: 1, limit: SEARCH_LIMIT, totalPages: 1, totalItems: 1 };
 
@@ -45,11 +47,20 @@ beforeEach(() => {
         isEmailConfirmed: vi.fn().mockReturnValue(true),
     };
     catalog = { query: vi.fn().mockReturnValue(of(page)) };
+    notificationState = vi.fn().mockReturnValue({
+        unreadCount: null,
+        items: [],
+        loading: false,
+        loaded: false,
+        requested: false,
+        version: 0,
+    });
     TestBed.configureTestingModule({
         providers: [
             { provide: Router, useValue: router },
             { provide: AuthService, useValue: auth },
             { provide: ProductService, useValue: catalog },
+            { provide: NotificationService, useValue: { readState: notificationState } },
         ],
     });
     service = TestBed.inject(LocalWebmcpPilotService);
@@ -72,7 +83,63 @@ function expectToolError(result: unknown, message = ''): void {
     }
 }
 
+describe('local WebMCP notification feed', () => {
+    it('bounds the cached notification projection and omits content and target references', async () => {
+        const item = {
+            id: 'n1',
+            type: { kind: 'known', code: 'Hydration' },
+            isRead: false,
+            createdAtUtc: '2026-10-23T00:00:00Z',
+            title: 'private title',
+            body: 'private body',
+            targetUrl: '/private',
+            referenceId: 'private reference',
+        };
+        notificationState.mockReturnValue({
+            unreadCount: 30,
+            items: [{ ...item, type: { kind: 'unknown', code: 'private code' } }, ...Array.from({ length: 29 }, () => item)],
+            loading: false,
+            loaded: true,
+            requested: true,
+            version: 2,
+        });
+        const result = await callAsync(service, 'fooddiary_read_notification_feed', {});
+        expect(result).toMatchObject({
+            dataSource: 'live-cache',
+            unreadCount: 30,
+            cachedCount: 30,
+            truncated: true,
+            items: [
+                { id: 'n1', type: 'unknown', isRead: false, createdAtUtc: item.createdAtUtc },
+                ...Array.from({ length: 24 }, () => ({ id: 'n1', type: 'Hydration', isRead: false, createdAtUtc: item.createdAtUtc })),
+            ],
+        });
+        expect(JSON.stringify(result)).not.toContain('private');
+        auth.isAuthenticated.mockReturnValue(false);
+        expectToolError(await callAsync(service, 'fooddiary_read_notification_feed', {}));
+        expect(notificationState).toHaveBeenCalledOnce();
+    });
+});
+
 describe('local WebMCP screen and navigation', () => {
+    it('identifies live reads and keeps missing screen and API identity explicitly unknown', async () => {
+        const context = await callAsync(service, 'fooddiary_read_screen_context', {});
+        expect(context).toMatchObject({
+            screen: null,
+            provenance: {
+                dataSource: 'live',
+                screenUnavailableReason: 'no-published-screen',
+                sourceFreshness: 'not-compared-to-worktree',
+                apiRuntimeStatus: 'not-observed',
+            },
+        });
+        service.attach({ read: () => ({ kind: 'meal-diary' }) });
+        expect(await callAsync(service, 'fooddiary_read_screen_context', {})).toMatchObject({
+            provenance: { screenUnavailableReason: null },
+        });
+        expect(JSON.stringify(context)).not.toContain('owned-user');
+    });
+
     it('reads only explicitly attached screen state, excluding arbitrary URL values', async () => {
         service.attach({ read: () => ({ kind: 'meal-diary', dateFrom: '2026-10-17' }) });
         expect(await callAsync(service, 'fooddiary_read_screen_context', {})).toMatchObject({

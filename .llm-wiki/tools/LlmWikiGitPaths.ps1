@@ -1,5 +1,16 @@
 Set-StrictMode -Version Latest
 
+function Clear-LlmWikiGitRepositoryEnvironment([Diagnostics.ProcessStartInfo]$StartInfo) {
+    # A caller such as a Git hook may target another checkout. Scope isolation
+    # belongs to the child process; preserve the caller's environment and config.
+    foreach ($name in @('GIT_DIR', 'GIT_COMMON_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE',
+        'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_PREFIX',
+        'GIT_INTERNAL_SUPER_PREFIX', 'GIT_IMPLICIT_WORK_TREE', 'GIT_SHALLOW_FILE',
+        'GIT_GRAFT_FILE', 'GIT_REPLACE_REF_BASE', 'GIT_NAMESPACE')) {
+        $StartInfo.EnvironmentVariables.Remove($name)
+    }
+}
+
 function Get-LlmWikiSourceInventory {
     param([Parameter(Mandatory)][string]$RepositoryRoot)
 
@@ -108,6 +119,7 @@ function Invoke-LlmWikiGitPathList {
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = 'git'
     $startInfo.WorkingDirectory = $RepositoryRoot
+    Clear-LlmWikiGitRepositoryEnvironment $startInfo
     $startInfo.UseShellExecute = $false
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
@@ -166,6 +178,7 @@ function Invoke-LlmWikiGitCommand {
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = 'git'
     $startInfo.WorkingDirectory = $RepositoryRoot
+    Clear-LlmWikiGitRepositoryEnvironment $startInfo
     $startInfo.UseShellExecute = $false
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true

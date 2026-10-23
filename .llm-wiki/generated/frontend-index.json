@@ -3055,7 +3055,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/development/admin-webmcp.service.ts",
-      "line": 33
+      "line": 42
     },
     {
       "name": "AdminLoadErrorComponent",
@@ -3552,7 +3552,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-application.service.ts",
-      "line": 49
+      "line": 51
     },
     {
       "name": "LocalWebmcpCatalogService",
@@ -3573,7 +3573,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/composition/webmcp/local-webmcp-pilot.service.ts",
-      "line": 40
+      "line": 47
     },
     {
       "name": "LocalWebmcpPushService",
@@ -7367,7 +7367,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 42
+      "line": 51
     },
     {
       "name": "PushNotificationService",

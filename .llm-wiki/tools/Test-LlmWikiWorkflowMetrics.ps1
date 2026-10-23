@@ -13,6 +13,7 @@ $modelRegistryPath = Join-Path $fixtureRoot 'model-outcomes.json'
 $previousMetricsRoot = $env:LLM_WIKI_WORKFLOW_METRICS_ROOT
 $previousContextRegistry = $env:LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH
 $previousModelRegistry = $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH
+$previousWorkspaceOutcomeRoot = $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT
 
 try {
     $null = New-Item -ItemType Directory -Path $metricsRoot -Force
@@ -20,6 +21,7 @@ try {
     $env:LLM_WIKI_WORKFLOW_METRICS_ROOT = $metricsRoot
     $env:LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH = $contextRegistryPath
     $env:LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH = $modelRegistryPath
+    $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT = Join-Path $fixtureRoot 'workspace-outcomes'
     $emptyRegistry = [pscustomobject][ordered]@{ schemaVersion = 1; events = @() }
     [IO.File]::WriteAllText($contextRegistryPath, (($emptyRegistry | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     [IO.File]::WriteAllText($modelRegistryPath, (($emptyRegistry | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -66,6 +68,7 @@ try {
         [pscustomobject]@{ name = 'LLM_WIKI_WORKFLOW_METRICS_ROOT'; value = $previousMetricsRoot }
         [pscustomobject]@{ name = 'LLM_WIKI_CONTEXT_OUTCOME_REGISTRY_PATH'; value = $previousContextRegistry }
         [pscustomobject]@{ name = 'LLM_WIKI_MODEL_ROUTE_OUTCOME_REGISTRY_PATH'; value = $previousModelRegistry }
+        [pscustomobject]@{ name = 'LLM_WIKI_WORKSPACE_OUTCOME_ROOT'; value = $previousWorkspaceOutcomeRoot }
     )) {
         if ([string]::IsNullOrWhiteSpace([string]$entry.value)) { Remove-Item -LiteralPath "Env:$($entry.name)" -ErrorAction SilentlyContinue }
         else { Set-Item -LiteralPath "Env:$($entry.name)" -Value ([string]$entry.value) }

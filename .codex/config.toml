@@ -1,7 +1,8 @@
 [mcp_servers.fooddiary_development]
 command = "powershell.exe"
 args = ["-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts\\Start-FoodDiaryDevelopmentMcp.ps1", "-BuildMode", "--build-if-stale"]
-cwd = "."
+# Codex resolves project configuration paths from this .codex directory.
+cwd = ".."
 startup_timeout_sec = 120
 tool_timeout_sec = 210
 enabled = true
@@ -12,7 +13,7 @@ default_tools_approval_mode = "auto"
 [mcp_servers.angular_cli]
 command = "scripts\\Start-AngularMcp.cmd"
 args = ["--read-only"]
-cwd = "."
+cwd = ".."
 startup_timeout_sec = 60
 tool_timeout_sec = 150
 enabled = true

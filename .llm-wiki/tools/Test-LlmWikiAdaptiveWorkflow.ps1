@@ -424,14 +424,14 @@ $idleExperience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($idleExperience.state -eq 'idle' -and $idleExperience.mode -eq 'no-active-workspace') 'Compact experience did not return a useful idle status without a governed workspace.'
 
-$metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
-    -TasksPath "$smokeSandboxRelative/no-such-task-root" `
-    -Format Json | ConvertFrom-Json
-Assert-Adaptive ($metrics.schemaVersion -eq 4 -and $metrics.workspaceCount -eq 0 -and $metrics.ceremony.adoptionStatus -eq 'insufficient-data' -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
 $outcomeRoot = Join-Path (Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot) "workspace-outcomes-$([Guid]::NewGuid().ToString('N'))"
 $previousOutcomeRoot = $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT
 try {
     $env:LLM_WIKI_WORKSPACE_OUTCOME_ROOT = $outcomeRoot
+    $metrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkflowMetrics.ps1') `
+        -TasksPath "$smokeSandboxRelative/no-such-task-root" `
+        -Format Json | ConvertFrom-Json
+    Assert-Adaptive ($metrics.schemaVersion -eq 4 -and $metrics.workspaceCount -eq 0 -and $metrics.ceremony.adoptionStatus -eq 'insufficient-data' -and $null -ne $metrics.adaptive) 'Workflow metrics did not handle an empty task history or expose adaptive runs.'
     & (Join-Path $PSScriptRoot 'Write-LlmWikiWorkspaceOutcome.ps1') `
         -WorkspacePath '.artifacts/llm-wiki/tasks/completed-example' `
         -RegistryRoot $outcomeRoot `

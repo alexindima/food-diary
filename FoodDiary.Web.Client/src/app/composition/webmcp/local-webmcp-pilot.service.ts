@@ -12,7 +12,14 @@ import {
     untracked,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { registerWebmcpTools, WebmcpError, WebmcpExecutor } from 'fd-webmcp';
+import {
+    createWebmcpContextId,
+    inspectWebmcpAvailability,
+    publishWebmcpDiagnostics,
+    registerWebmcpTools,
+    WebmcpError,
+    WebmcpExecutor,
+} from 'fd-webmcp';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -50,6 +57,8 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
     private readonly executor = new WebmcpExecutor();
     private started = false;
     private hasRegisteredSession = false;
+    private readonly contextId = createWebmcpContextId(this.document);
+    private sessionRevision = 0;
 
     public initialize(): void {
         if (this.started) {
@@ -58,22 +67,30 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
         this.started = true;
         afterNextRender(() => {
             const context = localModelContext(this.document, isDevMode());
-            if (context === undefined) {
-                return;
-            }
+            const availability = inspectWebmcpAvailability(this.document, isDevMode());
             const sessionUser = computed(() => (this.auth.isAuthenticated() ? this.auth.getUserId() : null));
             effect(
                 onCleanup => {
                     const userId = sessionUser();
-                    if (userId === null) {
+                    publishWebmcpDiagnostics(this.document, availability, {
+                        authenticated: userId !== null,
+                        registration: userId === null ? 'signed-out' : 'not-registered',
+                        registeredToolCount: 0,
+                    });
+                    if (userId === null || context === undefined) {
                         return;
                     }
                     if (this.hasRegisteredSession) {
                         this.requests.clear();
                     }
                     this.hasRegisteredSession = true;
+                    this.sessionRevision++;
                     const tools = untracked(() => this.tools(userId));
-                    onCleanup(registerWebmcpTools(context, tools));
+                    onCleanup(
+                        registerWebmcpTools(context, tools, state => {
+                            publishWebmcpDiagnostics(this.document, availability, { authenticated: this.auth.isAuthenticated(), ...state });
+                        }),
+                    );
                 },
                 { injector: this.injector },
             );
@@ -230,11 +247,26 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
         }
     }
 
-    private context(): { path: string; screen: unknown; application: unknown } {
+    private readScreen(): unknown {
+        return this.screens.read() ?? this.screen?.read() ?? null;
+    }
+
+    private context(): { path: string; screen: unknown; application: unknown; provenance: unknown } {
         // Arbitrary query parameters can contain authentication return values.
+        const screen = this.readScreen();
+        const requests = this.requests.read();
         return {
             path: this.router.url.split('?')[0].split('#')[0],
-            screen: this.screens.read() ?? this.screen?.read() ?? null,
+            screen,
+            provenance: {
+                dataSource: 'live',
+                capturedAtUtc: new Date().toISOString(),
+                contextId: this.contextId,
+                sessionRevision: this.sessionRevision,
+                screenUnavailableReason: screen === null ? 'no-published-screen' : null,
+                sourceFreshness: 'not-compared-to-worktree',
+                apiRuntimeStatus: requests.some(request => request.apiRuntime !== null) ? 'observed-response-headers' : 'not-observed',
+            },
             application: {
                 authenticated: this.auth.isAuthenticated(),
                 roles: { admin: this.auth.isAdmin(), dietologist: this.auth.isDietologist() },
@@ -254,15 +286,14 @@ export class LocalWebmcpPilotService implements MealDevelopmentTools {
                     availability: environment.developmentBuild === undefined ? 'not-emitted' : 'emitted',
                     sourceCapture: environment.developmentBuild ?? null,
                 },
-                apiRuntimeObservations: this.requests
-                    .read()
+                apiRuntimeObservations: requests
                     .filter(request => request.apiRuntime !== null)
                     .map(request => ({
                         requestId: request.id,
                         observedOrigin: request.origin,
                         ...request.apiRuntime,
                     })),
-                requests: this.requests.read(),
+                requests,
             },
         };
     }

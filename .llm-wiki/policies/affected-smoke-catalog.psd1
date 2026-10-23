@@ -51,6 +51,7 @@
         @{ When = 'adaptive-evals'; Remove = @('adaptive-routing', 'adaptive-experience') }
     )
     AdditionalMatches = @(
+        @{ Pattern = '^\.llm-wiki/tools/Recover-LlmWikiEvidenceExecution\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiAssessmentRunner|Test-LlmWikiFeedbackReliability)\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/(LlmWikiBehaviorSpecification|LlmWikiSubstantiveReview|Get-LlmWikiPhaseStatus|Test-LlmWikiBehaviorWorkflow)\.ps1$'; Groups = @('governed-delivery') }
         @{ Pattern = '^\.llm-wiki/tools/LlmWikiBehaviorSpecification\.ps1$'; Groups = @('adaptive-experience') }

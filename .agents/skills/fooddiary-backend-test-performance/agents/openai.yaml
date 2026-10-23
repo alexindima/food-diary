@@ -1,0 +1,4 @@
+interface:
+  display_name: "FoodDiary test performance"
+  short_description: "Measure and improve backend test runtime"
+  default_prompt: "Use $fooddiary-backend-test-performance to find and verify a backend test-suite speed improvement."

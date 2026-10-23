@@ -25,6 +25,13 @@ affected checks retain their scoped result without promoting that state.
 
 ## PowerShell prerequisite
 
+Project-scoped MCP paths are relative to `.codex/config.toml`'s directory:
+`cwd = ".."` selects the repository root before resolving `scripts/...`.
+Run `node scripts/ai/development-mcp-diagnostics.mjs` to validate the configured
+launcher, initialize the actual server, list its tools and call server status.
+The probe starts its own bounded connection and may build stale MCP outputs;
+it does not claim that an already-running chat refreshed its native catalog.
+
 Wiki commands require PowerShell 7 (`pwsh`) on the launching process's `PATH`.
 Locally, the seven process tests marked `PowerShellFact` are skipped with a
 reason when `pwsh` is missing or older than version 7. Other tests still run.

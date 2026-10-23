@@ -9,9 +9,11 @@ try {
     $argumentsPath = Join-Path $root 'arguments.json'
     $resultPath = Join-Path $root 'result.json'
     $receiptPath = Join-Path $root 'stage.passed'
-    [IO.File]::WriteAllText($tool, "param([string]`$Value) if (`$Value -ne 'ok') { throw 'bad value' }", [Text.UTF8Encoding]::new($false))
-    [IO.File]::WriteAllText($argumentsPath, '{"Value":"ok"}', [Text.UTF8Encoding]::new($false))
-    & (Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1') -ToolPath $tool -ArgumentsPath $argumentsPath -StageName sample -ResultPath $resultPath -Fingerprint abc -PassedReceiptPath $receiptPath
+    [IO.File]::WriteAllText($tool, "param([string]`$Value) if (`$Value -cne 'Проверка ёжика') { throw 'UTF-8 round-trip failed' }; `$Value | & node -e 'process.stdin.setEncoding(""utf8""); process.stdin.on(""data"", value => process.stdout.write(value));'", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($argumentsPath, '{"Value":"Проверка ёжика"}', [Text.UTF8Encoding]::new($false))
+    $unicodeOutput = Join-Path $root 'utf8-output.txt'
+    & (Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1') -ToolPath $tool -ArgumentsPath $argumentsPath -StageName sample -ResultPath $resultPath -Fingerprint abc -PassedReceiptPath $receiptPath -OutputPath $unicodeOutput
+    if ([IO.File]::ReadAllText($unicodeOutput).Trim() -cne 'Проверка ёжика') { throw 'PowerShell/Node UTF-8 output changed Cyrillic text.' }
     $result = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
     if ($result.status -ne 'passed' -or $result.fingerprint -ne 'abc' -or -not (Test-Path -LiteralPath $receiptPath)) {
         throw 'Observed stage did not persist its own durable success receipt.'

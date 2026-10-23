@@ -12,6 +12,7 @@ import {
     readdirSync,
     readSync,
     fstatSync,
+    statSync,
 } from "node:fs";
 import { dirname, join, resolve, relative } from "node:path";
 import { pathToFileURL, fileURLToPath } from "node:url";
@@ -201,8 +202,38 @@ export function taskDiagnostics(evidencePath, jobId) {
                 Date.now() - Date.parse(record.startedAtUtc) > 30_000)
         )
             result.job.status = observation.state;
+        result.job.progress = checkProgress(result.job, log);
     }
     return result;
+}
+
+function checkProgress(record, wrapperLog) {
+    let log = wrapperLog;
+    if (typeof record.executionLogPath === "string" && record.executionLogPath.startsWith(".artifacts/llm-wiki/"))
+        log = containedPath(repositoryRoot, record.executionLogPath);
+    const metadata = existsSync(log) ? statSync(log) : null;
+    let commandExitCode = null;
+    if (log !== wrapperLog && existsSync(`${log}.execution.json`)) {
+        try {
+            const execution = JSON.parse(readFileSync(`${log}.execution.json`, "utf8"));
+            if (Number.isInteger(execution.exitCode)) commandExitCode = execution.exitCode;
+        } catch {
+            // A partially published record is not a completed command outcome.
+        }
+    }
+    const running = ["queued", "running", "cancel-requested"].includes(record.status);
+    const started = Date.parse(record.startedAtUtc);
+    const finished = running ? Date.now() : Date.parse(record.finishedAtUtc);
+    return {
+        stage: record.status === "queued" ? "queued" : !running ? "finished" : commandExitCode === null ? "executing-check" : "publishing-evidence",
+        elapsedSeconds: Number.isFinite(started) && Number.isFinite(finished) ? Math.max(0, Math.round((finished - started) / 1000)) : null,
+        outputBytes: metadata?.size ?? 0,
+        lastOutputAtUtc: metadata?.size > 0 ? metadata.mtime.toISOString() : null,
+        secondsSinceLastOutput: metadata?.size > 0 ? Math.max(0, Math.round((Date.now() - metadata.mtimeMs) / 1000)) : null,
+        wrapperExitCode: record.exitCode ?? null,
+        commandExitCode,
+        silenceMeansHung: false,
+    };
 }
 
 function readTail(path) {
@@ -465,10 +496,19 @@ async function checkWorker(id) {
             pendingOutput += chunk.toString("utf8");
             const lines = pendingOutput.split("\n");
             pendingOutput = lines.pop();
-            for (const line of lines)
+            for (const line of lines) {
+                const executionLog = line.match(/^Canonical execution log: (.+)\r?$/);
+                if (executionLog) {
+                    const candidate = relative(repositoryRoot, resolve(executionLog[1].trim())).replaceAll("\\", "/");
+                    if (candidate.startsWith(".artifacts/llm-wiki/") && candidate.endsWith(".log")) {
+                        record.executionLogPath = candidate;
+                        save(path, record);
+                    }
+                }
                 writeFileSync(logPath, `${redactDiagnostic(line, 4000)}\n`, {
                     flag: "a",
                 });
+            }
         };
         child.stdout.on("data", output);
         child.stderr.on("data", output);

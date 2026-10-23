@@ -169,6 +169,7 @@ function Get-Calibration([object[]]$Estimates) {
     $outcomes = @($estimates | ForEach-Object {
         $estimate = $_
         $check = $evidence.checks | Where-Object id -eq $estimate.checkId | Select-Object -First 1
+        if ($null -eq $check) { return }
         $attempts = @($repairs | Where-Object checkId -eq $estimate.checkId)
         if ([string]$check.status -notin @('passed', 'failed', 'not-applicable') -and $attempts.Count -eq 0) { return }
         $verificationActual = [double]$check.durationSeconds

@@ -6,7 +6,7 @@ param(
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'security', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
-        'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate', 'task-evidence-import',
+        'evidence-init', 'evidence-run', 'evidence-recover', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate', 'task-evidence-import',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
         'task-verification-plan', 'task-verification-show', 'task-verification-verify', 'task-verification-run',
@@ -137,6 +137,7 @@ param(
     [ValidateSet('pending', 'passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$EvidenceCommand,
+    [string]$ExecutionRecordPath,
     [string[]]$CoverageScope,
     [string]$Reason,
     [string]$ReviewReason,
@@ -257,6 +258,10 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$wikiUtf8Encoding = [Text.UTF8Encoding]::new($false)
+[Console]::InputEncoding = $wikiUtf8Encoding
+[Console]::OutputEncoding = $wikiUtf8Encoding
+$OutputEncoding = $wikiUtf8Encoding
 if ($ChangeType -eq 'Persistence') {
     $ChangeType = 'Database'
     Write-Verbose "Compatibility alias: ChangeType 'Persistence' -> 'Database'."
@@ -2737,6 +2742,14 @@ switch ($Command) {
             Path = $EvidencePath
             Id = $Id
             Command = $EvidenceCommand
+        }
+    }
+    'evidence-recover' {
+        Invoke-WikiTool 'Recover-LlmWikiEvidenceExecution.ps1' @{
+            EvidencePath = $EvidencePath
+            Id = $Id
+            ExecutionRecordPath = $ExecutionRecordPath
+            Format = $Format
         }
     }
     'evidence-review' {

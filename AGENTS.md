@@ -65,6 +65,17 @@ The full catalog and Wiki are navigation; current code, tests, ADRs and scoped g
 
 ## Local Development
 
+For project discovery, prefer the FoodDiary Development MCP tools when available:
+`get_development_context` for bounded source context, `get_change_context` for
+change impact, `trace_backend_flow` for an exact backend flow, and `get_test_plan`
+for verification planning. Read `get_server_status` to establish runtime identity.
+Angular CLI, GitHub and Trello MCP are separate servers. If FoodDiary tools are
+absent or startup fails, run `node scripts/ai/development-mcp-diagnostics.mjs` once
+to check project configuration, handshake, tool inventory and server status.
+A successful standalone probe does not refresh an existing chat's tool catalog;
+report that distinction and use the documented Wiki CLI fallback while fixing
+the connection. Do not infer a server failure from non-use or a missing catalog.
+
 - In this repository, requests such as "перейди к локальной разработке", "запусти локально", or "открой локальное приложение" mean preparing and running the complete local application.
 - Build the frontend with `npm run build` in `FoodDiary.Web.Client`, then run its development server with `npm start`.
 - Run the backend with `dotnet run --project FoodDiary.Web.Api`.
