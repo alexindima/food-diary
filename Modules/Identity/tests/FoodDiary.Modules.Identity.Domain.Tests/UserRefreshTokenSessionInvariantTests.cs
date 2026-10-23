@@ -7,6 +7,20 @@ namespace FoodDiary.Modules.Identity.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class UserRefreshTokenSessionInvariantTests {
     [Fact]
+    public void RefreshSessionExpiration_IsPreservedOnCreationAndReplacedOnRotation() {
+        var now = new DateTime(2030, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), UserId.New(), "initial",
+            rememberMe: false, authProvider: "password", ipAddress: null, userAgent: null, now, now.AddDays(30));
+        Assert.Equal(now.AddDays(30), session.ExpiresAtUtc);
+
+        session.Rotate("next", rememberMe: true, now.AddMinutes(1), TimeSpan.Zero, now.AddDays(90));
+
+        Assert.Equal(now.AddDays(90), session.ExpiresAtUtc);
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.Rotate("invalid", rememberMe: true, now.AddMinutes(2), TimeSpan.Zero, now));
+        Assert.Equal("next", session.RefreshTokenHash);
+    }
+
+    [Fact]
     public void Rotation_PreservesTheOriginalNormalizedClientMetadata() {
         var id = RefreshTokenSessionId.New();
         var userId = UserId.New();

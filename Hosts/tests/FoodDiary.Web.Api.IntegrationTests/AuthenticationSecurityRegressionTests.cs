@@ -14,6 +14,60 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
     [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task RepeatLogin_ReplacesBrowserSessionAndKeepsTheOtherBrowser(bool rememberMe) {
+        using HttpClient browser = factory.CreateClient();
+        using HttpClient otherBrowser = factory.CreateClient();
+        string email = $"repeat-session-{Guid.NewGuid():N}@example.com";
+        using HttpResponseMessage registered = await browser.PostAsJsonAsync("/api/v1/auth/register",
+            new RegisterHttpRequest(email, "Password123!", "en"));
+        registered.EnsureSuccessStatusCode();
+        string oldAccess = await ReadAccessTokenAsync(registered);
+        string oldRefresh = AuthenticationResponseCookies.ReadRefreshToken(registered);
+        using HttpResponseMessage otherLogin = await otherBrowser.PostAsJsonAsync("/api/v1/auth/login",
+            new LoginHttpRequest(email, "Password123!"));
+        otherLogin.EnsureSuccessStatusCode();
+        otherBrowser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(otherLogin));
+
+        using HttpResponseMessage repeated = await browser.PostAsJsonAsync("/api/v1/auth/login",
+            new LoginHttpRequest(email, "Password123!", rememberMe));
+        repeated.EnsureSuccessStatusCode();
+        browser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(repeated));
+        string replacementRefresh = AuthenticationResponseCookies.ReadRefreshToken(repeated);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(replacementRefresh);
+        string setCookie = Assert.Single(repeated.Headers.GetValues("Set-Cookie"));
+        Assert.Equal(jwt.ValidTo, Microsoft.Net.Http.Headers.SetCookieHeaderValue.Parse(setCookie).Expires!.Value.UtcDateTime);
+        using HttpResponseMessage listed = await browser.GetAsync("/api/v1/auth/sessions");
+        listed.EnsureSuccessStatusCode();
+        using var sessions = JsonDocument.Parse(await listed.Content.ReadAsStringAsync());
+        Assert.Equal(2, sessions.RootElement.GetArrayLength());
+        Assert.Single(sessions.RootElement.EnumerateArray(), session => session.GetProperty("isCurrent").GetBoolean());
+
+        using HttpClient staleAccessClient = factory.CreateClient();
+        staleAccessClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oldAccess);
+        using HttpResponseMessage oldAccessDenied = await staleAccessClient.GetAsync("/api/v1/users/info");
+        using HttpResponseMessage oldRefreshDenied = await browser.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(oldRefresh));
+        using HttpResponseMessage otherAllowed = await otherBrowser.GetAsync("/api/v1/users/info");
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.Unauthorized, oldAccessDenied.StatusCode),
+            () => Assert.Equal(HttpStatusCode.Unauthorized, oldRefreshDenied.StatusCode),
+            () => Assert.Equal(HttpStatusCode.OK, otherAllowed.StatusCode));
+
+        using HttpResponseMessage failedLogin = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "IncorrectPassword123!"));
+        Assert.Equal(HttpStatusCode.Unauthorized, failedLogin.StatusCode);
+        using HttpResponseMessage stillActive = await browser.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.OK, stillActive.StatusCode);
+        using HttpResponseMessage again = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "Password123!"));
+        again.EnsureSuccessStatusCode();
+        browser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(again));
+        using HttpResponseMessage afterAgain = await browser.GetAsync("/api/v1/auth/sessions");
+        afterAgain.EnsureSuccessStatusCode();
+        using var finalSessions = JsonDocument.Parse(await afterAgain.Content.ReadAsStringAsync());
+        Assert.Equal(2, finalSessions.RootElement.GetArrayLength());
+    }
+
+    [RequiresDockerTheory]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task RevokeSession_ImmediatelyRejectsItsAccessAndRefreshTokensButKeepsCurrentSession(bool revokeAllOthers) {
         using HttpClient first = factory.CreateClient();
         using HttpClient second = factory.CreateClient();

@@ -82,18 +82,18 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "d0fe45b8fb3d5ca4937ec2898e3099d50e3b920c9ccea9fff512a8bc6a618de2",
+      "pageSha256": "64477f09594f638e6948a9bcd90fad0a10d4396a2a30bf63faa08626f636bb2d",
       "sources": [
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf95fa1d391ad059512fc7d06d9dd2582b5942b92bc83eeb8e4d08cc07b556a8",
-          "reviewReason": "Reviewed the final ProjectDependencyMatrixTests delta: only the existing Lessons Application test project gains its own narrow Lessons.Contracts reference, matching its existing LessonAdminReadModel use and new default reader calls. Production matrix, ownership, transaction and host boundaries remain unchanged; exact reference-list equality is preserved. Full architecture suite2274passed, complete backend build0warnings0errors. The architecture overview remains accurate."
+          "sha256": "caea95c52a57c50607bfaedcbed15b8cffeb29c07bd9ee7ccee3360e13a1622c",
+          "reviewReason": "Reviewed the final dependency matrix: only direct owner-contract references in three test projects were added; production module ownership, graph direction, coordinated contexts and composition remain unchanged."
         }
       ],
-      "reason": "Reviewed the final ProjectDependencyMatrixTests delta: only the existing Lessons Application test project gains its own narrow Lessons.Contracts reference, matching its existing LessonAdminReadModel use and new default reader calls. Production matrix, ownership, transaction and host boundaries remain unchanged; exact reference-list equality is preserved. Full architecture suite2274passed, complete backend build0warnings0errors. The architecture overview remains accurate.",
+      "reason": "Reviewed the final dependency matrix: only direct owner-contract references in three test projects were added; production module ownership, graph direction, coordinated contexts and composition remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "12d0462def1572e9a83925223c63e8be2949890e",
-      "reviewedAtUtc": "2026-10-21T22:20:15.575314Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:36:36.3903311Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -253,14 +253,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "b3e0e6c76f364481e4a6fe2d71b829d727af4d957096c152482b49600a0738a8",
-          "reviewReason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof."
+          "sha256": "caea95c52a57c50607bfaedcbed15b8cffeb29c07bd9ee7ccee3360e13a1622c",
+          "reviewReason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate."
         }
       ],
-      "reason": "The refreshed health data now includes actual provider edges with no unused provider allowances, and the executable project matrix still enforces exact project/reference coverage. The guide explains enforced drift versus review candidates and incomplete static consumer evidence, without asserting current totals or converting an empty generated violations list into executed architecture-test proof.",
+      "reason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:33.5190291Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:36:38.4377529Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -483,8 +483,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "7f03462a15276b1f381e8172e51ed979a85fdab98173ba01c71f67c5f1906bd2",
-          "reviewReason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure."
+          "sha256": "84dde84b78bbca1a947fc92b1ad782ba1f128290fb0d9f49e0435691016be06d",
+          "reviewReason": "Reviewed the session-lifecycle task-finish additions: six hash-chained retrospective cost observations were appended. They are hypotheses only; no approval, experiment, application, policy or durable guidance changed. The page accurately describes this observation boundary and automatic task-finish recording."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -492,10 +492,10 @@
           "reviewReason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure."
         }
       ],
-      "reason": "Finish still invokes learning-promotion observe only after completion/retrospective, checks observation validity, and separately observes learning health. The page correctly distinguishes automatic observation from explicit approval, experiment, application and rollback. Forwarding an explicitly owned packet scope does not silently approve or apply learnings or alter those post-seal calls. Current final delta reviewed: Actual appended learning entries are only observed numeric cost hypotheses, correctly tied to sealed retrospective/check evidence. Historical observations remain intact; zero applied exposure leaves health unchanged. Reused global execution logs across distinct workspaces are correlated and are not proof of independent calibration benefit. Approval, experiment and materialization remain separate; no rules or durable guidance were applied. Final reviewed append is exactly18 observed hypotheses (4 to22), with 6 shared log groups explicitly correlated; five valid finishes create no health events without exposure.",
-      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-23T02:36:00.641494Z"
+      "reason": "Reviewed the session-lifecycle task-finish additions: six hash-chained retrospective cost observations were appended. They are hypotheses only; no approval, experiment, application, policy or durable guidance changed. The page accurately describes this observation boundary and automatic task-finish recording.",
+      "baseRef": "HEAD",
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T20:06:46.7374851Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -604,14 +604,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "23e1037f0b2ac4769e7895395bf8fcbcacfc4a960c6aff62bfd132bac927f985",
-          "reviewReason": "The refreshed domain/data schema remains version 1 with the same invariant/mapping/index/relationship families, including the new RecipeLikes FK evidence. The page correctly requires comparing EF key/nullability/delete/concurrency behavior and exercising physical schema changes against the real provider. It asserts no changing record count or actual migration/test success."
+          "sha256": "901f3f9c0000e32ef0c15fb3964d3b0261e6c07dfc18bfb2bffab4d4fae5e0e3",
+          "reviewReason": "Reviewed UserRefreshTokenSession.ExpiresAtUtc, nullable EF mapping, matching additive migration/designer/snapshot, UTC expiration validation and passing domain plus PostgreSQL expiry/rotation tests; the existing domain/data discovery instructions remain accurate."
         }
       ],
-      "reason": "The refreshed domain/data schema remains version 1 with the same invariant/mapping/index/relationship families, including the new RecipeLikes FK evidence. The page correctly requires comparing EF key/nullability/delete/concurrency behavior and exercising physical schema changes against the real provider. It asserts no changing record count or actual migration/test success.",
+      "reason": "Reviewed UserRefreshTokenSession.ExpiresAtUtc, nullable EF mapping, matching additive migration/designer/snapshot, UTC expiration validation and passing domain plus PostgreSQL expiry/rotation tests; the existing domain/data discovery instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:37.0333457Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:35:55.0955746Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -779,14 +779,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "03c326f37e5ea35051e68a1ae575924ed50ae9a80439118598a4a0a185923ac2",
-          "reviewReason": "Actual append records exact root/scoped AGENTS versions, sealed completion/retrospective and correct cohort attribution. Composite scores combine readiness/confidence/critique with failure-prediction calibration; a false thresholded success signal is not a failed test or unsuccessful task. Samples can be related and do not establish a causal instruction effect. No instruction edit, experimental look, adoption or rollback was performed; current normative correlation/governed-adoption text remains accurate. Final reviewed append is5 observations (11 to16) with exact completion provenance. Scores71.25 for the first2 and68.75 for coverage reflect the current failure-prediction calibration formula; actual task/test validity remains separately true. Email93.75 and F09 95 are also observational scores."
+          "sha256": "d944ec486e682d47fed93490b3675e552c4762ff9194b0914ce6c66d9c0dac23",
+          "reviewReason": "Reviewed the new session-lifecycle outcome event: it records the sealed completion, applicable AGENTS.md fingerprints, task cohort and measured outcome in the existing append-only chain. No instruction source, experiment or governing threshold changed; the workflow page remains accurate."
         }
       ],
-      "reason": "Actual append records exact root/scoped AGENTS versions, sealed completion/retrospective and correct cohort attribution. Composite scores combine readiness/confidence/critique with failure-prediction calibration; a false thresholded success signal is not a failed test or unsuccessful task. Samples can be related and do not establish a causal instruction effect. No instruction edit, experimental look, adoption or rollback was performed; current normative correlation/governed-adoption text remains accurate. Final reviewed append is5 observations (11 to16) with exact completion provenance. Scores71.25 for the first2 and68.75 for coverage reflect the current failure-prediction calibration formula; actual task/test validity remains separately true. Email93.75 and F09 95 are also observational scores.",
-      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-23T02:36:50.3066867Z"
+      "reason": "Reviewed the new session-lifecycle outcome event: it records the sealed completion, applicable AGENTS.md fingerprints, task cohort and measured outcome in the existing append-only chain. No instruction source, experiment or governing threshold changed; the workflow page remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T20:06:47.5672700Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -811,8 +811,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "2589e0e03a9fbc581430c954a8360d7e8d629f567f014ea38efc0c7dd284123f",
-          "reviewReason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0."
+          "sha256": "2bd21d90234594ac380adb0a929f8de83450f8232bc2ddf3e564a474baf0d7fb",
+          "reviewReason": "Reviewed the appended session-lifecycle observed eval candidate with its retrospective, changed paths and cost signals. No candidate was approved or applied, and no active eval case changed. The page accurately preserves separate observation, review and activation steps."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -820,10 +820,10 @@
           "reviewReason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0."
         }
       ],
-      "reason": "The completed-task path still creates a sealed retrospective and then invokes eval-promotion observe, checking validity and exposing the observation event hash. Optional explicit path selection changes the task packet intentionally, not promotion thresholds, approval/application separation or the verification suite. The page contains no claim that the new isolated finish regression executes full readiness or publishes learned cases. Current final delta reviewed: Actual new observations contain eligible cost signals and exact owning changed-path/check/rule snapshots; bounded expectedModules follows the existing DiffContext Limit8 contract. These are pending candidate assertions, not active cases or product regression results. No approve/applied/rolled-back transition or eval-case configuration change occurred. Final reviewed append is exactly2 observations (2 to4), attributable to F03/backend completion; all three small finishes validly add0.",
-      "baseRef": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-23T02:36:50.6349054Z"
+      "reason": "Reviewed the appended session-lifecycle observed eval candidate with its retrospective, changed paths and cost signals. No candidate was approved or applied, and no active eval case changed. The page accurately preserves separate observation, review and activation steps.",
+      "baseRef": "HEAD",
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T20:06:48.2629731Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -922,8 +922,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "596e904bd2131e0ad04c9e6fee94de5a35913ec94a459312430a6b7143c3bfc0",
-          "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
+          "sha256": "b9bca637c0013e8e20f6bfc7e9e7b1d3e7f16717c268549cdd3b0ee228cd8364",
+          "reviewReason": "Reviewed the added in-memory existing refresh cookie context: it is ignored by JSON serialization and redacted from ToString, never stored or logged; only an expiration timestamp is added to persistence, with unchanged owner isolation and provider sharing."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -931,10 +931,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak.",
+      "reason": "Reviewed the added in-memory existing refresh cookie context: it is ignored by JSON serialization and redacted from ToString, never stored or logged; only an expiration timestamp is added to persistence, with unchanged owner isolation and provider sharing.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:38.9963186Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:35:59.0868244Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1089,14 +1089,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d89cd2b9593a07bf4beacd346b092159e5d9bfb3cec3fcfd16d7fb05199695e6",
-          "reviewReason": "The refreshed topology keeps schema 1 and explicit declaration/inference limitations; provider COMMIT sharing and changed mail startup evidence do not turn static behavior signals into resilience proof. The guide still scopes behaviorSignals to class/registration windows and requires provider-backed recovery evidence after failed EF transactions. It asserts neither changing runtime counts nor successful deployed readiness/delivery."
+          "sha256": "4dc755b9d4379a281f7a7cc6fa7831d92505ed285f471453cfad77c224d58ffb",
+          "reviewReason": "Reviewed topology changes caused by cookie expiry and Identity constructor dependencies: no service, worker, provider or recurring job was added; prior browser revocation is staged with replacement in one coordinated unit-of-work save and cancellation remains propagated."
         }
       ],
-      "reason": "The refreshed topology keeps schema 1 and explicit declaration/inference limitations; provider COMMIT sharing and changed mail startup evidence do not turn static behavior signals into resilience proof. The guide still scopes behaviorSignals to class/registration windows and requires provider-backed recovery evidence after failed EF transactions. It asserts neither changing runtime counts nor successful deployed readiness/delivery.",
+      "reason": "Reviewed topology changes caused by cookie expiry and Identity constructor dependencies: no service, worker, provider or recurring job was added; prior browser revocation is staged with replacement in one coordinated unit-of-work save and cancellation remains propagated.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:40.8423231Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:36:07.9911279Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1379,8 +1379,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "23fb15eafcd2cc85a1d69fdddf5f0e75b00ba1324f2449a3127bcbd74fba0307",
-          "reviewReason": "The repository catalog remains schema 1 with the same generator and inventory families; new provider edges and current project/guide/document records change retrieval inputs, not this generic CLI/MCP query/cache/ranking contract. The page contains no current catalog total or final freshness claim and explicitly separates source/index drift from ranking failure and retrieval references from execution evidence. Final retrieval/freshness checks remain separate obligations."
+          "sha256": "4fd5d0e1aa0cd561e4f00420a09e0fb18373df726ce6a25144de911106522293",
+          "reviewReason": "Reviewed catalog changes from narrow direct test references and internal authentication metadata methods; the owner navigation, scoped query commands and authoritative-source rules remain accurate with no new production project or endpoint."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1393,10 +1393,10 @@
           "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
         }
       ],
-      "reason": "The repository catalog remains schema 1 with the same generator and inventory families; new provider edges and current project/guide/document records change retrieval inputs, not this generic CLI/MCP query/cache/ranking contract. The page contains no current catalog total or final freshness claim and explicitly separates source/index drift from ranking failure and retrieval references from execution evidence. Final retrieval/freshness checks remain separate obligations.",
+      "reason": "Reviewed catalog changes from narrow direct test references and internal authentication metadata methods; the owner navigation, scoped query commands and authoritative-source rules remain accurate with no new production project or endpoint.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:39.7248299Z"
+      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
+      "reviewedAtUtc": "2026-10-23T15:36:02.6274050Z"
     },
     {
       "pageId": "workflow.review-diff",

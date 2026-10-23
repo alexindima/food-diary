@@ -35,5 +35,7 @@ public interface IJwtTokenGenerator {
         IReadOnlyCollection<string> roles,
         bool rememberMe = false,
         RefreshTokenSessionId? refreshSessionId = null);
+    // Reads metadata from a token just issued by this service; does not validate incoming credentials.
+    DateTime ReadRefreshTokenExpirationUtc(string refreshToken);
     (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token);
 }

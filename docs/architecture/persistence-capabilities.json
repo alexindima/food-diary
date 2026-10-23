@@ -861,7 +861,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "29eadca8c91f87549d00a0905b25cdd4f3f8611707d2e432b43a602f8f823f98"
+      "technicalSourceSha256": "cfd4313c920b38922d7a14b30f952892099bde491ef36209559990860ca1784e"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -901,7 +901,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "96cd70adbc9a02b95429277df5309c63fbd6016c6f526d8c48a5657d07548a58"
+      "technicalSourceSha256": "ec519e1fd14899ea7b60924985a03ae488fcb760c96b1e359be8745116cf1879"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

@@ -23,6 +23,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVer
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Http;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
@@ -143,7 +144,7 @@ public static class AuthHttpMappings {
         public AdminSsoExchangeCommand ToCommand(HttpContext httpContext) {
             return new AdminSsoExchangeCommand(
                 Code: request.Code,
-                ClientContext: httpContext.ToAuthenticationClientContext("admin-sso"));
+                ClientContext: httpContext.ToAuthenticationClientContext("admin-sso", replaceBrowserSession: false));
         }
     }
 
@@ -221,11 +222,12 @@ public static class AuthHttpMappings {
     }
 
     extension(HttpContext httpContext) {
-        internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider) {
+        internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider, bool replaceBrowserSession = true) {
             return new AuthenticationClientContext(
                 authProvider,
                 httpContext.Connection.RemoteIpAddress?.ToString(),
-                httpContext.Request.Headers.UserAgent.ToString());
+                httpContext.Request.Headers.UserAgent.ToString(),
+                replaceBrowserSession ? httpContext.Request.Cookies[RefreshTokenCookieService.CookieName] : null);
         }
     }
 }

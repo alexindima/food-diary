@@ -18,6 +18,7 @@ public interface IRefreshTokenSessionWriteRepository {
         string newRefreshTokenHash,
         bool rememberMe,
         DateTime rotatedAtUtc,
+        DateTime? expiresAtUtc = null,
         CancellationToken cancellationToken = default);
 
     Task RevokeAllAsync(UserId userId, DateTime revokedAtUtc, CancellationToken cancellationToken = default);

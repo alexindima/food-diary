@@ -1,3 +1,4 @@
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Application.Mappings;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
@@ -22,7 +23,7 @@ public class AuthenticationTokenServiceTests {
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider());
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,
@@ -41,6 +42,7 @@ public class AuthenticationTokenServiceTests {
         Assert.Equal(["User"], jwt.LastAccessRoles);
         Assert.Equal(session.Id, jwt.LastAccessRefreshSessionId);
         Assert.Equal(session.Id, jwt.LastRefreshSessionId);
+        Assert.Equal(jwt.ReadRefreshTokenExpirationUtc(result.RefreshToken), session.ExpiresAtUtc);
     }
 
     [Fact]
@@ -49,7 +51,7 @@ public class AuthenticationTokenServiceTests {
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider());
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,
@@ -86,6 +88,7 @@ public class AuthenticationTokenServiceTests {
             new InMemoryUserLoginEventRepository(),
             sessions,
             jwt,
+            Substitute.For<IPasswordHasher>(),
             dateTimeProvider);
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
@@ -121,6 +124,52 @@ public class AuthenticationTokenServiceTests {
         Assert.True(rotatedSession.RememberMe);
         Assert.Equal(refreshSessionId, jwt.LastAccessRefreshSessionId);
         Assert.Equal(refreshSessionId, jwt.LastRefreshSessionId);
+        Assert.Equal(jwt.ReadRefreshTokenExpirationUtc(tokens.RefreshToken), rotatedSession.ExpiresAtUtc);
+    }
+
+    [Theory]
+    [InlineData("valid", true)]
+    [InlineData("invalid", false)]
+    [InlineData("foreign-user", false)]
+    [InlineData("foreign-session", false)]
+    [InlineData("wrong-hash", false)]
+    [InlineData("revoked", false)]
+    [InlineData("missing-session", false)]
+    public async Task RepeatLogin_ReplacesOnlyTheSessionProvenByTheSameUserCookie(string cookieState, bool replaces) {
+        User user = CreateUser("repeat-login@example.com");
+        var clock = new StubDateTimeProvider();
+        DateTime now = clock.GetUtcNow().UtcDateTime;
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var previous = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(),
+            cookieState is "foreign-session" ? UserId.New() : user.Id,
+            SecurityTokenGenerator.HashForStorage(cookieState is "wrong-hash" ? "different-token" : "existing-refresh-token"),
+            rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "same-browser", now.AddDays(-1));
+        var otherBrowser = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "other-hash",
+            rememberMe: false, authProvider: "password", ipAddress: null, userAgent: "same-browser", now.AddDays(-1));
+        if (cookieState is "revoked") {
+            previous.Revoke(now.AddHours(-1));
+        }
+        await sessions.AddAsync(previous);
+        await sessions.AddAsync(otherBrowser);
+        var jwt = new FakeJwtTokenGenerator {
+            ExistingTokenIdentity = cookieState is "invalid" ? null :
+                (cookieState is "foreign-user" ? UserId.New() : user.Id, user.Email, false,
+                    cookieState is "missing-session" ? RefreshTokenSessionId.New() : previous.Id),
+        };
+        var service = new AuthenticationTokenService(new InMemoryUserLoginEventRepository(), sessions, jwt,
+            Substitute.For<IPasswordHasher>(), clock);
+        var principal = new UserAuthenticationPrincipalModel(user.Id, user.Email, ["User"], AccessTokenCapUtc: null, user.ToModel());
+
+        await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
+            new AuthenticationClientContext("password", IpAddress: null, "same-browser", "existing-refresh-token"));
+
+        UserRefreshTokenSession replacement = sessions.Items.Single(session => session.Id != previous.Id && session.Id != otherBrowser.Id);
+        Assert.Multiple(
+            () => Assert.Equal(replaces || cookieState is "revoked", previous.RevokedAtUtc.HasValue),
+            () => Assert.True(otherBrowser.IsActive),
+            () => Assert.True(replacement.IsActive),
+            () => Assert.Equal(user.Id, replacement.UserId),
+            () => Assert.Equal(3, sessions.Items.Count));
     }
 
     private static User CreateUser(string email, params string[] roles) {
@@ -198,6 +247,7 @@ public class AuthenticationTokenServiceTests {
             string newRefreshTokenHash,
             bool rememberMe,
             DateTime rotatedAtUtc,
+            DateTime? expiresAtUtc = null,
             CancellationToken cancellationToken = default) {
             UserRefreshTokenSession? session = Items.FirstOrDefault(item => item.Id == id);
             if (session is null || session.UserId != userId || !session.IsActive ||
@@ -205,7 +255,7 @@ public class AuthenticationTokenServiceTests {
                 return Task.FromResult(result: false);
             }
 
-            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero, expiresAtUtc);
             return Task.FromResult(result: true);
         }
 
@@ -260,6 +310,7 @@ public class AuthenticationTokenServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator : IJwtTokenGenerator {
+        public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ExistingTokenIdentity { get; init; }
         public UserId LastAccessUserId { get; private set; }
         public string? LastAccessEmail { get; private set; }
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
@@ -327,7 +378,10 @@ public class AuthenticationTokenServiceTests {
             return "refresh-token";
         }
 
-        public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) => null;
+        public DateTime ReadRefreshTokenExpirationUtc(string refreshToken) => new(2030, 6, 28, 12, 0, 0, DateTimeKind.Utc);
+
+        public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) =>
+            token is "existing-refresh-token" ? ExistingTokenIdentity : null;
     }
 
     [ExcludeFromCodeCoverage]

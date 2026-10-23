@@ -83,6 +83,7 @@ public sealed class AuthSessionLifecycleControllerTests {
     public async Task Logout_RevokesCookieSessionAndExpiresRefreshCookie() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(
@@ -110,6 +111,7 @@ public sealed class AuthSessionLifecycleControllerTests {
     public async Task Logout_RequestTokenSupportsLegacyClientAndTakesPrecedenceOverCookie() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(

@@ -463,14 +463,14 @@
       "name": "PreviousRefreshTokenHash",
       "type": "string?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "credential",
       "name": "PreviousRefreshTokenValidUntilUtc",
       "type": "DateTime?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 18
+      "line": 19
     },
     {
       "category": "credential",

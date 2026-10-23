@@ -208,6 +208,7 @@ public sealed class AuthSessionControllerTests {
     private static DefaultHttpContext CreateHttpContext() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton(Substitute.For<FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions.IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
         var httpContext = new DefaultHttpContext {
             RequestServices = services.BuildServiceProvider(),

@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Modules.Users.Contracts.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure;
 
@@ -34,7 +36,11 @@ public static class IdentityModuleRegistration {
         services.AddScoped<IUserLoginEventWriteRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddScoped<IRefreshTokenSessionRepository>(provider => new RefreshTokenSessionRepository(
-            provider.GetRequiredService<IdentityDbContext>().UserRefreshTokenSessions, provider.GetRequiredService<IdentityDbContext>().Database, CreateTransactionSynchronizer(provider)));
+            provider.GetRequiredService<IdentityDbContext>().UserRefreshTokenSessions,
+            provider.GetRequiredService<IdentityDbContext>().Database,
+            provider.GetRequiredService<TimeProvider>(),
+            provider.GetRequiredService<IOptions<JwtOptions>>(),
+            CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserAccessTokenSessionReader, AccessTokenSessionReader>();
         services.AddScoped<IUserSessionRevocationService>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());

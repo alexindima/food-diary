@@ -8,6 +8,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Service
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Services.UserAgents;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Authentication.Contracts.Authentication.Common;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Services;
 
@@ -15,6 +16,7 @@ public sealed class AuthenticationTokenService(
     IUserLoginEventWriteRepository userLoginEventRepository,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
+    IPasswordHasher passwordHasher,
     TimeProvider dateTimeProvider)
     : IAuthenticationTokenService {
     public async Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
@@ -38,6 +40,8 @@ public sealed class AuthenticationTokenService(
             resolvedRefreshSessionId);
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        await RevokeExistingBrowserSessionAsync(principal.UserId, clientContext?.ExistingRefreshToken, nowUtc, cancellationToken)
+            .ConfigureAwait(false);
         await PersistAuthenticationArtifactsAsync(
             principal.UserId,
             hashedRefreshToken,
@@ -45,6 +49,7 @@ public sealed class AuthenticationTokenService(
             resolvedRefreshSessionId,
             clientContext,
             nowUtc,
+            jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken),
             cancellationToken).ConfigureAwait(false);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
     }
@@ -76,8 +81,40 @@ public sealed class AuthenticationTokenService(
             newRefreshTokenHash,
             rememberMe,
             dateTimeProvider.GetUtcNow().UtcDateTime,
+            jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken),
             cancellationToken).ConfigureAwait(false);
         return rotated ? new IssuedAuthenticationTokens(accessToken, refreshToken) : null;
+    }
+
+    private async Task RevokeExistingBrowserSessionAsync(
+        UserId userId,
+        string? existingRefreshToken,
+        DateTime nowUtc,
+        CancellationToken cancellationToken) {
+        if (string.IsNullOrWhiteSpace(existingRefreshToken)) {
+            return;
+        }
+
+        (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? validation =
+            jwtTokenGenerator.ValidateToken(existingRefreshToken);
+        if (validation is not { refreshSessionId: { } sessionId } || validation.Value.userId != userId) {
+            return;
+        }
+
+        UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(sessionId, cancellationToken)
+            .ConfigureAwait(false);
+        if (session is null || session.UserId != userId || !session.IsActive) {
+            return;
+        }
+
+        bool matches = SecurityTokenGenerator.IsFastStorageHash(session.RefreshTokenHash)
+            ? SecurityTokenGenerator.VerifyFastStorageHash(existingRefreshToken, session.RefreshTokenHash)
+            : passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(existingRefreshToken), session.RefreshTokenHash);
+        if (matches) {
+            // Stage both replacement and revocation in the same unit-of-work save.
+            session.Revoke(nowUtc);
+            await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     private async Task PersistAuthenticationArtifactsAsync(
@@ -87,6 +124,7 @@ public sealed class AuthenticationTokenService(
         RefreshTokenSessionId resolvedRefreshSessionId,
         AuthenticationClientContext? clientContext,
         DateTime nowUtc,
+        DateTime expiresAtUtc,
         CancellationToken cancellationToken) {
         var session = UserRefreshTokenSession.Create(
             resolvedRefreshSessionId,
@@ -96,7 +134,8 @@ public sealed class AuthenticationTokenService(
             clientContext?.AuthProvider,
             clientContext?.IpAddress,
             clientContext?.UserAgent,
-            nowUtc);
+            nowUtc,
+            expiresAtUtc);
         await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
 
         if (clientContext is not null) {

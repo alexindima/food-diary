@@ -35346,11 +35346,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.78
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
@@ -35514,11 +35514,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
+      "structuralRiskScore": 0.7
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
@@ -35634,11 +35634,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "nonBlankLines": 5,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
@@ -36450,11 +36450,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 1,
+      "nonBlankLines": 147,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.74
+      "structuralRiskScore": 14.94
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -36778,11 +36778,11 @@
     },
     {
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "nonBlankLines": 103,
-      "decisionPoints": 7,
+      "nonBlankLines": 117,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.56
+      "structuralRiskScore": 14.34
     },
     {
       "path": "Modules/Identity/Domain/ValueObjects/Ids/RefreshTokenSessionId.cs",
@@ -36810,11 +36810,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "nonBlankLines": 214,
+      "nonBlankLines": 216,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.28
+      "structuralRiskScore": 22.32
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
@@ -36834,11 +36834,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 63,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
+      "structuralRiskScore": 2.76
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -36914,11 +36914,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 252,
-      "decisionPoints": 55,
+      "nonBlankLines": 268,
+      "decisionPoints": 59,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.54
+      "structuralRiskScore": 93.86
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -37098,11 +37098,11 @@
     },
     {
       "path": "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
-      "nonBlankLines": 37,
+      "nonBlankLines": 39,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
+      "structuralRiskScore": 0.78
     },
     {
       "path": "Modules/Identity/PersistenceModel/Configurations/Email/EmailTemplateConfiguration.cs",
@@ -37218,11 +37218,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "nonBlankLines": 211,
+      "nonBlankLines": 213,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 5.76
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
@@ -37538,11 +37538,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs",

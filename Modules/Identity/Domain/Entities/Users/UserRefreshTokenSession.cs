@@ -14,6 +14,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     public string? UserAgent { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime LastRotatedAtUtc { get; private set; }
+    public DateTime? ExpiresAtUtc { get; private set; }
     public string? PreviousRefreshTokenHash { get; private set; }
     public DateTime? PreviousRefreshTokenValidUntilUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
@@ -29,7 +30,8 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
         string? authProvider,
         string? ipAddress,
         string? userAgent,
-        DateTime nowUtc) {
+        DateTime nowUtc,
+        DateTime? expiresAtUtc = null) {
         if (id == RefreshTokenSessionId.Empty) {
             throw new ArgumentException("Session id must not be empty.", nameof(id));
         }
@@ -49,6 +51,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
             UserAgent = NormalizeOptionalText(userAgent, 512),
             CreatedAtUtc = normalizedNow,
             LastRotatedAtUtc = normalizedNow,
+            ExpiresAtUtc = NormalizeExpiration(expiresAtUtc, normalizedNow),
         };
         session.SetCreated(normalizedNow);
         return session;
@@ -56,7 +59,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
 
     public bool IsActive => RevokedAtUtc is null;
 
-    public void Rotate(string refreshTokenHash, bool rememberMe, DateTime nowUtc, TimeSpan previousTokenGracePeriod) {
+    public void Rotate(string refreshTokenHash, bool rememberMe, DateTime nowUtc, TimeSpan previousTokenGracePeriod, DateTime? expiresAtUtc = null) {
         if (!IsActive) {
             throw new InvalidOperationException("Revoked refresh token session cannot be rotated.");
         }
@@ -65,12 +68,14 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
         EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
         string normalizedRefreshTokenHash = NormalizeRequiredText(refreshTokenHash, nameof(refreshTokenHash), 512);
         DateTime? previousTokenValidUntilUtc = NormalizePreviousTokenValidUntil(normalizedNow, previousTokenGracePeriod);
+        DateTime? normalizedExpiration = NormalizeExpiration(expiresAtUtc, normalizedNow);
 
         PreviousRefreshTokenHash = RefreshTokenHash;
         PreviousRefreshTokenValidUntilUtc = previousTokenValidUntilUtc;
         RefreshTokenHash = normalizedRefreshTokenHash;
         RememberMe = rememberMe;
         LastRotatedAtUtc = normalizedNow;
+        ExpiresAtUtc = normalizedExpiration;
         SetModified(normalizedNow);
     }
 
@@ -115,6 +120,17 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
         if (value < LastRotatedAtUtc) {
             throw new ArgumentOutOfRangeException(paramName, "Timestamp cannot be earlier than the last token rotation.");
         }
+    }
+
+    private static DateTime? NormalizeExpiration(DateTime? expiresAtUtc, DateTime nowUtc) {
+        if (expiresAtUtc is not DateTime expiration) {
+            return null;
+        }
+
+        DateTime normalized = NormalizeUtcTimestamp(expiration, nameof(expiresAtUtc));
+        return normalized > nowUtc
+            ? normalized
+            : throw new ArgumentOutOfRangeException(nameof(expiresAtUtc), "Expiration must be later than issuance.");
     }
 
     private static DateTime? NormalizePreviousTokenValidUntil(DateTime nowUtc, TimeSpan gracePeriod) =>

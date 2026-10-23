@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects;
@@ -174,8 +176,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         await using FoodDiaryDbContext rotateContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
         await using FoodDiaryDbContext revokeContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
-        var rotateRepository = new RefreshTokenSessionRepository(rotateContext.UserRefreshTokenSessions, rotateContext.Database);
-        var revokeRepository = new RefreshTokenSessionRepository(revokeContext.UserRefreshTokenSessions, revokeContext.Database);
+        var rotateRepository = new RefreshTokenSessionRepository(rotateContext.UserRefreshTokenSessions, rotateContext.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
+        var revokeRepository = new RefreshTokenSessionRepository(revokeContext.UserRefreshTokenSessions, revokeContext.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         Task<bool> rotate = rotateRepository.TryRotateAsync(
             id: session.Id,
@@ -1357,7 +1359,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverRefreshTokenSessionRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
         DateTime now = DateTime.UtcNow;
         var session = UserRefreshTokenSession.Create(
             RefreshTokenSessionId.New(),

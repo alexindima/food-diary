@@ -132,6 +132,9 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator {
             rememberMe,
             refreshSessionId);
 
+    public DateTime ReadRefreshTokenExpirationUtc(string refreshToken) =>
+        new JwtSecurityTokenHandler().ReadJwtToken(refreshToken).ValidTo;
+
     public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) {
         try {
             var tokenHandler = new JwtSecurityTokenHandler();

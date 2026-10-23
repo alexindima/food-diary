@@ -109,6 +109,7 @@ public sealed class JwtTokenGeneratorTests {
         (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.Equal(now.AddDays(90), jwt.ValidTo);
+        Assert.Equal(jwt.ValidTo, generator.ReadRefreshTokenExpirationUtc(token));
         Assert.NotNull(validated);
         Assert.True(validated.Value.rememberMe);
         Assert.Contains(jwt.Claims, claim =>

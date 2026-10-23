@@ -3,4 +3,7 @@ namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Mod
 public sealed record AuthenticationClientContext(
     string AuthProvider,
     string? IpAddress,
-    string? UserAgent);
+    string? UserAgent,
+    [property: System.Text.Json.Serialization.JsonIgnore] string? ExistingRefreshToken = null) {
+    public override string ToString() => $"AuthenticationClientContext {{ AuthProvider = {AuthProvider}, ExistingRefreshToken = [redacted] }}";
+}

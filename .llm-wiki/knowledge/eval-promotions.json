@@ -980,6 +980,161 @@
       },
       "reason": "",
       "eventHash": "d4edf57d72271018bce04573a4724c4c0de6093d196804b789aa2708a2cb96ed"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 5,
+      "kind": "observed",
+      "candidateId": "learned-4bf290068948a374",
+      "createdAtUtc": "2026-10-23T20:05:10.7218780Z",
+      "previousHash": "d4edf57d72271018bce04573a4724c4c0de6093d196804b789aa2708a2cb96ed",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/session-lifecycle",
+        "retrospectiveHash": "89f290b561c250ee76d7f809c42004e4e4807c969588350cb05be59c40422086",
+        "packetFingerprint": "0906bf73b396b52ee2b7a7f8f7edc35732f8a94a92cf2aa981c37fbf1322992f",
+        "signals": [
+          {
+            "id": "cost-architecture-health",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-health",
+              "error=50900%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1900%"
+            ]
+          },
+          {
+            "id": "cost-data-access-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'data-access-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "data-access-integration-tests",
+              "error=77.51%"
+            ]
+          },
+          {
+            "id": "cost-infrastructure-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'infrastructure-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=130.77%",
+              "infrastructure-integration-tests"
+            ]
+          },
+          {
+            "id": "cost-migration-format",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'migration-format'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1400%",
+              "migration-format"
+            ]
+          },
+          {
+            "id": "cost-nuget-vulnerability-audit",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1233.33%",
+              "nuget-vulnerability-audit"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-4bf290068948a374",
+          "changedPaths": [
+            "docs/architecture/persistence-capabilities.json",
+            "docs/architecture/persistence-technical-sources.txt",
+            "FoodDiary.Infrastructure/Migrations/20261023151204_AddRefreshSessionExpiry.cs",
+            "FoodDiary.Infrastructure/Migrations/20261023151204_AddRefreshSessionExpiry.Designer.cs",
+            "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationCookiePolicyTestController.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationCookiePolicyTransportTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/AuthenticationSecurityRegressionTests.cs",
+            "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+            "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
+            "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+            "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
+            "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+            "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
+            "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
+            "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+            "Modules/Identity/PersistenceModel/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
+            "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
+            "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserRefreshTokenSessionInvariantTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/ActiveSessionProjectionIntegrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/PagedIdentityProjectionIntegrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/RefreshSessionIdentityIntegrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/RefreshTokenSessionFallbackTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthenticationCookieResultFilterTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthHttpMappingsTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionControllerTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/FoodDiary.Modules.Identity.Presentation.Tests.csproj",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj",
+            "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+            "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs"
+          ],
+          "expectedModules": [
+            "Identity",
+            "Users"
+          ],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Contracts",
+            "Database",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-drift",
+            "backend-boundaries",
+            "backend-public-contract",
+            "dependency-nuget",
+            "deployment-rollout",
+            "domain-invariant",
+            "ef-migration",
+            "observability-critical-flow",
+            "performance-data-access",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-health",
+            "architecture-tests",
+            "data-access-integration-tests",
+            "infrastructure-integration-tests",
+            "migration-format",
+            "nuget-vulnerability-audit"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "f98512d9bbe08f147680fb196c253fa15a175a481e1ca7b7058caca13a2737f4"
+      },
+      "reason": "",
+      "eventHash": "c710d5b3ac731103c344d8481447c47760085ad49dd55526d11b57d0790ad388"
     }
   ]
 }

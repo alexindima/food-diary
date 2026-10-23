@@ -2,6 +2,7 @@ using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Presentation.Filters;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -26,7 +27,7 @@ public sealed class AuthenticationCookieResultFilterTests {
             .GetCustomAttributes(inherit: true).OfType<IFilterMetadata>().ToList();
         Assert.Single(filters.OfType<SuppressRefreshTokenCookieAttribute>());
         var context = new ResultExecutingContext(actionContext, filters, result, controller);
-        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(TimeProvider.System));
+        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(CreateTokenGenerator()));
         bool continued = false;
 
         await filter.OnResultExecutionAsync(context, () => {
@@ -37,7 +38,7 @@ public sealed class AuthenticationCookieResultFilterTests {
 
         Assert.True(continued);
         Assert.Equal(0, httpContext.Response.Headers.SetCookie.Count);
-        Assert.Equal("main-session", new RefreshTokenCookieService(TimeProvider.System).Read(httpContext));
+        Assert.Equal("main-session", new RefreshTokenCookieService(CreateTokenGenerator()).Read(httpContext));
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         Assert.Equal("admin-access-token", Assert.IsType<AuthenticationHttpResponse>(result.Value).AccessToken);
         string json = System.Text.Json.JsonSerializer.Serialize(response, System.Text.Json.JsonSerializerOptions.Web);
@@ -54,7 +55,7 @@ public sealed class AuthenticationCookieResultFilterTests {
         var result = new OkObjectResult(response);
         object controller = new();
         var context = new ResultExecutingContext(actionContext, [], result, controller);
-        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(TimeProvider.System));
+        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(CreateTokenGenerator()));
 
         await filter.OnResultExecutionAsync(context, () => Task.FromResult(
             new ResultExecutedContext(actionContext, [], result, controller)));
@@ -69,7 +70,8 @@ public sealed class AuthenticationCookieResultFilterTests {
             () => Assert.Contains("path=/api/v1/auth", setCookie, StringComparison.OrdinalIgnoreCase),
             () => Assert.Contains("secure", setCookie, StringComparison.OrdinalIgnoreCase),
             () => Assert.Contains("httponly", setCookie, StringComparison.OrdinalIgnoreCase),
-            () => Assert.Contains("samesite=lax", setCookie, StringComparison.OrdinalIgnoreCase));
+            () => Assert.Contains("samesite=lax", setCookie, StringComparison.OrdinalIgnoreCase),
+            () => Assert.Contains("expires=Fri, 28 Jun 2030 12:00:00 GMT", setCookie, StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -79,11 +81,18 @@ public sealed class AuthenticationCookieResultFilterTests {
         var result = new OkObjectResult(new { Value = "unchanged" });
         object controller = new();
         var context = new ResultExecutingContext(actionContext, [], result, controller);
-        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(TimeProvider.System));
+        var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(CreateTokenGenerator()));
 
         await filter.OnResultExecutionAsync(context, () => Task.FromResult(
             new ResultExecutedContext(actionContext, [], result, controller)));
 
         Assert.Equal(0, httpContext.Response.Headers.SetCookie.Count);
+    }
+
+    private static IJwtTokenGenerator CreateTokenGenerator() {
+        IJwtTokenGenerator generator = Substitute.For<IJwtTokenGenerator>();
+        generator.ReadRefreshTokenExpirationUtc(Arg.Any<string>())
+            .Returns(new DateTime(2030, 6, 28, 12, 0, 0, DateTimeKind.Utc));
+        return generator;
     }
 }

@@ -25,7 +25,8 @@ public sealed class AuthenticationCookiePolicyTransportTests(TransportApiWebAppl
         string[] cookies = response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? values) ? [.. values] : [];
         if (writesCookie) {
             string cookie = Assert.Single(cookies);
-            Assert.Contains($"{RefreshTokenCookieService.CookieName}=test-refresh", cookie, StringComparison.Ordinal);
+            Assert.Contains($"{RefreshTokenCookieService.CookieName}=", cookie, StringComparison.Ordinal);
+            Assert.NotEmpty(AuthenticationResponseCookies.ReadRefreshToken(response));
             Assert.Contains("httponly", cookie, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("path=/api/v1/auth", cookie, StringComparison.OrdinalIgnoreCase);
         } else {

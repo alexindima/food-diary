@@ -16327,7 +16327,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "EmailSender",
@@ -16670,7 +16670,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "IdentityProviderRegistration",
@@ -16740,7 +16740,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "UserLoginEventRepository",
@@ -17006,7 +17006,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 29
+      "line": 30
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -17286,7 +17286,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RequireTelegramBotSecretAttribute",

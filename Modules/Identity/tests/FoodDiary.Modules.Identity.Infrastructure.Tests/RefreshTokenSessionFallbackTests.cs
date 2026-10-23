@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
@@ -22,7 +24,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession foreign = CreateSession(UserId.New());
         context.UserRefreshTokenSessions.AddRange(current, target, foreign);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         if (all) {
             await repository.RevokeAllOtherAsync(owner, foreign.Id, Now);
@@ -51,7 +53,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession session = CreateSession(owner);
         context.UserRefreshTokenSessions.Add(session);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         await repository.RevokeByIdAsync(RefreshTokenSessionId.New(), owner, Now);
         await repository.RevokeByIdAsync(session.Id, UserId.New(), Now);
@@ -67,7 +69,7 @@ public sealed class RefreshTokenSessionFallbackTests {
         UserRefreshTokenSession session = CreateSession(owner);
         context.UserRefreshTokenSessions.Add(session);
         await context.SaveChangesAsync();
-        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         Assert.False(await repository.TryRotateAsync(RefreshTokenSessionId.New(), owner, "hash", "new", rememberMe: true, Now));
         Assert.False(await repository.TryRotateAsync(session.Id, UserId.New(), "hash", "new", rememberMe: true, Now));

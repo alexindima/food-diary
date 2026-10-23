@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Http;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 
 namespace FoodDiary.Modules.Identity.Presentation.Security;
 
-public sealed class RefreshTokenCookieService(TimeProvider timeProvider) {
+public sealed class RefreshTokenCookieService(IJwtTokenGenerator jwtTokenGenerator) {
     public const string CookieName = "fooddiary.refresh";
 
     public string? Read(HttpContext context) => context.Request.Cookies[CookieName];
 
     public void Set(HttpContext context, string refreshToken) {
-        context.Response.Cookies.Append(CookieName, refreshToken, CreateOptions(context, timeProvider.GetUtcNow().AddDays(30)));
+        DateTime expiresAtUtc = jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken);
+        context.Response.Cookies.Append(CookieName, refreshToken, CreateOptions(context, new DateTimeOffset(expiresAtUtc)));
     }
 
     public void Delete(HttpContext context) {

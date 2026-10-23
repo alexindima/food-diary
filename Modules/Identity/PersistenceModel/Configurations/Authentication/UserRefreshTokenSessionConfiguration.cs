@@ -37,6 +37,9 @@ internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfigur
         builder.Property(e => e.LastRotatedAtUtc)
             .HasColumnType("timestamp with time zone");
 
+        builder.Property(e => e.ExpiresAtUtc)
+            .HasColumnType("timestamp with time zone");
+
         builder.Property(e => e.PreviousRefreshTokenValidUntilUtc)
             .HasColumnType("timestamp with time zone");
 

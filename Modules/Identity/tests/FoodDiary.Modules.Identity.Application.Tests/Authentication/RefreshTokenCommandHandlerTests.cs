@@ -383,6 +383,8 @@ public sealed class RefreshTokenCommandHandlerTests {
             IReadOnlyCollection<string> roles,
             bool rememberMe = false,
             RefreshTokenSessionId? refreshSessionId = null) => "unused-refresh-token";
+        public DateTime ReadRefreshTokenExpirationUtc(string refreshToken) => new(2030, 6, 28, 12, 0, 0, DateTimeKind.Utc);
+
         public (UserId userId, string? email, bool rememberMe, RefreshTokenSessionId? refreshSessionId)? ValidateToken(string token) =>
             token switch {
                 "current-refresh-token" => (userId, email, false, RefreshSessionId),
@@ -435,6 +437,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             string newRefreshTokenHash,
             bool rememberMe,
             DateTime rotatedAtUtc,
+            DateTime? expiresAtUtc = null,
             CancellationToken cancellationToken = default) {
             UserRefreshTokenSession? session = _sessions.FirstOrDefault(item => item.Id == id);
             if (session is null || session.UserId != userId || !session.IsActive ||
@@ -442,7 +445,7 @@ public sealed class RefreshTokenCommandHandlerTests {
                 return Task.FromResult(result: false);
             }
 
-            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero, expiresAtUtc);
             return Task.FromResult(result: true);
         }
 

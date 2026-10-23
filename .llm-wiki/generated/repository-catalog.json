@@ -6499,6 +6499,7 @@
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Tooling/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
         "packageReferences": [
@@ -6600,6 +6601,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
+          "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
           "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
@@ -12579,6 +12581,7 @@
           "Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj",
           "Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj",
           "Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj",
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj",

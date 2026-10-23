@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
@@ -78,9 +80,9 @@ public sealed class PagedIdentityProjectionIntegrationTests(PostgresDatabaseFixt
         context.ChangeTracker.Clear();
         using var cancellation = new CancellationTokenSource();
         List<CancellationToken> synchronizations = [];
-        var synchronized = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database,
+        var synchronized = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }),
             token => { synchronizations.Add(token); return Task.CompletedTask; });
-        var standalone = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var standalone = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         IReadOnlyList<RefreshTokenSessionReadModel> first = await standalone.GetActivePageReadModelsAsync(owner.Id, 1, 1, cancellation.Token);
         IReadOnlyList<RefreshTokenSessionReadModel> second = await synchronized.GetActivePageReadModelsAsync(owner.Id, 2, 1, cancellation.Token);

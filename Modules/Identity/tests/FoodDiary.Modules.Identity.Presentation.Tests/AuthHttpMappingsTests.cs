@@ -19,6 +19,7 @@ using FoodDiary.Modules.Users.Contracts.Models;
 
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
@@ -26,6 +27,23 @@ namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthHttpMappingsTests {
+    [Fact]
+    public void LoginMapping_PassesExistingBrowserCookieButAdminSsoLeavesMainSessionAlone() {
+        HttpContext context = CreateHttpContext("203.0.113.10", "same-browser");
+        context.Request.Headers.Cookie = $"{RefreshTokenCookieService.CookieName}=existing-refresh-token";
+
+        LoginCommand login = new LoginHttpRequest("user@example.com", "password").ToCommand(context);
+        GoogleLoginCommand google = new GoogleLoginHttpRequest("credential").ToCommand(context);
+        AdminSsoExchangeCommand admin = new AdminSsoExchangeHttpRequest("code").ToCommand(context);
+
+        Assert.Multiple(
+            () => Assert.Equal("existing-refresh-token", login.ClientContext!.ExistingRefreshToken),
+            () => Assert.Equal("existing-refresh-token", google.ClientContext!.ExistingRefreshToken),
+            () => Assert.Null(admin.ClientContext!.ExistingRefreshToken),
+            () => Assert.DoesNotContain("existing-refresh-token", login.ClientContext!.ToString(), StringComparison.Ordinal),
+            () => Assert.DoesNotContain("existing-refresh-token", System.Text.Json.JsonSerializer.Serialize(login.ClientContext), StringComparison.Ordinal));
+    }
+
     [Fact]
     public void RegisterRequest_ToCommand_MapsAllFields() {
         var request = new RegisterHttpRequest(

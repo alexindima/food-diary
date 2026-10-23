@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
@@ -27,12 +29,14 @@ public sealed class RefreshSessionIdentityIntegrationTests(PostgresDatabaseFixtu
         context.UserRefreshTokenSessions.AddRange(current, other, foreign);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
-        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database);
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
 
         Assert.False(context.Database.HasPendingModelChanges());
         Assert.False(await repository.TryRotateAsync(current.Id, foreignOwner.Id, "initial", "wrong-owner", rememberMe: true, now));
         Assert.False(await repository.TryRotateAsync(current.Id, owner.Id, "wrong-hash", "wrong", rememberMe: true, now));
-        Assert.True(await repository.TryRotateAsync(current.Id, owner.Id, "initial", "rotated", rememberMe: true, now));
+        DateTime expiresAtUtc = now.AddDays(90).AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond));
+        Assert.True(await repository.TryRotateAsync(current.Id, owner.Id, "initial", "rotated", rememberMe: true, now, expiresAtUtc));
+        Assert.Equal(expiresAtUtc, (await repository.GetByIdAsync(current.Id))!.ExpiresAtUtc);
         Assert.False(await repository.TryRotateAsync(current.Id, owner.Id, "initial", "stale", rememberMe: true, now));
         await repository.RevokeOtherByIdAsync(foreign.Id, owner.Id, current.Id, now);
         await repository.RevokeOtherByIdAsync(current.Id, owner.Id, current.Id, now);

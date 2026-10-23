@@ -5,18 +5,35 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using FoodDiary.Authentication.Contracts.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 
-public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession> sessions, Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+public sealed class RefreshTokenSessionRepository(
+    DbSet<UserRefreshTokenSession> sessions,
+    Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database,
+    TimeProvider timeProvider,
+    IOptions<JwtOptions> jwtOptions,
+    Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+    private IQueryable<UserRefreshTokenSession> GetUnexpiredSessions(UserId userId) {
+        DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+        JwtOptions options = jwtOptions.Value;
+        DateTime regularCutoff = nowUtc.AddDays(-(options.RefreshTokenExpirationDays > 0 ? options.RefreshTokenExpirationDays : 7));
+        DateTime rememberedCutoff = nowUtc.AddDays(-(options.RememberMeRefreshTokenExpirationDays > 0 ? options.RememberMeRefreshTokenExpirationDays : 90));
+        return sessions.Where(session => session.UserId == userId && session.RevokedAtUtc == null &&
+            (session.ExpiresAtUtc > nowUtc || (session.ExpiresAtUtc == null &&
+                ((session.RememberMe && session.LastRotatedAtUtc > rememberedCutoff) ||
+                 (!session.RememberMe && session.LastRotatedAtUtc > regularCutoff)))));
+    }
+
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await sessions
+        return await GetUnexpiredSessions(userId)
             .AsNoTracking()
-            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .Select(session => new RefreshTokenSessionReadModel(
                 session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
@@ -31,9 +48,8 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await sessions
+        return await GetUnexpiredSessions(userId)
             .AsNoTracking()
-            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .ThenBy(session => session.Id)
             .Skip((page - 1) * limit)
@@ -69,8 +85,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await sessions
-            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
+        return await GetUnexpiredSessions(userId)
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -98,6 +113,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
         string newRefreshTokenHash,
         bool rememberMe,
         DateTime rotatedAtUtc,
+        DateTime? expiresAtUtc = null,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
@@ -110,7 +126,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
                 return false;
             }
 
-            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero);
+            session.Rotate(newRefreshTokenHash, rememberMe, rotatedAtUtc, TimeSpan.Zero, expiresAtUtc);
             return true;
         }
 
@@ -126,6 +142,7 @@ public sealed class RefreshTokenSessionRepository(DbSet<UserRefreshTokenSession>
                     .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null)
                     .SetProperty(session => session.RefreshTokenHash, newRefreshTokenHash)
                     .SetProperty(session => session.RememberMe, rememberMe)
+                    .SetProperty(session => session.ExpiresAtUtc, expiresAtUtc)
                     .SetProperty(session => session.LastRotatedAtUtc, rotatedAtUtc),
                 cancellationToken)
             .ConfigureAwait(false);

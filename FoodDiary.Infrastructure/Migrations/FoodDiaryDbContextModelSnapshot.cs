@@ -2478,6 +2478,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("IpAddress")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");

@@ -21,6 +21,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_ReadModelRepositorySharesScopedSessionRepository() {
         var services = new ServiceCollection();
+        services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IUserLoginEventQuery, UnusedLoginEventQuery>();
         services.AddScoped(_ => Substitute.For<IModuleTransactionCoordinator>());
         services.AddScoped<FoodDiary.Persistence.Abstractions.IModuleContextFactory>(provider => provider.GetRequiredService<FoodDiaryDbContext>());
