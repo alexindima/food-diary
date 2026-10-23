@@ -46,6 +46,7 @@ obj/
 # Tests / coverage
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+*.dcvr
 
 # Publish profiles and env files
 *.pubxml
@@ -63,8 +64,10 @@ Thumbs.db
 /coverage-results/
 /.artifacts/
 .playwright-cli/
+/.codex-remote-attachments/
 /output/playwright/
 /output/qa/
+/FoodDiary.Web.Client/output/playwright/
 /FoodDiary.Web.Client/test-results/
 /FoodDiary.Web.Client/playwright-report/
 /FoodDiary.TechRadar/node_modules/

@@ -58,7 +58,11 @@ and the [SDK guide](../../docs/frontend/API_SDK.md). It accepts exactly four
 required-property changes: `ShoppingListHttpResponse.revision` and
 `UpdateShoppingListHttpRequest.expectedRevision`, each in the component schema
 and serialized HTTP DTO comparison, against commit
-`536c7a767ca451f2bf2840f9e5007c40bc1fb0af` and the two exact snapshot pairs.
+`a09333d00e8cb10a18387fd10c096c51aee64c25`, the latest successful ancestral
+CI push, and the two exact snapshot pairs. Both baseline snapshots are
+byte-identical to those originally reviewed at the unpublished local commit
+`536c7a767ca451f2bf2840f9e5007c40bc1fb0af`; only the publication base binding
+changed.
 Every client must send the revision it read; a missing revision returns 400,
 and a stale revision returns 409. Release the regenerated SDK and web assets
 with the API through the existing CI-gated deployment. Older packaged clients

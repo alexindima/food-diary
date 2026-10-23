@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "shopping-list-required-revision-f03-2026-10-23",
-  "baseCommit": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
+  "baseCommit": "a09333d00e8cb10a18387fd10c096c51aee64c25",
   "decision": "Accept only the four exact F03 required revision changes below. The user explicitly chose to require a revision from every client, including older applications, to prevent lost shopping-list updates. ADR 0056 and docs/frontend/API_SDK.md record this bounded compatibility exception. All other API compatibility requirements remain in force.",
   "clientRollout": "Release the regenerated web SDK and updated web assets together with the API. Every shopping-list PATCH must send expectedRevision from the list that was read. Older applications must update; already open web tabs must reload and installed PWAs must activate the new version. No optional legacy-write bypass is permitted. A deployment has not been performed by this approval record; use the existing CI-gated deployment and validate 400 for missing revisions, 409 for stale revisions and successful current-client saves.",
   "snapshots": [
