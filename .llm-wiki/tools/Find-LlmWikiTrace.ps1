@@ -297,7 +297,7 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
         $null -eq $requestDefinition -or $_.path -ne $requestDefinition.path
     } | Group-Object path | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object path)
     $impactPaths = @(
-        @($requestDefinition.path) + @($candidate.path) +
+        @(if ($null -ne $requestDefinition) { $requestDefinition.path }) + @($candidate.path) +
         @($implementations | ForEach-Object path) +
         @($presentation | ForEach-Object path) +
         @($filteredDirectConsumers | ForEach-Object path) +

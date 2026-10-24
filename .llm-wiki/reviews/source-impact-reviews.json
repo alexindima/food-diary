@@ -1460,21 +1460,23 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "4e059a263f76810db4c559e2b5599d8599571ccf48d060f6360c6d0e8ec60b48",
+      "pageSha256": "6e3a51425ad1d9e89dcb54afc593f6d653b3242954e43f500114e0ed4c2c490e",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c1531f03ad0cadb7cf0a5bcc9c5ca9b482abf285e2ef78106bb79ee96e21ab58"
+          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+          "sha256": "423fc5ce434756fbb4ba80afb99eadcc64dfcebcc237c0bd027b42bb8cf88cf3",
+          "reviewReason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain."
         },
         {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "dcc3a9d51e1b7d30b87612fffd2ce6ed0caeb3329a49e103a155cca823f1c94f"
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "afe13c106155a872981c6cde7341733a7ddd875a4a42e5db73003ea0dd594b2c",
+          "reviewReason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain."
         }
       ],
-      "reason": "Traced root initialization through recovery signals, the shared notice and shell callback to registered and nested routed editor checks. Traced diagnostics through FrontendObservabilityService, LoggingApiService, generated postLogs and the owning validator/processor. Browser probes caught and corrected unsupported event names; final API requests returned 204 with PWA outcomes and build metadata.",
+      "reason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:55:45.2697942Z"
+      "gitHead": "10eb7aa677de4fa48caf5c2805dbcccfc0cdaec7",
+      "reviewedAtUtc": "2026-10-24T20:54:16.2240412Z"
     },
     {
       "pageId": "workflow-verification-planner",

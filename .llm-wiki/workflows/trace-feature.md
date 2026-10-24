@@ -55,6 +55,9 @@ untracked C# sources and the prior generated-file exclusions, without following
 directory symlinks. The candidate ranking and trace output are unchanged.
 Exclusions apply to descendant directory names; a repository remains searchable
 when its own location is nested under an ancestor such as `.artifacts`.
+When a handler is visible but its request declaration is absent, the source trace
+keeps `requestDefinition: null` and includes only resolved paths in `impact.paths`.
+This remains valid under strict PowerShell mode; the handler path is retained.
 
 Backend-oriented natural-language queries automatically use the SQLite graph
 when they contain terms such as SMTP, persistence, readiness, outbox, hosted

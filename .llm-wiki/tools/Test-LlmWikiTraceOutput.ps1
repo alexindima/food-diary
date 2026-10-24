@@ -2,6 +2,7 @@
 param([switch]$SourceScopeOnly)
 
 $ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $scopeFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'trace-source-scope'
@@ -22,6 +23,16 @@ try {
     if ($traces.Count -ne 1 -or $null -eq $traces[0] -or -not $traces[0].PSObject.Properties['handler'] -or
         $traces[0].handler.name -ne 'TraceScopeCommandHandler' -or $traces[0].handler.path -ne 'Handler.cs') {
         throw 'Trace source scan must keep a repository under .artifacts while pruning excluded descendants.'
+    }
+    if ($null -ne $traces[0].requestDefinition -or @($traces[0].impact.paths).Count -ne 1 -or
+        $traces[0].impact.paths[0] -ne 'Handler.cs') {
+        throw 'Trace without a request declaration must retain the handler without inventing a request impact path.'
+    }
+    [IO.File]::WriteAllText((Join-Path $fixtureRepository 'Command.cs'), 'public sealed record TraceScopeCommand : ICommand<string>;', [Text.UTF8Encoding]::new($false))
+    $declaredTrace = & (Join-Path $fixtureTools 'Find-LlmWikiTrace.ps1') -Query TraceScope -Format Json | ConvertFrom-Json
+    if ($declaredTrace.requestDefinition.path -ne 'Command.cs' -or $declaredTrace.requestDefinition.line -ne 1 -or
+        (@($declaredTrace.impact.paths) -join ',') -ne 'Command.cs,Handler.cs' -or @($declaredTrace.directConsumers).Count -ne 0) {
+        throw 'Trace must include a resolved request declaration in impact paths without treating it as a consumer.'
     }
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($scopeFixture)

@@ -559,6 +559,14 @@
       "structuralRiskScore": 115.82
     },
     {
+      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+      "nonBlankLines": 345,
+      "decisionPoints": 71,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 115.4
+    },
+    {
       "path": ".llm-wiki/tools/Manage-LlmWikiRepairLoop.ps1",
       "nonBlankLines": 342,
       "decisionPoints": 71,
@@ -581,14 +589,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 115.18
-    },
-    {
-      "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-      "nonBlankLines": 345,
-      "decisionPoints": 70,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 113.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -1083,10 +1083,10 @@
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
       "nonBlankLines": 345,
-      "decisionPoints": 70,
+      "decisionPoints": 71,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 113.9
+      "structuralRiskScore": 115.4
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
