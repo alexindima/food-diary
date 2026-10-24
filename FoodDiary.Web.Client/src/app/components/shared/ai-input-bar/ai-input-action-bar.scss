@@ -1,6 +1,6 @@
 .ai-input-action-bar {
     &__manual {
-        padding-inline-start: var(--fd-space-xxs);
+        min-width: 0;
     }
 
     &__manual-label {

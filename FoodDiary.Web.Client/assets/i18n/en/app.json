@@ -1001,6 +1001,8 @@
         "FILTERS_ALREADY_EMPTY": "No filters to reset"
     },
     "AI_INPUT_BAR": {
+        "MANUAL_ACTION": "Manually",
+        "FAVORITES_ACTION": "From favorites",
         "SHORT_PLACEHOLDER": "What did you eat?",
         "PHOTO_TITLE": "Recognize from photo",
         "ADD_ACTION": "Add",
@@ -4198,7 +4200,7 @@
         "DELETE_ERROR": "Could not delete the result. Please try again.",
         "DELETED": "Result deleted.",
         "LOAD_ERROR": "Could not load recent recognitions. Please try again.",
-        "SHOW_RECENT": "Photo recognition history",
+        "SHOW_RECENT": "Recognition history",
         "STATUS": {
             "Failed": "Interrupted or failed",
             "Succeeded": "Ready",

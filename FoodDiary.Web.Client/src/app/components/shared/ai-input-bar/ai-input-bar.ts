@@ -1,9 +1,11 @@
 import {
+    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
     effect,
+    ElementRef,
     inject,
     input,
     output,
@@ -77,6 +79,12 @@ export class AiInputBarComponent {
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly speechOwner = {};
     private readonly photoUploadField = viewChild(ImageUploadFieldComponent);
+    private readonly actionsElement = viewChild.required<ElementRef<HTMLElement>>('actionsElement');
+    private readonly manualActionsElement = viewChild.required<ElementRef<HTMLElement>>('manualActionsElement');
+    private readonly historyElement = viewChild.required<FdUiButtonComponent, ElementRef<HTMLElement>>('historyElement', {
+        read: ElementRef,
+    });
+    private readonly historyLabelElement = viewChild.required<ElementRef<HTMLElement>>('historyLabelElement');
     private readonly photoDialogRef = signal<FdUiDialogRef<AiPhotoResultComponent> | null>(null);
     private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
 
@@ -84,10 +92,12 @@ export class AiInputBarComponent {
     public readonly clearToken = input(0);
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
+    public readonly historyLabelKey = input<string | null>(null);
     public readonly mealRecognized = output<AiInputBarResult>();
     public readonly mealCreateRequested = output<AiInputBarResult>();
 
     protected readonly voiceText = signal('');
+    protected readonly isHistoryLabelCompact = signal(false);
     protected readonly speechErrorKey = signal<string | null>(null);
     protected readonly textSubmittedQuery = signal<string | null>(null);
     protected readonly textIsAnalyzing = this.recognition.text.analyzing;
@@ -152,6 +162,48 @@ export class AiInputBarComponent {
                     this.clearState();
                 }
             });
+        });
+        afterRenderEffect(onCleanup => {
+            if (this.historyLabelKey() === null) {
+                return;
+            }
+            const actions = this.actionsElement().nativeElement;
+            const manualActions = this.manualActionsElement().nativeElement;
+            const history = this.historyElement().nativeElement;
+            const label = this.historyLabelElement().nativeElement;
+            const control = history.querySelector('button');
+            const icon = history.querySelector('fd-ui-icon');
+            const windowRef = actions.ownerDocument.defaultView;
+            const Observer = windowRef?.ResizeObserver;
+            if (control === null || icon === null || windowRef === null) {
+                return;
+            }
+            const update = (): void => {
+                const footerStyle = windowRef.getComputedStyle(actions);
+                const buttonStyle = windowRef.getComputedStyle(control);
+                const availableWidth =
+                    actions.clientWidth - Number.parseFloat(footerStyle.paddingLeft) - Number.parseFloat(footerStyle.paddingRight);
+                const historyWidth =
+                    icon.getBoundingClientRect().width +
+                    label.getBoundingClientRect().width +
+                    Number.parseFloat(buttonStyle.columnGap) +
+                    Number.parseFloat(buttonStyle.paddingLeft) +
+                    Number.parseFloat(buttonStyle.paddingRight) +
+                    Number.parseFloat(buttonStyle.borderLeftWidth) +
+                    Number.parseFloat(buttonStyle.borderRightWidth);
+                const requiredWidth = manualActions.getBoundingClientRect().width + Number.parseFloat(footerStyle.columnGap) + historyWidth;
+                this.isHistoryLabelCompact.set(requiredWidth > availableWidth);
+            };
+            update();
+            if (Observer !== undefined) {
+                const observer = new Observer(update);
+                for (const element of [actions, manualActions, label, control, icon]) {
+                    observer.observe(element);
+                }
+                onCleanup(() => {
+                    observer.disconnect();
+                });
+            }
         });
     }
 

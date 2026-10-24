@@ -1338,6 +1338,10 @@
     "DISABLED_HINTS": {
         "COOLDOWN_ACTIVE": "Дождитесь завершения таймера."
     },
+    "MEALS_PREVIEW": {
+        "MANUAL_ACTION": "Вручную",
+        "HISTORY_ACTION": "История"
+    },
     "PUBLIC_SITE": {
         "LANGUAGE": "Язык",
         "LOGIN": "Войти",

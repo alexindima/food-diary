@@ -52,11 +52,26 @@
             <div class="meals-preview__ai-panel fd-motion-enter">
                 <fd-ai-input-bar
                     mode="create"
+                    historyLabelKey="MEALS_PREVIEW.HISTORY_ACTION"
                     [mealType]="entry().slot ?? null"
                     [isProcessing]="isAiMealSaving()"
                     [clearToken]="aiMealClearToken()"
                     (mealCreateRequested)="aiMealCreateRequested.emit($event)"
-                />
+                >
+                    <fd-ui-button
+                        inputActions
+                        type="button"
+                        variant="secondary"
+                        fill="text"
+                        size="sm"
+                        icon="add"
+                        iconSize="sm"
+                        [ariaLabel]="'MEALS_PREVIEW.MANUAL_ACTION' | translate"
+                        (click)="add.emit(entry().slot)"
+                    >
+                        {{ 'MEALS_PREVIEW.MANUAL_ACTION' | translate }}
+                    </fd-ui-button>
+                </fd-ai-input-bar>
             </div>
         }
     </div>

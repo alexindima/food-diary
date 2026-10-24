@@ -3111,7 +3111,7 @@
       "role": "Component",
       "selector": "fd-ai-input-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "line": 67
+      "line": 69
     },
     {
       "name": "AiPhotoDetailsPanelComponent",
@@ -6723,7 +6723,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/seo.service.ts",
-      "line": 50
+      "line": 51
     },
     {
       "name": "TokenStorageService",
@@ -8148,16 +8148,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4170,
-      "russianProperties": 4170,
+      "englishProperties": 4172,
+      "russianProperties": 4172,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1249,
-      "russianProperties": 1249,
+      "englishProperties": 1252,
+      "russianProperties": 1252,
       "countsMatch": true
     },
     {

@@ -5,9 +5,9 @@
     <div class="meal-manage__items-grid fd-grid fd-gap-lg">
         <fd-ai-input-action-bar
             mode="emit"
-            manualPrefixLabelKey="MEAL_MANAGE.ITEMS_OR_MANUAL"
-            manualActionLabelKey="MEAL_MANAGE.CHOOSE_ITEM"
-            manualActionIcon="search"
+            manualActionLabelKey="MEALS_PREVIEW.MANUAL_ACTION"
+            historyLabelKey="MEALS_PREVIEW.HISTORY_ACTION"
+            [showManualPrefix]="false"
             [mealType]="selectedMealType()"
             [isProcessing]="isProcessing()"
             (mealRecognized)="mealRecognized.emit($event)"

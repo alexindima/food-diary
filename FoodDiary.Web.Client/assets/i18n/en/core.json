@@ -1338,6 +1338,10 @@
     "DISABLED_HINTS": {
         "COOLDOWN_ACTIVE": "Wait for the cooldown to finish."
     },
+    "MEALS_PREVIEW": {
+        "MANUAL_ACTION": "Manually",
+        "HISTORY_ACTION": "History"
+    },
     "PUBLIC_SITE": {
         "LANGUAGE": "Language",
         "LOGIN": "Sign in",

@@ -1,96 +1,107 @@
-<div class="ai-input-bar fd-row fd-gap-control" [class.ai-input-bar--attached]="hasAttachedResult()">
-    <fd-image-upload-field
-        class="ai-input-bar__hidden-upload"
-        appearance="hidden"
-        [cropEnabled]="false"
-        [resizeMaxDimension]="1536"
-        [deleteOnClear]="true"
-        (imagePreparationStarted)="onPhotoPreparationStarted($event)"
-        (imagePreparationFailed)="onPhotoPreparationFailed()"
-        (imageChanged)="onPhotoSelected($event)"
-    />
-    <fd-ui-icon class="ai-input-bar__icon" name="auto_awesome" />
-    <input
-        type="text"
-        class="ai-input-bar__input fd-ui-body-sm"
-        [placeholder]="'AI_INPUT_BAR.SHORT_PLACEHOLDER' | translate"
-        [attr.aria-label]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
-        [value]="voiceText()"
-        [disabled]="isDisabled()"
-        (input)="onTextInput($event)"
-        (keydown.enter)="submitTextAsync(); $event.preventDefault()"
-    />
-    @if (!voiceText().trim()) {
-        <fd-ui-button
-            class="ai-input-bar__action-btn"
-            variant="secondary"
-            fill="solid"
-            icon="photo_camera"
-            iconSize="lg"
-            fdUiHintPosition="bottom"
-            [disabled]="isDisabled()"
-            [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-            [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-            (click)="onPhotoClickAsync()"
+<div class="ai-input-bar__composer" [class.ai-input-bar__composer--attached]="hasAttachedResult()">
+    <div class="ai-input-bar fd-row fd-gap-control">
+        <fd-image-upload-field
+            class="ai-input-bar__hidden-upload"
+            appearance="hidden"
+            [cropEnabled]="false"
+            [resizeMaxDimension]="1536"
+            [deleteOnClear]="true"
+            (imagePreparationStarted)="onPhotoPreparationStarted($event)"
+            (imagePreparationFailed)="onPhotoPreparationFailed()"
+            (imageChanged)="onPhotoSelected($event)"
         />
-        @if (isSpeechSupported) {
+        <fd-ui-icon class="ai-input-bar__icon" name="auto_awesome" />
+        <input
+            type="text"
+            class="ai-input-bar__input fd-ui-body-sm"
+            [placeholder]="'AI_INPUT_BAR.SHORT_PLACEHOLDER' | translate"
+            [attr.aria-label]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
+            [value]="voiceText()"
+            [disabled]="isDisabled()"
+            (input)="onTextInput($event)"
+            (keydown.enter)="submitTextAsync(); $event.preventDefault()"
+        />
+        @if (!voiceText().trim()) {
             <fd-ui-button
                 class="ai-input-bar__action-btn"
                 variant="secondary"
                 fill="solid"
+                icon="photo_camera"
                 iconSize="lg"
                 fdUiHintPosition="bottom"
-                [icon]="microphoneIcon()"
-                [ariaPressed]="isListening()"
-                [class.ai-input-bar__action-btn--mic-active]="isListening()"
-                [disabled]="isMicrophoneDisabled()"
-                [disabledReason]="isMicrophoneDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
-                [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
-                (click)="toggleMicAsync()"
+                [disabled]="isDisabled()"
+                [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+                [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+                (click)="onPhotoClickAsync()"
+            />
+            @if (isSpeechSupported) {
+                <fd-ui-button
+                    class="ai-input-bar__action-btn"
+                    variant="secondary"
+                    fill="solid"
+                    iconSize="lg"
+                    fdUiHintPosition="bottom"
+                    [icon]="microphoneIcon()"
+                    [ariaPressed]="isListening()"
+                    [class.ai-input-bar__action-btn--mic-active]="isListening()"
+                    [disabled]="isMicrophoneDisabled()"
+                    [disabledReason]="isMicrophoneDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                    [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
+                    [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
+                    (click)="toggleMicAsync()"
+                />
+            }
+        } @else {
+            <fd-ui-button
+                class="ai-input-bar__submit"
+                variant="primary"
+                fill="solid"
+                iconSize="lg"
+                [icon]="textSubmitIcon()"
+                [disabled]="isDisabled()"
+                [disabledReason]="isDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
+                (click)="submitTextAsync()"
             />
         }
-    } @else {
-        <fd-ui-button
-            class="ai-input-bar__submit"
-            variant="primary"
-            fill="solid"
-            iconSize="lg"
-            [icon]="textSubmitIcon()"
-            [disabled]="isDisabled()"
-            [disabledReason]="isDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-            [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
-            (click)="submitTextAsync()"
+    </div>
+
+    @if (speechErrorKey(); as errorKey) {
+        <fd-ui-inline-alert
+            class="ai-input-bar__speech-error"
+            appearance="notice"
+            severity="danger"
+            role="alert"
+            [message]="errorKey | translate"
         />
     }
-</div>
 
-@if (speechErrorKey(); as errorKey) {
-    <fd-ui-inline-alert
-        class="ai-input-bar__speech-error"
-        appearance="notice"
-        severity="danger"
-        role="alert"
-        [message]="errorKey | translate"
-    />
-}
-
-<div class="ai-input-bar__actions fd-row fd-wrap fd-justify-between fd-gap-xs">
-    <ng-content select="[inputActions]" />
-    <fd-ui-button
-        class="ai-input-bar__history"
-        type="button"
-        icon="history"
-        variant="secondary"
-        fill="text"
-        [ariaLabel]="'AI_RECOGNITION.SHOW_RECENT' | translate"
-        [fdUiHint]="'AI_RECOGNITION.SHOW_RECENT' | translate"
-        [disabled]="isDisabled()"
-        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-        (click)="openRecognitionHistory()"
-    >
-        <span class="ai-input-bar__history-label">{{ 'AI_RECOGNITION.SHOW_RECENT' | translate }}</span>
-    </fd-ui-button>
+    <div #actionsElement class="ai-input-bar__actions fd-row fd-justify-between fd-gap-xs">
+        <div #manualActionsElement class="ai-input-bar__manual-actions">
+            <ng-content select="[inputActions]" />
+        </div>
+        <fd-ui-button
+            #historyElement
+            class="ai-input-bar__history"
+            type="button"
+            icon="history"
+            variant="secondary"
+            fill="text"
+            size="sm"
+            iconSize="sm"
+            [class.ai-input-bar__history--labeled]="historyLabelKey() !== null"
+            [class.ai-input-bar__history--compact]="isHistoryLabelCompact()"
+            [ariaLabel]="'AI_RECOGNITION.SHOW_RECENT' | translate"
+            [fdUiHint]="'AI_RECOGNITION.SHOW_RECENT' | translate"
+            [disabled]="isDisabled()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            (click)="openRecognitionHistory()"
+        >
+            <span #historyLabelElement class="ai-input-bar__history-label">{{
+                historyLabelKey() ?? 'AI_RECOGNITION.SHOW_RECENT' | translate
+            }}</span>
+        </fd-ui-button>
+    </div>
 </div>
 
 @if (hasTextResult()) {

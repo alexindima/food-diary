@@ -18,6 +18,7 @@ export class AiInputActionBarComponent {
     public readonly isProcessing = input(false);
     public readonly clearToken = input(0);
     public readonly showManualPrefix = input(true);
+    public readonly historyLabelKey = input<string | null>(null);
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
     public readonly manualPrefixLabelKey = input('MEAL_LIST.MANUAL_ADD_OR');

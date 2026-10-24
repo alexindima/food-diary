@@ -5,6 +5,7 @@
     <fd-ai-input-bar
         [mode]="mode()"
         [mealType]="mealType()"
+        [historyLabelKey]="historyLabelKey()"
         [isProcessing]="isProcessing()"
         [clearToken]="clearToken()"
         (mealRecognized)="mealRecognized.emit($event)"
@@ -16,8 +17,10 @@
             }
             <fd-ui-button
                 type="button"
-                variant="primary"
+                variant="secondary"
                 fill="text"
+                size="sm"
+                iconSize="sm"
                 [icon]="manualActionIcon()"
                 [ariaLabel]="manualActionLabelKey() | translate"
                 (click)="manualAction.emit()"

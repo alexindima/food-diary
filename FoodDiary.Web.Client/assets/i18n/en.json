@@ -1775,6 +1775,15 @@
         "FASTING_BUSY": "Finish the current fasting update first.",
         "FASTING_REDUCE_UNAVAILABLE": "Choose fewer hours than the time remaining in this fast."
     },
+    "MEALS_PREVIEW": {
+        "MANUAL_ACTION": "Manually",
+        "HISTORY_ACTION": "History",
+        "EYEBROW": "See today",
+        "TITLE": "Today's meals preview",
+        "VIEW_ALL": "Open all meals",
+        "PLACEHOLDER": "Add a meal to see it here",
+        "ADD_MANUAL_HINT": "Add manually"
+    },
     "PUBLIC_SITE": {
         "LANGUAGE": "Language",
         "LOGIN": "Sign in",
@@ -1837,13 +1846,6 @@
         "MOCK_MEAL": "Breakfast",
         "MOCK_CHART": "Progress",
         "RECIPES": "Browse recipes without signing up"
-    },
-    "MEALS_PREVIEW": {
-        "EYEBROW": "See today",
-        "TITLE": "Today's meals preview",
-        "VIEW_ALL": "Open all meals",
-        "PLACEHOLDER": "Add a meal to see it here",
-        "ADD_MANUAL_HINT": "Add manually"
     },
     "FEATURES": {
         "EYEBROW": "Why Food Diary",
@@ -5284,6 +5286,8 @@
         "FILTERS_ALREADY_EMPTY": "No filters to reset"
     },
     "AI_INPUT_BAR": {
+        "MANUAL_ACTION": "Manually",
+        "FAVORITES_ACTION": "From favorites",
         "SHORT_PLACEHOLDER": "What did you eat?",
         "PHOTO_TITLE": "Recognize from photo",
         "ADD_ACTION": "Add",
@@ -8028,7 +8032,7 @@
         "DELETE_ERROR": "Could not delete the result. Please try again.",
         "DELETED": "Result deleted.",
         "LOAD_ERROR": "Could not load recent recognitions. Please try again.",
-        "SHOW_RECENT": "Photo recognition history",
+        "SHOW_RECENT": "Recognition history",
         "STATUS": {
             "Failed": "Interrupted or failed",
             "Succeeded": "Ready",

@@ -5246,6 +5246,11 @@
           "required": false
         },
         {
+          "name": "historyLabelKey",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "mode",
           "type": "AiInputBarMode",
           "required": false

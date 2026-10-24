@@ -35,6 +35,19 @@
         min-height: 76px;
     }
 
+    &__favorite-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--fd-size-icon-md);
+        height: var(--fd-size-icon-md);
+        margin-inline-start: var(--fd-space-xxs);
+        padding-inline: var(--fd-space-xxs);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-surface-muted);
+        font-size: var(--fd-text-helper-size);
+    }
+
     &__active-filters {
         display: flex;
         align-items: center;

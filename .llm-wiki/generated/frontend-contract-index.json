@@ -3,11 +3,11 @@
   "summary": {
     "components": 503,
     "componentsWithoutDirectSpecs": 125,
-    "inputs": 1620,
+    "inputs": 1622,
     "outputs": 556,
     "apiCalls": 317,
     "templatesWithTranslations": 364,
-    "translationKeys": 2184,
+    "translationKeys": 2185,
     "consumerEdges": 1286,
     "consumedComponents": 321,
     "unconsumedComponents": 181
@@ -11923,6 +11923,11 @@
           "required": false
         },
         {
+          "name": "historyLabelKey",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "mode",
           "type": "AiInputBarMode",
           "required": false
@@ -11988,6 +11993,11 @@
         },
         {
           "name": "mealType",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "historyLabelKey",
           "type": "string | null",
           "required": false
         }
@@ -22146,7 +22156,7 @@
       "feature": "meals",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
       "keys": [
-        "MEAL_FAVORITES.OPEN",
+        "AI_INPUT_BAR.FAVORITES_ACTION",
         "MEAL_LIST.ACTIVE_FILTERS_LABEL",
         "MEAL_LIST.DATE_FILTER_BUTTON",
         "MEAL_LIST.REMOVE_FILTER",
@@ -23616,6 +23626,7 @@
       "keys": [
         "DASHBOARD.ADD_WITH_AI_BUTTON",
         "MEALS_PREVIEW.ADD_MANUAL_HINT",
+        "MEALS_PREVIEW.MANUAL_ACTION",
         "MEAL_CARD.MEAL_TYPES.OTHER"
       ]
     },
@@ -25226,12 +25237,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.html",
       "occurrences": 1,
       "inputsUsed": [
+        "historyLabelKey",
         "isProcessing",
-        "manualActionIcon",
         "manualActionLabelKey",
-        "manualPrefixLabelKey",
         "mealType",
-        "mode"
+        "mode",
+        "showManualPrefix"
       ],
       "outputsHandled": [
         "manualAction",
@@ -25247,7 +25258,9 @@
       "occurrences": 1,
       "inputsUsed": [
         "clearToken",
+        "historyLabelKey",
         "isProcessing",
+        "manualActionLabelKey",
         "mode",
         "showManualPrefix"
       ],
@@ -25265,6 +25278,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "clearToken",
+        "historyLabelKey",
         "isProcessing",
         "mealType",
         "mode"
@@ -25283,6 +25297,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "clearToken",
+        "historyLabelKey",
         "isProcessing",
         "mealType",
         "mode"
@@ -28060,6 +28075,8 @@
         "ariaLabel",
         "fill",
         "icon",
+        "iconSize",
+        "size",
         "type",
         "variant"
       ],
@@ -28080,6 +28097,7 @@
         "fill",
         "icon",
         "iconSize",
+        "size",
         "type",
         "variant"
       ],
@@ -28344,13 +28362,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "ariaLabel",
         "fill",
         "icon",
         "iconSize",
         "size",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -29839,6 +29858,8 @@
         "ariaLabel",
         "fill",
         "icon",
+        "iconSize",
+        "size",
         "variant"
       ],
       "outputsHandled": []
