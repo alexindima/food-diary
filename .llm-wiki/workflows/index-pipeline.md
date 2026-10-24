@@ -218,6 +218,11 @@ full content reads without a persistent timestamp cache. Their complete-command
 timer includes source verification;
 SQL and reader-load durations remain separate.
 
+Runtime source exclusions apply below the checkout root. A checkout inside a
+parent named `.artifacts`, `tests` or `bin` retains the same source set and
+fingerprint as an ordinary checkout. The source-inventory regression exercises
+those layouts, including the private read-only cache layout, on Windows and Linux.
+
 Module source areas come from the Git-visible file inventory. Empty legacy
 directories and ignored build outputs must not change generated pages between
 a developer checkout and CI. Module abstraction roots resolve to the sibling
@@ -667,6 +672,11 @@ all relevant repository inputs and compiled outputs. This lets an immediately
 following pre-push freshness check return after one native hash pass instead
 of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
 generators. Strict affected verification and CI do not request this reuse.
+
+The unstable-input cache regression recognizes native rejection diagnostics
+across ANSI styling and wrapped error lines. It still requires a failed execution
+and byte-identical saved receipts; an unrelated worker failure cannot satisfy
+the expected rejection message. Failures include the child output for diagnosis.
 
 Concurrent index updates serialize on the durable Git-directory lock. A second
 session waits instead of failing immediately, then recomputes its input and

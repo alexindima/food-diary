@@ -6,7 +6,6 @@ function Get-LlmWikiRuntimeTopologySourceFiles {
     Get-LlmWikiSourceFiles -RepositoryRoot $RepositoryRoot -Filter '*.cs' `
         -ExcludedDirectory @('tests', 'obj', 'bin', '.artifacts', '.llm-wiki', 'TestResults', 'Migrations') |
         Where-Object {
-            $_.FullName -notmatch '[\\/](tests|obj|bin|\.artifacts|\.llm-wiki|TestResults|Migrations)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'
         }
 }

@@ -11,7 +11,9 @@ if ($parseErrors.Count) { throw 'Full audit has syntax errors.' }
 $expected = @{
     # Compared with 01ccc7bf3: the exact cache allowlist assertion also includes
     # documented module-page reuse. No assertions were removed; count is unchanged.
-    Core = @{ count = 336; hash = 'b9adb97be65d5c2c2281a60d7557cd6442fcb1a4dc04a3224103da57cd73f2d1' }
+    # Include the symbol-index reuse approved in e19f1cf4d in the exact cache
+    # allowlist assertion. All 336 Core assertions and their shard remain.
+    Core = @{ count = 336; hash = 'd024ea161d9b550374643d1c052aa14c9bc435d3e091704e899a4e707c2ebe7b' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     # CI repair retains tamper rejection and adds separate stale-metadata and

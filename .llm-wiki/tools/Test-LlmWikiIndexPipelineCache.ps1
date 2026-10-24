@@ -74,7 +74,19 @@ function Assert-Update([bool]$Cached, [int]$RunsAdded) {
         throw "Unexpected update reuse=$Cached or worker starts. $output"
     }
 }
+function Test-UnstableInputDiagnostic([string]$Output) {
+    # Native error rendering can add ANSI styles and wrap text behind a gutter.
+    # Match the same rejection message across that presentation formatting.
+    $plain = [regex]::Replace($Output, '\x1b\[[0-?]*[ -/]*[@-~]', '')
+    $plain = [regex]::Replace($plain, '(?m)^\s*\|\s?', '')
+    return $plain -match 'inputs\s+changed\s+during\s+generation'
+}
 try {
+    $wrappedDiagnostic = "$([char]27)[31m     | LLM Wiki index inputs changed during`n     | generation; no reusable receipt will be published.$([char]27)[0m"
+    if (-not (Test-UnstableInputDiagnostic $wrappedDiagnostic) -or
+        (Test-UnstableInputDiagnostic 'An unrelated worker failed.')) {
+        throw 'Mutation diagnostic matching depends on native error line wrapping.'
+    }
     Write-Fixture '.gitignore' ".artifacts/`n"
     [void][IO.Directory]::CreateDirectory((Join-Path $fixture '.artifacts'))
     [void][IO.Directory]::CreateDirectory((Join-Path $fixture '.llm-wiki/generated'))
@@ -226,16 +238,16 @@ if ($name -eq 'Build-LlmWikiSymbolIndex' -and [IO.File]::Exists((Join-Path $root
     [IO.File]::AppendAllText((Join-Path $fixture '.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1'), "`n# force a cache miss`n")
     Write-Fixture '.artifacts/mutate-source' 'yes'
     $output = Invoke-Pipeline @('-ReuseUnchangedChecks') 1
-    if (-not $output.Contains('inputs changed during generation') -or
+    if (-not (Test-UnstableInputDiagnostic $output) -or
         [Convert]::ToBase64String([IO.File]::ReadAllBytes($receipt)) -cne [Convert]::ToBase64String($receiptBefore) -or
         [Convert]::ToBase64String([IO.File]::ReadAllBytes($symbol)) -cne [Convert]::ToBase64String($originalOutput)) {
         throw 'Changing inputs certified a mixed snapshot or failed without preserving rollback/receipt bytes.'
     }
     Write-Fixture 'Source.cs' 'alpha'
     $output = Invoke-Pipeline @('-Check','-ReuseUnchangedChecks') 1
-    if (-not $output.Contains('inputs changed during generation') -or
+    if (-not (Test-UnstableInputDiagnostic $output) -or
         [Convert]::ToBase64String([IO.File]::ReadAllBytes($receipt)) -cne [Convert]::ToBase64String($receiptBefore)) {
-        throw 'Changing inputs during check published a new reusable receipt.'
+        throw "Changing inputs during check published a new reusable receipt. Receipt changed: $([Convert]::ToBase64String([IO.File]::ReadAllBytes($receipt)) -cne [Convert]::ToBase64String($receiptBefore)). Output: $output"
     }
     Write-Host "Pipeline cache regression passed: $cases executions; unchanged reuse, forced runs, content/output/schema invalidation, lock, recovery and unstable-source rollback."
 } finally {

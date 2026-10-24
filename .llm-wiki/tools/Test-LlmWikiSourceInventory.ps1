@@ -49,6 +49,22 @@ function Get-ReferenceRuntimeFingerprint {
 }
 
 try {
+    $controlRoot = Join-Path $fixtureRoot 'control-checkout'
+    Write-InventoryFixture (Join-Path $controlRoot 'Worker.cs') 'sealed class Worker { }'
+    Write-InventoryFixture (Join-Path $controlRoot 'docker-compose.yml') "services:`n"
+    $controlFingerprint = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $controlRoot
+    foreach ($parent in @('.artifacts/cache', 'tests/worktree', 'bin/checkout')) {
+        $relocatedRoot = Join-Path $fixtureRoot "$parent/repository"
+        Write-InventoryFixture (Join-Path $relocatedRoot 'Worker.cs') 'sealed class Worker { }'
+        Write-InventoryFixture (Join-Path $relocatedRoot 'docker-compose.yml') "services:`n"
+        $relocatedFingerprint = Get-LlmWikiRuntimeTopologyFingerprint -RepositoryRoot $relocatedRoot
+        if ($controlFingerprint.sourceFileCount -ne 2 -or
+            $relocatedFingerprint.sourceFileCount -ne 2 -or
+            $relocatedFingerprint.sourceFingerprint -cne $controlFingerprint.sourceFingerprint) {
+            throw "Runtime fingerprint excluded sources because of the checkout parent: $parent"
+        }
+    }
+
     foreach ($path in @('Root.cs', 'Modules/файл с пробелом.cs', 'node_modules/Included.cs', 'Modules/Widget.CS', 'Modules/Widget.Designer.cs', 'Modules/Widget.g.cs', 'tests/IncludedConfiguration.cs', 'Modules/MainConfiguration.cs')) {
         Write-InventoryFixture (Join-Path $fixtureRepository $path) "public class Alpha {}`r`n"
     }

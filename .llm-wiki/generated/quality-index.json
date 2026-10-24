@@ -1914,11 +1914,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
-      "nonBlankLines": 68,
+      "nonBlankLines": 67,
       "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.36
+      "structuralRiskScore": 15.34
     },
     {
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",

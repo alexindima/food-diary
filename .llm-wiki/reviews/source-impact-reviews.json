@@ -891,53 +891,68 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "6213e06c01f1005ec94c0d8ef0ee0f707c3418b7cad09cc2c42f3aed538973c6",
+      "pageSha256": "20a8b5ba5083f26807928c1f3db318d546cb43e86846491228d6e4bbf2268347",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
           "sha256": "462229340a7752e757775b6b83affc398e0d2274814af6f4d75116b9d5a5109b",
-          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact."
+          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         },
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
           "sha256": "12b6312df110f1e853dcf63e3bf6c63c9d3585597040a53815813aa32554094c",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
           "sha256": "ee058200c4f2c8ec94b9ad6fbbb9414b559a38fc21da94c47f1ad41be9d3f500",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
+          "sha256": "e10bb714f75c9f2067ccc3ca32767f1819263f167e5db3fa9828f5de9e2ef813",
+          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "33f4a4506d165cc0b14048c9e63f9d5ad4b1c21bf1efd438f07bf2a63a8d5007",
-          "reviewReason": "Reviewed 74dbb61f3 assertion additions against its parent: all prior Assert-Wiki commands and shard membership are preserved; exactly two context role assertions were added to Governed and Workspace. Refreshed only those two frozen inventories. The inventory guard passes 718 assertions and 64 CI result combinations; isolated fixtures still reject changed or removed assertions. Updated this page to refer to the authoritative exact inventory instead of duplicating stale counts; shard isolation and CI failure gating remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged."
+          "sha256": "f67de155675b8b3386d1fb8f6d90ea45729c99f3fee2b644f0a57b345efc37f9",
+          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1",
+          "sha256": "bcd1ab78638f7ff05d20d410a167d780858dc75795b75b2abe5ddc5b519c4a0b",
+          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
+          "sha256": "52522fd321e7cb917523cdd0945157a2e8510a26dd31e6074465e4447a6a38e4",
+          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "782cb14767832c28b05542c8613fa5ab98dc40bd866b366533e963cb538e28f2",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged."
+          "sha256": "3b289ec9e9f9fc8383500b20cbfe359a7bdfd306aef196350cd4a900c1dc55c3",
+          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         },
         {
           "path": "scripts/Clean-NestedDotnetArtifacts.ps1",
           "sha256": "7f37c4eeb173268a6d3101b4e03890d6ab179df245a6f62f445370eb6278c99f",
-          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact."
+          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         },
         {
           "path": "scripts/Test-NestedDotnetArtifactsCleanup.ps1",
           "sha256": "e4fdb0c694034b3c7a10f5d27f2abae0e97da4bd403dbdca604c1888be22c7ab",
-          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact."
+          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged.",
+      "reason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5cc44d6ee3842958b0ee87564692b76b0c8e24a3",
-      "reviewedAtUtc": "2026-10-24T19:20:12.6738554Z"
+      "gitHead": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
+      "reviewedAtUtc": "2026-10-24T20:10:45.7133483Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
