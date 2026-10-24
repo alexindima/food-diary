@@ -14,6 +14,10 @@ param(
     [ValidateSet('pending', 'passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$Command,
+    [ValidateSet('before', 'after')]
+    [string]$RegressionPhase,
+    [string]$ExpectedFailure,
+    [string[]]$TestPath,
     [string]$Reason,
     [object]$ReviewContent,
     [double]$DurationSeconds,
@@ -98,6 +102,15 @@ function Get-EvidenceMarkdown {
         foreach ($check in $Evidence.supplementalChecks) { $lines.Add("- $($check.id): $($check.status); ``$($check.command)``") }
         $lines.Add('')
     }
+    $regressions = @(@($Evidence.checks) + @(if ($Evidence.PSObject.Properties['supplementalChecks']) { $Evidence.supplementalChecks }) | Where-Object { $_.PSObject.Properties['regression'] } | ForEach-Object {
+        Test-LlmWikiRegressionEvidence $_ $repositoryRoot $Path
+    })
+    if ($regressions.Count -gt 0) {
+        $lines.Add('## Regression Evidence')
+        $lines.Add('')
+        foreach ($regression in $regressions) { $lines.Add("- $($regression.id): $($regression.state). $($regression.issues -join ' ')") }
+        $lines.Add('')
+    }
     $lines.Add('## Review Obligations')
     $lines.Add('')
     if (@($Evidence.reviews).Count -eq 0) {
@@ -128,7 +141,7 @@ function Get-EvidenceMarkdown {
     $lines.Add('')
     $lines.Add("- Unresolved checks: $($unresolvedChecks.Count)")
     $lines.Add("- Unresolved reviews: $($unresolvedReviews.Count)")
-    if ($unresolvedChecks.Count -eq 0 -and $unresolvedReviews.Count -eq 0) {
+    if ($unresolvedChecks.Count -eq 0 -and $unresolvedReviews.Count -eq 0 -and @($regressions | Where-Object { -not $_.valid }).Count -eq 0) {
         $lines.Add('- Evidence state: complete')
     } else {
         $lines.Add('- Evidence state: incomplete')
@@ -208,6 +221,17 @@ switch ($Action) {
         $evidence = Read-EvidenceFile
         $evidenceBeforeRun = [IO.File]::ReadAllText($absolutePath)
         $entry = @($evidence.checks | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
+        $requiredCheck = $entry.Count -gt 0
+        if ($RegressionPhase -and $requiredCheck) { throw 'Use a distinct supplemental ID for regression evidence; required checks keep their canonical verification.' }
+        if ($RegressionPhase) {
+            if (-not $evidence.PSObject.Properties['supplementalChecks']) { $evidence | Add-Member -NotePropertyName supplementalChecks -NotePropertyValue @() }
+            $entry = @($evidence.supplementalChecks | Where-Object id -eq $Id | Select-Object -First 1)
+            if ($entry.Count -eq 0) {
+                if ($RegressionPhase -eq 'after') { throw 'Regression after run requires an observed before run under the same ID.' }
+                $entry = ,([pscustomobject]@{ id = $Id; status = 'pending'; command = $Command; durationSeconds = $null; reason = '' })
+                $evidence.supplementalChecks = @($evidence.supplementalChecks) + $entry
+            }
+        }
         if ($entry.Count -eq 0) {
             throw "Required check is not present in the evidence bundle: $Id"
         }
@@ -224,17 +248,40 @@ switch ($Action) {
             -ChangedPath @($evidence.change.changedPaths) `
             -Format Json | ConvertFrom-Json
         $canonicalCheck = @($policy.requiredChecks | Where-Object id -eq $Id | Select-Object -First 1)
-        if ($canonicalCheck.Count -eq 0) {
+        if ($canonicalCheck.Count -eq 0 -and -not $RegressionPhase) {
             throw "Check '$Id' is not required by the current change policy."
         }
-        if ($commandToRun -cne [string]$canonicalCheck[0].command) {
+        if ($canonicalCheck.Count -gt 0 -and ($RegressionPhase -or $commandToRun -cne [string]$canonicalCheck[0].command)) {
             throw "Refusing non-canonical command for check '$Id'. Reinitialize evidence from the current policy."
         }
         $allowedCommand = $commandToRun -match '^dotnet (test|format|list) [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:-]+)*$' -or
             $commandToRun -match '^cd FoodDiary\.Web\.Client && npm (run [A-Za-z0-9_:-]+|audit)$' -or
             $commandToRun -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
+        if ($RegressionPhase) {
+            # Focused filters and Angular include flags remain shell-free data.
+            $allowedCommand = $commandToRun -match '^dotnet test [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:=~,-]+)*$' -or
+                $commandToRun -match '^cd FoodDiary\.Web\.Client && npm run test[A-Za-z0-9_:-]*(?: [A-Za-z0-9_./\\:=,-]+)*$' -or
+                $commandToRun -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
+            if ($commandToRun -match '(?:^|\s)--no-build(?:\s|$)') { $allowedCommand = $false }
+        }
         if (-not $allowedCommand) {
             throw "Refusing command outside the evidence execution allowlist: $commandToRun"
+        }
+        $regressionTests = @()
+        if ($RegressionPhase -eq 'before') {
+            if ([string]::IsNullOrWhiteSpace($ExpectedFailure)) { throw 'Regression before run requires -ExpectedFailure with a distinctive assertion message to inspect in the log.' }
+            $regressionTests = @(Get-LlmWikiRegressionTestFiles $repositoryRoot $TestPath)
+        } elseif ($RegressionPhase -eq 'after') {
+            if (-not $entry[0].PSObject.Properties['regression'] -or $null -eq $entry[0].regression) { throw 'Regression after run requires an observed before run.' }
+            if ($commandToRun -cne [string]$entry[0].command) { throw 'Regression before and after runs must use the same command.' }
+            $beforeValidation = Test-LlmWikiRegressionEvidence $entry[0] $repositoryRoot $Path -BeforeOnly
+            if (-not $beforeValidation.valid) { throw ($beforeValidation.issues -join ' ') }
+            $beforeRecord = Get-Content -LiteralPath (Join-Path $repositoryRoot $entry[0].regression.before.recordPath) -Raw | ConvertFrom-Json
+            if ($ExpectedFailure -and $ExpectedFailure -cne [string]$beforeRecord.expectedFailure) { throw 'Regression expected failure must match the before run.' }
+            $ExpectedFailure = [string]$beforeRecord.expectedFailure
+            if (-not $TestPath) { $TestPath = @($beforeRecord.testFiles | ForEach-Object path) }
+            $regressionTests = @(Get-LlmWikiRegressionTestFiles $repositoryRoot $TestPath)
+            if (($regressionTests | ConvertTo-Json -Compress) -cne (@($beforeRecord.testFiles) | ConvertTo-Json -Compress)) { throw 'Regression before and after runs must use the same test files.' }
         }
 
         Write-Host "Running evidence check '$Id': $commandToRun"
@@ -273,8 +320,16 @@ switch ($Action) {
             fingerprintBefore = $beforeExecution.fingerprint; fingerprintAfter = $afterExecution.fingerprint
             logPath = $executionLog; logSha256 = (Get-FileHash -LiteralPath $executionLog -Algorithm SHA256).Hash.ToLowerInvariant()
         }
+        if ($RegressionPhase) {
+            $historicalExecution.regressionPhase = $RegressionPhase
+            $historicalExecution.testFiles = $regressionTests
+            $historicalExecution.expectedFailure = $ExpectedFailure
+        }
         [IO.File]::WriteAllText($executionLog + '.execution.json', (($historicalExecution | ConvertTo-Json -Depth 6) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         if ($beforeExecution.fingerprint -cne $afterExecution.fingerprint) { throw "Source changed while check '$Id' executed; actual outcome/log retained at '$executionLog' but passing evidence cannot be recorded." }
+        if ($RegressionPhase -eq 'before' -and ($exitCode -eq 0 -or -not ([IO.File]::ReadAllText($executionLog)).Contains($ExpectedFailure))) {
+            throw "Regression before run did not observe the expected failure. Inspect '$executionLog'; a passing test or an unrelated build/setup failure cannot establish the baseline."
+        }
         $entry[0].status = if ($exitCode -eq 0) { 'passed' } else { 'failed' }
         $entry[0].command = $commandToRun
         $entry[0] | Add-Member -NotePropertyName executionCommand -NotePropertyValue $commandToRun -Force
@@ -299,9 +354,21 @@ switch ($Action) {
             recordSha256 = (Get-FileHash -LiteralPath ($executionLog + '.execution.json') -Algorithm SHA256).Hash.ToLowerInvariant()
         })
         $entry[0] | Add-Member -NotePropertyName lineage -NotePropertyValue $lineage -Force
+        if ($RegressionPhase) {
+            $run = [pscustomobject][ordered]@{
+                recordPath = $executionRecordRelative
+                recordSha256 = $lineage.execution.verification.recordSha256
+                logPath = $lineage.artifact.path
+                logSha256 = $lineage.artifact.sha256
+                exitCode = $exitCode
+            }
+            if ($RegressionPhase -eq 'before') {
+                $entry[0] | Add-Member -NotePropertyName regression -NotePropertyValue ([pscustomobject]@{ before = $run; after = $null }) -Force
+            } else { $entry[0].regression.after = $run }
+        }
         try {
             Write-EvidenceFile $evidence
-            if ($exitCode -eq 0) {
+            if ($exitCode -eq 0 -and $requiredCheck) {
                 & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationReceipts.ps1') -Action Record `
                     -RepositoryRoot $repositoryRoot -Command $commandToRun -SourceEvidencePath $Path -CheckId $Id -ExpectedFingerprint $beforeExecution.fingerprint -Format Json | Out-Null
                 if ((Get-LlmWikiVerificationFingerprint $repositoryRoot).fingerprint -cne $beforeExecution.fingerprint) { throw 'Repository inputs changed while execution proof was published.' }
@@ -311,7 +378,8 @@ switch ($Action) {
             throw
         }
         Write-Host "Recorded check '$Id' as '$($entry[0].status)' in $($entry[0].durationSeconds)s."
-        if ($exitCode -ne 0 -and -not $NoExitOnFailure) {
+        if ($RegressionPhase -eq 'before') { $global:LASTEXITCODE = 0 }
+        if ($exitCode -ne 0 -and $RegressionPhase -ne 'before' -and -not $NoExitOnFailure) {
             exit $exitCode
         }
         } finally { $executionLease.Dispose() }

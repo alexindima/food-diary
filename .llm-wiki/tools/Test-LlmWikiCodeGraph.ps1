@@ -323,6 +323,7 @@ if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-
     throw 'Code graph did not connect a namespace convention literal to matching production declarations.'
 }
 $graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath $recipesBoundary -Limit 100 -Format Json | ConvertFrom-Json
+& (Join-Path $PSScriptRoot 'Test-LlmWikiGraphTestPlan.ps1') -SkipRefresh
 if (@($graphTestPlan.recommended | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1 -or
     @($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 0) {
     throw 'Graph-only test plan did not classify a transitive Recipes test consumer as recommended.'

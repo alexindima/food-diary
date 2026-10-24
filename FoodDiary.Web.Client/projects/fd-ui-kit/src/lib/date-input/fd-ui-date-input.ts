@@ -17,14 +17,17 @@ import {
     signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { map, of } from 'rxjs';
 
 import { FdUiCalendarComponent } from '../calendar/fd-ui-calendar';
 import { fdUiFormatDateInputValue, fdUiParseLocalDate, fdUiStartOfLocalDay } from '../date/fd-ui-date.utils';
 import { fdUiLocalizedDateHint, fdUiParseLocalizedDate } from '../date/fd-ui-localized-date.utils';
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { fdUiIsComposing } from '../interaction/fd-ui-text-enter.directive';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -38,6 +41,8 @@ let uniqueId = 0;
     host: { '(keydown)': 'onOverlayKeydown($event)' },
 })
 export class FdUiDateInputComponent implements FormValueControl<string | Date | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly locale = inject(LOCALE_ID);
     private readonly document = inject(DOCUMENT);
@@ -57,9 +62,10 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly placeholder = input<string>();
     public readonly todayLabel = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly invalidDateLabel = input<string>();
     private readonly invalidManualDate = signal(false);
-    protected readonly fieldError = computed(() => this.error() ?? (this.invalidManualDate() ? this.invalidDateLabel() : null));
+    protected readonly fieldError = computed(() => this.resolvedError() ?? (this.invalidManualDate() ? this.invalidDateLabel() : null));
     public readonly required = input(false);
     public readonly showRequiredIndicator = input(true);
     public readonly size = input<FdUiFieldSize>('md');
@@ -69,6 +75,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly earliestDate = input<string | Date>();
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly manualInputInvalidChange = output<boolean>();
     public readonly disabled = input(false);
@@ -94,7 +101,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         }
         const error = this.fieldError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly shouldFloatLabel = computed(
         () => this.allowManualInput() || this.isFocused() || this.isOpen() || this.internalValue() !== null,
@@ -277,6 +284,9 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     }
 
     protected onInputKeydown(event: KeyboardEvent): void {
+        if (fdUiIsComposing(event)) {
+            return;
+        }
         switch (event.key) {
             case 'ArrowDown':
             case 'Enter':

@@ -1,4 +1,4 @@
-<nav class="sidebar-mobile" [attr.aria-label]="'SIDEBAR.MOBILE_NAVIGATION' | translate">
+<nav #mobileNav class="sidebar-mobile" [attr.aria-label]="'SIDEBAR.MOBILE_NAVIGATION' | translate">
     @if (isProgressVisible()) {
         <section class="sidebar-mobile__progress" aria-live="polite">
             <div class="sidebar-mobile__progress-head">
@@ -81,18 +81,10 @@
         </button>
     </div>
 
-    @if (isSheetOpen()) {
+    <ng-template [fdUiModal]="isSheetOpen()" [fdUiModalLabel]="activeSheetLabelKey() | translate" (fdUiModalClosed)="closeMenus.emit()">
         <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMenus.emit()"></div>
 
-        <div
-            #mobileSheetPanel
-            class="sidebar-mobile__sheet"
-            cdkTrapFocus
-            role="dialog"
-            aria-modal="true"
-            tabindex="-1"
-            [attr.aria-label]="activeSheetLabelKey() | translate"
-        >
+        <div class="sidebar-mobile__sheet" [style.--sidebar-mobile-sheet-offset.px]="sheetBottom()">
             @if (mobileSheet() === 'user') {
                 <div class="sidebar-mobile__user-row">
                     <a
@@ -149,5 +141,5 @@
                 />
             }
         </div>
-    }
+    </ng-template>
 </nav>

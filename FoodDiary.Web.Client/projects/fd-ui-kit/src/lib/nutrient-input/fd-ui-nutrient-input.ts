@@ -12,8 +12,10 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 
 const DEFAULT_MAX_INPUT_CHARS = 8;
@@ -29,6 +31,8 @@ const EXTRA_DENSE_VALUE_LENGTH = 8;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiNutrientInputComponent implements FormValueControl<string | number | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
@@ -46,6 +50,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     public readonly readonly = input(false);
     public readonly controlReadonly = input(false);
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly tintColor = input<string>();
     public readonly textColor = input<string>();
     public readonly size = input<'sm' | 'md' | 'lg'>('md');
@@ -55,6 +60,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     public readonly unitLabel = input<string>();
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -87,8 +93,8 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     }
 
     protected get hostClass(): string {
-        const error = this.error();
-        const hasError = error !== null && error !== undefined && error.length > 0;
+        const error = this.resolvedError();
+        const hasError = error !== null && error.length > 0;
         return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()} ${this.valueDensityClass}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
     }
 

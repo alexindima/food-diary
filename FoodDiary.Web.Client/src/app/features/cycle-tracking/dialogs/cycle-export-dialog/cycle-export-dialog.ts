@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { form, FormField, required } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
@@ -7,6 +7,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -19,7 +20,7 @@ export type CycleExportSelection = CycleExportRange & { currentPassword?: string
     selector: 'fd-cycle-export-dialog',
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiDateInputComponent,

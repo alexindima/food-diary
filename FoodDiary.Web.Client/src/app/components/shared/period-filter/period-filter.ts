@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, input, output, untracked } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
@@ -8,7 +9,7 @@ type DateRangeValue = { start: Date | null; end: Date | null } | null;
 
 @Component({
     selector: 'fd-period-filter',
-    imports: [FdUiTabsComponent, FdUiSegmentedToggleComponent, FdUiDateRangeInputComponent, FormField],
+    imports: [FdUiTabsComponent, FdUiSegmentedToggleComponent, FdUiDateRangeInputComponent, FormField, TranslatePipe],
     templateUrl: './period-filter.html',
     styleUrls: ['./period-filter.scss'],
     host: {

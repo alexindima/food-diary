@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
-import { FormField, FormRoot } from '@angular/forms/signals';
+import { FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state';
@@ -32,7 +33,7 @@ import { PRODUCT_LIST_TOUR } from './product-list-tour';
     providers: [ProductListFacade],
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

@@ -120,6 +120,12 @@ check this provenance and finding closure, but cannot prove a reviewer's judgmen
 - Are architecture, contract, integration, visual, migration, or localization
   checks included when triggered by the change policy?
 - Were commands actually run, with failures disclosed?
+- For a behavior bug, does the diagnosis distinguish observed facts from the
+  cause hypothesis, and does the regression test fail for the original defect
+  before passing with the fix? Inspect both logs and unchanged test/fixture inputs;
+  build/setup failures and manual pass labels do not establish that pair. When
+  automation is unsuitable, inspect the documented reason and repeated manual
+  scenario from the [bug protocol](AI_WORKFLOW.md#bug-diagnosis-and-regression-evidence).
 - Does `evidence-validate` pass, or are unresolved risks clearly handed off?
 
 ## Finding Quality

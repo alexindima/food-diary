@@ -1,20 +1,35 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiCardComponent } from '../card/fd-ui-card';
+import { FdUiTopLoaderComponent } from '../top-loader/fd-ui-top-loader';
 import { FdUiLoaderComponent } from './fd-ui-loader';
 
 const meta: Meta<FdUiLoaderComponent> = {
     title: 'Components/Loader',
     component: FdUiLoaderComponent,
     tags: ['autodocs'],
-    decorators: [moduleMetadata({ imports: [FdUiCardComponent] })],
+    decorators: [moduleMetadata({ imports: [FdUiCardComponent, FdUiButtonComponent, FdUiTopLoaderComponent] })],
 };
 
 export default meta;
 type Story = StoryObj<FdUiLoaderComponent>;
 
 export const Default: Story = {};
+
+export const LoadingFeedback: Story = {
+    render: () => ({
+        template: `
+            <div class="fd-stack fd-gap-md">
+                <fd-ui-top-loader [visible]="true" />
+                <fd-ui-loader />
+                <fd-ui-button [loading]="true">Save changes</fd-ui-button>
+                <p role="status">Saving changes…</p>
+            </div>
+        `,
+    }),
+};
 
 export const InContext: Story = {
     render: () => ({

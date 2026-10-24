@@ -1,5 +1,12 @@
 ﻿<div class="auth fd-stack fd-gap-md">
-    <fd-ui-tabs class="auth__tabs" [tabs]="authTabs" [selectedValue]="authMode" (selectedValueChange)="changeAuthMode($event)" />
+    <fd-ui-tabs
+        #modeTabs
+        class="auth__tabs"
+        [ariaLabel]="'AUTH.DIALOG_TITLE' | translate"
+        [tabs]="authTabs"
+        [selectedValue]="authMode"
+        (selectedValueChange)="changeAuthMode($event)"
+    />
 
     <p class="auth__subtitle fd-ui-body-sm">
         @if (authMode === 'login') {
@@ -11,49 +18,65 @@
 
     <div class="auth__content fd-stack fd-gap-md">
         @if (authMode === 'login') {
-            @if (showPasswordReset()) {
-                <fd-auth-password-reset-form
-                    [form]="passwordResetForm"
-                    [errors]="passwordResetFieldErrors()"
-                    [globalError]="globalError()"
-                    [isPasswordResetting]="isPasswordResetting()"
-                    [passwordResetSent]="passwordResetSent()"
-                    [passwordResetCooldownSeconds]="passwordResetCooldownSeconds()"
-                    (passwordResetClose)="onPasswordResetClose()"
-                />
-            } @else {
-                <fd-auth-login-form
-                    [form]="loginForm"
-                    [errors]="loginFieldErrors()"
+            <div
+                role="tabpanel"
+                [id]="modeTabs.panelId('login')"
+                [attr.aria-labelledby]="modeTabs.tabId('login')"
+                [hidden]="authMode !== 'login'"
+            >
+                @if (showPasswordReset()) {
+                    <fd-auth-password-reset-form
+                        [form]="passwordResetForm"
+                        [errors]="passwordResetFieldErrors()"
+                        [globalError]="globalError()"
+                        [isPasswordResetting]="isPasswordResetting()"
+                        [passwordResetSent]="passwordResetSent()"
+                        [passwordResetCooldownSeconds]="passwordResetCooldownSeconds()"
+                        (passwordResetClose)="onPasswordResetClose()"
+                    />
+                } @else {
+                    <fd-auth-login-form
+                        [form]="loginForm"
+                        [errors]="loginFieldErrors()"
+                        [globalError]="globalError()"
+                        [isSubmitting]="isSubmitting()"
+                        [isRestoring]="isRestoring()"
+                        [showRestoreAction]="showRestoreAction()"
+                        [googleReady]="googleReady()"
+                        [googleLinkRequired]="googleLinkRequired()"
+                        [loginSubmitLabelKey]="loginSubmitLabelKey()"
+                        [isSubmitDisabled]="isLoginSubmitDisabled()"
+                        (loginNativeInput)="onLoginNativeInput()"
+                        (passwordResetOpen)="onPasswordResetOpen()"
+                        (restoreSubmit)="onRestoreSubmit()"
+                    >
+                        @if (!hideTelegram()) {
+                            <fd-telegram-entry-button (selected)="openTelegram()" />
+                        }
+                    </fd-auth-login-form>
+                }
+            </div>
+            <div role="tabpanel" hidden [id]="modeTabs.panelId('register')" [attr.aria-labelledby]="modeTabs.tabId('register')"></div>
+        } @else {
+            <div role="tabpanel" hidden [id]="modeTabs.panelId('login')" [attr.aria-labelledby]="modeTabs.tabId('login')"></div>
+            <div
+                role="tabpanel"
+                [id]="modeTabs.panelId('register')"
+                [attr.aria-labelledby]="modeTabs.tabId('register')"
+                [hidden]="authMode !== 'register'"
+            >
+                <fd-auth-register-form
+                    [form]="registerForm"
+                    [errors]="registerFieldErrors()"
                     [globalError]="globalError()"
                     [isSubmitting]="isSubmitting()"
-                    [isRestoring]="isRestoring()"
-                    [showRestoreAction]="showRestoreAction()"
                     [googleReady]="googleReady()"
-                    [googleLinkRequired]="googleLinkRequired()"
-                    [loginSubmitLabelKey]="loginSubmitLabelKey()"
-                    [isSubmitDisabled]="isLoginSubmitDisabled()"
-                    (loginNativeInput)="onLoginNativeInput()"
-                    (passwordResetOpen)="onPasswordResetOpen()"
-                    (restoreSubmit)="onRestoreSubmit()"
                 >
                     @if (!hideTelegram()) {
                         <fd-telegram-entry-button (selected)="openTelegram()" />
                     }
-                </fd-auth-login-form>
-            }
-        } @else {
-            <fd-auth-register-form
-                [form]="registerForm"
-                [errors]="registerFieldErrors()"
-                [globalError]="globalError()"
-                [isSubmitting]="isSubmitting()"
-                [googleReady]="googleReady()"
-            >
-                @if (!hideTelegram()) {
-                    <fd-telegram-entry-button (selected)="openTelegram()" />
-                }
-            </fd-auth-register-form>
+                </fd-auth-register-form>
+            </div>
         }
     </div>
 </div>

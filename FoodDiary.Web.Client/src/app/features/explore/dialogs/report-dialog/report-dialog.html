@@ -5,13 +5,7 @@
     </div>
     <div class="report-actions">
         <fd-ui-button variant="outline" (click)="onCancel()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
-        <fd-ui-button
-            variant="primary"
-            [disabled]="form.reason().invalid() || isSubmitting()"
-            [disabledReason]="form.reason().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-            [loading]="isSubmitting()"
-            (click)="onSubmit()"
-        >
+        <fd-ui-button variant="primary" [loading]="isSubmitting()" (click)="onSubmit()">
             {{ 'REPORT.SUBMIT' | translate }}
         </fd-ui-button>
     </div>

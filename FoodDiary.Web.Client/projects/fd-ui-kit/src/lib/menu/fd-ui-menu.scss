@@ -68,3 +68,8 @@
     margin: var(--fd-space-menu-divider-margin);
     background-color: var(--fd-bg-border);
 }
+@media (any-pointer: coarse) {
+    .fd-ui-menu__item {
+        min-height: var(--fd-size-control-lg);
+    }
+}

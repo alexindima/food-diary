@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 113,
+    "selectorUnreferencedComponents": 114,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 125,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 12
   },
@@ -1132,6 +1132,14 @@
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.html",
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.spec.ts"
+    },
+    {
+      "class": "FormValidationExample",
+      "selector": "fd-form-validation-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form/fd-ui-form.stories.ts",
+      "templatePath": null,
+      "specPath": null
     },
     {
       "class": "StyleGovernanceDocsComponent",
@@ -3807,6 +3815,11 @@
           "required": false
         },
         {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
+          "required": false
+        },
+        {
           "name": "required",
           "type": "",
           "required": false
@@ -4275,6 +4288,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "FormValidationExample",
+      "selector": "fd-form-validation-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form/fd-ui-form.stories.ts",
+      "templatePath": null,
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },

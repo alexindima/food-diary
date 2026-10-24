@@ -25,3 +25,9 @@
         transform: rotate(360deg);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .fd-ui-loader__spinner {
+        animation: none;
+    }
+}

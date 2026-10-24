@@ -10,6 +10,7 @@ tags:
   - task
   - orchestration
 sources:
+  - .llm-wiki/tools/LlmWikiRoleAssignment.ps1
   - .llm-wiki/tools/Manage-LlmWikiContextBundle.ps1
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
@@ -24,6 +25,22 @@ sources:
 ---
 
 # Build bounded task context bundles
+
+`task-context-show -WorkspacePath <task> -Role researcher|implementer|reviewer
+-Format Json` prepares a role assignment from a current verified bundle.
+Research emphasizes source flows and experiments; implementation emphasizes the
+bounded change and actual checks; review emphasizes requirements, consumers and
+concrete findings. Each view names its expected deliverables and existing task
+artifacts for scope, acceptance and evidence. `create` and `verify` also accept
+`-Role`.
+
+Views reorder the existing redacted items without adding sources or dropping
+mandatory instructions, changing excerpts or exceeding the existing budget.
+They retain packet/bundle fingerprints and add a role-bound assignment hash.
+A stale or invalid bundle returns no assignment; regenerate and verify it before
+dependent work. This is a prepared handoff: it does not launch processes, acquire
+leases or create another task-state store. Use roles only when they help the
+task; routine work gains no mandatory agents.
 
 Context discovery uses the same in-process C# ranking reader as MCP. Multi-layer questions remain ambiguous even with a separated first score; inspect each requested part before committing bundle scope. Cache dependencies include the shared reader source as well as the policy and graph fingerprint.
 

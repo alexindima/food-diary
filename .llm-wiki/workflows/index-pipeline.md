@@ -123,6 +123,13 @@ sources:
 
 # Run the Staged Index Pipeline
 
+Read-only query snapshots live in each checkout's ignored
+`.artifacts/llm-wiki/read-only-snapshots` directory. For `D:\FD`, both checkout
+creation and cache cleanup use drive D rather than the Windows system temp
+directory. Worktrees have their own cache roots; slot locks, retention and
+mutation guards still protect concurrent readers. Previous temp caches are
+disposable and are not reused from the new location.
+
 Changes to the MCP scope router, SQLite flow reader, and development-context
 corpora select both context retrieval groups in affected verification. This
 keeps mixed-intent and required-chain coverage in the local verification route.

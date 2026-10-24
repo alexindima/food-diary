@@ -51,6 +51,46 @@ Back these classes with CSS variables from `src/styles/design-tokens.scss`. Comp
 
 ## Components
 
+### Forms and validation
+
+Use `FdUiFormDirective` in component imports for `<form [formRoot]="fields">`.
+It composes Angular's Signal Forms `FormRoot` and moves focus to the first
+invalid control after an unsuccessful submission. Submit buttons stay enabled
+for validation attempts; keep pending-request, upload and unavailable-context
+guards. Validation and API handlers still reject invalid values.
+
+UI-kit fields accept the framework's `errors` and `touched` state. They display
+translated validation errors after interaction, with associated descriptions
+and invalid state. An explicit `error` message takes precedence. Composite
+fields expose `focus()` for keyboard/error navigation. For an action outside
+a form, mark the field tree touched, reject invalid data and use
+`focusFirstInvalidField(fields)` to select the correction point.
+
+### Template modal panels
+
+Use `FdUiModalDirective` for an existing custom sheet instead of implementing a
+second modal lifecycle. It portals the template through `FdUiDialogService`, so
+browser Back, Escape, focus trapping/return, background `inert`, and scroll
+blocking are shared with component dialogs. The template supplies its own
+layout and backdrop; do not add another `role="dialog"` or focus trap inside it.
+
+```html
+<ng-template
+    [fdUiModal]="panelOpen()"
+    [fdUiModalDisableClose]="saving()"
+    fdUiModalLabelledBy="panel-title"
+    (fdUiModalClosed)="panelOpen.set(false)"
+>
+    <!-- Custom sheet layout, labelled heading, backdrop and explicit close action. -->
+</ng-template>
+```
+
+`fdUiModalLabel` supplies a name when there is no visible heading. Set the open
+state to false on `fdUiModalClosed`. The dismissal guard blocks Back/Escape;
+explicit close/backdrop actions must honour the same busy state. Destroying
+the owner always cleans up its overlay. The `surface` service preset reserves
+the full viewport for custom panel layouts without fullscreen dialog padding.
+
 ### Charts
 
 The chart primitives are SVG-based and intended for Food Diary UI needs rather than general-purpose analytics. They do not depend on Chart.js and should be preferred for compact dashboard cards, mobile views, and simple nutrition/body trend visuals.
@@ -757,7 +797,9 @@ Do not use for long or interactive content. Prefer a popover or inline help for 
 
 #### `fd-ui-tabs`
 
-Tabs component.
+Named horizontal tabs. Set `ariaLabel` or `ariaLabelledBy`. In the default `mode="tabs"`, render a panel for each value with `role="tabpanel"`, `[id]="tabSet.panelId(value)"` and `[attr.aria-labelledby]="tabSet.tabId(value)"`; hide inactive panels. Use a template reference (`#tabSet`) to obtain those IDs. Give a panel `tabindex="0"` when its first meaningful content is not focusable. Left/Right, Home/End select and focus tabs; Up/Down retain browser scrolling.
+
+Use `mode="selection"` for filters that update the same content: named groups of native pressed buttons, each in the tab order. Use `mode="navigation"` for route choices: values are Angular route links and the selected route receives `aria-current="page"`.
 
 #### `fd-ui-pagination`
 
@@ -770,6 +812,14 @@ Pagination control.
 - `pageIndex?: number`
 
 ### Misc
+
+Text inputs, textareas and autocomplete accept `enterKeyHint` (`enter`, `done`, `go`, `next`, `previous`, `search`, `send`). This forwards the native keyboard hint without changing Enter behavior; search appearance defaults to `search`. Choose a hint according to the form action, preserving newlines in multiline fields.
+
+With a coarse pointer, common buttons, field surfaces, suffix controls, checkbox labels, tabs, segmented choices and menu options provide at least a 48px target height using `--fd-size-control-lg`. Compact desktop sizing remains available. Dense calendar/chart geometry is reviewed separately; this is not a claim that every control has a 48px target. Editable input typography stays at least the body size.
+
+Shared loaders, busy buttons, top loading bars and application skeletons honor `prefers-reduced-motion: reduce` with a static indicator. Loading state and accessible naming remain available.
+
+`(fdUiTextEnter)="submit()"` replaces custom `(keydown.enter)` text submission. Import `FdUiTextEnterDirective`; it prevents ordinary Enter's default action and emits once, but leaves composing Enter and the documented IME `keyCode=229` fallback untouched. Editable comboboxes can use `fdUiIsComposing(event)` before handling candidate navigation. Keep native form submission for ordinary forms and native keyboard activation for buttons.
 
 #### `fd-ui-accent-surface`
 

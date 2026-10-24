@@ -45,7 +45,7 @@
         />
     </div>
 
-    @if (error()) {
-        <div class="fd-ui-nutrient-input__error">{{ error() }}</div>
+    @if (resolvedError()) {
+        <div class="fd-ui-nutrient-input__error">{{ resolvedError() }}</div>
     }
 </div>

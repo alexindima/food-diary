@@ -158,6 +158,21 @@ describe('RecipeDetailComponent summary state', () => {
         expect(component['tabs'][1].value).toBe('cook');
     });
 
+    it('links each tab to its labelled panel while only the selected panel is visible', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const tabs = [...host.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+        for (const tab of tabs) {
+            const panel = host.querySelector<HTMLElement>(`[id="${tab.getAttribute('aria-controls')}"]`);
+            expect(panel?.getAttribute('role')).toBe('tabpanel');
+            expect(panel?.getAttribute('aria-labelledby')).toBe(tab.id);
+            expect(panel?.hidden).toBe(tab.getAttribute('aria-selected') !== 'true');
+        }
+        tabs[1].click();
+        fixture.detectChanges();
+        expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(1);
+        expect(host.querySelector('[role="tabpanel"]:not([hidden])')?.getAttribute('aria-labelledby')).toBe(tabs[1].id);
+    });
+
     it('should change active tab', () => {
         expect(component['activeTab']).toBe('summary');
 

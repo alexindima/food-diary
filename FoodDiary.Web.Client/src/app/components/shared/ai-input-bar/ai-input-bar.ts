@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiInlineAlertComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiInlineAlertComponent, FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { firstValueFrom } from 'rxjs';
@@ -61,6 +61,7 @@ const SPEECH_ERROR_KEYS: Record<SpeechRecognitionFailure, string> = {
         FdUiHintDirective,
         FdUiIconComponent,
         FdUiInlineAlertComponent,
+        FdUiTextEnterDirective,
         AiPhotoResultComponent,
         ImageUploadFieldComponent,
     ],

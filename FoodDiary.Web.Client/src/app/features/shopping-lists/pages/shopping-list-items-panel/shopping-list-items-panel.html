@@ -4,6 +4,7 @@
             <fd-ui-input
                 class="shopping-list__quick-add-input"
                 floatLabel="always"
+                enterKeyHint="done"
                 prefixIcon="add"
                 [formField]="itemForm().name"
                 [error]="
@@ -24,15 +25,7 @@
                 [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_DETAILS' | translate"
                 (click)="toggleDetails()"
             />
-            <fd-ui-button
-                type="button"
-                class="shopping-list__quick-add-button"
-                variant="primary"
-                fill="solid"
-                [disabled]="isItemFormInvalid()"
-                [disabledReason]="isItemFormInvalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-                (click)="itemAdd.emit()"
-            >
+            <fd-ui-button type="submit" class="shopping-list__quick-add-button" variant="primary" fill="solid">
                 {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
             </fd-ui-button>
         </div>

@@ -19,7 +19,6 @@ export function createRegisterFormModel(): RegisterFormValues {
     return {
         email: '',
         password: '',
-        confirmPassword: '',
         agreeTerms: false,
     };
 }
@@ -41,7 +40,6 @@ export function createEmptyRegisterFieldErrors(): RegisterFieldErrors {
     return {
         email: null,
         password: null,
-        confirmPassword: null,
         agreeTerms: null,
     };
 }

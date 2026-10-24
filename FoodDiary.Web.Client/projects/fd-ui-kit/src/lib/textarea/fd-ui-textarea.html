@@ -19,6 +19,7 @@
             [attr.placeholder]="placeholderAttribute()"
             [attr.maxlength]="maximumLength() ?? maxLength() ?? null"
             [attr.rows]="rows()"
+            [attr.enterkeyhint]="enterKeyHint() ?? null"
             [cdkTextareaAutosize]="autosize()"
             [cdkAutosizeMinRows]="autosize() ? rows() : 0"
             [class.fd-ui-textarea__control--autosize]="autosize()"
@@ -31,6 +32,6 @@
     </div>
 
     @if (hasError()) {
-        <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+        <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</div>
     }
 </div>

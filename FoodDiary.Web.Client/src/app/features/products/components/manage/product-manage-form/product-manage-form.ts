@@ -1,12 +1,13 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, maxLength, min, required, validate } from '@angular/forms/signals';
+import { form, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { catchError, firstValueFrom, of } from 'rxjs';
 
@@ -85,7 +86,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
         FdUiPreventUnloadDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
-        FormRoot,
+        FdUiFormDirective,
         FdPageContainerDirective,
         PageBodyComponent,
         PageHeaderComponent,

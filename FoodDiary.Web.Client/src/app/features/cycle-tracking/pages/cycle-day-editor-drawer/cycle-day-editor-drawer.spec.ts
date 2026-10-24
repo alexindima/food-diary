@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../../../shared/models/cycle.data';
@@ -57,7 +57,7 @@ describe('cycle day editor calendar bounds', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const host = fixture.nativeElement as HTMLElement;
+        const host = document.body;
         host.querySelector<HTMLButtonElement>('fd-ui-date-input button')?.click();
         fixture.detectChanges();
         const currentDate = document.querySelector<HTMLButtonElement>(`[data-date="${today}"]`);
@@ -112,7 +112,7 @@ describe('CycleDayEditorDrawerComponent', () => {
         fixture.componentInstance.closed.subscribe(closed);
         fixture.componentRef.setInput('isSaving', true);
         fixture.detectChanges();
-        const root = fixture.nativeElement as HTMLElement;
+        const root = document.body;
         expect(root.querySelector('textarea')?.matches(':disabled')).toBe(true);
         expect(root.querySelector('.cycle-drawer__segments button')?.matches(':disabled')).toBe(true);
         fixture.componentInstance['close']();
@@ -144,3 +144,11 @@ describe('CycleDayEditorDrawerComponent', () => {
         expect(fixture.componentInstance.dayForm().headache().value()).toBe(MODERATE_SYMPTOM_INTENSITY);
     });
 });
+
+beforeEach(() =>
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false })),
+    ),
+);
+afterEach(() => vi.unstubAllGlobals());

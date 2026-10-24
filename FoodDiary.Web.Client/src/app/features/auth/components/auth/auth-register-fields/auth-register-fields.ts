@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,6 +20,16 @@ export class AuthRegisterFieldsComponent {
     public readonly form = input.required<FieldTree<RegisterFormValues>>();
     public readonly errors = input.required<RegisterFieldErrors>();
     protected readonly passwordMaximumLength = AUTH_PASSWORD_MAX_LENGTH;
+    protected readonly isPasswordVisible = signal(false);
+    protected readonly passwordInputType = computed<'password' | 'text'>(() => (this.isPasswordVisible() ? 'text' : 'password'));
+    protected readonly passwordToggleIcon = computed(() => (this.isPasswordVisible() ? 'visibility_off' : 'visibility'));
+    protected readonly passwordToggleLabelKey = computed(() =>
+        this.isPasswordVisible() ? 'AUTH.LOGIN.HIDE_PASSWORD' : 'AUTH.LOGIN.SHOW_PASSWORD',
+    );
     private readonly router = inject(Router);
     protected readonly privacyUrl = localizedPublicPath('/privacy-policy', publicSiteLocale(this.router.url));
+
+    protected togglePasswordVisibility(): void {
+        this.isPasswordVisible.update(visible => !visible);
+    }
 }

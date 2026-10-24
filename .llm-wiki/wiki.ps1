@@ -128,6 +128,10 @@ param(
     [string[]]$Decision,
     [object]$BehaviorSpec,
     [object]$ReviewContent,
+    [ValidateSet('researcher', 'implementer', 'reviewer')]
+    [string]$Role,
+    [switch]$Behavioral,
+    [string]$EvaluationPath,
     [string[]]$Option,
     [string[]]$BoundaryEvidence,
     [string]$PhaseId,
@@ -137,6 +141,9 @@ param(
     [ValidateSet('pending', 'passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$EvidenceCommand,
+    [ValidateSet('before', 'after')]
+    [string]$RegressionPhase,
+    [string]$ExpectedFailure,
     [string]$ExecutionRecordPath,
     [string[]]$CoverageScope,
     [string]$Reason,
@@ -1349,6 +1356,7 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $designArguments.ProposedPath = $ProposedPath }
         if ($PSBoundParameters.ContainsKey('Decision')) { $designArguments.Decision = $Decision }
         if ($PSBoundParameters.ContainsKey('BehaviorSpec')) { $designArguments.BehaviorSpec = $BehaviorSpec }
+        if ($PSBoundParameters.ContainsKey('ReviewContent')) { $designArguments.ReviewContent = $ReviewContent }
         if ($PSBoundParameters.ContainsKey('Criterion')) { $designArguments.Criterion = $Criterion }
         Invoke-WikiTool 'Get-LlmWikiDesignCheckpoint.ps1' $designArguments
         if ($Format -eq 'Text' -and -not (Test-Path -LiteralPath (Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $WorkspacePath))) {
@@ -1818,7 +1826,7 @@ switch ($Command) {
             'task-context-verify' = 'verify'
             'task-context-compare' = 'compare'
         }[$Command]
-        Invoke-WikiTool 'Manage-LlmWikiContextBundle.ps1' @{
+        $contextArguments = @{
             Action = $contextAction
             WorkspacePath = $WorkspacePath
             SourceWorkspacePath = $SourceWorkspacePath
@@ -1828,6 +1836,8 @@ switch ($Command) {
             FailOnInvalid = $FailOnInvalid
             Format = $Format
         }
+        if ($Role) { $contextArguments.Role = $Role }
+        Invoke-WikiTool 'Manage-LlmWikiContextBundle.ps1' $contextArguments
     }
     { $_ -in @('task-context-budget-assess', 'task-context-budget-create', 'task-context-budget-show', 'task-context-budget-verify') } {
         $contextBudgetAction = @{
@@ -2738,12 +2748,18 @@ switch ($Command) {
         Invoke-WikiTool 'Manage-LlmWikiEvidence.ps1' $evidenceArguments
     }
     'evidence-run' {
-        Invoke-WikiTool 'Manage-LlmWikiEvidence.ps1' @{
+        $runArguments = @{
             Action = 'run'
             Path = $EvidencePath
             Id = $Id
             Command = $EvidenceCommand
         }
+        if ($RegressionPhase) {
+            $runArguments.RegressionPhase = $RegressionPhase
+            $runArguments.ExpectedFailure = $ExpectedFailure
+            $runArguments.TestPath = $TestPath
+        }
+        Invoke-WikiTool 'Manage-LlmWikiEvidence.ps1' $runArguments
     }
     'evidence-recover' {
         Invoke-WikiTool 'Recover-LlmWikiEvidenceExecution.ps1' @{
@@ -2787,7 +2803,14 @@ switch ($Command) {
         }
     }
     'evals' {
-        Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1' @{ Detailed = $Detailed }
+        if ($Behavioral) {
+            $behavioralArguments = @{ Format = $Format; FailOnInvalid = $FailOnInvalid }
+            if ($EvaluationPath) { $behavioralArguments.EvaluationPath = $EvaluationPath }
+            if ($CorpusPath) { $behavioralArguments.CorpusPath = $CorpusPath }
+            Invoke-WikiTool 'Invoke-LlmWikiBehavioralEvaluation.ps1' $behavioralArguments
+        } else {
+            Invoke-WikiTool 'Invoke-LlmWikiEvals.ps1' @{ Detailed = $Detailed }
+        }
     }
     { $_ -in @('eval-observe', 'eval-candidates', 'eval-list', 'eval-show', 'eval-approve', 'eval-reject', 'eval-apply', 'eval-rollback', 'eval-verify') } {
         $evalAction = @{

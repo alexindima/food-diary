@@ -302,7 +302,7 @@ describe('ClientDashboardComponent task deadlines', () => {
         const taskButton = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(button =>
             button.textContent.includes('CLIENT_TASKS.FORM.CREATE'),
         );
-        expect(taskButton?.disabled).toBe(true);
+        expect(taskButton?.disabled).toBe(false);
     });
 
     it.each(['2026-10-02', '2026-03-29', '2026-10-25'])('keeps the whole selected due day available: %s', async dueDate => {
@@ -559,7 +559,7 @@ function registerDateValidationTests(): void {
         expect(root.querySelector('.fd-ui-date-input__error')?.textContent).toContain(
             'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.INVALID_RANGE',
         );
-        expect(root.querySelector<HTMLButtonElement>('.client-dashboard__date-apply button')?.disabled).toBe(true);
+        expect(root.querySelector<HTMLButtonElement>('.client-dashboard__date-apply button')?.disabled).toBe(false);
 
         component['dateFilterModel'].set({ dateFrom: '2026-05-22', dateTo: '2026-05-23' });
         fixture.detectChanges();

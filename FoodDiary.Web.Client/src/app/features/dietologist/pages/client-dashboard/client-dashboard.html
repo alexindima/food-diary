@@ -57,12 +57,7 @@
                             "
                         />
                     </div>
-                    <fd-ui-button
-                        class="client-dashboard__date-apply"
-                        type="submit"
-                        [disabled]="dateFilterForm().invalid() || detailsLoading()"
-                        [disabledReason]="dateFilterForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-                    >
+                    <fd-ui-button class="client-dashboard__date-apply" type="submit" [loading]="detailsLoading()">
                         {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY' | translate }}
                     </fd-ui-button>
                     <div class="client-dashboard__date-actions fd-row fd-wrap fd-gap-xs">
@@ -133,11 +128,7 @@
                         <fd-ui-input [label]="'CLIENT_TASKS.FORM.TITLE' | translate" [formField]="taskForm.title" />
                         <fd-ui-textarea [label]="'CLIENT_TASKS.FORM.DETAILS' | translate" [rows]="3" [formField]="taskForm.details" />
                         <fd-ui-date-input [label]="'CLIENT_TASKS.FORM.DUE_DATE' | translate" [formField]="taskForm.dueDate" />
-                        <fd-ui-button
-                            type="submit"
-                            [disabled]="taskForm().invalid() || savingTask()"
-                            [disabledReason]="taskForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-                        >
+                        <fd-ui-button type="submit">
                             {{ 'CLIENT_TASKS.FORM.CREATE' | translate }}
                         </fd-ui-button>
                     </form>
@@ -228,17 +219,18 @@
                         />
                         <div class="fd-row fd-wrap fd-gap-sm">
                             <fd-ui-input
+                                #templateNameInput
                                 [label]="'RECOMMENDATION_TEMPLATES.NAME' | translate"
-                                [error]="templateNameTooLong() ? ('RECOMMENDATION_TEMPLATES.NAME_TOO_LONG' | translate) : null"
+                                [error]="templateNameError()"
                                 [formField]="recommendationForm.templateName"
                             />
                             <fd-ui-button
                                 type="button"
                                 variant="secondary"
                                 fill="outline"
-                                [disabled]="templateInvalid()"
-                                [disabledReason]="'DISABLED_HINTS.FORM_INVALID' | translate"
-                                [loading]="savingTemplate()"
+                                [disabled]="!canRecommend()"
+                                [disabledReason]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate"
+                                [loading]="savingTemplate() || savingRecommendation()"
                                 (click)="createRecommendationTemplate()"
                             >
                                 {{ 'RECOMMENDATION_TEMPLATES.SAVE' | translate }}

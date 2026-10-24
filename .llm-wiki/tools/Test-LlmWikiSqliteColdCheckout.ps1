@@ -5,8 +5,14 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
-$sandboxRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'sqlite-cold-checkout'
-$checkoutRoot = Join-Path $sandboxRoot 'repository'
+# The read-only cache is now inside this fixture checkout. A short, independent
+# root leaves room for both Git and SQLite's Windows path limits, including
+# a nested isolated validation checkout.
+$previousExternalSandbox = $env:LLM_WIKI_SMOKE_EXTERNAL_SANDBOX
+$env:LLM_WIKI_SMOKE_EXTERNAL_SANDBOX = Join-Path $repositoryRoot '.artifacts/native'
+$sandboxParent = Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot -IndependentRepository
+$sandboxRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'cold' -IndependentRepository
+$checkoutRoot = Join-Path $sandboxRoot 'r'
 $shellPath = (Get-Process -Id $PID).Path
 function Assert-ColdCheckout([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
 try {
@@ -59,7 +65,10 @@ try {
     Write-Host 'SQLite cold checkout passed: backend planning and all 12 indexes, source isolation, explicit frontend dependency failure.'
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($sandboxRoot)
-    $artifactPrefix = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts')).TrimEnd('\','/') + [IO.Path]::DirectorySeparatorChar
-    if (-not $resolvedFixture.StartsWith($artifactPrefix,[StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe cold-checkout fixture path.' }
-    if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }
+    $resolvedParent = [IO.Path]::GetFullPath($sandboxParent).TrimEnd('\','/')
+    try {
+        if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $resolvedParent -or
+            [IO.Path]::GetFileName($resolvedFixture) -notmatch '^cold-[a-f0-9]{32}$') { throw 'Unsafe cold-checkout fixture path.' }
+        if (Test-Path -LiteralPath $resolvedFixture) { Remove-Item -LiteralPath $resolvedFixture -Recurse -Force }
+    } finally { $env:LLM_WIKI_SMOKE_EXTERNAL_SANDBOX = $previousExternalSandbox }
 }

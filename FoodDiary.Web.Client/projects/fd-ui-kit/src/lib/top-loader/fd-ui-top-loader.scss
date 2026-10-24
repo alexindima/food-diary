@@ -45,3 +45,15 @@
         transform: translateX(320%) scaleX(0.82);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .fd-ui-top-loader {
+        transition: none;
+    }
+
+    .fd-ui-top-loader__bar {
+        width: 100%;
+        animation: none;
+        will-change: auto;
+    }
+}

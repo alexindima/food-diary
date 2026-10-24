@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { interval } from 'rxjs';
@@ -12,11 +13,13 @@ const SECOND_MS = 1000;
 
 @Component({
     selector: 'fd-user-manage-backup-email',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiInputComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiInputComponent, FdUiTextEnterDirective],
     templateUrl: './user-manage-backup-email.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageBackupEmailComponent {
+    private readonly emailInput = viewChild(FdUiInputComponent);
+    protected readonly attempted = signal(false);
     protected readonly facade = inject(ProfileManageFacade);
     protected readonly email = signal(this.facade.backupEmailSentTo() ?? '');
     protected readonly visible = computed(() => this.facade.user()?.hasTelegramIdentity === true);
@@ -40,7 +43,13 @@ export class UserManageBackupEmailComponent {
         this.email.set(typeof value === 'string' ? value : '');
     }
 
-    protected submit(): void {
+    protected submit(event?: Event): void {
+        event?.preventDefault();
+        this.attempted.set(true);
+        if (!this.validEmail()) {
+            this.emailInput()?.focus();
+            return;
+        }
         if (this.validEmail() && !this.facade.isRequestingBackupEmail() && this.resendSeconds() === 0) {
             void this.facade.requestBackupEmailAsync(this.email());
         }

@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 503,
-    "componentsWithoutDirectSpecs": 125,
-    "inputs": 1622,
+    "components": 504,
+    "componentsWithoutDirectSpecs": 126,
+    "inputs": 1639,
     "outputs": 556,
     "apiCalls": 317,
-    "templatesWithTranslations": 364,
-    "translationKeys": 2185,
+    "templatesWithTranslations": 365,
+    "translationKeys": 2184,
     "consumerEdges": 1286,
     "consumedComponents": 321,
-    "unconsumedComponents": 181
+    "unconsumedComponents": 182
   },
   "components": [
     {
@@ -4321,6 +4321,11 @@
           "required": false
         },
         {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
+          "required": false
+        },
+        {
           "name": "required",
           "type": "",
           "required": false
@@ -4328,6 +4333,11 @@
         {
           "name": "maximumLength",
           "type": "number",
+          "required": false
+        },
+        {
+          "name": "enterKeyHint",
+          "type": "FdUiEnterKeyHint",
           "required": false
         },
         {
@@ -4792,6 +4802,11 @@
           "required": false
         },
         {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
+          "required": false
+        },
+        {
           "name": "disabled",
           "type": "",
           "required": false
@@ -4919,6 +4934,11 @@
         {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -5147,6 +5167,11 @@
         {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -5656,8 +5681,18 @@
           "required": false
         },
         {
+          "name": "enterKeyHint",
+          "type": "FdUiEnterKeyHint",
+          "required": false
+        },
+        {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -6175,6 +6210,11 @@
           "required": false
         },
         {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
+          "required": false
+        },
+        {
           "name": "tintColor",
           "type": "string",
           "required": false
@@ -6372,6 +6412,11 @@
           "required": false
         },
         {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
+          "required": false
+        },
+        {
           "name": "required",
           "type": "",
           "required": false
@@ -6482,6 +6527,11 @@
         {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -6754,6 +6804,11 @@
         {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -7062,6 +7117,21 @@
           "name": "appearance",
           "type": "FdUiTabsAppearance",
           "required": false
+        },
+        {
+          "name": "mode",
+          "type": "'tabs' | 'selection' | 'navigation'",
+          "required": false
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "ariaLabelledBy",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -7095,8 +7165,18 @@
           "required": false
         },
         {
+          "name": "enterKeyHint",
+          "type": "FdUiEnterKeyHint",
+          "required": false
+        },
+        {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -7216,6 +7296,11 @@
         {
           "name": "error",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "errors",
+          "type": "readonly ValidationError.WithOptionalFieldTree[]",
           "required": false
         },
         {
@@ -7357,6 +7442,16 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/week-picker/fd-ui-week-picker.spec.ts"
+    },
+    {
+      "class": "FormValidationExample",
+      "selector": "fd-form-validation-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form/fd-ui-form.stories.ts",
+      "templatePath": null,
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "StyleGovernanceDocsComponent",
@@ -19949,7 +20044,8 @@
         "ADMIN_BILLING.REVENUE.TAX",
         "ADMIN_BILLING.REVENUE.TITLE",
         "ADMIN_BILLING.SCHEDULED_CANCELLATIONS",
-        "ADMIN_BILLING.SUMMARY_ERROR"
+        "ADMIN_BILLING.SUMMARY_ERROR",
+        "ADMIN_NAV.BILLING"
       ]
     },
     {
@@ -20001,6 +20097,7 @@
         "ADMIN_BUGS.NOT_CONFIGURED",
         "ADMIN_BUGS.RESET_FILTERS",
         "ADMIN_BUGS.SEARCH",
+        "ADMIN_BUGS.SOURCE_FILTER",
         "ADMIN_BUGS.STATUS",
         "ADMIN_CATALOG.APPLY",
         "ADMIN_COMMON.LOADING"
@@ -20429,8 +20526,7 @@
         "AUTH.LOGIN.PASSWORD",
         "AUTH.LOGIN.PASSWORD_PLACEHOLDER",
         "AUTH.LOGIN.REMEMBER_ME",
-        "AUTH.LOGIN.RESTORE",
-        "DISABLED_HINTS.FORM_INVALID"
+        "AUTH.LOGIN.RESTORE"
       ]
     },
     {
@@ -20451,8 +20547,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
       "keys": [
         "AUTH.REGISTER.AGREE_TO_TERMS",
-        "AUTH.REGISTER.CONFIRM_PASSWORD",
-        "AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER",
         "AUTH.REGISTER.EMAIL",
         "AUTH.REGISTER.EMAIL_PLACEHOLDER",
         "AUTH.REGISTER.PASSWORD",
@@ -20472,6 +20566,7 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html",
       "keys": [
+        "AUTH.DIALOG_TITLE",
         "AUTH.LOGIN.SUBTITLE",
         "AUTH.REGISTER.SUBTITLE"
       ]
@@ -20528,8 +20623,7 @@
         "AUTH.RESET.REQUEST_NEW_LINK",
         "AUTH.RESET.SAVE",
         "AUTH.RESET.SUBTITLE",
-        "AUTH.RESET.TITLE",
-        "DISABLED_HINTS.FORM_INVALID"
+        "AUTH.RESET.TITLE"
       ]
     },
     {
@@ -20542,8 +20636,7 @@
         "AUTH.REQUIRED_PASSWORD_CHANGE.NEW_PASSWORD",
         "AUTH.REQUIRED_PASSWORD_CHANGE.SAVE",
         "AUTH.REQUIRED_PASSWORD_CHANGE.SUBTITLE",
-        "AUTH.REQUIRED_PASSWORD_CHANGE.TITLE",
-        "FORM_ERRORS.REQUIRED"
+        "AUTH.REQUIRED_PASSWORD_CHANGE.TITLE"
       ]
     },
     {
@@ -20568,8 +20661,7 @@
         "AUTH.TELEGRAM.TIME_ZONE_SEARCH",
         "AUTH.TELEGRAM.TITLE",
         "AUTH.TELEGRAM.UNAVAILABLE",
-        "COMMON.LOADING",
-        "FORM_ERRORS.REQUIRED"
+        "COMMON.LOADING"
       ]
     },
     {
@@ -21112,14 +21204,12 @@
         "DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER",
         "DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE",
         "DIETOLOGIST.CLIENT_DASHBOARD.TOUR.START_TOUR",
-        "DISABLED_HINTS.FORM_INVALID",
         "DISABLED_HINTS.OPERATION_BUSY",
         "RECOMMENDATIONS.DISCUSSION.TITLE",
         "RECOMMENDATION_TEMPLATES.ARCHIVE",
         "RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT",
         "RECOMMENDATION_TEMPLATES.EMPTY",
         "RECOMMENDATION_TEMPLATES.NAME",
-        "RECOMMENDATION_TEMPLATES.NAME_TOO_LONG",
         "RECOMMENDATION_TEMPLATES.SAVE",
         "RECOMMENDATION_TEMPLATES.TITLE"
       ]
@@ -21208,8 +21298,7 @@
         "DIETOLOGIST.CLIENTS.HEADING",
         "DIETOLOGIST.CLIENTS.LOAD_ERROR",
         "DIETOLOGIST.CLIENTS.RETRY",
-        "DIETOLOGIST.CLIENTS.TOUR.START_TOUR",
-        "DISABLED_HINTS.FORM_INVALID"
+        "DIETOLOGIST.CLIENTS.TOUR.START_TOUR"
       ]
     },
     {
@@ -21255,8 +21344,7 @@
       "keys": [
         "COMMENTS.TITLE",
         "COMMENTS.WRITE_PLACEHOLDER",
-        "COMMON.CANCEL",
-        "DISABLED_HINTS.FORM_INVALID"
+        "COMMON.CANCEL"
       ]
     },
     {
@@ -21271,7 +21359,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html",
       "keys": [
         "COMMON.CANCEL",
-        "DISABLED_HINTS.FORM_INVALID",
         "REPORT.REASON_LABEL",
         "REPORT.REASON_PLACEHOLDER",
         "REPORT.SUBMIT",
@@ -22385,7 +22472,6 @@
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.html",
       "keys": [
-        "DISABLED_HINTS.FORM_INVALID",
         "PRODUCT_MANAGE.CANCEL_BUTTON",
         "PRODUCT_MANAGE.DELETE_BUTTON",
         "PRODUCT_MANAGE.START_TOUR"
@@ -22687,6 +22773,7 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.html",
       "keys": [
+        "FORM_ERRORS.EMAIL",
         "USER_MANAGE.BACKUP_EMAIL_COOLDOWN",
         "USER_MANAGE.BACKUP_EMAIL_HINT",
         "USER_MANAGE.BACKUP_EMAIL_LABEL",
@@ -23702,6 +23789,13 @@
     },
     {
       "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
+      "keys": [
+        "COMMON.PERIOD"
+      ]
+    },
+    {
+      "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.html",
       "keys": [
         "AI.PREMIUM_DIALOG.ACTION",
@@ -23856,7 +23950,6 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
       "keys": [
-        "DISABLED_HINTS.FORM_INVALID",
         "PUBLIC_RECIPES.SHOPPING_CANCEL",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT",
         "SHOPPING_LIST.ADD_ITEM_CATEGORY",
@@ -23884,7 +23977,6 @@
         "PUBLIC_RECIPES.SHOPPING_COUNT",
         "PUBLIC_RECIPES.SHOPPING_LIST",
         "PUBLIC_RECIPES.SHOPPING_NAME",
-        "PUBLIC_RECIPES.SHOPPING_NAME_REQUIRED",
         "PUBLIC_RECIPES.SHOPPING_PICK_HINT"
       ]
     },
@@ -23903,7 +23995,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "keys": [
         "COMMON.MORE_ACTIONS",
-        "DISABLED_HINTS.FORM_INVALID",
         "DISABLED_HINTS.OPERATION_BUSY",
         "FORM_ERRORS.MAX_LENGTH",
         "SHOPPING_LIST.ADD_ITEM_AMOUNT",
@@ -28551,8 +28642,6 @@
       "occurrences": 3,
       "inputsUsed": [
         "appearance",
-        "disabled",
-        "disabledReason",
         "fill",
         "fullWidth",
         "loading",
@@ -28651,8 +28740,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.html",
       "occurrences": 3,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "fill",
         "fullWidth",
         "loading",
@@ -28669,8 +28756,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
       "occurrences": 2,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "fill",
         "fullWidth",
         "loading",
@@ -28690,6 +28775,7 @@
         "disabled",
         "disabledReason",
         "fullWidth",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -29069,10 +29155,9 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.html",
       "occurrences": 2,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "loading",
         "size",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -29102,8 +29187,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/explore/dialogs/report-dialog/report-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "loading",
         "variant"
       ],
@@ -30051,8 +30134,6 @@
       "inputsUsed": [
         "appearance",
         "ariaLabel",
-        "disabled",
-        "disabledReason",
         "fill",
         "fullWidth",
         "icon",
@@ -30966,8 +31047,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.html",
       "occurrences": 2,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "fill",
         "type",
         "variant"
@@ -30982,8 +31061,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
       "occurrences": 2,
       "inputsUsed": [
-        "disabled",
-        "disabledReason",
         "fill",
         "type",
         "variant"
@@ -31013,8 +31090,6 @@
       "inputsUsed": [
         "ariaExpanded",
         "ariaLabel",
-        "disabled",
-        "disabledReason",
         "fill",
         "icon",
         "type",
@@ -35950,6 +36025,7 @@
       "inputsUsed": [
         "appearance",
         "autocomplete",
+        "enterKeyHint",
         "error",
         "id",
         "label",
@@ -35986,18 +36062,23 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "auth",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
         "autocomplete",
+        "enterKeyHint",
         "error",
         "id",
         "label",
         "maximumLength",
         "placeholder",
+        "suffixButtonAriaLabel",
+        "suffixButtonIcon",
         "type"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "suffixButtonClicked"
+      ]
     },
     {
       "component": "FdUiInputComponent",
@@ -36436,6 +36517,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.html",
       "occurrences": 1,
       "inputsUsed": [
+        "enterKeyHint",
+        "error",
         "label",
         "type",
         "value"
@@ -36646,6 +36729,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
       "inputsUsed": [
+        "enterKeyHint",
         "error",
         "floatLabel",
         "label",
@@ -38061,6 +38145,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
+        "ariaLabel",
         "fullWidth",
         "options",
         "selectedValue",
@@ -39137,12 +39222,12 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaLabel",
+        "mode",
         "selectedValue",
         "tabs"
       ],
-      "outputsHandled": [
-        "selectedValueChange"
-      ]
+      "outputsHandled": []
     },
     {
       "component": "FdUiTabsComponent",
@@ -39152,6 +39237,8 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaLabel",
+        "mode",
         "selectedValue",
         "tabs"
       ],
@@ -39168,6 +39255,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "appearance",
+        "ariaLabel",
+        "mode",
         "selectedValue",
         "tabs"
       ],
@@ -39183,6 +39272,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaLabel",
+        "mode",
         "selectedValue",
         "tabs"
       ],
@@ -39198,6 +39289,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaLabel",
         "selectedValue",
         "tabs"
       ],
@@ -39213,6 +39305,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/recipes/components/detail/recipe-detail/recipe-detail.html",
       "occurrences": 1,
       "inputsUsed": [
+        "ariaLabel",
         "selectedValue",
         "tabs"
       ],
@@ -39228,6 +39321,8 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
+        "ariaLabel",
+        "mode",
         "selectedValue",
         "tabs"
       ],
@@ -43275,8 +43370,6 @@
       "inputsUsed": [
         "discardLabel",
         "message",
-        "saveDisabled",
-        "saveDisabledReason",
         "saveLabel",
         "saving"
       ],

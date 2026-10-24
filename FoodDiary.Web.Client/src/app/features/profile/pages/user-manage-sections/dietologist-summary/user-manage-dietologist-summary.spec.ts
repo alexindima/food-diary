@@ -23,7 +23,7 @@ describe('UserManageDietologistSummaryComponent', () => {
             variant: 'primary',
             icon: 'person_add',
             labelKey: 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION',
-            disabled: true,
+            disabled: false,
             action: 'invite',
         });
         expect(view.showPendingStatus()).toBe(false);

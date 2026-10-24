@@ -525,11 +525,9 @@
     }
 
     &__backdrop {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 100%;
-        height: 100dvh;
+        /* stylelint-disable-next-line declaration-property-value-disallowed-list -- Modal content is portaled to the shared overlay container. */
+        position: fixed;
+        inset: 0;
         background: color-mix(in srgb, var(--fd-color-slate-900) 32%, transparent);
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
@@ -538,10 +536,11 @@
 
     &__sheet {
         --sidebar-mobile-sheet-gap: var(--fd-space-sidebar-mobile-sheet-gap);
-        position: absolute;
+        /* stylelint-disable-next-line declaration-property-value-disallowed-list -- Keep the portaled sheet above its measured mobile navigation. */
+        position: fixed;
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
-        bottom: calc(100% + var(--fd-space-xs));
+        bottom: calc(var(--sidebar-mobile-sheet-offset) + var(--fd-space-xs));
         background: var(--fd-surface-navigation-background);
         backdrop-filter: var(--fd-surface-backdrop-filter);
         -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);

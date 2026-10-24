@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import type { FdUiRadioOption } from './fd-ui-radio.types';
 import { FdUiRadioOptionsComponent } from './fd-ui-radio-options';
 
@@ -16,18 +18,22 @@ let nextId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiRadioGroupComponent<T = unknown> implements FormValueControl<T | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     protected readonly isEqual = Object.is;
 
     public readonly id = input(`fd-radio-${nextId++}`);
     public readonly label = input<string>();
     public readonly hint = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly orientation = input<'vertical' | 'horizontal'>('vertical');
     public readonly options = input<Array<FdUiRadioOption<T>>>([]);
     public readonly disabled = input(false);
     public readonly value = model<T | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
 
     protected selectOption(option: FdUiRadioOption<T>): void {

@@ -181,6 +181,8 @@ Assert-Adaptive ((@(Get-AdaptiveIds @($dashboardLocalDayBug.stages | Where-Objec
 Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'bug-brief' -and $_.command -match 'Compact' -and $_.command -match 'trace' }).Count -eq 1) 'Bounded cross-layer bug omitted compact root-cause tracing.'
 Assert-Adaptive (@(Get-AdaptiveIds $dashboardLocalDayBug.stages) -notcontains 'journey-impact' -and @(Get-AdaptiveIds $dashboardLocalDayBug.stages) -notcontains 'design') 'Bounded cross-layer bug retained mandatory journey or design stages.'
 Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Bounded cross-layer bug did not finish with the fast local gate.'
+Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'bug-brief' -and $_.completionEvidence -match 'reproduction' -and $_.completionEvidence -match 'minimal experiment' }).Count -eq 1) 'Bug discovery omitted observable diagnosis before implementation.'
+Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'implementation' -and $_.purpose -match 'before changing' -and $_.completionEvidence -match 'RegressionPhase before/after' }).Count -eq 1) 'Bug implementation omitted the same-test red/green evidence without adding stages.'
 
 $localReactiveBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix an Angular effect that accidentally tracks signal reads inside clearState and reopens the existing result.' `
@@ -390,10 +392,25 @@ $architecturalDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.p
     -Limit 4 `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($architecturalDesign.sliceStrategy.enabled -and $architecturalDesign.sliceStrategy.kind -eq 'vertical-outcome') 'Architectural design did not enable vertical outcome slices.'
-Assert-Adaptive ($architecturalDesign.ready -and $architecturalDesign.behaviorSpecification.status -eq 'specified') 'A complete behavior specification did not make the grounded design ready.'
+Assert-Adaptive (-not $architecturalDesign.ready -and $architecturalDesign.behaviorSpecification.status -eq 'specified' -and $architecturalDesign.planReview.status -eq 'needs-review') 'Design became ready before reviewing whether the plan satisfies its outcomes.'
 Assert-Adaptive (@($architecturalDesign.decisionQuestions | Where-Object { $_.status -eq 'resolved' -and -not $_.blocking }).Count -gt 0) 'Resolved design input remained presented as an open decision.'
 Assert-Adaptive (@($architecturalDesign.designSlices).Count -eq 3) 'Architectural design did not produce the bounded three-slice decomposition.'
 Assert-Adaptive (@(Get-AdaptiveIds $architecturalDesign.designSlices) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
+$planReviewFixture = @{
+    planFingerprint = $architecturalDesign.planReview.planFingerprint
+    outcomes = @($architecturalDesign.planReview.acceptanceCriteria | ForEach-Object { @{ criterion = $_; phaseIds = @($architecturalDesign.implementationPhases.id); verification = 'Run the existing phase-contract and design-output regressions.'; reasoning = 'Test fixture: retain current phases and validate additive slice output.' } })
+    perspectives = @($architecturalDesign.planReview.perspectives | ForEach-Object { @{ id = $_.id; status = 'covered'; reasoning = 'Test fixture: current planner and design consumers keep the same phase IDs; focused tests cover bounded bugs and the additive design output.' } })
+    findings = @()
+}
+$reviewedDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
+    -Objective $architecturalDesign.objective `
+    -ProposedPath '.llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1' `
+    -Decision 'Preserve existing phase contracts and add acceptance-oriented slices as an additive output.' `
+    -Criterion @($architecturalDesign.planReview.acceptanceCriteria) `
+    -BehaviorSpec $architecturalDesign.behaviorSpecification `
+    -ReviewContent $planReviewFixture `
+    -Limit 4 -Format Json | ConvertFrom-Json
+Assert-Adaptive ($reviewedDesign.ready -and $reviewedDesign.planReview.status -eq 'reviewed') 'A complete current plan review did not make the grounded design ready.'
 
 $bugDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
     -Objective 'Fix a local Wiki output formatting bug.' `

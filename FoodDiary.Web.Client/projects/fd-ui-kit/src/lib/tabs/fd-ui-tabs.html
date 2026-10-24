@@ -1,18 +1,36 @@
-<div role="tablist" [class]="`fd-ui-tabs ${appearanceClass()}`">
+<div
+    [attr.role]="listRole()"
+    [attr.aria-label]="ariaLabel()"
+    [attr.aria-labelledby]="ariaLabelledBy()"
+    [class]="`fd-ui-tabs ${appearanceClass()}`"
+>
     @for (tab of tabItems(); track tab.value) {
-        <button
-            #tabButton
-            type="button"
-            class="fd-ui-tabs__tab"
-            role="tab"
-            [id]="tabId($index)"
-            [class.fd-ui-tabs__tab--active]="$index === selectedIndex()"
-            [attr.aria-selected]="$index === selectedIndex()"
-            [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
-            (click)="selectIndex($index)"
-            (keydown)="onKeydown($index, $event)"
-        >
-            <span class="fd-ui-tabs__label"> {{ tab.labelText }} </span>
-        </button>
+        @if (mode() === 'navigation') {
+            <a
+                class="fd-ui-tabs__tab"
+                [routerLink]="tab.value"
+                [class.fd-ui-tabs__tab--active]="tab.selected"
+                [attr.aria-current]="tab.selected ? 'page' : null"
+            >
+                <span class="fd-ui-tabs__label">{{ tab.labelText }}</span>
+            </a>
+        } @else {
+            <button
+                #tabButton
+                type="button"
+                class="fd-ui-tabs__tab"
+                [attr.role]="tab.role"
+                [id]="tabId(tab.value)"
+                [class.fd-ui-tabs__tab--active]="tab.selected"
+                [attr.aria-selected]="tab.ariaSelected"
+                [attr.aria-pressed]="tab.ariaPressed"
+                [attr.aria-controls]="tab.controls"
+                [attr.tabindex]="tab.tabIndex"
+                (click)="selectIndex($index)"
+                (keydown)="onKeydown($index, $event)"
+            >
+                <span class="fd-ui-tabs__label">{{ tab.labelText }}</span>
+            </button>
+        }
     }
 </div>

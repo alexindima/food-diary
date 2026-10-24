@@ -14,8 +14,10 @@ import {
     signal,
     viewChildren,
 } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -37,6 +39,8 @@ let uniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiTimeInputComponent implements FormValueControl<string | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     public readonly id = input(`fd-ui-time-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly pickerAriaLabel = input<string>();
@@ -44,10 +48,12 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
     public readonly hoursLabel = input('Hours');
     public readonly minutesLabel = input('Minutes');
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly value = model<string | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -86,9 +92,9 @@ export class FdUiTimeInputComponent implements FormValueControl<string | null> {
 
     protected readonly sizeClass = computed(() => `fd-ui-time-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly hostClass = computed(

@@ -95,3 +95,9 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
+@media (any-pointer: coarse) {
+    .fd-ui-checkbox__label {
+        min-width: var(--fd-size-control-lg);
+        min-height: var(--fd-size-control-lg);
+    }
+}

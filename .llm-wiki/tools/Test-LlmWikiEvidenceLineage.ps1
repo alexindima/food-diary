@@ -151,6 +151,12 @@ if ($evidence.PSObject.Properties['supplementalChecks']) {
 }
 $substantiveReview = Test-LlmWikiSubstantiveReview -Evidence $evidence -EvidencePath $normalizedEvidencePath
 foreach ($issue in $substantiveReview.issues) { $issues.Add($issue) }
+$regressions = @(@($evidence.checks) + @(if ($evidence.PSObject.Properties['supplementalChecks']) { $evidence.supplementalChecks }) | Where-Object { $_.PSObject.Properties['regression'] } | ForEach-Object {
+    Test-LlmWikiRegressionEvidence $_ $repositoryRoot $normalizedEvidencePath
+})
+foreach ($regression in $regressions) {
+    foreach ($issue in $regression.issues) { $issues.Add("Regression '$($regression.id)': $issue") }
+}
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     workspace = $normalizedWorkspacePath
@@ -162,6 +168,7 @@ $result = [pscustomobject][ordered]@{
     issues = @($issues)
     items = @($items)
     substantiveReview = $substantiveReview
+    regressions = $regressions
 }
 if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 10

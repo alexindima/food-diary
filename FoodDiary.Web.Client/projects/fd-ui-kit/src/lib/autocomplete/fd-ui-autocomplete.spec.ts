@@ -18,6 +18,25 @@ afterEach(() => {
 });
 
 describe('FdUiAutocompleteComponent', () => {
+    it.each([{ isComposing: true }, { keyCode: 229 }])('leaves IME confirmation to the text input: %j', composition => {
+        const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
+        fixture.componentRef.setInput('options', [{ value: 'apple', label: 'Apple' }]);
+        fixture.detectChanges();
+        const input = (fixture.nativeElement as HTMLElement).querySelector('input');
+        input?.focus();
+        fixture.detectChanges();
+        const selected = vi.fn();
+        fixture.componentInstance.optionSelected.subscribe(selected);
+        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, ...composition });
+        input?.dispatchEvent(event);
+        fixture.detectChanges();
+        expect(selected).not.toHaveBeenCalled();
+        expect(event.defaultPrevented).toBe(false);
+        input?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(selected).toHaveBeenCalledOnce();
+    });
+
     it('keeps late suggestions closed after focus moves to another field', () => {
         const fixture = TestBed.createComponent(FdUiAutocompleteComponent);
         fixture.componentRef.setInput('value', 'Apple');

@@ -2,12 +2,13 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, type ParamMap } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
@@ -34,7 +35,7 @@ type FieldErrors = Record<ErrorField, string | null>;
     imports: [
         CommonModule,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiCardComponent,
         FdUiInputComponent,

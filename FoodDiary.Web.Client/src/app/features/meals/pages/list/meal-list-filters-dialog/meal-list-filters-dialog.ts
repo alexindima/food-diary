@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiDateRangeInputComponent, type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -7,6 +7,7 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
@@ -37,7 +38,7 @@ export type MealListFiltersDialogResult = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,

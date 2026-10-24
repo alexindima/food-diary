@@ -313,7 +313,6 @@ describe('AuthComponent register', () => {
         component['registerModel'].set({
             email: 'taken@example.com',
             password: 'password123',
-            confirmPassword: 'password123',
             agreeTerms: true,
         });
 
@@ -360,7 +359,6 @@ describe('AuthComponent register', () => {
         component['registerModel'].set({
             email: 'user@example.com',
             password: 'password123',
-            confirmPassword: 'password123',
             agreeTerms: false,
         });
 
@@ -379,7 +377,6 @@ describe('AuthComponent register results', () => {
         component['registerModel'].set({
             email: 'taken@example.com',
             password: 'password123',
-            confirmPassword: 'password123',
             agreeTerms: true,
         });
 
@@ -395,7 +392,6 @@ describe('AuthComponent register results', () => {
         component['registerModel'].set({
             email: 'deleted@example.com',
             password: 'password123',
-            confirmPassword: 'password123',
             agreeTerms: true,
         });
 
@@ -411,7 +407,6 @@ describe('AuthComponent register results', () => {
         component['registerModel'].set({
             email: 'new@example.com',
             password: 'password123',
-            confirmPassword: 'password123',
             agreeTerms: true,
         });
 

@@ -151,6 +151,19 @@ describe('PasswordResetComponent form validation', () => {
 });
 
 describe('PasswordResetComponent submit', () => {
+    it('allows an invalid submit to reveal errors and focus the password without sending a request', async () => {
+        const { fixture, authServiceSpy } = createComponent();
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('button[type="submit"]');
+        expect(button?.disabled, 'An invalid form must allow an explanatory submit attempt').toBe(false);
+        button?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('FORM_ERRORS.REQUIRED');
+        expect(document.activeElement).toBe(host.querySelector('input[type="password"]'));
+        expect(authServiceSpy.confirmPasswordReset).not.toHaveBeenCalled();
+    });
+
     it('should prevent native form submit when confirming reset', async () => {
         const { authServiceSpy, component, fixture } = createComponent();
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));

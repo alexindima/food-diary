@@ -75,9 +75,9 @@ $sourceFiles = @(
     $directories.Push([IO.DirectoryInfo]::new($repositoryRoot))
     $files = while ($directories.Count -gt 0) {
         $directory = $directories.Pop()
-        if (($directory.FullName + '/') -match '[\\/](obj|bin|\.artifacts|TestResults|Migrations)[\\/]') { continue }
         foreach ($child in $directory.EnumerateDirectories()) {
-            if (($child.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReparsePoint)) -eq 0) {
+            if ($child.Name -notin @('obj', 'bin', '.artifacts', 'TestResults', 'Migrations') -and
+                ($child.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReparsePoint)) -eq 0) {
                 $directories.Push($child)
             }
         }

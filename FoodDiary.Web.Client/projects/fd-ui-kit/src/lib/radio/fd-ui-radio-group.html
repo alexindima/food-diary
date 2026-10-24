@@ -11,8 +11,8 @@
     <div
         class="fd-ui-radio-group__control"
         role="radiogroup"
-        [attr.aria-describedby]="error() ? `${id()}-error` : null"
-        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="resolvedError() ? `${id()}-error` : null"
+        [attr.aria-invalid]="resolvedError() ? 'true' : null"
     >
         <fd-ui-radio-options
             [id]="id()"
@@ -25,10 +25,10 @@
         />
     </div>
 
-    @if (hint() && !error()) {
+    @if (hint() && !resolvedError()) {
         <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
     }
-    @if (error()) {
-        <p class="fd-ui-radio-group__error" role="alert" [id]="`${id()}-error`">{{ error() }}</p>
+    @if (resolvedError()) {
+        <p class="fd-ui-radio-group__error" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</p>
     }
 </div>

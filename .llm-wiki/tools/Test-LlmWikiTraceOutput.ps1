@@ -1,7 +1,37 @@
 [CmdletBinding()]
-param()
+param([switch]$SourceScopeOnly)
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$scopeFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'trace-source-scope'
+try {
+    $fixtureRepository = Join-Path $scopeFixture '.artifacts/repository'
+    $fixtureTools = Join-Path $fixtureRepository '.llm-wiki/tools'
+    $null = New-Item -ItemType Directory -Path $fixtureTools -Force
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1') -Destination (Join-Path $fixtureTools 'Find-LlmWikiTrace.ps1')
+    $handlerSource = 'public sealed class TraceScopeCommandHandler(ITraceRepository repository) : ICommandHandler<TraceScopeCommand, string> {}'
+    [IO.File]::WriteAllText((Join-Path $fixtureRepository 'Handler.cs'), $handlerSource, [Text.UTF8Encoding]::new($false))
+    foreach ($excluded in @('.artifacts', 'bin', 'obj', 'TestResults', 'Migrations')) {
+        $excludedDirectory = Join-Path $fixtureRepository $excluded
+        $null = New-Item -ItemType Directory -Path $excludedDirectory -Force
+        [IO.File]::WriteAllText((Join-Path $excludedDirectory 'Excluded.cs'), $handlerSource.Replace('TraceScopeCommandHandler', 'ExcludedTraceScopeCommandHandler'), [Text.UTF8Encoding]::new($false))
+    }
+    $traceOutput = @(& (Join-Path $fixtureTools 'Find-LlmWikiTrace.ps1') -Query TraceScope -Format Json)
+    $traces = @($traceOutput | ConvertFrom-Json)
+    if ($traces.Count -ne 1 -or $null -eq $traces[0] -or -not $traces[0].PSObject.Properties['handler'] -or
+        $traces[0].handler.name -ne 'TraceScopeCommandHandler' -or $traces[0].handler.path -ne 'Handler.cs') {
+        throw 'Trace source scan must keep a repository under .artifacts while pruning excluded descendants.'
+    }
+} finally {
+    $resolvedFixture = [IO.Path]::GetFullPath($scopeFixture)
+    $fixtureParent = [IO.Path]::GetFullPath((Get-LlmWikiSmokeSandboxRoot -RepositoryRoot $repositoryRoot)).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $fixtureParent -or
+        [IO.Path]::GetFileName($resolvedFixture) -notmatch '^trace-source-scope-[a-f0-9]{32}$') { throw 'Unsafe trace scope fixture cleanup.' }
+    Remove-Item -LiteralPath $resolvedFixture -Recurse -Force
+}
+Write-Host 'Trace source-scope regression passed.'
+if ($SourceScopeOnly) { return }
 & node (Join-Path $PSScriptRoot 'Test-LlmWikiTraceScope.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Trace scope unit regression failed.' }
 $frontendTraceScript = Join-Path $PSScriptRoot 'Find-LlmWikiFrontendTrace.ps1'

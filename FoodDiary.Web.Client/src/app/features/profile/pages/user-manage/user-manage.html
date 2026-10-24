@@ -135,8 +135,6 @@
                 [discardLabel]="'UNSAVED_CHANGES.DISCARD' | translate"
                 [saveLabel]="(isSavingProfile() ? 'USER_MANAGE.PROFILE_STATUS_SAVING' : 'UNSAVED_CHANGES.SAVE') | translate"
                 [saving]="isSavingProfile()"
-                [saveDisabled]="userForm().invalid()"
-                [saveDisabledReason]="profileValidationErrorKey() | translate"
                 (discard)="discardUserFormChanges()"
                 (save)="onSubmit()"
             />

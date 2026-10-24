@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, maxLength, required } from '@angular/forms/signals';
+import { form, FormField, maxLength, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter, finalize, switchMap } from 'rxjs';
 
@@ -22,7 +23,7 @@ import { RecipeCommentsListComponent } from './recipe-comments-list/recipe-comme
     templateUrl: './recipe-comments.html',
     styleUrls: ['./recipe-comments.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
+    imports: [FormField, FdUiFormDirective, TranslatePipe, FdUiButtonComponent, FdUiTextareaComponent, RecipeCommentsListComponent],
 })
 export class RecipeCommentsComponent {
     private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
@@ -40,7 +41,7 @@ export class RecipeCommentsComponent {
     protected readonly pageSize = COMMENTS_PAGE_SIZE;
     protected readonly commentModel = signal({ text: '' });
     protected readonly commentForm = form(this.commentModel, path => {
-        required(path.text);
+        validate(path.text, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
         maxLength(path.text, COMMENT_MAX_LENGTH);
     });
     protected readonly editingCommentId = signal<RecipeCommentId | null>(null);

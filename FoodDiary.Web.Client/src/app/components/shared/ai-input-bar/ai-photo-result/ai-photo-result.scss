@@ -732,3 +732,9 @@
         display: none;
     }
 }
+@media (prefers-reduced-motion: reduce) {
+    .ai-photo-result__scan-line {
+        top: 50%;
+        animation: none;
+    }
+}

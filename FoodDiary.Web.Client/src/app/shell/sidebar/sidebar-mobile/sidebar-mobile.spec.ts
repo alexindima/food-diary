@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
@@ -18,12 +18,11 @@ describe('SidebarMobileComponent', () => {
     });
 
     it('derives open state and report links from selected mobile sheet', () => {
-        const fixture = createComponent('reports');
-        const host = fixture.nativeElement as HTMLElement;
-        const sheet = host.querySelector('.sidebar-mobile__sheet');
+        createComponent('reports');
+        const host = document.body;
         const links = host.querySelectorAll('.sidebar-mobile__sheet-link');
 
-        expect(sheet?.getAttribute('aria-label')).toBe('SIDEBAR.REPORTS_AND_GOALS');
+        expect(document.querySelector('[role=dialog]')?.getAttribute('aria-label')).toBe('SIDEBAR.REPORTS_AND_GOALS');
         expect(links.length).toBe(MOBILE_REPORT_ITEMS.length);
         expect(host.querySelectorAll('button.is-open').length).toBe(1);
     });
@@ -34,7 +33,7 @@ describe('SidebarMobileComponent', () => {
         const foodToggle = vi.fn();
         component['foodToggle'].subscribe(foodToggle);
 
-        const host = fixture.nativeElement as HTMLElement;
+        const host = document.body;
         const foodButton = host.querySelector('button[aria-haspopup="dialog"]');
         foodButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -42,8 +41,8 @@ describe('SidebarMobileComponent', () => {
     });
 
     it('provides accessible names when visual labels are hidden on narrow screens', () => {
-        const fixture = createComponent(null);
-        const host = fixture.nativeElement as HTMLElement;
+        createComponent(null);
+        const host = document.body;
         const items = [...host.querySelectorAll<HTMLElement>('.sidebar-mobile__item')];
 
         expect(items.map(item => item.getAttribute('aria-label'))).toEqual([
@@ -56,29 +55,29 @@ describe('SidebarMobileComponent', () => {
     });
 
     it('hides admin panel action from non-admin users', () => {
-        const fixture = createComponent('user', false);
-        const host = fixture.nativeElement as HTMLElement;
+        createComponent('user', false);
+        const host = document.body;
 
         expect(host.querySelector('.sidebar-mobile__sheet-link--admin')).toBeNull();
     });
 
     it('shows admin panel action for admin users', () => {
-        const fixture = createComponent('user', true);
-        const host = fixture.nativeElement as HTMLElement;
+        createComponent('user', true);
+        const host = document.body;
 
         expect(host.querySelector('.sidebar-mobile__sheet-link--admin')).not.toBeNull();
     });
 
     it('does not render notification badge when there are no unread notifications', () => {
-        const fixture = createComponent('user', false, 0);
-        const host = fixture.nativeElement as HTMLElement;
+        createComponent('user', false, 0);
+        const host = document.body;
 
         expect(host.querySelector('.sidebar-mobile__notifications-badge')).toBeNull();
     });
 
     it('renders notification badge when there are unread notifications', () => {
-        const fixture = createComponent('user', false, UNREAD_NOTIFICATION_COUNT);
-        const host = fixture.nativeElement as HTMLElement;
+        createComponent('user', false, UNREAD_NOTIFICATION_COUNT);
+        const host = document.body;
 
         const badge = host.querySelector('.sidebar-mobile__notifications-badge');
         if (badge === null) {
@@ -111,3 +110,11 @@ function createComponent(
 
     return fixture;
 }
+
+beforeEach(() =>
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false })),
+    ),
+);
+afterEach(() => vi.unstubAllGlobals());

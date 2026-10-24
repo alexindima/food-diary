@@ -53,6 +53,8 @@ The backend source scan prunes `obj`, `bin`, `.artifacts`, `TestResults`, and
 `Migrations` directories before descending into them. It retains visible,
 untracked C# sources and the prior generated-file exclusions, without following
 directory symlinks. The candidate ranking and trace output are unchanged.
+Exclusions apply to descendant directory names; a repository remains searchable
+when its own location is nested under an ancestor such as `.artifacts`.
 
 Backend-oriented natural-language queries automatically use the SQLite graph
 when they contain terms such as SMTP, persistence, readiness, outbox, hosted

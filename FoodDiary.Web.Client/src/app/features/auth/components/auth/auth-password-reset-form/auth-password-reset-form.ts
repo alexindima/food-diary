@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -9,7 +10,7 @@ import type { PasswordResetFieldErrors, PasswordResetFormValues } from '../auth-
 
 @Component({
     selector: 'fd-auth-password-reset-form',
-    imports: [FormField, FormRoot, TranslatePipe, FdUiButtonComponent, FdUiFormErrorComponent, FdUiInputComponent],
+    imports: [FormField, FdUiFormDirective, TranslatePipe, FdUiButtonComponent, FdUiFormErrorComponent, FdUiInputComponent],
     templateUrl: './auth-password-reset-form.html',
     styleUrl: '../auth.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

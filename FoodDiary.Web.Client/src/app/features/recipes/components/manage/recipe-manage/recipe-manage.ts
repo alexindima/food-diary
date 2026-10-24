@@ -1,11 +1,12 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, max, maxLength, min, required, validate } from '@angular/forms/signals';
+import { form, max, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -67,7 +68,7 @@ import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
-        FormRoot,
+        FdUiFormDirective,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,

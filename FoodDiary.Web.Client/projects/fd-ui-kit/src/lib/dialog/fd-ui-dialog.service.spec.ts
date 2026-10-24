@@ -3,6 +3,7 @@ import { type GlobalPositionStrategy, Overlay } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FdUiDialogService } from './fd-ui-dialog.service';
@@ -12,6 +13,25 @@ import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY } from './fd-ui-dialog.tokens';
     template: '',
 })
 class DummyDialogComponent {}
+
+describe('FdUiDialogService background interaction', () => {
+    it('makes the page inert while a real dialog is open and restores it on close', () => {
+        vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false, addListener: vi.fn(), removeListener: vi.fn() }));
+        const page = document.createElement('main');
+        document.body.append(page);
+        const service = TestBed.inject(FdUiDialogService);
+        try {
+            const ref = service.open(DummyDialogComponent, { autoFocus: false, restoreFocus: false });
+            expect(page.hasAttribute('inert'), 'The page behind a modal must be inert').toBe(true);
+            ref.close();
+            expect(page.hasAttribute('inert')).toBe(false);
+        } finally {
+            service.closeAll();
+            page.remove();
+            vi.unstubAllGlobals();
+        }
+    });
+});
 
 type DialogOpenMock = ReturnType<typeof vi.fn<Dialog['open']>>;
 type DialogOpenConfig = NonNullable<Parameters<Dialog['open']>[1]>;
@@ -60,7 +80,7 @@ function createOverlayMock(): {
 }
 
 function createDialogOpenMock(): DialogOpenMock {
-    return vi.fn<Dialog['open']>();
+    return vi.fn<Dialog['open']>().mockReturnValue({ closed: new Subject<unknown>() } as unknown as ReturnType<Dialog['open']>);
 }
 
 function createDialogMock(open: DialogOpenMock): Dialog {
@@ -79,6 +99,7 @@ function latestConfig(open: DialogOpenMock): DialogOpenConfig {
 
 function setupDialogService(matches: boolean, platformId = 'browser'): DialogServiceTestContext {
     const documentMock = {
+        body: null,
         defaultView: {
             history: {},
             matchMedia: vi.fn().mockReturnValue({ matches }),

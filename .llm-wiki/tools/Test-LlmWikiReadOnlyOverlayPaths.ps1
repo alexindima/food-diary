@@ -138,15 +138,8 @@ try {
     foreach ($tool in @('Clear-LlmWikiReadOnlySnapshotCache.ps1','LlmWikiGitPaths.ps1')) {
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot $tool) -Destination (Join-Path $clearTools $tool) -Force
     }
-    $cacheHasher = [Security.Cryptography.SHA256]::Create()
-    try { $cacheHash = $cacheHasher.ComputeHash([Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($fixture)).ToLowerInvariant())) }
-    finally { $cacheHasher.Dispose() }
-    $cacheKey = (([BitConverter]::ToString($cacheHash) -replace '-', '').ToLowerInvariant()).Substring(0,16)
-    $tempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
-        Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
-    } else { [IO.Path]::GetTempPath() }
-    $cacheBase = [IO.Path]::GetFullPath((Join-Path $tempRoot 'fooddiary-llm-wiki-read-only'))
-    $ownedCache = [IO.Path]::GetFullPath((Join-Path $cacheBase $cacheKey))
+    $cacheBase = [IO.Path]::GetFullPath((Join-Path $fixture '.artifacts/llm-wiki'))
+    $ownedCache = Join-Path $cacheBase 'read-only-snapshots'
     $ownedRoot = Join-Path $ownedCache $staleKey
     $ownedLockPath = Join-Path $ownedCache "$staleKey.lock"
     try {

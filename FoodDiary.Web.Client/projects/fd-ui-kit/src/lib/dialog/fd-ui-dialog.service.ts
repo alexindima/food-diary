@@ -2,14 +2,15 @@ import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import type { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT, isPlatformBrowser, Location } from '@angular/common';
-import { inject, PLATFORM_ID, Service, type StaticProvider } from '@angular/core';
+import { inject, PLATFORM_ID, Service, type StaticProvider, type TemplateRef } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY, FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
+import { FD_UI_DIALOG_BACKGROUND } from './fd-ui-dialog-background';
 import { FD_UI_DIALOG_HISTORY } from './fd-ui-dialog-history';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
-export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
+export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen' | 'surface';
 
 const DEFAULT_DIALOG_TOP_OFFSET = '40px';
 
@@ -40,6 +41,7 @@ export class FdUiDialogService {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly compactViewportQuery = inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY);
     private readonly history = inject(FD_UI_DIALOG_HISTORY);
+    private readonly background = inject(FD_UI_DIALOG_BACKGROUND);
 
     public constructor() {
         this.history.connect(inject(Location, { optional: true }));
@@ -49,11 +51,15 @@ export class FdUiDialogService {
         this.dialog.closeAll();
     }
 
-    public open<T, D = unknown, R = unknown>(component: ComponentType<T>, config: FdUiDialogConfig<D> = {}): FdUiDialogRef<T, R> {
+    public open<T, D = unknown, R = unknown>(
+        component: ComponentType<T> | TemplateRef<T>,
+        config: FdUiDialogConfig<D> = {},
+    ): FdUiDialogRef<T, R> {
         const layout = this.resolveDialogLayout(config);
         const size = this.resolveDialogSize(config);
         const positionStrategy = config.positionStrategy ?? this.resolvePositionStrategy(layout);
         const baseProviders = config.providers ?? [];
+        let releaseBackground = (): void => {};
 
         const dialogConfig: DialogConfig<D, DialogRef<R, T>> = {
             ...config,
@@ -64,6 +70,14 @@ export class FdUiDialogService {
             backdropClass: layout.backdropClass,
             autoFocus: config.autoFocus ?? 'first-tabbable',
             scrollStrategy: config.scrollStrategy ?? this.overlay.scrollStrategies.block(),
+            closePredicate: (result, resolvedConfig, instance) => {
+                if (config.closePredicate?.(result, resolvedConfig, instance) === false) {
+                    return false;
+                }
+                // CDK restores focus while disposing the container, before `closed` emits.
+                releaseBackground();
+                return true;
+            },
             providers: cdkDialogRef => {
                 const wrappedRef = new FdUiDialogRef<T, R>(cdkDialogRef);
                 return [
@@ -75,6 +89,12 @@ export class FdUiDialogService {
         };
 
         const dialogRef = this.dialog.open<R, D, T>(component, dialogConfig);
+        releaseBackground = this.background.acquire();
+        dialogRef.closed.subscribe({
+            complete: () => {
+                releaseBackground();
+            },
+        });
         this.history.track(dialogRef);
 
         return new FdUiDialogRef<T, R>(dialogRef);
@@ -88,7 +108,9 @@ export class FdUiDialogService {
         const resolvedPreset = this.resolvePreset(config.preset);
         const presetPanelClasses = resolvedPreset.panelClass ?? [];
         const providedPanelClasses = this.asArray(config.panelClass);
-        const isFullscreen = [...presetPanelClasses, ...providedPanelClasses].includes('fd-ui-dialog-panel--fullscreen');
+        const isFullscreen = [...presetPanelClasses, ...providedPanelClasses].some(
+            className => className === 'fd-ui-dialog-panel--fullscreen' || className === 'fd-ui-dialog-panel--surface',
+        );
         const isEdgeMobile = this.isCompactMobile() && !isFullscreen;
 
         return {
@@ -152,6 +174,9 @@ export class FdUiDialogService {
                     size: 'xl',
                     panelClass: ['fd-ui-dialog-panel--fullscreen'],
                 };
+            }
+            case 'surface': {
+                return { panelClass: ['fd-ui-dialog-panel--surface'] };
             }
             case undefined: {
                 return {};

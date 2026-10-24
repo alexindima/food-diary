@@ -1,5 +1,12 @@
 <div class="problem-workspace">
-    <fd-ui-tabs appearance="wrap-compact" [tabs]="tabs" [selectedValue]="source()" (selectedValueChange)="selectSource($event)" />
+    <fd-ui-tabs
+        mode="selection"
+        appearance="wrap-compact"
+        [ariaLabel]="'ADMIN_BUGS.SOURCE_FILTER' | translate"
+        [tabs]="tabs"
+        [selectedValue]="source()"
+        (selectedValueChange)="selectSource($event)"
+    />
     <form class="admin-filter-bar" [formRoot]="form">
         <fd-admin-period [inline]="true" />
         <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />

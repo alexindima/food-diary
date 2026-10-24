@@ -15,6 +15,15 @@ $impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impa
 $isTestPath = { param($Path) [string]$Path -match '(^|/)(?:tests?/|[^/]+\.Tests?/)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$|(^|/)Test-[^/]+\.ps1$' }
 $scoped = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $graphConsumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+$owningGraphTests = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+$explicitSourcePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+foreach ($path in $scope) { [void]$explicitSourcePaths.Add(([string]$path).Replace('\', '/').TrimEnd('/')) }
+$explicitSourceTypes = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+foreach ($declaration in @($impact.declaredSymbols)) {
+    if ($declaration.kind -ne 'method' -and $explicitSourcePaths.Contains([string]$declaration.path)) {
+        [void]$explicitSourceTypes.Add([string]$declaration.name)
+    }
+}
 $scopeTooBroad = [Collections.Generic.List[object]]::new()
 foreach ($path in $scope) {
     $normalizedPath = ([string]$path).Replace('\', '/').TrimEnd('/')
@@ -50,7 +59,16 @@ foreach ($path in $scope) {
     }
 }
 foreach ($consumer in @($impact.consumers)) {
-    if (& $isTestPath $consumer.path) { [void]$graphConsumers.Add([string]$consumer.path) }
+    if (& $isTestPath $consumer.path) {
+        [void]$graphConsumers.Add([string]$consumer.path)
+        # A graph-backed test of the selected type outranks broad downstream
+        # consumers before the final response limit, including sibling projects.
+        $testName = [IO.Path]::GetFileNameWithoutExtension([string]$consumer.path)
+        if ($consumer.language -eq 'csharp' -and $explicitSourceTypes.Contains([string]$consumer.symbol) -and
+            $testName -eq "$($consumer.symbol)Tests") {
+            [void]$owningGraphTests.Add([string]$consumer.path)
+        }
+    }
 }
 $required = @(
     $(if (@($scope | Where-Object { $_.Replace('\', '/') -eq '.github/workflows/ci-tests.yml' }).Count -gt 0) { 'Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
@@ -59,7 +77,7 @@ $required = @(
 $recommended = @(
     $graphConsumers |
         Where-Object { -not $scoped.Contains($_) } |
-        Sort-Object |
+        Sort-Object @{ Expression = { $owningGraphTests.Contains($_) }; Descending = $true }, @{ Expression = { $_ } } |
         Select-Object -First $Limit
 )
 $result = [pscustomobject][ordered]@{

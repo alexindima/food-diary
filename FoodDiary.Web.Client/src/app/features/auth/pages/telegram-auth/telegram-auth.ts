@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +22,16 @@ import { telegramTimeZoneOptions } from '../../lib/telegram-time-zone-options';
 
 @Component({
     selector: 'fd-telegram-auth',
-    imports: [TranslatePipe, FormField, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent, FdUiSelectComponent, AuthComponent],
+    imports: [
+        FdUiFormDirective,
+        TranslatePipe,
+        FormField,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        AuthComponent,
+    ],
     providers: [TelegramAuthFacade],
     templateUrl: './telegram-auth.html',
     styleUrl: './telegram-auth.scss',

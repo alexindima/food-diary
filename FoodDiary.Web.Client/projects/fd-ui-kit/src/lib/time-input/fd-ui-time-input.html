@@ -21,8 +21,8 @@
                 [readOnly]="true"
                 [attr.placeholder]="placeholderAttribute()"
                 [disabled]="disabled()"
-                [attr.aria-describedby]="error() ? `${id()}-error` : null"
-                [attr.aria-invalid]="error() ? 'true' : null"
+                [attr.aria-describedby]="resolvedError() ? `${id()}-error` : null"
+                [attr.aria-invalid]="resolvedError() ? 'true' : null"
                 [attr.aria-label]="label() ? null : pickerAccessibleName()"
                 [attr.aria-controls]="`${id()}-dialog`"
                 [attr.aria-expanded]="isOpen()"
@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    @if (error()) {
-        <div class="fd-ui-time-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    @if (resolvedError()) {
+        <div class="fd-ui-time-input__error" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</div>
     }
 </div>

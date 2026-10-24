@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -8,6 +8,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -45,7 +46,7 @@ const MILLISECONDS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINU
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -85,6 +86,7 @@ export class DietologistClientsPageComponent {
     protected readonly attentionLoading = signal(true);
     protected readonly attentionError = signal(false);
     protected readonly invalidAttentionSettings = signal<ReadonlySet<keyof AttentionSignalSettings>>(new Set());
+    private readonly attentionFields = viewChildren<ElementRef<HTMLInputElement>>('attentionField');
     protected readonly attentionSettings = signal<AttentionSignalSettings>({
         inactivityDays: 3,
         calorieDeviationPercent: 25,
@@ -169,6 +171,9 @@ export class DietologistClientsPageComponent {
 
     protected applyAttentionSettings(): void {
         if (this.invalidAttentionSettings().size > 0) {
+            this.attentionFields()
+                .find(field => !field.nativeElement.validity.valid)
+                ?.nativeElement.focus();
             return;
         }
         this.loadAttentionSignals();

@@ -74,9 +74,6 @@ export class AppComponent {
                 ?.route ?? this.currentPath(),
     );
     protected readonly isMailRoute = computed(() => ['/mail-inbox', '/outgoing-emails'].includes(this.currentPath()));
-    protected navigateMail(path: string): void {
-        void this.router.navigateByUrl(path);
-    }
     protected readonly pageHeader = computed(() =>
         ['/users', '/email-templates', '/lessons', '/ai-prompts'].includes(this.currentSection())
             ? null

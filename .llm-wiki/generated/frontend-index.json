@@ -8,15 +8,15 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2688,
-    "symbols": 853,
+    "typescriptFiles": 2700,
+    "symbols": 856,
     "routes": 108,
     "features": 46,
-    "specs": 804,
+    "specs": 808,
     "localeFiles": 5,
     "roles": {
       "Component": 497,
-      "Directive": 15,
+      "Directive": 18,
       "Facade": 88,
       "Other": 41,
       "Pipe": 5,
@@ -1676,7 +1676,7 @@
       "role": "Component",
       "selector": "fd-ui-autocomplete",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.ts",
-      "line": 43
+      "line": 47
     },
     {
       "name": "FdUiBarChartComponent",
@@ -1718,7 +1718,7 @@
       "role": "Component",
       "selector": "fd-ui-checkbox",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
-      "line": 12
+      "line": 14
     },
     {
       "name": "FdUiChipSelectComponent",
@@ -1732,7 +1732,7 @@
       "role": "Component",
       "selector": "fd-ui-date-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
-      "line": 40
+      "line": 43
     },
     {
       "name": "FdUiDatePickerButtonComponent",
@@ -1746,14 +1746,14 @@
       "role": "Component",
       "selector": "fd-ui-date-range-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts",
-      "line": 21
+      "line": 22
     },
     {
       "name": "FdUiDatetimeInputComponent",
       "role": "Component",
       "selector": "fd-ui-datetime-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
-      "line": 38
+      "line": 41
     },
     {
       "name": "FdUiDialogShellComponent",
@@ -1802,7 +1802,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.service.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "FdUiDialogComponent",
@@ -1810,6 +1810,13 @@
       "selector": "fd-ui-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "line": 50
+    },
+    {
+      "name": "FdUiModalDirective",
+      "role": "Directive",
+      "selector": "ng-template[fdUiModal]",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-modal.directive.ts",
+      "line": 8
     },
     {
       "name": "FdUiEmojiPickerComponent",
@@ -1845,6 +1852,13 @@
       "selector": "fd-ui-form-error",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form-error/fd-ui-form-error.ts",
       "line": 145
+    },
+    {
+      "name": "FdUiFormDirective",
+      "role": "Directive",
+      "selector": "form[formRoot]",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form/fd-ui-form.directive.ts",
+      "line": 17
     },
     {
       "name": "FdUiHintOverlayComponent",
@@ -1893,7 +1907,7 @@
       "role": "Component",
       "selector": "fd-ui-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "line": 47
+      "line": 49
     },
     {
       "name": "FdUiActivateDirective",
@@ -1922,6 +1936,13 @@
       "selector": "[fdUiStopActivation]",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/interaction/fd-ui-stop-activation.directive.ts",
       "line": 12
+    },
+    {
+      "name": "FdUiTextEnterDirective",
+      "role": "Directive",
+      "selector": "[fdUiTextEnter]",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/interaction/fd-ui-text-enter.directive.ts",
+      "line": 16
     },
     {
       "name": "FdUiLevelIndicatorComponent",
@@ -1998,7 +2019,7 @@
       "role": "Component",
       "selector": "fd-ui-nutrient-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/nutrient-input/fd-ui-nutrient-input.ts",
-      "line": 31
+      "line": 33
     },
     {
       "name": "FdUiPaginationComponent",
@@ -2026,7 +2047,7 @@
       "role": "Component",
       "selector": "fd-ui-radio-group",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.ts",
-      "line": 18
+      "line": 20
     },
     {
       "name": "FdUiRadioOptionsComponent",
@@ -2040,7 +2061,7 @@
       "role": "Component",
       "selector": "fd-ui-satiety-scale",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/satiety-scale/fd-ui-satiety-scale.ts",
-      "line": 102
+      "line": 104
     },
     {
       "name": "FdUiSectionErrorStateComponent",
@@ -2075,7 +2096,7 @@
       "role": "Component",
       "selector": "fd-ui-select",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "FdUiSidebarItemComponent",
@@ -2117,21 +2138,21 @@
       "role": "Component",
       "selector": "fd-ui-tabs",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/tabs/fd-ui-tabs.ts",
-      "line": 30
+      "line": 32
     },
     {
       "name": "FdUiTextareaComponent",
       "role": "Component",
       "selector": "fd-ui-textarea",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
-      "line": 30
+      "line": 32
     },
     {
       "name": "FdUiTimeInputComponent",
       "role": "Component",
       "selector": "fd-ui-time-input",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
-      "line": 39
+      "line": 41
     },
     {
       "name": "FdUiToastHostComponent",
@@ -3111,7 +3132,7 @@
       "role": "Component",
       "selector": "fd-ai-input-bar",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-bar.ts",
-      "line": 69
+      "line": 70
     },
     {
       "name": "AiPhotoDetailsPanelComponent",
@@ -3468,7 +3489,7 @@
       "role": "Component",
       "selector": "fd-period-filter",
       "path": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "PremiumRequiredDialogComponent",
@@ -3643,14 +3664,14 @@
       "role": "Component",
       "selector": "fd-auth-login-form",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "AuthPasswordResetFormComponent",
       "role": "Component",
       "selector": "fd-auth-password-reset-form",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "AuthRegisterFieldsComponent",
@@ -3664,14 +3685,14 @@
       "role": "Component",
       "selector": "fd-auth-register-form",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-form/auth-register-form.ts",
-      "line": 25
+      "line": 26
     },
     {
       "name": "AuthComponent",
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 56
+      "line": 57
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -3727,21 +3748,21 @@
       "role": "Component",
       "selector": "fd-password-reset",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/password-reset/password-reset.ts",
-      "line": 48
+      "line": 49
     },
     {
       "name": "RequiredPasswordChangeComponent",
       "role": "Component",
       "selector": "fd-required-password-change",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
-      "line": 28
+      "line": 29
     },
     {
       "name": "TelegramAuthComponent",
       "role": "Component",
       "selector": "fd-telegram-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "line": 30
+      "line": 40
     },
     {
       "name": "CyclesService",
@@ -3755,7 +3776,7 @@
       "role": "Component",
       "selector": "fd-cycle-export-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.ts",
-      "line": 34
+      "line": 35
     },
     {
       "name": "CycleDayFacade",
@@ -3832,7 +3853,7 @@
       "role": "Component",
       "selector": "fd-cycle-day-editor-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.ts",
-      "line": 53
+      "line": 54
     },
     {
       "name": "CycleDayItemComponent",
@@ -3888,14 +3909,14 @@
       "role": "Component",
       "selector": "fd-cycle-settings-drawer",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "CycleTrackingPageComponent",
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 140
+      "line": 141
     },
     {
       "name": "DashboardService",
@@ -4182,7 +4203,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 151
+      "line": 152
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -4252,7 +4273,7 @@
       "role": "Component",
       "selector": "fd-dietologist-clients-page",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-clients-page.ts",
-      "line": 59
+      "line": 60
     },
     {
       "name": "DietologistInvitationPageComponent",
@@ -4308,7 +4329,7 @@
       "role": "Component",
       "selector": "fd-recipe-comments",
       "path": "FoodDiary.Web.Client/src/app/features/explore/components/comments/recipe-comments.ts",
-      "line": 27
+      "line": 28
     },
     {
       "name": "LikeButtonComponent",
@@ -4609,7 +4630,7 @@
       "role": "Component",
       "selector": "fd-calorie-goal-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/goals/dialogs/calorie-goal-dialog/calorie-goal-dialog.ts",
-      "line": 25
+      "line": 34
     },
     {
       "name": "CalorieGoalFacade",
@@ -4889,7 +4910,7 @@
       "role": "Component",
       "selector": "fd-meal-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-      "line": 104
+      "line": 105
     },
     {
       "name": "MealManualItemDialogComponent",
@@ -5050,7 +5071,7 @@
       "role": "Component",
       "selector": "fd-meal-list-filters-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.ts",
-      "line": 51
+      "line": 52
     },
     {
       "name": "MealListContentComponent",
@@ -5232,7 +5253,7 @@
       "role": "Component",
       "selector": "fd-product-list-base",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "line": 52
+      "line": 53
     },
     {
       "name": "ProductListFiltersDialogComponent",
@@ -5295,7 +5316,7 @@
       "role": "Component",
       "selector": "fd-product-manage-form",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
-      "line": 96
+      "line": 97
     },
     {
       "name": "ProductNutritionEditorComponent",
@@ -5358,7 +5379,7 @@
       "role": "Component",
       "selector": "fd-product-list-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-list-dialog/product-list-dialog.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "PublicProductPreviewComponent",
@@ -5456,7 +5477,7 @@
       "role": "Component",
       "selector": "fd-product-list-page",
       "path": "FoodDiary.Web.Client/src/app/features/products/pages/list/product-list-page.ts",
-      "line": 57
+      "line": 58
     },
     {
       "name": "ProductAddComponent",
@@ -5491,7 +5512,7 @@
       "role": "Component",
       "selector": "fd-change-password-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/profile/dialogs/change-password-dialog/change-password-dialog.ts",
-      "line": 33
+      "line": 42
     },
     {
       "name": "PasswordSuccessDialogComponent",
@@ -5582,7 +5603,7 @@
       "role": "Component",
       "selector": "fd-user-manage-dietologist-summary",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-summary/user-manage-dietologist-summary.ts",
-      "line": 28
+      "line": 29
     },
     {
       "name": "UserManageNotificationsCardComponent",
@@ -5603,7 +5624,7 @@
       "role": "Component",
       "selector": "fd-user-manage-backup-email",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.ts",
-      "line": 19
+      "line": 20
     },
     {
       "name": "UserManagePasswordMethodComponent",
@@ -5638,7 +5659,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 102
+      "line": 103
     },
     {
       "name": "DietologistPromoComponent",
@@ -5883,7 +5904,7 @@
       "role": "Component",
       "selector": "fd-recipe-manage",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
-      "line": 84
+      "line": 85
     },
     {
       "name": "RecipeNutritionEditorComponent",
@@ -6009,7 +6030,7 @@
       "role": "Component",
       "selector": "fd-recipe-select-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.ts",
-      "line": 52
+      "line": 53
     },
     {
       "name": "RecipeDetailFacade",
@@ -6100,7 +6121,7 @@
       "role": "Component",
       "selector": "fd-recipe-list",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts",
-      "line": 77
+      "line": 78
     },
     {
       "name": "RecipeAddComponent",
@@ -6184,7 +6205,7 @@
       "role": "Component",
       "selector": "fd-shopping-item-edit",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-item-edit/shopping-item-edit.ts",
-      "line": 21
+      "line": 30
     },
     {
       "name": "ShoppingListBrowserDialogComponent",
@@ -6198,7 +6219,7 @@
       "role": "Component",
       "selector": "fd-shopping-list-picker",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
-      "line": 40
+      "line": 41
     },
     {
       "name": "ShoppingMergePreviewComponent",
@@ -6233,14 +6254,14 @@
       "role": "Component",
       "selector": "fd-shopping-list-items-panel",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.ts",
-      "line": 45
+      "line": 46
     },
     {
       "name": "ShoppingListManageControlsComponent",
       "role": "Component",
       "selector": "fd-shopping-list-manage-controls",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.ts",
-      "line": 42
+      "line": 43
     },
     {
       "name": "ShoppingListPageComponent",
@@ -6387,7 +6408,7 @@
       "role": "Component",
       "selector": "fd-waist-history-form-card",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-form-card/waist-history-form-card.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "WaistHistoryGoalCardComponent",
@@ -6429,7 +6450,7 @@
       "role": "Component",
       "selector": "fd-waist-history-goal-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-goal-dialog/waist-history-goal-dialog.ts",
-      "line": 20
+      "line": 29
     },
     {
       "name": "WaistHistoryFacade",
@@ -6569,7 +6590,7 @@
       "role": "Component",
       "selector": "fd-weight-history-form-card",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-form-card/weight-history-form-card.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "WeightHistoryGoalCardComponent",
@@ -6604,7 +6625,7 @@
       "role": "Component",
       "selector": "fd-weight-history-goal-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-goal-dialog/weight-history-goal-dialog.ts",
-      "line": 20
+      "line": 29
     },
     {
       "name": "WeightHistoryFacade",
@@ -7570,7 +7591,7 @@
       "role": "Component",
       "selector": "fd-sidebar-mobile",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.ts",
-      "line": 35
+      "line": 30
     },
     {
       "name": "SidebarRouteLinksComponent",
@@ -8156,8 +8177,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1252,
-      "russianProperties": 1252,
+      "englishProperties": 1253,
+      "russianProperties": 1253,
       "countsMatch": true
     },
     {

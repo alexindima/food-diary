@@ -9,6 +9,7 @@ tags:
   - developer-experience
   - planning
 sources:
+  - .llm-wiki/tools/LlmWikiPlanReview.ps1
   - .llm-wiki/wiki.ps1
   - .llm-wiki/tools/Get-LlmWikiExperience.ps1
   - .llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1
@@ -105,6 +106,38 @@ record a separate pass over requirements and code in the current evidence bundle
 The automatic report labels its own assessment separately from the recorded
 semantic judgment. Current source and requirement fingerprints bind that judgment;
 open behavior gaps and blocking findings remain visible through evidence lineage.
+
+For design-required profiles, `design.planReview` now asks whether the plan is
+sufficient when read backwards from each acceptance outcome. It remains
+`needs-review` and `ready=false` until the agent supplies a reasoned review of
+outcomes, consumers/wiring, failure behavior, execution order and scope. This is
+part of design, with no additional workspace, role chain or stage for ordinary
+bugs. The review is invalidated by changes to the behavior, decisions, phases or
+declared source contents, including creation of a previously absent plan file.
+
+Rerun the same design arguments with `-ReviewContent` containing:
+
+```powershell
+$review = @{
+    planFingerprint = $design.planReview.planFingerprint
+    outcomes = @(@{
+        criterion = '<exact acceptance text>'
+        phaseIds = @('implementation', 'focused-verification')
+        verification = '<planned command or concrete manual scenario>'
+        reasoning = '<why these phases and this check establish the outcome>'
+    }) # One row per acceptance outcome.
+    perspectives = @(@{
+        id = 'consumers' # One row for each ID in planReview.perspectives.
+        status = 'covered' # covered, not-applicable (with reason), or gap.
+        reasoning = '<current-source anchors and coverage; explain exclusions>'
+    })
+    findings = @() # Resolve every finding before implementation.
+}
+```
+
+The tool checks completeness and binding. The agent/reviewer judges whether the
+reasoning is sound; planned checks are not execution evidence. Use existing
+`-Decision` input to refine the chosen approach and rerun after resolving gaps.
 
 Generate manual exploratory coverage with `qa`. Journey cases come from the
 durable product journey catalog; generic failure and retry cases are always

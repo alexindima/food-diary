@@ -457,3 +457,15 @@
         grid-column: 2 / 5;
     }
 }
+@media (prefers-reduced-motion: reduce) {
+    .photo-ai-dialog__scan-line {
+        top: 50%;
+        animation: none;
+    }
+
+    .photo-ai-dialog__nutrition-bar::after {
+        left: 0;
+        width: 100%;
+        animation: none;
+    }
+}

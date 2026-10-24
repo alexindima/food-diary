@@ -376,7 +376,7 @@ describe('UserManageComponent profile height validation', () => {
         expect(component['userForm']().invalid()).toBe(true);
         expect(facade.saveProfileAsync).not.toHaveBeenCalled();
         const button = (fixture.nativeElement as HTMLElement).querySelector('fd-unsaved-changes-bar fd-ui-button:last-child button');
-        expect(button?.hasAttribute('disabled')).toBe(true);
+        expect(button?.hasAttribute('disabled')).toBe(false);
     });
 
     it.each([null, FRACTIONAL_PROFILE_HEIGHT, MAX_PROFILE_HEIGHT])('allows saving optional or valid height %s', async heightCm => {
@@ -431,7 +431,7 @@ describe('UserManageComponent invalid birthday drafts', () => {
 
         expect(component['userForm']().invalid()).toBe(true);
         expect(facade.saveProfileAsync).not.toHaveBeenCalled();
-        expect(profileSaveButton()?.disabled).toBe(true);
+        expect(profileSaveButton()?.disabled).toBe(false);
     });
 
     it('guards an invalid birthday draft even when no other field changes', async () => {
@@ -439,7 +439,7 @@ describe('UserManageComponent invalid birthday drafts', () => {
         editProfileBirthDate(FUTURE_PROFILE_BIRTH_DATE);
 
         expect(component['hasUnsavedProfileChanges']()).toBe(true);
-        expect(profileSaveButton()?.disabled).toBe(true);
+        expect(profileSaveButton()?.disabled).toBe(false);
     });
 
     it('discards the invalid manual draft and its error', async () => {

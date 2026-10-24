@@ -76,9 +76,6 @@ export class AuthFormManager {
             required(path.password);
             minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
             maxLength(path.password, AUTH_PASSWORD_MAX_LENGTH);
-            required(path.confirmPassword);
-            maxLength(path.confirmPassword, AUTH_PASSWORD_MAX_LENGTH);
-            validate(path.confirmPassword, ({ value }) => (value() === this.registerModel().password ? undefined : { kind: 'matchField' }));
             validate(path.agreeTerms, ({ value }) => (value() ? undefined : { kind: 'required' }));
         },
         {

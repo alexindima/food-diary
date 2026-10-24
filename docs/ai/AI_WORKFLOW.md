@@ -52,6 +52,40 @@ contracts and acceptance criteria. Reproduce suspected failures; a second model'
 approval is not verification evidence. Routine local changes use their focused
 checks without adding a full governance cycle.
 
+## Bug diagnosis and regression evidence
+
+Before changing an implementation to fix a bug, record a compact diagnosis in
+the existing research notes or task journal: reproduction steps/inputs, expected
+and actual behavior, a cause hypothesis with current-source anchors, one minimal
+experiment, its observed result, and the resulting conclusion. Compare with a
+working adjacent flow when useful. Test one hypothesis at a time. An issue that
+cannot be reproduced remains explicitly unconfirmed; gather the missing evidence
+instead of presenting a guessed cause as established. This fits the current
+research/bug-brief stage and does not require a design or governed workspace.
+
+For a behavior fix with a meaningful automated regression test, run that test on
+the unfixed implementation and inspect its assertion failure, then apply the fix
+and run the same command with unchanged test files. A build, dependency, runner or
+setup error does not establish the expected failure. If the test or its fixtures
+must change, repeat the pair. Existing broad verification remains required.
+
+Use the existing `evidence-run` with a distinct supplemental ID and
+`-RegressionPhase before|after` to retain both logs and execution records inside
+the evidence bundle. The before run requires `-TestPath` and a distinctive literal
+`-ExpectedFailure` from the assertion output; the after run can reuse those values
+and the command. Confirmation requires a nonzero before exit with that message,
+an unchanged test-file fingerprint, a subsequent source change, and a current
+passing executed after run. The message match is mechanical: the implementer and
+reviewer still inspect whether the failure is the reported defect.
+
+If the fix was already written, reproduce the original implementation in an
+isolated checkout with the same test; preserve current work. If automation is
+unsuitable (for example a display-only change), record the reason and repeat the
+same concrete manual scenario before and after. Missing prerequisites or an
+unobserved original failure remain evidence gaps, not a confirmed red/green pair.
+Keep these notes and logs in existing task artifacts; no new registry, mandatory
+agent role or extra stage is needed.
+
 ## Behavior, phase proof and code review
 
 For a design-required route, pass `design -BehaviorSpec <object> -Criterion <outcomes>`.
@@ -65,6 +99,23 @@ asking only about unresolved product decisions. Store the reviewed design output
 in the existing task artifacts; do not create another persistent planning system.
 `design` reports `ready=false` while a required specification is incomplete.
 Tiny and ordinary bug routes gain no mandatory design stage.
+
+Design-required work also reviews the proposed plan backwards from every
+acceptance outcome. Use the existing `design -ReviewContent` input to bind a
+reasoned coverage review to `planReview.planFingerprint`: map each exact
+criterion to existing phase IDs and a concrete planned verification, then review
+consumers/wiring, failures, order and scope. Missing coverage, unresolved findings
+or changed design/source contents keep `ready=false`. This validates the review
+record; the agent must judge semantic sufficiency. See the compact
+[review payload](../../.llm-wiki/workflows/developer-experience.md).
+
+When role separation helps, `task-context-show -Role researcher|implementer|reviewer`
+prepares deliverables and a reordered view of the same verified redacted context
+bundle. Invalid bundles produce no assignment. Roles are optional and launch no
+agents. For instruction changes use `evals -Behavioral` to inspect the controlled
+pressure scenarios; actual paired transcripts and separate rubric judgments are
+required for observed behavioral results. Technical smoke tests alone do not
+measure instruction effectiveness. See [behavioral evaluations](../../.llm-wiki/workflows/evals.md).
 
 For governed phases, `phase-status` derives progress from the manifest, acceptance
 matrix, evidence bundle and current execution lineage. Map phase files to criteria

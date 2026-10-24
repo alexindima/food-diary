@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ExportService } from '../../../../shared/api/export.service';
@@ -21,6 +21,10 @@ let facade: CycleTrackingFacade;
 let publishedScreen: DevelopmentScreen;
 
 beforeEach(() => {
+    vi.stubGlobal(
+        'matchMedia',
+        vi.fn(() => ({ matches: false })),
+    );
     TestBed.configureTestingModule({
         imports: [CycleSettingsDrawerComponent],
         providers: [
@@ -61,7 +65,7 @@ describe('CycleSettingsDrawerComponent errors', () => {
         facade.settingsModel.update(model => ({ ...model, averageCycleLength: 28.5 }));
         facade.settingsForm.averageCycleLength().markAsTouched();
         fixture.detectChanges();
-        const element = fixture.nativeElement as HTMLElement;
+        const element = document.body;
         const input = element.querySelector('input[type=number]');
         const alert = element.querySelector('[role=alert]');
         expect(alert?.textContent).toContain('CYCLE_TRACKING.AVG_LENGTH_ERROR');
@@ -75,7 +79,7 @@ describe('CycleSettingsDrawerComponent errors', () => {
     it('announces a failed save while preserving the settings controls', () => {
         fixture.componentRef.setInput('error', 'CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
         fixture.detectChanges();
-        const element = fixture.nativeElement as HTMLElement;
+        const element = document.body;
         expect(element.querySelector('[role=alert]')?.textContent).toContain('CYCLE_TRACKING.SAVE_SETTINGS_FAILED');
         expect(element.querySelectorAll('input[type=number]')).toHaveLength(DURATION_FIELD_COUNT);
         expect(element.querySelector('button[type=submit]')?.hasAttribute('disabled')).toBe(false);
@@ -88,8 +92,8 @@ describe('CycleSettingsDrawerComponent pending actions', () => {
         fixture.detectChanges();
         const closed = vi.fn();
         fixture.componentInstance.closed.subscribe(closed);
-        const element = fixture.nativeElement as HTMLElement;
-        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        const element = document.body;
+        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
         expect(closed).not.toHaveBeenCalled();
         const buttons = Array.from(element.querySelectorAll('button'));
         expect(buttons.find(button => button.textContent.includes('COMMON.CANCEL'))?.disabled).toBe(true);
@@ -97,7 +101,7 @@ describe('CycleSettingsDrawerComponent pending actions', () => {
         expect(element.querySelector('form')?.getAttribute('aria-busy')).toBe('true');
         fixture.componentRef.setInput(operation, false);
         fixture.detectChanges();
-        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        element.querySelector('.cycle-drawer')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
         expect(closed).toHaveBeenCalledOnce();
     });
 });
@@ -158,3 +162,5 @@ describe('Cycle settings development capability', () => {
         expect(() => publishedScreen.clearDraft?.()).toThrow('busy');
     });
 });
+
+afterEach(() => vi.unstubAllGlobals());

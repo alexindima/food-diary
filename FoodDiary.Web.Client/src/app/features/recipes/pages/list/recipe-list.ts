@@ -10,13 +10,14 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { debounceTime, distinctUntilChanged, EMPTY, skip, switchMap } from 'rxjs';
@@ -55,7 +56,7 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

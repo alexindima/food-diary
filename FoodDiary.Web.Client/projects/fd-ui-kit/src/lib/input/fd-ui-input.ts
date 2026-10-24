@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, untracked } from '@angular/core';
 import { afterNextRender, DestroyRef, type ElementRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import type { FdUiEnterKeyHint } from '../types/enter-key-hint.type';
 import type { FdUiFieldSize } from '../types/field-size.type';
 import { FD_UI_INPUT_AUTOFILL_SYNC_DELAYS_MS } from './fd-ui-input.tokens';
 
@@ -59,7 +61,9 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly localizedNumber = input(false);
     public readonly numberNormalizer = input<(value: number | null) => number | null>();
     public readonly autocomplete = input<FdUiInputAutocomplete>();
+    public readonly enterKeyHint = input<FdUiEnterKeyHint>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly showRequiredIndicator = input(true);
     public readonly suffixText = input<string>();
@@ -81,6 +85,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     public readonly appearance = input<FdUiInputAppearance>('default');
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -121,9 +126,9 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     protected readonly sizeClass = computed(() => `fd-ui-input--size-${this.size()}`);
     protected readonly appearanceClass = computed(() => `fd-ui-input--appearance-${this.appearance()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly hostClass = computed(
         () =>

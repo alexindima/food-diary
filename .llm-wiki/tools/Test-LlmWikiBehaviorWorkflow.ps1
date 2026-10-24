@@ -296,7 +296,66 @@ if (Test-Path (Join-Path $PSScriptRoot '../../.artifacts/publication-drift')) { 
     Assert-Behavior (-not (Read-Phase).valid) 'Changing criterion text retained phase completion.'
     $changedRequirements = & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     Assert-Behavior (-not $changedRequirements.substantiveReview.valid) 'Changing requirements retained the prior review.'
-    Write-Host 'Behavior workflow regression passed: specification, staged changes, execution lineage, source/log drift and substantive review closure.'
+    # The same focused test must fail on the original implementation and pass
+    # after its fix. Keep this history inside the existing evidence bundle.
+    $regressionPath = '.artifacts/llm-wiki/regression.json'
+    Write-FixtureJson $regressionPath @{ git = @{ base = $base; head = $base }; change = @{ changedPaths = @('src/value.txt', 'src/behavior.ps1'); scopes = @('Backend'); modules = @('Fixture') }; checks = @(); reviews = @(); supplementalChecks = @(); artifacts = @() }
+    function Run-Regression([string]$Phase, [string]$Expected = 'Unexpected value', [string]$RunCommand = $command) {
+        Push-Location $fixture
+        try {
+            & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path $regressionPath -Id value-regression `
+                -Command $RunCommand -RegressionPhase $Phase -ExpectedFailure $Expected -TestPath src/behavior.ps1 -NoExitOnFailure | Out-Null
+        } finally { Pop-Location }
+    }
+    function Read-Regression {
+        & (Join-Path $fixtureTools 'Test-LlmWikiEvidenceLineage.ps1') -EvidencePath $regressionPath -Format Json | ConvertFrom-Json
+    }
+    function Assert-RegressionRejected([scriptblock]$Action, [string]$Pattern) {
+        $rejected = $false
+        try { & $Action } catch { $rejected = $_.Exception.Message -match $Pattern }
+        Assert-Behavior $rejected "Regression evidence accepted invalid input: $Pattern"
+    }
+    Assert-RegressionRejected { Run-Regression after } 'before'
+    Assert-RegressionRejected { Run-Regression before } 'expected failure'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '1')
+    Assert-RegressionRejected { Run-Regression before 'Unrelated assertion' } 'expected failure'
+    Run-Regression before
+    Assert-Behavior ($LASTEXITCODE -eq 0) 'The observed expected failure did not return successfully to the Wiki facade.'
+    $redEvidence = Get-Content -LiteralPath (Join-Path $fixture $regressionPath) -Raw | ConvertFrom-Json
+    Assert-Behavior ($redEvidence.supplementalChecks[0].status -eq 'failed') 'The expected red run was relabelled as a passing check.'
+    Assert-Behavior (-not (Read-Regression).valid) 'A red run without a green run completed regression evidence.'
+    Assert-RegressionRejected { Run-Regression after 'Unexpected value' './.llm-wiki/wiki.ps1 different-test' } 'same command'
+    $testSource = [IO.File]::ReadAllText((Join-Path $fixture 'src/behavior.ps1'))
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/behavior.ps1'), $testSource + "`n# changed assertion input")
+    Assert-RegressionRejected { Run-Regression after } 'test files'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/behavior.ps1'), $testSource)
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')
+    Push-Location $fixture
+    try {
+        & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') run -Path $regressionPath -Id value-regression -RegressionPhase after -NoExitOnFailure | Out-Null
+    } finally { Pop-Location }
+    $confirmed = Read-Regression
+    Assert-Behavior ($confirmed.valid -and $confirmed.regressions[0].state -eq 'confirmed') 'A genuine red/green pair did not validate.'
+    $regressionSummary = & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') summary -Path $regressionPath | Out-String
+    Assert-Behavior ($regressionSummary -match 'value-regression: confirmed' -and $regressionSummary -match 'Evidence state: complete') 'Handoff omitted the confirmed regression pair.'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '3')
+    $staleSummary = & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') summary -Path $regressionPath | Out-String
+    Assert-Behavior ($staleSummary -match 'value-regression: unconfirmed' -and $staleSummary -match 'Evidence state: incomplete') 'Handoff confirmed a green run against changed source.'
+    [IO.File]::WriteAllText((Join-Path $fixture 'src/value.txt'), '2')
+    $pairedEvidenceText = [IO.File]::ReadAllText((Join-Path $fixture $regressionPath))
+    $pairedEvidence = $pairedEvidenceText | ConvertFrom-Json
+    $redLog = Join-Path $fixture $pairedEvidence.supplementalChecks[0].regression.before.logPath
+    $redLogText = [IO.File]::ReadAllText($redLog)
+    [IO.File]::WriteAllText($redLog, 'Replaced original failure log')
+    Assert-Behavior (-not (Read-Regression).valid) 'A modified historical red log retained confirmation.'
+    [IO.File]::WriteAllText($redLog, $redLogText)
+    $pairedEvidence.supplementalChecks[0].regression.before.exitCode = 0
+    Write-FixtureJson $regressionPath $pairedEvidence
+    Assert-Behavior (-not (Read-Regression).valid) 'A successful before run was accepted as regression evidence.'
+    [IO.File]::WriteAllText((Join-Path $fixture $regressionPath), $pairedEvidenceText)
+    & (Join-Path $fixtureTools 'Manage-LlmWikiEvidence.ps1') check -Path $regressionPath -Id value-regression -Status passed -Command $command -Reason 'Manual pass' | Out-Null
+    Assert-Behavior (-not (Read-Regression).valid) 'A manual pass replaced the executed green run.'
+    Write-Host 'Behavior workflow regression passed: specification, execution lineage, source/log drift, review closure and paired red/green evidence.'
 } finally {
     $resolvedFixture = [IO.Path]::GetFullPath($fixture)
     if ([IO.Path]::GetDirectoryName($resolvedFixture) -cne $ownedParent) { throw 'Fixture cleanup escaped its owned parent.' }

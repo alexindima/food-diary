@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
-import { FormField, FormRoot } from '@angular/forms/signals';
+import { FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
@@ -13,7 +14,15 @@ import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
 @Component({
     selector: 'fd-weight-history-goal-dialog',
-    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, FormRoot, MeasurementUnitPipe, TranslatePipe],
+    imports: [
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiInputComponent,
+        FormField,
+        FdUiFormDirective,
+        MeasurementUnitPipe,
+        TranslatePipe,
+    ],
     templateUrl: './weight-history-goal-dialog.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

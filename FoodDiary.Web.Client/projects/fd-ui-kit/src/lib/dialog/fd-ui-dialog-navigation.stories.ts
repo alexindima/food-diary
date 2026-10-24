@@ -6,11 +6,12 @@ import { FdUiDialogShellComponent } from '../dialog-shell/fd-ui-dialog-shell';
 import { FdUiInputComponent } from '../input/fd-ui-input';
 import { FdUiDialogService } from './fd-ui-dialog.service';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
+import { FdUiModalDirective } from './fd-ui-modal.directive';
 import { provideFdUiDialogNavigation } from './provide-dialog-navigation';
 
 @Component({
     selector: 'fd-dialog-navigation-example',
-    imports: [FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent],
+    imports: [FdUiButtonComponent, FdUiDialogShellComponent, FdUiInputComponent, FdUiModalDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (dialogRef) {
@@ -26,12 +27,27 @@ import { provideFdUiDialogNavigation } from './provide-dialog-navigation';
             </fd-ui-dialog-shell>
         } @else {
             <fd-ui-button (click)="open()">Open dialog</fd-ui-button>
+            <fd-ui-button (click)="panelOpen.set(true)">Open custom panel</fd-ui-button>
+            <ng-template
+                [fdUiModal]="panelOpen()"
+                [fdUiModalDisableClose]="locked()"
+                fdUiModalLabel="Custom panel"
+                (fdUiModalClosed)="panelOpen.set(false)"
+            >
+                <fd-ui-dialog-shell title="Custom panel" [disableClose]="locked()">
+                    <fd-ui-input label="Panel draft" />
+                    <fd-ui-button (click)="open()">Open nested dialog</fd-ui-button>
+                    <fd-ui-button (click)="locked.set(!locked())">Toggle panel lock</fd-ui-button>
+                    <fd-ui-button (click)="panelOpen.set(false)">Close panel</fd-ui-button>
+                </fd-ui-dialog-shell>
+            </ng-template>
         }
     `,
 })
 class DialogNavigationExampleComponent {
     protected readonly dialogRef = inject(FdUiDialogRef, { optional: true });
     protected readonly locked = signal(false);
+    protected readonly panelOpen = signal(false);
     private readonly dialogs = inject(FdUiDialogService);
 
     protected open(): void {

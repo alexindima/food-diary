@@ -35,6 +35,30 @@ function createComponent(): AuthRegisterFormTestContext {
 }
 
 describe('AuthRegisterFormComponent', () => {
+    it('offers one new password field whose visibility can be toggled without losing its value', () => {
+        const { fixture } = createComponent();
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelectorAll('input[autocomplete="new-password"]')).toHaveLength(1);
+        const control = root.querySelector<HTMLInputElement>('input[type="password"]');
+        if (control === null) {
+            throw new Error('Password field is required');
+        }
+        control.value = '  password123  ';
+        control.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+        const toggle = root.querySelector<HTMLButtonElement>('button[aria-label="AUTH.LOGIN.SHOW_PASSWORD"]');
+        expect(toggle).not.toBeNull();
+        toggle?.click();
+        fixture.detectChanges();
+        expect(control.type).toBe('text');
+        expect(control.value).toBe('  password123  ');
+        expect(toggle?.getAttribute('aria-label')).toBe('AUTH.LOGIN.HIDE_PASSWORD');
+        toggle?.click();
+        fixture.detectChanges();
+        expect(control.type).toBe('password');
+        expect(control.value).toBe('  password123  ');
+    });
+
     it('should expose google button ref and render register fields', () => {
         const { component, fixture } = createComponent();
         const root = fixture.nativeElement as HTMLElement;

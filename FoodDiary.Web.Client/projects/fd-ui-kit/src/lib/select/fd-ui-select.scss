@@ -227,3 +227,9 @@
         box-shadow: var(--fd-shadow-focus);
     }
 }
+@media (any-pointer: coarse) {
+    .fd-ui-select .fd-ui-select__control-wrap,
+    .fd-ui-select__menu-item {
+        min-height: var(--fd-size-control-lg);
+    }
+}

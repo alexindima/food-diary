@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
@@ -94,7 +95,7 @@ export class UserManageDietologistSummaryComponent {
             variant: 'primary',
             icon: 'person_add',
             labelKey: 'USER_MANAGE.DIETOLOGIST_INVITE_ACTION',
-            disabled: this.dietologistForm()().invalid() || this.isSavingDietologist(),
+            disabled: this.isSavingDietologist(),
             action: 'invite',
         };
     });
@@ -103,6 +104,11 @@ export class UserManageDietologistSummaryComponent {
 
     protected executeSummaryAction(action: DietologistSummaryAction['action']): void {
         if (action === 'invite') {
+            this.dietologistForm()().markAsTouched();
+            if (this.dietologistForm()().invalid()) {
+                focusFirstInvalidField(this.dietologistForm());
+                return;
+            }
             this.dietologistInvite.emit();
             return;
         }

@@ -111,7 +111,6 @@ export class SidebarComponent {
     );
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
-    private mobileSheetScrollTop = 0;
 
     public constructor() {
         effect(() => {
@@ -136,20 +135,13 @@ export class SidebarComponent {
             }
         });
 
-        effect(onCleanup => {
-            if (!this.isMobileViewport() || !this.isMobileSheetOpen()) {
-                return;
-            }
-
-            this.lockMobileSheetScroll();
-            onCleanup(() => {
-                this.unlockMobileSheetScroll();
-            });
-        });
-
         const mobileMediaQuery = this.browserWindow.matchMedia(this.mobileViewportQuery);
         const updateMobileViewport = (): void => {
-            this.isMobileViewport.set(this.getIsMobileViewport());
+            const isMobile = this.getIsMobileViewport();
+            this.isMobileViewport.set(isMobile);
+            if (!isMobile) {
+                this.closeMobileMenus();
+            }
         };
 
         mobileMediaQuery?.addEventListener('change', updateMobileViewport);
@@ -363,38 +355,8 @@ export class SidebarComponent {
         return isSidebarRouteActive(this.router.url, route, exact);
     }
 
-    private lockMobileSheetScroll(): void {
-        if (!this.browserWindow.isAvailable()) {
-            return;
-        }
-
-        const scrollbarWidth = Math.max(0, this.browserWindow.getViewportWidth() - this.document.documentElement.clientWidth);
-        this.mobileSheetScrollTop = this.browserWindow.getScrollY();
-        this.document.body.style.insetBlockStart = `-${this.mobileSheetScrollTop}px`;
-        this.document.body.style.paddingInlineEnd = `${scrollbarWidth}px`;
-        this.document.body.classList.add('fd-scroll-lock');
-    }
-
-    private unlockMobileSheetScroll(): void {
-        this.document.body.classList.remove('fd-scroll-lock');
-        this.document.body.style.removeProperty('inset-block-start');
-        this.document.body.style.removeProperty('padding-inline-end');
-
-        if (!this.browserWindow.isAvailable()) {
-            return;
-        }
-
-        this.browserWindow.scrollTo(0, this.mobileSheetScrollTop);
-    }
-
     private readonly handleDocumentKeydown = (event: KeyboardEvent): void => {
-        if (event.key !== 'Escape') {
-            return;
-        }
-
-        if (this.isMobileSheetOpen()) {
-            event.preventDefault();
-            this.closeMobileMenus();
+        if (event.key !== 'Escape' || event.defaultPrevented) {
             return;
         }
 

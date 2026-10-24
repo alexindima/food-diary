@@ -27,9 +27,10 @@
             [required]="required()"
             [disabled]="disabled()"
             [attr.maxlength]="maximumLength() ?? null"
+            [attr.enterkeyhint]="enterKeyHint() ?? null"
             [attr.placeholder]="placeholderAttribute()"
-            [attr.aria-describedby]="error() ? `${id()}-error` : null"
-            [attr.aria-invalid]="error() ? 'true' : null"
+            [attr.aria-describedby]="resolvedError() ? `${id()}-error` : null"
+            [attr.aria-invalid]="resolvedError() ? 'true' : null"
             [attr.aria-expanded]="isOpen()"
             [attr.aria-controls]="`${id()}-listbox`"
             [attr.aria-activedescendant]="activeOptionId()"
@@ -84,7 +85,7 @@
         </ng-template>
     </div>
 
-    @if (error()) {
-        <div class="fd-ui-autocomplete__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    @if (resolvedError()) {
+        <div class="fd-ui-autocomplete__error" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</div>
     }
 </div>

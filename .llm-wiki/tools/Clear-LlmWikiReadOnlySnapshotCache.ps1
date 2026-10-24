@@ -7,23 +7,11 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$repositoryPathHasher = [Security.Cryptography.SHA256]::Create()
-try {
-    $repositoryPathHash = $repositoryPathHasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($repositoryRoot.ToLowerInvariant()))
-} finally {
-    $repositoryPathHasher.Dispose()
-}
-$repositorySnapshotKey = (([BitConverter]::ToString($repositoryPathHash) -replace '-', '').ToLowerInvariant()).Substring(0, 16)
-$snapshotTempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
-    Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
-} else {
-    [IO.Path]::GetTempPath()
-}
-$cacheBase = [IO.Path]::GetFullPath((Join-Path $snapshotTempRoot 'fooddiary-llm-wiki-read-only'))
-$snapshotParent = [IO.Path]::GetFullPath((Join-Path $cacheBase $repositorySnapshotKey))
+$cacheBase = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
+$snapshotParent = [IO.Path]::GetFullPath((Join-Path $cacheBase 'read-only-snapshots'))
 $cachePrefix = $cacheBase.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
 if (-not $snapshotParent.StartsWith($cachePrefix, [StringComparison]::OrdinalIgnoreCase)) {
-    throw "Refusing to clean a read-only snapshot cache outside the expected temp root: $snapshotParent"
+    throw "Refusing to clean a read-only snapshot cache outside repository artifacts: $snapshotParent"
 }
 if (-not (Test-Path -LiteralPath $snapshotParent -PathType Container)) {
     Write-Host 'LLM Wiki read-only snapshot cache is empty.'

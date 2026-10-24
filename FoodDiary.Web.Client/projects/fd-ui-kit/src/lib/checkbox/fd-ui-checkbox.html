@@ -1,11 +1,12 @@
 <div class="fd-ui-checkbox">
     <input
+        #control
         class="fd-ui-checkbox__input"
         type="checkbox"
         [id]="id()"
         [checked]="checked()"
         [disabled]="disabled()"
-        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-invalid]="resolvedError() ? 'true' : null"
         [attr.aria-describedby]="describedBy()"
         (change)="updateCheckedValue($event)"
         (blur)="touchControl()"
@@ -21,10 +22,10 @@
             <ng-content />
         </span>
     </label>
-    @if (hint() && !error()) {
+    @if (hint() && !resolvedError()) {
         <div class="fd-ui-checkbox__hint fd-ui-helper-text" [id]="`${id()}-hint`">{{ hint() }}</div>
     }
-    @if (error()) {
-        <div class="fd-ui-checkbox__error fd-ui-error-text" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+    @if (resolvedError()) {
+        <div class="fd-ui-checkbox__error fd-ui-error-text" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</div>
     }
 </div>

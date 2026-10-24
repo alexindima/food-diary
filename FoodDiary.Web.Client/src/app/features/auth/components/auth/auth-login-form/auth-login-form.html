@@ -18,6 +18,7 @@
             appearance="auth"
             type="email"
             autocomplete="username"
+            enterKeyHint="next"
             id="auth-login-email"
             [formField]="form().email"
             [label]="'AUTH.LOGIN.EMAIL' | translate"
@@ -30,6 +31,7 @@
         <fd-ui-input
             appearance="auth"
             autocomplete="current-password"
+            enterKeyHint="go"
             [maximumLength]="passwordMaximumLength"
             [type]="passwordInputType()"
             [formField]="form().password"
@@ -54,9 +56,7 @@
             appearance="brand-action"
             size="lg"
             variant="primary"
-            [disabled]="isSubmitDisabled()"
-            [disabledReason]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-            [loading]="isSubmitting()"
+            [loading]="isSubmitDisabled() || isSubmitting()"
             [fullWidth]="true"
         >
             {{ loginSubmitLabelKey() | translate }}
@@ -68,9 +68,7 @@
                 size="lg"
                 variant="secondary"
                 fill="outline"
-                [disabled]="form()().invalid() || isRestoring() || isSubmitting()"
-                [disabledReason]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-                [loading]="isRestoring()"
+                [loading]="isRestoring() || isSubmitting()"
                 [fullWidth]="true"
                 (click)="restoreSubmit.emit()"
             >

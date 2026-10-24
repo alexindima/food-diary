@@ -126,6 +126,7 @@
         "RATE_LIMITED": "Too many requests. Please wait a minute before trying again."
     },
     "COMMON": {
+        "PERIOD": "Period",
         "ADD": "Add",
         "CANCEL": "Cancel",
         "CLEAR": "Clear",

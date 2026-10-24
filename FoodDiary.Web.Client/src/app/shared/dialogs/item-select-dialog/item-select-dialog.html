@@ -3,7 +3,9 @@
         <div class="meal-item-select fd-stack fd-gap-md">
             @if (!isInitialTabLocked()) {
                 <fd-ui-tabs
+                    mode="selection"
                     class="meal-item-select__tabs"
+                    [ariaLabel]="titleKey | translate"
                     [tabs]="tabs"
                     [selectedValue]="activeTab()"
                     (selectedValueChange)="onTabChange($event)"
@@ -44,7 +46,9 @@
     <div class="meal-item-select fd-stack fd-gap-md">
         @if (!isInitialTabLocked()) {
             <fd-ui-tabs
+                mode="selection"
                 class="meal-item-select__tabs"
+                [ariaLabel]="titleKey | translate"
                 [tabs]="tabs"
                 [selectedValue]="activeTab()"
                 (selectedValueChange)="onTabChange($event)"

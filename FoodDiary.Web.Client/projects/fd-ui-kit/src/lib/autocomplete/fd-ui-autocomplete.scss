@@ -229,3 +229,18 @@
     padding: var(--fd-space-menu-item-padding);
     text-align: center;
 }
+@media (any-pointer: coarse) {
+    .fd-ui-autocomplete .fd-ui-autocomplete__control-wrap,
+    .fd-ui-autocomplete__menu-item {
+        min-height: var(--fd-size-control-lg);
+    }
+
+    .fd-ui-autocomplete__control-wrap {
+        padding-right: calc(var(--fd-size-control-lg) + var(--fd-space-xs));
+    }
+
+    .fd-ui-autocomplete__suffix {
+        width: var(--fd-size-control-lg);
+        height: var(--fd-size-control-lg);
+    }
+}

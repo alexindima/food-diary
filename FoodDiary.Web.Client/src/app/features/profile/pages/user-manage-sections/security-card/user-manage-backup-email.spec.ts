@@ -6,6 +6,8 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
 import { UserManageBackupEmailComponent } from './user-manage-backup-email';
 
+const RESEND_COOLDOWN_MS = 60_000;
+
 describe('UserManageBackupEmailComponent', () => {
     const facade = {
         user: signal({ hasTelegramIdentity: true, email: null as string | null }),
@@ -18,6 +20,7 @@ describe('UserManageBackupEmailComponent', () => {
         facade.user.set({ hasTelegramIdentity: true, email: null });
         facade.isRequestingBackupEmail.set(false);
         facade.backupEmailSentTo.set(null);
+        facade.backupEmailResendAt.set(0);
         facade.requestBackupEmailAsync.mockReset();
         TestBed.configureTestingModule({
             imports: [UserManageBackupEmailComponent],
@@ -44,5 +47,33 @@ describe('UserManageBackupEmailComponent', () => {
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-ui-input')).toBeNull();
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('confirmed@example.com');
+    });
+
+    it('explains an invalid submit and focuses its field without sending a request', () => {
+        const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('button');
+        expect(button?.disabled).toBe(false);
+        button?.click();
+        fixture.detectChanges();
+        const input = host.querySelector<HTMLInputElement>('input');
+        expect(host.querySelector('[role="alert"]')?.textContent).toContain('FORM_ERRORS.EMAIL');
+        expect(document.activeElement).toBe(input);
+        expect(input?.getAttribute('aria-invalid')).toBe('true');
+        expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
+    });
+
+    it('retains request and resend guards even when invoked by the keyboard', () => {
+        const fixture = TestBed.createComponent(UserManageBackupEmailComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance;
+        component['email'].set('backup@example.com');
+        facade.isRequestingBackupEmail.set(true);
+        component['submit']();
+        facade.isRequestingBackupEmail.set(false);
+        facade.backupEmailResendAt.set(Date.now() + RESEND_COOLDOWN_MS);
+        component['submit']();
+        expect(facade.requestBackupEmailAsync).not.toHaveBeenCalled();
     });
 });

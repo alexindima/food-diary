@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, type ElementRef, input, viewChild } from '@angular/core';
-import { type FieldTree, FormRoot } from '@angular/forms/signals';
+import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 
 import { AuthGoogleSectionComponent } from '../auth-google-section/auth-google-section';
@@ -11,7 +12,7 @@ import { AuthRegisterFieldsComponent } from '../auth-register-fields/auth-regist
 @Component({
     selector: 'fd-auth-register-form',
     imports: [
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiFormErrorComponent,

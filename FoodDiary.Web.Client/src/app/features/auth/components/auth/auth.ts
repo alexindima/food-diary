@@ -16,6 +16,7 @@ import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { firstValueFrom } from 'rxjs';
 
@@ -256,7 +257,12 @@ export class AuthComponent {
     }
 
     protected onRestoreSubmit(): void {
+        this.loginForm().markAsTouched();
+        this.formManager.updateFieldErrors();
         if (this.loginForm().invalid() || this.isRestoring()) {
+            if (this.loginForm().invalid()) {
+                focusFirstInvalidField(this.loginForm);
+            }
             return;
         }
 

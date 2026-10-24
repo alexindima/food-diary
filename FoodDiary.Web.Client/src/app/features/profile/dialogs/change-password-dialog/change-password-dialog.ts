@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { firstValueFrom } from 'rxjs';
@@ -28,7 +29,15 @@ type FieldErrors = Record<ErrorField, string | null>;
     templateUrl: './change-password-dialog.html',
     styleUrls: ['./change-password-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField, FormRoot, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent, FdUiButtonComponent],
+    imports: [
+        FormField,
+        FdUiFormDirective,
+        TranslatePipe,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiInputComponent,
+        FdUiButtonComponent,
+    ],
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);

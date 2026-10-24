@@ -5,6 +5,8 @@ param(
     [string]$Action = 'show',
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [string]$SourceWorkspacePath,
+    [ValidateSet('researcher', 'implementer', 'reviewer')]
+    [string]$Role,
     [Nullable[int]]$Limit,
     [Nullable[int]]$CharacterBudget,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
@@ -14,6 +16,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiRoleAssignment.ps1')
+if ($Role -and $Action -eq 'compare') { throw 'Role assignments require create, show or verify.' }
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
@@ -412,10 +416,22 @@ if ($Action -eq 'create') {
     $result = [pscustomobject][ordered]@{ action = $Action; valid = $validation.valid; issues = @($validation.issues); bundle = $bundle }
 }
 
+if ($Role) {
+    # Creation also revalidates before exposing an executable assignment.
+    $roleValidation = if ($Action -eq 'create') { Test-Bundle $result.bundle $normalizedWorkspace } else { $validation }
+    $result.valid = $roleValidation.valid
+    $result | Add-Member -NotePropertyName assignment -NotePropertyValue $(if ($roleValidation.valid) { Get-LlmWikiRoleAssignment -Bundle $result.bundle -Role $Role } else { $null })
+    if (-not $roleValidation.valid) { $result | Add-Member -NotePropertyName issues -NotePropertyValue @($roleValidation.issues) -Force }
+}
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     Write-Host "Context bundle: action=$($result.action), valid=$($result.valid)"
     if ($result.PSObject.Properties['bundle']) { Write-Host "Items=$(@($result.bundle.items).Count), characters=$($result.bundle.budgets.usedCharacters), redactions=$($result.bundle.redaction.count), hash=$($result.bundle.bundleHash)" }
     if ($result.PSObject.Properties['overlapPercent']) { Write-Host "Overlap=$($result.overlapPercent)%" }
+    if ($Role -and $null -ne $result.assignment) {
+        Write-Host "Role: $Role. $($result.assignment.purpose)"
+        foreach ($deliverable in $result.assignment.deliverables) { Write-Host " - $deliverable" }
+        Write-Host $result.assignment.execution
+    }
     if ($result.PSObject.Properties['issues']) { foreach ($issue in @($result.issues | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) { Write-Host " - $issue" } }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }

@@ -16,8 +16,9 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -54,12 +55,14 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public readonly ariaLabel = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly options = input<Array<FdUiSelectOption<T>>>([]);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<T | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -68,6 +71,11 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     protected readonly isOpen = signal(false);
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
     protected readonly overlayMinWidth = signal(0);
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public focus(): void {
+        this.controlRef()?.nativeElement.focus();
+    }
 
     public constructor() {
         effect(() => {
@@ -86,9 +94,9 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
 
     protected readonly sizeClass = computed(() => `fd-ui-select--size-${this.size()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly hostClass = computed(
         () =>

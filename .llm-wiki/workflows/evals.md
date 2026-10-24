@@ -3,6 +3,8 @@ id: workflow.evals
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/evals/behavioral-instructions.json
+  - .llm-wiki/tools/Invoke-LlmWikiBehavioralEvaluation.ps1
   - .llm-wiki/evals/context-search-conversational.json
   - .llm-wiki/evals/context-search-conversational-paraphrases.json
   - .llm-wiki/evals/development-context-cross-layer.json
@@ -22,6 +24,54 @@ sources:
 ---
 
 # AI Development Evals
+
+Behavioral instruction evaluation is an explicit, separate mode:
+
+```powershell
+./.llm-wiki/wiki.ps1 evals -Behavioral -Format Json
+./.llm-wiki/wiki.ps1 evals -Behavioral -EvaluationPath '.artifacts/evals/runs.json' -Format Json
+```
+
+The five pressure scenarios cover diagnosis before patching, an already-green
+regression test, a missing API consumer, stale proof after edits, and resuming
+partial work with stale context. Without submitted runs the status is `not-run`.
+Default `evals` remains the existing deterministic routing/policy suite.
+
+Use fresh disposable sessions with the identical scenario, model and settings
+for baseline (candidate instructions withheld) and guided (listed current
+instruction hashes). Save actual agent/tool transcripts, then have a separate
+reviewer assess each rubric item. Do not insert the expected answer into the
+agent prompt. Repeat paired trials to study variance. The manifest shape is:
+
+```json
+{
+  "corpusSha256": "<from behavioral report>",
+  "runs": [{
+    "caseId": "plan-missing-consumer",
+    "trial": 1,
+    "condition": "guided",
+    "model": "<actual model>",
+    "settings": {"reasoningEffort": "<actual setting>"},
+    "instructions": [{"path": "docs/ai/AI_WORKFLOW.md", "sha256": "<current hash>"}, {"path": "docs/ai/CODE_REVIEW.md", "sha256": "<current hash>"}],
+    "transcriptPath": ".artifacts/evals/consumer-guided.txt",
+    "transcriptSha256": "<SHA256 of saved transcript>",
+    "review": {
+      "reviewer": "<independent reviewer identity>",
+      "assessments": [{"id": "consumer-gap", "verdict": "passed", "reason": "<semantic assessment>", "evidenceQuote": "<literal transcript anchor>"}]
+    }
+  }]
+}
+```
+
+Supply every rubric item exactly once, with `passed`, `failed` or `inconclusive`,
+and both conditions for each trial; baseline `instructions` is an empty array.
+The tool verifies hashes, literal anchors and pair comparability. Missing pairs
+or inconclusive judgments stay `insufficient-data`; changed transcripts,
+instructions or corpus invalidate evidence. `observed` means all scenarios have
+a comparable submitted pair, not that instructions improved the model. Semantic
+judgments remain the reviewer's responsibility. No model is invoked by this
+command and no instruction is automatically promoted. Synthetic smoke fixtures
+test this validator and are never published as model measurements.
 
 The flow-coverage corpus preserves two observed discovery failures: meal-form
 updates with server nutrition recalculation and tests, and photo recognition

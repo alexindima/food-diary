@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, maxLength, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 
 import type { ShoppingListDraftItem } from '../../lib/shopping-list.facade';
 import { isShoppingListAmountValid } from '../../lib/shopping-list-amount.validation';
@@ -15,7 +16,15 @@ export type ShoppingItemEditData = ShoppingListDraftItem & { productId?: string 
 @Component({
     selector: 'fd-shopping-item-edit',
     templateUrl: './shopping-item-edit.html',
-    imports: [TranslatePipe, FormField, FormRoot, FdUiDialogComponent, FdUiInputComponent, FdUiSelectComponent, FdUiButtonComponent],
+    imports: [
+        TranslatePipe,
+        FormField,
+        FdUiFormDirective,
+        FdUiDialogComponent,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        FdUiButtonComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingItemEditComponent {
@@ -33,7 +42,7 @@ export class ShoppingItemEditComponent {
         note: this.data.note ?? '',
     });
     protected readonly fields = form(this.draft, path => {
-        required(path.name);
+        validate(path.name, ({ value }) => (value().trim().length === 0 ? { kind: 'required' } : undefined));
         maxLength(path.name, SHOPPING_ITEM_NAME_LIMIT);
         maxLength(path.category, SHOPPING_ITEM_CATEGORY_LIMIT);
         maxLength(path.note, SHOPPING_ITEM_NOTE_LIMIT);

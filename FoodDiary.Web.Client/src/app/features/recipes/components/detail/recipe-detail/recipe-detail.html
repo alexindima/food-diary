@@ -30,9 +30,21 @@
     </header>
 
     <div class="recipe-detail fd-stack fd-gap-lg">
-        <fd-ui-tabs [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
-        @switch (activeTab) {
-            @case ('summary') {
+        <fd-ui-tabs
+            #detailTabs
+            [ariaLabel]="recipe.name"
+            [tabs]="tabs"
+            [selectedValue]="activeTab"
+            (selectedValueChange)="onTabChange($event)"
+        />
+        <div
+            role="tabpanel"
+            tabindex="0"
+            [id]="detailTabs.panelId('summary')"
+            [attr.aria-labelledby]="detailTabs.tabId('summary')"
+            [hidden]="activeTab !== 'summary'"
+        >
+            @if (activeTab === 'summary') {
                 <fd-recipe-detail-summary
                     [recipe]="recipe"
                     [calories]="calories"
@@ -44,10 +56,18 @@
                     [ingredientPreview]="ingredientPreview"
                 />
             }
-            @case ('cook') {
+        </div>
+        <div
+            role="tabpanel"
+            tabindex="0"
+            [id]="detailTabs.panelId('cook')"
+            [attr.aria-labelledby]="detailTabs.tabId('cook')"
+            [hidden]="activeTab !== 'cook'"
+        >
+            @if (activeTab === 'cook') {
                 <fd-recipe-cook-mode [recipe]="recipe" />
             }
-        }
+        </div>
     </div>
 
     <div fdUiDialogFooter class="recipe-detail__footer fd-stack fd-gap-sm">

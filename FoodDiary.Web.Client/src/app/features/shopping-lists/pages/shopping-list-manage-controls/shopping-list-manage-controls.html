@@ -50,6 +50,7 @@
                 <div class="shopping-list__rename">
                     <input
                         class="shopping-list__list-card-rename-input"
+                        enterkeyhint="done"
                         fdUiFocusSelect
                         type="text"
                         [fdUiFocusWhen]="true"
@@ -57,7 +58,7 @@
                         [attr.aria-label]="'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate"
                         (input)="updateRenameDraft($event)"
                         (blur)="saveRename(list.id)"
-                        (keydown.enter)="saveRename(list.id)"
+                        (fdUiTextEnter)="saveRename(list.id)"
                         (keydown.escape)="cancelRename()"
                     />
                     <fd-ui-button

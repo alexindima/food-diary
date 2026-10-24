@@ -15,6 +15,15 @@ if (-not $frontendImpact.ready) { throw 'Frontend impact fixture is not ready.' 
 $frontendPlanArguments = @{ Intent = 'Update dashboard behavior'; DiffInput = $frontendDiff; PolicyInput = $frontendPolicy; Format = 'Json'; NoBaseline = $true }
 $queriedFrontendPlan = & $tool @frontendPlanArguments | ConvertFrom-Json
 $reusedFrontendPlan = & $tool @frontendPlanArguments -FrontendContractsInput $frontendImpact.groups.frontendContract | ConvertFrom-Json
+$bugPlanArguments = @{} + $frontendPlanArguments
+$bugPlanArguments.Intent = 'Fix dashboard behavior regression'
+$bugPlan = & $tool @bugPlanArguments -FrontendContractsInput $frontendImpact.groups.frontendContract | ConvertFrom-Json
+foreach ($scenarioId in @('bug-diagnosis', 'regression-red-green')) {
+    if ($scenarioId -notin @($bugPlan.scenarios | ForEach-Object id) -or $scenarioId -in @($reusedFrontendPlan.scenarios | ForEach-Object id)) {
+        throw "Bug-only scenario $scenarioId was omitted or leaked into ordinary feature verification."
+    }
+}
+if (@($bugPlan.commands).Count -ne @($reusedFrontendPlan.commands).Count) { throw 'Bug diagnosis prompts added unconditional execution commands.' }
 if (($queriedFrontendPlan | ConvertTo-Json -Depth 20 -Compress) -cne ($reusedFrontendPlan | ConvertTo-Json -Depth 20 -Compress)) {
     throw 'Sharing the scoped frontend impact changed the complete test plan.'
 }

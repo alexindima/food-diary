@@ -97,12 +97,8 @@ if (-not $Isolated) {
     $previousSnapshot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
     $previousSource = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
     $previousSandbox = $env:LLM_WIKI_SMOKE_SANDBOX
-    $hashAlgorithm = [Security.Cryptography.SHA256]::Create()
-    try { $rootHash = ([BitConverter]::ToString($hashAlgorithm.ComputeHash([Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($cloneRoot)).ToLowerInvariant()))) -replace '-', '').ToLowerInvariant().Substring(0, 16) }
-    finally { $hashAlgorithm.Dispose() }
-    $snapshotTemp = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp' } else { [IO.Path]::GetTempPath() }
-    $snapshotParent = Join-Path $snapshotTemp 'fooddiary-llm-wiki-read-only'
-    $cloneSnapshots = Join-Path $snapshotParent $rootHash
+    $snapshotParent = Join-Path $cloneRoot '.artifacts/llm-wiki'
+    $cloneSnapshots = Join-Path $snapshotParent 'read-only-snapshots'
     try {
         $null = New-Item -ItemType Directory -Path $cloneParent -Force
         & git clone --shared --quiet $repositoryRoot $cloneRoot
@@ -137,7 +133,9 @@ $protectedSentinel = Join-Path $repositoryRoot '.llm-wiki/generated/read-only-gu
 $dirtySentinel = Join-Path $repositoryRoot 'read-only-guard-worktree-smoke.tmp'
 $cleanSourceRelative = 'Shared/FoodDiary.Results/Result.cs'
 $cleanSource = Join-Path $repositoryRoot $cleanSourceRelative
-$cleanRepositoryRoot = Join-Path $fixtureRoot 'clean-repository'
+# Keep the native Git working directory below Windows' path limit even when
+# this regression itself runs in an isolated checkout with a snapshot cache.
+$cleanRepositoryRoot = Join-Path $repositoryRoot ".artifacts/guard-clean-$([guid]::NewGuid().ToString('N').Substring(0, 8))"
 $cleanSnapshotParent = $null
 $writerJob = $null
 
@@ -155,7 +153,7 @@ Start-Sleep -Milliseconds 750
 [IO.File]::AppendAllText((Join-Path $root 'Shared/FoodDiary.Results/Result.cs'), "`n// unexpected snapshot mutation`n", [Text.Encoding]::UTF8)
 '@
     [IO.File]::WriteAllText($mutationTool, $mutationScript, [Text.UTF8Encoding]::new($false))
-    [IO.File]::WriteAllText($safeTool, "Write-Output 'read-only-safe-control'", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($safeTool, "Write-Output 'read-only-safe-control'; (Get-Location).Path", [Text.UTF8Encoding]::new($false))
 
     $writerJob = Start-Job -ScriptBlock {
         param([string]$Signal, [string]$Target)
@@ -193,6 +191,10 @@ Start-Sleep -Milliseconds 750
     $safeOutput = @(& $guardPath -ToolPath $safeTool)
     if ('read-only-safe-control' -notin $safeOutput) {
         throw 'Read-only guard did not preserve output from a legitimate read-only tool.'
+    }
+    $expectedSnapshotParent = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki/read-only-snapshots'))
+    if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($safeOutput[-1])) -cne $expectedSnapshotParent) {
+        throw "Read-only snapshot was stored outside repository artifacts: $($safeOutput[-1])"
     }
 
     # Changing an existing overlay leaves its porcelain status unchanged.
@@ -260,6 +262,7 @@ if ($Probe) {
 Write-Output 'read-only-clean-control'
 '@, [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot init --quiet
+    [IO.File]::WriteAllText((Join-Path $cleanRepositoryRoot '.gitignore'), ".artifacts/`n", [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot config user.email 'wiki-smoke@example.invalid'
     & git -C $cleanRepositoryRoot config user.name 'Wiki Smoke'
     & git -C $cleanRepositoryRoot add --all
@@ -296,22 +299,7 @@ if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
         throw "Read-only guard lost the actual tool exit code: '$exitFailure'."
     }
 
-    $cleanRepositoryPathHasher = [Security.Cryptography.SHA256]::Create()
-    try {
-        $cleanRepositoryPathHash = $cleanRepositoryPathHasher.ComputeHash(
-            [Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($cleanRepositoryRoot)).ToLowerInvariant()))
-    } finally {
-        $cleanRepositoryPathHasher.Dispose()
-    }
-    $cleanRepositorySnapshotKey = (
-        ([BitConverter]::ToString($cleanRepositoryPathHash) -replace '-', '').ToLowerInvariant()
-    ).Substring(0, 16)
-    $snapshotTempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
-        Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
-    } else {
-        [IO.Path]::GetTempPath()
-    }
-    $cleanSnapshotParent = Join-Path $snapshotTempRoot "fooddiary-llm-wiki-read-only/$cleanRepositorySnapshotKey"
+    $cleanSnapshotParent = Join-Path $cleanRepositoryRoot '.artifacts/llm-wiki/read-only-snapshots'
     $cleanReadyFile = Get-ChildItem -LiteralPath $cleanSnapshotParent -Filter '*.ready' -File |
         Sort-Object LastWriteTimeUtc -Descending |
         Select-Object -First 1
@@ -492,9 +480,11 @@ param($Guard, $Tool, $Partition, $Barrier, $Peer)
     }
     Remove-Item -LiteralPath $protectedSentinel -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $dirtySentinel -Force -ErrorAction SilentlyContinue
-    if ($cleanSnapshotParent) {
-        Remove-Item -LiteralPath $cleanSnapshotParent -Recurse -Force -ErrorAction SilentlyContinue
-    }
+    $cleanRoot = [IO.Path]::GetFullPath($cleanRepositoryRoot)
+    $cleanParent = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts')).TrimEnd('\', '/')
+    if ([IO.Path]::GetDirectoryName($cleanRoot) -cne $cleanParent -or
+        [IO.Path]::GetFileName($cleanRoot) -notmatch '^guard-clean-[a-f0-9]{8}$') { throw 'Unsafe clean guard fixture cleanup.' }
+    if (Test-Path -LiteralPath $cleanRoot) { Remove-Item -LiteralPath $cleanRoot -Recurse -Force }
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 

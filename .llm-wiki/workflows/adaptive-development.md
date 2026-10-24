@@ -11,6 +11,7 @@ tags:
   - design
   - handoff
 sources:
+  - docs/ai/AI_WORKFLOW.md
   - .llm-wiki/tools/LlmWikiGitHistory.ps1
   - .llm-wiki/tools/LlmWikiGitHistoryScanner.cs
   - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
@@ -85,6 +86,15 @@ TypeScript; frontend code-graph discovery requires the locked npm dependencies.
 Direct behavior tests cover identity, selection, scope, freshness and output bounds.
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
+
+Bug research/brief and implementation stages include the compact
+[diagnosis and regression protocol](../../docs/ai/AI_WORKFLOW.md#bug-diagnosis-and-regression-evidence).
+Record reproduction, expected/actual behavior, a source-backed hypothesis and a
+minimal experiment in existing notes. For a meaningful automated test retain its
+expected failure before the fix and passing run afterward; `evidence-run
+-RegressionPhase before|after` keeps both in the existing bundle. An unsuitable
+automated test uses a documented manual scenario instead. The stage counts and
+small-route workspace/design budgets are unchanged.
 
 Bounded `visual-ui-change` work remains on the small workflow when it includes
 paired locale files. Localization alone does not require a governed workspace

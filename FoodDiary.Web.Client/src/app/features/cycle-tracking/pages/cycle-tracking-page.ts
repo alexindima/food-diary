@@ -11,7 +11,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormField, FormRoot } from '@angular/forms/signals';
+import { FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -21,6 +21,7 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInlineAlertComponent } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -105,7 +106,7 @@ const RECENT_DAY_LIMIT = 5;
         PageBodyComponent,
         FdPageContainerDirective,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         FdUiHintDirective,
         FdUiIconComponent,
         FdUiCardComponent,

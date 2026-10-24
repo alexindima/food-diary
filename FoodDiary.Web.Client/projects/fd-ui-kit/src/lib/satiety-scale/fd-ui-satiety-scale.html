@@ -39,7 +39,7 @@
         }
     </div>
 
-    @if (error()) {
-        <div class="satiety-scale__error">{{ error() }}</div>
+    @if (resolvedError()) {
+        <div class="satiety-scale__error">{{ resolvedError() }}</div>
     }
 </div>

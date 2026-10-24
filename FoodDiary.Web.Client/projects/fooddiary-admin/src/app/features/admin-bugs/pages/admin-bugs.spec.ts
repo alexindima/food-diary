@@ -81,14 +81,15 @@ it('refreshes the audit result when applying an unchanged URL filter', async () 
     expect(getPage.mock.calls.length).toBe(count + 1);
 });
 
-it('defaults to user reports and keeps the audit panel out of that tab', () => {
+it('defaults to user reports with a pressed source filter and no audit panel', () => {
     const fixture = TestBed.createComponent(AdminBugsPageComponent);
     fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
     expect(getPage).toHaveBeenCalledWith(expect.objectContaining({ source: 'email' }));
-    expect((fixture.nativeElement as HTMLElement).querySelector('fd-admin-audit-status')).toBeNull();
-    expect((fixture.nativeElement as HTMLElement).querySelector('[role="tab"][aria-selected="true"]')?.textContent).toContain(
-        'ADMIN_BUGS.TAB_EMAIL',
-    );
+    expect(host.querySelector('fd-admin-audit-status')).toBeNull();
+    expect(host.querySelector('[role="tab"]')).toBeNull();
+    expect(host.querySelector('[role="group"]')?.getAttribute('aria-label')).toBe('ADMIN_BUGS.SOURCE_FILTER');
+    expect(host.querySelector('button[aria-pressed="true"]')?.textContent).toContain('ADMIN_BUGS.TAB_EMAIL');
 });
 
 it('switches source in the URL, resets source-specific filters and preserves the selected period', () => {

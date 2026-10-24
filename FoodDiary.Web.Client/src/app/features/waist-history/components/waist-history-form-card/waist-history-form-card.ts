@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
@@ -14,7 +15,7 @@ import { MAX_WAIST_CM, MIN_WAIST_CM } from '../../lib/waist-history.constants';
     selector: 'fd-waist-history-form-card',
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         FdUiButtonComponent,
         FdUiDateInputComponent,
         FdUiFormErrorComponent,

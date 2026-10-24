@@ -3,6 +3,7 @@ id: workflow.self-maintenance
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/tools/LlmWikiEnvironmentDiagnostics.ps1
   - .llm-wiki/tools/Invoke-LlmWikiSelfMaintenance.ps1
   - .llm-wiki/tools/code-graph-maintenance.mjs
   - .llm-wiki/tools/wiki-markdown-links.mjs
@@ -17,6 +18,23 @@ sources:
 ---
 
 # Wiki self-maintenance
+
+`health -QualityArea Wiki -Format Json` includes `environment`: PowerShell and
+Git/Node/.NET versions, available bytes on the repository, temporary and snapshot
+cache volumes, snapshot directory count, and measured probe/total duration.
+Below 1 GiB produces a warning; below 256 MiB or an unavailable runtime blocks
+the expensive source/graph checks and reports an actionable prerequisite gap.
+Unknown volume capacity stays unknown. Health does not scan cache contents for
+size and does not remove files. Cache cleanup uses the existing ownership-aware
+`Clear-LlmWikiReadOnlySnapshotCache.ps1` tool.
+Frontend dependency presence is reported without claiming package readiness.
+MCP remains `not-probed` with the existing diagnostic command: CLI health cannot
+inspect or refresh an open chat's tool catalog.
+
+Capture `workflow-metrics -Format Json` alongside health before optimizing a slow
+route. Its existing per-operation median/p95, sample counts and failures provide
+the baseline; compare the same operation, scope, runtime and cache state after a
+change. One health duration is an observation, not a performance improvement.
 
 An unchanged size or timestamp no longer bypasses hashing for dirty source files. The writer refreshes repeated edits to the same dirty path, while read-only guards reject changed dirty snapshot contents. Complete generation and full verification receipts are checked independently of a healthy graph snapshot.
 

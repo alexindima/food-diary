@@ -13,13 +13,14 @@ import {
     untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, max, min, required, validate } from '@angular/forms/signals';
+import { form, max, min, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -94,7 +95,7 @@ import type { UnsavedEditor } from '../../../../shared/forms/unsaved-editor';
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
-        FormRoot,
+        FdUiFormDirective,
         MealGeneralInfoComponent,
         MealSatietyCardComponent,
         MealItemsSectionComponent,

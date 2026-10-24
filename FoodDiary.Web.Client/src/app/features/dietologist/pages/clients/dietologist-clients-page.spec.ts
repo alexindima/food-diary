@@ -82,7 +82,7 @@ describe('Dietologist bulk recommendation recovery', () => {
             (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
                 '[aria-labelledby="bulk-recommendations-title"] form button',
             )?.disabled,
-        ).toBe(true);
+        ).toBe(false);
         component['sendBulkRecommendation']();
         expect(dialogService.open).not.toHaveBeenCalled();
         expect(dietologistService.bulkCreateRecommendations).not.toHaveBeenCalled();

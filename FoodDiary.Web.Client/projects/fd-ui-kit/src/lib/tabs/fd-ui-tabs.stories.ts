@@ -25,8 +25,13 @@ export const Default: Story = {
                 selected,
             },
             template: `
-                <fd-ui-tabs [tabs]="tabs" [(selectedValue)]="selected"></fd-ui-tabs>
-                <p style="margin-top: 16px; color: #666;">Selected tab: {{ selected() }}</p>
+                <fd-ui-tabs #tabSet ariaLabel="Food details" [tabs]="tabs" [(selectedValue)]="selected" />
+    @for (tab of tabs; track tab.value) {
+        <div role="tabpanel" tabindex="0" [id]="tabSet.panelId(tab.value)" [attr.aria-labelledby]="tabSet.tabId(tab.value)" [hidden]="selected() !== tab.value">
+            {{ tab.label }} content
+        </div>
+    }
+
             `,
         };
     },
@@ -48,7 +53,12 @@ export const ManyTabs: Story = {
                 ],
                 selected,
             },
-            template: '<fd-ui-tabs [tabs]="tabs" [(selectedValue)]="selected"></fd-ui-tabs>',
+            template: `<fd-ui-tabs #tabSet ariaLabel="Food details" [tabs]="tabs" [(selectedValue)]="selected" />
+    @for (tab of tabs; track tab.value) {
+        <div role="tabpanel" tabindex="0" [id]="tabSet.panelId(tab.value)" [attr.aria-labelledby]="tabSet.tabId(tab.value)" [hidden]="selected() !== tab.value">
+            {{ tab.label }} content
+        </div>
+    }`,
         };
     },
 };
@@ -64,7 +74,24 @@ export const TwoTabs: Story = {
                 ],
                 selected,
             },
-            template: '<fd-ui-tabs [tabs]="tabs" [(selectedValue)]="selected"></fd-ui-tabs>',
+            template: `<fd-ui-tabs #tabSet ariaLabel="Food details" [tabs]="tabs" [(selectedValue)]="selected" />
+    @for (tab of tabs; track tab.value) {
+        <div role="tabpanel" tabindex="0" [id]="tabSet.panelId(tab.value)" [attr.aria-labelledby]="tabSet.tabId(tab.value)" [hidden]="selected() !== tab.value">
+            {{ tab.label }} content
+        </div>
+    }`,
         };
+    },
+};
+
+export const Selection: Story = {
+    args: {
+        mode: 'selection',
+        ariaLabel: 'Period',
+        selectedValue: 'week',
+        tabs: [
+            { value: 'week', label: 'Week' },
+            { value: 'month', label: 'Month' },
+        ],
     },
 };

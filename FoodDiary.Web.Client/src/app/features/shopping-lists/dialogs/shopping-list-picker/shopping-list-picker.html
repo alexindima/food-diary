@@ -29,9 +29,7 @@
             <fd-ui-button variant="secondary" fill="text" (click)="close()">{{
                 'PUBLIC_RECIPES.SHOPPING_CANCEL' | translate
             }}</fd-ui-button>
-            <fd-ui-button type="submit" [disabled]="!valid()" [disabledReason]="'PUBLIC_RECIPES.SHOPPING_NAME_REQUIRED' | translate">{{
-                actionKey() | translate
-            }}</fd-ui-button>
+            <fd-ui-button type="submit">{{ actionKey() | translate }}</fd-ui-button>
         </div>
     </form>
 </fd-ui-dialog>

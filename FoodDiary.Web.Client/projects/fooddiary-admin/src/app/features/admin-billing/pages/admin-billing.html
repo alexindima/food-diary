@@ -5,6 +5,8 @@
     </div>
 
     <fd-ui-tabs
+        mode="selection"
+        [ariaLabel]="'ADMIN_NAV.BILLING' | translate"
         [tabs]="[
             { value: 'subscriptions', label: 'Subscriptions' },
             { value: 'payments', label: 'Payments' },

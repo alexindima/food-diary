@@ -1,39 +1,34 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
-    effect,
+    DestroyRef,
     type ElementRef,
     inject,
-    Injector,
     input,
     output,
+    signal,
     viewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiIconComponent, FdUiModalDirective } from 'fd-ui-kit';
 
 import type { MobileSheetId, SidebarActionId, SidebarDirectRouteRequest, SidebarRouteItem } from '../sidebar-lib/sidebar.models';
 import { BODY_TRACKING_ITEMS, FOOD_TRACKING_ITEMS, MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
-import {
-    focusFirstSidebarInteractiveElement,
-    getSidebarMobileSheetLabelKey,
-    getSidebarMobileSheetRouteItems,
-} from '../sidebar-lib/sidebar-view.utils';
+import { getSidebarMobileSheetLabelKey, getSidebarMobileSheetRouteItems } from '../sidebar-lib/sidebar-view.utils';
 import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route-links';
 
 @Component({
     selector: 'fd-sidebar-mobile',
-    imports: [CdkTrapFocus, RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
+    imports: [FdUiModalDirective, RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
     templateUrl: './sidebar-mobile.html',
     styleUrl: '../sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarMobileComponent {
-    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly isProgressVisible = input.required<boolean>();
     public readonly dailyConsumedKcalRounded = input.required<number>();
@@ -53,7 +48,8 @@ export class SidebarMobileComponent {
     public readonly mobileAction = output<SidebarActionId>();
     public readonly routeSelected = output<SidebarRouteItem>();
 
-    private readonly mobileSheetRef = viewChild<ElementRef<HTMLElement>>('mobileSheetPanel');
+    private readonly mobileNav = viewChild<ElementRef<HTMLElement>>('mobileNav');
+    protected readonly sheetBottom = signal(0);
     protected readonly isFoodOpen = computed(() => this.mobileSheet() === 'food');
     protected readonly isBodyOpen = computed(() => this.mobileSheet() === 'body');
     protected readonly isReportsOpen = computed(() => this.mobileSheet() === 'reports');
@@ -65,17 +61,23 @@ export class SidebarMobileComponent {
     );
 
     public constructor() {
-        effect(() => {
-            if (!this.isSheetOpen()) {
+        afterNextRender(() => {
+            const nav = this.mobileNav()?.nativeElement;
+            if (nav === undefined) {
                 return;
             }
-
-            afterNextRender(
-                () => {
-                    focusFirstSidebarInteractiveElement(this.mobileSheetRef()?.nativeElement);
-                },
-                { injector: this.injector },
-            );
+            const update = (): void => {
+                this.sheetBottom.set(nav.getBoundingClientRect().height);
+            };
+            update();
+            const Observer = nav.ownerDocument.defaultView?.ResizeObserver;
+            if (Observer !== undefined) {
+                const observer = new Observer(update);
+                observer.observe(nav);
+                this.destroyRef.onDestroy(() => {
+                    observer.disconnect();
+                });
+            }
         });
     }
 }

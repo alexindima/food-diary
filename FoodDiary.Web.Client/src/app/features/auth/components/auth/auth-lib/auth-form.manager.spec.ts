@@ -32,6 +32,12 @@ describe('AuthFormManager', () => {
         });
     });
 
+    it('accepts email, one password and terms without requiring a second password entry', () => {
+        const manager = TestBed.inject(AuthFormManager);
+        manager.registerModel.update(value => ({ ...value, email: 'user@example.test', password: 'password123', agreeTerms: true }));
+        expect(manager.registerForm().valid()).toBe(true);
+    });
+
     it('recomputes translated field errors when the language changes', () => {
         const manager = TestBed.inject(AuthFormManager);
 
@@ -55,7 +61,6 @@ describe('AuthFormManager', () => {
         manager.registerModel.set({
             email: 'user@example.com',
             password: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH),
-            confirmPassword: 'a'.repeat(AUTH_PASSWORD_MIN_LENGTH),
             agreeTerms: false,
         });
 
@@ -82,7 +87,6 @@ describe('AuthFormManager', () => {
         manager.registerModel.set({
             email: 'user@example.test',
             password: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH),
-            confirmPassword: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH),
             agreeTerms: true,
         });
         expect(manager.registerForm().valid()).toBe(true);
@@ -90,12 +94,10 @@ describe('AuthFormManager', () => {
         manager.registerModel.update(value => ({
             ...value,
             password: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1),
-            confirmPassword: 'p'.repeat(PASSWORD_CONTRACT_MAX_LENGTH + 1),
         }));
         await submit(manager.registerForm);
 
         expect(manager.registerForm.password().getError('maxLength')).toBeDefined();
-        expect(manager.registerForm.confirmPassword().getError('maxLength')).toBeDefined();
         expect(register).not.toHaveBeenCalled();
     });
 });

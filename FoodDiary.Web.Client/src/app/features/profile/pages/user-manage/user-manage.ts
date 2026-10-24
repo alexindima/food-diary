@@ -14,12 +14,13 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, validate } from '@angular/forms/signals';
+import { form, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective, FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective, focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -77,7 +78,7 @@ const MAX_PROFILE_HEIGHT_CM = 300;
     imports: [
         FdUiPreventUnloadDirective,
         TranslatePipe,
-        FormRoot,
+        FdUiFormDirective,
         FdUiHintDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
@@ -369,7 +370,11 @@ export class UserManageComponent {
     }
 
     protected onSubmit(): boolean | Promise<boolean> {
+        this.userForm().markAsTouched();
         if (this.userForm().invalid() || this.facade.isSavingProfile()) {
+            if (this.userForm().invalid()) {
+                focusFirstInvalidField(this.userForm);
+            }
             return false;
         }
         const submission: ProfileSaveSnapshot = { values: this.readUserFormValues(), hasNewerEdits: null };

@@ -198,3 +198,9 @@
     display: block;
     margin-top: calc(0px - var(--fd-border-width));
 }
+@media (any-pointer: coarse) {
+    .ai-input-bar__input {
+        min-height: var(--fd-size-control-lg);
+        font-size: var(--fd-text-body-size);
+    }
+}

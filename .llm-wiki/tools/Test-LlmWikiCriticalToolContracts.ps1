@@ -28,7 +28,7 @@ $measureFunction = $benchmarkAst.Find({ param($Node) $Node -is [Management.Autom
 # contract marker, while behavior-heavy tools receive executable checks below.
 foreach ($contract in @(
     @{ file = 'Add-LlmWikiSourceReview.ps1'; marker = 'source-impact-reviews.json' }
-    @{ file = 'Clear-LlmWikiReadOnlySnapshotCache.ps1'; marker = 'fooddiary-llm-wiki-read-only' }
+    @{ file = 'Clear-LlmWikiReadOnlySnapshotCache.ps1'; marker = 'read-only-snapshots' }
     @{ file = 'Complete-LlmWikiUnseenContextCorpus.ps1'; marker = 'frozen-independent-query-corpus' }
     @{ file = 'Complete-LlmWikiAnswerEvaluationCorpus.ps1'; marker = 'frozen-independent-answer-corpus' }
     @{ file = 'Ensure-LlmWikiSqliteProjection.ps1'; marker = 'BackendOnlyRefresh' }

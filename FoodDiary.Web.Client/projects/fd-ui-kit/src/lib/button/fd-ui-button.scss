@@ -445,3 +445,14 @@
         color: var(--fd-color-danger);
     }
 }
+@media (prefers-reduced-motion: reduce) {
+    .fd-ui-button__spinner {
+        animation: none;
+    }
+}
+@media (any-pointer: coarse) {
+    .fd-ui-button {
+        min-width: max(var(--fd-button-min-width), var(--fd-size-control-lg));
+        min-height: max(var(--fd-button-height), var(--fd-size-control-lg));
+    }
+}

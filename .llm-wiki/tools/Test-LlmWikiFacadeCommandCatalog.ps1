@@ -205,7 +205,7 @@ if (@($parseErrors).Count -gt 0 -or @($runnerAst.FindAll({
 }
 $maintenanceText = Get-Content (Join-Path $PSScriptRoot 'Invoke-LlmWikiSelfMaintenance.ps1') -Raw
 $start = $maintenanceText.IndexOf('$freshnessReason =')
-$end = $maintenanceText.IndexOf('if ($Format -eq')
+$end = $maintenanceText.IndexOf('if ($Format -eq', $start)
 $diagnostic = [scriptblock]::Create($maintenanceText.Substring($start, $end - $start))
 foreach ($scenario in @('current', 'head-changed', 'working-tree-changed', 'projection-unavailable')) {
     & {
@@ -218,6 +218,8 @@ foreach ($scenario in @('current', 'head-changed', 'working-tree-changed', 'proj
         $sources = [pscustomobject]@{ changedPages = @() }
         $remainingSources = [pscustomobject]@{ findings = @() }
         $Repair = $false
+        $environment = [pscustomobject]@{ valid = $true; issues = @() }
+        $healthTimer = [Diagnostics.Stopwatch]::StartNew()
         . $diagnostic
         if ($result.projectionStatus.reason -ne $scenario -or $result.valid -ne $projectionFresh) { throw "Wrong freshness diagnosis: $scenario" }
         if ($projectionFresh -and $result.nextAction -ne 'No action required.') { throw 'Healthy wiki should not request a rebuild.' }

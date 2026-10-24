@@ -29,6 +29,7 @@
             [attr.type]="localizedNumber() && type() === 'number' ? 'text' : type()"
             [attr.inputmode]="inputMode() ?? (localizedNumber() ? 'decimal' : null)"
             [attr.autocomplete]="autocomplete() ?? null"
+            [attr.enterkeyhint]="enterKeyHint() ?? (appearance() === 'search' ? 'search' : null)"
             [value]="internalValue()"
             [required]="required()"
             [readonly]="readonly() || controlReadonly()"
@@ -62,6 +63,6 @@
     </div>
 
     @if (hasError()) {
-        <div class="fd-ui-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+        <div class="fd-ui-input__error" role="alert" [id]="`${id()}-error`">{{ resolvedError() }}</div>
     }
 </div>

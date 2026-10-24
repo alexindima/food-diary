@@ -12,10 +12,11 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form, FormField, FormRoot } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, skip, Subject, switchMap, takeUntil, tap } from 'rxjs';
@@ -41,7 +42,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiPaginationComponent,

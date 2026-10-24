@@ -9,12 +9,15 @@ tags:
   - testing
   - planning
 sources:
+  - docs/ai/AI_WORKFLOW.md
   - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
   - .llm-wiki/tools/LlmWikiNativeTestDiscovery.ps1
   - .llm-wiki/tools/LlmWikiTestSourceScanner.cs
   - .llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
+  - .llm-wiki/tools/Test-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/LlmWikiSourceInventory.ps1
   - .llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1
   - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
@@ -47,6 +50,13 @@ spec does not imply a `.csproj` or a backend coverage build.
 The fast graph plan recognizes `Test-*.ps1` scripts as tests and discovers an
 existing same-directory `Test-<name>.ps1` companion for standard PowerShell
 implementation verbs. These are navigation candidates, not execution evidence.
+Before applying the response limit, it prioritizes graph-backed C# consumers
+named `<SelectedType>Tests` for explicitly selected source files over broad
+downstream tests. Directory scopes retain their downstream candidate ordering.
+This includes tests in
+sibling module test projects, such as `MealNutritionServiceTests` in the Meals
+flow. They remain recommended; explicitly scoped and colocated tests remain
+required.
 
 Changes to `.github/workflows/ci-tests.yml` select `BuildWorkflowGuardrailTests`
 and its filtered architecture-test command. The fast graph plan also retains
@@ -92,6 +102,15 @@ prompts for backend, HTTP contracts, authorization, persistence, migrations,
 frontend states, localization, security, and observability. Scenario prompts
 still require the implementer to choose concrete inputs and assertions from the
 changed behavior.
+
+Bug/fix intents include `bug-diagnosis` and `regression-red-green` scenario prompts.
+They point to the existing research notes and evidence bundle: diagnose before
+editing, observe the expected assertion failure on the unfixed implementation,
+then pass the same command and unchanged test files after the fix. These prompts
+do not add commands to every plan or force automated tests for display-only work.
+Record a concrete manual scenario and the reason when automation is unsuitable;
+an unavailable runner is an evidence gap. See the
+[canonical protocol](../../docs/ai/AI_WORKFLOW.md#bug-diagnosis-and-regression-evidence).
 
 Repository-wide audit intent selects a representative assessment plan instead
 of pretending the current Git diff is the audit scope. It includes architecture,

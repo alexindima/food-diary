@@ -4,6 +4,7 @@
             class="fd-period-filter__tabs"
             appearance="soft"
             size="sm"
+            [ariaLabel]="'COMMON.PERIOD' | translate"
             [options]="tabs()"
             [selectedValue]="selectedValue()"
             [fullWidth]="true"
@@ -13,7 +14,9 @@
         />
     } @else {
         <fd-ui-tabs
+            mode="selection"
             class="fd-period-filter__tabs"
+            [ariaLabel]="'COMMON.PERIOD' | translate"
             [tabs]="tabs()"
             [selectedValue]="selectedValue()"
             (selectedValueChange)="onRangeChange($event)"

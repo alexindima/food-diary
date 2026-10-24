@@ -1,9 +1,10 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, untracked } from '@angular/core';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
+import { FdUiModalDirective } from 'fd-ui-kit/dialog/fd-ui-modal.directive';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -16,10 +17,10 @@ import type { CycleSettingsFormModel } from '../../lib/cycle-tracking.facade';
 @Component({
     selector: 'fd-cycle-settings-drawer',
     imports: [
-        CdkTrapFocus,
+        FdUiModalDirective,
         TranslatePipe,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         FdUiButtonComponent,
         FdUiCheckboxComponent,
         FdUiInputComponent,

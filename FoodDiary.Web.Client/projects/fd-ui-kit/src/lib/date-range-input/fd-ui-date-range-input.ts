@@ -4,6 +4,7 @@ import { disabled as disabledRule, form, FormField, type FormValueControl } from
 
 import { fdUiFormatDateInputValue, fdUiParseLocalDate } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
 export type FdUiDateRangeValue = {
@@ -19,6 +20,8 @@ export type FdUiDateRangeValue = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiDateRangeInputComponent implements FormValueControl<FdUiDateRangeValue | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly startPlaceholder = input<string>();

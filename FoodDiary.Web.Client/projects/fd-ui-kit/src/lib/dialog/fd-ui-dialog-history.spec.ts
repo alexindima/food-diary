@@ -28,7 +28,7 @@ function connectEvents(events: EventTarget, history: FdUiDialogHistory, navigate
         if (event instanceof PopStateEvent) {
             const state: unknown = event.state;
             if (!history.handlePopState({ type: event.type, state })) {
-            navigated();
+                navigated();
             }
         }
     });

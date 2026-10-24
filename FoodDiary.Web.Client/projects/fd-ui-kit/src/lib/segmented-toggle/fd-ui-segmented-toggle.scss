@@ -126,3 +126,8 @@
         min-width: max-content;
     }
 }
+@media (any-pointer: coarse) {
+    .fd-ui-segmented-toggle .fd-ui-segmented-toggle__item {
+        min-height: var(--fd-size-control-lg);
+    }
+}

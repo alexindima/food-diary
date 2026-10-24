@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, maxLength } from '@angular/forms/signals';
+import { form, FormField, maxLength, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiDialogComponent, FdUiFocusWhenDirective, FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
@@ -30,7 +31,7 @@ const LIST_NAME_MAX_LENGTH = 128;
         LocalizedNumberPipe,
         TranslatePipe,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         FdUiDialogComponent,
         FdUiInputComponent,
         FdUiSelectComponent,
@@ -61,6 +62,7 @@ export class ShoppingListPickerComponent {
         name: (this.data.selected?.name ?? this.data.name).slice(0, LIST_NAME_MAX_LENGTH),
     });
     protected readonly fields = form(this.draft, path => {
+        validate(path.name, ({ value }) => (this.draft().id === '' && value().trim().length === 0 ? { kind: 'required' } : undefined));
         maxLength(path.name, LIST_NAME_MAX_LENGTH);
     });
     protected readonly options = [

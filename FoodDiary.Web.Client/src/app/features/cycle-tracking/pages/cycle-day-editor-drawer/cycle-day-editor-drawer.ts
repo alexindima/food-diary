@@ -1,9 +1,10 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
+import { FdUiModalDirective } from 'fd-ui-kit/dialog/fd-ui-modal.directive';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
@@ -34,10 +35,10 @@ const SYMPTOM_SEVERITY_SEVERE_VALUE = String(SYMPTOM_SEVERITY_SEVERE);
 @Component({
     selector: 'fd-cycle-day-editor-drawer',
     imports: [
-        CdkTrapFocus,
+        FdUiModalDirective,
         TranslatePipe,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         FdUiButtonComponent,
         FdUiDateInputComponent,
         FdUiFormErrorComponent,

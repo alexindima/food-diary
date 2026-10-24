@@ -518,6 +518,11 @@ if ($fixedParentTriggered) {
     Add-Scenario 'repository-root-resolution-antipattern' 'Review every fixed-depth parent traversal in the affected tool family and replace brittle root discovery with a verified resolver.' 'Repository antipattern matches plus focused Wiki smoke'
 }
 
+if ($Intent -match '(?i)\b(bug|fix|regression|defect)\b|\u0438\u0441\u043f\u0440\u0430\u0432|\u043e\u0448\u0438\u0431|\u0440\u0435\u0433\u0440\u0435\u0441\u0441|\u0431\u0430\u0433') {
+    Add-Scenario 'bug-diagnosis' 'Before fixing, record reproduction, expected/actual behavior, a source-backed cause hypothesis, one minimal experiment and its observed result in existing research notes or the task journal.' 'Reproduction output and current-source anchors; explicitly report an unreproduced issue'
+    Add-Scenario 'regression-red-green' 'For a meaningful automated regression, observe its expected assertion failure before the fix and a passing run of the same command and unchanged test files afterward. Record why automation is unsuitable when using a manual scenario.' 'Existing evidence-run with -RegressionPhase before/after, or the original before/after logs in task notes; build/setup errors are not the expected failure'
+}
+
 if ('Backend' -in $scopes) {
     Add-Scenario 'backend-happy-path' 'Exercise the primary successful use-case path and assert durable result/state.' 'Focused unit or integration test'
     Add-Scenario 'backend-validation' 'Cover invalid, missing, and boundary inputs without performing side effects.' 'Validator/handler test'

@@ -1,9 +1,10 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { firstValueFrom } from 'rxjs';
 
@@ -20,7 +21,7 @@ type RequiredPasswordChangeFormModel = {
 
 @Component({
     selector: 'fd-required-password-change',
-    imports: [FormField, FormRoot, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent],
+    imports: [FormField, FdUiFormDirective, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiInputComponent],
     templateUrl: './required-password-change.html',
     styleUrl: './required-password-change.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

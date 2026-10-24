@@ -2604,8 +2604,10 @@ try {
     ) 'Context bundle omitted required scope or exceeded its budget.'
     $contextBundleCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiContextBundle.ps1') verify `
         -WorkspacePath $taskWorkspacePath `
+        -Role reviewer `
         -Format Json | ConvertFrom-Json
     Assert-Wiki $contextBundleCheck.valid 'Fresh context bundle failed provenance validation.'
+    Assert-Wiki ($contextBundleCheck.assignment.bundleHash -eq $contextBundle.bundle.bundleHash -and @($requiredContextPaths | Where-Object { $_ -notin @($contextBundleCheck.assignment.items.path) }).Count -eq 0) 'Reviewer assignment changed the verified bundle or omitted mandatory context.'
     $contextBudgetPath = Join-Path $absoluteTaskWorkspacePath 'context-budget.json'
     $contextBudget = & (Join-Path $toolsRoot 'Manage-LlmWikiContextBudget.ps1') create `
         -WorkspacePath $taskWorkspacePath `
@@ -3227,8 +3229,10 @@ try {
     [IO.File]::WriteAllText($contextBundlePath, (($tamperedContextBundle | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     $tamperedContextCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiContextBundle.ps1') verify `
         -WorkspacePath $taskWorkspacePath `
+        -Role implementer `
         -Format Json | ConvertFrom-Json
     Assert-Wiki (-not $tamperedContextCheck.valid -and @($tamperedContextCheck.issues) -contains 'Bundle hash is invalid.') 'Context bundle verification accepted tampered relevance metadata.'
+    Assert-Wiki ($null -eq $tamperedContextCheck.assignment) 'Invalid context produced an implementer assignment.'
     [IO.File]::Delete($contextBudgetPath)
     [IO.File]::Delete($contextBundlePath)
     [IO.File]::Delete($contextSecurityPath)

@@ -1,11 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiMenuComponent } from 'fd-ui-kit/menu/fd-ui-menu';
@@ -29,7 +30,7 @@ const CHECKED_SETTLE_MS = 300;
         FdUiMenuItemComponent,
         FdUiMenuTriggerDirective,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -69,7 +70,6 @@ export class ShoppingListItemsPanelComponent {
     protected readonly itemViewModels = computed(() => {
         return buildShoppingListItemViewModels(this.items(), key => this.translateService.instant(key), this.activeLang());
     });
-    protected readonly isItemFormInvalid = computed(() => this.itemForm()().invalid());
 
     public readonly itemAdd = output();
     public readonly itemRemove = output<ShoppingListItemId>();
@@ -105,6 +105,9 @@ export class ShoppingListItemsPanelComponent {
 
     protected onItemFormSubmit(event: SubmitEvent): void {
         event.preventDefault();
+        if (this.itemForm()().invalid()) {
+            return;
+        }
         this.itemAdd.emit();
     }
 }

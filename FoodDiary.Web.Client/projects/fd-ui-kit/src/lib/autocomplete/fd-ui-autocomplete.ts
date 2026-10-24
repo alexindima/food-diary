@@ -16,9 +16,13 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
+import { fdUiIsComposing } from '../interaction/fd-ui-text-enter.directive';
+import type { FdUiEnterKeyHint } from '../types/enter-key-hint.type';
 import type { FdUiFieldSize } from '../types/field-size.type';
 import type { FdUiAutocompleteOption } from './fd-ui-autocomplete.types';
 import { FdUiAutocompleteMenuComponent } from './fd-ui-autocomplete-menu';
@@ -41,6 +45,8 @@ let uniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<T | string | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     private readonly injector = inject(Injector);
     protected readonly controlRef = viewChild<ElementRef<HTMLInputElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
@@ -53,8 +59,10 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly showClear = input(true);
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly maximumLength = input<number>();
+    public readonly enterKeyHint = input<FdUiEnterKeyHint>();
     public readonly options = input<Array<FdUiAutocompleteOption<T>>>([]);
     public readonly loading = input(false);
     public readonly emptyText = input<string>();
@@ -65,6 +73,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly displayWith = input<(value: T | null) => string>();
     public readonly value = model<T | string | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -101,9 +110,9 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
 
     protected readonly sizeClass = computed(() => `fd-ui-autocomplete--size-${this.size()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.queryText().trim().length > 0);
     protected readonly hostClass = computed(
@@ -193,6 +202,9 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     }
 
     protected onControlKeydown(event: KeyboardEvent): void {
+        if (fdUiIsComposing(event)) {
+            return;
+        }
         switch (event.key) {
             case 'ArrowDown': {
                 event.preventDefault();

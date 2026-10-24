@@ -407,19 +407,9 @@ if (-not [string]::IsNullOrWhiteSpace($activeSnapshotRoot)) {
     return
 }
 
-$repositoryPathHasher = [Security.Cryptography.SHA256]::Create()
-try {
-    $repositoryPathHash = $repositoryPathHasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($sourceRepositoryRoot.ToLowerInvariant()))
-} finally {
-    $repositoryPathHasher.Dispose()
-}
-$repositorySnapshotKey = (([BitConverter]::ToString($repositoryPathHash) -replace '-', '').ToLowerInvariant()).Substring(0, 16)
-$snapshotTempRoot = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
-    Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp'
-} else {
-    [IO.Path]::GetTempPath()
-}
-$snapshotParent = Join-Path $snapshotTempRoot "fooddiary-llm-wiki-read-only/$repositorySnapshotKey"
+# Each checkout owns its disposable clones on the same volume as its sources.
+# This also keeps large read-only queries off the Windows system temp drive.
+$snapshotParent = [IO.Path]::GetFullPath((Join-Path $sourceRepositoryRoot '.artifacts/llm-wiki/read-only-snapshots'))
 $relativeToolPath = Get-RepositoryRelativePath -RepositoryRoot $sourceRepositoryRoot -Path $ToolPath
 if (-not $relativeToolPath) { throw "Read-only Wiki tool must be inside the repository: $ToolPath" }
 $requestedScopePaths = if ($ToolArguments.ContainsKey('ProposedPath') -and @($ToolArguments['ProposedPath']).Count -gt 0) {

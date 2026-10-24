@@ -1,7 +1,7 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, form, FormField, FormRoot, maxLength, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, maxLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
@@ -11,6 +11,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiFormDirective, focusFirstInvalidField } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -128,7 +129,7 @@ type TaskFormModel = {
         UpperCasePipe,
         LocalizedDatePipe,
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
@@ -149,6 +150,7 @@ type TaskFormModel = {
     styleUrls: ['./client-dashboard.scss'],
 })
 export class ClientDashboardComponent {
+    private readonly templateNameInput = viewChild<FdUiInputComponent>('templateNameInput');
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly dietologistFacade = inject(DietologistFacade);
@@ -241,6 +243,17 @@ export class ClientDashboardComponent {
     protected readonly templateNameTooLong = computed(
         () => this.recommendationModel().templateName.trim().length > TEMPLATE_NAME_MAX_LENGTH,
     );
+    protected readonly templateAttempted = signal(false);
+    protected readonly templateNameError = computed(() => {
+        this.translateService.currentLang();
+        if (this.templateNameTooLong()) {
+            return this.translateService.instant('RECOMMENDATION_TEMPLATES.NAME_TOO_LONG');
+        }
+        if (this.templateAttempted() && this.recommendationModel().templateName.trim().length === 0) {
+            return this.translateService.instant('FORM_ERRORS.REQUIRED');
+        }
+        return null;
+    });
     protected readonly templateInvalid = computed(
         () =>
             this.savingRecommendation() ||
@@ -289,7 +302,7 @@ export class ClientDashboardComponent {
         return client !== null && Object.values(client.permissions).some(Boolean);
     });
     protected readonly recommendationDisabled = computed(
-        () => !this.canRecommend() || this.recommendationForm.text().invalid() || this.savingRecommendation() || this.savingTemplate(),
+        () => !this.canRecommend() || this.savingRecommendation() || this.savingTemplate(),
     );
     protected readonly recommendationDisabledReason = computed(() => {
         this.translateService.currentLang();
@@ -297,7 +310,7 @@ export class ClientDashboardComponent {
             return this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED');
         }
 
-        return this.recommendationForm.text().invalid() ? this.translateService.instant('DISABLED_HINTS.FORM_INVALID') : null;
+        return null;
     });
     protected readonly profileChips = computed(() => {
         const client = this.client();
@@ -550,18 +563,25 @@ export class ClientDashboardComponent {
         this.recommendationModel.update(model => ({ ...model, text: template.text }));
     }
 
+    private focusTemplateError(): void {
+        if (this.recommendationModel().templateName.trim().length === 0 || this.templateNameTooLong()) {
+            this.templateNameInput()?.focus();
+        } else {
+            focusFirstInvalidField(this.recommendationForm);
+        }
+    }
+
     protected createRecommendationTemplate(): void {
+        if (this.savingTemplate() || this.savingRecommendation() || !this.canRecommend()) {
+            return;
+        }
+        this.templateAttempted.set(true);
+        this.recommendationForm().markAsTouched();
         const model = this.recommendationModel();
         const name = model.templateName.trim();
         const text = model.text.trim();
-        if (
-            name.length === 0 ||
-            name.length > TEMPLATE_NAME_MAX_LENGTH ||
-            text.length === 0 ||
-            text.length > RECOMMENDATION_MAX_LENGTH ||
-            this.savingTemplate() ||
-            this.savingRecommendation()
-        ) {
+        if (this.templateInvalid()) {
+            this.focusTemplateError();
             return;
         }
 
@@ -622,7 +642,7 @@ export class ClientDashboardComponent {
 
     private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
-        if (client === null || this.recommendationDisabled()) {
+        if (client === null || this.recommendationDisabled() || this.recommendationForm().invalid()) {
             this.recommendationForm().markAsTouched();
             return;
         }

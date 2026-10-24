@@ -12,10 +12,13 @@ import {
     output,
     signal,
 } from '@angular/core';
+import type { ValidationError } from '@angular/forms/signals';
 import { disabled as disabledRule, form, FormField, type FormValueControl } from '@angular/forms/signals';
 
 import { fdUiFormatDateInputValue, fdUiFormatTimeInputValue, fdUiPadDatePart, fdUiParseLocalDateTime } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
@@ -36,14 +39,18 @@ let uniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiDatetimeInputComponent implements FormValueControl<string | Date | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     public readonly id = input(`fd-ui-datetime-input-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly size = input<FdUiFieldSize>('md');
     public readonly value = model<string | Date | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -55,9 +62,9 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
     protected readonly isFocused = signal(false);
     protected readonly sizeClass = computed(() => `fd-ui-datetime-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly shouldFloatLabel = computed(
         () => this.isFocused() || this.dateModel() !== null || this.timeValue().trim().length > 0,

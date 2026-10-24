@@ -21,12 +21,13 @@
         @if (isMailRoute()) {
             <h1 class="fd-page-title">{{ 'ADMIN_OUTGOING.MAIL' | translate }}</h1>
             <fd-ui-tabs
+                mode="navigation"
+                [ariaLabel]="'ADMIN_OUTGOING.MAIL' | translate"
                 [tabs]="[
                     { value: '/mail-inbox', labelKey: 'ADMIN_OUTGOING.INCOMING' },
                     { value: '/outgoing-emails', labelKey: 'ADMIN_OUTGOING.OUTGOING' },
                 ]"
                 [selectedValue]="currentPath()"
-                (selectedValueChange)="navigateMail($event)"
             />
         } @else if (pageHeader(); as header) {
             <header class="admin-shell__page-header">

@@ -69,7 +69,6 @@
                                         [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                         [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
                                         [loading]="isDeleting()"
-                                        [disabled]="isSubmitting()"
                                         (click)="onDeleteProductAsync()"
                                     />
                                 }
@@ -89,9 +88,7 @@
                                     appearance="brand-action"
                                     [icon]="manageHeaderState().submitIcon"
                                     [fullWidth]="true"
-                                    [disabled]="productForm().invalid() || isSubmitting() || isDeleting() || photosUploading()"
-                                    [disabledReason]="productForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
-                                    [loading]="isSubmitting()"
+                                    [loading]="isSubmitting() || isDeleting() || photosUploading()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}
                                 </fd-ui-button>

@@ -332,11 +332,11 @@ describe('Telegram registration', () => {
         expect(harness.facade.completeAsync).toHaveBeenCalledWith('register', 'ru', 'Asia/Tbilisi');
     });
 
-    it('disables registration for a missing timezone and blocks a programmatic invalid submission', async () => {
+    it('explains a missing timezone and blocks invalid registration requests', async () => {
         const harness = await createIntentHarnessAsync();
         harness.fixture.componentInstance['registrationForm'].timeZoneId().value.set('');
         await settleAsync(harness);
-        expect(button(harness, 'AUTH.TELEGRAM.CREATE').disabled).toBe(true);
+        expect(button(harness, 'AUTH.TELEGRAM.CREATE').disabled).toBe(false);
         button(harness, 'AUTH.TELEGRAM.CREATE').click();
         harness.fixture.componentInstance['complete']('register');
         await settleAsync(harness);

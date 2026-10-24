@@ -19,7 +19,6 @@ import type { DesktopSectionId, MobileSheetId, SidebarActionItem, SidebarRouteIt
 
 const NAVIGATION_ID = 1;
 const ADMIN_LOADING_TTL_MS = 100;
-const LOCKED_SCROLL_Y = 240;
 const ADMIN_SSO_CODE = 'admin-sso-code';
 const ADMIN_LOADING_URL = 'blob:admin-loading';
 
@@ -112,7 +111,17 @@ describe('SidebarComponent mobile behavior', () => {
     beforeEach(setupSidebarTestEnvironment);
     afterEach(cleanupSidebarTestEnvironment);
 
-    it('closes mobile sheet on Escape and restores trigger focus', () => {
+    it('dismisses a mobile modal when the viewport switches to desktop', () => {
+        const query = Object.assign(new EventTarget(), { matches: true });
+        const { component } = createComponent({ mediaQuery: query as unknown as MediaQueryList });
+        const harness = component as unknown as SidebarHarness;
+        harness.toggleMobileFood(document.createElement('button'));
+        query.matches = false;
+        query.dispatchEvent(new Event('change'));
+        expect(harness.mobileSheet(), 'A mobile modal must close when its navigation disappears').toBeNull();
+    });
+
+    it('leaves modal Escape handling to the shared layer and restores focus after explicit dismissal', () => {
         const { component } = createComponent();
         const harness = component as unknown as SidebarHarness;
         const trigger = document.createElement('button');
@@ -120,29 +129,11 @@ describe('SidebarComponent mobile behavior', () => {
 
         harness.toggleMobileFood(trigger);
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-
+        expect(harness.mobileSheet()).toBe('food');
+        expect(focusSpy).not.toHaveBeenCalled();
+        harness.closeMobileMenus();
         expect(harness.mobileSheet()).toBeNull();
         expect(focusSpy).toHaveBeenCalledOnce();
-    });
-
-    it('blocks page scroll without shifting content while a mobile sheet is open', () => {
-        const { component } = createComponent({ isMobileViewport: true });
-        const harness = component as unknown as SidebarHarness;
-        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
-        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1200 });
-        Object.defineProperty(window, 'scrollY', { configurable: true, value: LOCKED_SCROLL_Y });
-        Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 1183 });
-
-        harness.toggleMobileFood(document.createElement('button'));
-        TestBed.tick();
-
-        expectScrollLockApplied();
-
-        harness.closeMobileMenus();
-        TestBed.tick();
-
-        expectScrollLockReleased();
-        expect(scrollTo).toHaveBeenCalledWith(0, LOCKED_SCROLL_Y);
     });
 });
 
@@ -244,25 +235,26 @@ function setupSidebarTestEnvironment(): void {
 }
 
 function cleanupSidebarTestEnvironment(): void {
-    document.body.classList.remove('fd-scroll-lock');
-    document.body.style.removeProperty('inset-block-start');
-    document.body.style.removeProperty('padding-inline-end');
     vi.restoreAllMocks();
 }
 
-function expectScrollLockApplied(): void {
-    expect(document.body.classList.contains('fd-scroll-lock')).toBe(true);
-    expect(document.body.style.insetBlockStart).toBe(`-${LOCKED_SCROLL_Y}px`);
-    expect(document.body.style.paddingInlineEnd).toBe('17px');
+type SidebarViewportOptions = { isMobileViewport?: boolean; mediaQuery?: MediaQueryList };
+
+function configureSidebarViewport(options: SidebarViewportOptions): void {
+    Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        value: vi.fn(
+            () =>
+                options.mediaQuery ?? {
+                    matches: options.isMobileViewport ?? false,
+                    addEventListener: vi.fn(),
+                    removeEventListener: vi.fn(),
+                },
+        ),
+    });
 }
 
-function expectScrollLockReleased(): void {
-    expect(document.body.classList.contains('fd-scroll-lock')).toBe(false);
-    expect(document.body.style.insetBlockStart).toBe('');
-    expect(document.body.style.paddingInlineEnd).toBe('');
-}
-
-function createComponent(options: { isMobileViewport?: boolean } = {}): {
+function createComponent(options: SidebarViewportOptions = {}): {
     authService: ReturnType<typeof createAuthServiceMock>;
     component: SidebarComponent;
     dialogService: { open: ReturnType<typeof vi.fn> };
@@ -271,15 +263,7 @@ function createComponent(options: { isMobileViewport?: boolean } = {}): {
     toastService: { error: ReturnType<typeof vi.fn> };
     unsavedHandler: { discard: ReturnType<typeof vi.fn>; hasChanges: ReturnType<typeof vi.fn>; save: ReturnType<typeof vi.fn> };
 } {
-    Object.defineProperty(window, 'matchMedia', {
-        configurable: true,
-        value: vi.fn(() => ({
-            matches: options.isMobileViewport ?? false,
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-        })),
-    });
-
+    configureSidebarViewport(options);
     const routerEvents = new Subject<unknown>();
     const router = { events: routerEvents, url: '/' };
     const authService = createAuthServiceMock();

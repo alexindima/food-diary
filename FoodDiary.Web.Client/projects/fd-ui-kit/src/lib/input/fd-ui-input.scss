@@ -241,6 +241,10 @@
     padding-left: var(--fd-space-control-auth-affix-padding-x);
 }
 
+.fd-ui-input--appearance-auth .fd-ui-input__control-wrap--with-suffix-button {
+    padding-right: var(--fd-space-control-affix-padding-x);
+}
+
 .fd-ui-input--appearance-auth .fd-ui-input__control-wrap--with-prefix .fd-ui-input__label {
     left: var(--fd-space-control-auth-affix-padding-x);
     max-width: calc(100% - 62px);
@@ -323,4 +327,22 @@
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-size);
     line-height: var(--fd-text-body-line-height);
+}
+@media (any-pointer: coarse) {
+    .fd-ui-input .fd-ui-input__control-wrap {
+        min-height: var(--fd-size-control-lg);
+    }
+
+    .fd-ui-input__control {
+        font-size: max(var(--fd-text-body-size), var(--fd-input-control-font-size));
+    }
+
+    .fd-ui-input .fd-ui-input__control-wrap--with-suffix-button {
+        padding-right: calc(var(--fd-size-control-lg) + var(--fd-space-xs));
+    }
+
+    .fd-ui-input__suffix {
+        width: var(--fd-size-control-lg);
+        height: var(--fd-size-control-lg);
+    }
 }

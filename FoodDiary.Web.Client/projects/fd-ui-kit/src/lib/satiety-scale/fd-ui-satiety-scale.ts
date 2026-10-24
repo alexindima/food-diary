@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surface';
+import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
 
 export type FdUiSatietyScaleLevel = {
     value: number;
@@ -100,16 +102,20 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiSatietyScaleComponent implements FormValueControl<number | null> {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
+    public readonly focus = injectFdUiControlFocus();
     private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly label = input<string>();
     public readonly hint = input<string>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly layout = input<'grid' | 'vertical'>('grid');
     public readonly levels = input<FdUiSatietyScaleLevel[]>(DEFAULT_SATIETY_LEVELS);
     public readonly value = model<number | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
     public readonly levelSelected = output<number>();

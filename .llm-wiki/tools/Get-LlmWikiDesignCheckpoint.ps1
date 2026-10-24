@@ -10,6 +10,7 @@ param(
     [string[]]$ProposedPath,
     [string[]]$Decision,
     [object]$BehaviorSpec,
+    [object]$ReviewContent,
     [string[]]$Criterion,
     [ValidateSet('Sqlite')]
     [string]$CompiledIndexSource = 'Sqlite',
@@ -21,6 +22,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiBehaviorSpecification.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiPlanReview.ps1')
 
 function Get-CollectionPropertyValues([object[]]$InputObject, [string]$PropertyName) {
     @(
@@ -108,6 +110,7 @@ $designSlices = @(if ($usesVerticalSlices) {
         }
     )
 } else { @() })
+$planReview = Get-LlmWikiPlanReview -Plan $plan -BehaviorSpecification $behaviorSpecification -SourcePath @($research.discovery.groundedPaths) -Decision $Decision -RepositoryRoot ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))) -ReviewContent $ReviewContent -Required $usesVerticalSlices
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective
@@ -138,11 +141,14 @@ $result = [pscustomobject][ordered]@{
         reason = if ($usesVerticalSlices) { 'Large feature, critical, and architectural profiles benefit from acceptance-oriented end-to-end slices.' } else { 'Tiny, maintenance, and bounded bug work avoids slice-planning ceremony.' }
     }
     designSlices = @($designSlices)
-    ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0 -and $behaviorSpecification.status -ne 'needs-input'
+    planReview = $planReview
+    ready = @($decisionQuestions | Where-Object blocking).Count -eq 0 -and @($research.discovery.groundedPaths).Count -gt 0 -and $behaviorSpecification.status -ne 'needs-input' -and $planReview.valid
     nextAction = if ($behaviorSpecification.status -eq 'needs-input') {
         'Complete the compact behavior specification from current sources and task intent; resolve its open questions before implementation.'
     } elseif (@($decisionQuestions | Where-Object blocking).Count -gt 0) {
         'Resolve blocking decision questions with current-source evidence and record the selected alternative before editing.'
+    } elseif (-not $planReview.valid) {
+        'Review each outcome and plan perspective; rerun design with -ReviewContent bound to planReview.planFingerprint. Resolve gaps before implementation.'
     } else {
         'Confirm target behavior and acceptance criteria, then implement the generated phases in order.'
     }
@@ -151,6 +157,8 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 14; exit 0 }
 Write-Host "Design checkpoint: $($result.profile), ready=$($result.ready)"
 Write-Host "Objective: $Objective"
 Write-Host "Behavior specification: $($behaviorSpecification.status)"
+Write-Host "Plan review: $($planReview.status), fingerprint=$($planReview.planFingerprint)"
+foreach ($issue in $planReview.issues) { Write-Host "PLAN: $issue" }
 foreach ($question in $behaviorSpecification.openQuestions) { Write-Host "SPEC: $question" }
 foreach ($example in $behaviorSpecification.examples) { Write-Host "Example [$($example.kind)]: Given $($example.given); when $($example.when); then $($example.then)" }
 foreach ($question in $result.decisionQuestions) { Write-Host "$(([string]$question.status).ToUpperInvariant()) [$($question.id)]: $($question.question)" }

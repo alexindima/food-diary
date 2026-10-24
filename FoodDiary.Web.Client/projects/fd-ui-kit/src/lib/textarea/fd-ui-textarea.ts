@@ -12,8 +12,10 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import type { FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
+import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
+import type { FdUiEnterKeyHint } from '../types/enter-key-hint.type';
 import type { FdUiFieldSize } from '../types/field-size.type';
 
 let uniqueId = 0;
@@ -32,7 +34,9 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly id = input(`fd-ui-textarea-${uniqueId++}`);
     public readonly label = input<string>();
     public readonly placeholder = input<string>();
+    public readonly enterKeyHint = input<FdUiEnterKeyHint>();
     public readonly error = input<string | null>();
+    public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly required = input(false);
     public readonly readonly = input(false);
     public readonly rows = input(DEFAULT_ROWS);
@@ -44,6 +48,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<string | number | null>(null);
     public readonly touched = model(false);
+    protected readonly resolvedError = injectFdUiFieldError(this.error, this.errors, this.touched);
     public readonly touch = output();
     public readonly disabled = input(false);
 
@@ -60,9 +65,9 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
     protected readonly hasError = computed(() => {
-        const error = this.error();
+        const error = this.resolvedError();
 
-        return error !== null && error !== undefined && error.trim().length > 0;
+        return typeof error === 'string' && error.trim().length > 0;
     });
     protected readonly hostClass = computed(
         () =>

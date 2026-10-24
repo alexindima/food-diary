@@ -303,6 +303,18 @@ if ($hasArchitecturalEvidence) { $reasons.Add('Architecture or durable decision 
 if ($crossCutting) { $reasons.Add('The inferred change crosses multiple scopes or modules.') }
 if ($requiresPathDiscovery) { $reasons.Add('Concrete implementation paths are not grounded yet; research must discover them before risk can be trusted.') }
 
+if ($bugIntent -and $profile -in @('bug', 'critical', 'architectural', 'scope-discovery')) {
+    $diagnosisStage = $stages | Where-Object id -in @('bug-brief', 'research', 'scope-research') | Select-Object -First 1
+    if ($null -ne $diagnosisStage) {
+        $diagnosisStage.completionEvidence += ' Bug diagnosis records reproduction, expected/actual behavior, a source-backed hypothesis, one minimal experiment and its observed result in existing research notes or the task journal; an unreproduced issue stays explicit.'
+    }
+    $implementationStage = $stages | Where-Object id -eq 'implementation' | Select-Object -First 1
+    if ($null -ne $implementationStage) {
+        $implementationStage.purpose += ' For a meaningful automated regression test, observe its expected assertion failure before changing the implementation; retain that log.'
+        $implementationStage.completionEvidence += ' The unchanged regression test passes after the fix; evidence-run -RegressionPhase before/after can retain both executions in the existing bundle. If automation is unsuitable, record the reason and repeat the concrete manual scenario.'
+    }
+}
+
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     objective = $Objective

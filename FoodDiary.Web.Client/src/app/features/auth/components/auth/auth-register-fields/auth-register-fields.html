@@ -4,6 +4,7 @@
             appearance="auth"
             type="email"
             autocomplete="email"
+            enterKeyHint="next"
             id="auth-register-email"
             [formField]="form().email"
             [label]="'AUTH.REGISTER.EMAIL' | translate"
@@ -14,25 +15,17 @@
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
             appearance="auth"
-            type="password"
             autocomplete="new-password"
+            enterKeyHint="done"
+            [type]="passwordInputType()"
             [maximumLength]="passwordMaximumLength"
             [formField]="form().password"
             [label]="'AUTH.REGISTER.PASSWORD' | translate"
             [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate"
             [error]="errors().password"
-        />
-    </div>
-    <div class="auth__field fd-stack fd-gap-xs">
-        <fd-ui-input
-            appearance="auth"
-            type="password"
-            autocomplete="new-password"
-            [maximumLength]="passwordMaximumLength"
-            [formField]="form().confirmPassword"
-            [label]="'AUTH.REGISTER.CONFIRM_PASSWORD' | translate"
-            [placeholder]="'AUTH.REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
-            [error]="errors().confirmPassword"
+            [suffixButtonIcon]="passwordToggleIcon()"
+            [suffixButtonAriaLabel]="passwordToggleLabelKey() | translate"
+            (suffixButtonClicked)="togglePasswordVisibility()"
         />
     </div>
 

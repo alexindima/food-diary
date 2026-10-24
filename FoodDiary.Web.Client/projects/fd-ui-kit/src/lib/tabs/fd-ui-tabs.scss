@@ -51,6 +51,7 @@
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
+    text-decoration: none;
 }
 
 .fd-ui-tabs__tab:hover {
@@ -87,4 +88,11 @@
     --fd-tabs-item-padding-inline: var(--fd-space-tabs-wrap-item-padding-inline);
     --fd-tabs-label-white-space: normal;
     --fd-tabs-label-line-height: 1.1;
+}
+@media (any-pointer: coarse) {
+    .fd-ui-tabs__tab {
+        min-width: var(--fd-size-control-lg);
+        min-height: var(--fd-size-control-lg);
+        height: auto;
+    }
 }

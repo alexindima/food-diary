@@ -13,13 +13,14 @@
         <fd-ui-icon class="ai-input-bar__icon" name="auto_awesome" />
         <input
             type="text"
+            enterkeyhint="send"
             class="ai-input-bar__input fd-ui-body-sm"
             [placeholder]="'AI_INPUT_BAR.SHORT_PLACEHOLDER' | translate"
             [attr.aria-label]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
             [value]="voiceText()"
             [disabled]="isDisabled()"
             (input)="onTextInput($event)"
-            (keydown.enter)="submitTextAsync(); $event.preventDefault()"
+            (fdUiTextEnter)="submitTextAsync()"
         />
         @if (!voiceText().trim()) {
             <fd-ui-button

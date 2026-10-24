@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
-import { FormField, FormRoot } from '@angular/forms/signals';
+import { FormField } from '@angular/forms/signals';
 import { convertToParamMap, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
@@ -37,7 +38,7 @@ import { ProductListRouteStateFacade } from '../../lib/list/product-list-route-s
     ],
     imports: [
         FormField,
-        FormRoot,
+        FdUiFormDirective,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiFocusWhenDirective } from 'fd-ui-kit';
+import { FdUiFocusWhenDirective, FdUiTextEnterDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -26,6 +26,7 @@ const QUICK_LIST_LIMIT = 3;
     selector: 'fd-shopping-list-manage-controls',
     imports: [
         FdUiFocusWhenDirective,
+        FdUiTextEnterDirective,
         TranslatePipe,
         ShoppingListBrowserComponent,
         FdUiButtonComponent,

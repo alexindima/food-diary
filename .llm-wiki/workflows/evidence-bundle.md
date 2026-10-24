@@ -3,6 +3,7 @@ id: workflow.evidence-bundle
 kind: workflow
 status: current
 sources:
+  - docs/ai/AI_WORKFLOW.md
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
   - .llm-wiki/tools/Recover-LlmWikiEvidenceExecution.ps1
   - .llm-wiki/tools/LlmWikiEvidenceCommands.ps1
@@ -115,6 +116,43 @@ policy and records its exit status and duration automatically. It resolves the
 current policy again immediately before execution, requires an exact
 ID/command match, and applies a narrow command-family allowlist. Editing
 `evidence.json` therefore cannot introduce an arbitrary shell command.
+
+For a focused regression test, opt into `evidence-run -RegressionPhase before`
+with a distinct supplemental ID, an explicit allowed test command, the test-file
+paths and the expected assertion message. After the fix use the same ID and
+`-RegressionPhase after`. This is the bounded exception to policy-only execution;
+it cannot replace a required check or publish its reusable verification receipt.
+Supported commands are focused `dotnet test`, existing frontend `npm run test:*`
+scripts, and Wiki commands within the execution allowlist. Shell chains other
+than the existing frontend working-directory prefix and `--no-build` are refused.
+
+```powershell
+# Initialize/reuse this task's existing evidence bundle; choose the actual
+# focused command, test files and assertion output from the diagnosed behavior.
+$evidence = '.artifacts/llm-wiki/evidence.json'
+$testCommand = '<focused test command>'
+$testFiles = @('<repository-relative regression test file>')
+./.llm-wiki/wiki.ps1 evidence-run -EvidencePath $evidence -Id regression-case `
+  -EvidenceCommand $testCommand -RegressionPhase before -TestPath $testFiles `
+  -ExpectedFailure '<distinctive assertion message>'
+
+# Apply the implementation fix, leaving the test and relevant fixtures unchanged.
+./.llm-wiki/wiki.ps1 evidence-run -EvidencePath $evidence -Id regression-case `
+  -RegressionPhase after
+```
+
+The supplemental entry retains `regression.before` and `regression.after` beside
+its ordinary status and lineage. The expected red run stays `failed`; the command
+returns normally when that expected failure is observed. Both original log and
+execution-record hashes are checked. Before evidence is historical and need not
+match the fixed source; after evidence follows normal current-source lineage.
+Changed commands/tests, missing or modified logs, unrelated assertion output and
+manual pass labels cannot confirm the pair. List all relevant test/fixture inputs
+in `-TestPath`; a newly edited test requires a fresh before/after pair. Lineage
+validation blocks incomplete opted-in pairs, and `handoff` reports their state.
+The diagnosis and the limits of message matching follow
+[the canonical bug workflow](../../docs/ai/AI_WORKFLOW.md#bug-diagnosis-and-regression-evidence).
+Existing bundles without regression entries retain their existing behavior.
 
 Every resolved check and review carries a lineage envelope. It records the
 repository commit, base ref, source policy rule, canonical definition and
