@@ -37,6 +37,10 @@ jobs:
       - name: Test deployment database readiness
         run: python3 -B -m unittest discover -s scripts/database -p 'test_check_primary_baseline_readiness.py'
 
+      - name: Test scoped .NET artifact cleanup
+        shell: pwsh
+        run: ./scripts/Test-NestedDotnetArtifactsCleanup.ps1
+
       - name: Test atomic frontend publication and retention
         run: python3 -B -m unittest discover -s scripts/deploy -p 'test_publish_frontend.py'
 

@@ -38,6 +38,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiIndexFingerprint.ps1
   - .llm-wiki/tools/Test-LlmWikiProcess.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
+  - scripts/Test-NestedDotnetArtifactsCleanup.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
   - FoodDiary.Web.Client/.husky/pre-push
   - .llm-wiki/policies/affected-smoke-catalog.psd1
@@ -685,6 +686,12 @@ build outputs, or another development session's task-scoped artifacts. This
 keeps the code graph, compiled helper runtimes, and index caches warm across
 commits and prevents a hook from deleting a SQLite database used by another
 session.
+
+Nested cleanup prunes the repository root `.artifacts`, `.git`, dependencies
+and directory links before descending, and selects each project artifact tree
+only once. Scoped targets are validated before any deletion, including trailing
+separators and linked ancestors. The CI fixture regression exercises cache and
+sibling-scope preservation, descendant cleanup and rejected unsafe targets.
 
 C# test-source-only changes select the quality index without
 forcing catalog, symbol, contract, sensitive-data, module-page, or architecture
