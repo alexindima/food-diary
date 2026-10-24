@@ -3,7 +3,9 @@
         <div class="landing-section__copy">
             <span class="landing-section__eyebrow">{{ 'LANDING_FAQ.EYEBROW' | translate }}</span>
             <h2 class="landing-section__title">{{ 'LANDING_FAQ.TITLE' | translate }}</h2>
-            <p class="landing-section__subtitle">{{ 'LANDING_FAQ.SUBTITLE' | translate }}</p>
+            <p class="landing-section__subtitle">
+                <span data-nosnippet>{{ 'LANDING_FAQ.SUBTITLE' | translate }}</span>
+            </p>
         </div>
         <div class="landing-faq">
             @for (item of questions(); track item.questionKey) {

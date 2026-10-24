@@ -413,7 +413,7 @@
     "SEO": {
         "DEFAULT_DESCRIPTION": "Food Diary is an online food diary, calorie and macro tracker, nutrition planner, weight and waist tracker, fasting tool, and dietologist workspace.",
         "LANDING_TITLE": "Food Diary and Calorie Tracker",
-        "LANDING_DESCRIPTION": "Track meals, calories and macros, save recipes and review weight history. Manual entry is free; photo, text and voice recognition are available with Premium.",
+        "LANDING_DESCRIPTION": "Track meals, calories and macros, save recipes and follow your weight. Start a free food diary with manual meal logging.",
         "FOOD_DIARY_PAGE": "Online food diary and food tracker",
         "FOOD_DIARY_PAGE_DESCRIPTION": "Record meals in your online food tracker, see calories and macros for each portion, and return to your meal history whenever you need it.",
         "CALORIE_COUNTER_PAGE": "Calorie tracker for meals and daily totals",

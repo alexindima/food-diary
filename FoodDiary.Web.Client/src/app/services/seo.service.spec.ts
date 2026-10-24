@@ -82,8 +82,11 @@ describe('SeoService social tags', () => {
     it('should update Twitter card tags', () => {
         service.update({ titleKey: null, path: '/' });
 
-        expect(metaService.getTag('name="twitter:card"')?.content).toBe('summary');
+        expect(metaService.getTag('name="twitter:card"')?.content).toBe('summary_large_image');
         expect(metaService.getTag('name="twitter:title"')?.content).toBe('Food Diary');
+        expect(metaService.getTag('property="og:image"')?.content).toBe(
+            'https://fooddiary.club/assets/images/seo/food-diary-meal-tracking.png',
+        );
     });
 });
 
@@ -93,6 +96,9 @@ describe('SeoService canonical urls', () => {
         service.update({ path: '/ru/calorie-counter' });
         expect(metaService.getTag('property="og:url"')?.content).toBe('https://fooddiary.club/ru/calorie-counter');
         expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://fooddiary.club/ru/calorie-counter');
+        expect(metaService.getTag('property="og:image"')?.content).toBe(
+            'https://fooddiary.club/assets/images/seo/food-diary-meal-tracking.png',
+        );
     });
 
     it('should create or update canonical link', () => {
@@ -152,6 +158,9 @@ describe('SeoService structured data and robots', () => {
         const payload = JSON.parse(script?.textContent ?? '{}') as { ['@graph']: Array<Record<string, string>> };
         expect(payload['@graph'].some(item => item['@type'] === 'SoftwareApplication')).toBe(true);
         expect(payload['@graph'].some(item => item['url'] === 'https://fooddiary.club/privacy-policy')).toBe(true);
+        expect(payload['@graph'].find(item => item['@type'] === 'WebPage')?.['primaryImageOfPage']).toBe(
+            'https://fooddiary.club/assets/images/seo/food-diary-meal-tracking.png',
+        );
     });
 
     it('should add robots noindex when noIndex is true', () => {

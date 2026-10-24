@@ -8,6 +8,7 @@ import { isPublicMarketingPath, localizedPublicPath, stripPublicLocale } from '.
 import { resolveTranslateLanguage } from '../shared/i18n/translate-language.utils';
 
 const DEFAULT_TITLE = 'Food Diary';
+const PUBLIC_PREVIEW_IMAGE_PATH = '/assets/images/seo/food-diary-meal-tracking.png';
 const DEFAULT_SITE_URLS = {
     en: 'https://fooddiary.club',
     ru: 'https://fooddiary.club/ru',
@@ -58,7 +59,9 @@ export class SeoService {
         const currentSiteUrl = this.getCurrentSiteUrl();
         const pageTitle = this.getPageTitle(data);
         const description = this.getDescription(data);
-        const imageUrl = data.imageUrl ?? `${currentSiteUrl}/assets/pwa/icon-512x512.png`;
+        const isPublicPage = isPublicMarketingPath(data.path ?? this.document.location.pathname);
+        const defaultImagePath = isPublicPage ? PUBLIC_PREVIEW_IMAGE_PATH : '/assets/pwa/icon-512x512.png';
+        const imageUrl = data.imageUrl ?? `${currentSiteUrl}${defaultImagePath}`;
         const currentUrl = this.buildSiteUrl(currentSiteUrl, data.path);
 
         this.title.setTitle(pageTitle);
@@ -72,14 +75,17 @@ export class SeoService {
         this.meta.updateTag({ property: 'og:site_name', content: DEFAULT_TITLE });
         this.meta.updateTag({ property: 'og:locale', content: this.getOpenGraphLocale() });
 
-        this.meta.updateTag({ name: 'twitter:card', content: data.imageUrl === undefined ? 'summary' : 'summary_large_image' });
+        this.meta.updateTag({
+            name: 'twitter:card',
+            content: isPublicPage || data.imageUrl !== undefined ? 'summary_large_image' : 'summary',
+        });
         this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
         this.meta.updateTag({ name: 'twitter:description', content: description });
         this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
 
         this.updateCanonical(currentUrl);
         this.updateAlternateLinks(data.path);
-        this.updateStructuredData(pageTitle, description, currentUrl, data);
+        this.updateStructuredData(pageTitle, description, currentUrl, { ...data, imageUrl });
 
         if (data.noIndex === true) {
             this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
@@ -224,6 +230,7 @@ export class SeoService {
                     name: pageTitle,
                     url: currentUrl,
                     description,
+                    primaryImageOfPage: data.imageUrl,
                     isPartOf: {
                         '@type': 'WebSite',
                         name: DEFAULT_TITLE,
