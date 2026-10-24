@@ -1,0 +1,15 @@
+{
+    "name": "fooddiary-web-quality",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "test": "node --test test/*.test.mjs",
+        "test:browser": "node verify-browser.mjs",
+        "validate": "node cli.mjs validate",
+        "audit": "node cli.mjs audit"
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "commit": "65e7edd67e77420eaf02c5df00fdc0521417d809",
+  "policyReviewedAt": "2026-10-24T20:45:18.432Z",
+  "note": "Verified the published commit and its distinct tree through the GitHub commit endpoint. Cached guide contents and all reviewed requirement mappings are unchanged."
+}

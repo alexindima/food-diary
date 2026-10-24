@@ -795,14 +795,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "5aaf9efa5f6454aa397c91569b9654011ee8955d468d92f11c19bb72edb4357b",
-          "reviewReason": "The package.json delta only adds task-runtime-browser.test.mjs to the existing AI-development Node test command. It does not change browser selection, headed task-owned identity, required rendered interaction/console/screenshot evidence, or the distinction between plan-only and executed visual QA. No actual browser or package test result is inferred."
+          "sha256": "d545f54a397abb75ca23ae59b5240033685cd2194dbef9e62e0727cde049eeab",
+          "reviewReason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed."
         }
       ],
-      "reason": "Reviewed the browser skill references: actual WebMCP availability and bounded cached notification metadata are distinguished from API, browser and delivery proof. Current source/build/session provenance remains explicit, and no credential or content projection was added.",
-      "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:30.4531012Z"
+      "reason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed.",
+      "baseRef": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
+      "gitHead": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
+      "reviewedAtUtc": "2026-10-24T21:22:15.9626927Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

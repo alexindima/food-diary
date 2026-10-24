@@ -1,0 +1,54 @@
+[
+    {
+        "id": "home-en-desktop",
+        "kind": "public",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": { "width": 1440, "height": 900 }
+    },
+    {
+        "id": "home-en-mobile",
+        "kind": "public",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": { "width": 390, "height": 844 },
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "home-ru-desktop",
+        "kind": "public",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": { "width": 1440, "height": 900 },
+        "colorScheme": "dark"
+    },
+    {
+        "id": "home-ru-mobile",
+        "kind": "public",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": { "width": 390, "height": 844 }
+    },
+    {
+        "id": "login-en-desktop",
+        "kind": "login",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": { "width": 1440, "height": 900 },
+        "openDialog": "Sign in"
+    },
+    {
+        "id": "login-en-mobile",
+        "kind": "login",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": { "width": 390, "height": 844 },
+        "openDialog": "Sign in"
+    }
+]
