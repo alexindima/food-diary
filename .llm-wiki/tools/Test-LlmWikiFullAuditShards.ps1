@@ -18,8 +18,11 @@ $expected = @{
     # genuine unexpected-module cases, increasing Workspace coverage by one.
     # Add the real empty-check retrospective regression; all prior assertions
     # remain unchanged. This assertion belongs to both Governed and Workspace.
-    Governed = @{ count = 378; hash = '22902b963a1a4a1b0fa39fc2892ebacbb71bfe2dbe1870956eb0748824c56a95' }
-    Workspace = @{ count = 281; hash = 'fe3356e1a851610b131dc4cd5f36214f008cc18703576e9f8b620091aaceeca8' }
+    # Compared with 74dbb61f3^, retain every prior assertion and add two context
+    # role checks: preserve mandatory reviewer context and reject assignments
+    # from invalid bundles. Both checks belong to Governed and Workspace.
+    Governed = @{ count = 380; hash = 'b659181d181b2837694371b674b962fef5c25f32ba96f93ac1abe917523185bf' }
+    Workspace = @{ count = 283; hash = '761d8aef297f6f1794486ef0e3cf6e3f07f839214f19718b32fd9054921558af' }
     Orchestration = @{ count = 97; hash = 'fdd52d1221307232c0a905826fd28e98c22428d303ffe571b91210a1a2c2aac4' }
     # Retain durable-memory preservation and add canonical model-outcome
     # registry preservation for every shard; all earlier assertions remain.

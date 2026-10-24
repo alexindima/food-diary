@@ -891,33 +891,38 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "52172600508e952caf578d22d27f5c68e5ee72adb14906829ec6663a3dde493e",
+      "pageSha256": "2ce1590e592a16b12bd5be64e1be704f100c1eb34f4f959a9f18c39224add3fe",
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
           "sha256": "12b6312df110f1e853dcf63e3bf6c63c9d3585597040a53815813aa32554094c",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
           "sha256": "ee058200c4f2c8ec94b9ad6fbbb9414b559a38fc21da94c47f1ad41be9d3f500",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "33f4a4506d165cc0b14048c9e63f9d5ad4b1c21bf1efd438f07bf2a63a8d5007",
+          "reviewReason": "Reviewed 74dbb61f3 assertion additions against its parent: all prior Assert-Wiki commands and shard membership are preserved; exactly two context role assertions were added to Governed and Workspace. Refreshed only those two frozen inventories. The inventory guard passes 718 assertions and 64 CI result combinations; isolated fixtures still reject changed or removed assertions. Updated this page to refer to the authoritative exact inventory instead of duplicating stale counts; shard isolation and CI failure gating remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
           "sha256": "782cb14767832c28b05542c8613fa5ab98dc40bd866b366533e963cb538e28f2",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:07.6065483Z"
+      "gitHead": "74dbb61f3ac24f3d25aaa3976583cd0d3a40a5ee",
+      "reviewedAtUtc": "2026-10-24T18:42:06.9560912Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

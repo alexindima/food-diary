@@ -415,9 +415,10 @@ checks. Workspace runs governance, migration, export, evidence, and handoff.
 Orchestration initializes two conflicting workspaces and decision/blocker journal
 entries through the normal tools, validates them, then runs the original scheduler
 scenarios independently. Governed remains the complete combined compatibility
-option. A frozen assertion inventory verifies 336 Core, 279 Workspace, and 97
-Orchestration assertions against the current 713-assertion audit, including one
-common memory-isolation assertion run by every shard. CI uses separate checkout/cache roots and
+option. The frozen inventory in `Test-LlmWikiFullAuditShards.ps1` verifies each
+shard's exact assertion count and hash against the complete audit, including
+common memory and model-outcome isolation assertions run by every shard.
+CI uses separate checkout/cache roots and
 `fail-fast: false`; the final gate requires the aggregate matrix result. Local
 `-AuditShard All` remains the default complete sequential audit. Run individual
 shards sequentially in a shared checkout to avoid contending on the snapshot
