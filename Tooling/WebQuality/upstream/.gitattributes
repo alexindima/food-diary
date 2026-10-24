@@ -1,0 +1,2 @@
+# Preserve exact upstream Git blobs, including original trailing whitespace.
+sources/*.md -text -whitespace

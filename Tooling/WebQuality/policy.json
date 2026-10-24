@@ -1,0 +1,440 @@
+{
+    "schemaVersion": 1,
+    "description": "FoodDiary adoption profile for pinned Google guidance. Partial guide mappings are not complete conformance.",
+    "scopes": [
+        {
+            "id": "client",
+            "path": "FoodDiary.Web.Client/src/app"
+        },
+        {
+            "id": "admin",
+            "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app"
+        },
+        {
+            "id": "ui-kit",
+            "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib"
+        },
+        {
+            "id": "tour",
+            "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib"
+        },
+        {
+            "id": "webmcp",
+            "path": "FoodDiary.Web.Client/projects/fd-webmcp/src/lib"
+        }
+    ],
+    "requirements": [
+        {
+            "id": "alt-text",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Alternate Text",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:alt-text",
+            "statement": "Provide alternative text for images that require it.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "elements-content",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Accessible Names",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:elements-content",
+            "statement": "Give native headings, links and buttons accessible content.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "click-events-have-key-events",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Keyboard handlers",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:click-events-have-key-events",
+            "statement": "Accompany non-native click handlers with keyboard handling.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "interactive-supports-focus",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Tab order",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:interactive-supports-focus",
+            "statement": "Make interactive elements keyboard focusable.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "valid-aria",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "ARIA roles and states",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:valid-aria",
+            "statement": "Use valid ARIA attribute values.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "role-has-required-aria",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "ARIA roles and states",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:role-has-required-aria",
+            "statement": "Supply the ARIA states required by explicit roles.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "no-positive-tabindex",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Tab order",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:no-positive-tabindex",
+            "statement": "Preserve natural keyboard order without positive tabindex values.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "label-has-associated-control",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Labels and hints",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:label-has-associated-control",
+            "statement": "Associate form labels with their controls.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "button-has-type",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Prefer native HTML",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:button-has-type",
+            "statement": "Give native buttons an explicit valid type.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "table-scope",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Lists and tables",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:table-scope",
+            "statement": "Use the scope attribute only on native table header cells.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "fd-ui-button-accessible-name",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Accessible Names",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "source",
+            "check": "template:fd-ui-button-accessible-name",
+            "statement": "Pass accessible names through the FoodDiary UI button contract.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "image-priority-conflict",
+            "source": {
+                "guide": "optimize-image-priority",
+                "anchor": "Do not",
+                "reviewedBlob": "c07bf3f6f949b4621431a264a5442a16c93e6149"
+            },
+            "engine": "source",
+            "check": "template:image-priority",
+            "statement": "Keep high-priority and Angular priority images out of lazy loading.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "image-deprecated-attributes",
+            "source": {
+                "guide": "optimize-image-priority",
+                "anchor": "deprecated",
+                "reviewedBlob": "c07bf3f6f949b4621431a264a5442a16c93e6149"
+            },
+            "engine": "source",
+            "check": "template:deprecated-image-attributes",
+            "statement": "Avoid deprecated image priority and invalid loading attributes.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "relative-font-size",
+            "source": {
+                "guide": "typography",
+                "anchor": "font-size",
+                "reviewedBlob": "6f2d76aafab89e3c5f9f9887bdca565158920e97"
+            },
+            "engine": "source",
+            "check": "css:relative-font-size",
+            "statement": "Use relative font sizes that respect user text preferences.",
+            "severity": "warning",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "unitless-line-height",
+            "source": {
+                "guide": "typography",
+                "anchor": "line-height",
+                "reviewedBlob": "6f2d76aafab89e3c5f9f9887bdca565158920e97"
+            },
+            "engine": "source",
+            "check": "css:unitless-line-height",
+            "statement": "Use unitless line heights for scalable typography.",
+            "severity": "warning",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "bounded-text-wrap",
+            "source": {
+                "guide": "typography",
+                "anchor": "Text wrapping",
+                "reviewedBlob": "6f2d76aafab89e3c5f9f9887bdca565158920e97"
+            },
+            "engine": "source",
+            "check": "css:bounded-text-wrap",
+            "statement": "Limit expensive balanced text wrapping to deliberate elements.",
+            "severity": "error",
+            "scopes": ["client", "admin", "ui-kit", "tour", "webmcp"]
+        },
+        {
+            "id": "axe",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Automated checks",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:axe",
+            "statement": "Run detectable WCAG A/AA checks on rendered browser states.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "document-language",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Language",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:document-language",
+            "statement": "Expose the expected EN/RU document language.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "page-title",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Titles",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:page-title",
+            "statement": "Provide a nonempty page title.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "main-landmark",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Landmarks",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:main-landmark",
+            "statement": "Provide one native main landmark per page.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "zoom-allowed",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Typography",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:zoom-allowed",
+            "statement": "Keep browser zoom available through viewport metadata.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "horizontal-overflow",
+            "source": {
+                "guide": "responsive-design",
+                "anchor": "Overall best practices",
+                "reviewedBlob": "5ea79aae37e92d1d6f0dda295303a7a0b49f13ce"
+            },
+            "engine": "browser",
+            "check": "browser:horizontal-overflow",
+            "statement": "Keep page content within the tested mobile and desktop viewport widths.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "login-autocomplete",
+            "source": {
+                "guide": "autofill-sign-in-form",
+                "anchor": "autocomplete",
+                "reviewedBlob": "636555b7575033bb1dd60fc9bf9506d6e04803a4"
+            },
+            "engine": "browser",
+            "check": "browser:login-autocomplete",
+            "statement": "Expose username and current-password autocomplete on rendered login inputs.",
+            "severity": "error",
+            "scopes": ["client"],
+            "scenarios": ["login"]
+        },
+        {
+            "id": "dialog-focus",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Modals",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "browser",
+            "check": "browser:dialog-focus",
+            "statement": "Move focus into the modal, contain keyboard navigation and restore focus after Escape.",
+            "severity": "error",
+            "scopes": ["client"],
+            "scenarios": ["login"]
+        },
+        {
+            "id": "authenticated-accessibility",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Automated checks",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "journeys",
+            "check": "journeys:authenticated-axe",
+            "statement": "Execute the existing authenticated mobile and desktop accessibility journeys.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "public-performance-budgets",
+            "source": {
+                "guide": "performance",
+                "anchor": "Largest Contentful Paint",
+                "reviewedBlob": "32c6eccb03df6f05c113b7d15cebc9067a9e0e0f"
+            },
+            "engine": "performance",
+            "check": "performance:public-budgets",
+            "statement": "Measure public-page laboratory performance against the repository budgets.",
+            "severity": "error",
+            "scopes": ["client"]
+        },
+        {
+            "id": "screen-reader-review",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Manual testing",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "manual",
+            "check": "manual:assistive-technology",
+            "statement": "Review meaningful names, announcements and navigation with assistive technology.",
+            "severity": "error",
+            "scopes": ["client"],
+            "procedure": "On changed user/admin journeys, use a screen reader and keyboard to inspect headings, field labels, validation announcements and dialog transitions. Record browser, assistive technology, route, locale, build and findings. axe passing is not a substitute."
+        },
+        {
+            "id": "real-user-vitals",
+            "source": {
+                "guide": "performance",
+                "anchor": "Interaction to Next Paint",
+                "reviewedBlob": "32c6eccb03df6f05c113b7d15cebc9067a9e0e0f"
+            },
+            "engine": "manual",
+            "check": "manual:field-vitals",
+            "statement": "Evaluate real-user INP, LCP and CLS separately from laboratory scores.",
+            "severity": "error",
+            "scopes": ["client"],
+            "procedure": "Review comparable real-user measurements by device and release at the 75th percentile. Lighthouse TBT is not field INP. Existing telemetry has a smaller page-load metric set; verify coverage before asserting conformance."
+        },
+        {
+            "id": "os-text-scaling",
+            "source": {
+                "guide": "respect-os-text-scale",
+                "anchor": "Text Scale",
+                "reviewedBlob": "4ed75063c0c3a56214640256db3bb6498d70908a"
+            },
+            "engine": "manual",
+            "check": "manual:text-scale",
+            "statement": "Verify operating-system text scaling and browser zoom on representative flows.",
+            "severity": "error",
+            "scopes": ["client"],
+            "procedure": "Test 200% browser zoom plus OS enlarged text on supported desktop/mobile browsers. Check clipped text, hidden controls, overlays and scrolling. Browser viewport resizing alone does not establish this behavior."
+        },
+        {
+            "id": "reduced-motion",
+            "source": {
+                "guide": "accessibility",
+                "anchor": "Motion and Preferences",
+                "reviewedBlob": "603dfa8b333ffae3c5f03c8c1e3b7392e29bbed5"
+            },
+            "engine": "manual",
+            "check": "manual:motion",
+            "statement": "Verify that reduced-motion preference removes nonessential motion.",
+            "severity": "error",
+            "scopes": ["client"],
+            "procedure": "Compare no-preference and reduce on routes with animations, scrolling and dialogs. Inspect actual motion and controls, not just the presence of a media query."
+        },
+        {
+            "id": "fallback-compatibility",
+            "source": {
+                "guide": "forms",
+                "anchor": "Fallback",
+                "reviewedBlob": "0409c179e09a8beca7209f9798f74a7069d6b121"
+            },
+            "engine": "manual",
+            "check": "manual:browser-support",
+            "statement": "Review modern form features and their fallbacks against supported browsers.",
+            "severity": "error",
+            "scopes": ["client"],
+            "procedure": "For adopted browser APIs and CSS features, review the pinned guide compatibility notes and test critical flows in supported Safari/Firefox/Chromium versions. Chromium automation alone is not cross-browser evidence."
+        }
+    ],
+    "exceptions": [],
+    "guideReviews": []
+}

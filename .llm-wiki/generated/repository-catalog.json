@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 297,
-    "documentationPages": 241
+    "documentationPages": 242
   },
   "dotnet": {
     "projects": [
@@ -16091,6 +16091,7 @@
       "docs/frontend/PUBLIC_LIGHTHOUSE.md",
       "docs/frontend/PUBLIC_RECIPES.md",
       "docs/frontend/TEMPLATE_LINTING.md",
+      "docs/frontend/WEB_QUALITY.md",
       "docs/frontend/angular-22-tech-debt.md",
       "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",
       "docs/plans/ADMIN_EXPANSION.md",
