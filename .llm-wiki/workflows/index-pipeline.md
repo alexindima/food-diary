@@ -18,6 +18,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/tools/Build-LlmWikiModulePages.ps1
+  - .llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1
+  - .llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1
   - .llm-wiki/tools/Get-LlmWikiContractConsumers.ps1
   - .llm-wiki/tools/Test-LlmWikiContractConsumers.ps1
   - .llm-wiki/tools/Test-LlmWikiModulePageCache.ps1
@@ -146,6 +148,13 @@ Missing, extra or changed output pages invalidate reuse. A successful forced
 generation also refreshes the receipt; failed checks and changing inputs never
 publish success. The pipeline forwards this opt-in with `-ReuseUnchangedChecks`.
 Use the generator without the flag to force reconstruction of every page.
+
+The C# symbol generator accepts the same opt-in. Its receipt includes the
+production C# path/content set, generator helpers, runtime/culture/encoding and
+the exact verified output bytes. Source additions, deletions and renames,
+same-size edits with restored timestamps and output corruption invalidate reuse.
+The full path rechecks input stability before publishing a receipt. Direct
+`-Check` without the reuse flag continues to extract and compare the full index.
 
 Measure cold generation separately from a repeated cache-hit check; OS caches
 and concurrent work can dominate wall-clock comparisons. A smaller generator

@@ -80,11 +80,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 475,
-      "decisionPoints": 151,
+      "nonBlankLines": 477,
+      "decisionPoints": 152,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 238
+      "structuralRiskScore": 239.54
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -922,11 +922,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
-      "nonBlankLines": 198,
-      "decisionPoints": 23,
+      "nonBlankLines": 255,
+      "decisionPoints": 32,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.46
+      "structuralRiskScore": 55.1
     },
     {
       "path": ".llm-wiki/tools/Clear-LlmWikiReadOnlySnapshotCache.ps1",
@@ -1506,11 +1506,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-      "nonBlankLines": 475,
-      "decisionPoints": 151,
+      "nonBlankLines": 477,
+      "decisionPoints": 152,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 238
+      "structuralRiskScore": 239.54
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1",
@@ -64988,9 +64988,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiIndexSelection.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -66322,7 +66323,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
       "line": 1,
-      "testReferenceCount": 22,
+      "testReferenceCount": 23,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
@@ -66343,6 +66344,7 @@
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
         ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskEvidenceMappingRetention.ps1",
         ".llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1"
@@ -66391,13 +66393,14 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiIndexCache.ps1",
       "line": 1,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexFingerprint.ps1",
         ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
-        ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1"
+        ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -66420,7 +66423,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiJson.ps1",
       "line": 1,
-      "testReferenceCount": 14,
+      "testReferenceCount": 15,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
         ".llm-wiki/tools/Test-LlmWikiBackendModuleModel.ps1",
@@ -66434,6 +66437,7 @@
         ".llm-wiki/tools/Test-LlmWikiPortable.ps1",
         ".llm-wiki/tools/Test-LlmWikiQualitySelfCoverage.ps1",
         ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1"
       ],
@@ -66509,7 +66513,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
       "line": 1,
-      "testReferenceCount": 9,
+      "testReferenceCount": 10,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1",
@@ -66518,6 +66522,7 @@
         ".llm-wiki/tools/Test-LlmWikiGitPaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1",
         ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiToolStartup.ps1"
       ],
@@ -66618,7 +66623,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 50,
+      "testReferenceCount": 51,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1",
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
@@ -66657,6 +66662,7 @@
         ".llm-wiki/tools/Test-LlmWikiSchedulerLocks.ps1",
         ".llm-wiki/tools/Test-LlmWikiSmokeScheduling.ps1",
         ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
+        ".llm-wiki/tools/Test-LlmWikiSymbolIndexCache.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskBaseline.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskEvidenceMappingRetention.ps1",
         ".llm-wiki/tools/Test-LlmWikiTaskHandoff.ps1",
