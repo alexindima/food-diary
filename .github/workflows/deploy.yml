@@ -586,6 +586,7 @@ jobs:
           $SCP_CMD nginx/sites-enabled/techradar.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/techradar.fooddiary.club
           $SCP_CMD scripts/bootstrap-tech-radar-tls.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
           $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
+          $SCP_CMD scripts/deploy/install_nginx_logrotate.py scripts/deploy/nginx-logrotate.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
           DEPLOY_COMMIT_SHA="${{ env.SOURCE_COMMIT_SHA }}"
@@ -601,6 +602,10 @@ jobs:
           fi
 
           cd /opt/fooddiary
+
+          # Reject an unreviewed host policy before stopping any database writers.
+          python3 scripts/deploy/install_nginx_logrotate.py
+          logrotate --debug /etc/logrotate.d/nginx >/dev/null
 
           chmod 0755 /etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
           chmod 0755 /opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh

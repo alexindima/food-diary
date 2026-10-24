@@ -139,6 +139,35 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
+    public void RuntimeDiagnostics_StayOptInAndDoNotLimitApplicationFileWrites() {
+        string overlay = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.job-manager-diagnostics.yml"));
+        string control = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "deploy", "job-manager-diagnostics.sh"));
+        string workflow = ReadDeployWorkflow();
+
+        Assert.Multiple(
+            () => Assert.DoesNotContain("docker-compose.job-manager-diagnostics.yml", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("DOTNET_DbgMiniDumpType: \"3\"", overlay, StringComparison.Ordinal),
+            () => Assert.Contains("size=256m,mode=0700", overlay, StringComparison.Ordinal),
+            () => Assert.Contains("network_mode: none", overlay, StringComparison.Ordinal),
+            () => Assert.Contains("SYS_PTRACE", overlay, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("privileged:", overlay, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("unconfined", overlay, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("fsize:", overlay, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("ulimit -f", control, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void DeployWorkflow_ReviewsRotationPolicyBeforeStoppingWriters() {
+        string workflow = ReadDeployWorkflow();
+        int install = workflow.IndexOf("python3 scripts/deploy/install_nginx_logrotate.py", StringComparison.Ordinal);
+        int stop = workflow.IndexOf("stop --timeout 60 api telegram-bot job-manager", StringComparison.Ordinal);
+
+        Assert.Multiple(
+            () => Assert.True(install >= 0, "Managed Nginx rotation policy installation is missing."),
+            () => Assert.True(stop > install, "Unknown host rotation policies must fail before writers are stopped."));
+    }
+
+    [Fact]
     public void Workflows_PinEveryExternalActionToACommitSha() {
         string workflowsRoot = ArchitectureTestPaths.FromRoot(".github", "workflows");
         string[] violations = [.. Directory

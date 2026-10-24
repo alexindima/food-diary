@@ -146,12 +146,17 @@
           "path": "AGENTS.md",
           "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
           "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "633b2b5d0aab032429a79df1424f4d24a02bd73b348ad7e152ff5aaf909977a0",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
         }
       ],
-      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:25.1377400Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:13.7040687Z"
     },
     {
       "pageId": "system.quality-index",
@@ -242,6 +247,11 @@
       "pageSha256": "f21a78ea954e7adc60acb8bc9bd7e4372c4a0ac6e8f779783486dd19db08d1a0",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "f8e89a1e506b9fdc458d59091fd86337a04fff799fb151a0679b392cb1583b20",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
+        },
+        {
           "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
           "sha256": "02b26dadc1a114c15b2230b86bd819230878a304d6d70e1fd0a59d468dec6fcb",
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
@@ -252,10 +262,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:26.9948423Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:14.2067635Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -603,14 +613,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "ed015e4ac06f2c0a7f8cbe46d85bdde326c720394c4c0a73f15bcdf621ff0ea1",
-          "reviewReason": "ADR README now lists accepted decisions 0054, 0055 and 0056. Its lifecycle and durable ownership/deployment/consistency/public-contract criteria are unchanged. This command guide names neither a fixed ADR inventory nor an automatic requirement to create a new record, so no narrative update follows from those additions."
+          "sha256": "633b2b5d0aab032429a79df1424f4d24a02bd73b348ad7e152ff5aaf909977a0",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
         }
       ],
-      "reason": "ADR README now lists accepted decisions 0054, 0055 and 0056. Its lifecycle and durable ownership/deployment/consistency/public-contract criteria are unchanged. This command guide names neither a fixed ADR inventory nor an automatic requirement to create a new record, so no narrative update follows from those additions.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:36.2420546Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:14.7487037Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -844,6 +854,11 @@
       "pageSha256": "e6c3d19bcc8aca497afb641900f09134ca03b753f43adf6ea52ef46b72483250",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "f8e89a1e506b9fdc458d59091fd86337a04fff799fb151a0679b392cb1583b20",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
+        },
+        {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
           "sha256": "9471c65b1a16abf1d3d131bf3db02dd839c019c3592a1cb0dec8c452bb224d32",
           "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
@@ -884,10 +899,10 @@
           "reviewReason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates."
         }
       ],
-      "reason": "Reviewed assertion inventory against the actual Test-LlmWikiTools diff: one real empty-check retrospective assertion was added; no earlier assertion was removed or relaxed. Governed377->378 and Workspace280->281, other partitions unchanged. The full Governed audit passed, and the refreshed inventory plus complete facade-contract group pass, preserving isolated CI shards and failure gates.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:55:35.4511640Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:15.6758506Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1179,8 +1194,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "ac9360e57b1ad572208be95ebfc103071cdc7919ed17ecc627931737bda46138",
-          "reviewReason": "CI still runs the complete focused Wiki gate, API compatibility, dependency inspection and report publication in that order; non-PR events additionally run independent Core/Workspace/Orchestration Full shards and the stable final gate requires their aggregate result. The new atomic-publication unit step does not change report provenance, optional governance handling or shard ownership. No current CI result is asserted."
+          "sha256": "f8e89a1e506b9fdc458d59091fd86337a04fff799fb151a0679b392cb1583b20",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1193,10 +1208,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "CI still runs the complete focused Wiki gate, API compatibility, dependency inspection and report publication in that order; non-PR events additionally run independent Core/Workspace/Orchestration Full shards and the stable final gate requires their aggregate result. The new atomic-publication unit step does not change report provenance, optional governance handling or shard ownership. No current CI result is asserted.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:40.5564389Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:21.1532103Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1527,8 +1542,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ec63af3302e8682545d5f19fd6938f4e977d09eb497265da1a76d54f8ba816ed",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "39d9021fd62fdd03aee3b866c26dd51510bcaebadf293d64158775a60d7ce9ad",
+          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1561,10 +1576,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
+      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:33.7648836Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T11:01:18.0530369Z"
     },
     {
       "pageId": "workflow.review-diff",

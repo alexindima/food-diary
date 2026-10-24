@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 297,
-    "documentationPages": 238
+    "documentationPages": 240
   },
   "dotnet": {
     "projects": [
@@ -15941,6 +15941,7 @@
       "docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md",
       "docs/adr/0055-atomic-frontend-publication-and-asset-retention.md",
       "docs/adr/0056-shopping-list-content-revisions.md",
+      "docs/adr/0057-opt-in-native-diagnostics.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",
@@ -16074,6 +16075,7 @@
       "docs/backend/OUTGOING_MAIL.md",
       "docs/backend/PADDLE_PRODUCTION_RUNBOOK.md",
       "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+      "docs/backend/PRODUCTION_RUNTIME_DIAGNOSTICS.md",
       "docs/backend/TELEGRAM_CLIENT_RUNBOOK.md",
       "docs/backend/TELEGRAM_TEST_STAND.md",
       "docs/dependencies/overrides.md",

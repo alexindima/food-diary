@@ -1249,6 +1249,47 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "31f9769034f3179c0410b485cb3ca6c4993fe8a7d7ad13b27fc9ec7170acbc82",
       "eventHash": "9498e389ba795ec49ede98c0dae941d194a537ec18b9ca3fb7b014699dd1c60b"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "3a686f5402cc463da575b04516a02b43",
+      "workspace": ".artifacts/llm-wiki/tasks/runtime-diagnostics-merge",
+      "recordedAtUtc": "2026-10-24T11:06:30.4342309Z",
+      "completionFingerprint": "6088a79ae520b100ab2f0847c2093e7275c967ecb502264739f3b2cf9c809dfc",
+      "retrospectiveHash": "27d77af6b11b9721bb8773a751d907eefa8f134c22d8f5f387ca1a7511452087",
+      "instructionSetFingerprint": "ffacc19cddd0baed3998e0e64785e25d4f6346b970ded55c8769802f18cfb8e8",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f"
+        },
+        {
+          "path": "Tooling/tests/FoodDiary.ArchitectureTests/AGENTS.md",
+          "fingerprint": "aedb1fff785406f9af4132e27e2864468f1a3ec5eddd973d8335cd82ded288a0"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "medium",
+        "complexityScore": 59,
+        "complexityBandUpperBound": 59,
+        "cohortKey": "medium|complexity<=59",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 95.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 100.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "9498e389ba795ec49ede98c0dae941d194a537ec18b9ca3fb7b014699dd1c60b",
+      "eventHash": "19fccc1a9c04929b252a7a5d7d558dbd8e8b914ef4b30f2f7af928ad8a71d666"
     }
   ]
 }

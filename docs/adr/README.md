@@ -87,3 +87,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0054: Independent commit verification and notification reconciliation](0054-independent-commit-verification-and-notification-reconciliation.md)
 - [0055: Atomic frontend publication and asset retention](0055-atomic-frontend-publication-and-asset-retention.md)
 - [0056: Required content revisions for shopping-list updates](0056-shopping-list-content-revisions.md)
+- [0057: Opt-in bounded native incident diagnostics](0057-opt-in-native-diagnostics.md)

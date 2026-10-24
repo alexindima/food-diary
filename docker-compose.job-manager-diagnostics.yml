@@ -1,0 +1,51 @@
+# Explicit, temporary incident overlay. Never included by the deployment workflow.
+# Use the exact deployed image digest for JOB_MANAGER_IMAGE_REF.
+services:
+  job-manager:
+    entrypoint: ["/bin/sh", "/opt/fooddiary/job-manager-diagnostics.sh", "run"]
+    cap_add:
+      - SYS_PTRACE
+    ulimits:
+      core: 0
+    environment:
+      DOTNET_DbgEnableMiniDump: "1"
+      DOTNET_DbgMiniDumpType: "3"
+      DOTNET_DbgMiniDumpName: /var/lib/fooddiary/job-manager-crashdumps/job-manager.%t.%p.dmp
+      DOTNET_EnableCrashReport: "1"
+    volumes:
+      - job-manager-diagnostics:/var/lib/fooddiary/job-manager-crashdumps
+      - ./scripts/deploy/job-manager-diagnostics.sh:/opt/fooddiary/job-manager-diagnostics.sh:ro
+    depends_on:
+      job-manager-diagnostics-retention:
+        condition: service_healthy
+
+  job-manager-diagnostics-retention:
+    image: ${JOB_MANAGER_IMAGE_REF:?Use the exact deployed Job Manager image digest}
+    entrypoint: ["/bin/sh", "/opt/fooddiary/job-manager-diagnostics.sh", "retain"]
+    restart: unless-stopped
+    read_only: true
+    network_mode: none
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 32m
+    cpus: 0.1
+    volumes:
+      - job-manager-diagnostics:/var/lib/fooddiary/job-manager-crashdumps
+      - ./scripts/deploy/job-manager-diagnostics.sh:/opt/fooddiary/job-manager-diagnostics.sh:ro
+    healthcheck:
+      test: ["CMD", "/bin/sh", "/opt/fooddiary/job-manager-diagnostics.sh", "verify"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    profiles: ["full", "jobs"]
+
+volumes:
+  job-manager-diagnostics:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=256m,mode=0700,uid=0,gid=0,noexec,nosuid,nodev
+    labels:
+      club.fooddiary.data-classification: sensitive-diagnostics
+      club.fooddiary.retention-policy: four-files-seven-days-256m-volatile

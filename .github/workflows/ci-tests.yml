@@ -40,6 +40,13 @@ jobs:
       - name: Test atomic frontend publication and retention
         run: python3 -B -m unittest discover -s scripts/deploy -p 'test_publish_frontend.py'
 
+      - name: Test protected runtime diagnostics and Nginx rotation
+        env:
+          FOODDIARY_RUNTIME_DOCKER_TESTS: '1'
+        run: |
+          python3 -B -m unittest discover -s scripts/deploy -p 'test_install_nginx_logrotate.py'
+          python3 -B -m unittest discover -s scripts/deploy -p 'test_runtime_diagnostics_docker.py'
+
       - name: Test PWA shell integrity headers
         shell: pwsh
         run: ./scripts/Test-PwaShellIntegrity.ps1
