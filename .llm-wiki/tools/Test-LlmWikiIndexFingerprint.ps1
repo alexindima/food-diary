@@ -32,7 +32,38 @@ try {
     $changed = Get-LlmWikiIndexInputFingerprint $repositoryRoot @($firstRelative, $secondRelative)
     if ($first -ceq $changed) { throw 'Index fingerprint did not detect a same-length content change with a restored timestamp.' }
 
-    Write-Host 'Index fingerprint smoke passed: Unicode paths, stable ordering, missing inputs, and content changes are handled.'
+    [IO.File]::WriteAllText($firstPath, "alpha`n", [Text.UTF8Encoding]::new($false))
+    $lf = Get-LlmWikiIndexInputFingerprint $repositoryRoot @($firstRelative)
+    [IO.File]::WriteAllText($firstPath, "alpha`r`n", [Text.UTF8Encoding]::new($false))
+    $crlf = Get-LlmWikiIndexInputFingerprint $repositoryRoot @($firstRelative)
+    if ($lf -ceq $crlf) { throw 'Git text filters concealed changed input bytes from the content fingerprint.' }
+
+    $abcPath = Join-Path $testRoot 'hash-abc.bin'
+    [IO.File]::WriteAllBytes($abcPath, [byte[]]@(97,98,99))
+    $missingPath = Join-Path $testRoot 'missing.bin'
+    $orders = @(
+        @('LlmWikiIndexCache.ps1','LlmWikiQueryCache.ps1','LlmWikiVerificationReceipts.ps1'),
+        @('LlmWikiIndexCache.ps1','LlmWikiVerificationReceipts.ps1','LlmWikiQueryCache.ps1'),
+        @('LlmWikiQueryCache.ps1','LlmWikiIndexCache.ps1','LlmWikiVerificationReceipts.ps1'),
+        @('LlmWikiQueryCache.ps1','LlmWikiVerificationReceipts.ps1','LlmWikiIndexCache.ps1'),
+        @('LlmWikiVerificationReceipts.ps1','LlmWikiIndexCache.ps1','LlmWikiQueryCache.ps1'),
+        @('LlmWikiVerificationReceipts.ps1','LlmWikiQueryCache.ps1','LlmWikiIndexCache.ps1')
+    )
+    foreach ($order in $orders) {
+        & {
+            foreach ($name in $order) { . (Join-Path $PSScriptRoot $name) }
+            $expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'
+            if ((Get-LlmWikiRequiredFileSha256 $abcPath) -cne $expected -or (Get-LlmWikiFileSha256 $abcPath) -cne $expected) {
+                throw "Existing-file hashing changed after loading $($order -join ',')."
+            }
+            $requiredThrew = $false
+            try { $null = Get-LlmWikiRequiredFileSha256 $missingPath } catch { $requiredThrew = $true }
+            if (-not $requiredThrew -or (Get-LlmWikiFileSha256 $missingPath) -cne '<missing>') {
+                throw "Required/optional missing-file contracts depend on helper load order: $($order -join ',')."
+            }
+        }
+    }
+    Write-Host 'Index fingerprint smoke passed: Unicode, content mutations and required/optional hashes across all six helper load orders.'
 } finally {
     Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
 }

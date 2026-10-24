@@ -91,7 +91,7 @@ if ($runtimeEvalGroups -notcontains 'context-search-evals' -or $runtimeEvalGroup
 }
 $frontendInventoryGroups = @(Get-Groups '.llm-wiki/tools/Test-LlmWikiFrontendSourceInventory.ps1')
 if ($frontendInventoryGroups -notcontains 'index-selection') { throw 'Frontend source inventory omitted its index regressions.' }
-foreach ($source in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Build-LlmWikiSymbolIndex', 'Test-LlmWikiSymbolIndexCache')) {
+foreach ($source in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Build-LlmWikiSymbolIndex', 'Test-LlmWikiSymbolIndexCache', 'Test-LlmWikiIndexPipelineCache')) {
     if (@(Get-Groups ".llm-wiki/tools/$source.ps1") -notcontains 'index-selection') {
         throw "Native fixture source '$source' omitted its index regressions."
     }

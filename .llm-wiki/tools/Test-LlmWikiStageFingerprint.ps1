@@ -44,7 +44,7 @@ try {
         [IO.File]::SetLastWriteTimeUtc($jsonHelper, $jsonTime)
         if ($jsonBefore -ceq (& $tool -Stage $stage)) { throw "$stage ignored its changed shared JSON helper." }
     }
-    foreach ($name in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Test-LlmWikiSymbolIndexCache')) {
+    foreach ($name in @('LlmWikiSmokeSandbox', 'Test-LlmWikiArchitectureHealthToolExclusion', 'Test-LlmWikiSymbolIndexCache', 'Test-LlmWikiIndexFingerprint', 'Test-LlmWikiIndexPipelineCache')) {
         $indexSource = Join-Path $fixtureTools "$name.ps1"
         [IO.File]::WriteAllText($indexSource, 'first')
         $indexBefore = & $tool -Stage 'affected smoke:index-selection'

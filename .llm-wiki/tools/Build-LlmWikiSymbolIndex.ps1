@@ -130,7 +130,7 @@ function Write-SymbolCache([string]$ExpectedJson, [string]$InputFingerprint) {
 $sourceFiles = @(Get-SymbolSourceFiles)
 $inputFingerprint = Get-SymbolInputFingerprint $sourceFiles
 if ($ReuseUnchangedCheck -and (Test-Path -LiteralPath $outputPath -PathType Leaf) -and
-    (Test-LlmWikiIndexSetCache $cachePath $inputFingerprint (Get-LlmWikiFileSha256 $outputPath))) {
+    (Test-LlmWikiIndexSetCache $cachePath $inputFingerprint (Get-LlmWikiRequiredFileSha256 $outputPath))) {
     Write-Host 'C# symbol index cache hit: source set, contents, generator, runtime and output are unchanged.'
     return
 }

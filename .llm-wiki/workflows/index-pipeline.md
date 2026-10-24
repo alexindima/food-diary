@@ -34,6 +34,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1
   - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
   - .llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1
+  - .llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1
+  - .llm-wiki/tools/Test-LlmWikiIndexFingerprint.ps1
   - .llm-wiki/tools/Test-LlmWikiProcess.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
@@ -148,6 +150,24 @@ Missing, extra or changed output pages invalidate reuse. A successful forced
 generation also refreshes the receipt; failed checks and changing inputs never
 publish success. The pipeline forwards this opt-in with `-ReuseUnchangedChecks`.
 Use the generator without the flag to force reconstruction of every page.
+
+The pipeline also reuses an unchanged complete update result. It obtains the
+writer lock and recovers orphan transactions before consulting its schema 2
+receipt. Exact input, generated-output and runtime fingerprints (PowerShell,
+CLR, OS, culture, encoding, Node and repository-selected .NET SDK) must match; a hit starts
+no generators and creates no backup/checkpoints. A miss runs the normal
+transaction. Sources are rehashed after generation and semantic no-op restoration,
+before commit; changed inputs cause rollback and cannot publish a new receipt.
+Older receipts are regenerated once. Check mode retains its architecture-drift
+guard, and strict affected verification still bypasses reuse. Call the pipeline
+without `-ReuseUnchangedChecks` to force all selected generators; the `update`
+facade enables this opt-in automatically.
+
+Index hashing uses `Get-LlmWikiRequiredFileSha256`, which throws for missing
+files. Query/verification dependency hashing retains its optional `<missing>`
+marker. Loading those helpers in another order cannot replace the required
+contract. Bulk Git hashing disables text filters so LF/CRLF byte changes also
+invalidate reuse. No timestamp-based or cross-request file-hash memoization is used.
 
 The C# symbol generator accepts the same opt-in. Its receipt includes the
 production C# path/content set, generator helpers, runtime/culture/encoding and

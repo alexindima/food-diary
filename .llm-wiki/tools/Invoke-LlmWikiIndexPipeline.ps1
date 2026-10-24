@@ -211,11 +211,25 @@ function Get-PipelineCacheState([string[]]$ToolNames) {
     $toolSet = @($ToolNames | Sort-Object -Unique) -join '|'
     $toolSetHash = (Get-StringSha256 $toolSet).Substring(0, 16)
     $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve Git directory for pipeline cache receipts.').Lines[0].Trim()
+    $runtime = "$($PSVersionTable.PSVersion)|$($PSVersionTable.PSEdition)|$([Environment]::Version)|$([Environment]::OSVersion)|$([Globalization.CultureInfo]::CurrentCulture.Name)|$([Text.Encoding]::Default.CodePage)"
+    Push-Location $repositoryRoot
+    try {
+        foreach ($name in @('node','dotnet')) {
+            $command = Get-Command $name -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+            $version = '<missing>'
+            if ($null -ne $command) {
+                $version = @(& $command.Source --version) -join "`n"
+                if ($LASTEXITCODE -ne 0) { throw "Unable to resolve $name version for pipeline reuse." }
+            }
+            $runtime += "|${name}=$version"
+        }
+    } finally { Pop-Location }
     return [pscustomobject]@{
         receiptPath = Join-Path $gitDirectory "llm-wiki/index-cache/pipeline-$toolSetHash.json"
         inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $repositoryInputs
         outputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $generatedOutputs
         toolSet = $toolSet
+        runtimeFingerprint = Get-StringSha256 $runtime
     }
 }
 
@@ -223,8 +237,9 @@ function Test-PipelineCacheReceipt([object]$State) {
     if (-not (Test-Path -LiteralPath $State.receiptPath -PathType Leaf)) { return $false }
     try {
         $receipt = Get-Content -LiteralPath $State.receiptPath -Raw | ConvertFrom-Json
-        return [int]$receipt.schemaVersion -eq 1 -and
+        return [int]$receipt.schemaVersion -eq 2 -and
             [string]$receipt.toolSet -ceq [string]$State.toolSet -and
+            [string]$receipt.runtimeFingerprint -ceq [string]$State.runtimeFingerprint -and
             [string]$receipt.inputFingerprint -ceq [string]$State.inputFingerprint -and
             [string]$receipt.outputFingerprint -ceq [string]$State.outputFingerprint
     } catch {
@@ -236,9 +251,10 @@ function Test-PipelineCacheReceipt([object]$State) {
 function Write-PipelineCacheReceipt([object]$State) {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $State.receiptPath) -Force
     $receipt = [ordered]@{
-        schemaVersion = 1
+        schemaVersion = 2
         recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         toolSet = [string]$State.toolSet
+        runtimeFingerprint = [string]$State.runtimeFingerprint
         inputFingerprint = [string]$State.inputFingerprint
         outputFingerprint = [string]$State.outputFingerprint
     }
@@ -551,7 +567,8 @@ if ($sampledToolCount -gt 0) {
 if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNames) {
     Write-Host 'Iteration hint: use update -AffectedOnly -ContractIndexesOnly while editing; run the full affected update once before handoff.'
 }
-if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+$pipelineCacheState = $null
+if ($Check -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
     if ($Check -and (Test-PipelineCacheReceipt $pipelineCacheState)) {
         # Update receipts prove unchanged bytes, including indexes with drift.
@@ -679,16 +696,19 @@ try {
         $lockPath = Join-Path $transactionStateRoot 'update.lock'
         $lock = Enter-IndexUpdateLock $lockPath
         $updateLock = $lock.handle
-        if ($lock.waited -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+        # Recovery has priority over reuse, including a matching pre-crash tree.
+        Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
+        if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
             $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
             if (Test-PipelineCacheReceipt $pipelineCacheState) {
-                Write-Host "Concurrent LLM Wiki index result reused after $([Math]::Round($lock.waitDurationSeconds, 2))s; inputs and outputs match."
-                $updateLock.Dispose()
-                $updateLock = $null
-                exit 0
+                if ($lock.waited) {
+                    Write-Host "Concurrent LLM Wiki index result reused after $([Math]::Round($lock.waitDurationSeconds, 2))s; inputs and outputs match."
+                } else {
+                    Write-Host "LLM Wiki index update cache hit: $(@($selectedToolNames).Count) generator(s), source and generated hashes unchanged."
+                }
+                return
             }
         }
-        Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $transactionRoot = Join-Path $transactionStateRoot ([guid]::NewGuid().ToString('N'))
         $null = New-Item -ItemType Directory -Path $transactionRoot -Force
         $transactionState = [ordered]@{
@@ -727,13 +747,21 @@ try {
             -GeneratedRoot $generatedRoot `
             -BackupRoot (Join-Path $backupSnapshot.path 'content'))
         if ($semanticNoOps.Count -gt 0) { Write-Host "LLM Wiki semantic no-op suppression restored $($semanticNoOps.Count) unchanged generated artifact(s)." }
+    }
+    if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
+        $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
+        if ($finalPipelineCacheState.inputFingerprint -cne $pipelineCacheState.inputFingerprint -or
+            $finalPipelineCacheState.runtimeFingerprint -cne $pipelineCacheState.runtimeFingerprint) {
+            throw 'LLM Wiki index inputs changed during generation; no reusable receipt will be published.'
+        }
+    }
+    if (-not $Check -and $transactionRoot) {
         $transactionState.status = 'committed'
         $transactionState['completedAtUtc'] = [DateTime]::UtcNow.ToString('o')
         Write-IndexTransactionState $transactionRoot $transactionState
         $transactionNeedsRecovery = $false
     }
     if (-not $Check -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
-        $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
         Write-PipelineCacheReceipt $finalPipelineCacheState
         $pipelineReceiptRecorded = $true
     }
@@ -753,7 +781,6 @@ try {
 $pipelineStopwatch.Stop()
 Add-LlmWikiIndexTimings -RepositoryRoot $repositoryRoot -Mode $timingMode -Timings @($script:completedToolTimings)
 if (-not $pipelineReceiptRecorded -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
-    $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
     Write-PipelineCacheReceipt $finalPipelineCacheState
 }
 Write-Host "LLM Wiki index pipeline completed in $(if ($Check) { 'check' } else { 'update' }) mode in $([Math]::Round($pipelineStopwatch.Elapsed.TotalSeconds, 2))s."

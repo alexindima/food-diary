@@ -81,10 +81,10 @@ exit 0
     Assert-Cache $true $reuseCheck
     Assert-Cache $true $reuseUpdate
     Assert-Cache $false @('-Check')
-    $golden = Get-LlmWikiFileSha256 $outputPath
+    $golden = Get-LlmWikiRequiredFileSha256 $outputPath
     $timestamp = [IO.File]::GetLastWriteTimeUtc($outputPath)
     Assert-Cache $false @()
-    if ((Get-LlmWikiFileSha256 $outputPath) -cne $golden -or [IO.File]::GetLastWriteTimeUtc($outputPath) -ne $timestamp) {
+    if ((Get-LlmWikiRequiredFileSha256 $outputPath) -cne $golden -or [IO.File]::GetLastWriteTimeUtc($outputPath) -ne $timestamp) {
         throw 'Forced generation changed an identical output or differs from cached generation.'
     }
     $sourcePath = Join-Path $fixture $sourceRelative
@@ -146,8 +146,8 @@ exit 0
     # receipt publication paths execute unchanged.
     $jsonHelperPath = Join-Path $fixture '.llm-wiki/tools/LlmWikiJson.ps1'
     $jsonHelper = [IO.File]::ReadAllText($jsonHelperPath)
-    $beforeFailureReceipt = Get-LlmWikiFileSha256 $receiptPath
-    $beforeFailureOutput = Get-LlmWikiFileSha256 $outputPath
+    $beforeFailureReceipt = Get-LlmWikiRequiredFileSha256 $receiptPath
+    $beforeFailureOutput = Get-LlmWikiRequiredFileSha256 $outputPath
     [IO.File]::AppendAllText($jsonHelperPath, @'
 
 $script:originalCanonicalJson = ${function:ConvertTo-LlmWikiCanonicalJson}
@@ -160,8 +160,8 @@ function ConvertTo-LlmWikiCanonicalJson {
 '@)
     $failureOutput = Invoke-Generator $reuseCheck 1
     if (-not $failureOutput.Contains('inputs changed during extraction') -or
-        (Get-LlmWikiFileSha256 $receiptPath) -cne $beforeFailureReceipt -or
-        (Get-LlmWikiFileSha256 $outputPath) -cne $beforeFailureOutput) {
+        (Get-LlmWikiRequiredFileSha256 $receiptPath) -cne $beforeFailureReceipt -or
+        (Get-LlmWikiRequiredFileSha256 $outputPath) -cne $beforeFailureOutput) {
         throw 'Changed inputs published a receipt/output or failed for an unrelated reason.'
     }
     $cases++

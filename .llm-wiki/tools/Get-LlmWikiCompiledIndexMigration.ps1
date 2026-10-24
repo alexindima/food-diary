@@ -85,7 +85,10 @@ $results = foreach ($indexPath in $indexes) {
         automaticJsonFallback = $false
         retainedAs = 'projection-source-and-git-review-artifact'
         consumerCount = $consumers.Count
-        removable = $consumers.Count -eq 0
+        # These JSON files remain projection inputs and review artifacts. The
+        # PS/MJS/MD reference scan omits C#, policy and dynamic consumers, so a
+        # zero text-reference count cannot establish safe removal.
+        removable = $false
         consumers = [string[]]$consumers
     }
 }
@@ -98,7 +101,7 @@ $report = [pscustomobject][ordered]@{
     indexes = @($results)
 }
 if ($Format -eq 'Json') { $report | ConvertTo-Json -Depth 6; exit 0 }
-Write-Host "Compiled index migration: $($report.removableCount) safely removable index(es)."
+Write-Host "Compiled index migration: projection sources retained; limited text references do not establish safe removal."
 foreach ($item in $results) {
     Write-Host " - $($item.path): query-layer=$($item.queryLayer), default=$($item.defaultRoute), automatic-json-fallback=$($item.automaticJsonFallback), consumers=$($item.consumerCount), removable=$($item.removable)"
 }

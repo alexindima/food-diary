@@ -1,4 +1,4 @@
-function Get-LlmWikiFileSha256([string]$Path) {
+function Get-LlmWikiRequiredFileSha256([string]$Path) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try {
         $stream = [IO.File]::OpenRead($Path)
@@ -38,27 +38,70 @@ function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$In
     $stdinPath = [IO.Path]::GetTempFileName()
     $stdoutPath = [IO.Path]::GetTempFileName()
     $stderrPath = [IO.Path]::GetTempFileName()
+    $process = $null
+    $processStarted = $false
     try {
         # Do not append a trailing newline: Git for Linux treats the resulting
         # empty record as an empty path when --stdin-paths consumes the file.
         [IO.File]::WriteAllText($stdinPath, ($existingPaths -join "`n"), [Text.UTF8Encoding]::new($false))
-        $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--stdin-paths' `
-            -WorkingDirectory $RepositoryRoot -RedirectStandardInput $stdinPath `
-            -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
-            -NoNewWindow -PassThru -Wait
-        # Get-Content -Raw on a genuinely empty file emits no pipeline output at all on
-        # Windows PowerShell 5.1 (captured as PowerShell's internal AutomationNull, which
-        # still fools `-eq $null` but throws on any method call, unlike PowerShell 7+ which
-        # returns ''); `-join ''` reliably collapses either case to a real empty string.
-        # Get-Content without -Encoding defaults to the system codepage (not UTF-8) on
-        # Windows PowerShell 5.1 for a BOM-less file; -Encoding UTF8 makes decoding
-        # explicit and correct on every runtime, matching the BOM-free UTF-8 git wrote.
-        $output = (Get-Content -LiteralPath $stdoutPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''
-        $errorText = ((Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join '').Trim()
+        if ($PSVersionTable.PSVersion.Major -lt 6 -and [Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+            # PS5's Start-Process PID proxy can lose the exit code for fast Git
+            # processes; -Wait also races its job assignment. Own the native
+            # process handle instead. Fixed cmd redirection retains BOM-free file
+            # stdin without PS5's UTF-8 StreamWriter preamble. Paths are data in
+            # child-only variables; delayed expansion is disabled.
+            $start = [Diagnostics.ProcessStartInfo]::new()
+            $start.FileName = Join-Path ([Environment]::GetFolderPath('System')) 'cmd.exe'
+            $start.WorkingDirectory = $RepositoryRoot
+            $start.UseShellExecute = $false
+            $start.CreateNoWindow = $true
+            $start.RedirectStandardOutput = $true
+            $start.RedirectStandardError = $true
+            $start.EnvironmentVariables['FD_WIKI_HASH_INPUT'] = $stdinPath
+            $start.EnvironmentVariables['FD_WIKI_HASH_GIT'] = (Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+            $start.Arguments = '/d /s /v:off /c ""%FD_WIKI_HASH_GIT%" hash-object --no-filters --stdin-paths <"%FD_WIKI_HASH_INPUT%""'
+            $process = [Diagnostics.Process]::new()
+            $process.StartInfo = $start
+            if (-not $process.Start()) { throw 'git hash-object did not start.' }
+            $processStarted = $true
+            $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+            $stderrTask = $process.StandardError.ReadToEndAsync()
+            if (-not $process.WaitForExit(30000)) { throw 'git hash-object timed out after 30 seconds.' }
+            $output = [string]$stdoutTask.GetAwaiter().GetResult()
+            $errorText = ([string]$stderrTask.GetAwaiter().GetResult()).Trim()
+        } else {
+            $process = Start-Process -FilePath 'git' -ArgumentList 'hash-object', '--no-filters', '--stdin-paths' `
+                -WorkingDirectory $RepositoryRoot -RedirectStandardInput $stdinPath `
+                -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath `
+                -NoNewWindow -PassThru
+            $processStarted = $true
+            $null = $process.Handle
+            if (-not $process.WaitForExit(30000)) { throw 'git hash-object timed out after 30 seconds.' }
+            $process.WaitForExit()
+            # Get-Content -Raw on a genuinely empty file emits no pipeline output at all on
+            # Windows PowerShell 5.1 (captured as PowerShell's internal AutomationNull, which
+            # still fools `-eq $null` but throws on any method call, unlike PowerShell 7+ which
+            # returns ''); `-join ''` reliably collapses either case to a real empty string.
+            # Get-Content without -Encoding defaults to the system codepage (not UTF-8) on
+            # Windows PowerShell 5.1 for a BOM-less file; -Encoding UTF8 makes decoding
+            # explicit and correct on every runtime, matching the BOM-free UTF-8 git wrote.
+            $output = (Get-Content -LiteralPath $stdoutPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join ''
+            $errorText = ((Get-Content -LiteralPath $stderrPath -Raw -Encoding UTF8 -ErrorAction SilentlyContinue) -join '').Trim()
+        }
         if ($process.ExitCode -ne 0) {
             throw "git hash-object failed with exit code $($process.ExitCode).$(if ($errorText) { " $errorText" })"
         }
     } finally {
+        if ($null -ne $process) {
+            try {
+                if ($processStarted -and -not $process.HasExited) {
+                    if ($PSVersionTable.PSVersion.Major -lt 6) {
+                        & (Join-Path ([Environment]::GetFolderPath('System')) 'taskkill.exe') /PID $process.Id /T /F 2>$null | Out-Null
+                    } else { $process.Kill($true) }
+                    $null = $process.WaitForExit(5000)
+                }
+            } finally { $process.Dispose() }
+        }
         Remove-Item -LiteralPath $stdinPath, $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
     }
 
@@ -79,13 +122,13 @@ function Test-LlmWikiIndexCache([string]$ReceiptPath, [string]$OutputPath, [stri
     try {
         $receipt = Get-Content -LiteralPath $ReceiptPath -Raw | ConvertFrom-Json
         return [int]$receipt.schemaVersion -eq 1 -and [string]$receipt.inputFingerprint -ceq $InputFingerprint -and
-            [string]$receipt.outputFingerprint -ceq (Get-LlmWikiFileSha256 $OutputPath)
+            [string]$receipt.outputFingerprint -ceq (Get-LlmWikiRequiredFileSha256 $OutputPath)
     } catch { return $false }
 }
 
 function Write-LlmWikiIndexCache([string]$ReceiptPath, [string]$OutputPath, [string]$InputFingerprint) {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $ReceiptPath) -Force
-    $json = ([ordered]@{ schemaVersion = 1; inputFingerprint = $InputFingerprint; outputFingerprint = Get-LlmWikiFileSha256 $OutputPath } | ConvertTo-Json) + [Environment]::NewLine
+    $json = ([ordered]@{ schemaVersion = 1; inputFingerprint = $InputFingerprint; outputFingerprint = Get-LlmWikiRequiredFileSha256 $OutputPath } | ConvertTo-Json) + [Environment]::NewLine
     [IO.File]::WriteAllText($ReceiptPath, $json, (New-Object Text.UTF8Encoding($false)))
 }
 
@@ -103,7 +146,7 @@ function Get-LlmWikiIndexOutputSetFingerprint([string]$RepositoryRoot, [string[]
     $entries = @($OutputPath | ForEach-Object {
         $relative = $_.Replace('\', '/')
         $absolute = Join-Path $RepositoryRoot $relative
-        $hash = if (Test-Path -LiteralPath $absolute -PathType Leaf) { Get-LlmWikiFileSha256 $absolute } else { '<missing>' }
+        $hash = if (Test-Path -LiteralPath $absolute -PathType Leaf) { Get-LlmWikiRequiredFileSha256 $absolute } else { '<missing>' }
         "$relative`:$hash"
     })
     return Get-LlmWikiIndexEntryFingerprint $entries

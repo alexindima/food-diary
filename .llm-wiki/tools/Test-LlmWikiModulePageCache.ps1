@@ -99,10 +99,10 @@ try {
     Assert-Cache $false $reuse
     $pagePath = '.llm-wiki/generated/modules/users.md'
     $receipt = Join-Path $fixture '.artifacts/llm-wiki/index-cache/module-pages.json'
-    $receiptBefore = Get-LlmWikiFileSha256 $receipt
+    $receiptBefore = Get-LlmWikiRequiredFileSha256 $receipt
     [IO.File]::AppendAllText((Join-Path $fixture $pagePath), 'corrupt output')
     Assert-Cache $false $reuseCheck 1
-    if ((Get-LlmWikiFileSha256 $receipt) -cne $receiptBefore) { throw 'Failed output validation published a receipt.' }
+    if ((Get-LlmWikiRequiredFileSha256 $receipt) -cne $receiptBefore) { throw 'Failed output validation published a receipt.' }
     Assert-Cache $false $reuse
     Remove-Item -LiteralPath (Join-Path $fixture $pagePath)
     Assert-Cache $false $reuseCheck 1
