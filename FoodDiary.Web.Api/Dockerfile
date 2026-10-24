@@ -585,7 +585,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:819bd3649d8bf53f35527c68
 
 WORKDIR /app
 RUN apk add --no-cache \
-    ffmpeg=8.1.2-r0 \
+    ffmpeg=8.1.3-r0 \
     tzdata=2026e-r0 \
     icu-data-en=78.1-r0 \
     icu-libs=78.1-r0 \
