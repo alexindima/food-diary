@@ -1,11 +1,12 @@
 import { Dialog, type DialogConfig, type DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import type { ComponentType } from '@angular/cdk/portal';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, Location } from '@angular/common';
 import { inject, PLATFORM_ID, Service, type StaticProvider } from '@angular/core';
 
 import type { FdUiDialogSize } from './fd-ui-dialog';
 import { FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY, FD_UI_DIALOG_DISMISSAL_LOCK } from './fd-ui-dialog.tokens';
+import { FD_UI_DIALOG_HISTORY } from './fd-ui-dialog-history';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
 
 export type FdUiDialogPreset = 'confirm' | 'form' | 'list' | 'detail' | 'fullscreen';
@@ -38,6 +39,11 @@ export class FdUiDialogService {
     private readonly document = inject(DOCUMENT);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly compactViewportQuery = inject(FD_UI_DIALOG_COMPACT_VIEWPORT_QUERY);
+    private readonly history = inject(FD_UI_DIALOG_HISTORY);
+
+    public constructor() {
+        this.history.connect(inject(Location, { optional: true }));
+    }
 
     public closeAll(): void {
         this.dialog.closeAll();
@@ -69,6 +75,7 @@ export class FdUiDialogService {
         };
 
         const dialogRef = this.dialog.open<R, D, T>(component, dialogConfig);
+        this.history.track(dialogRef);
 
         return new FdUiDialogRef<T, R>(dialogRef);
     }

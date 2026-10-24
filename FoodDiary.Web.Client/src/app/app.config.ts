@@ -12,6 +12,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -88,6 +89,7 @@ export const appConfig: ApplicationConfig = {
             inject(AppUpdateService).initialize();
         }),
         provideZonelessChangeDetection(),
+        provideFdUiDialogNavigation(),
         provideRouter(
             routes,
             withComponentInputBinding(),

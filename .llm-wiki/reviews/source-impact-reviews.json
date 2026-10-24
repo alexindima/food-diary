@@ -289,8 +289,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "29445b8d1a837e280cf820bf13f96dcf4f12dd158a578330033162bbf4b2680c",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "1940743592b7f961bce18d2ef05d3419ad5f201dcfee570f9b7420f815d331df",
+          "reviewReason": "Reviewed regenerated architecture-health records for the shared dialog navigation provider and dynamic Storybook dialog example. Production/test project edges and enforced drift remain unchanged; selector candidates still require runtime and DI review, so the existing architecture-health workflow remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -303,10 +303,10 @@
           "reviewReason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate."
         }
       ],
-      "reason": "Reviewed conservative removal diagnostics: retained JSON projection inputs are never marked removable solely by a limited text scan. This agrees with the existing dynamic-consumer and behavior-proof guidance; dependency drift enforcement and SQLite query contracts are unchanged.",
+      "reason": "Reviewed regenerated architecture-health records for the shared dialog navigation provider and dynamic Storybook dialog example. Production/test project edges and enforced drift remain unchanged; selector candidates still require runtime and DI review, so the existing architecture-health workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:41:14.9612100Z"
+      "gitHead": "70f20b7bb0f53d9775fecd2c3811bf0055071f91",
+      "reviewedAtUtc": "2026-10-24T14:04:57.3870442Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

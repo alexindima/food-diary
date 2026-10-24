@@ -21,6 +21,7 @@ export * from './dialog/fd-ui-dialog-data';
 export * from './dialog/fd-ui-dialog-footer.directive';
 export * from './dialog/fd-ui-dialog-header.directive';
 export * from './dialog/fd-ui-dialog-ref';
+export * from './dialog/provide-dialog-navigation';
 export * from './dialog-shell/fd-ui-dialog-shell';
 export * from './emoji-picker/fd-ui-emoji-picker';
 export * from './empty-state/fd-ui-empty-state';

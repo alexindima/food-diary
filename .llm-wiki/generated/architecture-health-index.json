@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 112,
+    "selectorUnreferencedComponents": 113,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 124,
+    "componentsWithoutDirectSpecs": 125,
     "criticalSymbolsWithoutTestReferences": 38,
     "explicitDebtMarkers": 12
   },
@@ -1058,6 +1058,14 @@
       "selector": "fd-design-tokens-docs",
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/design-tokens.stories.ts",
+      "templatePath": null,
+      "specPath": null
+    },
+    {
+      "class": "DialogNavigationExampleComponent",
+      "selector": "fd-dialog-navigation-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-navigation.stories.ts",
       "templatePath": null,
       "specPath": null
     },
@@ -3650,6 +3658,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "DialogNavigationExampleComponent",
+      "selector": "fd-dialog-navigation-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-navigation.stories.ts",
+      "templatePath": null,
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },

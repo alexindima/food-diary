@@ -80,6 +80,7 @@ function latestConfig(open: DialogOpenMock): DialogOpenConfig {
 function setupDialogService(matches: boolean, platformId = 'browser'): DialogServiceTestContext {
     const documentMock = {
         defaultView: {
+            history: {},
             matchMedia: vi.fn().mockReturnValue({ matches }),
         },
     } as unknown as Document;

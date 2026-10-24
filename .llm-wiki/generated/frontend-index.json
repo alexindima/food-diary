@@ -8,17 +8,17 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2683,
-    "symbols": 852,
+    "typescriptFiles": 2688,
+    "symbols": 853,
     "routes": 108,
     "features": 46,
-    "specs": 802,
+    "specs": 804,
     "localeFiles": 5,
     "roles": {
       "Component": 497,
       "Directive": 15,
       "Facade": 88,
-      "Other": 40,
+      "Other": 41,
       "Pipe": 5,
       "Service": 207
     }
@@ -1784,6 +1784,13 @@
       "line": 6
     },
     {
+      "name": "FdUiDialogHistory",
+      "role": "Other",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-history.ts",
+      "line": 36
+    },
+    {
       "name": "FdUiDialogRef",
       "role": "Other",
       "selector": null,
@@ -1795,7 +1802,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.service.ts",
-      "line": 35
+      "line": 36
     },
     {
       "name": "FdUiDialogComponent",

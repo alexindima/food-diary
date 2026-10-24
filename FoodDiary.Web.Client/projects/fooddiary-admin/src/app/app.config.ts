@@ -2,6 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { provideFdUiDialogNavigation } from 'fd-ui-kit';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
         ...(environment.enableGlobalErrorHandler ? [provideBrowserGlobalErrorListeners()] : []),
         provideHttpClient(withInterceptors([adminAuthInterceptor])),
         provideRouter(routes),
+        provideFdUiDialogNavigation(),
         AdminTranslationLoader,
         provideTranslateService({
             lang: 'en',
