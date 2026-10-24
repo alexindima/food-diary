@@ -180,8 +180,11 @@ try {
             # to retain the native exit code on this Start-Process object.
             $null = $child.Handle
             if (-not $child.WaitForExit(30000)) { Stop-LlmWikiProcessTree $child; throw 'Pre-push scope fixture timed out.' }
+            # Unix Start-Process forwards output through asynchronous handlers.
+            # The timed wait does not drain them before the files are inspected.
+            $child.WaitForExit()
             $actual = @([IO.File]::ReadAllLines($stdoutPath) | Where-Object { $_ })
-            if ($child.ExitCode -ne 0 -or @(Compare-Object @($case.expected | Sort-Object) @($actual | Sort-Object)).Count) { throw "Pre-push scope lost delete/rename/Unicode/multiple-ref paths: $($actual -join ', '); $([IO.File]::ReadAllText($stderrPath))" }
+            if ($child.ExitCode -ne 0 -or @(Compare-Object @($case.expected | Sort-Object) @($actual | Sort-Object)).Count) { throw "Pre-push scope lost delete/rename/Unicode/multiple-ref paths: $($actual -join ', '); exit=$($child.ExitCode); expected=$($case.expected -join ', '); input=$($case.input.Trim()); $([IO.File]::ReadAllText($stderrPath))" }
         } finally { $child.Dispose() }
     }
 } finally {
