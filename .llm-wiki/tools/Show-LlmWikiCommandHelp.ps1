@@ -8,6 +8,7 @@ $tier = @($registry.tiers | Where-Object { @($_.commands) -contains $Command } |
 if ($tier.Count -eq 0) { throw "Wiki command is not registered: $Command" }
 
 $help = @{
+    'verification-telemetry-archive' = @('verification-telemetry-archive [-Format Json]', 'Preserves the complete active history in an immutable hash-bound archive and starts a new active metrics window. Existing execution evidence is unchanged.')
     context = @("context -Query '<question or exact file>' [-Module <owner>] [-ChangeType Any|Backend|Frontend|Tests] [-Compact] [-Limit <1..50>] [-Format Text|Json]", 'Retrieves fresh ranked sources; compact JSON uses one bounded list with test evidence and a 12000-character budget.')
     start = @("start -Intent '<large task>' [-PlannedPath <path[]>] [-Criterion '<observable outcome>' ...] [-WorkspacePath <path>]", 'Creates research and scoped acceptance criteria; explicit criteria replace generic starter outcomes.')
     'evidence-check' = @("evidence-check -EvidencePath <evidence.json> -Id <required-or-supplemental-id> -Status passed|failed|not-applicable -EvidenceCommand '<actual command>' [-Reason '<evidence>'] [-Format Json]", 'Required definitions stay canonical. Output flags are allowed; --no-build requires a successful build receipt for current sources. Unknown IDs with commands become supplemental results and never satisfy required gates.')

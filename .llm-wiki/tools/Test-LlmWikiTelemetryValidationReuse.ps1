@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $fixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'telemetry-validation'
 $fixtureTools = Join-Path $fixture '.llm-wiki/tools'
 $fixturePolicies = Join-Path $fixture '.llm-wiki/policies'
@@ -105,7 +106,66 @@ try {
     $resumed = Invoke-Fixture
     if (-not $resumed.valid -or $resumed.totalCount -ne 1) { throw 'Recording did not resume after archive.' }
     Assert-ValidationCount 12 'recording after archive'
-    Write-Host 'LLM Wiki telemetry validation reuse passed: exact inputs, tampering, policy, implementation, path, retention and recovery.'
+
+    & $managerPath record -RegistryPath $registryPath -CheckId second -Status failed -DurationSeconds 2 -Format Json | Out-Null
+    # An accepted legacy UTF-8 BOM must survive the immutable archive too.
+    [IO.File]::WriteAllText($registryPath, [IO.File]::ReadAllText($registryPath), [Text.UTF8Encoding]::new($true))
+    $beforeArchive = [IO.File]::ReadAllText($registryPath)
+    $beforeArchiveHash = (Get-FileHash -LiteralPath $registryPath -Algorithm SHA256).Hash
+    $beforeSource = [IO.File]::ReadAllText($managerPath)
+    $faultSource = $beforeSource.Replace('Write-Registry $next', "throw 'Injected archive publication failure.'")
+    if ($faultSource -ceq $beforeSource) { throw 'Archive fault-injection boundary is missing.' }
+    [IO.File]::WriteAllText($managerPath, $faultSource)
+    $failed = $false
+    try { $null = Invoke-Fixture archive } catch { $failed = $_.Exception.Message -like '*Injected archive publication failure*' }
+    if (-not $failed -or [IO.File]::ReadAllText($registryPath) -cne $beforeArchive) { throw 'Interrupted archive discarded or changed active telemetry.' }
+    [IO.File]::WriteAllText($managerPath, $beforeSource)
+    $archived = Invoke-Fixture archive
+    if (-not $archived.valid -or $archived.totalCount -ne 0 -or $archived.archivedEventCount -ne 2 -or $archived.archives.Count -ne 1) { throw 'Telemetry archive did not publish a new active window.' }
+    $archivePath = Join-Path "$registryPath.archives" $archived.archives[0].fileName
+    if ((Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash -cne $beforeArchiveHash) { throw 'Telemetry archive did not preserve exact original bytes.' }
+    $again = Invoke-Fixture archive
+    if ($again.registryHash -cne $archived.registryHash -or @(Get-ChildItem "$registryPath.archives" -Filter '*.json').Count -ne 1) { throw 'Empty archive retry created duplicate history.' }
+    & $managerPath record -RegistryPath $registryPath -CheckId active-window -Status passed -DurationSeconds 1 -Format Json | Out-Null
+    $window = Invoke-Fixture metrics
+    if ($window.totalCount -ne 1 -or $window.archivedEventCount -ne 2 -or $window.metricsScope -cne 'active-registry') { throw 'Telemetry metrics hid its archive/window boundary.' }
+
+    $archiveStamp = [IO.File]::GetLastWriteTimeUtc($archivePath)
+    $damaged = $beforeArchive.Replace('resumed', 'RESUMED')
+    if ($damaged.Length -ne $beforeArchive.Length -or $damaged -ceq $beforeArchive) { throw 'Invalid archive tamper fixture.' }
+    [IO.File]::WriteAllText($archivePath, $damaged, [Text.UTF8Encoding]::new($true))
+    [IO.File]::SetLastWriteTimeUtc($archivePath, $archiveStamp)
+    if ((Invoke-Fixture).valid) { throw 'Same-size, same-time archive edit reused valid validation.' }
+    [IO.File]::WriteAllText($archivePath, $beforeArchive, [Text.UTF8Encoding]::new($true))
+    if (-not (Invoke-Fixture).valid) { throw 'Restored archive did not recover validation.' }
+    Move-Item -LiteralPath $archivePath -Destination "$archivePath.missing"
+    if ((Invoke-Fixture).valid) { throw 'Missing archived history was accepted.' }
+    Move-Item -LiteralPath "$archivePath.missing" -Destination $archivePath
+    $secondArchive = Invoke-Fixture archive
+    if ($secondArchive.archives.Count -ne 2 -or $secondArchive.archivedEventCount -ne 3 -or $secondArchive.archives[1].previousArchiveHash -cne $secondArchive.archives[0].sha256) { throw 'Telemetry archive chain lost its predecessor.' }
+
+    # Real concurrent writers share the lock. Use the uninstrumented manager so
+    # the test's validation-count file is not an unrelated concurrency fixture.
+    $concurrentManager = Join-Path $fixtureTools 'Concurrent-Telemetry.ps1'
+    [IO.File]::WriteAllText($concurrentManager, $source)
+    Invoke-LlmWikiProcessBatch -WorkingDirectory $fixture -MaxConcurrency 2 -TimeoutSeconds 20 -Checks @(
+        @{ name='record'; script=$concurrentManager; arguments="record -RegistryPath `"$registryPath`" -CheckId concurrent-once -Status passed -Format Json" }
+        @{ name='archive'; script=$concurrentManager; arguments="archive -RegistryPath `"$registryPath`" -Format Json" }
+    )
+    $final = Invoke-Fixture list
+    $allEvents = @($final.events)
+    foreach ($reference in $final.archives) {
+        $segment = Get-Content -LiteralPath (Join-Path "$registryPath.archives" $reference.fileName) -Raw | ConvertFrom-Json
+        $allEvents += @($segment.events)
+    }
+    if ($allEvents.Count -ne 4 -or @($allEvents | Where-Object checkId -eq concurrent-once).Count -ne 1 -or @($allEvents.id | Sort-Object -Unique).Count -ne 4) { throw 'Concurrent record/archive lost or duplicated telemetry events.' }
+    $activeText = [IO.File]::ReadAllText($registryPath)
+    Remove-Item -LiteralPath $registryPath
+    $failed = $false
+    try { $null = Invoke-Fixture } catch { $failed = $_.Exception.Message -like '*archived history exists*' }
+    if (-not $failed) { throw 'Missing archive manifest silently initialized an empty history.' }
+    [IO.File]::WriteAllText($registryPath, $activeText)
+    Write-Host 'LLM Wiki telemetry validation reuse passed: exact inputs, tampering, retention, interrupted archive retry, immutable bytes, archive chain, concurrent writers and recovery.'
 } finally {
     if ($null -eq $previousCache) { Remove-Variable -Name LlmWikiTelemetryValidation -Scope Global -ErrorAction SilentlyContinue }
     else { $global:LlmWikiTelemetryValidation = $previousCache }

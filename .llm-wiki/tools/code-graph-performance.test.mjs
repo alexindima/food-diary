@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { searchContextBatch } from './code-graph-batch.mjs';
@@ -269,12 +269,54 @@ test('batch metadata and rows share one snapshot; next batch sees committed chan
   }
 });
 
-test('child failures preserve stdout start, stderr and exit status', () => {
-  assert.throws(() => runGraphProcess(process.execPath, ['-e',
+test('child failures preserve stdout start, stderr and exit status', async () => {
+  await assert.rejects(runGraphProcess(process.execPath, ['-e',
     "process.stdout.write('COMPILER_ERROR_START\\n' + 'x'.repeat(20000)); process.stderr.write('STDERR_END'); process.exitCode=7;",
   ]), error => error.message.includes('COMPILER_ERROR_START') && error.message.includes('STDERR_END') && error.message.includes('exit=7'));
-  assert.equal(runGraphProcess(process.execPath, ['-e', "process.stdout.write('ok')"]), 'ok');
-  assert.throws(() => runGraphProcess(join(tmpdir(), 'nonexistent-wiki-command'), []), /ENOENT/);
+  assert.equal(await runGraphProcess(process.execPath, ['-e', "process.stdout.write('ok')"]), 'ok');
+  await assert.rejects(runGraphProcess(join(tmpdir(), 'nonexistent-wiki-command'), []), /ENOENT/);
+});
+
+test('bounded child runner rejects output overflow, invalid deadlines and pre-cancellation', async () => {
+  await assert.rejects(runGraphProcess(process.execPath, ['-e', "process.stdout.write('x'.repeat(4096))"], { maxBuffer: 64 }), /output exceeded 64/);
+  await assert.rejects(runGraphProcess(process.execPath, [], { timeout: 0 }), /timeout must/);
+  const cancelled = new AbortController(); cancelled.abort(new Error('cancel-before-start'));
+  await assert.rejects(runGraphProcess(process.execPath, [], { signal: cancelled.signal }), /cancel-before-start/);
+});
+
+test('deadlines stop descendants and tolerate a parent that closes its inherited pipes', { timeout: 45000 }, async () => {
+  for (const parentExits of [false, true]) {
+    const script = "const {spawn}=require('node:child_process');const child=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'inherit'});"
+      + "console.log('OWNED_CHILD='+child.pid);" + (parentExits ? 'child.unref();process.exit(0);' : 'setInterval(()=>{},1000);');
+    let output, failure;
+    try { output = await runGraphProcess(process.execPath, ['-e', script], { timeout: 1000 }); } catch (error) { failure = error; output = error.message; }
+    const descendant = Number(/OWNED_CHILD=(\d+)/.exec(output)?.[1]);
+    assert.equal(Number.isInteger(descendant), true, 'Fixture did not publish its owned child PID.');
+    const stillRunning = () => {
+      try {
+        process.kill(descendant, 0);
+        if (process.platform === 'linux' && /\) [ZXx] /.test(readFileSync(`/proc/${descendant}/stat`, 'utf8'))) return false;
+        return true;
+      } catch (error) { if (['ESRCH', 'ENOENT'].includes(error.code)) return false; throw error; }
+    };
+    try {
+      if (failure) assert.match(failure.message, /timed out/);
+      else {
+        // Some platforms close inherited pipe handles on parent exit. That is
+        // normal completion, not a deadline: explicitly clean the fixture's PID.
+        assert.equal(parentExits, true);
+        if (stillRunning()) process.kill(descendant, 'SIGKILL');
+      }
+      const deadline = Date.now() + 5000;
+      while (stillRunning() && Date.now() < deadline) await new Promise(resolveWait => setTimeout(resolveWait, 25));
+      assert.equal(stillRunning(), false, 'Owned descendant survived its command deadline.');
+    } finally { if (stillRunning()) process.kill(descendant, 'SIGKILL'); }
+  }
+  const controller = new AbortController();
+  const result = runGraphProcess(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { timeout: 10000, signal: controller.signal });
+  const assertion = assert.rejects(result, /cancel-during-run/);
+  controller.abort(new Error('cancel-during-run'));
+  await assertion;
 });
 
 test('snapshot cleanup cannot hide the original search failure', () => {

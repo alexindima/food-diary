@@ -128,14 +128,14 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
-          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Inspected frontend-index workflow and facade diff: only the additive telemetry archive dispatch changed in wiki.ps1; frontend discovery, strict freshness and reader commands retain their existing routes."
         }
       ],
-      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
+      "reason": "Inspected frontend-index workflow and facade diff: only the additive telemetry archive dispatch changed in wiki.ps1; frontend discovery, strict freshness and reader commands retain their existing routes.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:24.7000015Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:52.3844525Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -226,6 +226,11 @@
           "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
         },
         {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
+          "sha256": "da6950c51585514a119a9fd1344c3478a06c450324375ae903ff7f902e868220",
+          "reviewReason": "Compared the adaptive wrapper with its previous check list: Routing, Experience, integration and three eval shards retain their scopes and arguments. Shared bounded batch adds concurrency/deadline/logging/cleanup without changing adaptive route selection or design/evidence obligations."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
           "sha256": "eb29cee0b8c29d09a92aa3ec977fcce823dcc394d705f3637eec370d0af0526a",
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
@@ -236,10 +241,10 @@
           "reviewReason": "task-runtime.mjs now supplies SSR_API_ORIGIN from the owned API URL and passes owned credentials internally to its browser identity probe. This does not change the documented safe runtime-list contract or justify treating a record as ready without observed checks. The page already correctly states that start/develop capture pre-existing dirt and later delta-aware facades use the task delta unless explicit ChangedPath overrides it."
         }
       ],
-      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
+      "reason": "Compared the adaptive wrapper with its previous check list: Routing, Experience, integration and three eval shards retain their scopes and arguments. Shared bounded batch adds concurrency/deadline/logging/cleanup without changing adaptive route selection or design/evidence obligations.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:26.5592846Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:54.0814262Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -295,14 +300,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Reviewed contract-consumer and SQLite lineage claims against code-graph diff: only awaited extraction/process supervision changed. Contract selection, Node writer ownership, no-JSON fallback and production/test distinctions remain valid."
         }
       ],
-      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
+      "reason": "Reviewed contract-consumer and SQLite lineage claims against code-graph diff: only awaited extraction/process supervision changed. Contract selection, Node writer ownership, no-JSON fallback and production/test distinctions remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:27.4715381Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:57.3328056Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -343,68 +348,38 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "074bf2995247983cf0a0ece843392c4731a6ce2c410db95f710f861a28c596b8",
+      "pageSha256": "ce2eb204b97c702ee45a2f610f331ca51ffb85bd444e23445559d17cf1a7c8f1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/DomainDataReader.cs",
-          "sha256": "6921367dcf92ea78c645b911053059913f2f1dd3f167239206afe9fc04fbca87",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "path": ".llm-wiki/tools/code-graph-dotnet-runtime.mjs",
+          "sha256": "2675257154d4cbbca9841735499d792881334f95ee7ced9c3999aa75695e2df5",
+          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
         },
         {
-          "path": ".llm-wiki/tools/LlmWiki.SqliteReader/StandaloneIndexReader.cs",
-          "sha256": "8eb3616ee2d1968494a827a73af7c28b3b6ec34ac19162ab8f0981167fa068cb",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "path": ".llm-wiki/tools/code-graph-dotnet-runtime.test.mjs",
+          "sha256": "634d8c4082650d395fc9057251e805481076754609d3de324ab98c70c5a6230d",
+          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-          "sha256": "fff4cd4fc4726dbb3ce80cd6f44a7343f2e54e985843739182e17a7d4896bda2",
-          "reviewReason": "Reviewed facade forwarding of behavior/review objects and current-index impact comparison; SQLite graph ownership, query routes and source authority remain unchanged."
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "3e8e795b25f508217d722b536be07b38ce1be12cdeac97f86386de74f82b5876",
+          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "7963d20d0723ab738869076e3e4f239cbabfc0284cdf3cce015439815e23e48b",
-          "reviewReason": "The test now uses the accepted InitialBaseline source and requires exactly one AchievementDefinitions CreateTable edge with that source path. Full isolated code-graph regression passed, including provenance, incrementality, query, corruption and dependency checks. No graph runtime or documented query contracts changed."
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "73d6154289f3528737399b59c2aa240a3e8c05738539775a0efbd10223a2fe86",
-          "reviewReason": "The wiki.ps1 delta is confined to optional ChangedPath forwarding in task-finish/task-verify. The page's context preparation, graph command routing, fast trace and explicit graph-impact examples use other unchanged clauses. It makes no finish-scope or automatic completion claim. Its SQLite/source-freshness boundaries therefore need no text update for this delta."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingTelemetryStore.cs",
-          "sha256": "7717e12d95aa6f9436c5d5715b67b72d816f9db189b2219746cf3c05aa765bdc",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "b9af72c787c5e8c94171005dbd084aa7a558bff4d387c0d85b3591a81090e023",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
-          "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
-          "reviewReason": "Reviewed the current SqliteFlowScopeReader diff and its complete521-case MCP ordinary/profile owner results plus both current context-search/retrieval smoke groups. SQL text, seed12/depth2/node16/row40/link80 bounds, read-only non-pooled transaction,2-second SQL timeouts, exact fingerprint and explicit unavailable/truncation semantics are unchanged. The same results are assigned before disposal and returned after all five configured async disposals. Node remains the sole projection writer; this page makes no claim about async-disposal syntax, so its flow guidance remains accurate."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "33ed2bdcbe91b590250bddd42a5feb494b7fe6a8197c7219dfd2b0d44adfb410",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.Batch.cs",
-          "sha256": "2671d148ca748550c399985eb6eece0d70de83fabf3d6c01c256c6e3a38e70e0",
-          "reviewReason": "Reviewed the added batch regression cases against SqliteContextSearchReader and the code-graph workflow: corrupt databases retain per-query unavailable results and release their file handles; invalid requests and pre-cancellation fail before opening SQLite. The documented read-only snapshot, unavailable-state, and bounded-flow behavior is unchanged."
-        },
-        {
-          "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.CandidateHydration.cs",
-          "sha256": "7c61dd3034ba69b8ecd1c07a0d434363e3a70108872963e39580518c91490320",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
         }
       ],
-      "reason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits.",
+      "reason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes.",
       "baseRef": "HEAD",
-      "gitHead": "8b4f20ea8f67f0d60fecfe1ad2e818bfa903c9dc",
-      "reviewedAtUtc": "2026-10-23T20:36:46.6384819Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:58.2613128Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -665,14 +640,14 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
-          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Reviewed compact help/catalog, command compatibility and phase/evidence claims. The facade adds one experimental telemetry-archive alias routed to the existing manager; daily routes and governed semantics remain unchanged."
         }
       ],
-      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
+      "reason": "Reviewed compact help/catalog, command compatibility and phase/evidence claims. The facade adds one experimental telemetry-archive alias routed to the existing manager; daily routes and governed semantics remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:29.9225954Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:59.0515211Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -787,8 +762,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Checked changed graph statements against impact projection and hash/cache narrative: no changes to source inventory, selection, ownership or simulation data. Awaited extractors still complete before graph transaction/publication; failure cannot publish a partial extraction."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -796,10 +771,10 @@
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         }
       ],
-      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
+      "reason": "Checked changed graph statements against impact projection and hash/cache narrative: no changes to source inventory, selection, ownership or simulation data. Awaited extractors still complete before graph transaction/publication; failure cannot publish a partial extraction.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:30.9148123Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:03:59.8045614Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -1069,8 +1044,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Checked privacy source review narrative and changed Node process boundary. Query ranking, privacy views and coalescing implementation are unchanged; the new subprocess diagnostics contain command output from source extraction and introduce no query/credential telemetry fields."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -1078,10 +1053,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
+      "reason": "Checked privacy source review narrative and changed Node process boundary. Query ranking, privacy views and coalescing implementation are unchanged; the new subprocess diagnostics contain command output from source extraction and introduce no query/credential telemetry fields.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:33.2747347Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:04:00.5616671Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1329,14 +1304,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
-          "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Reviewed dispatcher receipt lifecycle and facade diff. No dispatch/lease/receipt or task-finish branch changed; telemetry archive is additive and remains operational metadata, never execution evidence."
         }
       ],
-      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
+      "reason": "Reviewed dispatcher receipt lifecycle and facade diff. No dispatch/lease/receipt or task-finish branch changed; telemetry archive is additive and remains operational metadata, never execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:35.6096962Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:04:03.7650603Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1542,8 +1517,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "39d9021fd62fdd03aee3b866c26dd51510bcaebadf293d64158775a60d7ce9ad",
-          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
+          "sha256": "21478806733acfe67628cd90998cff97d7ed095f5e982b4cb6ff20203acb07f3",
+          "reviewReason": "Reviewed merged repository catalog against HEAD 29143cc and the Wiki tooling audit: both production diagnostics documents remain listed and the audit report is added (241 documentation pages). Catalog project/endpoint and query ranking contracts remain unchanged. Preserved the prior runtime diagnostics review and inspected the bounded awaited graph worker changes; context freshness, SQLite queries and frozen corpus expectations remain intact. All ten current affected smoke groups passed before this catalog receipt update."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1552,8 +1527,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Reviewed merged repository catalog against HEAD 29143cc and the Wiki tooling audit: both production diagnostics documents remain listed and the audit report is added (241 documentation pages). Catalog project/endpoint and query ranking contracts remain unchanged. Preserved the prior runtime diagnostics review and inspected the bounded awaited graph worker changes; context freshness, SQLite queries and frozen corpus expectations remain intact. All ten current affected smoke groups passed before this catalog receipt update."
         },
         {
           "path": "AGENTS.md",
@@ -1576,10 +1551,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
+      "reason": "Reviewed merged repository catalog against HEAD 29143cc and the Wiki tooling audit: both production diagnostics documents remain listed and the audit report is added (241 documentation pages). Catalog project/endpoint and query ranking contracts remain unchanged. Preserved the prior runtime diagnostics review and inspected the bounded awaited graph worker changes; context freshness, SQLite queries and frozen corpus expectations remain intact. All ten current affected smoke groups passed before this catalog receipt update.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T11:01:18.0530369Z"
+      "gitHead": "29143cc6411b266e29a6fa93a14edcc109dbadfe",
+      "reviewedAtUtc": "2026-10-24T11:24:43.2863522Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1588,8 +1563,8 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
-          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Compared facade diff with review/diff recipes: only telemetry command ValidateSet and its existing dispatch map gained archive. Source-review commands, changed-scope handling and deterministic policy requirements are unchanged."
         },
         {
           "path": "AGENTS.md",
@@ -1597,10 +1572,10 @@
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         }
       ],
-      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
+      "reason": "Compared facade diff with review/diff recipes: only telemetry command ValidateSet and its existing dispatch map gained archive. Source-review commands, changed-scope handling and deterministic policy requirements are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:34.6968482Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:04:02.4393599Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1623,20 +1598,25 @@
           "reviewReason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry."
         },
         {
+          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
+          "sha256": "3e8e795b25f508217d722b536be07b38ce1be12cdeac97f86386de74f82b5876",
+          "reviewReason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite."
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "a84106cef155debcbe4b82ad4a1ac565f0892dbda57af8e518db20450d064c98",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
+          "reviewReason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "7bd88b432bca29418987db08d7f3fd3c5a97f21b6772b259f3be8e41e1da1d1f",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "de47fa1418d5cb9ae205ac5ccf76f93901513550f31504f7b12464f505b803e2",
+          "reviewReason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite."
         }
       ],
-      "reason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery.",
+      "reason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:35.1461936Z"
+      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "reviewedAtUtc": "2026-10-24T10:04:03.1078227Z"
     }
   ]
 }

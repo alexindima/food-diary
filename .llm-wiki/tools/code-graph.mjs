@@ -3,7 +3,6 @@ import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { findLexicalCandidates, findWeightedIdentityCandidates } from './code-graph-candidates.mjs';
 import { searchContextBatch } from './code-graph-batch.mjs';
@@ -73,7 +72,7 @@ function graphDependencyFingerprintPath(databasePath) {
     : `${databasePath}.fingerprint`;
 }
 
-async function withBuildLock(callback, lockTiming = () => {}) {
+async function withBuildLock(callback, lockTiming = () => {}, signal) {
   const lockStarted = performance.now();
   const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
   const ownerPath = resolve(lockPath, 'owner.json');
@@ -83,6 +82,7 @@ async function withBuildLock(callback, lockTiming = () => {}) {
   const staleMs = Number(process.env.LLM_WIKI_GRAPH_LOCK_STALE_MS ?? 300_000);
   const deadline = Date.now() + timeoutMs;
   while (true) {
+    signal?.throwIfAborted();
     try {
       mkdirSync(lockPath);
       writeFileSync(ownerPath, JSON.stringify({ pid: process.pid, token: ownerToken, createdAtUtc: new Date().toISOString() }));
@@ -103,7 +103,7 @@ async function withBuildLock(callback, lockTiming = () => {}) {
         continue;
       }
       if (Date.now() >= deadline) throw new Error(`Timed out waiting for code graph build lock: ${lockPath}`);
-      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
+      await new Promise(resolveWait => setTimeout(resolveWait, 100));
     }
   }
   try {
@@ -128,19 +128,20 @@ function isProcessAlive(pid) {
   }
 }
 
-function ensureRoslynExtractor() {
-  ensureDotnetToolRuntime({
+async function ensureRoslynExtractor() {
+  await ensureDotnetToolRuntime({
     repositoryRoot,
     projectPath: roslynProject,
     assemblyPath: roslynDll,
     sourcePaths: [resolve(dirname(roslynProject), 'Program.cs')],
+    signal: graphCancellation.signal,
   });
 }
 
-function extractCSharp(database, candidates, knownPaths) {
+async function extractCSharp(database, candidates, knownPaths) {
   const paths = candidates.map((item) => item.path);
   if (paths.length === 0) return new Map();
-  ensureRoslynExtractor();
+  await ensureRoslynExtractor();
   let contextPaths;
   if (paths.length > 500) {
     contextPaths = [...knownPaths].filter((path) => path.endsWith('.cs'));
@@ -158,27 +159,27 @@ function extractCSharp(database, candidates, knownPaths) {
     }
     contextPaths = [...new Set([...paths, ...declarationPaths])].filter((path) => existsSync(resolve(repositoryRoot, path)));
   }
-  const process = spawnSync('dotnet', [roslynDll, '--stdin'], {
+  const output = await runGraphProcess('dotnet', [roslynDll, '--stdin'], {
     cwd: repositoryRoot,
     input: JSON.stringify({ paths, contextPaths, semantic: paths.length <= 500 }),
     encoding: 'utf8',
     maxBuffer: 128 * 1024 * 1024,
+    signal: graphCancellation.signal,
   });
-  if (process.status !== 0) throw new Error(`Roslyn extractor failed (${process.status}): ${process.stderr}`);
-  return new Map(JSON.parse(process.stdout).map((result) => [result.path, { language: 'csharp', ...result, projectReferences: [] }]));
+  return new Map(JSON.parse(output).map((result) => [result.path, { language: 'csharp', ...result, projectReferences: [] }]));
 }
 
-function extractTypeScript(candidates) {
+async function extractTypeScript(candidates) {
   const paths = candidates.map((item) => item.path);
   if (paths.length === 0) return new Map();
-  const child = spawnSync(process.execPath, [typescriptExtractor], {
+  const output = await runGraphProcess(process.execPath, [typescriptExtractor], {
     cwd: repositoryRoot,
     input: JSON.stringify({ paths }),
     encoding: 'utf8',
     maxBuffer: 128 * 1024 * 1024,
+    signal: graphCancellation.signal,
   });
-  if (child.status !== 0) throw new Error(`TypeScript extractor failed (${child.status}): ${child.stderr}`);
-  return new Map(JSON.parse(child.stdout).map((result) => [result.path, result]));
+  return new Map(JSON.parse(output).map((result) => [result.path, result]));
 }
 
 function assertTypeScriptCompilerAvailable() {
@@ -198,7 +199,7 @@ function repositoryPaths() {
   if (repositoryPathsCache) return repositoryPathsCache;
   const output = execFileSync('git', ['-C', repositoryRoot, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
     encoding: 'utf8',
-    maxBuffer: 64 * 1024 * 1024,
+    maxBuffer: 64 * 1024 * 1024, timeout: 30000,
   });
   repositoryPathsCache = output
     .split('\0')
@@ -208,11 +209,11 @@ function repositoryPaths() {
 }
 
 function changeSetSnapshot() {
-  const head = execFileSync('git', ['-C', repositoryRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  const head = execFileSync('git', ['-C', repositoryRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8', timeout: 30000 }).trim();
   const status = execFileSync(
     'git',
     ['-c', 'core.fsmonitor=false', '-C', repositoryRoot, 'status', '--porcelain=v1', '-z', '--untracked-files=all'],
-    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, timeout: 30000 });
   const records = status.split('\0').filter(Boolean);
   const changedPaths = new Set();
   for (let index = 0; index < records.length; index += 1) {
@@ -1123,10 +1124,10 @@ async function build(database, force = false, skipTypeScript = false) {
   recordGraphPhase('sourceInventory', phaseStarted);
   phaseStarted = performance.now();
   if (!skipTypeScript && typescriptCandidates.length > 0) assertTypeScriptCompilerAvailable();
-  const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
+  const roslynResults = await extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
   recordGraphPhase('csharpExtraction', phaseStarted);
   phaseStarted = performance.now();
-  const typescriptResults = skipTypeScript ? new Map() : extractTypeScript(typescriptCandidates);
+  const typescriptResults = skipTypeScript ? new Map() : await extractTypeScript(typescriptCandidates);
   recordGraphPhase('typescriptExtraction', phaseStarted);
   phaseStarted = performance.now();
 
@@ -2906,6 +2907,10 @@ const options = Object.fromEntries(argumentsList.map((argument) => {
   return separator < 0 ? [argument.replace(/^--/, ''), 'true'] : [argument.slice(2, separator), argument.slice(separator + 1)];
 }));
 const databasePath = resolve(repositoryRoot, options.database ?? '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
+const graphCancellation = new AbortController();
+const cancelGraph = () => graphCancellation.abort(new Error('Code graph operation cancelled.'));
+process.once('SIGINT', cancelGraph);
+process.once('SIGTERM', cancelGraph);
 let database;
 let graphProfileSucceeded = false;
 try {
@@ -2954,7 +2959,7 @@ try {
         database?.close();
         database = undefined;
       }
-    }, duration => { if (graphProfileDirectory) graphPhaseMs.lockWait = duration; });
+    }, duration => { if (graphProfileDirectory) graphPhaseMs.lockWait = duration; }, graphCancellation.signal);
   } else {
     database = openDatabase(databasePath);
   }
@@ -3034,6 +3039,8 @@ try {
   process.stdout.write(`${JSON.stringify(result)}\n`);
   graphProfileSucceeded = true;
 } finally {
+  process.removeListener('SIGINT', cancelGraph);
+  process.removeListener('SIGTERM', cancelGraph);
   database?.close();
   if (graphProfileDirectory) {
     mkdirSync(graphProfileDirectory, { recursive: true });

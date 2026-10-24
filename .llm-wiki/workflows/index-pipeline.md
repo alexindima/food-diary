@@ -31,6 +31,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1
   - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
+  - .llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1
+  - .llm-wiki/tools/Test-LlmWikiProcess.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
   - FoodDiary.Web.Client/.husky/pre-push
@@ -479,11 +481,25 @@ exclusive repository-local lock and snapshots the generated tree; an internal
 failure or worker timeout restores that snapshot before releasing the lock, so
 parallel sessions cannot publish overlapping or partially successful updates.
 After every completed dependency stage it also writes an atomic generated-tree
-checkpoint and records the stage name. If an external client kills the owner
+checkpoint and records the stage name. Backup and checkpoint snapshots have
+verified file manifests and immutable directories; state references are published
+only after the full copy verifies. A failed initial backup leaves the original
+generated tree intact. Restore prepares and verifies its replacement before
+moving the current tree. If an external client kills the owner
 process, the next update restores the latest completed-stage checkpoint rather
-than the original snapshot. Existing per-generator content receipts then reuse
+than the original snapshot, falling back to the verified original backup when
+the checkpoint is corrupt. Unusable recovery snapshots are retained with an
+explicit error. Existing per-generator content receipts then reuse
 those completed outputs and continue with the first unfinished stage. A normal
 tool failure still follows the catch path and rolls the whole transaction back.
+Existing transaction state files publish through filesystem replacement; initial
+publication uses a move to an absent path. Overwriting through the PowerShell
+provider is avoided because its force path deletes the destination first.
+Starting a later index worker unsuccessfully also stops earlier workers before
+rollback. The adaptive verification wrapper uses the shared bounded process batch
+with limited concurrency, captured stdout/stderr, deadlines, and sibling cleanup
+on startup failure. Graph extractor subprocesses have their own deadline and
+AbortSignal handling; timeout, cancellation and output overflow stop their tree.
 After a successful update, the transaction compares generated JSON structurally
 and text artifacts with normalized line endings. If a builder changed only
 serialization formatting, the original artifact is restored and omitted from the
@@ -526,14 +542,20 @@ The deep-freshness receipt hashes every query dependency declared in
 `.llm-wiki/policies/query-indexes.json`; the Development MCP reads that same
 manifest for status. Index updates acquire the exclusive update lock before
 recovering interrupted transactions. They persist an atomic `initializing`
-marker before copying the rollback tree, prefer the last completed-stage
-checkpoint for recoverable interruptions, and prune stale markerless or partial
-transactions that cannot be restored safely.
+marker before copying the rollback tree and bind the owner PID to its process
+start time. Recovery prefers the last verified completed-stage checkpoint.
+Only stale markerless initialization and incomplete `initializing` transactions
+are discarded. Unreadable or corrupt in-progress state is retained for diagnosis;
+legacy state uses its complete original backup, never its unverified checkpoint.
 
 The pre-commit hook runs `git diff --cached --check`. The pre-push hook runs the
 affected compiled-index freshness check for the pushed change set, followed by
 the applicable frontend and backend checks. Full Wiki regression remains a
 separate local/CI gate. Stylesheets do not select compiled-index generators.
+Existing-ref diffs include deletions and both rename endpoints with
+`--no-renames`; Git path output preserves Unicode. Changes to this hook select
+the real deletion/rename/new-ref/multiple-ref path regression and invalidate its
+cached receipt.
 
 Adaptive routing regression, adaptive experience/lifecycle regression, the
 integration-scan contract, and three deterministic eval shards are independent

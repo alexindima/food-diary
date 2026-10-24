@@ -19,6 +19,15 @@ try {
     & git -C $root -c user.name=Wiki -c user.email=wiki@example.invalid commit --quiet -m baseline
     if ($LASTEXITCODE -ne 0) { throw 'Unable to initialize stage fingerprint fixture.' }
     $tool = Join-Path $fixtureTools 'Get-LlmWikiVerificationStageFingerprint.ps1'
+    $hookRoot = Join-Path $root 'FoodDiary.Web.Client/.husky'
+    $null = New-Item -ItemType Directory -Path $hookRoot -Force
+    $hook = Join-Path $hookRoot 'pre-push'
+    [IO.File]::WriteAllText($hook, 'first')
+    $hookBefore = & $tool -Stage 'affected smoke:git-paths'
+    $hookStamp = [IO.File]::GetLastWriteTimeUtc($hook)
+    [IO.File]::WriteAllText($hook, 'other')
+    [IO.File]::SetLastWriteTimeUtc($hook, $hookStamp)
+    if ($hookBefore -ceq (& $tool -Stage 'affected smoke:git-paths')) { throw 'Git-path scope cache ignored a same-time pre-push hook edit.' }
     $changeDefinitions = Join-Path $policyRoot 'change-policies.json'
     [IO.File]::WriteAllText($changeDefinitions, 'first')
     $policyBefore = & $tool -Stage 'workspace policy'
@@ -58,7 +67,7 @@ try {
         [IO.File]::WriteAllText($managerPath, 'other')
         if ($beforeManager -ceq (& $tool -Stage 'affected smoke:facade-contract')) { throw "Scheduler manager '$name' did not invalidate its regression receipt." }
     }
-    $facadeTests = @('SchedulerLocks', 'DispatchMetricsReuse', 'FullAuditShards', 'FacadeCommandCatalog', 'CriticalToolContracts', 'StrictAffected', 'AffectedSmokePlanning', 'ObservedStageReceipt', 'ConcurrentVerify')
+    $facadeTests = @('Process', 'SchedulerLocks', 'DispatchMetricsReuse', 'FullAuditShards', 'FacadeCommandCatalog', 'CriticalToolContracts', 'StrictAffected', 'AffectedSmokePlanning', 'ObservedStageReceipt', 'ConcurrentVerify')
     foreach ($name in $facadeTests) {
         [IO.File]::WriteAllText((Join-Path $fixtureTools "Test-LlmWiki$name.ps1"), '# stable facade fixture')
     }

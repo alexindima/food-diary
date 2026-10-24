@@ -396,7 +396,8 @@
         "task-watchdog-verify",
         "verification-telemetry-list",
         "verification-telemetry-metrics",
-        "verification-telemetry-verify"
+        "verification-telemetry-verify",
+        "verification-telemetry-archive"
       ],
       "helpEntries": []
     }

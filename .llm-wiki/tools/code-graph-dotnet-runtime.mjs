@@ -6,7 +6,7 @@ import { runGraphProcess } from './code-graph-process.mjs';
 const hash = (path) => existsSync(path)
   ? createHash('sha256').update(readFileSync(path)).digest('hex') : null;
 
-export function ensureDotnetToolRuntime({ repositoryRoot, projectPath, assemblyPath, sourcePaths = [] }) {
+export async function ensureDotnetToolRuntime({ repositoryRoot, projectPath, assemblyPath, sourcePaths = [], signal }) {
   const inputs = [projectPath, ...sourcePaths, ...['Directory.Build.props', 'Directory.Packages.props', 'global.json', 'NuGet.Config']
     .map((path) => resolve(repositoryRoot, path))];
   const fingerprint = createHash('sha256').update(JSON.stringify(inputs.map((path) => [path, hash(path)]))).digest('hex');
@@ -34,7 +34,7 @@ export function ensureDotnetToolRuntime({ repositoryRoot, projectPath, assemblyP
   } catch {
     // An old, incomplete or damaged private snapshot must rebuild its runtime.
   }
-  runGraphProcess('dotnet', ['build', projectPath, '-c', 'Release', '--no-incremental', '--nologo', '--verbosity', 'quiet'], { cwd: repositoryRoot });
+  await runGraphProcess('dotnet', ['build', projectPath, '-c', 'Release', '--no-incremental', '--nologo', '--verbosity', 'quiet'], { cwd: repositoryRoot, signal });
   const outputs = readOutputs();
   writeFileSync(markerPath, `${JSON.stringify({ schemaVersion: 1, fingerprint, outputs })}\n`, 'utf8');
   return true;

@@ -148,6 +148,10 @@ foreach ($retired in @('Test-LlmWikiModelRoutingItemIds', 'Test-LlmWikiVerificat
 if (@(Get-Groups '.llm-wiki/tools/Test-LlmWikiModulePersistencePolicy.ps1') -notcontains 'change-policy') { throw 'Module persistence policy regression is no longer selected by its owning group.' }
 $gitPathGroups = @(Get-Groups '.llm-wiki/tools/LlmWikiGitPaths.ps1')
 if ($gitPathGroups -notcontains 'git-paths' -or $gitPathGroups -notcontains 'api-compatibility') { throw 'Git path changes must retain API baseline selection regressions.' }
+if (@(Get-Groups 'FoodDiary.Web.Client/.husky/pre-push') -notcontains 'git-paths') { throw 'Pre-push changes must execute deletion/rename scope regression tests.' }
+foreach ($group in @('git-paths', 'facade-contract', 'verification-cache')) {
+    if (@(Get-Groups '.llm-wiki/tools/LlmWikiProcess.ps1') -notcontains $group) { throw "Process helper change did not select its owning caller regressions: $group" }
+}
 foreach ($poolTool in @('LlmWikiCorpusEvaluation', 'Test-LlmWikiCorpusEvaluation', 'Test-LlmWikiContextOperations', 'Test-LlmWikiContextRankingPolicy')) {
     $poolGroups = @(Get-Groups ".llm-wiki/tools/$poolTool.ps1")
     if ($poolGroups -notcontains 'context-search-evals' -or $poolGroups -notcontains 'context-retrieval' -or $poolGroups -contains 'tool-contract') {

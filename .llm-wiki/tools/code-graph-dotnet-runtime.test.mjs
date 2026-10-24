@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 import test from 'node:test';
 import { ensureDotnetToolRuntime } from './code-graph-dotnet-runtime.mjs';
 
-test('private runtime recovers missing Roslyn dependencies and same-time source changes', { timeout: 120000 }, () => {
+test('private runtime recovers missing Roslyn dependencies and same-time source changes', { timeout: 120000 }, async () => {
   const artifacts = resolve(import.meta.dirname, '../../.artifacts/llm-wiki/dotnet-bootstrap-regression');
   mkdirSync(artifacts, { recursive: true });
   const root = mkdtempSync(resolve(artifacts, 'runtime-'));
@@ -19,22 +19,22 @@ test('private runtime recovers missing Roslyn dependencies and same-time source 
   const assemblyPath = resolve(root, 'bin/Release/net10.0/Bootstrap.dll');
   const options = { repositoryRoot: root, projectPath, assemblyPath, sourcePaths: [source] };
   const run = () => execFileSync('dotnet', [assemblyPath], { encoding: 'utf8' }).trim();
-  assert.equal(ensureDotnetToolRuntime(options), true);
+  assert.equal(await ensureDotnetToolRuntime(options), true);
   assert.equal(run(), 'before:CSharpCompilation');
-  assert.equal(ensureDotnetToolRuntime(options), false);
+  assert.equal(await ensureDotnetToolRuntime(options), false);
   rmSync(resolve(dirname(assemblyPath), 'Microsoft.CodeAnalysis.dll'));
-  assert.equal(ensureDotnetToolRuntime(options), true);
+  assert.equal(await ensureDotnetToolRuntime(options), true);
   assert.equal(run(), 'before:CSharpCompilation');
   const timestamp = statSync(source);
   writeFileSync(source, first.replace('before:', 'after::'));
   utimesSync(source, timestamp.atime, timestamp.mtime);
-  assert.equal(ensureDotnetToolRuntime(options), true);
+  assert.equal(await ensureDotnetToolRuntime(options), true);
   assert.equal(run(), 'after::CSharpCompilation');
   const props = resolve(root, 'Directory.Build.props');
   const before = JSON.parse(readFileSync(`${assemblyPath}.build-inputs.json`, 'utf8')).fingerprint;
   const propsTime = statSync(props);
   writeFileSync(props, readFileSync(props, 'utf8').replace('</Project>', '<!-- changed build input --></Project>'));
   utimesSync(props, propsTime.atime, propsTime.mtime);
-  assert.equal(ensureDotnetToolRuntime(options), true);
+  assert.equal(await ensureDotnetToolRuntime(options), true);
   assert.notEqual(JSON.parse(readFileSync(`${assemblyPath}.build-inputs.json`, 'utf8')).fingerprint, before);
 });

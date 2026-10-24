@@ -13,9 +13,10 @@ while read -r local_ref local_object_name remote_ref remote_object_name; do
     only_deletions=false
     # New refs or unavailable remote objects require a conservative full inventory.
     if [ "$remote_object_name" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$remote_object_name^{commit}" 2>/dev/null; then
-      ref_paths=$(git diff --name-only --diff-filter=ACMR "$remote_object_name" "$local_object_name") || exit 1
+      # Treat moves as delete/add so both endpoints invalidate their owners.
+      ref_paths=$(git -c core.quotepath=false diff --no-renames --name-only "$remote_object_name" "$local_object_name" --) || exit 1
     else
-      ref_paths=$(git ls-tree -r --name-only "$local_object_name") || exit 1
+      ref_paths=$(git -c core.quotepath=false ls-tree -r --name-only "$local_object_name") || exit 1
     fi
     changed_paths=$(printf '%s\n%s' "$changed_paths" "$ref_paths")
   fi
@@ -28,7 +29,7 @@ fi
 
 # Direct invocation has no ref input: check all tracked files.
 if [ "$saw_ref_update" = false ]; then
-  changed_paths=$(git ls-files) || exit 1
+  changed_paths=$(git -c core.quotepath=false ls-files) || exit 1
 fi
 changed_paths=$(printf '%s\n' "$changed_paths" | sort -u)
 hook_progress_init "pre-push" 4

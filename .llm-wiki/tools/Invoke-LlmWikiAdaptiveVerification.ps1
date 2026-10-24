@@ -1,13 +1,15 @@
 [CmdletBinding()]
 param(
     [ValidateSet('All', 'Workflow', 'Evals')]
-    [string]$Scope = 'All'
+    [string]$Scope = 'All',
+    [ValidateRange(1, 8)][int]$MaxConcurrency = 4,
+    [ValidateRange(1, 3600)][int]$TimeoutSeconds = 1800
 )
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = [IO.Path]::GetFullPath($PSScriptRoot)
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
-$shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $checks = @(
     if ($Scope -in @('All', 'Workflow')) {
         [pscustomobject]@{ name = 'adaptive routing'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1'; arguments = '-Group Routing' }
@@ -20,33 +22,5 @@ $checks = @(
         [pscustomobject]@{ name = 'evals 3/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 2 -ShardCount 3' }
     }
 )
-$workers = [Collections.Generic.List[object]]::new()
-
-foreach ($check in $checks) {
-    $startInfo = [Diagnostics.ProcessStartInfo]::new()
-    $startInfo.FileName = $shellPath
-    $startInfo.WorkingDirectory = $repositoryRoot
-    $startInfo.UseShellExecute = $false
-    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$($check.script)`" $($check.arguments)"
-    $process = [Diagnostics.Process]::new()
-    $process.StartInfo = $startInfo
-    if (-not $process.Start()) { throw "Unable to start LLM Wiki $($check.name) verification." }
-    Write-Host " - started $($check.name) (pid=$($process.Id))"
-    $workers.Add([pscustomobject]@{ check = $check; process = $process; stopwatch = [Diagnostics.Stopwatch]::StartNew() })
-}
-
-$failures = [Collections.Generic.List[string]]::new()
-foreach ($worker in $workers) {
-    try {
-        $worker.process.WaitForExit()
-        $worker.stopwatch.Stop()
-        $actualSeconds = $worker.stopwatch.Elapsed.TotalSeconds
-        if ($worker.process.ExitCode -ne 0) { $failures.Add("$($worker.check.name) (exit=$($worker.process.ExitCode))") }
-        Write-Host " - $($worker.check.name): $([Math]::Round($actualSeconds, 2))s"
-    } finally {
-        $worker.process.Dispose()
-    }
-}
-
-if ($failures.Count -gt 0) { throw "LLM Wiki adaptive verification failed: $($failures -join ', ')" }
+Invoke-LlmWikiProcessBatch -Checks $checks -WorkingDirectory $repositoryRoot -MaxConcurrency $MaxConcurrency -TimeoutSeconds $TimeoutSeconds
 Write-Host "LLM Wiki adaptive verification passed in parallel (scope=$Scope)."

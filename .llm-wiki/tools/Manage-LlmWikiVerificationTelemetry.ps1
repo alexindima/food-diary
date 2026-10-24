@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('record', 'list', 'metrics', 'verify')]
+    [ValidateSet('record', 'list', 'metrics', 'verify', 'archive')]
     [string]$Action = 'metrics',
     [string]$WorkspacePath,
     [string]$CheckId,
@@ -52,7 +52,7 @@ function Get-EventPayload([object]$Event) {
     }
 }
 function Get-RegistryPayload([object]$Registry) {
-    [pscustomobject][ordered]@{
+    $payload = [pscustomobject][ordered]@{
         schemaVersion = [int]$Registry.schemaVersion
         events = @($Registry.events | ForEach-Object {
             $payload = Get-EventPayload $_
@@ -60,14 +60,70 @@ function Get-RegistryPayload([object]$Registry) {
             $payload
         })
     }
+    if ($Registry.PSObject.Properties['archives']) { $payload | Add-Member -NotePropertyName archives -NotePropertyValue @($Registry.archives) }
+    $payload
 }
 function Read-Registry {
     if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
-        $empty = [pscustomobject][ordered]@{ schemaVersion = 1; events = @(); registryHash = '' }
-        Write-Registry $empty
+        $initializationLock = $null
+        try {
+            if ($null -eq $registryLock) { $initializationLock = Enter-RegistryLock }
+            if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
+                if (Test-Path -LiteralPath "$registryPath.archives" -PathType Container) {
+                    if (@(Get-ChildItem -LiteralPath "$registryPath.archives" -File -Filter '*.json').Count) { throw 'Telemetry registry is missing while archived history exists; restore its registry manifest before recording.' }
+                }
+                $empty = [pscustomobject][ordered]@{ schemaVersion = 1; events = @(); registryHash = '' }
+                Write-Registry $empty
+            }
+        } finally { if ($initializationLock) { $initializationLock.Dispose() } }
     }
     $script:registryText = [IO.File]::ReadAllText($registryPath)
-    $script:registryText | ConvertFrom-Json
+    $value = $script:registryText | ConvertFrom-Json
+    $script:archiveIssues = [Collections.Generic.List[string]]::new()
+    $archiveMaterial = [Collections.Generic.List[string]]::new()
+    $previousHash = ''
+    $seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    if ($value.PSObject.Properties['archives']) {
+        foreach ($archive in @($value.archives)) {
+            try {
+                if ([string]$archive.fileName -notmatch '^[a-f0-9]{64}\.json$' -or -not $seen.Add([string]$archive.fileName)) { throw 'Invalid or duplicate telemetry archive filename.' }
+                if ([string]$archive.previousArchiveHash -cne $previousHash -or [string]$archive.sha256 -notmatch '^[a-f0-9]{64}$' -or [int]$archive.eventCount -lt 1) { throw 'Invalid telemetry archive chain metadata.' }
+                $archivePath = Join-Path "$registryPath.archives" ([string]$archive.fileName)
+                $actualHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+                $archiveMaterial.Add("$($archive.fileName)=$actualHash")
+                if ($actualHash -cne [string]$archive.sha256) { throw "Telemetry archive content hash is invalid: $($archive.fileName)" }
+                $previousHash = [string]$archive.sha256
+            } catch { $script:archiveIssues.Add([string]$_.Exception.Message); $archiveMaterial.Add('<invalid>') }
+        }
+    }
+    $script:archiveFingerprint = Get-Hash ($archiveMaterial -join "`n")
+    $value
+}
+
+function Archive-Registry([object]$Registry) {
+    if (-not [string]::IsNullOrWhiteSpace($CheckId)) { throw 'Telemetry archive rotates the complete active registry; CheckId filters are not supported.' }
+    $archives = @($(if ($Registry.PSObject.Properties['archives']) { @($Registry.archives) }))
+    if (@($Registry.events).Count -eq 0) { return $Registry }
+    $directory = "$registryPath.archives"
+    $null = [IO.Directory]::CreateDirectory($directory)
+    $name = "$($Registry.registryHash).json"
+    $path = Join-Path $directory $name
+    $temporary = Join-Path $directory ('.archive-' + [guid]::NewGuid().ToString('N') + '.tmp')
+    try {
+        [IO.File]::Copy($registryPath, $temporary, $false)
+        $hash = (Get-FileHash -LiteralPath $temporary -Algorithm SHA256).Hash.ToLowerInvariant()
+        if (Test-Path -LiteralPath $path) {
+            if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $hash) { throw 'An existing immutable telemetry archive has different bytes.' }
+        } else { Move-Item -LiteralPath $temporary -Destination $path }
+        $descriptor = [pscustomobject][ordered]@{
+            fileName = $name; sha256 = $hash; eventCount = @($Registry.events).Count
+            previousArchiveHash = $(if ($archives.Count) { [string]$archives[-1].sha256 } else { '' })
+        }
+        $next = [pscustomobject][ordered]@{ schemaVersion = 1; events = @(); archives = @($archives) + @($descriptor); registryHash = '' }
+        if ([IO.File]::ReadAllText($registryPath) -cne $script:registryText) { throw 'Telemetry registry changed during archive preparation; original registry retained.' }
+        Write-Registry $next
+        return $next
+    } finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force } }
 }
 function Write-Registry([object]$Registry) {
     $Registry.registryHash = Get-Hash (Get-RegistryPayload $Registry)
@@ -76,7 +132,7 @@ function Write-Registry([object]$Registry) {
     $temporaryPath = Join-Path $parent ('.verification-telemetry-' + [guid]::NewGuid().ToString('N') + '.tmp')
     try {
         [IO.File]::WriteAllText($temporaryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
-        Move-Item -LiteralPath $temporaryPath -Destination $registryPath -Force
+        if ([IO.File]::Exists($registryPath)) { [IO.File]::Replace($temporaryPath, $registryPath, [NullString]::Value) } else { [IO.File]::Move($temporaryPath, $registryPath) }
     } finally {
         if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath -Force }
     }
@@ -97,6 +153,7 @@ function Enter-RegistryLock {
 }
 function Test-Registry([object]$Registry) {
     $issues = [Collections.Generic.List[string]]::new()
+    foreach ($issue in $script:archiveIssues) { $issues.Add($issue) }
     if ($Registry.schemaVersion -ne 1) { $issues.Add('schemaVersion must be 1.') }
     $previousHash = ''
     $sequence = 1
@@ -172,7 +229,7 @@ function Get-Metrics([object[]]$Events) {
     } | Sort-Object checkId)
 }
 
-$registryLock = if ($Action -eq 'record') { Enter-RegistryLock } else { $null }
+$registryLock = if ($Action -in @('record', 'archive')) { Enter-RegistryLock } else { $null }
 try {
 $registry = Read-Registry
 # One immutable validation result per process. Every call rereads all inputs;
@@ -182,6 +239,8 @@ $cachedValidation = Get-Variable -Name LlmWikiTelemetryValidation -Scope Global 
 if ($null -ne $cachedValidation -and
     [string]::Equals($cachedValidation.path, $registryPath, [StringComparison]::Ordinal) -and
     [string]::Equals($cachedValidation.registryText, $script:registryText, [StringComparison]::Ordinal) -and
+    $cachedValidation.PSObject.Properties['archiveFingerprint'] -and
+    [string]::Equals($cachedValidation.archiveFingerprint, $script:archiveFingerprint, [StringComparison]::Ordinal) -and
     [string]::Equals($cachedValidation.policyPath, $policyPath, [StringComparison]::Ordinal) -and
     [string]::Equals($cachedValidation.policyText, $policyText, [StringComparison]::Ordinal) -and
     [string]::Equals($cachedValidation.validatorText, $validatorText, [StringComparison]::Ordinal)) {
@@ -190,6 +249,7 @@ if ($null -ne $cachedValidation -and
     $validation = Test-Registry $registry
     $global:LlmWikiTelemetryValidation = [pscustomobject]@{
         path=$registryPath; registryText=$script:registryText
+        archiveFingerprint=$script:archiveFingerprint
         policyPath=$policyPath; policyText=$policyText; validatorText=$validatorText
         resultJson=($validation | ConvertTo-Json -Depth 5 -Compress)
     }
@@ -198,6 +258,9 @@ if ($Action -eq 'verify') {
     $result = [pscustomobject][ordered]@{ action = 'verify'; valid = $validation.valid; totalCount = @($registry.events).Count; registryHash = $registry.registryHash; issues = @($validation.issues) }
 } elseif (-not $validation.valid) {
     throw "Verification telemetry registry is invalid: $(@($validation.issues) -join ' ')"
+} elseif ($Action -eq 'archive') {
+    $registry = Archive-Registry $registry
+    $result = [pscustomobject][ordered]@{ action = 'archive'; valid = $true; totalCount = @($registry.events).Count; registryHash = $registry.registryHash; issues = @() }
 } elseif ($Action -eq 'record') {
     if ([string]::IsNullOrWhiteSpace($CheckId) -or
         [string]::IsNullOrWhiteSpace($Status) -or $DurationSeconds -lt 0) { throw 'record requires CheckId, Status, and non-negative DurationSeconds; WorkspacePath defaults to @wiki.' }
@@ -253,6 +316,16 @@ if ($Action -eq 'verify') {
 }
 
 $result | Add-Member -NotePropertyName registryPath -NotePropertyValue $registryPath
+$archives = @($(if ($registry.PSObject.Properties['archives']) { @($registry.archives) }))
+$result | Add-Member -NotePropertyName archives -NotePropertyValue $archives
+$archivedEventCount = [long]0
+foreach ($archive in $archives) {
+    if ($null -ne $archive -and $archive.PSObject.Properties['eventCount']) {
+        try { $archivedEventCount += [long]$archive.eventCount } catch { }
+    }
+}
+$result | Add-Member -NotePropertyName archivedEventCount -NotePropertyValue $archivedEventCount
+$result | Add-Member -NotePropertyName metricsScope -NotePropertyValue 'active-registry'
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     if ($Action -eq 'record') {
         Write-Host "Verification telemetry recorded: $($result.event.checkId)=$($result.event.status), duration=$($result.event.durationSeconds)s"

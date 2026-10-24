@@ -1,0 +1,1029 @@
+{
+  "schemaVersion": 1,
+  "baseline": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+  "branch": "codex/ai-tooling-feedback-20261024",
+  "initialStatus": "clean",
+  "counts": {
+    "files": 550,
+    "commands": 368,
+    "family": {
+      "ci-hooks": 9,
+      "shared-facade": 53,
+      "indexes-graph": 50,
+      "task-delivery": 34,
+      "learning-evals": 27,
+      "discovery-review": 50,
+      "orchestration": 13,
+      "evidence-proof": 14,
+      "verification-process": 17,
+      "tests": 182,
+      "mcp": 57,
+      "historical-audit": 4,
+      "adjacent-runtime": 40
+    },
+    "lines": 98768,
+    "auxiliaryFiles": 53,
+    "tiers": {
+      "core": 86,
+      "governed": 81,
+      "experimental": 201
+    }
+  },
+  "priorReviewComparison": {
+    "sameLfNormalized": 276,
+    "changed": 134,
+    "notInPrior": 140,
+    "comparison": "prior review digest is LF-normalized UTF-8; raw source digest retained separately"
+  },
+  "measurementEnvironment": {
+    "os": "Windows",
+    "powershell": "7.6.5",
+    "node": "26.2.0",
+    "dotnet": "10.0.102",
+    "ciNode": "22",
+    "parallelDevelopmentProcesses": "not stopped; results are local observations, not CI budgets"
+  },
+  "benchmark": {
+    "baseline": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+    "method": "3 sequential fresh subprocesses each, no cache deletion; first observation is not cold OS/filesystem; other development processes not stopped",
+    "statusStable": true,
+    "runs": [
+      {
+        "name": "pwsh-startup",
+        "iteration": 1,
+        "seconds": 0.3028,
+        "exitCode": 0,
+        "stdoutBytes": 1,
+        "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+      },
+      {
+        "name": "pwsh-startup",
+        "iteration": 2,
+        "seconds": 0.2687,
+        "exitCode": 0,
+        "stdoutBytes": 1,
+        "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+      },
+      {
+        "name": "pwsh-startup",
+        "iteration": 3,
+        "seconds": 0.2668,
+        "exitCode": 0,
+        "stdoutBytes": 1,
+        "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+      },
+      {
+        "name": "help",
+        "iteration": 1,
+        "seconds": 0.6365,
+        "exitCode": 0,
+        "stdoutBytes": 1232,
+        "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+      },
+      {
+        "name": "help",
+        "iteration": 2,
+        "seconds": 0.5733,
+        "exitCode": 0,
+        "stdoutBytes": 1232,
+        "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+      },
+      {
+        "name": "help",
+        "iteration": 3,
+        "seconds": 0.5801,
+        "exitCode": 0,
+        "stdoutBytes": 1232,
+        "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+      },
+      {
+        "name": "stage-fingerprint",
+        "iteration": 1,
+        "seconds": 1.2794,
+        "exitCode": 0,
+        "stdoutBytes": 66,
+        "stdoutSha256": "336df32059c5ceefb140760891832015dcbfbc7ea7b6da8c34b4455fe401880d"
+      },
+      {
+        "name": "stage-fingerprint",
+        "iteration": 2,
+        "seconds": 0.732,
+        "exitCode": 0,
+        "stdoutBytes": 66,
+        "stdoutSha256": "336df32059c5ceefb140760891832015dcbfbc7ea7b6da8c34b4455fe401880d"
+      },
+      {
+        "name": "stage-fingerprint",
+        "iteration": 3,
+        "seconds": 0.7464,
+        "exitCode": 0,
+        "stdoutBytes": 66,
+        "stdoutSha256": "336df32059c5ceefb140760891832015dcbfbc7ea7b6da8c34b4455fe401880d"
+      },
+      {
+        "name": "context-no-query-cache",
+        "iteration": 1,
+        "seconds": 1.3682,
+        "exitCode": 0,
+        "stdoutBytes": 5002,
+        "stdoutSha256": "1297cf13c1d13a3dfa41daf89b8b61866432982143c9e1702c9db961a5434cc7",
+        "fresh": true,
+        "cache": null,
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 312.62,
+          "roundTripDurationMs": 836.55,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "context-no-query-cache",
+        "iteration": 2,
+        "seconds": 1.4943,
+        "exitCode": 0,
+        "stdoutBytes": 5002,
+        "stdoutSha256": "032697802f31f6387991c11917f9c239dbb6f4e172acbfa8b3a0b7ad5344e0a3",
+        "fresh": true,
+        "cache": null,
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 327.94,
+          "roundTripDurationMs": 929.65,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "context-no-query-cache",
+        "iteration": 3,
+        "seconds": 1.3557,
+        "exitCode": 0,
+        "stdoutBytes": 5001,
+        "stdoutSha256": "6bc9997804e8f62762474f2278fff3cae7b4f56bfc9e1b0aa37572ef7a02334f",
+        "fresh": true,
+        "cache": null,
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 334.5,
+          "roundTripDurationMs": 852.81,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "context-cache-enabled",
+        "iteration": 1,
+        "seconds": 1.5711,
+        "exitCode": 0,
+        "stdoutBytes": 5002,
+        "stdoutSha256": "2312fcdbaede737b3d6289e72e62954c062ad133f0b48bfb7b27702d39d3e415",
+        "fresh": true,
+        "cache": null,
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 327.44,
+          "roundTripDurationMs": 975.33,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "context-cache-enabled",
+        "iteration": 2,
+        "seconds": 0.8798,
+        "exitCode": 0,
+        "stdoutBytes": 5067,
+        "stdoutSha256": "2000e5907fe9477e778f9e72db59cf42ce958782dea332d1a3764ac9d8c52494",
+        "fresh": true,
+        "cache": {
+          "storedTimings": true,
+          "hit": true
+        },
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 327.44,
+          "roundTripDurationMs": 975.33,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "context-cache-enabled",
+        "iteration": 3,
+        "seconds": 0.9589,
+        "exitCode": 0,
+        "stdoutBytes": 5067,
+        "stdoutSha256": "ff5023c3503e6e6f292f9457256542b67920b5bf65f906fd05e99f7cefe9f152",
+        "fresh": true,
+        "cache": {
+          "hit": true,
+          "storedTimings": true
+        },
+        "records": 12,
+        "compiledIndex": {
+          "source": "sqlite-search",
+          "fingerprint": "91135f80594fce9858082e7b78307f7c4fe7e950a178cfd375275ce428913c70",
+          "updatedAtUtc": "2026-10-23T22:56:26.858Z",
+          "indexedDocuments": 37079,
+          "returnedRecords": 50,
+          "sqlDurationMs": 327.44,
+          "roundTripDurationMs": 975.33,
+          "fresh": true,
+          "indexedChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231",
+          "currentChangeSetFingerprint": "39b20ee7fef19a1b34c4f9df6a18d2c0a1cf3805119386d22e4effd2cfc08231"
+        },
+        "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+      },
+      {
+        "name": "symbol-index-check",
+        "iteration": 1,
+        "seconds": 9.8391,
+        "exitCode": 0,
+        "stdoutBytes": 64,
+        "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+      },
+      {
+        "name": "symbol-index-check",
+        "iteration": 2,
+        "seconds": 9.6636,
+        "exitCode": 0,
+        "stdoutBytes": 64,
+        "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+      },
+      {
+        "name": "symbol-index-check",
+        "iteration": 3,
+        "seconds": 9.6653,
+        "exitCode": 0,
+        "stdoutBytes": 64,
+        "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+      }
+    ],
+    "medians": {
+      "pwsh-startup": 0.2687,
+      "help": 0.5801,
+      "stage-fingerprint": 0.7464,
+      "context-no-query-cache": 1.3682,
+      "context-cache-enabled": 0.9589,
+      "symbol-index-check": 9.6653
+    }
+  },
+  "primitiveBenchmark": [
+    {
+      "operation": "batch-git-hash-csharp",
+      "iteration": 1,
+      "seconds": 0.7413809,
+      "fileCount": 4612,
+      "fingerprint": "098b13d7aa247810457b32421931434c022e6df3c467e71af24b772c68e4f9e9"
+    },
+    {
+      "operation": "copy-generated",
+      "iteration": 1,
+      "seconds": 0.0630591,
+      "fileCount": 47,
+      "bytes": 12422794.0
+    },
+    {
+      "operation": "batch-git-hash-csharp",
+      "iteration": 2,
+      "seconds": 0.6837033,
+      "fileCount": 4612,
+      "fingerprint": "098b13d7aa247810457b32421931434c022e6df3c467e71af24b772c68e4f9e9"
+    },
+    {
+      "operation": "copy-generated",
+      "iteration": 2,
+      "seconds": 0.059758,
+      "fileCount": 47,
+      "bytes": 12422794.0
+    },
+    {
+      "operation": "batch-git-hash-csharp",
+      "iteration": 3,
+      "seconds": 0.6119224,
+      "fileCount": 4612,
+      "fingerprint": "098b13d7aa247810457b32421931434c022e6df3c467e71af24b772c68e4f9e9"
+    },
+    {
+      "operation": "copy-generated",
+      "iteration": 3,
+      "seconds": 0.0572107,
+      "fileCount": 47,
+      "bytes": 12422794.0
+    }
+  ],
+  "recoveryProbes": [
+    {
+      "case": "initial-backup-copy-failure",
+      "mechanism": "current source-extracted function/catch, isolated simulated interruption state",
+      "expected": [
+        "a.json",
+        "b.json"
+      ],
+      "actual": [
+        "a.json"
+      ],
+      "lostB": true,
+      "fixture": "D:\\FD\\.artifacts\\wiki-tools-audit-20261024\\initial-backup-copy-failure-080460b1c57c437eb483e29eab437536"
+    },
+    {
+      "case": "interrupted-checkpoint-copy",
+      "mechanism": "current source-extracted function/catch, isolated simulated interruption state",
+      "expected": [
+        "a.json",
+        "b.json"
+      ],
+      "actual": [
+        "a.json"
+      ],
+      "lostB": true,
+      "fixture": "D:\\FD\\.artifacts\\wiki-tools-audit-20261024\\interrupted-checkpoint-copy-03ff091e39be43fe8a8765ca020f71a8"
+    }
+  ],
+  "deletionProbe": {
+    "mechanism": "isolated index-to-worktree Git deletion; same diff-filter semantics as pre-push range",
+    "ACMR": "",
+    "ACMRD": "a.cs",
+    "fixture": "D:\\FD\\.artifacts\\wiki-tools-audit-20261024\\deletion-fixture-f9d4d68d1760489dad528a97a8f91ff1"
+  },
+  "focusedTestLogs": {
+    "node-focused.log": "✔ private runtime recovers missing Roslyn dependencies and same-time source changes (8867.068ms)\n✔ bounded input reads preserve every serial candidate and counter in inventory order (161.7546ms)\n✔ dirty same-size and same-time edits are read again in each pass; clean metadata avoids reading (0.5916ms)\n✔ input workers are bounded and a failure drains pending reads before rejection (29.2038ms)\n✔ missing paths are omitted; filesystem failures and invalid bounds reject (0.8714ms)\n✔ the real graph writer lock survives an awaited callback and releases on success and failure (35.7775ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 8970.0261\n",
+    "git-paths-test.log": "warning: in the working copy of 'tracked.md', LF will be replaced by CRLF the next time Git touches it\nLLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, bounded grep patterns, immutable refs, workspace HEAD overlays, and exit codes are safe.\n",
+    "checkpoint-test.log": "LLM Wiki index checkpoint regression passed: interrupted updates preserve the latest completed stage.\n"
+  },
+  "diagnostic": {
+    "nativeCatalogFoodDiaryTools": 0,
+    "standaloneProbeRuns": 1,
+    "retainedOutcome": "stdout truncated in aggregate output; health outcome not claimed",
+    "fallback": "Wiki CLI"
+  },
+  "finalVerification": {
+    "logPath": ".artifacts/wiki-tools-audit-20261024/final-verify-2.log",
+    "receiptPath": ".artifacts/wiki-tools-audit-20261024/final-verification.json",
+    "result": "recorded in owned local receipt after these tracked documents are frozen"
+  },
+  "reproductionScriptSources": {
+    "census.ps1": "$ErrorActionPreference = 'Stop'\n$root = (Get-Location).Path\n$tokens = $null; $errors = $null\n$ast = [Management.Automation.Language.Parser]::ParseFile((Join-Path $root '.llm-wiki/wiki.ps1'), [ref]$tokens, [ref]$errors)\n$switches = @($ast.FindAll({ param($n) $n -is [Management.Automation.Language.SwitchStatementAst] -and $n.Condition.Extent.Text -eq '$Command' }, $true))\n$routes = @(foreach ($s in $switches) { foreach ($c in $s.Clauses) {\n    [ordered]@{command=$c.Item1.Extent.Text.Trim(\"'`\"\"); line=$c.Item1.Extent.StartLineNumber; body=$c.Item2.Extent.Text}\n}})\n$validation = @($ast.ParamBlock.Parameters | Where-Object { $_.Name.VariablePath.UserPath -eq 'Command' })[0].Attributes | Where-Object { $_.TypeName.Name -eq 'ValidateSet' }\n$commands = @($validation.PositionalArguments | ForEach-Object Value)\n$result = [ordered]@{commands=$commands; routes=$routes; parseErrors=@($errors | ForEach-Object Message)}\n$result | ConvertTo-Json -Depth 12 | Set-Content .artifacts/wiki-tools-audit-20261024/facade.json -Encoding utf8\nWrite-Output \"commands=$($commands.Count); routes=$($routes.Count); parseErrors=$($errors.Count)\"\n",
+    "census.py": "import collections, hashlib, json, pathlib, re, subprocess\nroot=pathlib.Path.cwd()\nout=root/'.artifacts/wiki-tools-audit-20261024'\ntracked=subprocess.check_output(['git','ls-files','-z']).decode().split('\\0')[:-1]\ntexts={}\nfor p in tracked:\n    if pathlib.Path(p).suffix.lower() in {'.ps1','.psd1','.mjs','.cjs','.js','.ts','.cs','.csproj','.props','.targets','.json','.md','.yml','.yaml','.toml','.sh','.cmd'} or 'hooks/' in p:\n        try: texts[p]=(root/p).read_text(encoding='utf-8-sig')\n        except (UnicodeError, FileNotFoundError): pass\nselected=[p for p in tracked if p.startswith(('.llm-wiki/tools/','FoodDiary.Development.Mcp/','Tooling/tests/FoodDiary.Development.Mcp.Tests/','scripts/ai/','scripts/ci/')) and pathlib.Path(p).suffix.lower() in {'.ps1','.mjs','.cjs','.cs','.csproj','.mts'}]\nselected+= [p for p in tracked if p=='.llm-wiki/wiki.ps1' or p.startswith(('scripts/Start-FoodDiaryDevelopmentMcp.','.github/workflows/')) or ('hook' in p.lower() and pathlib.Path(p).suffix in {'.ps1','.sh'})]\nselected=sorted(set(selected))\nnames=collections.defaultdict(list)\nfor p in selected:\n    names[pathlib.Path(p).name].append(p)\n    if pathlib.Path(p).suffix in {'.cs','.csproj'}: names[pathlib.Path(p).stem].append(p)\nmatcher=re.compile('|'.join(re.escape(n) for n in sorted(names,key=len,reverse=True)))\nrefs=collections.defaultdict(list)\nfor src,t in texts.items():\n    for no,line in enumerate(t.splitlines(),1):\n        for n in set(m.group() for m in matcher.finditer(line)):\n            for dst in names[n]:\n                if src!=dst: refs[dst].append({'path':src,'line':no,'kind':'test' if re.search(r'(tests/|test\\.|Test-|\\.Tests/)',src,re.I) else 'documentation' if src.endswith('.md') else 'wiring' if re.search(r'(policies/|workflows/|\\.json$|\\.toml$|\\.csproj$|hooks/)',src) else 'source','match':n})\nfacade=json.loads((out/'facade.json').read_text(encoding='utf-8-sig'))\nregistry=json.loads(texts['.llm-wiki/policies/command-registry.json'])\ntiers={c:t['id'] for t in registry['tiers'] for c in t['commands']}\ndef family(p):\n    n=pathlib.Path(p).name\n    if p.startswith('Tooling/tests/') or re.search(r'(^Test-|\\.test\\.mjs$)',n): return 'tests'\n    if p.startswith('FoodDiary.Development.Mcp/'): return 'mcp'\n    if p.startswith('scripts/ai/'): return 'adjacent-runtime'\n    if p.startswith(('.github/','scripts/ci/')) or 'hooks/' in p: return 'ci-hooks'\n    if re.search(r'(Build-|Update-|SourceInventory|Index|Extractor|extractor|code-graph|typescript-extractor|CompiledIndex|Sqlite|Standalone)',n): return 'indexes-graph'\n    if re.search(r'(Evidence|Lineage|Acceptance|Proof|Substantive|Behavior|Phase|Requirement)',n): return 'evidence-proof'\n    if re.search(r'(Verification|Verify|Smoke|ObservedStage|Process|FullVerification|TaskChecks)',n): return 'verification-process'\n    if re.search(r'(Lease|Dispatch|Agent|Schedule|Orchestrat|WorkspaceCircuit|TaskGraph|Decomposition)',n): return 'orchestration'\n    if re.search(r'(Learning|Memory|Retrospective|Outcome|Experiment|Calibration|Feedback|Telemetry|Metrics|Eval|Corpus|Unseen)',n): return 'learning-evals'\n    if re.search(r'(Context|Research|Trace|Impact|Ownership|TestPlan|CoveragePlan|Decision|Contract|Quality|Health|Topology|Sensitive|Security|Domain|Dependency|Rollout|Precedent|Journey|Extraction)',n): return 'discovery-review'\n    if re.search(r'(Task|Delivery|Session|Adaptive|Development|Experience|Manifest|Packet|Readiness|Report|Design|Handoff|Plan)',n): return 'task-delivery'\n    return 'shared-facade'\ncosts={'tests':'fixture/subprocess-dependent; selected groups measured separately; no universal duration','mcp':'persistent CLR + bounded PowerShell/SQLite; cold launch differs from warm request','adjacent-runtime':'external runtime/HTTP/browser dependent; no production workload executed','ci-hooks':'conditional build/test/index costs; historical timings only','indexes-graph':'O(source bytes + syntax/relationships + serialized indexes); cache hit still fingerprints inputs','evidence-proof':'O(scope bytes + logs + task artifacts); may invoke dependent assessments','verification-process':'selected child-check costs dominate; wrapper overhead and fingerprinting additional','orchestration':'O(task/receipt/lease files + dependency graph); lock contention possible','learning-evals':'O(ledger/corpus size); nested verification/corpus subprocesses may dominate','discovery-review':'O(index candidates + source/fingerprint bytes), bounded output does not imply bounded scan','task-delivery':'composes discovery and multiple assessments; fan-out and hash scans dominate','shared-facade':'library/import/dispatch costs; can include repository scan'}\nrows=[]\nfor p in selected:\n    t=texts.get(p,''); fam=family(p); rr=refs[p]\n    purpose='; '.join(re.findall(r'^\\s*(?:function\\s+([\\w-]+)|(?:export\\s+)?(?:async\\s+)?function\\s+([\\w]+))',t,re.M)[i][0] or re.findall(r'^\\s*(?:function\\s+([\\w-]+)|(?:export\\s+)?(?:async\\s+)?function\\s+([\\w]+))',t,re.M)[i][1] for i in range(min(4,len(re.findall(r'^\\s*(?:function\\s+([\\w-]+)|(?:export\\s+)?(?:async\\s+)?function\\s+([\\w]+))',t,re.M)))))\n    deps=[]\n    for n in set(m.group() for m in matcher.finditer(t)):\n        deps.extend(d for d in names[n] if d!=p)\n    verdict='оставить'\n    if fam in {'task-delivery','learning-evals','shared-facade','discovery-review'}: verdict='упростить'\n    if fam=='orchestration': verdict='недостаточно данных'\n    runtime=[r for r in rr if r['kind'] in {'source','wiring'}]\n    tests=[r for r in rr if r['kind']=='test']\n    if not runtime and not tests and fam not in {'ci-hooks','mcp','adjacent-runtime'}: verdict='кандидат на удаление: проверить динамику/ручной CLI'\n    rows.append({'path':p,'sha256':hashlib.sha256((root/p).read_bytes()).hexdigest(),'lines':len(t.splitlines()),'family':fam,'purpose':purpose or pathlib.Path(p).stem,'purposeBasis':'symbol/name inventory; exact behavior and family assessment in report','consumers':rr,'dependencies':sorted(set(deps)),'coverageReferences':tests,'coverageMeaning':'lexical static reference; not line/branch coverage or executed proof','costModel':costs[fam],'verdict':verdict,'verdictBasis':'family assessment; absent lexical reference alone does not authorize removal'})\ncommands=[]\nfor c in facade['commands']:\n    routes=[r for r in facade['routes'] if r['command']==c]\n    deps=sorted({d for r in routes for m in matcher.finditer(r['body']) for d in names[m.group()]})\n    if not routes:\n        # Regex switch clauses deliberately use $_ conditions. Preserve every matching branch.\n        routes=[r for r in facade['routes'] if re.search(r\"['\\\"]\"+re.escape(c)+r\"['\\\"]\",r['command'])]\n        deps=sorted({d for r in routes for m in matcher.finditer(r['body']) for d in names[m.group()]})\n    commands.append({'command':c,'tier':tiers.get(c),'routes':[{'line':r['line'],'condition':r['command']} for r in routes], 'implementationFiles':deps,'purpose':'dispatches '+(', '.join(pathlib.Path(d).name for d in deps) or 'inline facade logic; inspect route'), 'consumers': [{'path':'.llm-wiki/policies/command-registry.json','kind':'supported CLI registry'}], 'coverage':'facade catalog/critical-tool contracts plus implementation coverageReferences; no per-command runtime claim','costModel':'implementation family costs + pwsh startup/dispatch','verdict':'оставить' if tiers.get(c)=='core' else 'недостаточно данных: retain compatibility until family decision'})\npayload={'schemaVersion':1,'baseline':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'scope':'tracked executable files under .llm-wiki/tools + facade + all Development MCP sources/tests + scripts/ai + CI + tracked hook entrypoints; policies/documents are wiring, not executable rows','limitations':['literal filename/class-name references include comments and tests; not proof of invocation','dynamic function/registry dispatch reviewed by family, not statically complete','every cost is a model unless measured in report','no coverage percentages inferred from references'],'counts':{'files':len(rows),'commands':len(commands),'family':dict(collections.Counter(r['family'] for r in rows)),'lines':sum(r['lines'] for r in rows)},'commands':commands,'files':rows}\n(out/'inventory.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\nprint(json.dumps(payload['counts'],ensure_ascii=False))\nprint('registryOnly',sorted(set(tiers)-set(facade['commands'])))\nprint('facadeOnly',sorted(set(facade['commands'])-set(tiers)))\nprint('unresolved routes', [c['command'] for c in commands if not c['routes']])\nprint('candidate files', [r['path'] for r in rows if r['verdict'].startswith('кандидат')])\nprint('largest',[(r['path'],r['lines']) for r in sorted(rows,key=lambda r:r['lines'],reverse=True)[:18]])\n",
+    "enrich.py": "import json,pathlib,subprocess,re,collections,hashlib\nroot=pathlib.Path.cwd();out=root/'.artifacts/wiki-tools-audit-20261024'\np=json.loads((out/'inventory.json').read_text(encoding='utf8'))\nfiles={r['path']:r for r in p['files']}\nextras=['FoodDiary.Web.Client/.husky/pre-push','FoodDiary.Web.Client/.husky/pre-commit','FoodDiary.Web.Client/.husky/progress.sh','scripts/Measure-DotnetTests.ps1','scripts/Clean-NestedDotnetArtifacts.ps1']\nfor f in extras:\n if f in files or not (root/f).is_file():continue\n t=(root/f).read_text(encoding='utf-8-sig');files[f]={'path':f,'sha256':hashlib.sha256((root/f).read_bytes()).hexdigest(),'lines':len(t.splitlines()),'family':'ci-hooks','purpose':{'FoodDiary.Web.Client/.husky/pre-push':'affected Wiki checks, retrieval corpus, parallel frontend/backend gates','FoodDiary.Web.Client/.husky/pre-commit':'staged whitespace gate','FoodDiary.Web.Client/.husky/progress.sh':'hook-owned progress/logging/elapsed time','scripts/Measure-DotnetTests.ps1':'test timing and TRX diagnostics','scripts/Clean-NestedDotnetArtifacts.ps1':'owned output cleanup and nested-artifact prevention'}.get(f,f),'purposeBasis':'reviewed source','consumers':[{'path':'FoodDiary.Web.Client/.husky/pre-push','line':1,'kind':'source','match':pathlib.Path(f).name}],'dependencies':[],'coverageReferences':[],'coverageMeaning':'see CI/hooks assessment in report','costModel':'conditional index/build/test costs; cleanup IO','verdict':'оставить','verdictBasis':'required hook/build diagnostics; deletion routing defect is separate'}\ncandidate={'.llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1','.llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1'}\nfor r in files.values():\n if r['family']=='tests':\n  r['verdict']='оставить'\n  r['verdictBasis']='test discovery via SDK/glob/policy is a real consumer; static self-reference absence never justifies deleting tests'\n elif r['family']=='orchestration':\n  r['verdict']='недостаточно данных'\n  r['verdictBasis']='CLI, policy and smoke wiring exist; scheduler value/externally initiated usage not proven by repository references'\n elif r['path'] in candidate:\n  r['verdict']='кандидат на удаление/объединение после замены migration diagnostics'\n  r['verdictBasis']='all 11 query indexes report migrated; manual CLI/test/diagnostic consumers must move before retirement (report R1)'\n elif r['path'].endswith('Invoke-LlmWikiAdaptiveVerification.ps1'):\n  r['verdict']='объединить'\n  r['verdictBasis']='same focused cases also have policy/catalog runners with bounded workers; retain cases and CLI compatibility (report R2)'\n elif r['verdict'].startswith('кандидат'):\n  r['verdict']='недостаточно данных'\n  r['verdictBasis']='no literal reference found; dynamic/manual invocation remains possible'\n r['assessment']='wiki-tools-audit-20261024.md#family-'+r['family']\n r['reviewDepth']='source census + family-level review; not exhaustive semantic review of each branch'\n r['consumers']=list({(x['path'],x.get('line',0),x['match']):x for x in r['consumers']}.values())\ncommands={c['command']:c for c in p['commands']}\nfor c in commands.values():c['consumers']=[]\ntracked=subprocess.check_output(['git','ls-files','-z']).decode().split('\\0')[:-1]\nfor f in tracked:\n if pathlib.Path(f).suffix.lower() not in {'.md','.cs','.ps1','.psd1','.mjs','.cjs','.json','.yml','.toml','.sh'} and f not in extras:continue\n try:t=(root/f).read_text(encoding='utf-8-sig')\n except (FileNotFoundError,UnicodeError):continue\n for n,l in enumerate(t.splitlines(),1):\n  for token in set(re.findall(r'''[\"']([a-z][a-z0-9-]*)[\"']''',l)):\n   if token in commands:\n    commands[token]['consumers'].append({'path':f,'line':n,'kind':'literal command mention; inspect source vs test/documentation'})\nfor c in commands.values():\n if c['command']=='help':c['routes']=[{'line':2938,'condition':'default branch; exact anchor in source'}]\n c['families']=sorted({files[x]['family'] for x in c['implementationFiles'] if x in files})\n c['assessment']='family assessments of implementationFiles; inline facade logic reviewed in shared-facade'\n c['verdict']='оставить' if c['tier']!='experimental' else 'недостаточно данных: сохранить поддерживаемый CLI до измерения пользы'\n if c['command'].startswith(('task-context-experiment','task-context-strategy','instruction-experiment','learning-canary')):c['verdict']='упростить: сделать факультативным семейством с сохранением ledger/rollback'\np['commands']=list(commands.values());p['files']=sorted(files.values(),key=lambda r:r['path'])\np['auxiliaryFiles']=[{'path':f,'role':'policy/registry/schema/corpus/knowledge wiring; not separate executable','sha256':hashlib.sha256((root/f).read_bytes()).hexdigest()} for f in tracked if f.startswith('.llm-wiki/') and pathlib.Path(f).suffix in {'.json','.psd1'} and not f.startswith('.llm-wiki/generated/')]\np['counts']={'files':len(files),'commands':len(commands),'family':dict(collections.Counter(r['family'] for r in files.values())),'lines':sum(r['lines'] for r in files.values()),'auxiliaryFiles':len(p['auxiliaryFiles']),'tiers':dict(collections.Counter(c['tier'] for c in commands.values()))}\n(out/'inventory-enriched.json').write_text(json.dumps(p,ensure_ascii=False,separators=(',',':'))+'\\n',encoding='utf8')\nprint(p['counts']);print('no implementation filename',[(c['command'],c['routes']) for c in commands.values() if not c['implementationFiles']])\n",
+    "bench.py": "import subprocess,time,json,pathlib,statistics,hashlib\nroot=pathlib.Path.cwd();out=root/'.artifacts/wiki-tools-audit-20261024'\nhead=subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()\nbefore=subprocess.check_output(['git','status','--porcelain=v1','-z'])\njobs=[\n ('pwsh-startup',['pwsh','-NoProfile','-Command','[Console]::Write(1)']),\n ('help',['pwsh','-NoProfile','-File','.llm-wiki/wiki.ps1','help']),\n ('stage-fingerprint',['pwsh','-NoProfile','-File','.llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1','-Stage','full verification','-Format','Text']),\n ('context-no-query-cache',['pwsh','-NoProfile','-File','.llm-wiki/tools/Find-LlmWikiContext.ps1','-Module','Recipes','-Query','RecipeNutritionUpdater','-Compact','-SkipQueryCache','-Format','Json']),\n ('context-cache-enabled',['pwsh','-NoProfile','-File','.llm-wiki/tools/Find-LlmWikiContext.ps1','-Module','Recipes','-Query','RecipeNutritionUpdater','-Compact','-Format','Json']),\n ('symbol-index-check',['pwsh','-NoProfile','-File','.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1','-Check']),\n]\nrows=[]\nfor name,args in jobs:\n for i in range(3):\n  start=time.perf_counter()\n  try:p=subprocess.run(args,capture_output=True,cwd=root,timeout=180)\n  except subprocess.TimeoutExpired as e:\n   rows.append({'name':name,'iteration':i+1,'timeoutSeconds':180});break\n  elapsed=time.perf_counter()-start\n  (out/f'bench-{name}-{i+1}.stdout').write_bytes(p.stdout);(out/f'bench-{name}-{i+1}.stderr').write_bytes(p.stderr)\n  row={'name':name,'iteration':i+1,'seconds':round(elapsed,4),'exitCode':p.returncode,'stdoutBytes':len(p.stdout),'stdoutSha256':hashlib.sha256(p.stdout).hexdigest()}\n  if name.startswith('context'):\n   try:\n    d=json.loads(p.stdout.decode('utf-8-sig'));row['fresh']=d.get('fresh',d.get('index',{}).get('fresh'));row['cache']=d.get('cache');row['rootKeys']=list(d);row['records']=len(d.get('items',d.get('implementationFiles',[])))\n   except Exception as e:row['parseError']=str(e)\n  rows.append(row);print(json.dumps(row),flush=True)\n  if p.returncode:break\nafter=subprocess.check_output(['git','status','--porcelain=v1','-z'])\npayload={'baseline':head,'method':'3 sequential fresh subprocesses each, no cache deletion; first observation is not cold OS/filesystem; other development processes not stopped','statusStable':before==after,'runs':rows,'medians':{n:statistics.median([r['seconds'] for r in rows if r['name']==n and r.get('exitCode')==0]) for n,_ in jobs if any(r['name']==n and r.get('exitCode')==0 for r in rows)}}\n(out/'bench.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\n",
+    "primitive-bench.ps1": "$ErrorActionPreference='Stop'\n$repo=(Get-Location).Path\n$auditRoot=Join-Path $repo '.artifacts/wiki-tools-audit-20261024'\n. .llm-wiki/tools/LlmWikiGitPaths.ps1\n. .llm-wiki/tools/LlmWikiIndexCache.ps1\n$rows=@()\n$repositoryRoot=$repo\n$tokens=$null; $errors=$null\n$ast=[Management.Automation.Language.Parser]::ParseFile((Join-Path $repo '.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1'),[ref]$tokens,[ref]$errors)\n$selection=$ast.FindAll({param($n) $n -is [Management.Automation.Language.AssignmentStatementAst] -and $n.Left.Extent.Text -eq '$sourceFiles'},$true)[0]\n$sourceFiles=@(Invoke-Expression $selection.Right.Extent.Text)\n$paths=@($sourceFiles | ForEach-Object { $_.FullName.Substring($repo.Length+1).Replace('\\','/') })\n$files=@(Get-ChildItem .llm-wiki/generated -Recurse -File)\n$bytes=($files|Measure-Object Length -Sum).Sum\nfor($i=1;$i -le 3;$i++) {\n  $timer=[Diagnostics.Stopwatch]::StartNew()\n  $fingerprint=Get-LlmWikiIndexInputFingerprint -RepositoryRoot $repo -InputPath $paths\n  $rows += [ordered]@{operation='batch-git-hash-csharp';iteration=$i;seconds=$timer.Elapsed.TotalSeconds;fileCount=$paths.Count;fingerprint=$fingerprint}\n  $copyRoot=Join-Path $auditRoot ('copy-generated-'+[guid]::NewGuid().ToString('N'))\n  $null=New-Item -ItemType Directory -Path $copyRoot\n  $timer.Restart()\n  Get-ChildItem .llm-wiki/generated -Force | Copy-Item -Destination $copyRoot -Recurse -Force\n  $rows += [ordered]@{operation='copy-generated';iteration=$i;seconds=$timer.Elapsed.TotalSeconds;fileCount=$files.Count;bytes=$bytes}\n}\n$rows|ConvertTo-Json -Depth 6|Set-Content (Join-Path $auditRoot 'primitive-bench.json') -Encoding utf8\n$rows|ConvertTo-Json -Depth 6\n",
+    "recovery-probe.ps1": "$ErrorActionPreference = 'Stop'\n$auditRoot = [IO.Path]::GetFullPath((Join-Path (Get-Location) '.artifacts/wiki-tools-audit-20261024'))\n$source = [IO.File]::ReadAllText((Join-Path (Get-Location) '.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1'))\n$tokens=$null; $errors=$null\n$ast=[Management.Automation.Language.Parser]::ParseInput($source,[ref]$tokens,[ref]$errors)\n$function=$ast.FindAll({param($n) $n -is [Management.Automation.Language.FunctionDefinitionAst] -and $n.Name -eq 'Restore-OrphanedIndexTransaction'},$true)[0]\nInvoke-Expression $function.Extent.Text\n$catch=$ast.FindAll({param($n) $n -is [Management.Automation.Language.CatchClauseAst] -and $n.Body.Extent.Text.Contains('LLM Wiki index update failed; restoring')},$true)[0]\n$results=@()\nforeach($case in @('initial-backup-copy-failure','interrupted-checkpoint-copy')) {\n    $fixture=Join-Path $auditRoot ($case+'-'+[guid]::NewGuid().ToString('N'))\n    $generatedRoot=Join-Path $fixture 'generated'\n    $stateRoot=Join-Path $fixture 'transactions'\n    $transactionRoot=Join-Path $stateRoot ([guid]::NewGuid().ToString('N'))\n    $backupRoot=Join-Path $transactionRoot 'generated'\n    $null=New-Item -ItemType Directory -Path $generatedRoot,$backupRoot -Force\n    [IO.File]::WriteAllText((Join-Path $generatedRoot 'a.json'),'A')\n    [IO.File]::WriteAllText((Join-Path $generatedRoot 'b.json'),'B')\n    [IO.File]::WriteAllText((Join-Path $backupRoot 'a.json'),'A')\n    if($case -eq 'initial-backup-copy-failure') {\n        # Execute the current source's catch body after a simulated failed second backup copy.\n        try { try { throw 'injected backup copy failure' } catch { & ([scriptblock]::Create($catch.Body.Extent.Text.Trim().Substring(1,$catch.Body.Extent.Text.Trim().Length-2))) } } catch { }\n    } else {\n        [IO.File]::WriteAllText((Join-Path $backupRoot 'b.json'),'B')\n        $checkpoint=Join-Path $transactionRoot 'checkpoint'\n        $null=New-Item -ItemType Directory -Path $checkpoint\n        [IO.File]::WriteAllText((Join-Path $checkpoint 'a.json'),'A')\n        [IO.File]::WriteAllText((Join-Path $transactionRoot 'state.json'),(@{ownerPid=2147483647;status='in-progress';completedStage='previous-complete-stage'}|ConvertTo-Json))\n        Restore-OrphanedIndexTransaction -TransactionStateRoot $stateRoot -GeneratedRoot $generatedRoot\n    }\n    $remaining=@(Get-ChildItem $generatedRoot -File | ForEach-Object Name)\n    $results += [ordered]@{case=$case;mechanism='current source-extracted function/catch, isolated simulated interruption state';expected=@('a.json','b.json');actual=$remaining;lostB=(-not (Test-Path (Join-Path $generatedRoot 'b.json')));fixture=$fixture}\n}\n$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $auditRoot 'recovery-probe.json') -Encoding utf8\n$results | ConvertTo-Json -Depth 6\n",
+    "publish-data.py": "import json,pathlib,subprocess,hashlib,collections,re\nroot=pathlib.Path.cwd();out=root/'.artifacts/wiki-tools-audit-20261024';docs=root/'docs/ai'\np=json.loads((out/'inventory-enriched.json').read_text(encoding='utf8'))\nold=json.loads((root/'docs/reports/wiki-tools-audit-2026-10-06/reviews.json').read_text(encoding='utf-8-sig'))\nby={r['path']:r for r in old['reviews']}\nhistorical=[x for x in subprocess.check_output(['git','ls-files','docs']).decode().splitlines() if pathlib.Path(x).suffix in {'.ps1','.mjs','.cs','.cjs'}]\nfor f in historical:\n t=(root/f).read_text(encoding='utf-8-sig')\n p['files'].append({'path':f,'sha256':hashlib.sha256((root/f).read_bytes()).hexdigest(),'lines':len(t.splitlines()),'family':'historical-audit','purpose':pathlib.Path(f).stem+'; frozen prior-audit helper','purposeBasis':'historical report scope and current source','consumers':[{'path':'docs/reports/wiki-tools-audit-2026-10-06','kind':'historical manual audit; no active policy/CI invocation established'}],'dependencies':[],'coverageReferences':[],'coverageMeaning':'frozen prior inventory/measurements; not current execution proof','costModel':'manual census/benchmarks; source/tree scans and subprocesses; not measured here','verdict':'кандидат на удаление/архивирование после сохранения evidence и manual entrypoint migration','verdictBasis':'historical audit-only scope; no current operational gate needs these frozen helpers','assessment':'wiki-tools-audit-20261024.md#historical-audits','reviewDepth':'read entrypoint and contract; historical evidence not promoted'})\nsame=changed=missing=0\nfor r in p['files']:\n f=r['path'];t=(root/f).read_text(encoding='utf-8-sig')\n normalized=t.replace('\\r\\n','\\n').replace('\\r','\\n')\n normalizedHash=hashlib.sha256(normalized.encode()).hexdigest()\n r['sha256LfNormalized']=normalizedHash\n prior=by.get(f)\n if prior:\n  matches=normalizedHash==prior['sourceSha256'];same+=matches;changed+=not matches\n  r['priorReview']={'path':'docs/reports/wiki-tools-audit-2026-10-06/reviews.json','matchesLfNormalizedCurrentSource':matches,'currentExecutionProof':False,'review':prior}\n else:missing+=1\n for c in r['consumers']:\n  if c['path'].startswith('docs/reports/'):c['kind']='historical-reference-only'\n  if c['path'].startswith('.llm-wiki/generated/'):c['kind']='generated-reference-only'\n r['referenceGraphMeaning']='filename/type-name lexical reference graph; includes helper bindings; not complete executable call graph'\n r['externalImports']=sorted(set(re.findall(r'''(?:from\\s+|import\\s*\\(|require\\s*\\()[\"']([^\"']+)[\"']''',t)))\n r['findings']=[x for x,paths in {'FDW-01':['Invoke-LlmWikiIndexPipeline.ps1'],'FDW-02':['Invoke-LlmWikiIndexPipeline.ps1','Test-LlmWikiIndexCheckpoint.ps1'],'FDW-03':['pre-push'],'FDW-04':['Invoke-LlmWikiAdaptiveVerification.ps1','code-graph-process.mjs','code-graph.mjs']}.items() if pathlib.Path(f).name in paths]\n if r['family']=='tests':r['discovery']='.NET SDK/Node --test/PowerShell smoke policy; tests need no textual file caller'\nfor c in p['commands']:\n if c['command']=='help':c['routes']=[{'line':2950,'condition':'default branch'}];c['implementationFiles']=['.llm-wiki/tools/Show-LlmWikiHelp.ps1']\n for item in c['consumers']:\n  if item['path'].startswith('docs/reports/'):item['kind']='historical-reference-only'\np['files'].sort(key=lambda r:r['path'])\np['counts']={'files':len(p['files']),'commands':len(p['commands']),'family':dict(collections.Counter(r['family'] for r in p['files'])),'lines':sum(r['lines'] for r in p['files']),'auxiliaryFiles':len(p['auxiliaryFiles']),'tiers':dict(collections.Counter(c['tier'] for c in p['commands']))}\np['priorReviewComparison']={'sameLfNormalized':same,'changed':changed,'notInPrior':missing,'comparison':'prior review digest is LF-normalized UTF-8; raw source digest retained separately'}\np['scope']+='; four tracked historical Wiki audit scripts under docs/reports are separately classified'\np['capturedAtUtc']=__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat()\ninventoryPath=docs/'wiki-tools-audit-20261024.inventory.json';inventoryPath.write_text(json.dumps(p,ensure_ascii=False,separators=(',',':'))+'\\n',encoding='utf8')\nbench=json.loads((out/'bench.json').read_text(encoding='utf8'))\nfor r in bench['runs']:\n if r['name'].startswith('context'):\n  payload=json.loads((out/f\"bench-{r['name']}-{r['iteration']}.stdout\").read_text(encoding='utf-8-sig'))\n  r['records']=len(payload['candidates']);r['fresh']=payload['compiledIndex']['fresh'];r['compiledIndex']=payload['compiledIndex'];r['topPath']=payload['candidates'][0]['path'];r.pop('rootKeys',None)\nlogs={n:(out/n).read_text(encoding='utf-8-sig') for n in ['node-focused.log','git-paths-test.log','checkpoint-test.log']}\nscripts={n:(out/n).read_text(encoding='utf-8-sig') for n in ['census.ps1','census.py','enrich.py','bench.py','primitive-bench.ps1','recovery-probe.ps1','publish-data.py']}\nevidence={'schemaVersion':1,'baseline':p['baseline'],'branch':'codex/ai-tooling-feedback-20261024','initialStatus':'clean','counts':p['counts'],'priorReviewComparison':p['priorReviewComparison'],'measurementEnvironment':{'os':'Windows','powershell':'7.6.5','node':'26.2.0','dotnet':'10.0.102','ciNode':'22','parallelDevelopmentProcesses':'not stopped; results are local observations, not CI budgets'},'benchmark':bench,'primitiveBenchmark':json.loads((out/'primitive-bench.json').read_text(encoding='utf-8-sig')),'recoveryProbes':json.loads((out/'recovery-probe.json').read_text(encoding='utf-8-sig')),'deletionProbe':json.loads((out/'deletion-probe.json').read_text(encoding='utf8')),'focusedTestLogs':logs,'diagnostic':{'nativeCatalogFoodDiaryTools':0,'standaloneProbeRuns':1,'retainedOutcome':'stdout truncated in aggregate output; health outcome not claimed','fallback':'Wiki CLI'},'finalVerification':{'logPath':'.artifacts/wiki-tools-audit-20261024/final-verify.log','receiptPath':'.artifacts/wiki-tools-audit-20261024/final-verification.json','result':'recorded in owned local receipt after these tracked documents are frozen'},'reproductionScriptSources':scripts,'inventorySha256':hashlib.sha256(inventoryPath.read_bytes()).hexdigest()}\n(docs/'wiki-tools-audit-20261024.evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\nprint(p['counts']);print(p['priorReviewComparison'])\n",
+    "static-calls.ps1": "$ErrorActionPreference='Stop'\n$repo=(Get-Location).Path\n$inventory=Get-Content docs/ai/wiki-tools-audit-20261024.inventory.json -Raw|ConvertFrom-Json\n$edges=[Collections.Generic.List[object]]::new()\nforeach($file in @($inventory.files|Where-Object path -like '*.ps1')) {\n  $tokens=$null;$errors=$null\n  $ast=[Management.Automation.Language.Parser]::ParseFile((Join-Path $repo $file.path),[ref]$tokens,[ref]$errors)\n  if($errors.Count) { throw \"Parse failure: $($file.path)\" }\n  $bindings=@{}\n  foreach($assignment in $ast.FindAll({param($n) $n -is [Management.Automation.Language.AssignmentStatementAst]},$true)) {\n    $key=$assignment.Left.Extent.Text\n    $targets=@([regex]::Matches($assignment.Right.Extent.Text,\"['`\"]([^'`\"/\\\\]+\\.(?:ps1|mjs))['`\"]\")|ForEach-Object {$_.Groups[1].Value})\n    if($targets.Count -gt 0) {$bindings[$key]=$targets}\n  }\n  foreach($command in $ast.FindAll({param($n) $n -is [Management.Automation.Language.CommandAst]},$true)) {\n    $name=$command.GetCommandName();$text=$command.Extent.Text\n    $targets=@()\n    $kind=''\n    if($command.InvocationOperator -in @([Management.Automation.Language.TokenKind]::Ampersand,[Management.Automation.Language.TokenKind]::Dot)) {\n      $targetText=$command.CommandElements[0].Extent.Text\n      $targets=@([regex]::Matches($targetText,\"['`\"]([^'`\"/\\\\]+\\.(?:ps1|mjs))['`\"]\")|ForEach-Object {$_.Groups[1].Value})\n      $kind='syntactic call/import'\n      if(-not $targets.Count -and $bindings.ContainsKey($targetText)) {$targets=$bindings[$targetText];$kind='call through statically bound variable (flow-insensitive)'}\n    } elseif($name -in @('Invoke-WikiTool','Invoke-JsonTool','Invoke-LlmWikiAssessment','Invoke-LlmWikiReadOnlyTool','Invoke-ObservedWikiStage')) {\n      $targets=@([regex]::Matches($text,\"['`\"]([^'`\"/\\\\]+\\.(?:ps1|mjs))['`\"]\")|ForEach-Object {$_.Groups[1].Value})\n      $kind='explicit filename passed to existing tool dispatcher'\n    }\n    foreach($target in $targets) {$edges.Add([ordered]@{source=$file.path;line=$command.Extent.StartLineNumber;targetLeaf=$target;kind=$kind;witness=($text -split \"`r?`n\")[0]})}\n  }\n}\n$edges|ConvertTo-Json -Depth 8|Set-Content .artifacts/wiki-tools-audit-20261024/static-calls.json -Encoding utf8\nWrite-Output \"static PowerShell call/import edges=$($edges.Count)\"\n",
+    "finalize-data.py": "import json,pathlib,collections,re,hashlib\nroot=pathlib.Path.cwd();base=root/'docs/ai';out=root/'.artifacts/wiki-tools-audit-20261024'\npath=base/'wiki-tools-audit-20261024.inventory.json';p=json.loads(path.read_text(encoding='utf8'))\nedges=json.loads((out/'static-calls.json').read_text(encoding='utf-8-sig'))\nbyLeaf=collections.defaultdict(list)\nfor r in p['files']:byLeaf[pathlib.Path(r['path']).name].append(r)\nfor r in p['files']:r['syntacticConsumers']=[]\nfor e in edges:\n for r in byLeaf.get(e['targetLeaf'],[]):\n  if r['path']!=e['source']:r['syntacticConsumers'].append({k:e[k] for k in ('source','line','kind')})\nfor r in p['files']:\n for name in ('consumers','coverageReferences'):\n  groups={}\n  for x in r[name]:\n   key=(x['path'],x['kind'],x.get('match',''))\n   row=groups.setdefault(key,{'path':x['path'],'kind':x['kind'],'match':x.get('match',''),'lines':[]})\n   if x.get('line') is not None:row['lines'].append(x['line'])\n  r[name]=list(groups.values())\n r['currentReview']={'correctness':'see family assessment and listed finding IDs; no blanket proof of correctness','algorithm':r['costModel'],'reliability':'family assessment plus priorReview where hash matched; known current findings explicit','coverage':'coverageReferences are static navigation, syntacticConsumers distinguish actual dispatcher/import sites; no inferred execution or percentage'}\nfor c in p['commands']:\n groups={}\n for x in c['consumers']:\n  k=(x['path'],x['kind']);row=groups.setdefault(k,{'path':x['path'],'kind':x['kind'],'lines':[]});row['lines'].append(x['line'])\n c['consumers']=list(groups.values())\np['referenceEncoding']='references grouped by (path,kind,match); lines are complete lexical occurrences; syntacticConsumers are AST call/import/explicit dispatcher sites, flow-insensitive variable bindings labeled separately'\np['staticCallEdges']=len(edges)\np['limitsOfCallGraph']='PowerShell filename calls/imports and explicit dispatcher filenames covered; dynamic property/table resolution and arbitrary runtime paths not proven. .NET SDK inclusion and Node ES imports use their owning project/import contracts.'\npath.write_text(json.dumps(p,ensure_ascii=False,separators=(',',':'))+'\\n',encoding='utf8')\nep=base/'wiki-tools-audit-20261024.evidence.json';ev=json.loads(ep.read_text(encoding='utf8'));ev['inventorySha256']=hashlib.sha256(path.read_bytes()).hexdigest();ev['staticCallEdges']=len(edges)\nev['reproductionScriptSources']['static-calls.ps1']=(out/'static-calls.ps1').read_text(encoding='utf8');ev['reproductionScriptSources']['finalize-data.py']=pathlib.Path(__file__).read_text(encoding='utf8')\nev['deletionProbeReproduction']='Create an isolated empty Git repo; write and git add a.cs without committing; remove a.cs; compare git diff --name-only --diff-filter=ACMR vs ACMRD. No commits or pushes required.'\nep.write_text(json.dumps(ev,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\nprint('inventory bytes',path.stat().st_size,'syntactic edges',len(edges))\n"
+  },
+  "inventorySha256": "a907a57c5fdd28d4530660db6d93a47b8fee1db6906068076b5f915f1b42c491",
+  "staticCallEdges": 2795,
+  "deletionProbeReproduction": "Create an isolated empty Git repo; write and git add a.cs without committing; remove a.cs; compare git diff --name-only --diff-filter=ACMR vs ACMRD. No commits or pushes required.",
+  "telemetryCapacity": {
+    "count": 5000,
+    "limit": 5000
+  },
+  "firstFinalVerificationAttempt": {
+    "exitCode": 1,
+    "durationSeconds": 46.9151245,
+    "head": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+    "status": [
+      " M .llm-wiki/generated/repository-catalog.json",
+      "?? docs/ai/wiki-tools-audit-20261024.evidence.json",
+      "?? docs/ai/wiki-tools-audit-20261024.inventory.json",
+      "?? docs/ai/wiki-tools-audit-20261024.md"
+    ],
+    "logPath": ".artifacts/wiki-tools-audit-20261024/final-verify.log",
+    "result": "failed at source-impact; requires current query-context page review"
+  },
+  "sourceImpactReview": {
+    "exitCode": 0,
+    "log": "Recorded source-impact review for 'workflow.query-context': 1 changed source(s).\n",
+    "scope": "workflow.query-context; only repository-catalog documentation path/count changed"
+  },
+  "postRepair": {
+    "capturedAtUtc": "2026-10-24T10:29:00.623781+00:00",
+    "counts": {
+      "files": 550,
+      "commands": 369,
+      "family": {
+        "ci-hooks": 9,
+        "shared-facade": 53,
+        "indexes-graph": 50,
+        "task-delivery": 34,
+        "learning-evals": 27,
+        "discovery-review": 50,
+        "orchestration": 13,
+        "evidence-proof": 14,
+        "verification-process": 17,
+        "tests": 182,
+        "mcp": 57,
+        "historical-audit": 4,
+        "adjacent-runtime": 40
+      },
+      "lines": 99459,
+      "auxiliaryFiles": 53,
+      "tiers": {
+        "core": 86,
+        "governed": 81,
+        "experimental": 202
+      }
+    },
+    "sourceSetSha256": "a7cca9672742cd7438658298cf2860aa72e91ef9b1858e428d4179c9257ae887",
+    "changedExecutableFiles": [
+      ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+      ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
+      ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+      ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+      ".llm-wiki/tools/LlmWikiProcess.ps1",
+      ".llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1",
+      ".llm-wiki/tools/Show-LlmWikiCommandHelp.ps1",
+      ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
+      ".llm-wiki/tools/Test-LlmWikiGitPaths.ps1",
+      ".llm-wiki/tools/Test-LlmWikiIndexCheckpoint.ps1",
+      ".llm-wiki/tools/Test-LlmWikiProcess.ps1",
+      ".llm-wiki/tools/Test-LlmWikiStageFingerprint.ps1",
+      ".llm-wiki/tools/Test-LlmWikiTelemetryValidationReuse.ps1",
+      ".llm-wiki/tools/code-graph-dotnet-runtime.mjs",
+      ".llm-wiki/tools/code-graph-dotnet-runtime.test.mjs",
+      ".llm-wiki/tools/code-graph-performance.test.mjs",
+      ".llm-wiki/tools/code-graph-process.mjs",
+      ".llm-wiki/tools/code-graph.mjs",
+      ".llm-wiki/wiki.ps1",
+      "FoodDiary.Web.Client/.husky/pre-push"
+    ],
+    "priorReviewComparison": {
+      "sameLfNormalized": 270,
+      "changed": 140,
+      "notInPrior": 140,
+      "comparison": "LF-normalized UTF-8 compared to historical review; execution evidence not promoted"
+    },
+    "findings": {
+      "FDW-01": "resolved in working tree; detailed final regressions and remaining limits in report",
+      "FDW-02": "resolved in working tree; detailed final regressions and remaining limits in report",
+      "FDW-03": "resolved in working tree; detailed final regressions and remaining limits in report",
+      "FDW-04": "resolved in working tree; detailed final regressions and remaining limits in report",
+      "FDW-05": "resolved in working tree; detailed final regressions and remaining limits in report",
+      "FDW-06": "resolved: existing state/registry publication uses filesystem Replace instead of provider delete-then-move; verified installed PS7/PS5 implementation and publication regressions"
+    },
+    "diagnostic": {
+      "ok": true,
+      "configuration": {
+        "configPath": "D:\\FD\\.codex\\config.toml",
+        "cwd": "D:\\FD",
+        "command": "powershell.exe",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-NonInteractive",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "scripts\\Start-FoodDiaryDevelopmentMcp.ps1",
+          "-BuildMode",
+          "--build-if-stale"
+        ],
+        "enabled": true,
+        "launcherPath": "D:\\FD\\scripts\\Start-FoodDiaryDevelopmentMcp.ps1",
+        "launcherExists": true,
+        "enabledTools": [
+          "get_change_context",
+          "get_development_context",
+          "trace_backend_flow",
+          "get_test_plan",
+          "get_server_status",
+          "get_next_task_action",
+          "get_task_diagnostics",
+          "collect_task_runtime_diagnostics",
+          "verify_task",
+          "cancel_task_check"
+        ]
+      },
+      "serverInfo": {
+        "name": "FoodDiary.Development.Mcp",
+        "version": "1.0.0.0"
+      },
+      "startupMilliseconds": 1089,
+      "toolNames": [
+        "cancel_task_check",
+        "collect_task_runtime_diagnostics",
+        "get_change_context",
+        "get_development_context",
+        "get_next_task_action",
+        "get_server_status",
+        "get_task_diagnostics",
+        "get_test_plan",
+        "trace_backend_flow",
+        "verify_task"
+      ],
+      "missingTools": [],
+      "serverStatus": {
+        "success": true,
+        "data": {
+          "version": "1.0.0.0",
+          "runtimeIdentity": {
+            "processId": 45784,
+            "processStartedAtUtc": "2026-10-24T09:01:07.9160543+00:00",
+            "assemblyVersion": "1.0.0.0",
+            "informationalVersion": "1.0.0+deae228a9937a674257b750011aaa451af4028b1",
+            "moduleVersionId": "49ccecb9-5e8d-4599-9e04-fae9ee3bd125",
+            "assemblySha256": "4a938673925675634aaa1afc0146c69762712d3ca46b59eac5bdaab9431871c7",
+            "assemblyLastWriteTimeUtc": "2026-10-23T21:09:58.8108903+00:00",
+            "repositoryHeadAtStartup": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+            "builtFromGitHead": "deae228a9937a674257b750011aaa451af4028b1",
+            "buildSourceFingerprint": "aface8ddd2656423f77f4b68ff3efcff3b56357bb3ee59b7e8cae912e715abd6"
+          },
+          "repositoryRoot": "D:\\FD",
+          "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+          "runningCodeMatchesRepositoryHead": false,
+          "worktreeDirty": true,
+          "worktreeFingerprint": "8e5669322036259c94de9b4e4988545b07564066ec9f764bd71312f557f44e0c",
+          "sourceFingerprint": "0fd77a664eb4c64dc37fb61818a117498b047751ebb09b299a48580e52f43fec",
+          "indexesMatchWorktree": false,
+          "runningCodeIncludesWorktreeChanges": true,
+          "sourceChangedPaths": [
+            "docs/ai/wiki-tools-audit-20261024.evidence.json",
+            "docs/ai/wiki-tools-audit-20261024.inventory.json",
+            "docs/ai/wiki-tools-audit-20261024.md"
+          ],
+          "derivedWikiPaths": [
+            ".llm-wiki/generated/repository-catalog.json"
+          ],
+          "reviewMetadataPaths": [
+            ".llm-wiki/reviews/source-impact-reviews.json"
+          ],
+          "wikiAvailable": true,
+          "indexFilesPresent": true,
+          "deepFreshness": "stale",
+          "lastVerifiedCommit": "4676b270c1fa5505e86e31fae42c492afc819715",
+          "lastVerifiedAtUtc": "2026-10-19T18:47:57.96681+00:00",
+          "indexFingerprint": "d2325455db7dac58b048d36356b1dcbb48a9daa74439017999d5060e83499c8b",
+          "indexStatusCode": "index_stale",
+          "indexCheckSummary": "Required indexes do not match the latest verified source/index fingerprint receipt.",
+          "indexes": [
+            {
+              "path": ".llm-wiki/generated/architecture-health-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T23:53:23.1456798+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/backend-contract-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T15:20:43.9596848+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/configuration-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-04T18:08:52.9546536+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/csharp-symbol-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T20:29:55.796608+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/domain-data-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T20:34:24.4177058+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/frontend-contract-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T22:25:07.9029327+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/frontend-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T22:25:05.5499615+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/quality-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T22:25:21.4647369+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/repository-catalog.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T23:53:05.2767722+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/runtime-topology.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T20:34:37.7262602+00:00"
+            },
+            {
+              "path": ".llm-wiki/generated/sensitive-data-index.json",
+              "exists": true,
+              "lastWriteTimeUtc": "2026-10-23T20:34:39.9012267+00:00"
+            }
+          ],
+          "runtimeMetrics": {
+            "queryCache": {
+              "entries": 0,
+              "hits": 0,
+              "misses": 0,
+              "hitRate": 0
+            },
+            "activeCommands": 0,
+            "queuedCommands": 0,
+            "completedCommands": 0,
+            "failedCommands": 0,
+            "cancelledCommands": 0,
+            "timedOutCommands": 0,
+            "commandTimings": [],
+            "commandStageTimings": [],
+            "contextRouting": {
+              "sampleCount": 410,
+              "sqlitePrimaryCount": 401,
+              "sqliteUnavailableCount": 8,
+              "sqliteUnavailableRate": 0.0195,
+              "jsonFallbackCount": 1,
+              "jsonFallbackRate": 0.0024,
+              "sqliteNoCandidateFallbackCount": 0,
+              "p50Milliseconds": 513.68,
+              "p95Milliseconds": 8065.33,
+              "oldestSampleAtUtc": "2026-08-21T16:13:47.9222673+00:00",
+              "latestSampleAtUtc": "2026-10-23T22:40:00.9847743+00:00",
+              "fallbackReasonCounts": {
+                "graph-refresh-failed": 5,
+                "other": 4
+              },
+              "refreshAttemptCount": 28,
+              "refreshSuccessCount": 23,
+              "refreshFailureCount": 5,
+              "consecutiveSqlitePrimaryCount": 92,
+              "retentionLimit": 1000,
+              "minimumRetirementSamples": 100,
+              "maximumRetirementJsonFallbackRate": 0.01,
+              "requiredRetirementSampleCount": 100,
+              "minimumAdditionalSqlitePrimarySamplesRequired": 0,
+              "jsonFallbackRetirementReady": true,
+              "persistenceHealthy": true,
+              "persistenceFailures": 0
+            }
+          },
+          "checkedAtUtc": "2026-10-24T09:01:11.0668048+00:00",
+          "readOnly": true,
+          "generationFreshness": "stale",
+          "lastGenerationCheckAtUtc": "2026-10-19T18:23:08.6890529+00:00"
+        },
+        "readOnly": true
+      },
+      "stderrBytes": 1708,
+      "nativeChatCatalog": "A healthy standalone connection does not prove that an existing chat refreshed its tools."
+    },
+    "telemetryArchiveProof": {
+      "preservedOriginalBytes": true,
+      "beforeEvents": 5000,
+      "archivedEvents": 5000,
+      "activeAtArchive": 0,
+      "archivePath": "D:\\FD\\.git\\llm-wiki\\verification-telemetry.json.archives\\23de59012f21cdd2e78763777033f7bf14087dcd6c047611ff5907c78472dbc8.json"
+    },
+    "verification": "final receipt is written after tracked report is frozen; see local receipt path",
+    "reproductionScriptSources": {
+      "refresh-audit.py": "import collections, datetime, hashlib, json, pathlib, re, subprocess\n\nroot = pathlib.Path.cwd()\nout = root / '.artifacts/wiki-tools-repair-20261024'\ndocs = root / 'docs/ai'\nip = docs / 'wiki-tools-audit-20261024.inventory.json'\nep = docs / 'wiki-tools-audit-20261024.evidence.json'\np = json.loads(ip.read_text(encoding='utf8'))\nev = json.loads(ep.read_text(encoding='utf8'))\nif not (out / 'initial-inventory.json').exists():\n    (out / 'initial-inventory.json').write_bytes(ip.read_bytes())\n    (out / 'initial-evidence.json').write_bytes(ep.read_bytes())\nbaseline = json.loads((out / 'initial-inventory.json').read_text(encoding='utf8'))\ntracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\\0')[:-1]\ntexts = {}\nfor f in tracked:\n    # Generated and historical reports are navigation, never current callers.\n    # Excluding census JSON also prevents self-reference graph inflation.\n    if f.startswith(('.llm-wiki/generated/', 'docs/reports/')) or 'wiki-tools-audit-20261024' in f:\n        continue\n    if pathlib.Path(f).suffix.lower() not in {'.ps1','.psd1','.mjs','.cjs','.js','.ts','.cs','.csproj','.props','.targets','.json','.md','.yml','.yaml','.toml','.sh','.cmd'} and '/.husky/' not in f:\n        continue\n    try: texts[f] = (root / f).read_text(encoding='utf-8-sig')\n    except (UnicodeError, FileNotFoundError): pass\nnames = collections.defaultdict(set)\nfor r in p['files']:\n    leaf = pathlib.Path(r['path'])\n    names[leaf.name].add(r['path'])\n    if leaf.suffix in {'.cs', '.csproj'}: names[leaf.stem].add(r['path'])\nrefs = collections.defaultdict(list)\ntoken_pattern = re.compile(r'(?<![\\w.-])(?:[A-Za-z_][\\w.-]*\\.(?:ps1|mjs|cjs|csproj|cs)|pre-push|pre-commit|[A-Za-z_]\\w*)(?![\\w.-])')\ncommand_mentions = collections.defaultdict(list)\nfacade = json.loads((out / 'facade.json').read_text(encoding='utf-8-sig'))\ntiers = {c:t['id'] for t in json.loads(texts['.llm-wiki/policies/command-registry.json'])['tiers'] for c in t['commands']}\nfor source, content in texts.items():\n    kind = 'test' if re.search(r'(tests/|test\\.|Test-|\\.Tests/)', source, re.I) else 'documentation' if source.endswith('.md') else 'wiring' if re.search(r'(policies/|workflows/|\\.json$|\\.toml$|\\.csproj$|/.husky/)',source) else 'source'\n    for line_no, line in enumerate(content.splitlines(),1):\n        for token in set(token_pattern.findall(line)):\n            for target in names.get(token, ()):\n                if source != target: refs[target].append({'path':source,'line':line_no,'kind':kind,'match':token})\n        for token in set(re.findall(r'''[\"']([a-z][a-z0-9-]*)[\"']''', line)):\n            if token in tiers: command_mentions[token].append({'path':source,'line':line_no,'kind':'literal command mention; inspect source vs test/documentation'})\ndef group_refs(rows):\n    groups = {}\n    for r in rows:\n        key = (r['path'], r['kind'], r.get('match',''))\n        row = groups.setdefault(key, {'path':r['path'],'kind':r['kind'],'lines':[]})\n        if r.get('match'): row['match'] = r['match']\n        if 'line' in r: row['lines'].append(r['line'])\n    return list(groups.values())\nold_reviews = {r['path']:r for r in json.loads((root/'docs/reports/wiki-tools-audit-2026-10-06/reviews.json').read_text(encoding='utf-8-sig'))['reviews']}\nrepair_ids = {\n    'Invoke-LlmWikiIndexPipeline.ps1':['FDW-01','FDW-02','FDW-04','FDW-06'],\n    'Test-LlmWikiIndexCheckpoint.ps1':['FDW-01','FDW-02','FDW-04','FDW-06'],\n    'pre-push':['FDW-03'], 'Test-LlmWikiGitPaths.ps1':['FDW-03'],\n    'LlmWikiProcess.ps1':['FDW-04'], 'Test-LlmWikiProcess.ps1':['FDW-04'],\n    'Invoke-LlmWikiAdaptiveVerification.ps1':['FDW-04'],\n    'code-graph-process.mjs':['FDW-04'], 'code-graph.mjs':['FDW-04'],\n    'code-graph-dotnet-runtime.mjs':['FDW-04'],\n    'Manage-LlmWikiVerificationTelemetry.ps1':['FDW-05','FDW-06'],\n    'Test-LlmWikiTelemetryValidationReuse.ps1':['FDW-05'],\n}\nsame = changed = missing = 0\nsource_material = []\nchanged_since_initial = []\nfor r in p['files']:\n    f = r['path']; raw = (root/f).read_bytes(); t = raw.decode('utf-8-sig')\n    previous = next(x for x in baseline['files'] if x['path']==f)\n    r['sha256'] = hashlib.sha256(raw).hexdigest()\n    r['sha256LfNormalized'] = hashlib.sha256(t.replace('\\r\\n','\\n').replace('\\r','\\n').encode()).hexdigest()\n    if previous['sha256'] != r['sha256']: changed_since_initial.append(f)\n    source_material.append(f + '=' + r['sha256'])\n    r['lines'] = len(t.splitlines())\n    r['consumers'] = group_refs(refs[f])\n    r['coverageReferences'] = group_refs(x for x in refs[f] if x['kind']=='test')\n    r['dependencies'] = sorted({d for token in set(token_pattern.findall(t)) for d in names.get(token,()) if d!=f})\n    r['externalImports'] = sorted(set(re.findall(r'''(?:from\\s+|import\\s*\\(|require\\s*\\()[\"']([^\"']+)[\"']''', t)))\n    r['referenceGraphMeaning'] = 'current lexical filename/type-name navigation; generated and historical report references excluded; not complete executable call graph'\n    r['currentReview']['correctness'] = 'Repeat family review with final-source digests; fixed finding statuses below; no universal correctness proof'\n    r['findings'] = repair_ids.get(pathlib.Path(f).name, [])\n    r['findingStatus'] = {i:'resolved in working tree; assertions and limits in postRepair evidence' for i in r['findings']}\n    if pathlib.Path(f).name == 'Invoke-LlmWikiAdaptiveVerification.ps1':\n        r['verdict'] = 'оставить компактный совместимый entrypoint'\n        r['verdictBasis'] = 'worker lifecycle now uses shared bounded process helper; cases/scope preserved; R2 implementation complete'\n    if f in old_reviews:\n        matches = old_reviews[f]['sourceSha256'] == r['sha256LfNormalized']\n        same += matches; changed += not matches\n        r['priorReview']['matchesLfNormalizedCurrentSource'] = matches\n    else: missing += 1\nfor r in p['auxiliaryFiles']: r['sha256'] = hashlib.sha256((root/r['path']).read_bytes()).hexdigest()\ncommands = []\nfor command in facade['commands']:\n    routes = [r for r in facade['routes'] if r['command']==command]\n    if not routes: routes = [r for r in facade['routes'] if re.search(r\"['\\\"]\"+re.escape(command)+r\"['\\\"]\",r['command'])]\n    deps = sorted({d for route in routes for token in set(token_pattern.findall(route['body'])) for d in names.get(token,())})\n    if command=='help':\n        routes=[{'line':len(texts['.llm-wiki/wiki.ps1'].splitlines())-1,'command':'default branch'}]\n        deps=['.llm-wiki/tools/Show-LlmWikiHelp.ps1']\n    c = next((dict(x) for x in baseline['commands'] if x['command']==command), {'command':command,'coverage':'facade catalog and owning telemetry regressions; no universal command execution claim','costModel':'shared helper + verified archive I/O','verdict':'оставить поддерживаемый archive entrypoint','assessment':'family-verification-process'})\n    c.update(tier=tiers[command], routes=[{'line':r['line'],'condition':r['command']} for r in routes], implementationFiles=deps,consumers=group_refs(command_mentions[command]),families=sorted({r['family'] for r in p['files'] if r['path'] in deps}))\n    commands.append(c)\nassert set(tiers)==set(facade['commands']) and not facade['parseErrors']\np['commands'] = commands\np['counts'] = {'files':len(p['files']),'commands':len(commands),'family':dict(collections.Counter(r['family'] for r in p['files'])),'lines':sum(r['lines'] for r in p['files']),'auxiliaryFiles':len(p['auxiliaryFiles']),'tiers':dict(collections.Counter(c['tier'] for c in commands))}\np['priorReviewComparison'] = {'sameLfNormalized':same,'changed':changed,'notInPrior':missing,'comparison':'LF-normalized UTF-8 compared to historical review; execution evidence not promoted'}\np['capturedAtUtc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()\np['postRepair'] = {'baselineCounts':baseline['counts'],'changedExecutableFiles':changed_since_initial,'sourceSetSha256':hashlib.sha256('\\n'.join(source_material).encode()).hexdigest(),'scope':'same complete executable census; final working tree, HEAD unchanged','lexicalExclusions':['generated records','historical reports','current audit report and census JSON'],'newCommand':'verification-telemetry-archive'}\np['referenceEncoding'] = 'references grouped by path/kind/match; current lexical occurrences; AST sites refreshed separately'\nip.write_text(json.dumps(p,ensure_ascii=False,separators=(',',':'))+'\\n', encoding='utf8')\nev['postRepair'] = {'capturedAtUtc':p['capturedAtUtc'],'counts':p['counts'],'sourceSetSha256':p['postRepair']['sourceSetSha256'],'changedExecutableFiles':changed_since_initial,'priorReviewComparison':p['priorReviewComparison'],'findings':{f'FDW-0{i}':'resolved in working tree; detailed final regressions and remaining limits in report' for i in range(1,6)},'diagnostic':json.loads((out/'mcp-diagnostics.json').read_text(encoding='utf-8-sig')),'telemetryArchiveProof':json.loads((out/'telemetry-archive-proof.json').read_text(encoding='utf-8-sig')),'verification':'final receipt is written after tracked report is frozen; see local receipt path','reproductionScriptSources':{'refresh-audit.py':pathlib.Path(__file__).read_text(encoding='utf8')}}\nev['postRepair']['findings']['FDW-06'] = 'resolved: existing state/registry publication uses filesystem Replace instead of provider delete-then-move; verified installed PS7/PS5 implementation and publication regressions'\nev['inventorySha256'] = hashlib.sha256(ip.read_bytes()).hexdigest()\nep.write_text(json.dumps(ev,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\nprint(json.dumps({'counts':p['counts'],'priorReviewComparison':p['priorReviewComparison'],'changed':len(changed_since_initial),'sourceSetSha256':p['postRepair']['sourceSetSha256']},ensure_ascii=False))\n",
+      "bench.py": "import subprocess,time,json,pathlib,statistics,hashlib\nroot=pathlib.Path.cwd();out=root/'.artifacts/wiki-tools-repair-20261024'\nhead=subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()\nbefore=subprocess.check_output(['git','status','--porcelain=v1','-z'])\njobs=[\n ('pwsh-startup',['pwsh','-NoProfile','-Command','[Console]::Write(1)']),\n ('help',['pwsh','-NoProfile','-File','.llm-wiki/wiki.ps1','help']),\n ('stage-fingerprint',['pwsh','-NoProfile','-File','.llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1','-Stage','full verification','-Format','Text']),\n ('context-no-query-cache',['pwsh','-NoProfile','-File','.llm-wiki/tools/Find-LlmWikiContext.ps1','-Module','Recipes','-Query','RecipeNutritionUpdater','-Compact','-SkipQueryCache','-Format','Json']),\n ('context-cache-enabled',['pwsh','-NoProfile','-File','.llm-wiki/tools/Find-LlmWikiContext.ps1','-Module','Recipes','-Query','RecipeNutritionUpdater','-Compact','-Format','Json']),\n ('symbol-index-check',['pwsh','-NoProfile','-File','.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1','-Check']),\n]\nrows=[]\nfor name,args in jobs:\n for i in range(3):\n  start=time.perf_counter()\n  try:p=subprocess.run(args,capture_output=True,cwd=root,timeout=180)\n  except subprocess.TimeoutExpired as e:\n   rows.append({'name':name,'iteration':i+1,'timeoutSeconds':180});break\n  elapsed=time.perf_counter()-start\n  (out/f'bench-{name}-{i+1}.stdout').write_bytes(p.stdout);(out/f'bench-{name}-{i+1}.stderr').write_bytes(p.stderr)\n  row={'name':name,'iteration':i+1,'seconds':round(elapsed,4),'exitCode':p.returncode,'stdoutBytes':len(p.stdout),'stdoutSha256':hashlib.sha256(p.stdout).hexdigest()}\n  if name.startswith('context'):\n   try:\n    d=json.loads(p.stdout.decode('utf-8-sig'));row['fresh']=d.get('fresh',d.get('index',{}).get('fresh'));row['cache']=d.get('cache');row['rootKeys']=list(d);row['records']=len(d.get('items',d.get('implementationFiles',[])))\n   except Exception as e:row['parseError']=str(e)\n  rows.append(row);print(json.dumps(row),flush=True)\n  if p.returncode:break\nafter=subprocess.check_output(['git','status','--porcelain=v1','-z'])\npayload={'baseline':head,'method':'3 sequential fresh subprocesses each, no cache deletion; first observation is not cold OS/filesystem; other development processes not stopped','statusStable':before==after,'runs':rows,'medians':{n:statistics.median([r['seconds'] for r in rows if r['name']==n and r.get('exitCode')==0]) for n,_ in jobs if any(r['name']==n and r.get('exitCode')==0 for r in rows)}}\n(out/'bench.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\n",
+      "update-report.py": "import json, pathlib, re\nroot = pathlib.Path.cwd()\nout = root/'.artifacts/wiki-tools-repair-20261024'\npath = root/'docs/ai/wiki-tools-audit-20261024.md'\ninitial = out/'initial-report.md'\nif not initial.exists(): initial.write_bytes(path.read_bytes())\nt = initial.read_text(encoding='utf8').replace(chr(96),'§')\np = json.loads((root/'docs/ai/wiki-tools-audit-20261024.inventory.json').read_text(encoding='utf8'))\ncount = f\"{p['counts']['lines']:,}\".replace(',',' ')\nintro = '''Аудируемый Git HEAD: §b5e40b9a25a287283f61eedd5abfb3abe39d2ab9§, ветка\n§codex/ai-tooling-feedback-20261024§. Первоначальный аудит начат на чистом дереве.\nПо следующему запросу исправлены пять подтверждённых дефектов FDW-01…05 и\nповторён анализ на изменённом рабочем дереве. Commit, push и deploy не выполнялись.\nКоманды ниже относятся к корню репозитория.\n\nПодтверждённые сценарии потери generated-файлов, пропуска удалений, неограниченного\nожидания workers и отсутствия штатного архива закрыты. Границы исправлений и\nрегрессий приведены ниже. Безопасное немедленное удаление production-инструмента\nпо-прежнему не доказано. Следующий измеримый резерв — symbol-index §-Check§;\nредкие experimental-семейства требуют данных об использовании.\n\n## Повторный анализ после исправлений\n\n| Находка | Изменение | Поведенческая проверка |\n| --- | --- | --- |\n| FDW-01, закрыта | Rollback разрешён только после публикации полного проверенного backup; ошибка первоначального копирования сохраняет generated | Ошибка второго Copy-Item в настоящем transaction try/catch, сохранены все исходные bytes и кириллица; PS7 и PS5 |\n| FDW-02, закрыта | Неизменяемые versioned checkpoints, SHA-256 manifest и публикация ссылки после проверки. Recovery проверяет checkpoint, затем backup; сохраняет неисправную транзакцию | Прерванная следующая копия, повреждённый checkpoint, повреждение обоих snapshots, legacy fallback, реальное ожидание двух writers |\n| FDW-03, закрыта | Pre-push использует §--no-renames --name-only§ со всеми статусами и Unicode. Hook участвует в smoke selection и fingerprint | Настоящий hook prefix в Git fixture: deletion-only, оба конца rename, кириллица, новый ref, несколько refs; PS7/PS5 |\n| FDW-04, закрыта | Adaptive wrapper использует общий bounded batch; graph subprocesses имеют deadline/AbortSignal/output bound; index batch останавливает начатых writers при сбое следующего запуска | Реальные child/grandchild: timeout, exit 7, startup failure, cancel, output overflow, сообщения ошибки; Node и PS7/PS5 |\n| FDW-05, закрыта | §verification-telemetry-archive§ сохраняет точный файл и hash-linked descriptors под общей блокировкой, открывает активное окно | Publication fault/retry, UTF-8 BOM byte hash, cap, same-size/time tamper, отсутствующий архив/manifest, одновременные record/archive; PS7/PS5 |\n\nНовый census содержит **369 команд, 550 исполняемых файлов/проектов, CURRENT_LINES строк**,\n53 policy/schema/corpus/knowledge-файла и 2805 AST call/import/dispatcher edges.\n86 команд core, 81 governed, 202 experimental. Размер исходников вырос из-за\nпроверяемых snapshot/cleanup/archive протоколов и регрессий. Удалений файлов и\nкоманд нет. Для каждого файла обновлены SHA-256, зависимости, current lexical\nconsumers, historical digest comparison, finding status и граница review.\nGenerated records и исторические отчёты исключены из current caller graph,\nчтобы census не размножал собственные упоминания.\n\nПовторно проверены CLI/registry/help compatibility, generator dependency barriers,\nwriter-lock ordering, reader/cache hash contracts, test discovery, CI/hook wiring,\nMCP boundaries и основания удаления по всем семействам ниже. В исправленных путях\nзакрыты дополнительные частные случаи: PS5 UTF-8 manifest decoding, освобождение\nресурсов при ошибке подготовки worker, остановка index writer до rollback,\nхолодная инициализация telemetry под lock и сохранение BOM при архиве.\nОтдельные assertions проверяют выбор группы для внешнего hook path и invalidation\nreceipt при его same-size/time правке.\n\nЛокальные 5000 событий telemetry сохранены штатной archive-командой. SHA-256 архива\nсовпадает с исходным файлом:\n§5f249824097e7580b73094fb27b70b96c5568178ffe1c3cf6a9035f5e83802d9§.\nНовые события записываются в активный registry; старые доступны в связанном архиве.\n§metrics§ и §list§ явно описывают **активное окно**, не объединяют всю историю;\nстарые forecasts требуют пересчёта после смены registry hash. При чтении\nпроверяются bytes всех архивов, поэтому стоимость растёт с историей.\n\nРезультат общего gate фиксируется в\n§.artifacts/wiki-tools-repair-20261024/final-verification.json§ после заморозки\nотчёта и JSON-приложений. Отдельные тесты и probes сохранены в §postRepair§ evidence.\nПовторный общий запуск — §wiki verify§ и §wiki verify-full§ с профилем Focused.\nИсторический monolithic Full, frontend §npm run verify§, backend solution suite\nи production сценарии этим tooling-only изменением не заявляются выполненными.\n\nГраницы: fault injection воспроизводит реальные функции на достижимых состояниях,\nно не отключение питания/переполнение диска во всех возможных точках. Legacy\nsnapshot не восстановит файл, уже утраченный старой версией. Node deadline\nдопускает до 20 секунд на cleanup после основного срока. Batch stdout/stderr\nограничены по наблюдаемому размеру файлов с polling: возможен краткий overshoot;\nпамять вывода ограничена preview. Cleanup tests подтверждают остановку живых owned\nдеревьев и siblings при ошибке запуска, а не универсальное supervision намеренно\nфоновых процессов после успешного выхода родителя. Linux-specific поведение в\nэтой Windows-сессии не исполнялось. CI Node 22 не подменён локальным Node 26.\n\n'''\nstart=t.index('Аудируемый baseline:'); end=t.index('## Доказательства и границы полноты')\nt=t[:start]+intro.replace('CURRENT_LINES',count)+t[end:]\nt=t.replace('368 CLI-команд, 550','369 CLI-команд, 550').replace('98 768 строк',count+' строк').replace('2795 PowerShell','2805 PowerShell').replace('368 команд здесь','369 команд здесь')\nt=t.replace('Из текущих 550 файлов 276 совпадают','Из текущих 550 файлов 270 совпадают').replace('134 изменились,','140 изменились,')\nstart=t.index('Нативный каталог инструментов этого чата'); end=t.index('§wiki.ps1 start§',start)\nt=t[:start]+'''Нативный каталог чата по-прежнему не содержит FoodDiary Development MCP.\nПервый diagnostic stdout аудита был усечён. Для отдельной repair-сессии сохранён\nсамостоятельный diagnostic: §ok=true§, 10 tools, успешный handshake и\n§get_server_status§, cwd §D:\\\\FD§. Generation freshness на тот момент была stale.\nЭто доступность самостоятельного сервера, а не регистрация tools в уже открытом\nчате. Работа продолжена через документированный Wiki CLI.\n\n'''+t[end:]\nt=t.replace('Governed state и learning outcomes для аудита не создавались.','Governed workspace для аудита не создавался. Для ремонта start выбрал feature, medium, requiresWorkspace=false и требует design; checkpoint сохранён с независимыми исходными audit probes. Отдельный evidence bundle хранит substantive review окончательного diff.')\nt=t.replace('## Подтверждённые дефекты и риски','## Исходные дефекты до исправлений и оставшиеся направления')\nfor fid in range(1,6):\n    marker=re.search(rf'^### FDW-0{fid}[^\\n]+\\n',t,re.M)\n    t=t[:marker.end()]+'\\n**Закрыто в рабочем дереве; ниже сохранено описание исходного baseline и исходного probe.**\\n'+t[marker.end():]\nt=t.replace('Текущий §Test-LlmWikiIndexCheckpoint.ps1§ проходит','Исходный §Test-LlmWikiIndexCheckpoint.ps1§ проходил').replace('из текущего исходника','из baseline исходника').replace('Probe вызывает текущую функцию recovery','Исходный probe вызывает baseline функцию recovery')\nt=t.replace('Пользовательская telemetry в этом аудите не очищалась и не редактировалась.','Первоначальный аудит telemetry не изменял. При ремонте 5000 событий сохранены штатным архивированием.')\nt=re.sub(r'- §Restore-OrphanedIndexTransaction§ узнаёт живого owner только по PID\\..*?lock tests, а не менять семантику удаления lock-файла\\.', '- Риск повторного использования PID в index recovery закрыт schema-3 state: проверяются PID и process start ticks. Legacy state сохраняет прежнюю совместимость; совпавший живой legacy PID может задержать legacy recovery до завершения процесса.',t,flags=re.S)\nt=t.replace('## Измерения на текущем baseline','## Измерения исходного baseline и повторные наблюдения')\nb=json.loads((out/'bench.json').read_text(encoding='utf8'))\nold={'pwsh-startup':.2687,'help':.5801,'stage-fingerprint':.7464,'context-no-query-cache':1.3682,'context-cache-enabled':.919,'symbol-index-check':9.6653}\ntable=['| Операция | До, медиана с | После, медиана с |','| --- | ---: | ---: |']+[f'| §{n}§ | {old[n]:.3f} | {v:.3f} |' for n,v in b['medians'].items()]\npos=t.index('## Инвентарь и решения по семействам')\nt=t[:pos]+'''Повторены три последовательных запуска каждой операции тем же harness, без очистки\nOS/cache и остановки чужих development процессов. Дополнительные audit-файлы входят\nв dirty working-tree fingerprint; это не изолированный A/B benchmark.\n\n'''+ '\\n'.join(table)+'''\n\nВсе повторные команды завершились успешно. Retrieval снова вернул по 12 непустых\nкандидатов с fresh compiled source. Ускорение не заявляется: подтверждён прежний\nрезерв symbol-index; из этих наблюдений нельзя приписать замедление конкретному алгоритму.\n\n'''+t[pos:]\nt=t.replace('§wiki.ps1§ содержит 368 команд: 86 core, 81 governed,','§wiki.ps1§ содержит 369 команд: 86 core, 81 governed,').replace('201 experimental','202 experimental')\nt=t.replace('dependency propagation и строгий §verify§; исправить FDW-01/02.','dependency propagation и строгий §verify§; FDW-01/02 исправлены manifest snapshots.')\nt=t.replace('Упростить §Invoke-LlmWikiAdaptiveVerification§ через bounded runner (FDW-04/R2).','§Invoke-LlmWikiAdaptiveVerification§ теперь использует общий bounded batch (FDW-04/R2 закрыты).')\nt=t.replace('backend outputs изолированы в §.artifacts/pre-push/<pid>§. Исправить FDW-03.','backend outputs изолированы в §.artifacts/pre-push/<pid>§. FDW-03 исправлен и покрыт настоящим hook fixture.')\nt=t.replace('| R2: §Invoke-LlmWikiAdaptiveVerification§ |','| R2: §Invoke-LlmWikiAdaptiveVerification§ — выполнено |')\nt=t.replace('Объединить оболочку, сохранить routing/experience/integration/eval shard cases, scope behavior, stderr/exit и failure semantics. Сначала equivalence test и timeout cleanup','Оболочка переведена на общий bounded batch; сохранены routing/experience/integration/eval shards, scope, stdout/stderr и exit semantics; целевые регрессии и общий gate проверяют совместимость')\nfor label in ['FDW-01/02:', 'FDW-03:', 'FDW-04/R2:', 'FDW-05:']: t=re.sub(r'(?m)^\\| P[12] \\| '+re.escape(label)+r'.*\\n','',t)\nt=t.replace('Все 368 команд','Все 369 команд').replace('## Приоритетный план','## Оставшийся приоритетный план')\nt=t.replace('всех 98 тысяч строк', 'всех 99 тысяч строк')\nt=t.replace('пять подтверждённых дефектов FDW-01…05', 'шесть подтверждённых дефектов FDW-01…06')\nt=t.replace('2805',str(len(json.loads((out/'static-calls.json').read_text(encoding='utf-8-sig')))))\natomic = \"\"\"| FDW-06, закрыта | Существующие state и registry заменяются через File.Replace с настоящим null backup; начальная публикация идёт в отсутствующий путь | IL установленных PS7/PS5 подтверждает Delete перед MoveTo в прежнем force-provider пути; новый state заменяется целиком, sharing failure сохраняет прежние bytes; PS7/PS5 |\n\"\"\"\nt=t.replace('Новый census содержит',atomic+'\\nНовый census содержит')\nt=t.replace('\\n\\n| FDW-06','\\n| FDW-06')\nt=t.replace('холодная инициализация telemetry под lock и сохранение BOM при архиве.', 'холодная инициализация telemetry под lock, сохранение BOM при архиве и замена delete-then-move на файловую replacement-операцию.')\natomic_detail = \"\"\"### FDW-06, P1: force-перезапись state/registry имела окно отсутствующего файла\n\n**Закрыто в повторном анализе.** Проверка IL фактически установленных PowerShell 7\nи 5 показала, что force-ветвь FileSystemProvider.MoveFileInfoItem вызывает Delete,\nзатем MoveTo. Прерывание между ними могло оставить transaction без state либо\ntelemetry без manifest. Теперь существующий файл публикуется через File.Replace,\nначальная публикация — File.Move в отсутствующий путь. Настоящий null backup\nпередаётся через NullString.Value: обычный PowerShell null преобразуется в пустую\nстроку и вызывает ошибку API. Последняя особенность обнаружена тестом и исправлена.\nНовые assertions проверяют повторную публикацию state и сохранение его bytes при\nошибке sharing; остальные архивные и восстановительные регрессии повторены.\nIL-вывод и исходник read-only disassembler сохранены в evidence. Это анализ\nдостижимого crash window, а не утверждение о наблюдавшейся потере данных в этой сессии.\n\n\"\"\"\nt=t.replace('### Остальные риски, без заявления о воспроизведённой аварии',atomic_detail+'### Остальные риски, без заявления о воспроизведённой аварии')\nt=t.replace('Дополнительные audit-файлы входят', 'Наблюдения сделаны до заключительной замены операции публикации state/registry; это измерения неизменённых read-команд. Дополнительные audit-файлы входят')\nt=t.replace('## Проверка отчёта и сохранение результатов','## История исходных проверок и сохранение результатов').replace('В текущей сессии прошли шесть Node tests','В первоначальном аудите прошли шесть Node tests')\nt=t.replace('Заключительная Wiki-проверка и список изменённых файлов записываются в локальный','Исходная заключительная Wiki-проверка и список изменённых файлов сохранены в локальном')\nt=t.replace('source fingerprint уже проверенных документов ради добавления результата проверки.','source fingerprint проверенных документов ради добавления результата проверки. Повторная проверка ремонта имеет отдельный receipt: §.artifacts/wiki-tools-repair-20261024/final-verification.json§.')\npath.write_text(t.replace('§',chr(96)),encoding='utf8')\nprint('report bytes',path.stat().st_size)\n",
+      "review-pages.ps1": "$ErrorActionPreference = 'Stop'\n$reviews = [ordered]@{\n    'system.frontend-index' = 'Inspected frontend-index workflow and facade diff: only the additive telemetry archive dispatch changed in wiki.ps1; frontend discovery, strict freshness and reader commands retain their existing routes.'\n    'workflow-adaptive-development' = 'Compared the adaptive wrapper with its previous check list: Routing, Experience, integration and three eval shards retain their scopes and arguments. Shared bounded batch adds concurrency/deadline/logging/cleanup without changing adaptive route selection or design/evidence obligations.'\n    'workflow-backend-contract-review' = 'Reviewed contract-consumer and SQLite lineage claims against code-graph diff: only awaited extraction/process supervision changed. Contract selection, Node writer ownership, no-JSON fallback and production/test distinctions remain valid.'\n    'workflow-code-graph' = 'Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes.'\n    'workflow-developer-experience' = 'Reviewed compact help/catalog, command compatibility and phase/evidence claims. The facade adds one experimental telemetry-archive alias routed to the existing manager; daily routes and governed semantics remain unchanged.'\n    'workflow-impact-simulation' = 'Checked changed graph statements against impact projection and hash/cache narrative: no changes to source inventory, selection, ownership or simulation data. Awaited extractors still complete before graph transaction/publication; failure cannot publish a partial extraction.'\n    'workflow-privacy-review' = 'Checked privacy source review narrative and changed Node process boundary. Query ranking, privacy views and coalescing implementation are unchanged; the new subprocess diagnostics contain command output from source extraction and introduce no query/credential telemetry fields.'\n    'workflow.query-context' = 'Reviewed context SQLite/no-fallback, corpus and freshness claims against graph process diff and the existing documentation-only catalog delta. Ranking/SQL/candidate contracts remain unchanged; graph extraction now awaits bounded workers. Original fresh nonempty query observations are retained separately from repeat observations.'\n    'workflow.review-diff' = 'Compared facade diff with review/diff recipes: only telemetry command ValidateSet and its existing dispatch map gained archive. Source-review commands, changed-scope handling and deterministic policy requirements are unchanged.'\n    'workflow.self-maintenance' = 'Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite.'\n    'workflow-task-dispatch-receipts' = 'Reviewed dispatcher receipt lifecycle and facade diff. No dispatch/lease/receipt or task-finish branch changed; telemetry archive is additive and remains operational metadata, never execution evidence.'\n}\nforeach ($entry in $reviews.GetEnumerator()) {\n    & ./.llm-wiki/wiki.ps1 review -Id $entry.Key -Reason $entry.Value\n    if (-not $?) { throw \"Source-impact review failed for $($entry.Key).\" }\n}\n",
+      "finalize-audit.py": "import collections, hashlib, json, pathlib, re\nroot=pathlib.Path.cwd()\nout=root/'.artifacts/wiki-tools-repair-20261024'\ndocs=root/'docs/ai'\nip=docs/'wiki-tools-audit-20261024.inventory.json'\nep=docs/'wiki-tools-audit-20261024.evidence.json'\np=json.loads(ip.read_text(encoding='utf8'))\nedges=json.loads((out/'static-calls.json').read_text(encoding='utf-8-sig'))\nby_leaf=collections.defaultdict(list)\nfor f in p['files']:\n    f['syntacticConsumers']=[]\n    by_leaf[pathlib.Path(f['path']).name].append(f)\nfor edge in edges:\n    for f in by_leaf.get(edge['targetLeaf'],[]):\n        if f['path']!=edge['source']:\n            f['syntacticConsumers'].append({k:edge[k] for k in ('source','line','kind')})\nfor c in p['commands']:\n    if c['command']=='help': c['routes']=[{'line':2951,'condition':'default branch of Command switch'}]\n    if c['command']=='verification-telemetry-archive':\n        c['purpose']='explicitly preserve the complete active telemetry file in an immutable hash-linked archive and publish an empty active window under the shared registry lock'\n        c['assessment']='wiki-tools-audit-20261024.md#family-verification-process'\np['staticCallEdges']=len(edges)\np['postRepair']['staticCallEdges']=len(edges)\nip.write_text(json.dumps(p,ensure_ascii=False,separators=(',',':'))+'\\n',encoding='utf8')\nev=json.loads(ep.read_text(encoding='utf8'))\nb=json.loads((out/'bench.json').read_text(encoding='utf8'))\nfor run in b['runs']:\n    if run['name'].startswith('context'):\n        result=json.loads((out/f\"bench-{run['name']}-{run['iteration']}.stdout\").read_text(encoding='utf-8-sig'))\n        run['records']=len(result['candidates'])\n        run['fresh']=result['compiledIndex']['fresh']\n        run['compiledIndex']=result['compiledIndex']\n        run['topPath']=result['candidates'][0]['path']\n        run.pop('rootKeys',None)\n        assert run['records']==12 and run['fresh']\n    assert run['exitCode']==0\nlogs=['checkpoint-strict-final.log','checkpoint-strict-ps5-final.log','process-batch-4.log','process-ps5.log','git-paths-final.log','git-paths-ps5-2.log','telemetry-atomic-2.log','telemetry-atomic-ps5.log','operational-telemetry.log','smoke-planning-2.log','stage-fingerprint-2.log','concurrent-index.log','node-final.log']\nev['postRepair']['targetedLogs']={name:(out/name).read_text(encoding='utf-8-sig',errors='replace') for name in logs}\nev['postRepair']['benchmark']=b\nev['postRepair']['benchmark']['measurementPhase']='post-repair read-only observations before final atomic state/registry publication correction; no isolated final-source performance claim'\nev['postRepair']['atomicPublicationInspection']={name:(out/name).read_text(encoding='utf-8-sig') for name in ['inspect-move.ps1','move-implementation.txt','move-implementation-ps5.txt']}\nev['postRepair']['staticCallEdges']=len(edges)\nev['postRepair']['originalFailedAttempts']={\n 'checkpoint-ps5.log':'new manifest decoded with legacy Get-Content; fixed with ReadAllText, PS5 final passed',\n 'git-paths-ps5.log':'Start-Process object lost native exit code without cached handle; test harness corrected; PS5 final passed',\n 'node-process.log':'test incorrectly assumed all platforms retained inherited pipes after parent exit; now checks actual permitted lifecycle and owns fixture cleanup',\n 'process-batch-3.log':'injected PowerShell ScriptProperty exception was swallowed by property access; malformed-script validation now exercises batch startup failure and sibling cleanup',\n 'smoke-planning.log':'external pre-push path was absent from AdditionalMatches; catalog and selector assertion now pass',\n 'stage-fingerprint.log':'facade fixture required the new direct Process regression stub; fixture updated without changing negative cache tests',\n 'verify-1.log':'quality index invalidated by final regression-source edits; refreshed before repeat',\n 'verify-full.log':'review ledger changed during graph refresh; stability guard correctly rejected it; repeat after freezing tracked inputs',\n}\nev['postRepair']['finalReceiptPath']='.artifacts/wiki-tools-repair-20261024/final-verification.json'\nev['postRepair']['originalFailedAttempts']['verify-full-final.log']='intentionally stopped after discovering provider delete-then-move publication gap; completed group logs retained; corrected final source is verified in a separate run'\nev['postRepair']['originalFailedAttempts']['telemetry-atomic.log']='PowerShell null coerced to empty backup path in File.Replace; fixed with NullString.Value; subsequent PS7/PS5 telemetry tests passed'\nev['postRepair']['originalFailedAttempts']['verify-full-atomic-final.log']='new checkpoint fixture used Count on empty unwrapped pipeline under inherited StrictMode; fixture now explicitly runs StrictMode, wraps zero/one/many enumerations and passes PS7/PS5; no assertion removed'\nev['postRepair']['broaderVerificationStatus']='final receipt is recorded after these source/report documents are frozen; no old or failed run is relabeled passed'\nev['postRepair']['limits']=[\n 'Windows local execution, PowerShell 7.6.5 and 5.1, Node 26.2.0; CI Node 22 and Linux execution not claimed',\n 'family semantic review plus full declared file census; not exhaustive execution of all 369 commands',\n 'snapshot fault injection models reachable interrupted states, not every power-loss/filesystem durability point',\n 'metrics describe active telemetry window; archives preserve original history with content verification',\n 'snapshot/worker/telemetry fault regressions and Focused full gate do not claim application-wide frontend/backend or legacy monolithic Full execution',\n]\nev['postRepair']['reproductionScriptSources'].update({name:(out/name).read_text(encoding='utf-8-sig') for name in ['bench.py','update-report.py','review-pages.ps1','finalize-audit.py']})\nev['inventorySha256']=hashlib.sha256(ip.read_bytes()).hexdigest()\nep.write_text(json.dumps(ev,ensure_ascii=False,indent=2)+'\\n',encoding='utf8')\nprint(json.dumps({'edges':len(edges),'inventoryBytes':ip.stat().st_size,'evidenceBytes':ep.stat().st_size,'logs':len(logs),'benchmarkCommands':len(b['runs'])}))\n"
+    },
+    "targetedLogs": {
+      "checkpoint-strict-final.log": "WARNING: Recovering interrupted LLM Wiki index transaction d2c0fff684454926958a991520b65552 from a verified snapshot of the last completed stage or original backup.\nWARNING: Recovering legacy index transaction from its original backup; unverified legacy checkpoint is ignored.\nWARNING: Recovering interrupted LLM Wiki index transaction a79f97168d1047989ea67693f2d6ae3d from a verified snapshot of the last completed stage or original backup.\nLLM Wiki index checkpoint regression passed: failed initial copy, interrupted checkpoint, corruption, legacy fallback, Unicode and writer-lock publication.\n",
+      "checkpoint-strict-ps5-final.log": "WARNING: Recovering interrupted LLM Wiki index transaction b0292ec73f764d28a5faa225a54c8b1f from a verified snapshot of\n the last completed stage or original backup.\nWARNING: Recovering legacy index transaction from its original backup; unverified legacy checkpoint is ignored.\nWARNING: Recovering interrupted LLM Wiki index transaction 796223a137464c1ab746baf159f904cb from a verified snapshot of\n the last completed stage or original backup.\nLLM Wiki index checkpoint regression passed: failed initial copy, interrupted checkpoint, corruption, legacy fallback, Unicode and writer-lock publication.\n",
+      "process-batch-4.log": " - started success (pid=55992); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\d8393d07699e4ee5b1d0363c8fb0f262\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\d8393d07699e4ee5b1d0363c8fb0f262\\1.stderr.log\nbatch-success\n\n - success: 0.46s\n - started failure (pid=49720); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\e3817079b6b24b2c959a9b50bec44946\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\e3817079b6b24b2c959a9b50bec44946\\1.stderr.log\nbatch-failure-stdout\n\n - failure: 0.45s\n - started hang (pid=60168); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\386ecc3d510e408e9224ca8d4a9dba97\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\386ecc3d510e408e9224ca8d4a9dba97\\1.stderr.log\n - hang: 4.25s\n - started running-sibling (pid=20212); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\284ad1ec8d0549d58bbda59e102beaaa\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-8ce68f1e7051423e86d6b422cd56b675\\.artifacts\\llm-wiki\\process-batches\\284ad1ec8d0549d58bbda59e102beaaa\\1.stderr.log\nLLM Wiki process-tree smoke passed: descendant termination, bounded batch success, original failures, deadlines and startup-failure sibling cleanup.\n",
+      "process-ps5.log": " - started success (pid=44412); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\36f5144fc91d461283caac2a74c5d0ee\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\36f5144fc91d461283caac2a74c5d0ee\\1.stderr.log\nbatch-success\n\n - success: 0.49s\n - started failure (pid=66828); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\d29a46ff7e50406993fa03bcb5a9ed73\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\d29a46ff7e50406993fa03bcb5a9ed73\\1.stderr.log\nbatch-failure-stdout\n\n - failure: 0.44s\n - started hang (pid=60920); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\01f445ffde754fcebb6df8ac412c30b4\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\01f445ffde754fcebb6df8ac412c30b4\\1.stderr.log\n - hang: 4.54s\n - started running-sibling (pid=45780); logs=C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\ad1d88ce234f411582eef2ef49091d2c\\1.stdout.log, C:\\Users\\alexi\\AppData\\Local\\Temp\\llm-wiki-process-451ea3bf6e55412ba666c4b516ebc467\\.artifacts\\llm-wiki\\process-batches\\ad1d88ce234f411582eef2ef49091d2c\\1.stderr.log\nLLM Wiki process-tree smoke passed: descendant termination, bounded batch success, original failures, deadlines and startup-failure sibling cleanup.\n",
+      "git-paths-final.log": "warning: in the working copy of 'tracked.md', LF will be replaced by CRLF the next time Git touches it\nLLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, batching, refs, worktrees, exit codes and real pre-push deletion/rename/multiple-ref scope.\n",
+      "git-paths-ps5-2.log": "warning: in the working copy of 'tracked.md', LF will be replaced by CRLF the next time Git touches it\nLLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, batching, refs, worktrees, exit codes and real pre-push deletion/rename/multiple-ref scope.\n",
+      "telemetry-atomic-2.log": " - started record (pid=44304); logs=D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51860\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\.artifacts\\llm-wiki\\process-batches\\29da491203e24993ba557447619ea2ff\\1.stdout.log, D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51860\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\.artifacts\\llm-wiki\\process-batches\\29da491203e24993ba557447619ea2ff\\1.stderr.log\n - started archive (pid=56044); logs=D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51860\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\.artifacts\\llm-wiki\\process-batches\\29da491203e24993ba557447619ea2ff\\2.stdout.log, D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51860\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\.artifacts\\llm-wiki\\process-batches\\29da491203e24993ba557447619ea2ff\\2.stderr.log\n{\n  \"action\": \"record\",\n  \"valid\": true,\n  \"event\": {\n    \"schemaVersion\": 1,\n    \"sequence\": 1,\n    \"id\": \"ca87dd1e0bbb41ce86576e1b28e9fb0a\",\n    \"recordedAtUtc\": \"2026-10-24T10:15:11.0037584Z\",\n    \"workspace\": \"@wiki\",\n    \"packetFingerprint\": \"\",\n    \"checkId\": \"concurrent-once\",\n    \"status\": \"passed\",\n    \"durationSeconds\": 0.0,\n    \"commandHash\": \"\",\n    \"policyFingerprint\": \"5f58d606765e59c202805a7057b4989ff72cc125161555f277bba915015ec36e\",\n    \"previousHash\": \"\",\n    \"eventHash\": \"46896da1a9861738ba18aa556d795f96c5cb51ccdb9d1493108ddbe4da150dc4\"\n  },\n  \"registryHash\": \"825c84186b82382881d1d18f3af1acaf7ced7105e7af711fb17c054b1396706c\",\n  \"issues\": [],\n  \"registryPath\": \"D:\\\\FD\\\\.artifacts\\\\llm-wiki\\\\smoke-standalone\\\\51860\\\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\\\registry.json\",\n  \"archives\": [\n    {\n      \"fileName\": \"d0332334af51cc921d93e45784b7bf0ce22cb9a1212f5fd24ed75fdb9334516f.json\",\n      \"sha256\": \"009e6ce485e11c8ab9b944f8707bea675ba14071beab03ba8eb4eea28a315d5c\",\n      \"eventCount\": 2,\n      \"previousArchiveHash\": \"\"\n    },\n    {\n      \"fileName\": \"2c5447624fd5778d1c8ba38e3e2aa23ac472e67f3882ed05fb3bb186d41c125c.json\",\n      \"sha256\": \"aaac0f727040e4d86998ae1581ddab9849307b45ebd8e6020b105ce51ad8eed9\",\n      \"eventCount\": 1,\n      \"previousArchiveHash\": \"009e6ce485e11c8ab9b944f8707bea675ba14071beab03ba8eb4eea28a315d5c\"\n    }\n  ],\n  \"archivedEventCount\": 3,\n  \"metricsScope\": \"active-registry\"\n}\n\n - record: 0.91s\n{\n  \"action\": \"archive\",\n  \"valid\": true,\n  \"totalCount\": 0,\n  \"registryHash\": \"e8c07baa7396e000ee224e7da13e8c1e72984ba227e5180e0db0f5f471b37274\",\n  \"issues\": [],\n  \"registryPath\": \"D:\\\\FD\\\\.artifacts\\\\llm-wiki\\\\smoke-standalone\\\\51860\\\\telemetry-validation-4d44404e65ac48f3838a2e9c1ecf0496\\\\registry.json\",\n  \"archives\": [\n    {\n      \"fileName\": \"d0332334af51cc921d93e45784b7bf0ce22cb9a1212f5fd24ed75fdb9334516f.json\",\n      \"sha256\": \"009e6ce485e11c8ab9b944f8707bea675ba14071beab03ba8eb4eea28a315d5c\",\n      \"eventCount\": 2,\n      \"previousArchiveHash\": \"\"\n    },\n    {\n      \"fileName\": \"2c5447624fd5778d1c8ba38e3e2aa23ac472e67f3882ed05fb3bb186d41c125c.json\",\n      \"sha256\": \"aaac0f727040e4d86998ae1581ddab9849307b45ebd8e6020b105ce51ad8eed9\",\n      \"eventCount\": 1,\n      \"previousArchiveHash\": \"009e6ce485e11c8ab9b944f8707bea675ba14071beab03ba8eb4eea28a315d5c\"\n    },\n    {\n      \"fileName\": \"825c84186b82382881d1d18f3af1acaf7ced7105e7af711fb17c054b1396706c.json\",\n      \"sha256\": \"385840eb42ad82c1fceaa07664eb75c5b62005db06f89000589f0e3374a9a1c4\",\n      \"eventCount\": 1,\n      \"previousArchiveHash\": \"aaac0f727040e4d86998ae1581ddab9849307b45ebd8e6020b105ce51ad8eed9\"\n    }\n  ],\n  \"archivedEventCount\": 4,\n  \"metricsScope\": \"active-registry\"\n}\n\n - archive: 1.12s\nLLM Wiki telemetry validation reuse passed: exact inputs, tampering, retention, interrupted archive retry, immutable bytes, archive chain, concurrent writers and recovery.\n",
+      "telemetry-atomic-ps5.log": " - started record (pid=48508); logs=D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51592\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\.artifacts\\llm-wiki\\process-batches\\371271e391914b3b87f7263b2a3b5ea9\\1.stdout.log, D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51592\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\.artifacts\\llm-wiki\\process-batches\\371271e391914b3b87f7263b2a3b5ea9\\1.stderr.log\n - started archive (pid=56868); logs=D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51592\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\.artifacts\\llm-wiki\\process-batches\\371271e391914b3b87f7263b2a3b5ea9\\2.stdout.log, D:\\FD\\.artifacts\\llm-wiki\\smoke-standalone\\51592\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\.artifacts\\llm-wiki\\process-batches\\371271e391914b3b87f7263b2a3b5ea9\\2.stderr.log\n{\n    \"action\":  \"record\",\n    \"valid\":  true,\n    \"event\":  {\n                  \"schemaVersion\":  1,\n                  \"sequence\":  1,\n                  \"id\":  \"7acb732c22344414b2e792290526b442\",\n                  \"recordedAtUtc\":  \"2026-10-24T10:15:11.1854172Z\",\n                  \"workspace\":  \"@wiki\",\n                  \"packetFingerprint\":  \"\",\n                  \"checkId\":  \"concurrent-once\",\n                  \"status\":  \"passed\",\n                  \"durationSeconds\":  0,\n                  \"commandHash\":  \"\",\n                  \"policyFingerprint\":  \"6deb777e8a52a81fe905e380ed542287cd4287ec749f1ff2681f1155c66bd327\",\n                  \"previousHash\":  \"\",\n                  \"eventHash\":  \"7f5280a4dd7344ad6a1a5577c0ec55f2521dfab3f20702987372dc67e0fd15c3\"\n              },\n    \"registryHash\":  \"83042895b85da49e74cb36fe6682293fc62802792729ca0862d1aa7499f7e89b\",\n    \"issues\":  [\n\n               ],\n    \"registryPath\":  \"D:\\\\FD\\\\.artifacts\\\\llm-wiki\\\\smoke-standalone\\\\51592\\\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\\\registry.json\",\n    \"archives\":  [\n                     {\n                         \"fileName\":  \"187b0731e5b372ec2f88e4c26c74237ee8d3360be7c27a8cfca1c2ac2fc58170.json\",\n                         \"sha256\":  \"3a475465da418352a856b0a580225a52500f54fc584dad5ba0fcc6f533749721\",\n                         \"eventCount\":  2,\n                         \"previousArchiveHash\":  \"\"\n                     },\n                     {\n                         \"fileName\":  \"7c959922a575c0bc9b595de9f0c0d4c3ec20d3c8e2810ee116f0a57383307dfa.json\",\n                         \"sha256\":  \"115fc5e3b707ad967f111a6ce58924f9bc1e149e0b1a4b6ffcb1c1a0abbe86bf\",\n                         \"eventCount\":  1,\n                         \"previousArchiveHash\":  \"3a475465da418352a856b0a580225a52500f54fc584dad5ba0fcc6f533749721\"\n                     }\n                 ],\n    \"archivedEventCount\":  3,\n    \"metricsScope\":  \"active-registry\"\n}\n\n - record: 0.84s\n{\n    \"action\":  \"archive\",\n    \"valid\":  true,\n    \"totalCount\":  0,\n    \"registryHash\":  \"fb3ae233b53e8e8336d1a80dc782fa40d7f1d871cbfe10269fda88cdd4610b3d\",\n    \"issues\":  [\n\n               ],\n    \"registryPath\":  \"D:\\\\FD\\\\.artifacts\\\\llm-wiki\\\\smoke-standalone\\\\51592\\\\telemetry-validation-7e824bbe0d0a469d80a11c72c4e9c1f6\\\\registry.json\",\n    \"archives\":  [\n                     {\n                         \"fileName\":  \"187b0731e5b372ec2f88e4c26c74237ee8d3360be7c27a8cfca1c2ac2fc58170.json\",\n                         \"sha256\":  \"3a475465da418352a856b0a580225a52500f54fc584dad5ba0fcc6f533749721\",\n                         \"eventCount\":  2,\n                         \"previousArchiveHash\":  \"\"\n                     },\n                     {\n                         \"fileName\":  \"7c959922a575c0bc9b595de9f0c0d4c3ec20d3c8e2810ee116f0a57383307dfa.json\",\n                         \"sha256\":  \"115fc5e3b707ad967f111a6ce58924f9bc1e149e0b1a4b6ffcb1c1a0abbe86bf\",\n                         \"eventCount\":  1,\n                         \"previousArchiveHash\":  \"3a475465da418352a856b0a580225a52500f54fc584dad5ba0fcc6f533749721\"\n                     },\n                     {\n                         \"fileName\":  \"83042895b85da49e74cb36fe6682293fc62802792729ca0862d1aa7499f7e89b.json\",\n                         \"sha256\":  \"8af2bf1e3759f050feddda461cdaa6cf614fe00499880d07d09b433ff38e80e1\",\n                         \"eventCount\":  1,\n                         \"previousArchiveHash\":  \"115fc5e3b707ad967f111a6ce58924f9bc1e149e0b1a4b6ffcb1c1a0abbe86bf\"\n                     }\n                 ],\n    \"archivedEventCount\":  4,\n    \"metricsScope\":  \"active-registry\"\n}\n\n - archive: 1.03s\nLLM Wiki telemetry validation reuse passed: exact inputs, tampering, retention, interrupted archive retry, immutable bytes, archive chain, concurrent writers and recovery.\n",
+      "operational-telemetry.log": "LLM Wiki operational telemetry regression passed: local metrics are snapshot-aware, integrity-protected, and Git-clean.\n",
+      "smoke-planning-2.log": "Smoke scheduling passed: bounded median history, concurrency, failure/cache exclusion, incomplete history and deterministic ordering.\nwarning: in the working copy of '.llm-wiki/policies/affected-smoke-catalog.psd1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.llm-wiki/tools/LlmWikiGitPaths.ps1', LF will be replaced by CRLF the next time Git touches it\nLLM Wiki affected-smoke planning regression passed: focused routing and failure-preserving diagnostics.\n",
+      "stage-fingerprint-2.log": "Affected tools smoke: 1 changed path(s), groups=facade-contract.\nAffected tools smoke group starting: facade-contract\n - facade-contract: 0.11s\nAffected tools smoke: 1 changed path(s), groups=facade-contract.\nAffected tools smoke group starting: facade-contract\nAffected tools smoke: 1 changed path(s), groups=strict-shapes.\nAffected tools smoke group starting: strict-shapes\nAffected tools smoke: 1 changed path(s), groups=strict-shapes.\nAffected tools smoke group starting: strict-shapes\n - strict-shapes: 0.02s\nStage fingerprints passed: product edits, stable reuse, Unicode/arrow paths, renames and deletion.\n",
+      "concurrent-index.log": "LLM Wiki concurrent index update regression passed: the waiter reused the matching completed refresh.\n",
+      "node-final.log": "✔ private runtime recovers missing Roslyn dependencies and same-time source changes (15907.8677ms)\n✔ bounded input reads preserve every serial candidate and counter in inventory order (171.2131ms)\n✔ dirty same-size and same-time edits are read again in each pass; clean metadata avoids reading (1.2583ms)\n✔ input workers are bounded and a failure drains pending reads before rejection (27.192ms)\n✔ missing paths are omitted; filesystem failures and invalid bounds reject (0.9425ms)\n✔ the real graph writer lock survives an awaited callback and releases on success and failure (244.9058ms)\n✔ pass-local root lookup preserves first-match order, path normalization and unknown results (22.2994ms)\n✔ a fresh maintenance pass does not reuse matches or misses after a project move (5.7815ms)\n✔ maintenance detects missing, orphaned and duplicate feature rows without pretending repair succeeded (1.6619ms)\n✔ Markdown repair preserves literals and formatting while repairing real destination spans (7.1715ms)\n✔ Markdown repair leaves unterminated HTML and malformed reference definitions untouched (1.8599ms)\n✔ Wiki provenance repair only follows confirmed moves and preserves narrative (1.7521ms)\n✔ self-maintenance discovers relocated project roots and repairs derived data idempotently (2.4761ms)\n✔ physical module ownership covers sibling layers, tests and misleading names (10.4788ms)\n✔ project discovery includes services, shared libraries, hosts and unknown identities after relocation (0.4654ms)\n✔ exact file identity preserves paths and test suffixes without substring guesses (0.4628ms)\n✔ English plural recall preserves previous alternatives and recognizes es plurals (0.5376ms)\n✔ bounded identity recall is independent of body length and uses stable ties (3.6856ms)\n✔ compound identity recall reserves distinct paths before applying the candidate limit (12.8878ms)\n✔ batch metadata and rows share one snapshot; next batch sees committed changes (1103.9695ms)\n✔ child failures preserve stdout start, stderr and exit status (283.1292ms)\n✔ bounded child runner rejects output overflow, invalid deadlines and pre-cancellation (3345.0025ms)\n✔ deadlines stop descendants and tolerate a parent that closes its inherited pipes (5787.127ms)\n✔ snapshot cleanup cannot hide the original search failure (0.2934ms)\n✔ batch restores custom cache settings and reports restoration failures without losing search errors (0.8634ms)\nℹ tests 25\nℹ suites 0\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 16062.5166\n"
+    },
+    "benchmark": {
+      "baseline": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
+      "method": "3 sequential fresh subprocesses each, no cache deletion; first observation is not cold OS/filesystem; other development processes not stopped",
+      "statusStable": true,
+      "runs": [
+        {
+          "name": "pwsh-startup",
+          "iteration": 1,
+          "seconds": 0.3253,
+          "exitCode": 0,
+          "stdoutBytes": 1,
+          "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        },
+        {
+          "name": "pwsh-startup",
+          "iteration": 2,
+          "seconds": 0.3302,
+          "exitCode": 0,
+          "stdoutBytes": 1,
+          "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        },
+        {
+          "name": "pwsh-startup",
+          "iteration": 3,
+          "seconds": 0.3258,
+          "exitCode": 0,
+          "stdoutBytes": 1,
+          "stdoutSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        },
+        {
+          "name": "help",
+          "iteration": 1,
+          "seconds": 0.8304,
+          "exitCode": 0,
+          "stdoutBytes": 1232,
+          "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+        },
+        {
+          "name": "help",
+          "iteration": 2,
+          "seconds": 0.7686,
+          "exitCode": 0,
+          "stdoutBytes": 1232,
+          "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+        },
+        {
+          "name": "help",
+          "iteration": 3,
+          "seconds": 0.7386,
+          "exitCode": 0,
+          "stdoutBytes": 1232,
+          "stdoutSha256": "47e00733f92fdac5e05eeccfb20478b4eb1ade566b5680f0d271a3add71e247f"
+        },
+        {
+          "name": "stage-fingerprint",
+          "iteration": 1,
+          "seconds": 4.8971,
+          "exitCode": 0,
+          "stdoutBytes": 66,
+          "stdoutSha256": "051989fc1ad579ac02c6d9c482c8113fdaa64fb36d81e51f123fda223e42174a"
+        },
+        {
+          "name": "stage-fingerprint",
+          "iteration": 2,
+          "seconds": 1.1294,
+          "exitCode": 0,
+          "stdoutBytes": 66,
+          "stdoutSha256": "051989fc1ad579ac02c6d9c482c8113fdaa64fb36d81e51f123fda223e42174a"
+        },
+        {
+          "name": "stage-fingerprint",
+          "iteration": 3,
+          "seconds": 1.028,
+          "exitCode": 0,
+          "stdoutBytes": 66,
+          "stdoutSha256": "051989fc1ad579ac02c6d9c482c8113fdaa64fb36d81e51f123fda223e42174a"
+        },
+        {
+          "name": "context-no-query-cache",
+          "iteration": 1,
+          "seconds": 21.1891,
+          "exitCode": 0,
+          "stdoutBytes": 5004,
+          "stdoutSha256": "a2fc7647fd943f203c34c6693a54921cc911bb31056db7f5c49e7f698b6293ed",
+          "fresh": true,
+          "cache": null,
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 498.09,
+            "roundTripDurationMs": 20532.76,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "context-no-query-cache",
+          "iteration": 2,
+          "seconds": 1.7499,
+          "exitCode": 0,
+          "stdoutBytes": 5003,
+          "stdoutSha256": "7b95a835a1c12779bb907107f0632adc8547aa7bda66c051ac1ac1ce49ab9800",
+          "fresh": true,
+          "cache": null,
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 385.31,
+            "roundTripDurationMs": 1085.86,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "context-no-query-cache",
+          "iteration": 3,
+          "seconds": 1.7012,
+          "exitCode": 0,
+          "stdoutBytes": 5003,
+          "stdoutSha256": "1c4a1f4fc5dad486eb96208617fd53c52ba337b0a2af3392678005ce116095c7",
+          "fresh": true,
+          "cache": null,
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 382.03,
+            "roundTripDurationMs": 1056.22,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "context-cache-enabled",
+          "iteration": 1,
+          "seconds": 1.9744,
+          "exitCode": 0,
+          "stdoutBytes": 5003,
+          "stdoutSha256": "4b1580b5a8f48959a199d7a2e27fdea00195d1c0afe43993f71e8156f60fa3d4",
+          "fresh": true,
+          "cache": null,
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 361.34,
+            "roundTripDurationMs": 1175.91,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "context-cache-enabled",
+          "iteration": 2,
+          "seconds": 1.0639,
+          "exitCode": 0,
+          "stdoutBytes": 5068,
+          "stdoutSha256": "cbd80de761ece06bfb35d495738b46d2d41945201ce39bdbd62ebcff69fcfae0",
+          "fresh": true,
+          "cache": {
+            "storedTimings": true,
+            "hit": true
+          },
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 361.34,
+            "roundTripDurationMs": 1175.91,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "context-cache-enabled",
+          "iteration": 3,
+          "seconds": 1.0067,
+          "exitCode": 0,
+          "stdoutBytes": 5068,
+          "stdoutSha256": "0919cf7a0d6af17b43f606131e79ca43b6a2e8fa0e3dcc135a2fb158e4e70573",
+          "fresh": true,
+          "cache": {
+            "hit": true,
+            "storedTimings": true
+          },
+          "records": 12,
+          "compiledIndex": {
+            "source": "sqlite-search",
+            "fingerprint": "de6a137a97cdbaf7d30f50e5a2efe79b4976498e2dff3be34d4560f823e3a849",
+            "updatedAtUtc": "2026-10-24T09:55:03.482Z",
+            "indexedDocuments": 37080,
+            "returnedRecords": 50,
+            "sqlDurationMs": 361.34,
+            "roundTripDurationMs": 1175.91,
+            "fresh": true,
+            "indexedChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e",
+            "currentChangeSetFingerprint": "2965dfaaee87a33cf57d9d3c23dcf78eb278a7e424de50f9d064e02d8a0faf6e"
+          },
+          "topPath": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs"
+        },
+        {
+          "name": "symbol-index-check",
+          "iteration": 1,
+          "seconds": 9.8935,
+          "exitCode": 0,
+          "stdoutBytes": 64,
+          "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+        },
+        {
+          "name": "symbol-index-check",
+          "iteration": 2,
+          "seconds": 10.02,
+          "exitCode": 0,
+          "stdoutBytes": 64,
+          "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+        },
+        {
+          "name": "symbol-index-check",
+          "iteration": 3,
+          "seconds": 11.9411,
+          "exitCode": 0,
+          "stdoutBytes": 64,
+          "stdoutSha256": "c447e0c45f8ecd452ad1c33d53019529b389ee3bb134f87906e789171acd2235"
+        }
+      ],
+      "medians": {
+        "pwsh-startup": 0.3258,
+        "help": 0.7686,
+        "stage-fingerprint": 1.1294,
+        "context-no-query-cache": 1.7499,
+        "context-cache-enabled": 1.0639,
+        "symbol-index-check": 10.02
+      },
+      "measurementPhase": "post-repair read-only observations before final atomic state/registry publication correction; no isolated final-source performance claim"
+    },
+    "atomicPublicationInspection": {
+      "inspect-move.ps1": "$ErrorActionPreference='Stop'\n$method=[Microsoft.PowerShell.Commands.FileSystemProvider].GetMethod('MoveFileInfoItem',[Reflection.BindingFlags]'Instance,NonPublic')\nif (-not $method) { throw 'Move implementation unavailable.' }\n$opcodes=@{}\nforeach($field in [Reflection.Emit.OpCodes].GetFields([Reflection.BindingFlags]'Public,Static')) {\n    $opcode=$field.GetValue($null);$opcodes[[int]$opcode.Value]=$opcode\n}\n$il=$method.GetMethodBody().GetILAsByteArray()\n$offset=0\nwhile($offset -lt $il.Length) {\n    $start=$offset\n    $key=[int]$il[$offset++]\n    if($key -eq 254){$key=(0xfe00 -bor [int]$il[$offset++])-65536}\n    $opcode=$opcodes[$key]\n    $size=switch([string]$opcode.OperandType) {\n        'InlineNone' {0}\n        'ShortInlineBrTarget' {1}\n        'ShortInlineI' {1}\n        'ShortInlineVar' {1}\n        'InlineVar' {2}\n        'InlineI8' {8}\n        'InlineR' {8}\n        'InlineSwitch' {4+4*[BitConverter]::ToInt32($il,$offset)}\n        default {4}\n    }\n    if($opcode.OperandType -eq [Reflection.Emit.OperandType]::InlineMethod) {\n        $target=$method.Module.ResolveMethod([BitConverter]::ToInt32($il,$offset))\n        \"$start $($opcode.Name) $($target.DeclaringType.FullName).$($target.Name)\"\n    }\n    $offset+=$size\n}\n",
+      "move-implementation.txt": "2 callvirt System.IO.FileInfo.MoveTo\n14 callvirt System.IO.FileSystemInfo.get_FullName\n20 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n39 callvirt System.IO.FileSystemInfo.get_Attributes\n47 callvirt System.IO.FileSystemInfo.set_Attributes\n54 callvirt System.IO.FileInfo.MoveTo\n66 callvirt System.IO.FileSystemInfo.get_FullName\n72 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n162 newobj System.Management.Automation.ErrorRecord..ctor\n167 call System.Management.Automation.Provider.CmdletProvider.WriteError\n188 newobj System.Management.Automation.ErrorRecord..ctor\n193 call System.Management.Automation.Provider.CmdletProvider.WriteError\n213 newobj System.Management.Automation.ErrorRecord..ctor\n218 call System.Management.Automation.Provider.CmdletProvider.WriteError\n236 call System.IO.File.Exists\n247 newobj System.IO.FileInfo..ctor\n264 callvirt System.IO.FileSystemInfo.get_Attributes\n272 callvirt System.IO.FileSystemInfo.set_Attributes\n279 callvirt System.IO.FileSystemInfo.Delete\n286 callvirt System.IO.FileInfo.MoveTo\n298 callvirt System.IO.FileSystemInfo.get_FullName\n304 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n408 newobj System.Management.Automation.ErrorRecord..ctor\n413 call System.Management.Automation.Provider.CmdletProvider.WriteError\n434 newobj System.Management.Automation.ErrorRecord..ctor\n439 call System.Management.Automation.Provider.CmdletProvider.WriteError\n456 newobj System.Management.Automation.ErrorRecord..ctor\n461 call System.Management.Automation.Provider.CmdletProvider.WriteError\n",
+      "move-implementation-ps5.txt": "2 callvirt System.IO.FileInfo.MoveTo\n14 callvirt System.IO.FileSystemInfo.get_FullName\n20 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n39 callvirt System.IO.FileSystemInfo.get_Attributes\n47 callvirt System.IO.FileSystemInfo.set_Attributes\n54 callvirt System.IO.FileInfo.MoveTo\n66 callvirt System.IO.FileSystemInfo.get_FullName\n72 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n162 newobj System.Management.Automation.ErrorRecord..ctor\n167 call System.Management.Automation.Provider.CmdletProvider.WriteError\n188 newobj System.Management.Automation.ErrorRecord..ctor\n193 call System.Management.Automation.Provider.CmdletProvider.WriteError\n213 newobj System.Management.Automation.ErrorRecord..ctor\n218 call System.Management.Automation.Provider.CmdletProvider.WriteError\n236 call System.IO.File.Exists\n247 newobj System.IO.FileInfo..ctor\n265 callvirt System.IO.FileSystemInfo.get_Attributes\n273 callvirt System.IO.FileSystemInfo.set_Attributes\n280 callvirt System.IO.FileSystemInfo.Delete\n287 callvirt System.IO.FileInfo.MoveTo\n299 callvirt System.IO.FileSystemInfo.get_FullName\n305 call System.Management.Automation.Provider.CmdletProvider.WriteItemObject\n409 newobj System.Management.Automation.ErrorRecord..ctor\n414 call System.Management.Automation.Provider.CmdletProvider.WriteError\n435 newobj System.Management.Automation.ErrorRecord..ctor\n440 call System.Management.Automation.Provider.CmdletProvider.WriteError\n457 newobj System.Management.Automation.ErrorRecord..ctor\n462 call System.Management.Automation.Provider.CmdletProvider.WriteError\n"
+    },
+    "staticCallEdges": 2805,
+    "originalFailedAttempts": {
+      "checkpoint-ps5.log": "new manifest decoded with legacy Get-Content; fixed with ReadAllText, PS5 final passed",
+      "git-paths-ps5.log": "Start-Process object lost native exit code without cached handle; test harness corrected; PS5 final passed",
+      "node-process.log": "test incorrectly assumed all platforms retained inherited pipes after parent exit; now checks actual permitted lifecycle and owns fixture cleanup",
+      "process-batch-3.log": "injected PowerShell ScriptProperty exception was swallowed by property access; malformed-script validation now exercises batch startup failure and sibling cleanup",
+      "smoke-planning.log": "external pre-push path was absent from AdditionalMatches; catalog and selector assertion now pass",
+      "stage-fingerprint.log": "facade fixture required the new direct Process regression stub; fixture updated without changing negative cache tests",
+      "verify-1.log": "quality index invalidated by final regression-source edits; refreshed before repeat",
+      "verify-full.log": "review ledger changed during graph refresh; stability guard correctly rejected it; repeat after freezing tracked inputs",
+      "verify-full-final.log": "intentionally stopped after discovering provider delete-then-move publication gap; completed group logs retained; corrected final source is verified in a separate run",
+      "telemetry-atomic.log": "PowerShell null coerced to empty backup path in File.Replace; fixed with NullString.Value; subsequent PS7/PS5 telemetry tests passed",
+      "verify-full-atomic-final.log": "new checkpoint fixture used Count on empty unwrapped pipeline under inherited StrictMode; fixture now explicitly runs StrictMode, wraps zero/one/many enumerations and passes PS7/PS5; no assertion removed"
+    },
+    "finalReceiptPath": ".artifacts/wiki-tools-repair-20261024/final-verification.json",
+    "broaderVerificationStatus": "final receipt is recorded after these source/report documents are frozen; no old or failed run is relabeled passed",
+    "limits": [
+      "Windows local execution, PowerShell 7.6.5 and 5.1, Node 26.2.0; CI Node 22 and Linux execution not claimed",
+      "family semantic review plus full declared file census; not exhaustive execution of all 369 commands",
+      "snapshot fault injection models reachable interrupted states, not every power-loss/filesystem durability point",
+      "metrics describe active telemetry window; archives preserve original history with content verification",
+      "snapshot/worker/telemetry fault regressions and Focused full gate do not claim application-wide frontend/backend or legacy monolithic Full execution"
+    ]
+  }
+}

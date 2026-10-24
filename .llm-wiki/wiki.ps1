@@ -29,7 +29,7 @@ param(
         'learning-observe', 'learning-candidates', 'learning-list', 'learning-show', 'learning-approve', 'learning-reject', 'learning-supersede', 'learning-plan', 'learning-apply', 'learning-rollback', 'learning-verify',
         'learning-shadow', 'learning-canary-start', 'learning-canary-record', 'learning-canary-evaluate', 'learning-canary-stop', 'learning-experiment-list', 'learning-experiment-show', 'learning-experiment-verify',
         'learning-health-observe', 'learning-health-list', 'learning-health-show', 'learning-health-waive', 'learning-health-reopen', 'learning-health-verify',
-        'verification-telemetry-list', 'verification-telemetry-metrics', 'verification-telemetry-verify',
+        'verification-telemetry-list', 'verification-telemetry-metrics', 'verification-telemetry-verify', 'verification-telemetry-archive',
         'task-context-create', 'task-context-show', 'task-context-verify', 'task-context-compare',
         'task-context-budget-assess', 'task-context-budget-create', 'task-context-budget-show', 'task-context-budget-verify',
         'task-context-benchmark', 'task-context-benchmark-create', 'task-context-benchmark-show', 'task-context-benchmark-verify',
@@ -2194,11 +2194,12 @@ switch ($Command) {
             Format = $Format
         }
     }
-    { $_ -in @('verification-telemetry-list', 'verification-telemetry-metrics', 'verification-telemetry-verify') } {
+    { $_ -in @('verification-telemetry-list', 'verification-telemetry-metrics', 'verification-telemetry-verify', 'verification-telemetry-archive') } {
         $telemetryAction = @{
             'verification-telemetry-list' = 'list'
             'verification-telemetry-metrics' = 'metrics'
             'verification-telemetry-verify' = 'verify'
+            'verification-telemetry-archive' = 'archive'
         }[$Command]
         Invoke-WikiTool 'Manage-LlmWikiVerificationTelemetry.ps1' @{
             Action = $telemetryAction

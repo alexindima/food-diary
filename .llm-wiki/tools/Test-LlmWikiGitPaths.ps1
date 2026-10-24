@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiProcess.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 
 $unicodeName = -join @([char]0x0444, [char]0x0430, [char]0x0439, [char]0x043B)
@@ -131,4 +132,61 @@ try {
     Remove-Item -LiteralPath $overlayRepository -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, bounded grep patterns, immutable refs, workspace HEAD overlays, and exit codes are safe.'
+$hookPath = Join-Path $repositoryRoot 'FoodDiary.Web.Client/.husky/pre-push'
+$hookText = [IO.File]::ReadAllText($hookPath)
+$hookPrefixEnd = $hookText.IndexOf('hook_progress_init ', [StringComparison]::Ordinal)
+if ($hookPrefixEnd -lt 0) { throw 'Pre-push path-selection boundary is missing.' }
+$shell = Get-Command sh -ErrorAction SilentlyContinue
+$shellPath = if ($null -ne $shell) { $shell.Source } elseif ($env:ProgramFiles -and (Test-Path -LiteralPath (Join-Path $env:ProgramFiles 'Git/bin/sh.exe'))) { Join-Path $env:ProgramFiles 'Git/bin/sh.exe' } else { throw 'Git hook scope regression requires sh.' }
+$hookFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'pre-push-scope' -IndependentRepository
+try {
+    $stubRoot = Join-Path $hookFixture 'FoodDiary.Web.Client/.husky'
+    $null = New-Item -ItemType Directory -Path $stubRoot -Force
+    [IO.File]::WriteAllText((Join-Path $stubRoot 'progress.sh'), '')
+    $probe = Join-Path $hookFixture 'scope.sh'
+    [IO.File]::WriteAllText($probe, ($hookText.Substring(0, $hookPrefixEnd).Replace("`r`n", "`n") + "printf '%s\n' `"`$changed_paths`"`n"), [Text.UTF8Encoding]::new($false))
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('init', '--quiet')
+    foreach ($path in @('deleted.cs', 'moved.cs', $unicodePath)) {
+        $absolute = Join-Path $hookFixture $path
+        $null = New-Item -ItemType Directory -Path (Split-Path -Parent $absolute) -Force
+        [IO.File]::WriteAllText($absolute, $path)
+    }
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '--', 'deleted.cs', 'moved.cs', $unicodePath)
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'base')
+    $base = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    Remove-Item -LiteralPath (Join-Path $hookFixture 'deleted.cs')
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '-u')
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'delete')
+    $deleted = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('mv', '--', 'moved.cs', 'renamed.cs')
+    [IO.File]::AppendAllText((Join-Path $hookFixture $unicodePath), ' changed')
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '-u')
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'move')
+    $moved = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    foreach ($case in @(
+        @{ input = "refs/heads/a $deleted refs/heads/a $base`n"; expected = @('deleted.cs') }
+        @{ input = "refs/heads/a $moved refs/heads/a $deleted`n"; expected = @('moved.cs', 'renamed.cs', $unicodePath) }
+        @{ input = "refs/heads/a $deleted refs/heads/a $base`nrefs/heads/b $moved refs/heads/b $deleted`n"; expected = @('deleted.cs', 'moved.cs', 'renamed.cs', $unicodePath) }
+        @{ input = "refs/heads/a $moved refs/heads/a $('0' * 40)`n"; expected = @('renamed.cs', $unicodePath) }
+    )) {
+        $stdinPath = Join-Path $hookFixture 'input.txt'
+        $stdoutPath = Join-Path $hookFixture 'stdout.txt'
+        $stderrPath = Join-Path $hookFixture 'stderr.txt'
+        [IO.File]::WriteAllText($stdinPath, $case.input, [Text.UTF8Encoding]::new($false))
+        $window = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { @{ WindowStyle = 'Hidden' } } else { @{} }
+        $child = Start-Process @window -FilePath $shellPath -ArgumentList ('"' + $probe + '"') -WorkingDirectory $hookFixture -RedirectStandardInput $stdinPath -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
+        try {
+            # Windows PowerShell 5 needs the process handle cached before exit
+            # to retain the native exit code on this Start-Process object.
+            $null = $child.Handle
+            if (-not $child.WaitForExit(30000)) { Stop-LlmWikiProcessTree $child; throw 'Pre-push scope fixture timed out.' }
+            $actual = @([IO.File]::ReadAllLines($stdoutPath) | Where-Object { $_ })
+            if ($child.ExitCode -ne 0 -or @(Compare-Object @($case.expected | Sort-Object) @($actual | Sort-Object)).Count) { throw "Pre-push scope lost delete/rename/Unicode/multiple-ref paths: $($actual -join ', '); $([IO.File]::ReadAllText($stderrPath))" }
+        } finally { $child.Dispose() }
+    }
+} finally {
+    $fixturePrefix = [IO.Path]::GetFullPath((Split-Path -Parent $hookFixture)).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    if (-not [IO.Path]::GetFullPath($hookFixture).StartsWith($fixturePrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe pre-push fixture cleanup path.' }
+    Remove-Item -LiteralPath $hookFixture -Recurse -Force
+}
+Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, batching, refs, worktrees, exit codes and real pre-push deletion/rename/multiple-ref scope.'

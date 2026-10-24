@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 297,
-    "documentationPages": 240
+    "documentationPages": 241
   },
   "dotnet": {
     "projects": [
@@ -16042,6 +16042,7 @@
       "docs/ai/users-security-reader-ownership.md",
       "docs/ai/wiki-retrieval-followup.md",
       "docs/ai/wiki-retrieval-ownership.md",
+      "docs/ai/wiki-tools-audit-20261024.md",
       "docs/architecture/APPLICATION_PATTERNS.md",
       "docs/architecture/COMPOSED_READ_BOUNDARIES.md",
       "docs/architecture/Exception-vs-Result.md",

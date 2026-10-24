@@ -30,43 +30,153 @@ $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $pipelineCacheState = $null
 
+function Remove-IndexTransactionDirectory([string]$Path, [string]$Root) {
+    $absolute = [IO.Path]::GetFullPath($Path)
+    $prefix = [IO.Path]::GetFullPath($Root).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    if (-not $absolute.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { throw "Unsafe index transaction cleanup path: $absolute" }
+    if (Test-Path -LiteralPath $absolute) { Remove-Item -LiteralPath $absolute -Recurse -Force }
+}
+
+function Get-IndexSnapshotFiles([string]$ContentRoot) {
+    @(Get-ChildItem -LiteralPath $ContentRoot -Recurse -Force | ForEach-Object {
+        if ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Index snapshots cannot contain filesystem links.' }
+        if (-not $_.PSIsContainer) {
+            [pscustomobject][ordered]@{
+                path = $_.FullName.Substring($ContentRoot.Length).TrimStart('\', '/').Replace('\', '/')
+                sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            }
+        }
+    } | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path })
+}
+
+function Test-IndexSnapshot([string]$SnapshotRoot, [string]$ManifestHash) {
+    try {
+        $manifestPath = Join-Path $SnapshotRoot 'manifest.json'
+        if ($ManifestHash -and (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $ManifestHash) { return $false }
+        $manifest = [IO.File]::ReadAllText($manifestPath) | ConvertFrom-Json
+        if ($manifest.schemaVersion -ne 1) { return $false }
+        $actual = @(Get-IndexSnapshotFiles (Join-Path $SnapshotRoot 'content'))
+        $expected = @($manifest.files)
+        if ($actual.Count -ne $expected.Count) { return $false }
+        for ($index = 0; $index -lt $actual.Count; $index++) {
+            if ([string]$actual[$index].path -cne [string]$expected[$index].path -or [string]$actual[$index].sha256 -cne [string]$expected[$index].sha256) { return $false }
+        }
+        return $true
+    } catch { return $false }
+}
+
+function New-IndexSnapshot([string]$SourceRoot, [string]$SnapshotRoot) {
+    $SnapshotRoot = [IO.Path]::GetFullPath($SnapshotRoot)
+    $parent = Split-Path -Parent $SnapshotRoot
+    $pending = "$SnapshotRoot.pending-$([guid]::NewGuid().ToString('N'))"
+    if (Test-Path -LiteralPath $SnapshotRoot) { throw "Index snapshot already exists: $SnapshotRoot" }
+    try {
+        $contentRoot = Join-Path $pending 'content'
+        $null = New-Item -ItemType Directory -Path $contentRoot -Force
+        # Establish the source digest before copying, then verify the copy and
+        # recheck the source. A partial copy is never a published snapshot.
+        $files = @(Get-IndexSnapshotFiles $SourceRoot)
+        foreach ($item in @(Get-ChildItem -LiteralPath $SourceRoot -Force)) {
+            Copy-Item -LiteralPath $item.FullName -Destination $contentRoot -Recurse -Force
+        }
+        $manifestPath = Join-Path $pending 'manifest.json'
+        [IO.File]::WriteAllText($manifestPath, (([ordered]@{ schemaVersion = 1; files = $files } | ConvertTo-Json -Depth 8) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $manifestHash = (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        $sourceAfter = @(Get-IndexSnapshotFiles $SourceRoot) | ConvertTo-Json -Depth 8 -Compress
+        $sourceBefore = $files | ConvertTo-Json -Depth 8 -Compress
+        if ($sourceAfter -cne $sourceBefore -or -not (Test-IndexSnapshot $pending $manifestHash)) { throw 'Index snapshot contents changed or the copy is incomplete.' }
+        Move-Item -LiteralPath $pending -Destination $SnapshotRoot
+        return [pscustomobject]@{ path = $SnapshotRoot; manifestHash = $manifestHash }
+    } finally { Remove-IndexTransactionDirectory $pending $parent }
+}
+
+function Restore-IndexSnapshot([string]$SnapshotRoot, [string]$ManifestHash, [string]$GeneratedRoot, [string]$TransactionRoot) {
+    if (-not (Test-IndexSnapshot $SnapshotRoot $ManifestHash)) { throw "Index recovery snapshot is incomplete or corrupt: $SnapshotRoot" }
+    # A linked worktree's Git directory can be on another volume. Stage next
+    # to repository artifacts so publication remains a directory rename.
+    $checkoutRoot = Split-Path -Parent (Split-Path -Parent $GeneratedRoot)
+    $restoreRoot = Join-Path $checkoutRoot '.artifacts/llm-wiki/index-restores'
+    $null = New-Item -ItemType Directory -Path $restoreRoot -Force
+    $replacement = Join-Path $restoreRoot ('restore-' + [guid]::NewGuid().ToString('N'))
+    $displaced = Join-Path $restoreRoot ('displaced-' + [guid]::NewGuid().ToString('N'))
+    $restored = $false
+    try {
+        # Prepare and verify the replacement before moving the current tree.
+        $copy = New-IndexSnapshot (Join-Path $SnapshotRoot 'content') $replacement
+        Copy-Item -LiteralPath (Join-Path $SnapshotRoot 'manifest.json') -Destination (Join-Path $copy.path 'manifest.json') -Force
+        if (-not (Test-IndexSnapshot $copy.path $ManifestHash)) { throw 'Index recovery input changed while preparing the replacement.' }
+        $hadGenerated = Test-Path -LiteralPath $GeneratedRoot -PathType Container
+        if ($hadGenerated) { Move-Item -LiteralPath $GeneratedRoot -Destination $displaced }
+        try {
+            Move-Item -LiteralPath (Join-Path $copy.path 'content') -Destination $GeneratedRoot
+            $restored = $true
+        } catch {
+            if ($hadGenerated) { Move-Item -LiteralPath $displaced -Destination $GeneratedRoot }
+            throw
+        }
+    } finally {
+        Remove-IndexTransactionDirectory $replacement $restoreRoot
+        if ($restored) { Remove-IndexTransactionDirectory $displaced $restoreRoot }
+    }
+}
+
+function Get-IndexRecoverySnapshot([object]$State, [string]$TransactionRoot) {
+    if ([int]$State.schemaVersion -eq 3) {
+        foreach ($entry in @(
+            @{ name = [string]$State.checkpointSnapshot; hash = [string]$State.checkpointManifestHash }
+            @{ name = 'backup'; hash = [string]$State.backupManifestHash }
+        )) {
+            if ($entry.name -notmatch '^(?:backup|checkpoints/[a-f0-9]{32})$' -or $entry.hash -notmatch '^[a-f0-9]{64}$') { continue }
+            $path = Join-Path $TransactionRoot $entry.name
+            if (Test-IndexSnapshot $path $entry.hash) { return [pscustomobject]@{ path = $path; manifestHash = $entry.hash } }
+        }
+        throw 'No complete verified index snapshot is available; transaction retained for diagnosis.'
+    }
+    # Legacy state published in-progress only after its original backup was
+    # complete. Its replace-in-place checkpoint has no completion proof.
+    $legacy = Join-Path $TransactionRoot 'generated'
+    if (-not (Test-Path -LiteralPath $legacy -PathType Container)) { throw 'Legacy index backup is missing; transaction retained for diagnosis.' }
+    Write-Warning 'Recovering legacy index transaction from its original backup; unverified legacy checkpoint is ignored.'
+    return New-IndexSnapshot $legacy (Join-Path $TransactionRoot ('legacy-' + [guid]::NewGuid().ToString('N')))
+}
+
 function Restore-OrphanedIndexTransaction([string]$TransactionStateRoot, [string]$GeneratedRoot) {
     if (-not (Test-Path -LiteralPath $TransactionStateRoot -PathType Container)) { return }
     foreach ($orphan in @(Get-ChildItem -LiteralPath $TransactionStateRoot -Directory -ErrorAction SilentlyContinue)) {
         $statePath = Join-Path $orphan.FullName 'state.json'
-        $backupPath = Join-Path $orphan.FullName 'generated'
         $isStale = [DateTime]::UtcNow - $orphan.LastWriteTimeUtc -gt [TimeSpan]::FromMinutes(10)
         if (-not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
             if ($isStale -and $orphan.Name -match '^[0-9a-fA-F]{32}$') {
                 Write-Warning "Removing incomplete markerless LLM Wiki index transaction $($orphan.Name)."
-                Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+                Remove-IndexTransactionDirectory $orphan.FullName $TransactionStateRoot
             }
             continue
         }
-        try { $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json }
+        try { $state = [IO.File]::ReadAllText($statePath) | ConvertFrom-Json }
         catch {
-            if ($isStale) { Remove-Item -LiteralPath $orphan.FullName -Recurse -Force }
-            continue
+            throw "Unreadable index transaction state retained for diagnosis: $statePath"
         }
         $ownerAlive = $false
-        try { $ownerAlive = $null -ne (Get-Process -Id ([int]$state.ownerPid) -ErrorAction Stop) } catch { $ownerAlive = $false }
+        try {
+            $owner = Get-Process -Id ([int]$state.ownerPid) -ErrorAction Stop
+            $ownerAlive = $null -ne $owner
+            if ([int]$state.schemaVersion -eq 3) { $ownerAlive = $ownerAlive -and $owner.StartTime.ToUniversalTime().Ticks -eq [long]$state.ownerStartTicks }
+        } catch { $ownerAlive = $false }
         if ($ownerAlive) { continue }
-        if ([string]$state.status -eq 'initializing' -or -not (Test-Path -LiteralPath $backupPath -PathType Container)) {
+        if ([string]$state.status -eq 'initializing') {
             Write-Warning "Removing incomplete LLM Wiki index transaction $($orphan.Name) before its rollback snapshot was ready."
-            Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+            Remove-IndexTransactionDirectory $orphan.FullName $TransactionStateRoot
             continue
         }
         if ([string]$state.status -ne 'in-progress') {
-            Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+            if ([string]$state.status -ne 'committed') { throw "Unknown index transaction state retained for diagnosis: $statePath" }
+            Remove-IndexTransactionDirectory $orphan.FullName $TransactionStateRoot
             continue
         }
-        $checkpointPath = Join-Path $orphan.FullName 'checkpoint'
-        $recoveryPath = if (Test-Path -LiteralPath $checkpointPath -PathType Container) { $checkpointPath } else { $backupPath }
-        $recoveryKind = if ($recoveryPath -eq $checkpointPath) { "last completed stage '$([string]$state.completedStage)'" } else { 'rollback snapshot' }
-        Write-Warning "Recovering interrupted LLM Wiki index transaction $($orphan.Name) from $recoveryKind before running another update."
-        foreach ($item in @(Get-ChildItem -LiteralPath $GeneratedRoot -Force)) { Remove-Item -LiteralPath $item.FullName -Recurse -Force }
-        foreach ($item in @(Get-ChildItem -LiteralPath $recoveryPath -Force)) { Copy-Item -LiteralPath $item.FullName -Destination $GeneratedRoot -Recurse -Force }
-        Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+        $snapshot = Get-IndexRecoverySnapshot $state $orphan.FullName
+        Write-Warning "Recovering interrupted LLM Wiki index transaction $($orphan.Name) from a verified snapshot of the last completed stage or original backup."
+        Restore-IndexSnapshot $snapshot.path $snapshot.manifestHash $GeneratedRoot $orphan.FullName
+        Remove-IndexTransactionDirectory $orphan.FullName $TransactionStateRoot
     }
 }
 
@@ -78,7 +188,7 @@ function Write-IndexTransactionState([string]$TransactionRoot, [Collections.IDic
             $temporaryPath,
             (($State | ConvertTo-Json) + [Environment]::NewLine),
             [Text.UTF8Encoding]::new($false))
-        Move-Item -LiteralPath $temporaryPath -Destination $statePath -Force
+        if ([IO.File]::Exists($statePath)) { [IO.File]::Replace($temporaryPath, $statePath, [NullString]::Value) } else { [IO.File]::Move($temporaryPath, $statePath) }
     } finally {
         Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
     }
@@ -482,6 +592,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
     }
     $failed = [System.Collections.Generic.List[string]]::new()
     $nextTool = 0
+    try {
     while ($nextTool -lt $ToolNames.Count -or @($workers | Where-Object { -not $_.observed }).Count -gt 0) {
         # Refill each free slot immediately, retaining stage dependency barriers.
         while ($nextTool -lt $ToolNames.Count -and @($workers | Where-Object { -not $_.observed }).Count -lt $MaxConcurrency) {
@@ -515,7 +626,6 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         } else {
             $script:completedToolTimings.Add([pscustomobject]@{ tool = $worker.tool; durationSeconds = $worker.stopwatch.Elapsed.TotalSeconds })
         }
-        $worker.process.Dispose()
     }
     if ($failed.Count -gt 0) {
         $failedToolNames = @($failed | ForEach-Object { ($_ -split ' \(exit=')[0] })
@@ -545,12 +655,20 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         }
         throw "LLM Wiki index pipeline stage '$StageName' failed: $($failed -join ', ')"
     }
+    } finally {
+        foreach ($worker in $workers) {
+            try { if (-not $worker.process.HasExited) { Stop-LlmWikiProcessTree -Process $worker.process } }
+            finally { $worker.process.Dispose() }
+        }
+    }
 }
 
 $pipelineStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 $script:completedToolTimings = [Collections.Generic.List[object]]::new()
 $updateLock = $null
 $transactionRoot = $null
+$backupSnapshot = $null
+$transactionNeedsRecovery = $false
 $pipelineReceiptRecorded = $false
 $generatedRoot = Join-Path $repositoryRoot '.llm-wiki/generated'
 try {
@@ -573,17 +691,18 @@ try {
         Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $transactionRoot = Join-Path $transactionStateRoot ([guid]::NewGuid().ToString('N'))
         $null = New-Item -ItemType Directory -Path $transactionRoot -Force
-        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
-            schemaVersion = 2; status = 'initializing'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o')
-        })
-        $backupRoot = Join-Path $transactionRoot 'generated'
-        $null = New-Item -ItemType Directory -Path $backupRoot -Force
-        foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
-            Copy-Item -LiteralPath $item.FullName -Destination $backupRoot -Recurse -Force
+        $transactionState = [ordered]@{
+            schemaVersion = 3; status = 'initializing'; ownerPid = $PID
+            ownerStartTicks = (Get-Process -Id $PID).StartTime.ToUniversalTime().Ticks
+            startedAtUtc = [DateTime]::UtcNow.ToString('o')
+            backupManifestHash = ''; checkpointSnapshot = ''; checkpointManifestHash = ''
         }
-        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
-            schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o')
-        })
+        Write-IndexTransactionState $transactionRoot $transactionState
+        $backupSnapshot = New-IndexSnapshot $generatedRoot (Join-Path $transactionRoot 'backup')
+        $transactionState.status = 'in-progress'
+        $transactionState.backupManifestHash = $backupSnapshot.manifestHash
+        Write-IndexTransactionState $transactionRoot $transactionState
+        $transactionNeedsRecovery = $true
         Write-Host "LLM Wiki index transaction started: rollback snapshot captured."
     }
 
@@ -593,26 +712,25 @@ try {
         Write-Host "LLM Wiki index stage: $($stage.name) ($($tools.Count) tool(s))"
         Invoke-PipelineBatch -StageName $stage.name -ToolNames $tools -CheckMode ([bool]$Check)
         if (-not $Check -and $transactionRoot) {
-            $checkpointRoot = Join-Path $transactionRoot 'checkpoint'
-            if (Test-Path -LiteralPath $checkpointRoot) { Remove-Item -LiteralPath $checkpointRoot -Recurse -Force }
-            $null = New-Item -ItemType Directory -Path $checkpointRoot -Force
-            foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
-                Copy-Item -LiteralPath $item.FullName -Destination $checkpointRoot -Recurse -Force
-            }
-            Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
-                schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; completedStage = $stage.name; checkpointedAtUtc = [DateTime]::UtcNow.ToString('o')
-            })
+            $checkpointName = 'checkpoints/' + [guid]::NewGuid().ToString('N')
+            $checkpoint = New-IndexSnapshot $generatedRoot (Join-Path $transactionRoot $checkpointName)
+            $transactionState.checkpointSnapshot = $checkpointName
+            $transactionState.checkpointManifestHash = $checkpoint.manifestHash
+            $transactionState['completedStage'] = $stage.name
+            $transactionState['checkpointedAtUtc'] = [DateTime]::UtcNow.ToString('o')
+            Write-IndexTransactionState $transactionRoot $transactionState
             Write-Host "LLM Wiki index checkpoint saved after stage '$($stage.name)'."
         }
     }
     if (-not $Check -and $transactionRoot) {
         $semanticNoOps = @(Restore-LlmWikiSemanticNoOpArtifacts `
             -GeneratedRoot $generatedRoot `
-            -BackupRoot (Join-Path $transactionRoot 'generated'))
+            -BackupRoot (Join-Path $backupSnapshot.path 'content'))
         if ($semanticNoOps.Count -gt 0) { Write-Host "LLM Wiki semantic no-op suppression restored $($semanticNoOps.Count) unchanged generated artifact(s)." }
-        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
-            schemaVersion = 2; status = 'committed'; ownerPid = $PID; completedAtUtc = [DateTime]::UtcNow.ToString('o')
-        })
+        $transactionState.status = 'committed'
+        $transactionState['completedAtUtc'] = [DateTime]::UtcNow.ToString('o')
+        Write-IndexTransactionState $transactionRoot $transactionState
+        $transactionNeedsRecovery = $false
     }
     if (-not $Check -and $ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
         $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
@@ -620,21 +738,16 @@ try {
         $pipelineReceiptRecorded = $true
     }
 } catch {
-    if ($transactionRoot) {
+    if ($transactionNeedsRecovery) {
         Write-Warning 'LLM Wiki index update failed; restoring the generated tree from the transaction snapshot.'
-        foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
-            Remove-Item -LiteralPath $item.FullName -Recurse -Force
-        }
-        $backupRoot = Join-Path $transactionRoot 'generated'
-        foreach ($item in @(Get-ChildItem -LiteralPath $backupRoot -Force)) {
-            Copy-Item -LiteralPath $item.FullName -Destination $generatedRoot -Recurse -Force
-        }
+        Restore-IndexSnapshot $backupSnapshot.path $backupSnapshot.manifestHash $generatedRoot $transactionRoot
+        $transactionNeedsRecovery = $false
     }
     throw
 } finally {
     if ($updateLock) { $updateLock.Dispose() }
-    if ($transactionRoot -and (Test-Path -LiteralPath $transactionRoot)) {
-        Remove-Item -LiteralPath $transactionRoot -Recurse -Force
+    if ($transactionRoot -and -not $transactionNeedsRecovery) {
+        Remove-IndexTransactionDirectory $transactionRoot $transactionStateRoot
     }
 }
 $pipelineStopwatch.Stop()
