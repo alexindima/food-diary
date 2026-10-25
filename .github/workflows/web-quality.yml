@@ -12,11 +12,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  web-quality:
+  prepare:
+    name: Source, contracts and shared production build
     runs-on: ubuntu-latest
-    timeout-minutes: 90
-    env:
-      FD_WEB_QUALITY_CHANNEL: chromium
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
@@ -33,15 +32,6 @@ jobs:
         run: |
           node Tooling/WebQuality/cli.mjs validate
           node --test Tooling/WebQuality/test/*.test.mjs
-      - name: Install locked browser engines and system dependencies
-        working-directory: FoodDiary.Web.Client
-        run: |
-          node node_modules/@playwright/test/cli.js install --with-deps chromium firefox webkit
-          node -e "const {chromium}=require('@playwright/test');require('fs').appendFileSync(process.env.GITHUB_ENV,'CHROME_PATH='+chromium.executablePath()+'\n')"
-      - name: Verify browser assertions and report interaction against controlled fixtures
-        run: |
-          node Tooling/WebQuality/verify-browser.mjs
-          node Tooling/WebQuality/verify-platform-browser.mjs
       - name: Audit application source
         run: node Tooling/WebQuality/cli.mjs audit --profile source --report-dir .artifacts/web-quality/source
       - name: Execute linked owner behavior contracts
@@ -51,21 +41,112 @@ jobs:
       - name: Verify localized prerender and hydration payloads
         working-directory: FoodDiary.Web.Client
         run: npm run check:seo-prerender
+      - name: Share production assets with their source and output fingerprints
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: web-guidance-build
+          path: |
+            FoodDiary.Web.Client/dist/browser/
+            .artifacts/web-quality/build.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 2
+          overwrite: true
+      - name: Upload source and build evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: web-guidance-evidence-prepare-${{ github.run_attempt }}
+          path: .artifacts/web-quality/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  audit:
+    name: ${{ matrix.id }}
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - id: fixtures
+            profile: fixtures
+          - id: chromium
+            profile: browser
+            browser: chromium
+          - id: firefox
+            profile: browser
+            browser: firefox
+          - id: webkit
+            profile: browser
+            browser: webkit
+          - id: journeys
+            profile: journeys
+          - id: performance
+            profile: performance
+    container:
+      # ci.test.mjs requires this version to match the locked Playwright package.
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+      options: --init --ipc=host
+    env:
+      FD_WEB_QUALITY_CHANNEL: chromium
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - name: Install isolated frontend dependencies
+        working-directory: FoodDiary.Web.Client
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node scripts/apply-dependency-patches.mjs
+      - name: Receive the shared production build
+        if: matrix.profile == 'browser' || matrix.profile == 'performance'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: web-guidance-build
+      - name: Verify browser assertions and report interaction against controlled fixtures
+        if: matrix.profile == 'fixtures'
+        run: |
+          node Tooling/WebQuality/verify-browser.mjs
+          node Tooling/WebQuality/verify-platform-browser.mjs
       - name: Audit rendered public and login states
-        run: node Tooling/WebQuality/cli.mjs audit --profile browser --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/browser
-      - name: Audit Firefox compatibility
-        run: node Tooling/WebQuality/cli.mjs audit --profile browser --browser firefox --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/firefox
-      - name: Audit WebKit compatibility
-        run: node Tooling/WebQuality/cli.mjs audit --profile browser --browser webkit --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/webkit
+        if: matrix.profile == 'browser'
+        env:
+          QUALITY_BROWSER: ${{ matrix.browser }}
+          QUALITY_REPORT: .artifacts/web-quality/${{ matrix.id }}
+        run: node Tooling/WebQuality/cli.mjs audit --profile browser --browser "$QUALITY_BROWSER" --static-root FoodDiary.Web.Client/dist/browser --report-dir "$QUALITY_REPORT"
       - name: Audit authenticated accessibility journeys
+        if: matrix.profile == 'journeys'
         run: node Tooling/WebQuality/cli.mjs audit --profile journeys --report-dir .artifacts/web-quality/journeys
+      - name: Select the locked Chromium for Lighthouse
+        if: matrix.profile == 'performance'
+        working-directory: FoodDiary.Web.Client
+        run: node -e "const {chromium}=require('@playwright/test');require('fs').appendFileSync(process.env.GITHUB_ENV,'CHROME_PATH='+chromium.executablePath()+'\n')"
       - name: Collect public Lighthouse measurements
+        if: matrix.profile == 'performance'
         run: node Tooling/WebQuality/cli.mjs audit --profile performance --report-dir .artifacts/web-quality/performance
       - name: Upload reports and failed-run evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: web-guidance-evidence
+          name: web-guidance-evidence-${{ matrix.id }}-${{ github.run_attempt }}
           path: .artifacts/web-quality/
           if-no-files-found: ignore
           retention-days: 14
+
+  web-quality:
+    name: web-quality
+    if: always()
+    needs: [prepare, audit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every source, build and parallel audit job to succeed
+        env:
+          WEB_QUALITY_JOBS: ${{ toJSON(needs) }}
+        run: node -e "const jobs=Object.values(JSON.parse(process.env.WEB_QUALITY_JOBS));if(!jobs.length||jobs.some(job=>job.result!=='success')){console.error(jobs);process.exit(1)}"

@@ -271,10 +271,30 @@ master/main pushes, manual runs and the existing weekly schedule. Policy/tool
 contracts, controlled browser verifiers, source/owner audits, production build,
 Chromium/Firefox/WebKit public checks, client/admin journeys and repeated
 Lighthouse all execute automatically. There are no opt-in booleans for these
-engines. A failing quality job makes the overall CI workflow fail, which also
-prevents the existing success-based deployment continuation.
+engines. Source and owner contracts run in the preparation job, which builds
+production once and shares the browser assets with their source/output
+fingerprint receipt. Browser and Lighthouse consumers verify that receipt before
+and after their audit; missing, stale or modified assets fail.
 
-Reports and failed-run evidence upload even after failure. The workflow does
+Six matrix jobs then run concurrently on separate runners: checker fixtures,
+Chromium, Firefox, WebKit, authenticated journeys and Lighthouse. Each job uses
+the official Playwright Noble container, whose version must match the frontend
+lockfile. It already includes the browser engines and OS dependencies, avoiding
+an APT/browser installation on every run. Lighthouse keeps its sequential cold
+samples on its own runner; no other audit or build competes for that runner's CPU.
+The container changes the measurement environment, so saved baselines from a
+different OS context require a new comparable pair; unchanged absolute budgets
+continue to apply.
+
+The final `web-quality` status requires both preparation and the complete matrix
+to succeed. Failed, cancelled or skipped required jobs cannot pass it. Matrix
+fail-fast is disabled so sibling jobs retain their diagnostics. A failing gate
+makes the overall CI workflow fail, which also prevents the existing
+success-based deployment continuation.
+
+Reports and failed-run evidence upload even after failure, with separate artifact
+names per job and run attempt. The shared build is a short-lived artifact of the
+same workflow run; jobs never fetch a build from another revision. The workflow does
 not adopt upstream changes, merge branches or deploy on its own. Worktrees keep
 their own dependency trees, build outputs, servers and reports; personal browser
 sessions and unrelated development processes are not reused or cleaned up.

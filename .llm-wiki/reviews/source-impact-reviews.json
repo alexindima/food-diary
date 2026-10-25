@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "d727faa8e80aad8603d3b752e9aa764abcf772b4daba38a7aa9163d60acd9650",
-          "reviewReason": "Reviewed the added runtime-evidence paragraph against the browser adapter and three-engine verifier: actual uncaught error/rejection events invalidate cases, raw Playwright diagnostics are retained, and axe rules/preloading and live provider controls remain enabled. The frontend module summary, applicability boundaries, CI wiring and manual review scope are unchanged."
+          "sha256": "8dc2889b6be22a04d5026adc4ea3ea62bba636bcd9b385a2d9cef128dfc868c9",
+          "reviewReason": "Reviewed frontend navigation against the updated WebQuality workflow: the same source, owner, three-engine, journey and performance requirements remain automatic; production assets and their receipt are shared with six isolated jobs; the final gate rejects every non-success result. Primary Inter and explicit manual/field limitations remain accurate."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -58,10 +58,10 @@
           "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
         }
       ],
-      "reason": "Reviewed the added runtime-evidence paragraph against the browser adapter and three-engine verifier: actual uncaught error/rejection events invalidate cases, raw Playwright diagnostics are retained, and axe rules/preloading and live provider controls remain enabled. The frontend module summary, applicability boundaries, CI wiring and manual review scope are unchanged.",
+      "reason": "Reviewed frontend navigation against the updated WebQuality workflow: the same source, owner, three-engine, journey and performance requirements remain automatic; production assets and their receipt are shared with six isolated jobs; the final gate rejects every non-success result. Primary Inter and explicit manual/field limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "6e1e105a207660b3a14a3361c9e9d32707de45f2",
-      "reviewedAtUtc": "2026-10-25T16:13:14.3994936Z"
+      "gitHead": "c80bba0d1dc023e860b0248cf9b6414318ea5c64",
+      "reviewedAtUtc": "2026-10-25T18:51:51.6216399Z"
     },
     {
       "pageId": "module.mail-services",
