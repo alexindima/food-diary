@@ -1,18 +1,29 @@
-import { HttpClient, HttpContext, HttpContextToken, type HttpEvent, type HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+    HttpClient,
+    HttpContext,
+    HttpContextToken,
+    type HttpEvent,
+    type HttpHeaders,
+    HttpParams,
+    type HttpRequest,
+} from '@angular/common/http';
 import type { Observable } from 'rxjs';
 
 import { Configuration } from './generated/configuration';
 
 type SdkConstructor<T> = new (http: HttpClient, basePath: string | string[], configuration?: Configuration) => T;
 const SDK_EXTRA_HEADERS = new HttpContextToken<HttpHeaders | null>(() => null);
+type SdkConnectionOptions = Partial<Pick<HttpRequest<unknown>, 'keepalive' | 'priority' | 'withCredentials'>>;
 
 /** The generated client delegates to the application's existing interceptor chain. */
 export function createSdkConnection<T>(
     type: SdkConstructor<T>,
     baseUrl: string,
     http: HttpClient,
-    withCredentials = true,
+    connectionOptions: boolean | SdkConnectionOptions = true,
 ): { client: T; version: string } {
+    const options: SdkConnectionOptions =
+        typeof connectionOptions === 'boolean' ? { withCredentials: connectionOptions } : connectionOptions;
     const marker = '/api/v';
     const markerIndex = baseUrl.lastIndexOf(marker);
     if (markerIndex === -1) {
@@ -40,10 +51,10 @@ export function createSdkConnection<T>(
                     params = params.append(name, value);
                 }
             }
-            return http.request(request.clone({ headers, params }));
+            return http.request(request.clone({ headers, params, keepalive: options.keepalive, priority: options.priority }));
         },
     });
-    return { client: new type(transport, basePath, new Configuration({ withCredentials })), version };
+    return { client: new type(transport, basePath, new Configuration({ withCredentials: options.withCredentials ?? true })), version };
 }
 
 /** Preserve per-call headers and existing contexts, including loading suppression. */

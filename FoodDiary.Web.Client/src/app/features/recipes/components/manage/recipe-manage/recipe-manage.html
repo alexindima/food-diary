@@ -23,6 +23,7 @@
     <fd-page-body>
         <form
             #manageForm
+            method="post"
             class="recipe-manage__form fd-stack fd-gap-lg"
             [formRoot]="recipeSignalForm"
             [attr.aria-busy]="isFormLocked() || anyPhotosUploading()"

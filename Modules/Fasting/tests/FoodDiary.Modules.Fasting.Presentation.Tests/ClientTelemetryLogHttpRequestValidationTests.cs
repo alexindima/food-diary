@@ -15,6 +15,8 @@ public sealed class ClientTelemetryLogHttpRequestValidationTests {
         { "web_vital", "ttfb" },
         { "web_vital", "fcp" },
         { "web_vital", "lcp" },
+        { "web_vital", "cls" },
+        { "web_vital", "inp" },
         { "user_action", "notifications.settings.viewed" },
         { "user_action", "notifications.preference.changed" },
         { "user_action", "notifications.subscription.ensure" },

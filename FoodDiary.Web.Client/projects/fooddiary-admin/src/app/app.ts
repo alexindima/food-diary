@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -60,10 +61,16 @@ const ADMIN_TOOL_LINKS = [
 })
 export class AppComponent {
     private readonly router = inject(Router);
+    private readonly document = inject(DOCUMENT);
+    private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly isUsersSectionExpanded = signal(true);
     protected readonly currentUrl = signal(this.router.url);
-    protected readonly currentPath = computed(() => this.currentUrl().split('?')[0] ?? '/');
+    protected readonly currentPath = computed(() => this.currentUrl().split(/[?#]/u, 1)[0] ?? '/');
+    protected readonly skipToMainHref = computed(() => {
+        const path = this.currentUrl().split('#', 1)[0];
+        return `${path.length > 0 ? path : '/'}#admin-main-content`;
+    });
     private readonly translate = inject(TranslateService);
     private readonly language = toSignal(this.translate.onLangChange);
     protected readonly currentSection = computed(
@@ -144,6 +151,14 @@ export class AppComponent {
         this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             if (event instanceof NavigationEnd) {
                 this.currentUrl.set(event.urlAfterRedirects);
+                afterNextRender(
+                    () => {
+                        this.document.documentElement.setAttribute('data-app-ready', 'true');
+                    },
+                    {
+                        injector: this.injector,
+                    },
+                );
             }
         });
     }

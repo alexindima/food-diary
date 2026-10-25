@@ -215,7 +215,7 @@ function allowedHttpMember(path, node, method, checker) {
             argument.arguments[0].properties.every(
                 property =>
                     (ts.isShorthandPropertyAssignment(property) || ts.isPropertyAssignment(property)) &&
-                    ['headers', 'params'].includes(property.name.getText()),
+                    ['headers', 'params', 'keepalive', 'priority'].includes(property.name.getText()),
             )
         );
     }

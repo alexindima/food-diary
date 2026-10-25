@@ -45,18 +45,23 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "455d0bfd9a0172f3dd6e6e9c4c74aebf92d4674beab146223ef8f228d45f6adb",
+      "pageSha256": "1a0c2850298b11bad778aba4cb2f224d8d7f4f2f401ba2851d4e1b8ec1829b0f",
       "sources": [
         {
-          "path": "FoodDiary.Web.Client/src/app/features/products/api/product.service.ts",
-          "sha256": "8028887a50dec9aaf6bbfa1d9bc82dc4146b8a3fb0cbdca58a7e0d603ee834db",
-          "reviewReason": "Existing Prettier formatting only. All 32 TypeScript files have unchanged canonical AST fingerprints before/after, recorded in .artifacts/master-delivery-format-proof.json. Product service endpoints, types, authentication, routes, nutrition calculations, translations and public contracts are unchanged; source-derived indexes only track shifted line positions. Frontend module navigation remains accurate."
+          "path": "docs/frontend/WEB_QUALITY.md",
+          "sha256": "98cd2abd00c081087d674e6ff67466860bf81ae4a4ff9d38020ac7eddf911fe3",
+          "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
+          "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
         }
       ],
-      "reason": "Existing Prettier formatting only. All 32 TypeScript files have unchanged canonical AST fingerprints before/after, recorded in .artifacts/master-delivery-format-proof.json. Product service endpoints, types, authentication, routes, nutrition calculations, translations and public contracts are unchanged; source-derived indexes only track shifted line positions. Frontend module navigation remains accurate.",
+      "reason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit.",
       "baseRef": "HEAD",
-      "gitHead": "476136f93c4173b3d19569333d07be70cd5750d7",
-      "reviewedAtUtc": "2026-10-19T10:14:02.3384074Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T05:28:15.8681054Z"
     },
     {
       "pageId": "module.mail-services",
@@ -140,12 +145,22 @@
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
           "reviewReason": "Reviewed additive CLI options, environment health output, behavioral corpus and role views against their current generators. Existing source ownership and dispatch semantics remain accurately documented."
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
+          "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
+        },
+        {
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
+          "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
         }
       ],
-      "reason": "Reviewed additive CLI options, environment health output, behavioral corpus and role views against their current generators. Existing source ownership and dispatch semantics remain accurately documented.",
+      "reason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:03.8365535Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T06:16:06.4267922Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -190,14 +205,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "284cd97370ec8cee85449fa6d414f36b16a5fbb14a95f8b7da4a6f588c9cebd3",
-          "reviewReason": "The angular.json delta changes serve:staging and per-project coverage settings, while the catalog still inventories the same workspace projects/build-target families. The generic Git-visible inventory, literal-route limitations and reproducibility instructions remain accurate and contain no frozen count or claim that staging/coverage checks actually passed."
+          "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
+          "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed.",
+      "reason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:25.5845924Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T06:16:07.3534104Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -263,8 +278,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b405f7f4c1dd2928948e0df91c4e743df1764e2dddc7329fe86d3f1aad11d11a",
-          "reviewReason": "Reviewed the only CI YAML delta: the owned PWA Nginx fixture now adds a two-second startup delay to exercise bounded HTTP readiness. API snapshot generation, latest-successful-ancestor compatibility baseline selection, accepted transitions and fail-on-breaking gates are unchanged; this API compatibility guide remains accurate."
+          "sha256": "bc48a7567d8578a20088a6d21d74ffde80f069ea582c474d217d42decc2cd32a",
+          "reviewReason": "The new reusable CI quality job does not change API compatibility baseline selection. Existing OpenAPI snapshots passed unchanged; an additive five-metric telemetry HTTP behavior snapshot was added."
         },
         {
           "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
@@ -277,10 +292,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed the only CI YAML delta: the owned PWA Nginx fixture now adds a two-second startup delay to exercise bounded HTTP readiness. API snapshot generation, latest-successful-ancestor compatibility baseline selection, accepted transitions and fail-on-breaking gates are unchanged; this API compatibility guide remains accurate.",
+      "reason": "The new reusable CI quality job does not change API compatibility baseline selection. Existing OpenAPI snapshots passed unchanged; an additive five-metric telemetry HTTP behavior snapshot was added.",
       "baseRef": "HEAD",
-      "gitHead": "a62b3b7b7d2922ddcf14dc5f067d1cde2caa920a",
-      "reviewedAtUtc": "2026-10-25T00:43:08.7905659Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T05:28:20.1094662Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -794,15 +809,20 @@
           "reviewReason": "Reviewed the browser skill references: actual WebMCP availability and bounded cached notification metadata are distinguished from API, browser and delivery proof. Current source/build/session provenance remains explicit, and no credential or content projection was added."
         },
         {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
+          "reviewReason": "Reviewed package.json after adding offline pinned Inter asset contracts to test:performance-build. Existing Chrome/session, responsive interaction and screenshot workflow remains accurate. Current headed Chrome evidence confirms local Cyrillic/Latin font resources, readable RU at 200% on 390px, same-document skip focus and first-Enter registration; screenshots and logs are retained under .artifacts/web-guidance-release-*. Automated browser matrices and failing-font journeys are additional evidence, not substitutes for this workflow."
+        },
+        {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "d545f54a397abb75ca23ae59b5240033685cd2194dbef9e62e0727cde049eeab",
-          "reviewReason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed."
+          "sha256": "f3cc37ca59b4172661715064eb6a4b81dc899a6e156812e36280ff5a265b930c",
+          "reviewReason": "Reviewed package.json: test:performance-build adds the offline Sass/PostCSS theme-token payload and selector-equivalence suite. Browser commands, runtime identity, Chrome ownership, screenshot and interaction evidence obligations remain accurate; the startup optimization has headed Chrome token comparisons and separate real Storybook controls."
         }
       ],
-      "reason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed.",
-      "baseRef": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
-      "gitHead": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
-      "reviewedAtUtc": "2026-10-24T21:22:15.9626927Z"
+      "reason": "Reviewed package.json: test:performance-build adds the offline Sass/PostCSS theme-token payload and selector-equivalence suite. Browser commands, runtime identity, Chrome ownership, screenshot and interaction evidence obligations remain accurate; the startup optimization has headed Chrome token comparisons and separate real Storybook controls.",
+      "baseRef": "HEAD",
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T13:39:52.2627842Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -895,8 +915,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b405f7f4c1dd2928948e0df91c4e743df1764e2dddc7329fe86d3f1aad11d11a",
-          "reviewReason": "The CI change only injects startup delay into Test-PwaShellIntegrity before compiler dependency installation. Index generator selection, isolated Full shards, focused catalog scheduling, cache receipts and strict aggregate Wiki gate are unchanged; the staged index pipeline guide remains accurate."
+          "sha256": "bc48a7567d8578a20088a6d21d74ffde80f069ea582c474d217d42decc2cd32a",
+          "reviewReason": "Reviewed ci-tests diff: automatic WebQuality adds a separate reusable job and leaves Wiki stage dependencies, affected index commands and full-audit scheduling intact."
         },
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
@@ -949,10 +969,10 @@
           "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged."
         }
       ],
-      "reason": "The CI change only injects startup delay into Test-PwaShellIntegrity before compiler dependency installation. Index generator selection, isolated Full shards, focused catalog scheduling, cache receipts and strict aggregate Wiki gate are unchanged; the staged index pipeline guide remains accurate.",
+      "reason": "Reviewed ci-tests diff: automatic WebQuality adds a separate reusable job and leaves Wiki stage dependencies, affected index commands and full-audit scheduling intact.",
       "baseRef": "HEAD",
-      "gitHead": "a62b3b7b7d2922ddcf14dc5f067d1cde2caa920a",
-      "reviewedAtUtc": "2026-10-25T00:43:09.6810525Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T05:28:21.0253660Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1245,8 +1265,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "b405f7f4c1dd2928948e0df91c4e743df1764e2dddc7329fe86d3f1aad11d11a",
-          "reviewReason": "Reviewed the PWA fixture startup-delay argument added to the existing focused job. Review-report provenance, optional governance artifacts, report publication order and required focused/Full job aggregation are unchanged; the review-report guide still describes the current workflow."
+          "sha256": "bc48a7567d8578a20088a6d21d74ffde80f069ea582c474d217d42decc2cd32a",
+          "reviewReason": "The reusable WebQuality job adds its own evidence artifacts; existing Wiki report generation and optional governance artifact behavior remain unchanged in CI."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1259,10 +1279,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed the PWA fixture startup-delay argument added to the existing focused job. Review-report provenance, optional governance artifacts, report publication order and required focused/Full job aggregation are unchanged; the review-report guide still describes the current workflow.",
+      "reason": "The reusable WebQuality job adds its own evidence artifacts; existing Wiki report generation and optional governance artifact behavior remain unchanged in CI.",
       "baseRef": "HEAD",
-      "gitHead": "a62b3b7b7d2922ddcf14dc5f067d1cde2caa920a",
-      "reviewedAtUtc": "2026-10-25T00:43:10.5541853Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T05:28:21.8258077Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1287,8 +1307,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1d38dc8273beeecc25fc75e125976929cc04263c92d558c360486130a524a0fb",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "6e18351b21715d8dbb9a90bed998cbc2887cabfd099363d397386d8a2b44b3fa",
+          "reviewReason": "Refreshed runtime topology captures telemetry processor redaction and accepted CLS/INP events. No deployable host, recurring job or external analytics provider was added; five-metric HTTP transport and existing OpenAPI contracts passed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1296,10 +1316,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate.",
+      "reason": "Refreshed runtime topology captures telemetry processor redaction and accepted CLS/INP events. No deployable host, recurring job or external analytics provider was added; five-metric HTTP transport and existing OpenAPI contracts passed.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:41:17.9934801Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T06:16:09.3881142Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1581,12 +1601,17 @@
           "path": "docs/frontend/API_SDK.md",
           "sha256": "edacb126059bbe3177997e6ba7588a902efbdaaf898da4f7efec102b3350c849",
           "reviewReason": "API_SDK now documents independent admin SSO cookie policy and the narrow required-shopping-revision compatibility exception. Existing guide instructions trace transient authentication state and feature adapter to the concrete generated method, schema and scope manifest; they keep UI/error normalization and behavior checks separate from generated drift. Nothing in the current page promises revision-less PATCH or a shared admin/main-app session."
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
+          "reviewReason": "Reviewed SDK forwarding limited to headers, params, keepalive and priority. The generated-client ownership policy is preserved; API usage guard and telemetry owner contracts passed."
         }
       ],
-      "reason": "API_SDK now documents independent admin SSO cookie policy and the narrow required-shopping-revision compatibility exception. Existing guide instructions trace transient authentication state and feature adapter to the concrete generated method, schema and scope manifest; they keep UI/error normalization and behavior checks separate from generated drift. Nothing in the current page promises revision-less PATCH or a shared admin/main-app session.",
+      "reason": "Reviewed SDK forwarding limited to headers, params, keepalive and priority. The generated-client ownership policy is preserved; API usage guard and telemetry owner contracts passed.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:37.3308259Z"
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T05:28:18.2482722Z"
     },
     {
       "pageId": "workflow.query-context",

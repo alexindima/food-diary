@@ -1,5 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, Service } from '@angular/core';
+import type { Metric } from 'web-vitals';
+
+export type BrowserWebVital = Pick<Metric, 'name' | 'value' | 'id' | 'delta' | 'rating' | 'navigationType'>;
 
 const FIRST_NAVIGATION_ENTRY_INDEX = 0;
 
@@ -11,6 +14,24 @@ type NavigationTimingLike = {
 export class BrowserPerformanceService {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
+    private observingVitals = false;
+
+    public async observeWebVitalsAsync(callback: (metric: BrowserWebVital) => void): Promise<void> {
+        if (!this.isBrowser || this.observingVitals) {
+            return;
+        }
+        this.observingVitals = true;
+        try {
+            const { onCLS, onINP, onLCP, onFCP, onTTFB } = await import('web-vitals');
+            // Default reporting preserves final values across visibility changes and
+            // bfcache restores without emitting every intermediate layout shift.
+            for (const observe of [onCLS, onINP, onLCP, onFCP, onTTFB]) {
+                observe(callback);
+            }
+        } catch {
+            // Unsupported performance APIs or a failed optional chunk cannot block the app.
+        }
+    }
 
     public now(): number {
         return this.isBrowser ? performance.now() : Date.now();

@@ -19,13 +19,16 @@ export function journeyEvidence(report, requirement) {
         .filter(test => !passed.includes(test))
         .map(test => ({ message: `Journey status: ${test.status}; final result: ${test.results?.at(-1)?.status ?? 'missing'}` }));
     if (report.errors?.length) failures.push(...report.errors.map(error => ({ message: error.message ?? 'Playwright reporter error.' })));
+    for (const project of requirement.requiredProjects ?? [])
+        if (!tests.some(test => test.projectName === project))
+            failures.push({ message: `Required journey project did not execute: ${project}` });
     return {
         requirement: requirement.id,
         engine: 'journeys',
         status: !tests.length ? 'error' : failures.length ? 'fail' : 'pass',
         observations: tests.length,
         findings: failures,
-        detail: `${passed.length}/${tests.length} authenticated accessibility tests passed. API fixtures are mocked; this is not a live-backend audit.`,
+        detail: `${passed.length}/${tests.length} client, admin and platform journeys passed. API fixtures are mocked; this is not a live-backend audit.`,
     };
 }
 

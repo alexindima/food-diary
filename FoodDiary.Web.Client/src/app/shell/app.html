@@ -1,4 +1,4 @@
-<a class="fd-skip-nav fd-visually-hidden-focusable" href="#main-content">{{ 'COMMON.SKIP_TO_MAIN_CONTENT' | translate }}</a>
+<a class="fd-skip-nav fd-visually-hidden-focusable" [attr.href]="skipToMainHref()">{{ 'COMMON.SKIP_TO_MAIN_CONTENT' | translate }}</a>
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
 <div
     class="fd-root"
@@ -18,7 +18,9 @@
         }
     }
     <main class="fd-root__main" id="main-content" tabindex="-1">
-        <fd-app-update-notice [visible]="usesAuthenticatedShell()" [confirmReload]="confirmAppReloadAsync" />
+        @defer (when usesAuthenticatedShell()) {
+            <fd-app-update-notice [visible]="usesAuthenticatedShell()" [confirmReload]="confirmAppReloadAsync" />
+        }
         @defer (when showInstallPromotion()) {
             <fd-pwa-install-banner [visible]="showInstallPromotion()" />
         }
@@ -52,5 +54,7 @@
         </div>
     </main>
 </div>
-<fd-tour-host />
+@defer (when usesAuthenticatedShell()) {
+    <fd-tour-host />
+}
 <fd-ui-toast-host [closeLabel]="'COMMON.CLOSE_NOTIFICATION' | translate" />

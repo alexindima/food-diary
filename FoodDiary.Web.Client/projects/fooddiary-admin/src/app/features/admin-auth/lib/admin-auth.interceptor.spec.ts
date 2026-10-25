@@ -85,7 +85,8 @@ describe('adminAuthInterceptor', () => {
         const req = httpMock.expectOne('/api/admin/users');
         req.flush(payload, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
 
-        expect(localStorage.getItem('authToken')).toBe('admin-token');
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('admin-token');
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'forbidden', returnUrl: '/users?page=2' },
         });
@@ -129,7 +130,8 @@ describe('adminAuthInterceptor feature policy errors', () => {
         });
         expect(received).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.Forbidden, error: payload }));
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(localStorage.getItem('authToken')).toBe('admin-token');
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('admin-token');
         controller.verify();
         localStorage.clear();
     });

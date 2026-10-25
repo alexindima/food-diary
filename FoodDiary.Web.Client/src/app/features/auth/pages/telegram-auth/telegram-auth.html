@@ -36,7 +36,7 @@
                 } @else {
                     <p>{{ 'AUTH.TELEGRAM.NEW_HINT' | translate }}</p>
                     @if (facade.configuration()?.registrationEnabled) {
-                        <form class="fd-stack fd-gap-md" [formRoot]="registrationForm" (submit)="complete('register')">
+                        <form method="post" class="fd-stack fd-gap-md" [formRoot]="registrationForm" (submit)="complete('register')">
                             <fd-ui-input
                                 [value]="timeZoneSearch()"
                                 [label]="'AUTH.TELEGRAM.TIME_ZONE_SEARCH' | translate"

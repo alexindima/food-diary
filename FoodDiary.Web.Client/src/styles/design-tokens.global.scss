@@ -3,11 +3,16 @@
 
 @include design-tokens.fd-emit-static-palette-variables(':root');
 
+// Keep aliases local to every palette, including public marketing on a dark root.
+// Group their identical declarations instead of repeating them for each theme.
+@include design-tokens.fd-emit-shared-css-variables(
+    ':root, html[data-theme="ocean"], html[data-theme="leaf"], html[data-theme="dark"], .fd-root--public-site'
+);
+
 // Public marketing is light even before session initialization finishes.
-// Reuse the same declaration block so isolation adds no duplicate token payload.
-@include design-tokens.fd-emit-css-variables(ocean, ':root, html[data-theme="ocean"], .fd-root--public-site');
-@include design-tokens.fd-emit-css-variables(leaf, 'html[data-theme="leaf"]');
-@include design-tokens.fd-emit-css-variables(dark, 'html[data-theme="dark"]');
+@include design-tokens.fd-emit-css-variables(ocean, ':root, html[data-theme="ocean"], .fd-root--public-site', $include-shared: false);
+@include design-tokens.fd-emit-css-variables(leaf, 'html[data-theme="leaf"]', $include-shared: false);
+@include design-tokens.fd-emit-css-variables(dark, 'html[data-theme="dark"]', $include-shared: false);
 
 @include design-tokens.fd-emit-ui-style-variables(classic, ':root, html[data-ui-style="classic"], .fd-root--public-site');
 @include design-tokens.fd-emit-ui-style-variables(modern, 'html[data-ui-style="modern"]');

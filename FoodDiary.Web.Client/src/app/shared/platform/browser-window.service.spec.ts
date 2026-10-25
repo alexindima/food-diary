@@ -15,6 +15,23 @@ type TelegramCapableWindow = Window & {
 const TEST_SCROLL_Y = 120;
 const TEST_TIMEOUT_MS = 500;
 
+describe('BrowserWindowService visibility flush', () => {
+    it('waits through visible events and flushes once when the document becomes hidden', () => {
+        const target = document.implementation.createHTMLDocument('visibility fixture');
+        let visibility = 'visible';
+        Object.defineProperty(target, 'visibilityState', { get: () => visibility });
+        const callback = vi.fn();
+        const service = createService(target);
+        service.onVisibilityHiddenOnce(callback);
+        target.dispatchEvent(new Event('visibilitychange'));
+        expect(callback).not.toHaveBeenCalled();
+        visibility = 'hidden';
+        target.dispatchEvent(new Event('visibilitychange'));
+        target.dispatchEvent(new Event('visibilitychange'));
+        expect(callback, 'Visibility flush must survive an earlier visible event').toHaveBeenCalledOnce();
+    });
+});
+
 describe('BrowserWindowService', () => {
     afterEach(() => {
         Reflect.deleteProperty(window, 'Telegram');

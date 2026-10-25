@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { AdminAuthSdk } from '../../../shared/api/sdk/generated/api/admin-auth.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
+import { readAdminAccessToken } from './admin-token-storage';
 
 const BASE64_BLOCK_SIZE = 4;
 const BASE64_REMAINDER_NONE = 0;
@@ -25,7 +26,7 @@ export class AdminAuthService {
     public readonly ssoRateLimited = this.ssoRateLimitedSignal.asReadonly();
 
     public getToken(): string | null {
-        return this.localStorageRef?.getItem('authToken') ?? this.sessionStorageRef?.getItem('authToken') ?? null;
+        return readAdminAccessToken(this.localStorageRef, this.sessionStorageRef);
     }
 
     public isAuthenticated(): boolean {
@@ -132,7 +133,8 @@ export class AdminAuthService {
                 return false;
             }
 
-            this.localStorageRef?.setItem('authToken', response.accessToken);
+            this.sessionStorageRef?.setItem('authToken', response.accessToken);
+            this.localStorageRef?.removeItem('authToken');
             this.localStorageRef?.removeItem('refreshToken');
             return true;
         } catch (error: unknown) {

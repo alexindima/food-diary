@@ -1,7 +1,7 @@
 <div class="comments-section">
     <h3 class="comments-title fd-ui-section-title">{{ 'COMMENTS.TITLE' | translate }}</h3>
 
-    <form class="comment-form" [formRoot]="commentForm" (submit)="onSubmit()">
+    <form method="post" class="comment-form" [formRoot]="commentForm" (submit)="onSubmit()">
         <fd-ui-textarea [formField]="commentForm.text" [placeholder]="'COMMENTS.WRITE_PLACEHOLDER' | translate" [rows]="3" />
         <div class="comment-form-actions">
             @if (editingCommentId()) {

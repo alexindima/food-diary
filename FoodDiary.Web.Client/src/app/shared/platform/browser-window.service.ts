@@ -161,15 +161,13 @@ export class BrowserWindowService {
     }
 
     public onVisibilityHiddenOnce(callback: () => void): void {
-        this.document.addEventListener(
-            'visibilitychange',
-            () => {
-                if (this.document.visibilityState === 'hidden') {
-                    callback();
-                }
-            },
-            { once: true },
-        );
+        const listener = (): void => {
+            if (this.document.visibilityState === 'hidden') {
+                this.document.removeEventListener('visibilitychange', listener);
+                callback();
+            }
+        };
+        this.document.addEventListener('visibilitychange', listener);
     }
 
     public getTelegramInitData(): string | null {

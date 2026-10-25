@@ -223,7 +223,7 @@ describe('account access across tabs', () => {
 
         expect(service.isPremium()).toBe(true);
         expect(JSON.parse(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY) ?? 'null')).toEqual(['user-123', 'Premium', 'User']);
-        expect(localStorage.getItem('authToken')).toBe(remembered ? premiumToken : null);
+        expect(localStorage.getItem('authToken')).toBeNull();
         expect(sessionStorage.getItem('authToken')).toBe(premiumToken);
         publishAccessSnapshot(['user-123', 'Premium', 'User']);
         httpMock.expectNone(`${authBaseUrl}/refresh`);
@@ -382,7 +382,8 @@ describe('login', () => {
         const req = httpMock.expectOne(`${authBaseUrl}/login`);
         req.flush(loginAuthResponse);
 
-        expect(localStorage.getItem('authToken')).toBe(loginFakeToken);
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe(loginFakeToken);
         expect(localStorage.getItem('refreshToken')).toBeNull();
         expect(localStorage.getItem('refreshSession')).toBe('true');
     });

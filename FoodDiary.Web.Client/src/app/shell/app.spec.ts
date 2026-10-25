@@ -83,6 +83,19 @@ class SessionRootDialog {
 }
 
 describe('AppComponent session-owned route lifetime', () => {
+    it('keeps the skip link on the current document, including its query parameters', async () => {
+        const { fixture, rootElement, router } = await createSessionShellAsync();
+        allowPrivateEditorDeparture = true;
+        await router.navigateByUrl('/explore?category=public#previous');
+        fixture.detectChanges();
+        expect(router.url).toBe('/explore?category=public#previous');
+
+        expect(
+            rootElement.querySelector<HTMLAnchorElement>('.fd-skip-nav')?.getAttribute('href'),
+            'Skip navigation must preserve the current document instead of resolving against the root base URL',
+        ).toBe('/explore?category=public#main-content');
+    });
+
     it.each(['local', 'logout'])(
         'destroys a dirty owner even when %s departure cannot load the public destination',
         async reason => {

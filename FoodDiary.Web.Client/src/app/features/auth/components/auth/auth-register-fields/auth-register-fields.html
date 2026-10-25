@@ -3,7 +3,7 @@
         <fd-ui-input
             appearance="auth"
             type="email"
-            autocomplete="email"
+            autocomplete="username"
             enterKeyHint="next"
             id="auth-register-email"
             [formField]="form().email"
@@ -16,6 +16,7 @@
         <fd-ui-input
             appearance="auth"
             autocomplete="new-password"
+            id="new-password"
             enterKeyHint="done"
             [type]="passwordInputType()"
             [maximumLength]="passwordMaximumLength"

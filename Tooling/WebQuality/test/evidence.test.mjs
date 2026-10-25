@@ -16,6 +16,14 @@ test('skipped, missing and failing journey tests cannot establish accessibility 
     assert.ok(journeyEvidence(report, requirement).findings.some(item => item.message === 'Server did not start.'));
 });
 
+test('a green client project cannot stand in for omitted admin and platform journeys', () => {
+    const requirement = { id: 'all-journeys', requiredProjects: ['client', 'admin', 'platform'] };
+    const report = { suites: [{ specs: [{ tests: [{ projectName: 'client', status: 'expected', results: [{ status: 'passed' }] }] }] }] };
+    assert.equal(journeyEvidence(report, requirement).status, 'fail');
+    for (const projectName of ['admin', 'platform']) report.suites[0].specs[0].tests.push({ projectName, status: 'expected', results: [{ status: 'passed' }] });
+    assert.equal(journeyEvidence(report, requirement).status, 'pass');
+});
+
 function performanceSummary(overrides = {}, runs = 3) {
     const metrics = {
         performance: 95,

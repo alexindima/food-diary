@@ -1,14 +1,15 @@
-export type WebmcpTool = {
-    name: string;
-    description: string;
+import type {} from 'webmcp-types';
+
+export type WebmcpTool = Omit<WebMCP.ModelContextTool, 'inputSchema' | 'annotations' | 'execute'> & {
     inputSchema: Record<string, unknown>;
-    annotations: { readOnlyHint: boolean };
-    execute: (input: unknown) => Promise<unknown>;
+    annotations: WebMCP.ToolAnnotations & { readOnlyHint: boolean };
+    execute: (input: unknown, options?: WebMCP.ToolExecuteCallbackOptions) => Promise<unknown>;
 };
 
-export type WebmcpOperation = Omit<WebmcpTool, 'execute'> & { run: (input: unknown) => unknown };
+export type WebmcpOperation = Omit<WebmcpTool, 'execute'> & {
+    run: (input: unknown, options?: WebMCP.ToolExecuteCallbackOptions) => unknown;
+};
 
 export type WebmcpModelContext = {
-    registerTool: (tool: WebmcpTool, options?: { signal: AbortSignal }) => void | Promise<void>;
-    unregisterTool?: (name: string) => void;
+    registerTool: (tool: WebmcpTool, options?: WebMCP.ModelContextRegisterToolOptions) => void | Promise<void>;
 };

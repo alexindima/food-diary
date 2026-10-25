@@ -1,4 +1,6 @@
 import { createServer, request as httpRequest } from 'node:http';
+import { createSecureServer } from 'node:http2';
+import { createHash, X509Certificate } from 'node:crypto';
 import { request as httpsRequest } from 'node:https';
 import { readFileSync, realpathSync, statSync } from 'node:fs';
 import path from 'node:path';
@@ -27,11 +29,12 @@ export function prerenderFile(root, route) {
     return file;
 }
 
-export async function startStaticServer(staticRoot, apiOrigin) {
+export async function startStaticServer(staticRoot, apiOrigin, { transport = 'http1' } = {}) {
+    if (!['http1', 'http2'].includes(transport)) throw new Error('Unknown static server transport.');
     const root = realpathSync(staticRoot);
     const api = apiOrigin ? new URL(validateOrigin(apiOrigin)) : undefined;
     const cache = new Map();
-    const server = createServer((request, response) => {
+    const listener = (request, response) => {
         try {
             const requestUrl = request.url ?? '/';
             const decoded = decodeURIComponent(requestUrl.split(/[?#]/)[0]);
@@ -48,6 +51,7 @@ export async function startStaticServer(staticRoot, apiOrigin) {
             const url = new URL(requestUrl, 'http://localhost');
             if (api && url.pathname.startsWith('/api/')) {
                 const headers = { ...request.headers, host: api.host };
+                for (const name of Object.keys(headers)) if (name.startsWith(':')) delete headers[name];
                 delete headers.authorization;
                 delete headers.cookie;
                 const forward = (api.protocol === 'https:' ? httpsRequest : httpRequest)(
@@ -60,6 +64,15 @@ export async function startStaticServer(staticRoot, apiOrigin) {
                     upstream => {
                         const responseHeaders = { ...upstream.headers };
                         delete responseHeaders['set-cookie'];
+                        for (const name of [
+                            'connection',
+                            'keep-alive',
+                            'proxy-connection',
+                            'transfer-encoding',
+                            'upgrade',
+                            'http2-settings',
+                        ])
+                            delete responseHeaders[name];
                         response.writeHead(upstream.statusCode ?? 502, responseHeaders);
                         upstream.pipe(response);
                     },
@@ -105,7 +118,28 @@ export async function startStaticServer(staticRoot, apiOrigin) {
         } catch {
             response.writeHead(404).end('Not found');
         }
-    });
+    };
+    let certificate, certificateSPKI;
+    let server;
+    const sessions = new Set();
+    if (transport === 'http2') {
+        const { generate } = await import('selfsigned');
+        const pems = await generate([{ name: 'commonName', value: 'localhost' }], {
+            keySize: 2048,
+            algorithm: 'sha256',
+            notBeforeDate: new Date(Date.now() - 60_000),
+            notAfterDate: new Date(Date.now() + 3_600_000),
+        });
+        certificate = pems.cert;
+        certificateSPKI = createHash('sha256')
+            .update(new X509Certificate(certificate).publicKey.export({ type: 'spki', format: 'der' }))
+            .digest('base64');
+        server = createSecureServer({ cert: certificate, key: pems.private, allowHTTP1: true }, listener);
+        server.on('session', session => {
+            sessions.add(session);
+            session.once('close', () => sessions.delete(session));
+        });
+    } else server = createServer(listener);
     await new Promise((resolve, reject) => {
         server.once('error', reject);
         server.listen(0, '127.0.0.1', resolve);
@@ -113,11 +147,14 @@ export async function startStaticServer(staticRoot, apiOrigin) {
     const address = server.address();
     if (!address || typeof address === 'string') throw new Error('Cannot determine audit server port.');
     return {
-        origin: `http://127.0.0.1:${address.port}`,
+        origin: `${transport === 'http2' ? 'https' : 'http'}://127.0.0.1:${address.port}`,
+        certificate,
+        certificateSPKI,
         close: () =>
             new Promise((resolve, reject) => {
                 server.close(error => (error ? reject(error) : resolve()));
-                server.closeAllConnections();
+                for (const session of sessions) session.destroy();
+                server.closeAllConnections?.();
             }),
     };
 }

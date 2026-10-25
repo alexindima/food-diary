@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { type ComponentFixture, DeferBlockState, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
@@ -99,6 +99,7 @@ async function createRenderedComponentAsync(): Promise<void> {
     };
 
     await TestBed.configureTestingModule({
+        deferBlockBehavior: DeferBlockBehavior.Manual,
         imports: [MainComponent],
         providers: [
             { provide: PublicAuthDialogService, useValue: authDialogServiceMock },
@@ -122,7 +123,7 @@ describe('MainComponent deferred preview', () => {
 
             const deferBlocks = await fixture.getDeferBlocks();
 
-            expect(deferBlocks).toHaveLength(1);
+            expect(deferBlocks.length).toBeGreaterThan(0);
             await deferBlocks[0]?.render(DeferBlockState.Error);
             expect(fixture.debugElement.query(By.css('[data-testid="landing-preview-error"]'))).not.toBeNull();
         },

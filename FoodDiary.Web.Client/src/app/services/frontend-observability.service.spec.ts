@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -18,9 +18,12 @@ const WEB_VITAL_LCP_DUPLICATE = 1200;
 const NAVIGATION_RESPONSE_START_MS = 100;
 const PREVIOUS_LOG_EVENT_CALL_INDEX = -2;
 const SERVICE_WORKER_VERSION_HASH_LENGTH = 40;
+const INITIAL_CLS_SCORE = 0.01;
+const EXPECTED_VITAL_DELIVERIES = 5;
 
 let service: FrontendObservabilityService;
 let browserPerformanceSpy: {
+    observeWebVitalsAsync: ReturnType<typeof vi.fn<BrowserPerformanceService['observeWebVitalsAsync']>>;
     getNavigationResponseStart: ReturnType<typeof vi.fn<BrowserPerformanceService['getNavigationResponseStart']>>;
     now: ReturnType<typeof vi.fn<BrowserPerformanceService['now']>>;
     observeLatestEntry: ReturnType<typeof vi.fn<BrowserPerformanceService['observeLatestEntry']>>;
@@ -38,6 +41,7 @@ let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
 beforeEach(() => {
     environment.enableClientObservability = true;
     browserPerformanceSpy = {
+        observeWebVitalsAsync: vi.fn().mockResolvedValue(undefined),
         getNavigationResponseStart: vi.fn().mockReturnValue(null),
         now: vi.fn().mockReturnValue(0),
         observeLatestEntry: vi.fn().mockReturnValue(null),
@@ -91,6 +95,30 @@ describe('FrontendObservabilityService PWA diagnostics', () => {
     });
 });
 
+describe('FrontendObservabilityService URL privacy', () => {
+    it('redacts credentials, search values and record identifiers in every telemetry URL field', () => {
+        const route = '/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc/edit?token=secret#private';
+        vi.spyOn(TestBed.inject(Router), 'url', 'get').mockReturnValue(route);
+        browserWindowSpy.getHref.mockReturnValue(`https://fooddiary.test${route}`);
+        service.recordHttpRequest({
+            url: `https://fooddiary.test/api/v1${route}`,
+            method: 'GET',
+            statusCode: 200,
+            durationMs: 1,
+            outcome: 'success',
+        });
+        service.recordRouteTiming(route, 1, 'success');
+        service.recordWebVital('cls', INITIAL_CLS_SCORE, 'score');
+        service.recordClientError({ message: 'failure', location: `https://fooddiary.test${route}` });
+        for (const [payload] of loggingSpy.logEvent.mock.calls) {
+            expect(JSON.stringify(payload), 'Telemetry URLs must not include query secrets or record identifiers').not.toMatch(
+                /secret|private|5f8d9e1a/u,
+            );
+        }
+        expect(loggingSpy.logEvent.mock.calls[0][0]).toMatchObject({ route: '/meals/:id/edit', location: '/meals/:id/edit' });
+    });
+});
+
 describe('FrontendObservabilityService errors and requests', () => {
     it('should not send events when client observability is disabled', () => {
         environment.enableClientObservability = false;
@@ -128,7 +156,7 @@ describe('FrontendObservabilityService errors and requests', () => {
         expect((payload['details'] as Record<string, unknown>)['url']).toBe('/api/v1/products');
     });
 
-    it('should keep invalid http URLs when normalization fails', () => {
+    it('omits malformed HTTP URLs when normalization fails', () => {
         service.recordHttpRequest({
             url: 'http://%',
             method: 'POST',
@@ -139,7 +167,7 @@ describe('FrontendObservabilityService errors and requests', () => {
 
         const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['level']).toBe('error');
-        expect((payload['details'] as Record<string, unknown>)['url']).toBe('http://%');
+        expect((payload['details'] as Record<string, unknown>)['url']).toBe('/unknown');
     });
 
     it('should log route timing with rounded duration and error level', () => {
@@ -158,7 +186,7 @@ describe('FrontendObservabilityService errors and requests', () => {
         service.recordRouteTiming('/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc/edit?tab=items', ROUTE_DURATION_MS, 'success');
 
         const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
-        expect(payload['route']).toBe('/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc/edit?tab=items');
+        expect(payload['route']).toBe('/meals/:id/edit');
         expect(payload['pageRoute']).toBe('/meals/:id/edit');
     });
 
@@ -173,23 +201,39 @@ describe('FrontendObservabilityService errors and requests', () => {
 });
 
 describe('FrontendObservabilityService web vitals', () => {
-    it('should deduplicate repeated web vitals by name', () => {
+    it('deduplicates identical deliveries but preserves a later final vital value', () => {
         service.recordWebVital('lcp', WEB_VITAL_LCP_INITIAL);
         service.recordWebVital('lcp', WEB_VITAL_LCP_DUPLICATE);
+        service.recordWebVital('lcp', WEB_VITAL_LCP_DUPLICATE);
 
-        expect(loggingSpy.logEvent).toHaveBeenCalledTimes(1);
+        expect(loggingSpy.logEvent).toHaveBeenCalledTimes(2);
     });
 
     it('should record navigation timing during initialization for private routes', () => {
-        browserPerformanceSpy.getNavigationResponseStart.mockReturnValue(NAVIGATION_RESPONSE_START_MS);
-
         service.initialize();
-
+        const callback = browserPerformanceSpy.observeWebVitalsAsync.mock.calls[0][0];
+        vi.spyOn(TestBed.inject(Router), 'url', 'get').mockReturnValue('/meals');
+        callback({
+            name: 'TTFB',
+            value: NAVIGATION_RESPONSE_START_MS,
+            delta: NAVIGATION_RESPONSE_START_MS,
+            id: 'visit-1',
+            rating: 'good',
+            navigationType: 'navigate',
+        });
         const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['name']).toBe('ttfb');
+        expect(payload['route']).toBe('/dashboard');
         expect(payload['value']).toBe(NAVIGATION_RESPONSE_START_MS);
-        expect(browserPerformanceSpy.observePaintMetric).toHaveBeenCalled();
-        expect(browserPerformanceSpy.observeLatestEntry).toHaveBeenCalledWith('largest-contentful-paint', expect.any(Function));
+        service.initialize();
+        expect(browserPerformanceSpy.observeWebVitalsAsync).toHaveBeenCalledOnce();
+        callback({ name: 'CLS', value: 0.012, delta: 0.012, id: 'cls-1', rating: 'good', navigationType: 'navigate' });
+        callback({ name: 'INP', value: 120, delta: 120, id: 'inp-1', rating: 'good', navigationType: 'navigate' });
+        callback({ name: 'INP', value: 240, delta: 120, id: 'inp-1', rating: 'needs-improvement', navigationType: 'navigate' });
+        callback({ name: 'INP', value: 40, delta: 40, id: 'inp-2', rating: 'good', navigationType: 'back-forward-cache' });
+        expect(loggingSpy.logEvent.mock.calls[1][0]).toMatchObject({ name: 'cls', value: 0.012, unit: 'score' });
+        expect(loggingSpy.logEvent.mock.calls.at(-1)?.[0]).toMatchObject({ name: 'inp', value: 40, details: { metricId: 'inp-2' } });
+        expect(loggingSpy.logEvent).toHaveBeenCalledTimes(EXPECTED_VITAL_DELIVERIES);
     });
 });
 

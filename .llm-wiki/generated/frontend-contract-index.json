@@ -3,7 +3,7 @@
   "summary": {
     "components": 504,
     "componentsWithoutDirectSpecs": 126,
-    "inputs": 1639,
+    "inputs": 1640,
     "outputs": 556,
     "apiCalls": 317,
     "templatesWithTranslations": 365,
@@ -5637,6 +5637,11 @@
       "inputs": [
         {
           "name": "id",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "name",
           "type": "",
           "required": false
         },
@@ -16206,7 +16211,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/start",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 108,
+      "line": 109,
       "publicMethod": "tryUpgradeToAdminAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -16218,7 +16223,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/admin-sso/exchange",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 126,
+      "line": 127,
       "publicMethod": "exchangeSsoCodeAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": null,
@@ -18714,7 +18719,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/logs",
       "path": "FoodDiary.Web.Client/src/app/services/logging-api.service.ts",
-      "line": 40,
+      "line": 63,
       "publicMethod": "logEvent",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.logs",
@@ -19182,7 +19187,7 @@
       "responseType": "TranslationDictionary",
       "urlExpression": "url",
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-      "line": 74,
+      "line": 78,
       "publicMethod": "loadBundle",
       "transport": "HttpClient",
       "baseUrlExpression": null,
@@ -21660,7 +21665,8 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.html",
       "keys": [
         "ADMIN_NAV.SECTIONS",
-        "ADMIN_OUTGOING.MAIL"
+        "ADMIN_OUTGOING.MAIL",
+        "COMMON.SKIP_TO_MAIN_CONTENT"
       ]
     },
     {

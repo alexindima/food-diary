@@ -12,17 +12,24 @@ export class WebmcpExecutor {
 
     public tool(operation: WebmcpOperation, policy: WebmcpExecutionPolicy): WebmcpTool {
         const { run: _run, ...definition } = operation;
-        const executeAsync = async (input: unknown): Promise<unknown> => this.executeAsync(operation, policy, input);
+        const executeAsync: WebmcpTool['execute'] = async (input, options) => this.executeAsync(operation, policy, input, options);
         return {
             ...definition,
+            annotations: { ...definition.annotations, debugging: true },
             description: `${definition.description} ${policy.failureDescription}`,
             execute: executeAsync,
         };
     }
 
-    private async executeAsync(operation: WebmcpOperation, policy: WebmcpExecutionPolicy, input: unknown): Promise<unknown> {
+    private async executeAsync(
+        operation: WebmcpOperation,
+        policy: WebmcpExecutionPolicy,
+        input: unknown,
+        options?: WebMCP.ToolExecuteCallbackOptions,
+    ): Promise<unknown> {
         const changesScreen = !operation.annotations.readOnlyHint;
         try {
+            options?.signal.throwIfAborted();
             policy.requireSession();
             if (changesScreen && this.busy) {
                 return { ok: false, error: 'Another development tool is running.' };
@@ -31,7 +38,8 @@ export class WebmcpExecutor {
                 this.busy = true;
             }
             try {
-                const result = await operation.run(input);
+                const result = await operation.run(input, options);
+                options?.signal.throwIfAborted();
                 policy.requireSession();
                 return result;
             } finally {
@@ -40,6 +48,7 @@ export class WebmcpExecutor {
                 }
             }
         } catch (error: unknown) {
+            options?.signal.throwIfAborted();
             return { ok: false, error: policy.errorMessage(error) };
         }
     }

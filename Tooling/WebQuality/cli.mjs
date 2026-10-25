@@ -76,6 +76,7 @@ async function validate(lock, policy, directory = snapshotDirectory) {
     await validatePolicy(policy, lock, directory);
     const source = await adapter('source.mjs');
     const browser = await adapter('browser.mjs');
+    const contracts = await adapter('contracts.mjs');
     for (const requirement of policy.requirements) {
         const known =
             requirement.engine === 'source'
@@ -84,6 +85,8 @@ async function validate(lock, policy, directory = snapshotDirectory) {
                   ? browser.browserChecks
                   : requirement.engine === 'journeys'
                     ? new Set(['journeys:authenticated-axe'])
+                    : requirement.engine === 'contracts'
+                      ? contracts.contractChecks
                     : requirement.engine === 'performance'
                       ? new Set(['performance:public-budgets'])
                       : new Set([requirement.check]);
@@ -94,11 +97,11 @@ async function validate(lock, policy, directory = snapshotDirectory) {
 async function audit(options, lock, policy) {
     await validate(lock, policy);
     const selected =
-        options.profile === 'all' ? ['source', 'browser', 'journeys', 'performance'] : (options.profile ?? 'source').split(',');
+        options.profile === 'all' ? ['source', 'contracts', 'browser', 'journeys', 'performance'] : (options.profile ?? 'source').split(',');
     if (
         !selected.length ||
         new Set(selected).size !== selected.length ||
-        selected.some(engine => !['source', 'browser', 'journeys', 'performance'].includes(engine))
+        selected.some(engine => !['source', 'contracts', 'browser', 'journeys', 'performance'].includes(engine))
     )
         throw new Error('Unknown or repeated audit profile.');
     const startedAt = new Date().toISOString();
@@ -145,6 +148,7 @@ async function audit(options, lock, policy) {
                     : undefined;
             const build = staticRoot ? await verifyBuild(repositoryRoot, staticRoot) : undefined;
             if (engine === 'source') run = await (await adapter('source.mjs')).runSource(common);
+            if (engine === 'contracts') run = await (await adapter('contracts.mjs')).runContracts(common);
             if (engine === 'browser') {
                 let baseURL = options['base-url'];
                 if (!baseURL) {
@@ -227,7 +231,7 @@ export async function main(argv = process.argv.slice(2)) {
   validate                                     Verify catalogue, cached guides and reviewed mappings offline
   build [--report-dir PATH]                     Build production and record source/output fingerprints
   catalogue [--search TEXT] [--guide ID]         Inspect coverage or a cached guide
-  audit [--profile source|browser|journeys|performance|all]
+  audit [--profile source|contracts|browser|journeys|performance|all]
         [--base-url ORIGIN | --static-root PATH] [--report-dir PATH]
         [--browser chromium|firefox|webkit] [--channel chrome]
         [--routes /,/ru] [--devices mobile,desktop] [--strict] [--complete]

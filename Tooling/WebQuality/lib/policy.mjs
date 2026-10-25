@@ -1,13 +1,16 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
+import path from 'node:path';
 import { within } from './files.mjs';
 
-export const engines = new Set(['source', 'browser', 'journeys', 'performance', 'manual']);
+export const engines = new Set(['source', 'browser', 'journeys', 'performance', 'contracts', 'manual']);
 export const statuses = new Set(['pass', 'fail', 'not-run', 'manual', 'not-applicable', 'exception', 'error']);
 
 export async function validatePolicy(policy, lock, snapshotDirectory) {
     if (policy.schemaVersion !== 1 || !Array.isArray(policy.requirements) || !policy.requirements.length || !Array.isArray(policy.scopes))
         throw new Error('Invalid quality policy.');
     const scopes = new Set(policy.scopes.map(scope => scope.id));
+    const repositoryRoot = path.resolve(snapshotDirectory, '../../..');
+    for (const file of policy.additionalSources ?? []) await stat(within(repositoryRoot, file));
     if (scopes.size !== policy.scopes.length || !scopes.size) throw new Error('Empty or duplicate source scopes.');
     for (const scope of policy.scopes) {
         within('/quality-root', scope.path);
@@ -55,7 +58,32 @@ export async function validatePolicy(policy, lock, snapshotDirectory) {
         if (review.status === 'not-applicable' && policy.requirements.some(item => item.source.guide === review.guide))
             throw new Error(`Mapped guide cannot be declared inapplicable: ${review.guide}`);
         reviewedGuides.add(review.guide);
+        if (review.requirements && (!review.requirements.length || review.requirements.some(id => !ids.has(id))))
+            throw new Error(`Guide review references missing assertions: ${review.guide}`);
+        if (review.whenAbsent) {
+            if (!review.whenAbsent.reason?.trim() || !review.whenAbsent.patterns?.length)
+                throw new Error(`Missing applicability probe: ${review.guide}`);
+            for (const pattern of review.whenAbsent.patterns) {
+                const probe = new RegExp(pattern, 'gmu');
+                if (probe.test('')) throw new Error(`Empty applicability probe: ${review.guide}`);
+                if (policy.reviewMode === 'all-guides' && !review.whenAbsent.examples?.some(example => new RegExp(pattern, 'mu').test(example)))
+                    throw new Error(`Applicability probe lacks a positive fixture: ${review.guide}`);
+            }
+        }
+        if (policy.reviewMode === 'all-guides') {
+            if (!guide.cache || !review.anchor?.trim() || !review.requirements?.length || !review.evidence?.length || review.status === 'partial')
+                throw new Error(`Incomplete full-catalogue decision: ${review.guide}`);
+            const body = await readFile(within(snapshotDirectory, guide.cache), 'utf8');
+            if (!body.includes(review.anchor)) throw new Error(`Guide review anchor missing: ${review.guide}`);
+            for (const file of review.evidence) await stat(within(repositoryRoot, file));
+            if (review.status === 'not-applicable' && !review.whenAbsent)
+                throw new Error(`Inapplicability must be executable: ${review.guide}`);
+            if (review.whenAbsent && !review.requirements.some(id => policy.requirements.some(item => item.id === id && item.engine === 'source' && item.check === 'source:guide-applicability')))
+                throw new Error(`Applicability review is not connected to its executable guard: ${review.guide}`);
+        }
     }
+    if (policy.reviewMode === 'all-guides' && reviewedGuides.size !== lock.guides.length)
+        throw new Error('Every pinned guide requires an explicit current review decision.');
 }
 
 export function initialResults(policy) {

@@ -1,5 +1,6 @@
 <form
     #loginFormElement
+    method="post"
     class="auth__form fd-stack fd-gap-md"
     [formRoot]="form()"
     [attr.aria-busy]="isSubmitting() || isRestoring()"
@@ -31,6 +32,7 @@
         <fd-ui-input
             appearance="auth"
             autocomplete="current-password"
+            id="current-password"
             enterKeyHint="go"
             [maximumLength]="passwordMaximumLength"
             [type]="passwordInputType()"

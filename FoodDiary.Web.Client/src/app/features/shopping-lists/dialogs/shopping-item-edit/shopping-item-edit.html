@@ -1,5 +1,5 @@
 <fd-ui-dialog size="sm" [title]="'SHOPPING_LIST.EDIT_ITEM' | translate" (close)="close()">
-    <form class="fd-stack fd-gap-md" [formRoot]="fields" (submit)="save($event)">
+    <form method="post" class="fd-stack fd-gap-md" [formRoot]="fields" (submit)="save($event)">
         <fd-ui-input [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate" [formField]="fields.name" [controlReadonly]="isProductLinked" />
         <fd-ui-input
             type="number"

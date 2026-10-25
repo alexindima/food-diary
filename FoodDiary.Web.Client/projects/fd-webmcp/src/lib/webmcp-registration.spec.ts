@@ -35,8 +35,7 @@ describe('WebMCP registration diagnostics', () => {
 describe('WebMCP registration lifecycle', () => {
     it('registers in order with a shared abort signal and disposes once', async () => {
         const registerTool = vi.fn<WebmcpModelContext['registerTool']>();
-        const unregisterTool = vi.fn();
-        const dispose = registerWebmcpTools({ registerTool, unregisterTool }, [tool('first'), tool('second')]);
+        const dispose = registerWebmcpTools({ registerTool }, [tool('first'), tool('second')]);
         await vi.waitFor(() => {
             expect(registerTool).toHaveBeenCalledTimes(2);
         });
@@ -47,7 +46,6 @@ describe('WebMCP registration lifecycle', () => {
         dispose();
         dispose();
         expect(signal?.aborted).toBe(true);
-        expect(unregisterTool.mock.calls).toEqual([['first'], ['second']]);
     });
 
     it('aborts partial registration on failure without attempting later tools', async () => {
@@ -55,13 +53,12 @@ describe('WebMCP registration lifecycle', () => {
             .fn<WebmcpModelContext['registerTool']>()
             .mockResolvedValueOnce()
             .mockRejectedValueOnce(new Error('unsupported'));
-        const unregisterTool = vi.fn();
-        registerWebmcpTools({ registerTool, unregisterTool }, [tool('first'), tool('second'), tool('third')]);
+        registerWebmcpTools({ registerTool }, [tool('first'), tool('second'), tool('third')]);
         await vi.waitFor(() => {
-            expect(unregisterTool).toHaveBeenCalledTimes(2);
+            expect(registerTool.mock.calls[0][1]?.signal?.aborted).toBe(true);
         });
         expect(registerTool).toHaveBeenCalledTimes(2);
-        expect(registerTool.mock.calls[0][1]?.signal.aborted).toBe(true);
+        expect(registerTool.mock.calls[0][1]?.signal?.aborted).toBe(true);
     });
 });
 
@@ -72,13 +69,12 @@ describe('WebMCP registration cleanup', () => {
             resume = resolve;
         });
         const registerTool = vi.fn<WebmcpModelContext['registerTool']>().mockReturnValue(pending);
-        const unregisterTool = vi.fn();
-        const dispose = registerWebmcpTools({ registerTool, unregisterTool }, [tool('first'), tool('second')]);
+        const dispose = registerWebmcpTools({ registerTool }, [tool('first'), tool('second')]);
         dispose();
         resume();
         await pending;
         expect(registerTool).toHaveBeenCalledOnce();
-        expect(unregisterTool).toHaveBeenCalledWith('first');
+        expect(registerTool.mock.calls[0][1]?.signal?.aborted).toBe(true);
     });
 
     it('ignores a late registration failure after session cleanup', async () => {
@@ -87,12 +83,11 @@ describe('WebMCP registration cleanup', () => {
             rejectRegistration = reject;
         });
         const registerTool = vi.fn<WebmcpModelContext['registerTool']>().mockReturnValue(pending);
-        const unregisterTool = vi.fn();
         const states = vi.fn();
-        const dispose = registerWebmcpTools({ registerTool, unregisterTool }, [tool('first'), tool('second')], states);
+        const dispose = registerWebmcpTools({ registerTool }, [tool('first'), tool('second')], states);
 
         dispose();
-        expect(registerTool.mock.calls[0][1]?.signal.aborted).toBe(true);
+        expect(registerTool.mock.calls[0][1]?.signal?.aborted).toBe(true);
         rejectRegistration(new Error('session already closed'));
         // Let the rejected registration and its diagnostic callbacks settle.
         await new Promise<void>(resolve => {
@@ -101,36 +96,28 @@ describe('WebMCP registration cleanup', () => {
         dispose();
 
         expect(registerTool).toHaveBeenCalledOnce();
-        expect(unregisterTool.mock.calls).toEqual([['first']]);
         expect(states.mock.calls).toEqual([
             [{ registration: 'registering', registeredToolCount: 0 }],
             [{ registration: 'disposed', registeredToolCount: 0 }],
         ]);
     });
 
-    it('does not let old cleanup unregister a name now owned by a new session', async () => {
+    it('does not abort the replacement session registration when an old session closes', async () => {
         const registerTool = vi.fn<WebmcpModelContext['registerTool']>();
-        const unregisterTool = vi.fn();
-        const context = { registerTool, unregisterTool };
+        const context = { registerTool };
         const oldDispose = registerWebmcpTools(context, [tool('screen')]);
         await vi.waitFor(() => {
             expect(registerTool).toHaveBeenCalledOnce();
         });
         const newDispose = registerWebmcpTools(context, [tool('screen')]);
         oldDispose();
-        expect(unregisterTool).not.toHaveBeenCalled();
+        expect(registerTool.mock.calls[0][1]?.signal?.aborted).toBe(true);
+        expect(registerTool.mock.calls[1][1]?.signal?.aborted).toBe(false);
         newDispose();
-        expect(unregisterTool).toHaveBeenCalledOnce();
+        expect(registerTool.mock.calls[1][1]?.signal?.aborted).toBe(true);
     });
 
-    it('keeps logout safe when optional browser cleanup throws or is missing', () => {
-        const context = {
-            registerTool: vi.fn(),
-            unregisterTool: vi.fn().mockImplementation(() => {
-                throw new Error('gone');
-            }),
-        };
-        expect(registerWebmcpTools(context, [tool('screen')])).not.toThrow();
+    it('disposes without requiring any nonstandard cleanup API', () => {
         expect(registerWebmcpTools({ registerTool: vi.fn() }, [tool('screen')])).not.toThrow();
     });
 });

@@ -1,0 +1,3 @@
+*.woff2 -text
+# Preserve the pinned upstream license bytes, including its original trailing space.
+OFL.txt -text whitespace=-blank-at-eol

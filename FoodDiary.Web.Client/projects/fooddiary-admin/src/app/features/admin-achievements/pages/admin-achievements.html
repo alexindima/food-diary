@@ -45,7 +45,7 @@
         />
     </section>
 
-    <form class="editor fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
+    <form method="post" class="editor fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
         <div>
             <h2>{{ (editingId() === null ? 'ADMIN_ACHIEVEMENTS.NEW' : 'ADMIN_ACHIEVEMENTS.EDIT') | translate }}</h2>
             <p>{{ 'ADMIN_ACHIEVEMENTS.HELP' | translate }}</p>

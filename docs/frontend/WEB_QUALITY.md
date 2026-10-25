@@ -1,40 +1,57 @@
 # Versioned Modern Web Guidance checks
 
-FoodDiary WebQuality is an independent Node CLI in `Tooling/WebQuality` with
-frontend adapters under `FoodDiary.Web.Client/quality/modern-web-guidance`.
-It keeps Google source versions, FoodDiary adoption decisions, executable checks
-and results separate. It does not change the existing lint configuration,
-application behavior, Lighthouse runner, or delivery workflows.
+FoodDiary keeps Google's guidance as a versioned engineering policy in
+`Tooling/WebQuality`, with application adapters in
+`FoodDiary.Web.Client/quality/modern-web-guidance`. The accepted snapshot contains
+all **192 guides** from Google version **0.0.195**, commit
+`65e7edd67e77420eaf02c5df00fdc0521417d809`.
 
-## Architecture and boundaries
+Every guide has a source-bound applicability decision: **152 reviewed as
+applicable**, and **40 conditionally inapplicable** because the corresponding
+capability is absent. There are **68 requirements**: 61 executable assertions or
+linked owner suites, and seven explicit human/field assessments. Several guides
+share the same underlying assertion. A review decision is not a certificate that
+every sentence in a guide has been satisfied.
 
-- `upstream/upstream.lock.json`: the complete published guide inventory, exact
-  Google repository commit, release version and individual Git blob hashes.
-- `upstream/sources/`: unmodified content-addressed Markdown for mapped guides.
-  These are reference data, not instructions to the coding agent. Normal runs
-  are offline and verify each cached file against its upstream Git blob.
-- `policy.json`: reviewed requirements, source anchors/hashes, scope, engine,
-  severity, manual procedures and narrowly scoped exceptions.
-- `lib/` and `cli.mjs`: integrity, update staging/adoption, result contracts,
-  provenance and HTML/JSON reports. The CLI has no npm dependencies.
-- Frontend adapters resolve the **existing frontend dependency tree** for Angular
-  ESLint, TypeScript, PostCSS, Playwright and axe. The source runner reuses the
-  actual FoodDiary UI button rule from the existing ESLint configuration.
-- The browser adapter exercises public/login states. The journeys adapter runs
-  the existing authenticated axe fixtures on its own port 4318, without reusing
-  another session's dev server. The performance adapter calls the existing
-  Lighthouse collector and validates its real samples and repository budgets.
+## Ownership and execution
 
-A separate Angular dashboard or a fork of Google's agent evaluation harness
-would add maintenance without improving these checks. The generated HTML report
-already provides search, engine/status filters, source links and evidence detail.
+- `upstream/upstream.lock.json` records the complete inventory, release, commit
+  and individual Git blob hashes. `upstream/sources/` contains all 192 unmodified,
+  content-addressed texts. They are reference data, never executable agent
+  instructions. Policy/source audits are offline and validate source integrity.
+- `policy.json` owns the per-guide decisions, source anchors, evidence paths,
+  requirement mappings, scopes, severity and manual procedures. The full-catalogue
+  mode rejects missing decisions, stale blobs and invalid mappings.
+- Forty absence decisions include concrete feature probes and positive fixtures.
+  Every source audit rechecks them against application/library sources and
+  relevant configuration. A newly detected feature fails the audit until its
+  guide is reconsidered. This is a bounded adoption guard, not a proof against
+  every possible alias or dynamically assembled API call.
+- The CLI has no separate npm dependency tree or running server. Frontend
+  adapters use the workspace's locked Angular ESLint, TypeScript, PostCSS,
+  Playwright and axe dependencies. Existing ESLint rules and owner tests are
+  reused; Google's example harness and graders are not executed.
+- HTML and JSON reports contain searchable requirements, engine/status filters,
+  per-guide reasons, source links, findings and execution provenance. An
+  additional Angular dashboard would duplicate this maintained interface.
 
-## Install and run
+The source engine covers client, admin, UI kit, tour and WebMCP runtime code,
+entry documents and literal inline Angular templates. Generated SDKs, tests and
+stories are excluded. It checks concrete semantics, metadata, form transport,
+media/resource hints, CSS fallbacks and scaling, selected injection/message/code
+boundaries and persistent credential writes. Parsers and representative invalid
+fixtures establish that the assertions can actually fail; malformed inputs and
+missing dependencies are execution errors.
 
-Use the same supported Node version as frontend CI (Node 22 or newer). No install
-step is needed inside `Tooling/WebQuality`. In a new worktree, install frontend
-dependencies independently. For an isolated audit without changing Git hook
-configuration:
+The contracts engine executes actual UI kit, tour, WebMCP, calendar, client
+platform, admin platform and production/PWA suites. Required suite names,
+nonzero assertion counts and executed outcomes are validated. Missing, skipped,
+failed or inconsistent evidence cannot become a passing result.
+
+## Running locally
+
+Use Node 22 or newer and install the frontend's locked dependencies. An isolated
+installation can avoid changing shared hook configuration:
 
 ```powershell
 cd FoodDiary.Web.Client
@@ -43,205 +60,211 @@ node scripts/apply-dependency-patches.mjs
 cd ..
 node Tooling/WebQuality/cli.mjs validate
 node --test Tooling/WebQuality/test/*.test.mjs
-node Tooling/WebQuality/cli.mjs audit --profile source
+node Tooling/WebQuality/cli.mjs audit --profile source,contracts
 ```
 
-The frontend also exposes additive wrappers: `npm run quality:validate`,
-`npm run quality:audit`, `npm run test:web-quality` and
-`npm run test:web-quality:browser`. Existing verification scripts are unchanged.
-These wrappers integrate with the repository's existing evidence-command policy.
-`test:web-quality` runs both unit contracts and the controlled browser/report
-checks; the `:browser` variant runs only the browser checks. Use the direct Node
-unit-test command above when Chrome is unavailable.
+Frontend wrappers include `quality:validate`, `quality:audit`,
+`test:web-quality:unit` and `test:web-quality:browser`. `test:web-quality` runs
+both the unit and controlled browser/report checks. The inexpensive policy,
+unit, document and source checks also run through `npm run verify`.
 
-Source audits include client, admin, UI kit, tour and WebMCP runtime sources,
-external HTML and literal inline Angular templates. Generated SDK files and
-test/story sources are excluded. Files are parsed with their owning parsers;
-malformed templates/styles or missing dependencies are engine errors. A known
-invalid Angular fixture must report before application results are trusted.
+Each audit prints its report directory under `.artifacts/web-quality/runs`.
+Open `index.html`; retain `report.json` and linked logs for machine-readable
+evidence. Use `--report-dir .artifacts/web-quality/<name>` for a chosen directory.
+Concurrent runs must use different directories.
 
-Each run prints its unique report directory under `.artifacts/web-quality/runs`.
-Open `index.html`; `report.json` contains machine-readable evidence. Use
-`--report-dir .artifacts/web-quality/<name>` for a chosen run directory. Keep
-separate directories for concurrent runs and do not overwrite a run being read.
-
-`node Tooling/WebQuality/verify-browser.mjs` additionally tests the browser engine
-against controlled valid/invalid pages and checks report filters/layout in a
-real browser. It uses Chrome locally. CI explicitly installs the Chromium
-version locked by the frontend Playwright package and selects that channel.
-
-### Rendered public and login states
-
-Build production assets with a source/output receipt, then audit them through a task-owned ephemeral
-static server. Chrome is the default channel; it uses a fresh headless profile.
-No production account or personal signed-in browser session is used.
+### Production browser matrix
 
 ```powershell
 node Tooling/WebQuality/cli.mjs build
-node Tooling/WebQuality/cli.mjs audit --profile source,browser --static-root FoodDiary.Web.Client/dist/browser
+node Tooling/WebQuality/cli.mjs audit --profile browser --static-root FoodDiary.Web.Client/dist/browser
+node Tooling/WebQuality/cli.mjs audit --profile browser --browser firefox --static-root FoodDiary.Web.Client/dist/browser
+node Tooling/WebQuality/cli.mjs audit --profile browser --browser webkit --static-root FoodDiary.Web.Client/dist/browser
 ```
 
-The build command runs the existing `npm run build:prod` script and records input
-and output fingerprints in `.artifacts/web-quality/build.json`. Local browser
-and performance audits verify that receipt before and after execution. Changed
-sources, changed assets or missing receipts require a rebuild. This prevents an
-old `dist` directory from being reported as evidence for current source files.
-For `--base-url`, the origin and browser results are recorded, but association
-with this checkout remains explicitly unverified. The report labels its Git
-revision as the tool checkout revision.
+The build uses `npm run build:prod` and records input/output fingerprints in
+`.artifacts/web-quality/build.json`. Local browser and performance runs validate
+the receipt before and after execution. Changed sources or assets require a
+rebuild. A supplied `--base-url` records its actual origin, but does not establish
+that the remote deployment matches the checkout.
 
-The initial matrix covers EN/RU home pages at desktop/mobile sizes and the EN
-login modal at both sizes, with normal/reduced motion and light/dark browser
-preferences represented. This does **not** prove motion preferences or theme
-behavior: those require their own assertions. Checks cover detected axe
-violations, language/title/landmarks, viewport overflow/zoom metadata, rendered
-login autocomplete and actual modal focus transitions. axe's incomplete checks
-remain visible for manual review. Focus checks run last because they close the
-dialog, verifying both tab boundaries, Escape and focus restoration.
+The public matrix includes EN/RU home, SEO, login and registration states at
+desktop/mobile sizes. Assertions cover axe, semantic structure, keyboard and
+modal focus, current-document skip navigation, credential/autofill metadata,
+invalid submit feedback, 200% root text, 320 CSS pixel reflow, reduced motion and
+resource priorities. System colors are represented. A bounded, named,
+keyboard-scrollable data table qualifies for the two-dimensional reflow
+exception; an inaccessible or clipped container does not.
 
-`--base-url http://127.0.0.1:<owned-port>` can audit an existing owned origin.
-`--browser firefox` or `--browser webkit` requires that Playwright browser to be
-installed; unavailable engines fail explicitly. A WebKit run is not proof on
-every supported Safari/OS combination. No universal browser support claim is
-made by a Chrome-only run.
+Axe issue [#3978](https://github.com/dequelabs/axe-core/issues/3978) mixes
+unforced text fill with forced backgrounds. For system-color scenarios semantic
+checks run in the requested mode and author contrast runs separately in normal
+colors. The report records this limitation. Actual system-palette legibility
+remains a human assessment; no application color is changed merely to hide that
+tooling error.
 
-The static server inherits the existing Lighthouse server's behavior: API
-requests fail unless `--api-origin` is supplied. That option forwards anonymous
-requests and strips credentials. This is suitable for anonymous UI, not a
-replacement for authenticated live-backend testing. Production builds and
-signed-out pages intentionally expose no FoodDiary WebMCP tools.
+The two controlled browser verifiers test good and broken fixtures, nested base
+URLs, scrolling exceptions and report interactions. A fixture failure blocks
+trust in the corresponding application result. Chrome is the local default;
+CI installs the browser engines locked by the frontend Playwright package.
 
-### Authenticated accessibility fixtures
+### Client and admin journeys
 
 ```powershell
 node Tooling/WebQuality/cli.mjs audit --profile journeys
 ```
 
-This starts a separate dev server from the current checkout at port 4318 and
-runs the existing `authenticated accessibility` suite with a JSON reporter.
-Occupied ports fail; existing servers are not silently reused. The suite uses
-mocked API fixtures and covers only the routes/states in the existing tests.
-Skipped tests, empty reports and runner errors cannot establish a passing result.
-Logs, failure screenshots and traces stay in the report directory. These runs
-do not sign in to or change production.
+This starts owned development servers on ports **4318 and 4319**, without
+reusing existing sessions. Occupied ports fail. Three required projects cover
+client authentication/accessibility and mobile navigation, failed saves and
+draft protection, product form/tour behavior, admin SSO/navigation and moderation
+recovery, plus platform regressions. These include system-color focus, failed
+font loading, SEO text enlargement and an offscreen preview that loads only when
+the reader reaches it.
 
-### Performance
+Authenticated tour and update-notice UI are deferred until the authenticated shell
+is used. Actual production startup metadata rejects their accidental eager
+inclusion. Public sections with actionable controls use ordinary hydration so
+the first keyboard activation works across browser engines. Prerender checks
+protect their server-visible content.
+
+Packaged SSR translations are transferred by language and requested bundle;
+marketing-page startup does not transfer the private application dictionary or
+unrelated landing copy into SEO/privacy pages. Initial
+public language follows the URL before browser/stored preferences, matching the
+route guard. Owner tests cover transfer/cache behavior and the CI prerender
+check verifies the needed bundles in all 48 generated localized documents.
+
+Production/staging use an empty replacement for the local WebMCP providers;
+admin production does the same. A runtime `isDevMode()` branch alone did not
+remove the development implementation bytes. Production build guards inspect
+actual bundle inputs, including lazy chunks, and reject these implementations.
+Development builds retain their existing tools.
+
+The API fixtures are mocked; this is not a live-backend audit or evidence of
+production delivery. Skips, empty/missing projects, retries and runner failures
+cannot silently establish success. Logs, attachments, failed screenshots and
+traces are retained. Interactive FoodDiary verification follows the repository's
+browser QA skill; automated audits use fresh headless profiles.
+
+### Performance and field data
 
 ```powershell
 node Tooling/WebQuality/cli.mjs audit --profile performance
 node Tooling/WebQuality/cli.mjs audit --profile performance --routes=/ --devices=desktop
 ```
 
-Build production first. The default collects the existing four-route Lighthouse
-smoke inventory on mobile and desktop, with three sequential cold runs per case.
-The narrower example measures only the explicit selected scope. Reports preserve
-the actual route/device plan and measurement context. Do not run CPU-heavy jobs
-concurrently with measurements.
+Build production first. The default runs the existing four-route public smoke
+inventory on mobile and desktop, with three sequential cold runs per case
+(24 measurements). It validates complete comparable samples and applies the
+repository's existing budgets. Do not run CPU-heavy jobs concurrently. Broader
+prerender inventory and baseline comparison remain available through the
+original runner; see [Public Lighthouse](PUBLIC_LIGHTHOUSE.md).
 
-This adapter applies the **repository's existing budgets**, not a claim that
-Google mandates those thresholds. It validates at least three samples and
-the complete collection before accepting measurements. Lighthouse scores and
-TBT do not establish field INP or complete Core Web Vitals conformance. Existing
-baseline comparison remains available through the original runner; see
-[Public Lighthouse](PUBLIC_LIGHTHOUSE.md). A standalone saved summary is not
-silently treated as execution evidence for the current source revision.
+Inter is served locally as pinned Google Fonts v20 WOFF2 subsets, with its OFL
+license, source URLs and SHA-256 manifest under `src/fonts/inter`. Both apps use
+the same weight range and Unicode coverage. The font asset contract checks bytes,
+font-face metadata and entry documents, so a remote font stylesheet cannot silently
+return to the startup path. Only used subsets are requested; unused fonts remain
+in the existing lazy PWA asset group. Browser scenarios also block font delivery
+and check that content and authentication controls remain usable.
+
+The Lighthouse static host defaults to HTTPS with negotiated HTTP/2, matching the
+public nginx configuration. Its ephemeral loopback certificate stays in memory;
+Chrome trusts only that generated public-key fingerprint. Each local sample must
+contain actual `h2` network evidence. This is not a production TLS assessment.
+HTTP/1 diagnostic runs remain available, and their distinct comparison context
+cannot reuse an HTTP/2 baseline. Scores from the two transports are not a code
+before/after comparison. The certificate helper is a locked development dependency.
+
+Private client document entries dynamically load Google's `web-vitals` once and report
+CLS, INP, LCP, FCP and TTFB through the owned generated logging SDK. Final updates
+and bfcache metric IDs are retained; CLS is not rounded to zero. Transport uses
+low priority and keepalive. Known credential/PII patterns and URL parameters are
+masked, and diagnostics are bounded. No raw performance entries, DOM nodes or
+third-party analytics endpoint are added. The API accepts all five metrics and
+retains only the bounded official anonymous metric-ID format, never arbitrary
+details or session IDs. Document-lifetime metrics keep their entry route when
+SPA navigation occurs; they are not presented as measurements of every soft
+navigation. Server log routes are redacted independently of client masking.
+
+Field analysis must use the latest value per metric ID, sufficient sample counts
+and appropriate release/device/route cohorts. Public/admin field coverage and
+actual delivery loss require separate evidence. Lighthouse TBT is not field INP;
+passing laboratory budgets or checking request options does not establish p75
+Core Web Vitals conformance.
 
 `--profile all --static-root FoodDiary.Web.Client/dist/browser` runs source,
-public browser, authenticated fixture and performance engines sequentially.
+contracts, public browser, owned journeys and performance sequentially.
 
-## Reading the result
+## Interpreting results and limits
 
 Requirement statuses are `pass`, `fail`, `error`, `not-run`, `manual`,
-`not-applicable` and `exception`. An error is failure of execution/integrity,
-not an application finding. Missing engines stay `not-run`; zero observations
-cannot pass. Manual requirements carry concrete verification procedures. They
-remain manual until a separately reviewed evidence workflow is introduced.
+`not-applicable` and `exception`. An error denotes failed execution/integrity.
+Unexecuted engines stay `not-run`; zero observations cannot pass. Reports do not
+convert review coverage into an aggregate conformance percentage.
 
-Guide coverage is tracked independently: `unreviewed`, `partial`, `reviewed`,
-or `not-applicable`. Mapping some recommendations marks a guide only `partial`.
-Whole-guide review decisions must include a reason and match the pinned source
-blob. A changed guide invalidates its previous review. Inapplicability must be
-explicit; a feature that was never evaluated is not automatically inapplicable.
+Seven manual requirements retain concrete procedures for screen readers, actual
+OS text scaling, motion comfort, browser/device fallbacks and system palettes,
+field performance, privacy purposes/retention/deletion, and deployed security
+policies. The current frontend CSP permits `unsafe-inline` for existing startup,
+prerender and provider dependencies; strict nonce/hash CSP and Trusted Types need
+a staged integration review. The automatic checks do not certify that rollout,
+privacy compliance, reverse-proxy configuration or every application screen.
 
-The initial policy maps 31 requirements across eight guides from Google version
-0.0.195 and indexes all 192 published guides at commit
-`65e7edd67e77420eaf02c5df00fdc0521417d809`. It intentionally reports the remaining
-guides as unreviewed. Examples of residual work are screen-reader verification,
-OS text scaling, reduced motion, supported-browser fallback review and real-user
-performance. Source lint does not prove runtime behavior or complete WCAG.
+Access credentials now remain in tab storage. Remember-me and reload recovery
+use the existing HttpOnly refresh-cookie flow. Legacy persistent credentials
+migrate once; non-secret cross-tab ownership/invalidation hints remain separate.
+Session storage still requires application script isolation and is not an
+HttpOnly credential boundary. Owner suites protect account switching, logout,
+SSO, impersonation and late responses.
 
-Exit codes:
+Exit codes are `0` for no blocking findings in the executed scope, `1` for
+blocking findings or requested incomplete coverage, and `2` for engine or
+configuration errors. `--strict` promotes warnings. `--complete` also rejects
+manual, not-run, exception and partial/unreviewed states, so it intentionally
+cannot pass while the manual assessments remain unresolved.
 
-- `0`: no blocking findings in the executed scope. Other requirements or guides
-  may remain untested/unreviewed; inspect the report.
-- `1`: an error-severity application finding, a warning under `--strict`, or
-  incomplete coverage requested with `--complete`.
-- `2`: configuration/integrity failure or an engine could not execute.
-
-`--complete` also rejects partial/unreviewed guides and manual/not-run/exception
-requirements. It cannot currently pass the initial adoption profile. This is
-intentional. There is no misleading aggregate conformance percentage.
-
-Typography preferences currently have warning severity. Robust static rules,
-browser assertions and engine failures block their selected audit. Exceptions
-require a requirement ID, an exact source file or browser case ID, owner, reason
-and ISO expiry date (UTC). They match only when all findings belong to that exact
-scope. Wildcard folder exemptions and engine-error exemptions are not supported.
-
-## Update and extend the adopted guidance
-
-Google publishes source-authoring material separately from the compiled guides.
-We pin the published `GoogleChrome/modern-web-guidance` tree, so incomplete source
-stubs do not become application requirements. The updater downloads metadata
-and selected Markdown, verifies Git blob hashes and never installs or executes
-upstream skills, graders or scripts.
+## Updating the accepted standard
 
 ```powershell
 node Tooling/WebQuality/cli.mjs update --ref main --output .artifacts/web-quality-candidate
 node Tooling/WebQuality/cli.mjs diff --candidate .artifacts/web-quality-candidate
 ```
 
-Only update preparation accesses the network. The candidate records an immutable
-commit and `changes.json` lists added, changed and removed guides plus dependent
-requirement IDs. The accepted snapshot is unchanged. Add `--cache <guide-id>` to
-stage text for a previously unreviewed guide; comma-separated IDs are supported.
-
-Review changed text and compatibility notes. For every changed mapped guide,
-reconsider each requirement's meaning, scope and checker; then update
-`source.reviewedBlob` and its anchor in `policy.json`. Update whole-guide review
-records too. New guides remain explicitly unreviewed until evaluated. Removed
-mapped guides cannot be adopted without updating/retiring their requirements;
-do not silently delete a useful project guard just because upstream removed it.
+Updates stage a separate candidate and structured diff without changing the
+accepted policy. The candidate retains cached content-addressed texts; use
+`--cache <guide-id>` to request additional texts. Review new, changed and removed
+guides, normative assertions and browser compatibility. Update every affected
+guide decision, evidence path, source anchor/hash and requirement/checker. A new
+guide needs an explicit decision; removing a guide is not permission to silently
+remove a useful FoodDiary guard. An absence decision needs feature probes,
+positive fixtures and an executable adoption guard.
 
 ```powershell
-node Tooling/WebQuality/cli.mjs adopt --candidate .artifacts/web-quality-candidate --note "Reviewed affected requirements, scopes and compatibility"
+node Tooling/WebQuality/cli.mjs adopt --candidate .artifacts/web-quality-candidate --note "Reviewed affected assertions and compatibility"
 node Tooling/WebQuality/cli.mjs validate
 node --test Tooling/WebQuality/test/*.test.mjs
 ```
 
-Adoption validates the candidate against the **current reviewed policy** before
-writing anything accepted. Stale hashes and missing anchors fail. Source files
-are content-addressed and copied first; the lock is atomically replaced last.
-`review.json` records the adoption note. Inspect the Git diff and rerun affected
-application audits before committing the new standard and its checks together.
+Adoption validates the candidate against the reviewed policy before writing
+accepted state. Stale blobs, missing anchors or incomplete full-catalogue
+decisions fail. Source files are copied first and the lock is replaced last;
+`review.json` records the decision. Commit policy, source changes and working
+checker fixtures together, then rerun affected owner/browser/performance checks.
+Upstream publication is never automatically treated as an approved policy.
 
-To add a requirement, select a precise source assertion, declare its scope and
-choose an existing check or add a focused adapter assertion. Provide invalid
-and valid fixtures. A rule that checks where `scope` is legal, for example,
-does not establish that every table header declares scope. Keep these contracts
-as narrow as their actual assertions.
+## Automatic CI
 
-## CI and isolation
+`CI Tests` calls `.github/workflows/web-quality.yml` for pull requests,
+master/main pushes, manual runs and the existing weekly schedule. Policy/tool
+contracts, controlled browser verifiers, source/owner audits, production build,
+Chromium/Firefox/WebKit public checks, client/admin journeys and repeated
+Lighthouse all execute automatically. There are no opt-in booleans for these
+engines. A failing quality job makes the overall CI workflow fail, which also
+prevents the existing success-based deployment continuation.
 
-`.github/workflows/web-quality.yml` is independent of current CI/deployment files.
-Frontend/tool pull requests validate the pinned catalogue, run the tool and
-controlled browser-engine/report tests, and execute source audits. Application
-browser audits, authenticated fixtures and repeated
-Lighthouse collection are explicit manual-workflow options. Reports upload even
-after failure. The workflow never updates accepted sources or deploys anything.
-
-Use a separate worktree and its own dependencies/build outputs for independent
-work. Automated browser profiles, temporary servers, logs and report directories
-are task-owned. Existing sessions and the primary checkout are not reused or
-cleaned up. For interactive FoodDiary verification follow the repository browser
-QA skill; the automatic audit remains headless.
+Reports and failed-run evidence upload even after failure. The workflow does
+not adopt upstream changes, merge branches or deploy on its own. Worktrees keep
+their own dependency trees, build outputs, servers and reports; personal browser
+sessions and unrelated development processes are not reused or cleaned up.

@@ -1,8 +1,5 @@
 import type { WebmcpModelContext, WebmcpTool } from './webmcp.types';
 
-/** Abort first, then remove only names still owned by this registration. */
-const registrations = new WeakMap<WebmcpModelContext, Map<string, symbol>>();
-
 export type WebmcpRegistrationState = { registration: 'registering' | 'ready' | 'failed' | 'disposed'; registeredToolCount: number };
 
 export function registerWebmcpTools(
@@ -11,10 +8,7 @@ export function registerWebmcpTools(
     onState?: (state: WebmcpRegistrationState) => void,
 ): () => void {
     const controller = new AbortController();
-    const owner = Symbol('webmcp-registration');
     const names = new Set<string>();
-    const owners = registrations.get(context) ?? new Map<string, symbol>();
-    registrations.set(context, owners);
     let disposed = false;
     const report = (registration: WebmcpRegistrationState['registration'], registeredToolCount: number): void => {
         try {
@@ -28,24 +22,14 @@ export function registerWebmcpTools(
             return;
         }
         disposed = true;
+        // The browser owns registration removal through the registration signal.
+        // WebMCP has no unregisterTool method.
         controller.abort();
-        for (const name of names) {
-            if (owners.get(name) !== owner) {
-                continue;
-            }
-            owners.delete(name);
-            try {
-                context.unregisterTool?.(name);
-            } catch {
-                // Optional browser cleanup must not block logout or app destruction.
-            }
-        }
         report('disposed', 0);
     };
     report('registering', 0);
     void registerAsync(context, tools, controller.signal, name => {
         names.add(name);
-        owners.set(name, owner);
     })
         .then(() => {
             if (!disposed) {

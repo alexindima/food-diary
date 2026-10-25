@@ -1,6 +1,6 @@
 <fd-hero />
 <div class="landing-main">
-    @defer (on viewport; prefetch on idle; on timer(5s)) {
+    @defer (on viewport) {
         <fd-landing-preview-tour />
     } @placeholder {
         <div class="landing-main__preview-placeholder" aria-hidden="true"></div>

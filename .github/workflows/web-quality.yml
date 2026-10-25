@@ -1,81 +1,71 @@
 name: Web guidance quality
 
 on:
-    pull_request:
-        paths:
-            - 'Tooling/WebQuality/**'
-            - 'FoodDiary.Web.Client/**'
-            - '.github/workflows/web-quality.yml'
-    workflow_dispatch:
-        inputs:
-            browser:
-                description: 'Build production and audit public/login browser states'
-                type: boolean
-                default: false
-            journeys:
-                description: 'Run authenticated accessibility fixtures on an owned dev server'
-                type: boolean
-                default: false
-            performance:
-                description: 'Collect repeated public-page Lighthouse smoke measurements'
-                type: boolean
-                default: false
+  workflow_call:
+  workflow_dispatch:
 
 permissions:
-    contents: read
+  contents: read
 
 concurrency:
-    group: web-guidance-${{ github.ref }}
-    cancel-in-progress: true
+  group: web-guidance-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    web-quality:
-        runs-on: ubuntu-latest
-        timeout-minutes: 45
-        env:
-            FD_WEB_QUALITY_CHANNEL: chromium
-        steps:
-            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-            - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
-              with:
-                  node-version: 22
-                  cache: npm
-                  cache-dependency-path: FoodDiary.Web.Client/package-lock.json
-            - name: Install isolated frontend dependencies
-              working-directory: FoodDiary.Web.Client
-              run: |
-                  npm ci --ignore-scripts --no-audit --no-fund
-                  node scripts/apply-dependency-patches.mjs
-            - name: Verify source integrity and engine contracts
-              run: |
-                  node Tooling/WebQuality/cli.mjs validate
-                  node --test Tooling/WebQuality/test/*.test.mjs
-            - name: Install the locked Playwright Chromium and system dependencies
-              working-directory: FoodDiary.Web.Client
-              run: |
-                  node node_modules/@playwright/test/cli.js install --with-deps chromium
-                  node -e "const {chromium}=require('@playwright/test');require('fs').appendFileSync(process.env.GITHUB_ENV,'CHROME_PATH='+chromium.executablePath()+'\n')"
-            - name: Verify browser assertions and report interaction against controlled fixtures
-              run: node Tooling/WebQuality/verify-browser.mjs
-            - name: Audit application source
-              run: node Tooling/WebQuality/cli.mjs audit --profile source --report-dir .artifacts/web-quality/source
-            - name: Build production assets for requested browser measurements
-              if: ${{ inputs.browser || inputs.performance }}
-              run: node Tooling/WebQuality/cli.mjs build
-            - name: Audit rendered public and login states
-              if: ${{ inputs.browser }}
-              run: node Tooling/WebQuality/cli.mjs audit --profile browser --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/browser
-            - name: Audit authenticated accessibility journeys
-              if: ${{ inputs.journeys }}
-              run: node Tooling/WebQuality/cli.mjs audit --profile journeys --report-dir .artifacts/web-quality/journeys
-            - name: Collect public Lighthouse measurements
-              if: ${{ inputs.performance }}
-              run: node Tooling/WebQuality/cli.mjs audit --profile performance --report-dir .artifacts/web-quality/performance
-            - name: Upload reports and failed-run evidence
-              if: always()
-              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-              with:
-                  name: web-guidance-evidence
-                  path: .artifacts/web-quality/
-                  if-no-files-found: ignore
-                  retention-days: 14
+  web-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      FD_WEB_QUALITY_CHANNEL: chromium
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - name: Install isolated frontend dependencies
+        working-directory: FoodDiary.Web.Client
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node scripts/apply-dependency-patches.mjs
+      - name: Verify source integrity and engine contracts
+        run: |
+          node Tooling/WebQuality/cli.mjs validate
+          node --test Tooling/WebQuality/test/*.test.mjs
+      - name: Install locked browser engines and system dependencies
+        working-directory: FoodDiary.Web.Client
+        run: |
+          node node_modules/@playwright/test/cli.js install --with-deps chromium firefox webkit
+          node -e "const {chromium}=require('@playwright/test');require('fs').appendFileSync(process.env.GITHUB_ENV,'CHROME_PATH='+chromium.executablePath()+'\n')"
+      - name: Verify browser assertions and report interaction against controlled fixtures
+        run: |
+          node Tooling/WebQuality/verify-browser.mjs
+          node Tooling/WebQuality/verify-platform-browser.mjs
+      - name: Audit application source
+        run: node Tooling/WebQuality/cli.mjs audit --profile source --report-dir .artifacts/web-quality/source
+      - name: Execute linked owner behavior contracts
+        run: node Tooling/WebQuality/cli.mjs audit --profile contracts --report-dir .artifacts/web-quality/contracts
+      - name: Build production assets for browser measurements
+        run: node Tooling/WebQuality/cli.mjs build
+      - name: Verify localized prerender and hydration payloads
+        working-directory: FoodDiary.Web.Client
+        run: npm run check:seo-prerender
+      - name: Audit rendered public and login states
+        run: node Tooling/WebQuality/cli.mjs audit --profile browser --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/browser
+      - name: Audit Firefox compatibility
+        run: node Tooling/WebQuality/cli.mjs audit --profile browser --browser firefox --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/firefox
+      - name: Audit WebKit compatibility
+        run: node Tooling/WebQuality/cli.mjs audit --profile browser --browser webkit --static-root FoodDiary.Web.Client/dist/browser --report-dir .artifacts/web-quality/webkit
+      - name: Audit authenticated accessibility journeys
+        run: node Tooling/WebQuality/cli.mjs audit --profile journeys --report-dir .artifacts/web-quality/journeys
+      - name: Collect public Lighthouse measurements
+        run: node Tooling/WebQuality/cli.mjs audit --profile performance --report-dir .artifacts/web-quality/performance
+      - name: Upload reports and failed-run evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: web-guidance-evidence
+          path: .artifacts/web-quality/
+          if-no-files-found: ignore
+          retention-days: 14

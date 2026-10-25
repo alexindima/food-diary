@@ -33,6 +33,14 @@ afterEach(() => {
 });
 
 describe('AdminAuthService token state', () => {
+    it('migrates a legacy credential into the current tab without persisting an access token', () => {
+        localStorage.setItem('authToken', 'legacy-admin');
+        expect(service.getToken()).toBe('legacy-admin');
+        expect(localStorage.getItem('authToken'), 'Admin access tokens must not persist in localStorage').toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('legacy-admin');
+        localStorage.setItem('authToken', 'another-account');
+        expect(service.getToken()).toBe('legacy-admin');
+    });
     it('should detect admin role from token payload', () => {
         localStorage.setItem('authToken', createToken({ role: 'Admin' }));
         service.refreshTokenState();
@@ -111,7 +119,8 @@ describe('AdminAuthService SSO exchange', () => {
 
         await promise;
 
-        expect(localStorage.getItem('authToken')).toBeTruthy();
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBeTruthy();
         expect(localStorage.getItem('refreshToken')).toBeNull();
         expect(sessionStorage.getItem('adminSsoCode')).toBe('sso-code');
         expect(replaceStateSpy).toHaveBeenCalledWith({}, '', '/admin?foo=1');

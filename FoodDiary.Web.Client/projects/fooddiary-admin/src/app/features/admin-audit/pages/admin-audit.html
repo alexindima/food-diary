@@ -2,7 +2,7 @@
 <p>
     <a routerLink="/users/impersonation-sessions">{{ 'ADMIN_NAV.SESSIONS' | translate }}</a>
 </p>
-<form class="admin-filter-bar" [formRoot]="form">
+<form method="post" class="admin-filter-bar" [formRoot]="form">
     <fd-admin-period [inline]="true" />
     <fd-ui-input [label]="'ADMIN_AUDIT.ACTOR' | translate" [formField]="form.actorUserId" />
     <fd-ui-input [label]="'ADMIN_AUDIT.SUBJECT' | translate" [formField]="form.subjectClientUserId" />

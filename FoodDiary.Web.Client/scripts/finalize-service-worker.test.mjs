@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { collectStartupJavascript, splitServiceWorkerJavascript } from './finalize-service-worker.mjs';
+import { assertDeferredPublicStartup, collectStartupJavascript, splitServiceWorkerJavascript } from './finalize-service-worker.mjs';
 
 const stats = {
     outputs: {
@@ -22,6 +22,16 @@ const stats = {
         'private-C.js': { imports: [] },
     },
 };
+
+test('public startup excludes the authenticated tour while retaining lazy feature code', () => {
+    const fixture = structuredClone(stats);
+    fixture.outputs['private-C.js'].inputs = { 'projects/fd-tour/src/lib/fd-tour-host.ts': { bytesInOutput: 100 } };
+    assert.doesNotThrow(() => assertDeferredPublicStartup(fixture));
+    fixture.outputs['shared-B.js'].inputs = fixture.outputs['private-C.js'].inputs;
+    assert.throws(() => assertDeferredPublicStartup(fixture), /Deferred feature in public startup/u);
+    fixture.outputs['shared-B.js'].inputs = { 'src/app/components/shared/app-update-notice/app-update-notice.ts': { bytesInOutput: 100 } };
+    assert.throws(() => assertDeferredPublicStartup(fixture), /Deferred feature in public startup/u);
+});
 
 const createManifest = () => ({
     index: '/index.html',

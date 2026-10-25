@@ -18,7 +18,7 @@
             </p>
         </div>
     } @else {
-        <form class="admin-user-create-dialog fd-grid fd-gap-md" [formRoot]="form" (submit)="submit()">
+        <form method="post" class="admin-user-create-dialog fd-grid fd-gap-md" [formRoot]="form" (submit)="submit()">
             <fd-ui-input label="Email" type="email" floatLabel="always" [formField]="form.email" />
             <div class="fd-row fd-gap-sm">
                 <fd-ui-input label="First name" floatLabel="always" [formField]="form.firstName" />

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 import { adminApiErrorCode } from '../../../shared/api/admin-api-error';
+import { readAdminAccessToken } from './admin-token-storage';
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
@@ -12,7 +13,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     const localStorageRef = getBrowserStorage(documentRef, isBrowser, 'localStorage');
     const sessionStorageRef = getBrowserStorage(documentRef, isBrowser, 'sessionStorage');
-    const token = localStorageRef?.getItem('authToken') ?? sessionStorageRef?.getItem('authToken') ?? null;
+    const token = readAdminAccessToken(localStorageRef, sessionStorageRef);
     if (token === null || token.trim().length === 0) {
         return next(req);
     }

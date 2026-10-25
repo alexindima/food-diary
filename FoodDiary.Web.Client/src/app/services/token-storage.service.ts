@@ -12,7 +12,21 @@ export class TokenStorageService {
     private owner: string | null = null;
 
     public getToken(): string | null {
-        return this.storage.getItem('session', 'authToken') ?? this.storage.getItem('local', 'authToken') ?? null;
+        const tabToken = this.storage.getItem('session', 'authToken');
+        if (tabToken !== null) {
+            return tabToken;
+        }
+        const legacyToken = this.storage.getItem('local', 'authToken');
+        if (legacyToken !== null) {
+            const legacyOwner = this.jwtDecoder.extractUserId(legacyToken);
+            if (legacyOwner !== null && this.readAccessOwner() === null) {
+                this.saveAccountAccess(legacyOwner, this.jwtDecoder.extractRoles(legacyToken), true);
+            }
+            this.storage.setItem('session', 'authToken', legacyToken);
+            this.storage.setItem('session', 'authRemembered', 'true');
+            this.storage.removeItem('local', 'authToken');
+        }
+        return legacyToken;
     }
 
     public bindOwner(userId: string | null): void {
@@ -30,9 +44,9 @@ export class TokenStorageService {
         const remembered = rememberMe ?? this.isRemembered();
         this.storage.setItem('session', 'authToken', token);
         this.storage.setItem('session', 'authRemembered', String(remembered));
-        if (remembered && (publishShared || this.ownsSharedSession())) {
-            this.storage.setItem('local', 'authToken', token);
-        } else if (!remembered && (publishShared || this.ownsSharedSession())) {
+        // Remember-me belongs to the server's HttpOnly refresh cookie. Origin-wide
+        // storage carries invalidation hints, never a newly issued bearer token.
+        if (publishShared || this.ownsSharedSession()) {
             this.storage.removeItem('local', 'authToken');
         }
     }

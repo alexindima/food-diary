@@ -10,7 +10,11 @@ export function coverage(lock, policy) {
         status:
             policy.guideReviews?.find(review => review.guide === guide.id)?.status ??
             (policy.requirements.some(requirement => requirement.source.guide === guide.id) ? 'partial' : 'unreviewed'),
-        requirements: policy.requirements.filter(requirement => requirement.source.guide === guide.id).map(requirement => requirement.id),
+        review: policy.guideReviews?.find(review => review.guide === guide.id),
+        requirements: [...new Set([
+            ...policy.requirements.filter(requirement => requirement.source.guide === guide.id).map(requirement => requirement.id),
+            ...(policy.guideReviews?.find(review => review.guide === guide.id)?.requirements ?? []),
+        ])],
     }));
 }
 
@@ -26,7 +30,8 @@ export function renderReport(report, policy) {
             const requirement = policy.requirements.find(item => item.id === result.requirement);
             const guide = report.catalogue.find(item => item.id === requirement.source.guide);
             const source = `https://github.com/${report.upstream.repository}/blob/${report.upstream.commit}/${guide.path}`;
-            return `<article class="requirement" data-status="${escape(result.status)}" data-engine="${escape(result.engine)}"><header><span class="badge ${escape(result.status)}">${escape(result.status)}</span><span class="engine">${escape(result.engine)} · severity: ${escape(result.severity)}</span></header>
+            const relatedGuides = report.catalogue.filter(item => item.requirements.includes(requirement.id)).map(item => item.id).join(' ');
+            return `<article class="requirement" data-guides="${escape(relatedGuides)}" data-status="${escape(result.status)}" data-engine="${escape(result.engine)}"><header><span class="badge ${escape(result.status)}">${escape(result.status)}</span><span class="engine">${escape(result.engine)} · severity: ${escape(result.severity)}</span></header>
       <h3>${escape(requirement.statement)}</h3><p class="muted">${escape(requirement.id)} · ${escape(requirement.scopes.join(', '))}</p>
       <p>${escape(result.detail)}</p><ul>${result.findings.map(finding => `<li><strong>${escape(finding.file ?? finding.case ?? '')}${finding.line ? `:${escape(finding.line)}` : ''}</strong> ${escape(finding.message)}${finding.targets ? `<p class="muted">${escape(finding.targets.join(', '))}</p>` : ''}</li>`).join('')}</ul>
       ${result.cases ? `<details><summary>Execution evidence (${result.cases.length} cases)</summary><pre>${escape(JSON.stringify(result.cases, null, 2))}</pre></details>` : ''}
@@ -37,7 +42,7 @@ export function renderReport(report, policy) {
     const catalogueRows = report.catalogue
         .map(
             guide =>
-                `<tr data-guide-status="${escape(guide.status)}"><td>${escape(guide.id)}</td><td>${escape(guide.category)}</td><td>${escape(guide.status)}</td><td>${guide.requirements.length}</td></tr>`,
+                `<tr data-guide-status="${escape(guide.status)}"><td>${escape(guide.id)}${guide.review ? `<details><summary>Applicability and evidence</summary><p>${escape(guide.review.reason)}</p><p>Assertions: ${escape(guide.requirements.join(', '))}</p><p>Current source: ${escape(guide.review.evidence?.join(', '))}</p>${guide.review.whenAbsent ? `<p>Conditional absence: ${escape(guide.review.whenAbsent.reason)}. CI rejects introduction of a matching feature until this decision is replaced.</p>` : ''}</details>` : ''}</td><td>${escape(guide.category)}</td><td>${escape(guide.status)}</td><td>${guide.requirements.length}</td></tr>`,
         )
         .join('');
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FoodDiary · Web quality</title>
@@ -49,15 +54,15 @@ export function renderReport(report, policy) {
   <div class="stats">${Object.entries(counts)
       .map(([status, count]) => `<div class="stat"><strong>${count}</strong><span>${escape(status)}</span></div>`)
       .join('')}</div>
-  <div class="panel"><strong>Catalogue coverage</strong><p>${report.catalogue.length} published guides · ${report.catalogue.filter(item => item.status === 'partial').length} partially mapped · ${report.catalogue.filter(item => item.status === 'unreviewed').length} unreviewed. Manual assessment, browser scope and real-user performance remain explicit.</p><a href="report.json">Download full JSON evidence</a></div>
+  <div class="panel"><strong>Catalogue coverage</strong><p>${report.catalogue.length} published guides · ${report.catalogue.filter(item => item.status === 'reviewed').length} reviewed as applicable · ${report.catalogue.filter(item => item.status === 'not-applicable').length} conditionally inapplicable · ${report.catalogue.filter(item => item.status === 'partial').length} partially mapped · ${report.catalogue.filter(item => item.status === 'unreviewed').length} unreviewed. Manual assessment, browser scope and real-user performance remain explicit.</p><a href="report.json">Download full JSON evidence</a></div>
   <div class="toolbar"><label>Search requirements<input id="search" type="search" placeholder="Guide, requirement or source file"></label><label>Status<select id="status"><option value="">All statuses</option>${Object.keys(
       counts,
   )
       .map(status => `<option>${status}</option>`)
       .join(
           '',
-      )}</select></label><label>Engine<select id="engine"><option value="">All engines</option>${['source', 'browser', 'journeys', 'performance', 'manual'].map(engine => `<option>${engine}</option>`).join('')}</select></label><span id="visible" role="status" aria-live="polite"></span></div>
-  <section class="grid" aria-label="Requirement results">${rows}</section><h2>All published guides</h2><p>Partial means some recommendations have mappings; it does not mean the entire guide is covered.</p><details><summary>Browse the guide inventory (${report.catalogue.length})</summary><div class="table-scroll"><table><thead><tr><th scope="col">Guide</th><th scope="col">Category</th><th scope="col">Review status</th><th scope="col">Requirements</th></tr></thead><tbody>${catalogueRows}</tbody></table></div></details>
+      )}</select></label><label>Engine<select id="engine"><option value="">All engines</option>${['source', 'contracts', 'browser', 'journeys', 'performance', 'manual'].map(engine => `<option>${engine}</option>`).join('')}</select></label><span id="visible" role="status" aria-live="polite"></span></div>
+  <section class="grid" aria-label="Requirement results">${rows}</section><h2>All published guides</h2><p>Reviewed records an applicability decision and linked assertions. It does not certify every recommendation. Conditional absence is rechecked on every source audit. Human and field requirements remain explicit.</p><details><summary>Browse the guide inventory (${report.catalogue.length})</summary><div class="table-scroll"><table><thead><tr><th scope="col">Guide</th><th scope="col">Category</th><th scope="col">Review status</th><th scope="col">Requirements</th></tr></thead><tbody>${catalogueRows}</tbody></table></div></details>
   <h2>Run provenance</h2><details><summary>Revision, source fingerprints and execution environment</summary><pre>${escape(JSON.stringify({ ...report.provenance, executions: report.executions }, null, 2))}</pre></details></main>
-  <script>const search=document.getElementById('search'),status=document.getElementById('status'),engine=document.getElementById('engine'),cards=[...document.querySelectorAll('.requirement')];function filter(){let count=0;for(const card of cards){card.hidden=!!((status.value&&card.dataset.status!==status.value)||(engine.value&&card.dataset.engine!==engine.value)||!card.textContent.toLowerCase().includes(search.value.toLowerCase()));if(!card.hidden)count++}document.getElementById('visible').textContent=count+' requirements shown'}for(const control of [search,status,engine])control.addEventListener('input',filter);filter();</script></body></html>`;
+  <script>const search=document.getElementById('search'),status=document.getElementById('status'),engine=document.getElementById('engine'),cards=[...document.querySelectorAll('.requirement')];function filter(){let count=0;for(const card of cards){card.hidden=!!((status.value&&card.dataset.status!==status.value)||(engine.value&&card.dataset.engine!==engine.value)||!(card.textContent+' '+card.dataset.guides).toLowerCase().includes(search.value.toLowerCase()));if(!card.hidden)count++}document.getElementById('visible').textContent=count+' requirements shown'}for(const control of [search,status,engine])control.addEventListener('input',filter);filter();</script></body></html>`;
 }

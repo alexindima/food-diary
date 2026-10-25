@@ -33,7 +33,7 @@
                 />
             </header>
 
-            <form class="cycle-drawer__form" [formRoot]="dayForm()">
+            <form method="post" class="cycle-drawer__form" [formRoot]="dayForm()">
                 <fieldset class="cycle-drawer__body fd-stack fd-gap-card-content" [disabled]="isSaving()">
                     <fd-ui-date-input [label]="'CYCLE_TRACKING.DAY_DATE' | translate" [formField]="dayForm().date" [latestDate]="today()" />
 

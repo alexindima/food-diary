@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
+import { isPublicMarketingPath, publicSiteLocale } from '../../config/public-site-paths';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
@@ -48,7 +49,9 @@ export class LocalizationService {
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.getStoredLanguage();
         const domainLang = this.getDomainDefaultLanguage();
-        const normalizedLang = this.normalizeLanguage(storedLang ?? domainLang ?? browserLang);
+        const initialPath = this.browserWindow.getPathname() ?? this.document.location.pathname;
+        const routeLang = typeof initialPath === 'string' && isPublicMarketingPath(initialPath) ? publicSiteLocale(initialPath) : null;
+        const normalizedLang = this.normalizeLanguage(routeLang ?? storedLang ?? domainLang ?? browserLang);
 
         return firstValueFrom(this.translateService.use(normalizedLang)).then(() => {
             this.document.documentElement.setAttribute('data-i18n-ready', normalizedLang);

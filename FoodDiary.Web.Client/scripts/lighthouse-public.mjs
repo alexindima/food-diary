@@ -24,6 +24,7 @@ const values = new Set([
     'api-origin',
     'summary',
     'baseline',
+    'transport',
 ]);
 
 export function parseArgs(args) {
@@ -49,11 +50,17 @@ export function parseArgs(args) {
     if (options['base-url'] && options['api-origin']) throw new Error('--api-origin is only available for local static audits.');
     if (
         (options.check || options['save-baseline']) &&
-        ['smoke', 'routes', 'devices', 'runs', 'base-url', 'api-origin', 'static-root', 'dry-run'].some(key => key in options)
+        ['smoke', 'routes', 'devices', 'runs', 'base-url', 'api-origin', 'static-root', 'dry-run', 'transport'].some(key => key in options)
     ) {
         throw new Error('Check and baseline modes use the saved summary; collection options do not apply.');
     }
     return options;
+}
+
+export function assertLocalHttp2(lhr, origin) {
+    const requests = lhr.audits?.['network-requests']?.details?.items?.filter(item => item.url?.startsWith(`${origin}/`)) ?? [];
+    if (!requests.length || requests.some(item => item.protocol !== 'h2'))
+        throw new Error('Local HTTP/2 measurement has missing or non-h2 network evidence.');
 }
 
 export function normalizeRoute(route) {
@@ -358,7 +365,7 @@ export function renderSummary(summary, check, reportPrefix = '') {
 body{font:15px/1.5 system-ui,sans-serif;margin:24px;color:#17202a;background:#fafafa}h1{font-size:24px}table{border-collapse:collapse;background:white;width:100%;font-size:13px}th,td{border:1px solid #d5d8dc;padding:8px;text-align:left;vertical-align:top;white-space:nowrap}thead{background:#eaf0f5}small{display:block;color:#566573;font-size:11px}td:last-child{white-space:normal;min-width:180px}.scroll{overflow:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#075ca0}
 </style><h1>Public Lighthouse report</h1><p>${escapeHtml(summary.createdAt)} · ${summary.cases.length} cases · ${summary.plan.runs} cold runs per case · ${check.passed ? 'Checks passed' : 'Checks failed'}</p>
 <p>Values are medians; smaller text shows min–max. Scores use 0–100. Transfer is Lighthouse total byte weight. A one-run report is exploratory.</p>
-${summary.context.target?.mode === 'local-gzip' && !summary.context.target.apiOrigin ? '<p>Static hosting audit without an API proxy: API requests fail (404/405). API-dependent startup behavior requires a separate run with a real backend.</p>' : ''}
+${summary.context.target?.mode?.startsWith('local-gzip') && !summary.context.target.apiOrigin ? '<p>Static hosting audit without an API proxy: API requests fail (404/405). API-dependent startup behavior requires a separate run with a real backend.</p>' : ''}
 ${check.failures
     .filter(failure => !failure.route)
     .map(failure => `<p>${escapeHtml(failure.message)}</p>`)

@@ -97,6 +97,10 @@
                                 {
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.prod.ts"
+                                },
+                                {
+                                    "replace": "src/app/composition/webmcp/local-webmcp.providers.ts",
+                                    "with": "src/app/composition/webmcp/local-webmcp.providers.production.ts"
                                 }
                             ],
                             "budgets": [
@@ -119,6 +123,10 @@
                                 {
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.prod.ts"
+                                },
+                                {
+                                    "replace": "src/app/composition/webmcp/local-webmcp.providers.ts",
+                                    "with": "src/app/composition/webmcp/local-webmcp.providers.production.ts"
                                 }
                             ],
                             "budgets": [
@@ -169,6 +177,10 @@
                                 {
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.staging.ts"
+                                },
+                                {
+                                    "replace": "src/app/composition/webmcp/local-webmcp.providers.ts",
+                                    "with": "src/app/composition/webmcp/local-webmcp.providers.production.ts"
                                 }
                             ],
                             "outputHashing": "all",
@@ -370,6 +382,10 @@
                                 {
                                     "replace": "projects/fooddiary-admin/src/environments/environment.ts",
                                     "with": "projects/fooddiary-admin/src/environments/environment.prod.ts"
+                                },
+                                {
+                                    "replace": "projects/fooddiary-admin/src/app/shared/development/admin-webmcp.providers.ts",
+                                    "with": "projects/fooddiary-admin/src/app/shared/development/admin-webmcp.providers.production.ts"
                                 }
                             ],
                             "optimization": {

@@ -271,7 +271,7 @@
         &__feature-grid,
         &__steps,
         &__related-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: minmax(0, 1fr);
             gap: var(--fd-space-sm);
         }
 

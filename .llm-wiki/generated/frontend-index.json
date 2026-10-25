@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2701,
+    "typescriptFiles": 2711,
     "symbols": 856,
     "routes": 108,
     "features": 46,
-    "specs": 809,
+    "specs": 815,
     "localeFiles": 5,
     "roles": {
       "Component": 497,
@@ -2215,7 +2215,7 @@
       "role": "Component",
       "selector": "app-root",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "line": 61
+      "line": 62
     },
     {
       "name": "AdminAchievementsService",
@@ -2362,7 +2362,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "AdminBillingService",
@@ -6695,7 +6695,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/frontend-observability.service.ts",
-      "line": 22
+      "line": 23
     },
     {
       "name": "GlobalLoadingService",
@@ -6723,7 +6723,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/logging-api.service.ts",
-      "line": 33
+      "line": 37
     },
     {
       "name": "NavigationService",
@@ -7241,14 +7241,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/food-diary-translation.loader.ts",
-      "line": 21
+      "line": 20
     },
     {
       "name": "LocalizationService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "LocalizedDatePipe",
@@ -7423,7 +7423,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-performance.service.ts",
-      "line": 11
+      "line": 14
     },
     {
       "name": "BrowserStorageService",
@@ -7570,7 +7570,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 74
+      "line": 75
     },
     {
       "name": "AdminPanelLauncherService",

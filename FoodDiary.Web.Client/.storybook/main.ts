@@ -7,7 +7,7 @@ const config: StorybookConfig = {
         name: '@storybook/angular-vite',
         options: {},
     },
-    staticDirs: ['../assets'],
+    staticDirs: ['../assets', { from: '../src/fonts', to: '/fonts' }],
     viteFinal(viteConfig) {
         return mergeConfig(viteConfig, {
             resolve: { tsconfigPaths: true },

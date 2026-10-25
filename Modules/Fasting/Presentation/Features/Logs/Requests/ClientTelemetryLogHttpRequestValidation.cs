@@ -77,7 +77,7 @@ internal static class ClientTelemetryLogHttpRequestValidation {
             "client_error" => name is "global-error",
             "http_request" => name is "api.request",
             "route_timing" => name is "router.navigation",
-            "web_vital" => name is "ttfb" or "fcp" or "lcp",
+            "web_vital" => name is "ttfb" or "fcp" or "lcp" or "cls" or "inp",
             "user_action" => name is
                 "notifications.settings.viewed" or
                 "notifications.preference.changed" or

@@ -39,7 +39,7 @@
 
         @if (hasPeriodFilterPermission()) {
             <fd-ui-card data-tour-id="client-dashboard-period">
-                <form class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
+                <form method="post" class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
                     <div class="client-dashboard__date-field">
                         <fd-ui-date-input
                             [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL' | translate"
@@ -124,7 +124,7 @@
             <fd-ui-card>
                 <section class="client-dashboard__section fd-stack fd-gap-md" aria-labelledby="dietologist-client-tasks-title">
                     <h2 id="dietologist-client-tasks-title" class="fd-ui-card-title">{{ 'CLIENT_TASKS.TITLE' | translate }}</h2>
-                    <form class="fd-stack fd-gap-sm" [formRoot]="taskForm">
+                    <form method="post" class="fd-stack fd-gap-sm" [formRoot]="taskForm">
                         <fd-ui-input [label]="'CLIENT_TASKS.FORM.TITLE' | translate" [formField]="taskForm.title" />
                         <fd-ui-textarea [label]="'CLIENT_TASKS.FORM.DETAILS' | translate" [rows]="3" [formField]="taskForm.details" />
                         <fd-ui-date-input [label]="'CLIENT_TASKS.FORM.DUE_DATE' | translate" [formField]="taskForm.dueDate" />
@@ -207,7 +207,7 @@
                             }
                         </div>
                     </section>
-                    <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">
+                    <form method="post" class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">
                         <p class="fd-ui-caption" [hidden]="canRecommend()">
                             {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate }}
                         </p>

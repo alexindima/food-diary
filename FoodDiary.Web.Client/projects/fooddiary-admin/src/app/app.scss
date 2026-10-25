@@ -1,5 +1,15 @@
 @use 'variables' as variables;
 
+.admin-skip-nav {
+    position: absolute;
+    inset-block-start: var(--fd-space-xs);
+    inset-inline-start: var(--fd-space-xs);
+    padding: var(--fd-space-sm);
+    background: var(--fd-bg-primary);
+    color: var(--fd-color-white);
+    z-index: var(--fd-z-index-skip-nav);
+}
+
 .admin-shell {
     min-height: 100dvh;
     grid-template-columns: 280px minmax(0, 1fr);

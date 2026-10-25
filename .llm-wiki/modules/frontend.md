@@ -12,6 +12,7 @@ sources:
   - FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md
   - docs/frontend/FRONTEND_ARCHITECTURE.md
   - docs/frontend/API_SDK.md
+  - docs/frontend/WEB_QUALITY.md
   - docs/adr/0055-atomic-frontend-publication-and-asset-retention.md
   - docs/adr/0056-shopping-list-content-revisions.md
   - docs/frontend/PUBLIC_RECIPES.md
@@ -49,6 +50,15 @@ be updated in both English and Russian locale files.
 Before editing, read the root frontend guide and the nearest applicable scoped
 guide. UI kit, admin, tour, WebMCP, application root, and feature folders have
 additional local rules.
+
+## Web guidance policy
+
+`Tooling/WebQuality` binds the complete pinned Google catalogue to applicability
+decisions, source assertions, owner contracts, browser journeys and performance
+budgets. The main CI workflow invokes its reusable workflow automatically.
+See [WEB_QUALITY.md](../../docs/frontend/WEB_QUALITY.md) for execution, update
+review and the explicit manual/field assessments. A passing automated scope
+does not certify every guide or every application screen.
 
 ## API SDK
 

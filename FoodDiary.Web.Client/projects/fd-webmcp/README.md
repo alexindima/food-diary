@@ -19,6 +19,16 @@ registration only after browser rendering, using injected `DOCUMENT` and
 `isDevMode()`. Bind the returned disposer to the authenticated session's cleanup.
 Registration has no import-time side effects and installs no polyfill or server.
 
+Protocol contracts use the pinned official `webmcp-types` definitions. Browser
+registration is removed by aborting its registration signal; the current API
+has no `unregisterTool` method. Execution forwards the browser's cancellation
+signal to the operation and rejects cancelled work before returning a result.
+The mutation lock remains held until underlying work settles. Cancellation is
+cooperative and cannot roll back a UI action already accepted by the router or
+another owner; asynchronous operation implementations should observe the supplied
+signal before subsequent effects. Ordinary failures still use the consuming
+application's bounded error policy. Local tools declare the debugging annotation.
+
 Applications retain tool names/schemas, routes, authentication and role policies,
 API clients, metadata allowlists/redaction, and all domain calculations. Published
 capabilities prepare unsaved forms; the library has no persistence or permission

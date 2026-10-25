@@ -30,6 +30,7 @@ type TranslationLoaderMock = {
 
 type BrowserWindowServiceMock = {
     getHostname: ReturnType<typeof vi.fn<BrowserWindowService['getHostname']>>;
+    getPathname: ReturnType<typeof vi.fn<BrowserWindowService['getPathname']>>;
 };
 
 let service: LocalizationService;
@@ -67,6 +68,7 @@ beforeEach(() => {
     translateSpy.getBrowserLang.mockReturnValue('en');
     browserWindowSpy = {
         getHostname: vi.fn().mockReturnValue('fooddiary.club'),
+        getPathname: vi.fn().mockReturnValue('/dashboard'),
     };
     translationLoaderSpy = {
         isPublicRoute: vi.fn().mockReturnValue(true),
@@ -108,6 +110,18 @@ afterEach(() => {
 });
 
 describe('LocalizationService initialization', () => {
+    it.each(['/ru', '/ru/calorie-counter'])('uses the public URL locale before requesting initial translations: %s', async path => {
+        browserWindowSpy.getPathname.mockReturnValue(path);
+        localStorage.setItem('fd_language', 'en');
+        await service.initializeLocalizationAsync();
+        expect(translateSpy.use).toHaveBeenCalledExactlyOnceWith('ru');
+    });
+    it('uses the explicit English public URL before a stored Russian preference', async () => {
+        browserWindowSpy.getPathname.mockReturnValue('/calorie-counter');
+        localStorage.setItem('fd_language', 'ru');
+        await service.initializeLocalizationAsync();
+        expect(translateSpy.use).toHaveBeenCalledExactlyOnceWith('en');
+    });
     it("should initialize with default language 'en'", async () => {
         await service.initializeLocalizationAsync();
 

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { inspectPrerenderTranslationState } from './prerender-translations.mjs';
 
 const browserDir = path.resolve('dist/browser');
 const siteUrl = 'https://fooddiary.club';
@@ -21,6 +22,13 @@ for (const route of routes) {
     const isRussian = route === '/ru' || route.startsWith('/ru/');
     const locale = isRussian ? 'ru' : 'en';
     const basePath = route === '/ru' ? '/' : isRussian ? route.slice(3) : route;
+    const bundle = basePath === '/' ? 'landing' : basePath === '/privacy-policy' ? 'privacy' : 'seo';
+    issues.push(...inspectPrerenderTranslationState(html, locale, bundle).map(issue => `${route}: ${issue}`));
+    if (basePath === '/') {
+        for (const selector of ['fd-features', 'fd-dietologist-promo', 'fd-landing-steps', 'fd-landing-faq'])
+            if (!html.includes(`<${selector} `) && !html.includes(`<${selector}>`))
+                issues.push(`${route}: public ${selector} content is missing from SSR`);
+    }
     const canonical = siteUrl + (route === '/' ? '' : route);
     const enUrl = siteUrl + (basePath === '/' ? '' : basePath);
     const ruUrl = siteUrl + (basePath === '/' ? '/ru' : `/ru${basePath}`);

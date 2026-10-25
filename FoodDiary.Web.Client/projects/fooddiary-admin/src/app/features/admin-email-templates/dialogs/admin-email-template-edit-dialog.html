@@ -5,7 +5,7 @@
     [disableClose]="isSaving()"
     [title]="isNew ? 'Create email template' : 'Edit email template'"
 >
-    <form class="email-template-edit-dialog fd-grid fd-gap-md" [formRoot]="form">
+    <form method="post" class="email-template-edit-dialog fd-grid fd-gap-md" [formRoot]="form">
         <section class="template-meta fd-grid fd-gap-md fd-align-center" aria-label="Template metadata">
             <fd-ui-input label="Key" [formField]="form.key" />
             <fd-ui-input label="Locale" [formField]="form.locale" />

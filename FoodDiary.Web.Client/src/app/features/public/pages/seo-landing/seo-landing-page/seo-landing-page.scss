@@ -1,6 +1,7 @@
 @use 'variables' as variables;
 
 .seo-landing {
+    overflow-wrap: anywhere;
     --seo-landing-container-max-width: 1120px;
     min-height: 100dvh;
     background:

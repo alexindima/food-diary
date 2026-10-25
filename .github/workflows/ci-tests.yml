@@ -693,6 +693,10 @@ jobs:
           path: ${{ runner.temp }}/dependency-audit-logs/
           if-no-files-found: ignore
 
+  web-guidance:
+    name: Google web guidance
+    uses: ./.github/workflows/web-quality.yml
+
   frontend-checks:
     name: Frontend checks, tests, and builds
     runs-on: ubuntu-latest

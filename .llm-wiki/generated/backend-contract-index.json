@@ -31739,7 +31739,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Presentation/Features/Logs/ClientTelemetryHttpProcessor.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "ClientTelemetryLogHttpRequest",
@@ -31830,7 +31830,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/LogsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 12
     },
     {
       "contract": "CompleteAuditRunHttpRequest",

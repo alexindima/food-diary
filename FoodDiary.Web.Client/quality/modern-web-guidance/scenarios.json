@@ -5,7 +5,10 @@
         "scope": "client",
         "path": "/",
         "locale": "en",
-        "viewport": { "width": 1440, "height": 900 }
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        }
     },
     {
         "id": "home-en-mobile",
@@ -13,7 +16,10 @@
         "scope": "client",
         "path": "/",
         "locale": "en",
-        "viewport": { "width": 390, "height": 844 },
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
         "reducedMotion": "reduce"
     },
     {
@@ -22,7 +28,10 @@
         "scope": "client",
         "path": "/ru",
         "locale": "ru",
-        "viewport": { "width": 1440, "height": 900 },
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        },
         "colorScheme": "dark"
     },
     {
@@ -31,7 +40,10 @@
         "scope": "client",
         "path": "/ru",
         "locale": "ru",
-        "viewport": { "width": 390, "height": 844 }
+        "viewport": {
+            "width": 390,
+            "height": 844
+        }
     },
     {
         "id": "login-en-desktop",
@@ -39,7 +51,10 @@
         "scope": "client",
         "path": "/",
         "locale": "en",
-        "viewport": { "width": 1440, "height": 900 },
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        },
         "openDialog": "Sign in"
     },
     {
@@ -48,7 +63,114 @@
         "scope": "client",
         "path": "/",
         "locale": "en",
-        "viewport": { "width": 390, "height": 844 },
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
         "openDialog": "Sign in"
+    },
+    {
+        "id": "register-en-desktop",
+        "kind": "register",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        },
+        "openDialog": "Create account",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "register-en-mobile",
+        "kind": "register",
+        "scope": "client",
+        "path": "/",
+        "locale": "en",
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
+        "openDialog": "Create account",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "seo-en-mobile",
+        "kind": "public",
+        "scope": "client",
+        "path": "/calorie-counter",
+        "locale": "en",
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
+        "reducedMotion": "reduce",
+        "forcedColors": "active"
+    },
+    {
+        "id": "login-ru-desktop",
+        "kind": "login",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        },
+        "openDialog": "Войти",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "register-ru-desktop",
+        "kind": "register",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": {
+            "width": 1440,
+            "height": 900
+        },
+        "openDialog": "Начать бесплатно",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "login-ru-mobile",
+        "kind": "login",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
+        "openDialog": "Войти",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "register-ru-mobile",
+        "kind": "register",
+        "scope": "client",
+        "path": "/ru",
+        "locale": "ru",
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
+        "openDialog": "Начать бесплатно",
+        "reducedMotion": "reduce"
+    },
+    {
+        "id": "seo-ru-mobile",
+        "kind": "public",
+        "scope": "client",
+        "path": "/ru/calorie-counter",
+        "locale": "ru",
+        "viewport": {
+            "width": 390,
+            "height": 844
+        },
+        "reducedMotion": "reduce",
+        "forcedColors": "active"
     }
 ]

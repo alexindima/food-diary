@@ -168,7 +168,7 @@
                             </div>
                         }
                     </div>
-                    <form class="fd-stack fd-gap-sm" [formRoot]="bulkForm" (submit)="sendBulkRecommendation()">
+                    <form method="post" class="fd-stack fd-gap-sm" [formRoot]="bulkForm" (submit)="sendBulkRecommendation()">
                         <fd-ui-textarea
                             [label]="'BULK_RECOMMENDATIONS.TEXT' | translate"
                             [rows]="4"

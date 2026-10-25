@@ -9,6 +9,7 @@ import desktopConfig from 'lighthouse/core/config/desktop-config.js';
 import { createAuditProfile, removeAuditProfile } from './lighthouse-public-chrome.mjs';
 import {
     aggregate,
+    assertLocalHttp2,
     checkSummary,
     collectionPlan,
     formatMetric,
@@ -36,7 +37,8 @@ async function main() {
   npm run audit:lighthouse:check               Check budgets and saved baseline
   npm run audit:lighthouse:baseline            Save reviewed summary as baseline
 Options: --dry-run, --config=<file>, --reports-dir=<dir>, --static-root=<dir>,
-  --base-url=<origin>, --api-origin=<origin>, --summary=<file>, --baseline=<file>.
+  --base-url=<origin>, --api-origin=<origin>, --transport=http2|http1 (local, default http2),
+  --summary=<file>, --baseline=<file>.
 See ../docs/frontend/PUBLIC_LIGHTHOUSE.md. Check/baseline modes do not launch Chrome.`);
         return;
     }
@@ -82,12 +84,21 @@ See ../docs/frontend/PUBLIC_LIGHTHOUSE.md. Check/baseline modes do not launch Ch
     const staticRoot = path.resolve(root, options['static-root'] ?? 'dist/browser');
     const remoteOrigin = options['base-url'] ? validateOrigin(options['base-url']) : undefined;
     const apiOrigin = options['api-origin'] ? validateOrigin(options['api-origin']) : undefined;
+    const transport = options.transport ?? 'http2';
+    if (!['http1', 'http2'].includes(transport)) throw new Error('Transport must be http1 or http2.');
+    if (remoteOrigin && options.transport) throw new Error('A remote origin determines its own transport.');
     if (!remoteOrigin) for (const route of plan.routes) prerenderFile(staticRoot, route);
     console.log(
         `${plan.routes.length} routes × ${plan.devices.length} devices × ${plan.runs} runs = ${plan.routes.length * plan.devices.length * plan.runs} audits.`,
     );
     if (options['dry-run']) {
-        console.log(JSON.stringify({ ...plan, target: remoteOrigin ?? staticRoot, apiOrigin }, null, 2));
+        console.log(
+            JSON.stringify(
+                { ...plan, target: remoteOrigin ?? staticRoot, apiOrigin, transport: remoteOrigin ? 'remote' : transport },
+                null,
+                2,
+            ),
+        );
         return;
     }
 
@@ -103,7 +114,11 @@ See ../docs/frontend/PUBLIC_LIGHTHOUSE.md. Check/baseline modes do not launch Ch
         arch: arch(),
         cpu: cpus()[0]?.model ?? 'unknown',
         memoryGiB: Math.round(totalmem() / 1024 ** 3),
-        target: { mode: remoteOrigin ? 'remote' : 'local-gzip', origin: remoteOrigin ?? null, apiOrigin: apiOrigin ?? null },
+        target: {
+            mode: remoteOrigin ? 'remote' : transport === 'http2' ? 'local-gzip-http2' : 'local-gzip',
+            origin: remoteOrigin ?? null,
+            apiOrigin: apiOrigin ?? null,
+        },
         profiles: {},
     };
     let server;
@@ -120,11 +135,19 @@ See ../docs/frontend/PUBLIC_LIGHTHOUSE.md. Check/baseline modes do not launch Ch
     };
     persist();
     try {
-        server = remoteOrigin ? undefined : await startStaticServer(staticRoot, apiOrigin);
+        server = remoteOrigin ? undefined : await startStaticServer(staticRoot, apiOrigin, { transport });
         chromeProfile = createAuditProfile();
         // An explicit task-owned profile prevents chrome-launcher's asynchronous
         // Windows temp-removal callback from throwing outside the cleanup handler.
-        chrome = await launch({ userDataDir: chromeProfile, chromeFlags: ['--headless', '--no-sandbox'], logLevel: 'error' });
+        chrome = await launch({
+            userDataDir: chromeProfile,
+            chromeFlags: [
+                '--headless',
+                '--no-sandbox',
+                ...(server?.certificateSPKI ? [`--ignore-certificate-errors-spki-list=${server.certificateSPKI}`] : []),
+            ],
+            logLevel: 'error',
+        });
         const version = await (await fetch(`http://127.0.0.1:${chrome.port}/json/version`)).json();
         context.chromeMajor = /\/(\d+)/.exec(version.Browser)?.[1] ?? 'unknown';
         const origin = remoteOrigin ?? server.origin;
@@ -148,6 +171,7 @@ See ../docs/frontend/PUBLIC_LIGHTHOUSE.md. Check/baseline modes do not launch Ch
                             device === 'desktop' ? desktopConfig : undefined,
                         );
                         if (!result || !Array.isArray(result.report)) throw new Error('Lighthouse did not produce HTML and JSON reports.');
+                        if (!remoteOrigin && transport === 'http2') assertLocalHttp2(result.lhr, origin);
                         writeFileSync(path.join(runRoot, `${name}.html`), result.report[0]);
                         writeFileSync(path.join(runRoot, `${name}.json`), result.report[1]);
                         context.lighthouseVersion = result.lhr.lighthouseVersion;

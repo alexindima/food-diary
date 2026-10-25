@@ -25,6 +25,50 @@ function deferred(): { promise: Promise<unknown>; resolve: (value: unknown) => v
     return { promise, resolve };
 }
 
+describe('WebMCP cancellation', () => {
+    it('rejects an already cancelled browser execution before running the operation', async () => {
+        const controller = new AbortController();
+        controller.abort();
+        const run = vi.fn().mockReturnValue('should not run');
+        const tool = new WebmcpExecutor().tool(operation(false, run), policy());
+        const execute: (input: unknown, options?: { signal: AbortSignal }) => Promise<unknown> = tool.execute;
+        await expect(
+            execute({}, { signal: controller.signal }),
+            'Cancelled browser tools must reject without mutating the screen',
+        ).rejects.toBe(controller.signal.reason);
+        expect(run).not.toHaveBeenCalled();
+    });
+
+    it('propagates cancellation to pending work and keeps the mutation lock until work settles', async () => {
+        const controller = new AbortController();
+        const pending = deferred();
+        let receivedSignal: AbortSignal | undefined;
+        const runAsync = async (_input: unknown, options?: { signal: AbortSignal }): Promise<unknown> => {
+            receivedSignal = options?.signal;
+            return pending.promise;
+        };
+        const executor = new WebmcpExecutor();
+        const execute: (input: unknown, options?: { signal: AbortSignal }) => Promise<unknown> = executor.tool(
+            operation(false, runAsync),
+            policy(),
+        ).execute;
+        const running = execute({}, { signal: controller.signal });
+        controller.abort();
+        expect(await execute({})).toEqual({ ok: false, error: 'Another development tool is running.' });
+        pending.resolve({ privateResult: true });
+        await expect(running).rejects.toBe(controller.signal.reason);
+        expect(receivedSignal).toBe(controller.signal);
+        expect(
+            await executor
+                .tool(
+                    operation(false, () => 'next'),
+                    policy(),
+                )
+                .execute({}),
+        ).toBe('next');
+    });
+});
+
 describe('WebMCP tool execution', () => {
     it('allows reads during a pending mutation while refusing a second mutation', async () => {
         const executor = new WebmcpExecutor();

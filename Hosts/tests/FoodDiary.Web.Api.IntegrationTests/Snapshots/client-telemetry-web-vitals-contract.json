@@ -1,0 +1,10 @@
+{
+  "route": "/api/v1/logs",
+  "cases": [
+    { "name": "ttfb", "unit": "ms", "value": 100, "expectedStatus": 204 },
+    { "name": "fcp", "unit": "ms", "value": 200, "expectedStatus": 204 },
+    { "name": "lcp", "unit": "ms", "value": 300, "expectedStatus": 204 },
+    { "name": "cls", "unit": "score", "value": 0.012, "expectedStatus": 204 },
+    { "name": "inp", "unit": "ms", "value": 240, "expectedStatus": 204 }
+  ]
+}

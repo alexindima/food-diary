@@ -86,7 +86,7 @@
         <div class="product-list__search-toolbar">
             @if (!isMobileView()) {
                 <div class="product-list__desktop-search" data-tour-id="product-list-search">
-                    <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
+                    <form method="post" class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
                         <div class="product-list__search-control">
                             <fd-ui-input
                                 class="product-list__search-input"
@@ -112,7 +112,7 @@
                 </div>
             } @else {
                 <div class="product-list__mobile-search product-list__mobile-search--open" data-tour-id="product-list-search">
-                    <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
+                    <form method="post" class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
                         <div class="product-list__search-control">
                             <fd-ui-input
                                 class="product-list__search-input"

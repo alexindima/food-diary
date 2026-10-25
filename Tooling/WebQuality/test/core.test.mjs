@@ -70,6 +70,41 @@ test('argument parsing rejects typos, duplicate flags, unknown profiles at execu
         assert.throws(() => parseArgs(args));
 });
 
+test('full catalogue decisions cannot omit guides, source anchors, owner evidence or executable absence guards', async t => {
+    const root = await snapshot(t, 'Tooling/WebQuality/upstream');
+    await mkdir(path.resolve(root, '../../../client/src'), { recursive: true });
+    const fullLock = { ...clone(lock), guides: [clone(lock.guides[0])] };
+    const full = { ...clone(policy), reviewMode: 'all-guides', guideReviews: [{
+        guide: 'images', reviewedBlob: blob, status: 'reviewed', reason: 'Images are rendered by client templates.',
+        anchor: 'alternative text', requirements: ['image-alt'], evidence: ['client/src'],
+    }] };
+    await validatePolicy(full, fullLock, root);
+    for (const field of ['anchor', 'requirements', 'evidence']) {
+        const bad = clone(full); delete bad.guideReviews[0][field];
+        await assert.rejects(validatePolicy(bad, fullLock, root), /Incomplete/u);
+    }
+    const missing = clone(full); missing.guideReviews = [];
+    await assert.rejects(validatePolicy(missing, fullLock, root), /Every pinned guide/u);
+    const stale = clone(full); stale.guideReviews[0].reviewedBlob = 'f'.repeat(40);
+    await assert.rejects(validatePolicy(stale, fullLock, root), /stale/u);
+    const proof = clone(full); proof.guideReviews[0].evidence = ['client/missing'];
+    await assert.rejects(validatePolicy(proof, fullLock, root));
+    const unmapped = clone(full); unmapped.guideReviews[0].requirements = ['invented-pass'];
+    await assert.rejects(validatePolicy(unmapped, fullLock, root), /missing assertions/u);
+
+    fullLock.guides.push({ ...clone(fullLock.guides[0]), id: 'optional' });
+    full.requirements.push({ ...clone(full.requirements[0]), id: 'adoption', check: 'source:guide-applicability' });
+    full.guideReviews.push({ ...clone(full.guideReviews[0]), guide: 'optional', status: 'not-applicable', requirements: ['adoption'],
+        whenAbsent: { reason: 'Native optional API is not used.', patterns: ['\\bNewFeature\\b'], examples: ['NewFeature.create()'] } });
+    await validatePolicy(full, fullLock, root);
+    const noProbe = clone(full); delete noProbe.guideReviews[1].whenAbsent;
+    await assert.rejects(validatePolicy(noProbe, fullLock, root), /executable/u);
+    const noFixture = clone(full); noFixture.guideReviews[1].whenAbsent.examples = [];
+    await assert.rejects(validatePolicy(noFixture, fullLock, root), /positive fixture/u);
+    const noGuard = clone(full); noGuard.guideReviews[1].requirements = ['image-alt'];
+    await assert.rejects(validatePolicy(noGuard, fullLock, root), /executable guard/u);
+});
+
 test('portable paths cannot escape or point to the root', () => {
     for (const value of ['../outside', '..', '.', 'a/../../outside', '/outside', 'a\\b', '']) assert.throws(() => within('/root', value));
     assert.equal(within('/root', 'inside/data.json'), path.resolve('/root/inside/data.json'));

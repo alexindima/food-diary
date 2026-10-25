@@ -45,7 +45,7 @@
         transform 0.15s ease
     );
 
-    &:where(:hover:not(:disabled)) {
+    &:where(:enabled:hover) {
         background: var(--fd-button-background-hover);
         border-color: var(--fd-button-border-hover);
         color: var(--fd-button-text-hover);
@@ -53,7 +53,7 @@
         transform: var(--fd-button-transform-hover);
     }
 
-    &:where(:active:not(:disabled)) {
+    &:where(:enabled:active) {
         background: var(--fd-button-background-active);
         border-color: var(--fd-button-border-active);
         color: var(--fd-button-text-active);
@@ -62,7 +62,8 @@
     }
 
     &:where(:focus-visible) {
-        outline: none;
+        outline: var(--fd-outline-focus-strong);
+        outline-offset: var(--fd-outline-offset);
         box-shadow: var(--fd-button-focus-ring-shadow), var(--fd-button-shadow-hover);
     }
 
@@ -128,16 +129,10 @@
     &--outline,
     &--text {
         box-shadow: var(--fd-shadow-none);
-
-        &:where(:hover:not(:disabled)),
-        &:where(:active:not(:disabled)) {
-            box-shadow: var(--fd-shadow-none);
-        }
     }
 
     &--text {
         padding: 0 var(--fd-button-text-padding-x);
-        min-height: var(--fd-button-height);
     }
 }
 
@@ -271,7 +266,7 @@
 }
 
 .fd-ui-button--primary.fd-ui-button--outline,
-.fd-ui-button--outline:where(:not(.fd-ui-button--secondary):not(.fd-ui-button--danger):not(.fd-ui-button--info)) {
+.fd-ui-button--outline:where(:not(.fd-ui-button--secondary, .fd-ui-button--danger, .fd-ui-button--info)) {
     --fd-button-background-default: var(--fd-button-outline-background-default);
     --fd-button-background-hover: var(--fd-button-outline-background-hover);
     --fd-button-background-active: var(--fd-button-outline-background-active);
@@ -437,11 +432,11 @@
 .fd-ui-button--appearance-muted-icon {
     color: var(--fd-color-text-muted);
 
-    &:where(:hover:not(:disabled), :focus-visible:not(:disabled)) {
+    &:where(:enabled:is(:hover, :focus-visible)) {
         color: var(--fd-color-text);
     }
 
-    &.fd-ui-button--danger:where(:hover:not(:disabled), :focus-visible:not(:disabled)) {
+    &.fd-ui-button--danger:where(:enabled:is(:hover, :focus-visible)) {
         color: var(--fd-color-danger);
     }
 }

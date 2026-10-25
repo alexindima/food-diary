@@ -46,7 +46,7 @@
         </details>
         <fd-admin-ai-prompt-context [scenarioKey]="key()" [responseFormatJson]="item.responseFormatJson" />
         <div class="prompt-layout">
-            <form class="fd-grid fd-gap-md" [formRoot]="form">
+            <form method="post" class="fd-grid fd-gap-md" [formRoot]="form">
                 <h2 class="fd-ui-section-title">{{ 'ADMIN_PROMPTS.DRAFT' | translate }}</h2>
                 <fd-ui-checkbox
                     [label]="'ADMIN_PROMPTS.CUSTOM' | translate"

@@ -2,8 +2,43 @@ import { expect, type Page, test } from '@playwright/test';
 
 import type { AdminAiUsageSummary } from '../../projects/fooddiary-admin/src/app/features/admin-ai-usage/models/admin-ai-usage.data';
 import type { AdminDashboardOverview } from '../../projects/fooddiary-admin/src/app/features/admin-dashboard/models/admin-dashboard-overview.data';
+import { inspectPage } from '../../quality/modern-web-guidance/browser.mjs';
 
 const DAY_MS = 86_400_000;
+const GUIDANCE_MOBILE_WIDTH = 390;
+const GUIDANCE_DESKTOP_WIDTH = 1440;
+const GUIDANCE_TIMEOUT_MS = 120_000;
+
+test.describe('admin guidance accessibility', () => {
+    for (const width of [GUIDANCE_MOBILE_WIDTH, GUIDANCE_DESKTOP_WIDTH]) {
+        test(`keeps admin content accessible with visible keyboard focus at ${width}px`, async ({ page }, testInfo) => {
+            test.setTimeout(GUIDANCE_TIMEOUT_MS);
+            await page.setViewportSize({ width, height: 900 });
+            await page.emulateMedia({ forcedColors: width === GUIDANCE_DESKTOP_WIDTH ? 'active' : 'none' });
+            await authenticateAdminAsync(page);
+            await mockAdminApiAsync(page);
+            for (const path of ['/', '/users', '/ai-usage', '/email-templates']) {
+                await page.goto(path);
+                await page.locator('html[data-app-ready] main h1').waitFor();
+                for (const check of [
+                    'browser:axe',
+                    'browser:skip-link',
+                    'browser:page-structure',
+                    'browser:narrow-reflow',
+                    'browser:focus-visible',
+                ]) {
+                    const result = await inspectPage(page, check, { kind: 'public', locale: 'en' });
+                    await testInfo.attach(`${path === '/' ? 'dashboard' : path.replaceAll('/', '-')}-${check.slice('browser:'.length)}`, {
+                        body: JSON.stringify(result, null, 2),
+                        contentType: 'application/json',
+                    });
+                    expect(result.observations, `${path}: ${check} executes assertions`).toBeGreaterThan(0);
+                    expect(result.findings, `${path}: ${check}`).toEqual([]);
+                }
+            }
+        });
+    }
+});
 
 test.describe('admin smoke', () => {
     for (const session of ['empty', 'expired'] as const) {

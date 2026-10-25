@@ -53,6 +53,7 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
     private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly id = input(`fd-ui-input-${uniqueId++}`);
+    public readonly name = input('');
     public readonly label = input<string>();
     public readonly floatLabel = input<'auto' | 'always'>('auto');
     public readonly ariaLabel = input<string>();
@@ -93,6 +94,12 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
 
     protected readonly internalValue = signal<string | number>('');
     protected readonly isFocused = signal(false);
+    protected readonly isIdentifier = computed(
+        () =>
+            this.appearance() === 'search' ||
+            ['email', 'url', 'password', 'number', 'tel', 'date', 'datetime-local', 'time'].includes(this.type()) ||
+            ['email', 'username', 'current-password', 'new-password', 'one-time-code', 'url'].includes(this.autocomplete() ?? ''),
+    );
 
     private autofillSyncTimers: Array<ReturnType<typeof setTimeout>> = [];
 

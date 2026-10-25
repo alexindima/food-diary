@@ -28,7 +28,7 @@
                 />
             </header>
 
-            <form class="cycle-drawer__form" [formRoot]="settingsForm()" [attr.aria-busy]="isBusy()">
+            <form method="post" class="cycle-drawer__form" [formRoot]="settingsForm()" [attr.aria-busy]="isBusy()">
                 <div class="cycle-drawer__body fd-stack fd-gap-card-content">
                     <p class="cycle-drawer__privacy fd-ui-body-sm">{{ 'CYCLE_TRACKING.SETTINGS_DESCRIPTION' | translate }}</p>
                     <fd-ui-select [label]="'CYCLE_TRACKING.GOAL' | translate" [options]="goalOptions()" [formField]="settingsForm().goal" />

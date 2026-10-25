@@ -1,0 +1,8 @@
+// The application foundation must survive component outline resets and system
+// palettes, which remove box shadows. The browser owns focus-visible modality.
+:root :is(button, input):focus-visible,
+:root :is(select, textarea):focus-visible,
+:root :is([href], [tabindex]):focus-visible {
+    outline: var(--fd-outline-focus-strong);
+    outline-offset: var(--fd-outline-offset);
+}

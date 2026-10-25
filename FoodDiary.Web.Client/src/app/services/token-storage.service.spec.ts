@@ -13,9 +13,12 @@ beforeEach(() => {
 });
 
 describe('TokenStorageService getToken', () => {
-    it('should return token from localStorage', () => {
+    it('migrates the legacy token into this tab and removes persistent credentials', () => {
         localStorage.setItem('authToken', 'local-token');
         expect(service.getToken()).toBe('local-token');
+        expect(localStorage.getItem('authToken'), 'Access tokens must not persist in localStorage').toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('local-token');
+        expect(service.isRemembered()).toBe(true);
     });
 
     it('should return token from sessionStorage when not in localStorage', () => {
@@ -35,9 +38,9 @@ describe('TokenStorageService getToken', () => {
 });
 
 describe('TokenStorageService setToken', () => {
-    it('should store in localStorage when rememberMe is true', () => {
+    it('keeps remembered access credentials in the current tab only', () => {
         service.setToken('test-token', true);
-        expect(localStorage.getItem('authToken')).toBe('test-token');
+        expect(localStorage.getItem('authToken')).toBeNull();
         expect(sessionStorage.getItem('authToken')).toBe('test-token');
     });
 
@@ -50,7 +53,8 @@ describe('TokenStorageService setToken', () => {
     it('should update existing storage when rememberMe is undefined', () => {
         localStorage.setItem('authToken', 'old-token');
         service.setToken('new-token');
-        expect(localStorage.getItem('authToken')).toBe('new-token');
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBe('new-token');
     });
 
     it('should default to sessionStorage when no existing token and rememberMe is undefined', () => {
@@ -254,7 +258,7 @@ describe('TokenStorageService owner boundaries', () => {
         service.setToken(`${token('alice')}updated`);
 
         expect(service.isRemembered()).toBe(true);
-        expect(localStorage.getItem('authToken')).toBe(`${token('alice')}updated`);
+        expect(localStorage.getItem('authToken')).toBeNull();
         expect(sessionStorage.getItem('authToken')).toBe(`${token('alice')}updated`);
     });
 

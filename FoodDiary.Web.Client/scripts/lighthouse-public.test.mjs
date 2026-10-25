@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createServer, request } from 'node:http';
+import { connect } from 'node:http2';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -10,6 +11,7 @@ import { gunzipSync } from 'node:zlib';
 
 import {
     aggregate,
+    assertLocalHttp2,
     checkSummary,
     collectionPlan,
     makeBaseline,
@@ -204,6 +206,17 @@ test('budgets use correct score direction and device-specific limits', () => {
     assert.equal(checkSummary(summary({ lcp: 3500, performance: 85, tbt: 300, cls: 0.1 }), config).passed, true);
 });
 
+test('HTTP/2 evidence and comparison context cannot silently inherit HTTP/1 results', () => {
+    const origin = 'https://127.0.0.1:1234';
+    const report = protocol => ({ audits: { 'network-requests': { details: { items: [{ url: `${origin}/`, protocol }] } } } });
+    assert.doesNotThrow(() => assertLocalHttp2(report('h2'), origin));
+    assert.throws(() => assertLocalHttp2(report('http/1.1'), origin), /non-h2/u);
+    assert.throws(() => assertLocalHttp2({}, origin), /missing/u);
+    const changed = summary();
+    changed.context.target.mode = 'local-gzip-http2';
+    assert.match(checkSummary(changed, config, makeBaseline(summary())).failures[0].message, /context differs: target/u);
+});
+
 test('baseline tolerances use larger absolute or relative allowance', () => {
     const baseline = makeBaseline(summary());
     assert.equal(
@@ -317,6 +330,52 @@ test('explicit API proxy preserves real status/body/query and removes credential
     assert.equal(response.status, 422);
     assert.equal(response.body.toString(), '{"actual":"upstream"}');
     assert.equal(response.headers['set-cookie'], undefined);
+});
+
+test('HTTP/2 hosting negotiates h2 with an ephemeral loopback certificate and preserves safe API forwarding', async t => {
+    const root = temporary(t);
+    writeFileSync(path.join(root, 'index.html'), '<h1>HTTP/2 document</h1>');
+    const api = createServer((request, response) => {
+        assert.equal(request.url, '/api/example?limit=2');
+        assert.equal(request.headers.authorization, undefined);
+        assert.equal(request.headers.cookie, undefined);
+        response.writeHead(422, { 'content-type': 'application/json', 'set-cookie': 'private=test' });
+        response.end('{"actual":"upstream"}');
+    });
+    await new Promise(resolve => api.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => api.close(resolve)));
+    const server = await startStaticServer(root, `http://127.0.0.1:${api.address().port}`, { transport: 'http2' });
+    t.after(() => server.close());
+    assert.match(server.certificateSPKI, /^[A-Za-z0-9+/]{43}=$/u);
+    const get = (pathname, headers = {}) =>
+        new Promise((resolve, reject) => {
+            const session = connect(server.origin, { ca: server.certificate });
+            session.on('error', reject);
+            const stream = session.request({ ':path': pathname, ...headers });
+            const chunks = [];
+            let responseHeaders;
+            stream.on('response', headers => {
+                responseHeaders = headers;
+            });
+            stream.on('data', chunk => chunks.push(chunk));
+            stream.on('error', error => {
+                session.destroy();
+                reject(error);
+            });
+            stream.on('end', () => {
+                const protocol = session.alpnProtocol;
+                session.close();
+                resolve({ headers: responseHeaders, body: Buffer.concat(chunks), protocol });
+            });
+        });
+    const document = await get('/', { 'accept-encoding': 'gzip' });
+    assert.equal(document.protocol, 'h2');
+    assert.equal(document.headers[':status'], 200);
+    assert.equal(gunzipSync(document.body).toString(), '<h1>HTTP/2 document</h1>');
+    const forwarded = await get('/api/example?limit=2', { authorization: 'Bearer fake', cookie: 'fake=test' });
+    assert.equal(forwarded.headers[':status'], 422);
+    assert.equal(forwarded.headers['set-cookie'], undefined);
+    assert.equal(forwarded.body.toString(), '{"actual":"upstream"}');
 });
 
 test('CLI saves a reviewed baseline, passes same results, rejects regression and missing baseline', t => {

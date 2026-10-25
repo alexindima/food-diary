@@ -1036,41 +1036,11 @@ $fd-theme-design-tokens: (
     @return $value;
 }
 
-@mixin fd-emit-css-variables($theme, $selector) {
+// Declare aliases on every theme scope so nested palettes resolve var() locally.
+@mixin fd-emit-shared-css-variables($selector) {
     #{$selector} {
-        --fd-color-primary: #{fd-theme-token($theme, colors, primary)};
-        --fd-color-accent: #{fd-theme-token($theme, colors, accent)};
-        --fd-color-success: #{fd-theme-token($theme, colors, success)};
-        --fd-color-info: #{fd-theme-token($theme, colors, info)};
-        --fd-color-warn: #{fd-theme-token($theme, colors, warn)};
-        --fd-color-danger: #{fd-theme-token($theme, colors, warn)};
-        --fd-color-ai: #{fd-theme-token($theme, colors, ai)};
-        --fd-color-ai-strong: #{fd-theme-token($theme, colors, ai-strong)};
-        --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
-        --fd-material-base-surface: #{fd-theme-token($theme, colors, surface)};
-        --fd-material-base-muted: #{fd-theme-token($theme, colors, surface-muted)};
-        --fd-material-base-raised: #{fd-theme-token($theme, colors, surface-raised)};
-        --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
-        --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
-        --fd-color-dialog-surface: #{fd-theme-token($theme, colors, surface-raised)};
-        --fd-color-dialog-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
-        --fd-color-dialog-border: #{fd-theme-token($theme, colors, border-strong)};
         --fd-color-dialog-overlay: color-mix(in srgb, #{fd-token(colors, slate-900)} 60%, transparent);
-        --fd-color-background: #{fd-theme-token($theme, layout-page, background)};
-        --fd-color-text: #{fd-theme-token($theme, colors, text)};
-        --fd-color-text-strong: #{fd-theme-token($theme, colors, text-strong)};
-        --fd-color-text-muted: #{fd-theme-token($theme, colors, text-muted)};
-        --fd-color-border: #{fd-theme-token($theme, colors, border)};
-        --fd-color-border-strong: #{fd-theme-token($theme, colors, border-strong)};
-        --fd-color-shadow: #{fd-theme-token($theme, colors, shadow)};
-        --fd-color-on-brand: #{fd-theme-token($theme, colors, on-brand)};
-        --fd-color-on-brand-muted: #{fd-theme-token($theme, colors, on-brand-muted)};
-        --fd-color-on-ai: #{fd-theme-token($theme, colors, on-ai)};
-        --fd-color-primary-rgb: #{fd-theme-token($theme, colors, primary-rgb)};
-        --fd-color-danger-rgb: #{fd-theme-token($theme, colors, danger-rgb)};
 
-        --fd-bg-page: #{fd-theme-token($theme, layout-page, background)};
-        --fd-bg-body: #{fd-theme-token($theme, layout-page, background)};
         --fd-bg-surface: var(--fd-color-surface);
         --fd-bg-card-surface:
             radial-gradient(ellipse at 50% 43%, color-mix(in srgb, var(--fd-color-text) 2.5%, transparent), transparent 45%),
@@ -1460,32 +1430,6 @@ $fd-theme-design-tokens: (
         --fd-bg-category-orange: color-mix(in srgb, var(--fd-color-orange-500) 12%, transparent);
         --fd-bg-transparent: transparent;
 
-        --fd-color-primary-50: #{fd-theme-token($theme, colors, primary-50)};
-        --fd-color-primary-100: #{fd-theme-token($theme, colors, primary-100)};
-        --fd-color-primary-200: #{fd-theme-token($theme, colors, primary-200)};
-        --fd-color-primary-300: #{fd-theme-token($theme, colors, primary-300)};
-        --fd-color-primary-400: #{fd-theme-token($theme, colors, primary-400)};
-        --fd-color-primary-500: #{fd-theme-token($theme, colors, primary-500)};
-        --fd-color-primary-600: #{fd-theme-token($theme, colors, primary-600)};
-        --fd-color-primary-700: #{fd-theme-token($theme, colors, primary-700)};
-        --fd-color-primary-800: #{fd-theme-token($theme, colors, primary-800)};
-        --fd-color-primary-900: #{fd-theme-token($theme, colors, primary-900)};
-
-        --fd-gradient-brand-start: #{fd-theme-token($theme, gradients, brand-start)};
-        --fd-gradient-brand-end: #{fd-theme-token($theme, gradients, brand-end)};
-        --fd-gradient-brand-hover-start: #{fd-theme-token($theme, gradients, brand-hover-start)};
-        --fd-gradient-brand-hover-end: #{fd-theme-token($theme, gradients, brand-hover-end)};
-        --fd-gradient-sidebar-start: #{fd-theme-token($theme, gradients, sidebar-start)};
-        --fd-gradient-sidebar-end: #{fd-theme-token($theme, gradients, sidebar-end)};
-        --fd-gradient-premium-start: #{fd-theme-token($theme, gradients, premium-start)};
-        --fd-gradient-premium-end: #{fd-theme-token($theme, gradients, premium-end)};
-        --fd-gradient-hero-start: #{fd-theme-token($theme, gradients, hero-start)};
-        --fd-gradient-hero-end: #{fd-theme-token($theme, gradients, hero-end)};
-        --fd-gradient-ai-start: #{fd-theme-token($theme, gradients, ai-start)};
-        --fd-gradient-ai-end: #{fd-theme-token($theme, gradients, ai-end)};
-        --fd-gradient-ai-hover-start: #{fd-theme-token($theme, gradients, ai-hover-start)};
-        --fd-gradient-ai-hover-end: #{fd-theme-token($theme, gradients, ai-hover-end)};
-
         --fd-radius-xs: #{fd-token(radius, xs)};
         --fd-radius-sm: #{fd-token(radius, sm)};
         --fd-radius-md: #{fd-token(radius, md)};
@@ -1830,11 +1774,6 @@ $fd-theme-design-tokens: (
         --fd-color-notice-danger-message: color-mix(in srgb, var(--fd-color-danger) 36%, var(--fd-color-text-muted));
         --fd-color-notice-danger-action: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-text));
 
-        --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
-        --fd-layout-page-horizontal-padding: #{fd-theme-token($theme, layout-page, horizontal-padding)};
-        --fd-layout-page-vertical-padding: #{fd-theme-token($theme, layout-page, vertical-padding)};
-        --fd-layout-page-content-max-width: #{fd-theme-token($theme, layout-page, content-max-width)};
-        --fd-layout-page-section-spacing: #{fd-theme-token($theme, layout-page, section-spacing)};
         --fd-period-gap: #{fd-token(period-filter, gap)};
         --fd-page-body-gap: #{fd-token(page-body, gap)};
         --fd-layout-shell-sidebar-width: #{fd-token(layout-shell, sidebar-width)};
@@ -2000,14 +1939,78 @@ $fd-theme-design-tokens: (
         --fd-z-index-floating-panel: 1200;
         --fd-z-index-toast: 1300;
         --fd-z-index-skip-nav: 10000;
+    }
+}
 
+// Theme palettes and layout values vary; aliases and geometry are shared.
+@mixin fd-emit-css-variables($theme, $selector, $include-shared: true) {
+    #{$selector} {
+        --fd-color-primary: #{fd-theme-token($theme, colors, primary)};
+        --fd-color-accent: #{fd-theme-token($theme, colors, accent)};
+        --fd-color-success: #{fd-theme-token($theme, colors, success)};
+        --fd-color-info: #{fd-theme-token($theme, colors, info)};
+        --fd-color-warn: #{fd-theme-token($theme, colors, warn)};
+        --fd-color-danger: #{fd-theme-token($theme, colors, warn)};
+        --fd-color-ai: #{fd-theme-token($theme, colors, ai)};
+        --fd-color-ai-strong: #{fd-theme-token($theme, colors, ai-strong)};
+        --fd-color-surface: #{fd-theme-token($theme, colors, surface)};
+        --fd-material-base-surface: #{fd-theme-token($theme, colors, surface)};
+        --fd-material-base-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-material-base-raised: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-color-surface-raised: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-dialog-surface: #{fd-theme-token($theme, colors, surface-raised)};
+        --fd-color-dialog-surface-muted: #{fd-theme-token($theme, colors, surface-muted)};
+        --fd-color-dialog-border: #{fd-theme-token($theme, colors, border-strong)};
+        --fd-color-background: #{fd-theme-token($theme, layout-page, background)};
+        --fd-color-text: #{fd-theme-token($theme, colors, text)};
+        --fd-color-text-strong: #{fd-theme-token($theme, colors, text-strong)};
+        --fd-color-text-muted: #{fd-theme-token($theme, colors, text-muted)};
+        --fd-color-border: #{fd-theme-token($theme, colors, border)};
+        --fd-color-border-strong: #{fd-theme-token($theme, colors, border-strong)};
+        --fd-color-shadow: #{fd-theme-token($theme, colors, shadow)};
+        --fd-color-on-brand: #{fd-theme-token($theme, colors, on-brand)};
+        --fd-color-on-brand-muted: #{fd-theme-token($theme, colors, on-brand-muted)};
+        --fd-color-on-ai: #{fd-theme-token($theme, colors, on-ai)};
+        --fd-color-primary-rgb: #{fd-theme-token($theme, colors, primary-rgb)};
+        --fd-color-danger-rgb: #{fd-theme-token($theme, colors, danger-rgb)};
+        --fd-bg-page: #{fd-theme-token($theme, layout-page, background)};
+        --fd-bg-body: #{fd-theme-token($theme, layout-page, background)};
+        --fd-color-primary-50: #{fd-theme-token($theme, colors, primary-50)};
+        --fd-color-primary-100: #{fd-theme-token($theme, colors, primary-100)};
+        --fd-color-primary-200: #{fd-theme-token($theme, colors, primary-200)};
+        --fd-color-primary-300: #{fd-theme-token($theme, colors, primary-300)};
+        --fd-color-primary-400: #{fd-theme-token($theme, colors, primary-400)};
+        --fd-color-primary-500: #{fd-theme-token($theme, colors, primary-500)};
+        --fd-color-primary-600: #{fd-theme-token($theme, colors, primary-600)};
+        --fd-color-primary-700: #{fd-theme-token($theme, colors, primary-700)};
+        --fd-color-primary-800: #{fd-theme-token($theme, colors, primary-800)};
+        --fd-color-primary-900: #{fd-theme-token($theme, colors, primary-900)};
+        --fd-gradient-brand-start: #{fd-theme-token($theme, gradients, brand-start)};
+        --fd-gradient-brand-end: #{fd-theme-token($theme, gradients, brand-end)};
+        --fd-gradient-brand-hover-start: #{fd-theme-token($theme, gradients, brand-hover-start)};
+        --fd-gradient-brand-hover-end: #{fd-theme-token($theme, gradients, brand-hover-end)};
+        --fd-gradient-sidebar-start: #{fd-theme-token($theme, gradients, sidebar-start)};
+        --fd-gradient-sidebar-end: #{fd-theme-token($theme, gradients, sidebar-end)};
+        --fd-gradient-premium-start: #{fd-theme-token($theme, gradients, premium-start)};
+        --fd-gradient-premium-end: #{fd-theme-token($theme, gradients, premium-end)};
+        --fd-gradient-hero-start: #{fd-theme-token($theme, gradients, hero-start)};
+        --fd-gradient-hero-end: #{fd-theme-token($theme, gradients, hero-end)};
+        --fd-gradient-ai-start: #{fd-theme-token($theme, gradients, ai-start)};
+        --fd-gradient-ai-end: #{fd-theme-token($theme, gradients, ai-end)};
+        --fd-gradient-ai-hover-start: #{fd-theme-token($theme, gradients, ai-hover-start)};
+        --fd-gradient-ai-hover-end: #{fd-theme-token($theme, gradients, ai-hover-end)};
+        --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
+        --fd-layout-page-horizontal-padding: #{fd-theme-token($theme, layout-page, horizontal-padding)};
+        --fd-layout-page-vertical-padding: #{fd-theme-token($theme, layout-page, vertical-padding)};
+        --fd-layout-page-content-max-width: #{fd-theme-token($theme, layout-page, content-max-width)};
+        --fd-layout-page-section-spacing: #{fd-theme-token($theme, layout-page, section-spacing)};
         --fd-layout-header-height: #{fd-theme-token($theme, layout-header, height)};
         --fd-layout-header-background: #{fd-theme-token($theme, layout-header, background)};
         --fd-layout-header-text-color: #{fd-theme-token($theme, layout-header, text-color)};
         --fd-layout-header-horizontal-padding-left: #{fd-theme-token($theme, layout-header, horizontal-padding-left)};
         --fd-layout-header-horizontal-padding-right: #{fd-theme-token($theme, layout-header, horizontal-padding-right)};
         --fd-layout-header-shadow: #{fd-theme-token($theme, layout-header, shadow)};
-
         --fd-page-title-size: #{fd-theme-token($theme, page-header, title-size)};
         --fd-page-title-line-height: #{fd-theme-token($theme, page-header, title-line-height)};
         --fd-page-title-weight: #{fd-theme-token($theme, page-header, title-weight)};
@@ -2019,6 +2022,10 @@ $fd-theme-design-tokens: (
         --fd-page-actions-gap: #{fd-theme-token($theme, page-header, actions-gap)};
         --fd-page-header-mobile-background: #{fd-theme-token($theme, page-header, mobile-background)};
         --fd-page-header-mobile-border-color: #{fd-theme-token($theme, page-header, mobile-border-color)};
+    }
+
+    @if $include-shared {
+        @include fd-emit-shared-css-variables($selector);
     }
 }
 

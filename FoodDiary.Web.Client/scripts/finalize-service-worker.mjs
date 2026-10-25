@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertNoDevelopmentRuntime } from './check-production-bundles.mjs';
 
 const startupEntryPoints = ['src/main.ts', 'src/app/features/public/pages/landing/main.ts'];
 const normalizePath = value => value.replaceAll('\\', '/').replace(/^\.\//u, '');
@@ -63,6 +64,22 @@ export function splitServiceWorkerJavascript(manifest, stats) {
     return result;
 }
 
+export function assertDeferredPublicStartup(stats) {
+    const startup = collectStartupJavascript(stats);
+    for (const [output, metadata] of Object.entries(stats.outputs)) {
+        if (!startup.has(`/${normalizePath(output)}`)) continue;
+        for (const [input, contribution] of Object.entries(metadata.inputs ?? {})) {
+            const source = normalizePath(input);
+            if (
+                contribution.bytesInOutput > 0 &&
+                (source.includes('projects/fd-tour/src/') ||
+                    source.endsWith('src/app/components/shared/app-update-notice/app-update-notice.ts'))
+            )
+                throw new Error(`Deferred feature in public startup: ${output}: ${input}`);
+        }
+    }
+}
+
 if (process.argv[1] !== undefined && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
     const distDir = path.resolve('dist');
     const manifestPath = path.join(distDir, 'browser/ngsw.json');
@@ -71,6 +88,8 @@ if (process.argv[1] !== undefined && path.resolve(process.argv[1]) === fileURLTo
     } else {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
         const stats = JSON.parse(fs.readFileSync(path.join(distDir, 'browser-stats.json'), 'utf8'));
+        assertNoDevelopmentRuntime(stats);
+        assertDeferredPublicStartup(stats);
         const result = splitServiceWorkerJavascript(manifest, stats);
         fs.writeFileSync(manifestPath, `${JSON.stringify(result, null, 2)}\n`);
         const shell = result.assetGroups.find(group => group.name === 'app');

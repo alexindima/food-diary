@@ -86,7 +86,7 @@
         <div class="recipe-list__search-toolbar">
             @if (!isMobileView()) {
                 <div class="recipe-list__desktop-search" data-tour-id="recipe-list-search">
-                    <form class="recipe-list__search-form recipe-list__search-form--desktop" [formRoot]="searchForm">
+                    <form method="post" class="recipe-list__search-form recipe-list__search-form--desktop" [formRoot]="searchForm">
                         <fd-ui-input
                             class="recipe-list__search-input"
                             prefixIcon="search"
@@ -101,7 +101,7 @@
                 </div>
             } @else {
                 <div class="recipe-list__mobile-search recipe-list__mobile-search--open" data-tour-id="recipe-list-search">
-                    <form class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
+                    <form method="post" class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
                         <fd-ui-input
                             class="recipe-list__search-input"
                             prefixIcon="search"

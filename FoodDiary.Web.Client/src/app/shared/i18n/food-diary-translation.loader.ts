@@ -1,4 +1,4 @@
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, makeStateKey, PLATFORM_ID, Service, type StateKey, TransferState } from '@angular/core';
 import { TranslateLoader, type TranslationObject } from '@ngx-translate/core';
@@ -8,10 +8,9 @@ import { environment } from '../../../environments/environment';
 import { PUBLIC_SEO_PATHS } from '../../config/public-seo-landing-routes.config';
 import { PUBLIC_INFORMATION_PAGES, stripPublicLocale } from '../../config/public-site-paths';
 import { BrowserWindowService } from '../platform/browser-window.service';
-import { SERVER_TRANSLATIONS } from './server-translations.token';
+import { SERVER_TRANSLATIONS, type TranslationBundle } from './server-translations.token';
 
 type TranslationDictionary = TranslationObject;
-type TranslationBundle = 'core' | 'landing' | 'seo' | 'privacy' | 'app';
 
 function makeTranslationStateKey(lang: string, bundle: TranslationBundle): StateKey<TranslationDictionary> {
     return makeStateKey<TranslationDictionary>(`fd-i18n:${lang}:${bundle}`);
@@ -21,13 +20,15 @@ function makeTranslationStateKey(lang: string, bundle: TranslationBundle): State
 export class FoodDiaryTranslationLoader extends TranslateLoader {
     private readonly http = inject(HttpClient);
     private readonly browserWindow = inject(BrowserWindowService);
+    private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly transferState = inject(TransferState);
     private readonly cache = new Map<string, Observable<TranslationDictionary>>();
     private readonly serverTranslations = inject(SERVER_TRANSLATIONS, { optional: true });
 
     public getTranslation(lang: string): Observable<TranslationDictionary> {
-        return this.loadBundles(lang, this.getInitialBundles(this.browserWindow.getPathname() ?? '/')).pipe(catchError(() => of({})));
+        const path = this.browserWindow.getPathname() ?? this.document.location.pathname;
+        return this.loadBundles(lang, this.getInitialBundles(path)).pipe(catchError(() => of({})));
     }
 
     public loadApplicationTranslations(lang: string): Observable<TranslationDictionary> {
@@ -43,10 +44,6 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
     }
 
     private loadBundles(lang: string, bundles: readonly TranslationBundle[]): Observable<TranslationDictionary> {
-        const bundled = this.serverTranslations?.[lang];
-        if (bundled !== undefined) {
-            return of(bundled);
-        }
         if (bundles.length === 0) {
             return of({});
         }
@@ -62,6 +59,13 @@ export class FoodDiaryTranslationLoader extends TranslateLoader {
         }
 
         const transferStateKey = makeTranslationStateKey(lang, bundle);
+        const packaged = this.serverTranslations?.[lang]?.[bundle];
+        if (packaged !== undefined && isPlatformServer(this.platformId)) {
+            this.transferState.set(transferStateKey, packaged);
+            const request = of(packaged);
+            this.cache.set(key, request);
+            return request;
+        }
         if (isPlatformBrowser(this.platformId) && this.transferState.hasKey(transferStateKey)) {
             const transferred = this.transferState.get(transferStateKey, {});
             this.transferState.remove(transferStateKey);

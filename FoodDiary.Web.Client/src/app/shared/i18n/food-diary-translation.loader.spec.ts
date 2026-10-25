@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { makeStateKey, PLATFORM_ID, type StateKey, TransferState } from '@angular/core';
@@ -14,18 +15,46 @@ const LANGUAGE = 'en';
 const BUILD_VERSION = environment.buildVersion ?? 'dev';
 
 describe('FoodDiaryTranslationLoader routes', () => {
+    it('selects server bundles from the actual document route without transferring unrelated landing copy', async () => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: PLATFORM_ID, useValue: 'server' },
+                { provide: DOCUMENT, useValue: { location: { pathname: '/calorie-counter' } } },
+                { provide: TransferState, useFactory: (): TransferState => new TransferState() },
+                { provide: BrowserWindowService, useValue: { getPathname: (): null => null } },
+                { provide: SERVER_TRANSLATIONS, useValue: { en: { core: {}, seo: { SEO: true }, landing: { UNUSED: true } } } },
+            ],
+        });
+        await expect(firstValueFrom(TestBed.inject(FoodDiaryTranslationLoader).getTranslation('en'))).resolves.toEqual({ SEO: true });
+        expect(TestBed.inject(TransferState).hasKey(makeStateKey('fd-i18n:en:landing'))).toBe(false);
+        TestBed.inject(HttpTestingController).verify();
+    });
     it('uses packaged translations on the server without fetching the public hostname', async () => {
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                { provide: SERVER_TRANSLATIONS, useValue: { ru: { PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' } } } },
+                { provide: PLATFORM_ID, useValue: 'server' },
+                {
+                    provide: SERVER_TRANSLATIONS,
+                    useValue: { ru: { core: {}, app: { PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' } }, landing: { UNUSED: true } } },
+                },
             ],
         });
         const loader = TestBed.inject(FoodDiaryTranslationLoader);
         await expect(firstValueFrom(loader.loadRouteTranslations('ru', '/explore'))).resolves.toEqual({
             PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' },
         });
+        const transferred = TestBed.inject(TransferState);
+        expect(
+            transferred.get(makeStateKey<Record<string, unknown>>('fd-i18n:ru:app'), {}),
+            'Packaged server translations must reach browser transfer state',
+        ).toEqual({
+            PUBLIC_RECIPES: { CATALOG: 'Каталог рецептов' },
+        });
+        expect(transferred.hasKey(makeStateKey('fd-i18n:ru:landing'))).toBe(false);
         TestBed.inject(HttpTestingController).verify();
     });
     it('loads landing bundles for initial public route', async () => {

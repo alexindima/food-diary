@@ -7,7 +7,7 @@
         [selectedValue]="source()"
         (selectedValueChange)="selectSource($event)"
     />
-    <form class="admin-filter-bar" [formRoot]="form">
+    <form method="post" class="admin-filter-bar" [formRoot]="form">
         <fd-admin-period [inline]="true" />
         <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
         <fd-ui-select [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" [options]="statusOptions()" />

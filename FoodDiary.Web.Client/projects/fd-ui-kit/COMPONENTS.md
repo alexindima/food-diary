@@ -29,6 +29,12 @@ the document. The class does not choose a palette or modify account preferences.
 
 Most inputs accept `size` (`'sm' | 'md' | 'lg'`). The default is `md`.
 
+`fd-ui-input` forwards `name` to its native input, defaulting to the control's
+`id`. Provide stable IDs for account fields so native form serialization and
+password managers retain the field identity. Identifier, password and search
+controls disable spelling correction and capitalization; ordinary prose keeps
+the browser defaults.
+
 ## Typography
 
 Shared typography should come from the design-system semantic layer rather than ad-hoc `font-size` and `font-weight` values inside feature styles.

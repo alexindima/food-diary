@@ -3,6 +3,9 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { listFiles, portable, sha256, within } from '../../../Tooling/WebQuality/lib/files.mjs';
+import { platformTemplateRules, inspectPlatformStyles } from './platform-rules.mjs';
+import { inspectDocument } from './documents.mjs';
+import { searchableSource, inspectApplicability, inspectScript } from './inventory.mjs';
 
 const require = createRequire(new URL('../../package.json', import.meta.url));
 const dependency = async name => import(pathToFileURL(require.resolve(name)).href);
@@ -22,14 +25,35 @@ const nativeRules = new Set([
 export const sourceChecks = new Set(
     [...nativeRules]
         .map(rule => `template:${rule}`)
-        .concat([
-            'template:fd-ui-button-accessible-name',
-            'template:image-priority',
-            'template:deprecated-image-attributes',
-            'css:relative-font-size',
-            'css:unitless-line-height',
-            'css:bounded-text-wrap',
-        ]),
+        .concat(
+            [
+                'template:fd-ui-button-accessible-name',
+                'template:image-priority',
+                'template:deprecated-image-attributes',
+                'css:relative-font-size',
+                'css:unitless-line-height',
+                'css:bounded-text-wrap',
+            ],
+            Object.keys(platformTemplateRules).map(rule => `template:${rule}`),
+            [
+                'loading',
+                'scalable-text',
+                'render-containment',
+                'container-syntax',
+                'motion-safety',
+                'scrollbar-safety',
+                'feature-fallback',
+                'form-states',
+            ].map(rule => `css:${rule}`),
+            [
+                'script:dom-sinks',
+                'script:dynamic-code',
+                'script:message-origin',
+                'script:credential-storage',
+                'document:platform',
+                'source:guide-applicability',
+            ],
+        ),
 );
 
 const templateLocation = node => ({
@@ -52,6 +76,7 @@ const staticBooleanAttribute = value =>
     value !== undefined && value !== null && value !== false && value !== 'false' && !(typeof value === 'object' && value.dynamic);
 
 const imageRules = {
+    ...platformTemplateRules,
     'image-priority': {
         meta: { type: 'problem', schema: [], messages: { conflict: 'A high-priority/LCP image must not use loading="lazy".' } },
         create(context) {
@@ -195,7 +220,7 @@ export async function inlineTemplates(text, file) {
 export async function inspectStyles(text, file) {
     const parser = await dependency('postcss-scss');
     const root = (parser.default ?? parser).parse(text, { from: file });
-    const findings = [];
+    const findings = inspectPlatformStyles(root, file);
     root.walkDecls(declaration => {
         const { value } = declaration;
         const prop = declaration.prop.toLowerCase();
@@ -233,6 +258,7 @@ export async function runSource({ repositoryRoot, policy }) {
         throw new Error('Angular template parser/plugin self-test failed.');
     const records = [];
     const fingerprints = [];
+    const inventory = [];
     for (const scope of policy.scopes) {
         const files = await listFiles(within(repositoryRoot, scope.path), new Set(['.ts', '.html', '.css', '.scss']));
         const scopeRequirements = requirements.filter(requirement => requirement.scopes.includes(scope.id));
@@ -241,7 +267,18 @@ export async function runSource({ repositoryRoot, policy }) {
         )) {
             const relative = portable(path.relative(repositoryRoot, file));
             const text = await readFile(file, 'utf8');
+            inventory.push({ file: relative, searchable: searchableSource(text, relative) });
             fingerprints.push(`${relative}:${sha256(text)}`);
+            if (file.endsWith('.ts')) {
+                const findings = inspectScript(text, relative);
+                for (const requirement of scopeRequirements.filter(item => item.check.startsWith('script:')))
+                    records.push({ requirement: requirement.id, findings: findings.filter(item => item.check === requirement.check) });
+            }
+            if (file.endsWith('.html') && /<html\b/iu.test(text)) {
+                const findings = inspectDocument(text, relative);
+                for (const requirement of scopeRequirements.filter(item => item.check === 'document:platform'))
+                    records.push({ requirement: requirement.id, findings });
+            }
             const templates = file.endsWith('.html') ? [{ text, line: 0 }] : file.endsWith('.ts') ? await inlineTemplates(text, file) : [];
             for (const template of templates) {
                 const result = (await linter.lintText(template.text, { filePath: `${relative}.html` }))[0];
@@ -270,6 +307,14 @@ export async function runSource({ repositoryRoot, policy }) {
             }
         }
     }
+    for (const relative of policy.additionalSources ?? []) {
+        const text = await readFile(within(repositoryRoot, relative), 'utf8');
+        inventory.push({ file: relative, searchable: searchableSource(text, relative) });
+        fingerprints.push(`${relative}:${sha256(text)}`);
+    }
+    for (const requirement of requirements.filter(item => item.check === 'source:guide-applicability'))
+        for (const review of (policy.guideReviews ?? []).filter(item => item.whenAbsent))
+            records.push({ requirement: requirement.id, findings: inspectApplicability(inventory, [review]) });
     return {
         metadata: {
             fingerprint: sha256(fingerprints.sort().join('\n')),
@@ -287,7 +332,9 @@ export async function runSource({ repositoryRoot, policy }) {
                 observations: matching.length,
                 findings,
                 detail: matching.length
-                    ? `Inspected ${matching.length} source templates/styles in the declared scopes.`
+                    ? requirement.check === 'source:guide-applicability'
+                        ? `Rechecked ${matching.length} conditional absence decisions against ${inventory.length} source files and configuration entries.`
+                        : `Inspected ${matching.length} source files/templates in the declared scopes.`
                     : 'No applicable source files were inspected.',
             };
         }),

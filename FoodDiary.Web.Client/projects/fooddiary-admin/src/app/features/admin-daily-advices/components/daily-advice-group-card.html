@@ -1,6 +1,6 @@
 <fd-ui-card>
     @if (editing()) {
-        <form class="fd-grid fd-gap-md" [formRoot]="form">
+        <form method="post" class="fd-grid fd-gap-md" [formRoot]="form">
             <fd-ui-textarea [formField]="form.ru" [label]="'ADMIN_DAILY_ADVICES.RU' | translate" />
             <fd-ui-textarea [formField]="form.en" [label]="'ADMIN_DAILY_ADVICES.EN' | translate" />
             <fd-ui-input [formField]="form.tag" [label]="'ADMIN_DAILY_ADVICES.TAG' | translate" />

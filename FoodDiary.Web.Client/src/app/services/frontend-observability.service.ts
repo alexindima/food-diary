@@ -17,6 +17,7 @@ const DECIMAL_ROUNDING_DIVISOR = 10;
 const UUID_SEGMENT_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
 const NUMERIC_SEGMENT_PATTERN = /^\d+$/u;
 const NORMALIZED_ID_SEGMENT = ':id';
+const CLS_ROUNDING_FACTOR = 1000;
 
 @Service()
 export class FrontendObservabilityService {
@@ -27,7 +28,7 @@ export class FrontendObservabilityService {
     private readonly telemetrySession = inject(ClientTelemetrySessionService);
     private readonly navigationStarts = new Map<number, number>();
     private initialized = false;
-    private readonly reportedVitals = new Set<string>();
+    private readonly reportedVitals = new Map<string, number>();
 
     public initialize(): void {
         if (this.initialized || environment.enableClientObservability !== true || !this.browserWindow.isAvailable()) {
@@ -101,23 +102,26 @@ export class FrontendObservabilityService {
         });
     }
 
-    public recordWebVital(name: string, value: number, unit: string = 'ms'): void {
-        const dedupeKey = `${name}:${unit}`;
-        if (this.reportedVitals.has(dedupeKey)) {
+    public recordWebVital(name: string, value: number, unit: string = 'ms', details?: Record<string, unknown>): void {
+        const metricId = details?.['metricId'];
+        const entryRoute = details?.['entryRoute'];
+        const dedupeKey = `${name}:${unit}:${typeof metricId === 'string' ? metricId : ''}`;
+        if (!Number.isFinite(value) || value < 0 || this.reportedVitals.get(dedupeKey) === value) {
             return;
         }
 
-        this.reportedVitals.add(dedupeKey);
+        this.reportedVitals.set(dedupeKey, value);
         this.send({
             category: 'web_vital',
             name,
             level: 'info',
             timestamp: new Date().toISOString(),
             location: this.getLocation(),
-            route: this.router.url,
-            value: this.round(value),
+            route: typeof entryRoute === 'string' ? entryRoute : this.router.url,
+            value: unit === 'score' ? Math.round(value * CLS_ROUNDING_FACTOR) / CLS_ROUNDING_FACTOR : this.round(value),
             unit,
             buildVersion: environment.buildVersion,
+            details,
         });
     }
 
@@ -271,44 +275,16 @@ export class FrontendObservabilityService {
     }
 
     private observeWebVitals(): void {
-        this.recordNavigationTiming();
-        this.observePaintMetrics();
-        this.observeLargestContentfulPaint();
-    }
-
-    private recordNavigationTiming(): void {
-        const responseStart = this.browserPerformance.getNavigationResponseStart();
-        if (responseStart !== null) {
-            this.recordWebVital('ttfb', responseStart);
-        }
-    }
-
-    private observePaintMetrics(): void {
-        this.browserPerformance.observePaintMetric(entry => {
-            if (entry.name === 'first-contentful-paint') {
-                this.recordWebVital('fcp', entry.startTime);
-            }
+        const entryRoute = this.normalizeRoute(this.browserWindow.getPathname() ?? this.router.url);
+        void this.browserPerformance.observeWebVitalsAsync(metric => {
+            this.recordWebVital(metric.name.toLowerCase(), metric.value, metric.name === 'CLS' ? 'score' : 'ms', {
+                metricId: metric.id,
+                delta: metric.delta,
+                rating: metric.rating,
+                navigationType: metric.navigationType,
+                entryRoute,
+            });
         });
-    }
-
-    private observeLargestContentfulPaint(): void {
-        let latestEntry: PerformanceEntry | null = null;
-        const observer = this.browserPerformance.observeLatestEntry('largest-contentful-paint', entry => {
-            latestEntry = entry;
-        });
-        if (observer === null) {
-            return;
-        }
-
-        const flush = (): void => {
-            if (latestEntry !== null) {
-                this.recordWebVital('lcp', latestEntry.startTime);
-            }
-            observer.disconnect();
-        };
-
-        this.browserWindow.onPageHideOnce(flush);
-        this.browserWindow.onVisibilityHiddenOnce(flush);
     }
 
     private send(event: ClientTelemetryEvent): void {
@@ -319,6 +295,8 @@ export class FrontendObservabilityService {
         this.loggingApiService
             .logEvent({
                 ...event,
+                ...(event.route === undefined ? {} : { route: this.normalizeRoute(event.route) }),
+                ...(event.location === undefined ? {} : { location: this.normalizeUrl(event.location) }),
                 sessionId: this.telemetrySession.getSessionId(),
                 pageRoute: this.normalizeRoute(event.route ?? this.router.url),
             })
@@ -336,9 +314,9 @@ export class FrontendObservabilityService {
     private normalizeUrl(url: string): string {
         try {
             const location = this.getLocation();
-            return new URL(url, location.length > 0 ? location : 'http://localhost').pathname;
+            return this.normalizeRoute(new URL(url, location.length > 0 ? location : 'http://localhost').pathname);
         } catch {
-            return url;
+            return '/unknown';
         }
     }
 
@@ -356,7 +334,7 @@ export class FrontendObservabilityService {
 
     private isDynamicRouteSegment(segment: string): boolean {
         const decodedSegment = this.decodeRouteSegment(segment).toLowerCase();
-        return UUID_SEGMENT_PATTERN.test(decodedSegment) || NUMERIC_SEGMENT_PATTERN.test(decodedSegment);
+        return UUID_SEGMENT_PATTERN.test(decodedSegment) || NUMERIC_SEGMENT_PATTERN.test(decodedSegment) || decodedSegment.includes('@');
     }
 
     private decodeRouteSegment(segment: string): string {
@@ -372,8 +350,11 @@ export class FrontendObservabilityService {
     }
 
     private isPublicRoute(url: string): boolean {
-        const path = url.split(/[?#]/u, 1)[0].toLowerCase();
-        return path === '/' || path.startsWith('/auth') || path === '/privacy-policy' || PUBLIC_SEO_PATHS.has(path);
+        const path = url
+            .split(/[?#]/u, 1)[0]
+            .toLowerCase()
+            .replace(/^\/(?:en|ru)(?=\/|$)/u, '');
+        return path.length === 0 || path === '/' || path.startsWith('/auth') || path === '/privacy-policy' || PUBLIC_SEO_PATHS.has(path);
     }
 }
 

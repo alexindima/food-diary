@@ -1,5 +1,5 @@
 <fd-ui-dialog title="Start impersonation" size="sm" [disableClose]="isSubmitting()">
-    <form class="admin-user-impersonation-dialog fd-grid fd-gap-md" [formRoot]="form">
+    <form method="post" class="admin-user-impersonation-dialog fd-grid fd-gap-md" [formRoot]="form">
         <p>Target user: {{ targetEmail }}</p>
 
         <fd-ui-textarea

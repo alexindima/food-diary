@@ -17,8 +17,11 @@ This builds **production** assets and audits every route in
 `src/prerender-routes.txt`. The current inventory has 48 pages: 24 English and
 24 Russian. Each page gets the official Lighthouse mobile and desktop presets,
 with three sequential cold runs per preset: 288 audits. Lighthouse clears browser
-storage and the network cache between runs. The collection is deliberately
-opt-in; do not run another build, browser audit or CPU-heavy job concurrently.
+storage and the network cache between runs. This full inventory remains an
+explicit collection. WebQuality CI automatically runs the four-route smoke
+matrix on both device presets with three samples per case; see
+[WebQuality](WEB_QUALITY.md). Do not run another build, browser audit or CPU-heavy
+job concurrently with either collection.
 Dynamic recipe pages and authenticated screens are outside this static inventory.
 
 For a faster representative pass, build once and reuse the output:
@@ -42,8 +45,15 @@ npm run audit:lighthouse:collect -- --base-url=https://fooddiary.club --smoke
 
 `--dry-run` verifies the selected static HTML files and prints the plan without
 launching Chrome. Missing pages and assets return errors rather than a homepage
-fallback. The local server delivers gzip for text assets. It models static hosting,
-not production TLS, CDN latency, cache policy or server load.
+fallback. The local server delivers gzip for text assets and defaults to HTTPS
+with HTTP/2, matching `nginx/sites-enabled/fooddiary.club`. A one-hour loopback
+certificate is generated in memory; Chrome trusts only its public-key fingerprint,
+without a global certificate-error bypass. Every local sample verifies actual
+`h2` network evidence. This models the configured protocol, not production TLS
+trust, CDN latency, cache policy or server load. Use `--transport=http1` for an
+explicit legacy-protocol diagnostic. Remote origins determine their own protocol.
+HTTP/1 and HTTP/2 results have different comparison contexts and require separate
+baselines; a protocol change must never be presented as a code performance gain.
 
 Generated files under `reports/lighthouse/` are excluded from ESLint: report HTML
 is standalone output, not an Angular application template. Source templates and

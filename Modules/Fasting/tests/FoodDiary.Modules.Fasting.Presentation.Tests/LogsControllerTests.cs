@@ -15,6 +15,61 @@ namespace FoodDiary.Modules.Fasting.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class LogsControllerTests {
+    [Fact]
+    public async Task Create_WithCredentialBearingPageRoute_LogsOnlyTheRouteTemplateAsync() {
+        var logger = new RecordingLogger();
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "route_timing", Name: "router.navigation", Level: "info", Timestamp: DateTime.UtcNow.ToString("O"),
+            PageRoute: "/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc?token=secret#private");
+
+        await controller.Create(request);
+
+        Assert.Multiple(
+            () => Assert.Equal("/meals/:id", logger.Scope.GetValueOrDefault("ClientTelemetryPageRoute")),
+            () => Assert.DoesNotContain("secret", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("5f8d9e1a", logger.Message, StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("cls", 0.012, "score")]
+    [InlineData("inp", 240, "ms")]
+    public async Task Create_WithWebVital_PreservesAnonymousMeasurementIdentityForFinalUpdatesAsync(string name, double value, string unit) {
+        const string metricId = "v6-1234567890123-1234567890123";
+        var logger = new RecordingLogger();
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "web_vital", Name: name, Level: "info", Timestamp: DateTime.UtcNow.ToString("O"),
+            Value: value, Unit: unit, Details: JsonSerializer.Deserialize<JsonElement>(
+                """{"metricId":"v6-1234567890123-1234567890123","email":"secret@example.test"}"""));
+
+        IActionResult result = await controller.Create(request);
+
+        Assert.Multiple(
+            () => Assert.IsType<NoContentResult>(result),
+            () => Assert.Equal(metricId, logger.Scope.GetValueOrDefault("ClientTelemetryMetricId")),
+            () => Assert.Equal(value, logger.Scope.GetValueOrDefault("ClientTelemetryValue")),
+            () => Assert.Contains(metricId, logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret", string.Join(' ', logger.Scope.Values), StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret", logger.Message, StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("person@example.test")]
+    [InlineData("v6-123-secret")]
+    [InlineData("customer-identity")]
+    public async Task Create_WithArbitraryMetricIdentity_DoesNotPublishItAsync(string metricId) {
+        var logger = new RecordingLogger();
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "web_vital", Name: "cls", Level: "info", Timestamp: DateTime.UtcNow.ToString("O"),
+            Value: 0, Unit: "score", Details: JsonSerializer.SerializeToElement(new { metricId }));
+
+        await controller.Create(request);
+
+        Assert.Null(logger.Scope.GetValueOrDefault("ClientTelemetryMetricId"));
+    }
+
     [Theory]
     [InlineData("error", LogLevel.Warning)]
     [InlineData("warning", LogLevel.Warning)]
@@ -217,10 +272,15 @@ public sealed class LogsControllerTests {
     private sealed class RecordingLogger(bool returnNullScope = false) : ILogger<LogsController> {
         public LogLevel LogLevel { get; private set; }
         public string Message { get; private set; } = string.Empty;
+        public Dictionary<string, object?> Scope { get; private set; } = new(StringComparer.Ordinal);
 
         public IDisposable? BeginScope<TState>(TState state)
-            where TState : notnull =>
-            returnNullScope ? null : NullScope.Instance;
+            where TState : notnull {
+            if (state is IEnumerable<KeyValuePair<string, object?>> values) {
+                Scope = values.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal);
+            }
+            return returnNullScope ? null : NullScope.Instance;
+        }
 
         public bool IsEnabled(LogLevel logLevel) => true;
 

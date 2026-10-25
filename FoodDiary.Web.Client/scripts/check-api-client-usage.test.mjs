@@ -163,6 +163,18 @@ const fixtures = [
         true,
     ],
     [
+        'generated transport keepalive and priority',
+        'src/app/shared/api/sdk/sdk-connection.ts',
+        `${http} function createSdkConnection(request: HttpRequest<unknown>) { return client.request(request.clone({ keepalive: true, priority: 'low' })); }`,
+        false,
+    ],
+    [
+        'unbounded spread in generated transport',
+        'src/app/shared/api/sdk/sdk-connection.ts',
+        `${http} function createSdkConnection(request: HttpRequest<unknown>, options: unknown) { return client.request(request.clone({ ...options })); }`,
+        true,
+    ],
+    [
         'admin signed upload',
         'projects/fooddiary-admin/src/app/features/admin-ai-prompts/api/admin-ai-prompts.service.ts',
         `${http} class AdminAiPromptsService { uploadImage(upload: { uploadUrl: string }, file: Blob) { return client.put(upload.uploadUrl, file); } }`,

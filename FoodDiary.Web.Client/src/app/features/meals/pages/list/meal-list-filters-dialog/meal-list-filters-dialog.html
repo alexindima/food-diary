@@ -1,5 +1,5 @@
 <fd-ui-dialog class="meal-list-filters-dialog" [title]="'MEAL_LIST.FILTERS_TITLE' | translate">
-    <form [formRoot]="form" (submit)="onSubmit($event)">
+    <form method="post" [formRoot]="form" (submit)="onSubmit($event)">
         <fd-ui-date-range-input
             class="meal-list-filters-dialog__date-range"
             [formField]="form.dateRange"

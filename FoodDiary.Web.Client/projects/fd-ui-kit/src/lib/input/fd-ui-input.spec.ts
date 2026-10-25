@@ -78,6 +78,33 @@ const NORMALIZED_MAX_HOURS = 23;
 const FRACTIONAL_HOURS = 1.5;
 const NEGATIVE_FRACTIONAL_VALUE = -1.5;
 
+describe('FdUiInputComponent browser form metadata', () => {
+    it('serializes a stable field name and disables correction for account identifiers', async () => {
+        const { fixture, input, el } = await setupInputAsync();
+        fixture.componentRef.setInput('id', 'account-email');
+        fixture.componentRef.setInput('type', 'email');
+        fixture.componentRef.setInput('autocomplete', 'username');
+        fixture.componentRef.setInput('label', 'Account email');
+        fixture.detectChanges();
+
+        expect(input().name, 'Native form serialization must include the stable input name').toBe('account-email');
+        expect(input().getAttribute('spellcheck')).toBe('false');
+        expect(input().getAttribute('autocapitalize')).toBe('off');
+        expect(input().getAttribute('autocorrect')).toBe('off');
+        const nativeForm = document.createElement('form');
+        nativeForm.append(el);
+        input().value = 'user@example.test';
+        expect(new FormData(nativeForm).get('account-email')).toBe('user@example.test');
+    });
+
+    it('keeps text correction available for ordinary prose', async () => {
+        const { input } = await setupInputAsync();
+        expect(input().getAttribute('spellcheck')).not.toBe('false');
+        expect(input().getAttribute('autocapitalize')).not.toBe('off');
+        expect(input().getAttribute('autocorrect')).not.toBe('off');
+    });
+});
+
 describe('FdUiInputComponent Signal Forms touch', () => {
     it('marks the bound field touched when the native input loses focus', async () => {
         const { hostComponent, hostFixture, input } = await setupInputHostAsync();

@@ -1,4 +1,5 @@
 <!-- eslint-disable @angular-eslint/template/prefer-static-string-properties -- Bind control IDs to avoid duplicate host IDs and preserve label associations. -->
+<a class="admin-skip-nav fd-visually-hidden-focusable" [attr.href]="skipToMainHref()">{{ 'COMMON.SKIP_TO_MAIN_CONTENT' | translate }}</a>
 <div class="admin-shell fd-grid">
     <fd-ui-sidebar
         brandTitle="FoodDiary"
@@ -8,7 +9,7 @@
         (sectionToggled)="onSidebarSectionToggled($event.section.id)"
     />
 
-    <main class="admin-shell__content">
+    <main class="admin-shell__content" id="admin-main-content" tabindex="-1">
         <nav class="admin-shell__mobile-nav" [attr.aria-label]="'ADMIN_NAV.SECTIONS' | translate">
             <fd-ui-select
                 [id]="'admin-mobile-route'"

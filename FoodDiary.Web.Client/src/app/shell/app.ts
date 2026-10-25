@@ -1,5 +1,6 @@
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -99,7 +100,12 @@ export class AppComponent {
     protected readonly routeContentActive = signal(true);
     protected readonly usesAuthenticatedShell = computed(() => this.isAuthenticated() && this.shellMode() === 'authenticated');
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
-    protected readonly currentPath = signal(this.getCurrentPath());
+    protected readonly currentUrl = signal(this.router.url);
+    protected readonly currentPath = computed(() => this.getCurrentPath(this.currentUrl()));
+    protected readonly skipToMainHref = computed(() => {
+        const path = this.currentUrl().split('#', 1)[0];
+        return `${path.length > 0 ? path : '/'}#main-content`;
+    });
     protected readonly usesPublicSiteChrome = computed(() => isPublicMarketingPath(this.currentPath()));
     protected readonly isSidebarCollapsed = signal(false);
     protected readonly usesCompactMobileNavigation = computed(() => {
@@ -138,22 +144,7 @@ export class AppComponent {
             this.injector.get(PushNotificationService);
         }
 
-        this.router.events
-            .pipe(
-                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe(event => {
-                const nextPath = this.getCurrentPath(event.urlAfterRedirects);
-                this.publicScrollNavigationId = nextPath !== this.currentPath() && isPublicMarketingPath(nextPath) ? event.id : null;
-                this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
-                this.currentPath.set(nextPath);
-                this.shellMode.set(this.getShellMode());
-                const requiresSession = this.getDeepestRoute(this.activatedRoute).pathFromRoot.some(
-                    route => route.snapshot.data['requiresSession'] === true,
-                );
-                this.routeContentActive.set(!requiresSession || this.isAuthenticated());
-            });
+        this.observeNavigationCompletion();
 
         // Router Scroll arrives after the new view renders. Desktop scrolls inside
         // the shell viewport; mobile uses the document viewport.
@@ -227,6 +218,31 @@ export class AppComponent {
     private async prepareRouteAsync(url: string): Promise<void> {
         this.themeService.applyThemeForRoute(url);
         await this.localizationService.loadTranslationsForRouteAsync(url);
+    }
+
+    private observeNavigationCompletion(): void {
+        this.router.events
+            .pipe(
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(event => {
+                const nextPath = this.getCurrentPath(event.urlAfterRedirects);
+                this.publicScrollNavigationId = nextPath !== this.currentPath() && isPublicMarketingPath(nextPath) ? event.id : null;
+                this.document.documentElement.classList.remove(SESSION_ROUTE_PENDING_CLASS);
+                this.currentUrl.set(event.urlAfterRedirects);
+                afterNextRender(
+                    () => {
+                        this.document.documentElement.setAttribute('data-app-ready', 'true');
+                    },
+                    { injector: this.injector },
+                );
+                this.shellMode.set(this.getShellMode());
+                const requiresSession = this.getDeepestRoute(this.activatedRoute).pathFromRoot.some(
+                    route => route.snapshot.data['requiresSession'] === true,
+                );
+                this.routeContentActive.set(!requiresSession || this.isAuthenticated());
+            });
     }
 
     private getCurrentPath(url = this.router.url): string {

@@ -1,5 +1,5 @@
 <p role="alert" class="fd-ui-error-text">{{ error() }}</p>
-<form class="fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
+<form method="post" class="fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">
     <fd-ui-input [formField]="form.name" [label]="'ADMIN_MEAL_PLANS.NAME' | translate" />
     <fd-ui-textarea [formField]="form.description" [label]="'ADMIN_MEAL_PLANS.DESCRIPTION' | translate" />
     <div class="plan-fields">
