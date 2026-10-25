@@ -1,4 +1,5 @@
 import test from "node:test";
+import "./development-mcp-diagnostics.test.mjs";
 import assert from "node:assert/strict";
 import { randomUUID, createHash } from "node:crypto";
 import {

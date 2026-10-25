@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
@@ -10,7 +10,7 @@ export function readDevelopmentMcpConfiguration(repositoryRoot) {
   const section = text.match(/^\[mcp_servers\.fooddiary_development\]\s*\r?\n([\s\S]*?)(?=^\[|$(?![\s\S]))/m)?.[1];
   if (!section) throw new Error('Project configuration has no FoodDiary Development MCP server.');
   const values = Object.fromEntries([...section.matchAll(/^([a-z_]+)\s*=\s*(.+)$/gm)].map(([, key, value]) => [key, JSON.parse(value.trim())]));
-  const cwd = resolve(dirname(configPath), values.cwd ?? '.');
+  const cwd = resolve(repositoryRoot, values.cwd ?? '.');
   const fileIndex = values.args.indexOf('-File');
   const launcherPath = fileIndex >= 0 ? resolve(cwd, values.args[fileIndex + 1]) : null;
   return { configPath, cwd, command: values.command, args: values.args, enabled: values.enabled !== false,
