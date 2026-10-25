@@ -452,7 +452,7 @@
 }
 @media (any-pointer: coarse) {
     .fd-ui-button {
-        min-width: max(var(--fd-button-min-width), var(--fd-size-control-lg));
-        min-height: max(var(--fd-button-height), var(--fd-size-control-lg));
+        min-width: max(var(--fd-button-min-width), var(--fd-button-touch-min-size));
+        min-height: max(var(--fd-button-height), var(--fd-button-touch-min-size));
     }
 }

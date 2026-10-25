@@ -25,8 +25,9 @@
     }
 
     &__actions {
-        padding: var(--fd-space-xxs) var(--fd-space-xs);
+        padding: var(--fd-space-micro) var(--fd-space-xs);
         border-top: var(--fd-border-muted);
+        --fd-button-touch-min-size: var(--fd-size-control-sm);
         --fd-button-font-size: var(--fd-text-caption-size);
         --fd-button-font-weight: var(--fd-font-weight-regular);
         --fd-button-secondary-text-text-default: var(--fd-color-text-muted);
