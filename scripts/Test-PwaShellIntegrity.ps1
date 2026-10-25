@@ -4,10 +4,39 @@ param(
     [string]$RepositoryRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$Image = 'nginx:1.31.3-alpine',
     [ValidateSet('missing', 'never')]
-    [string]$PullPolicy = 'missing'
+    [string]$PullPolicy = 'missing',
+    [ValidateRange(0, 10)]
+    [int]$StartupDelaySeconds = 0
 )
 
 $ErrorActionPreference = 'Stop'
+
+function Wait-PwaFixtureReady {
+    param([Net.Http.HttpClient]$Client, [string[]]$SiteUris)
+
+    $deadline = [DateTime]::UtcNow.AddSeconds(30)
+    foreach ($siteUri in $SiteUris) {
+        $lastFailure = 'No HTTP response.'
+        do {
+            $response = $null
+            $cancellation = [Threading.CancellationTokenSource]::new(1000)
+            try {
+                $response = $Client.GetAsync("$siteUri/.well-known/acme-challenge/control", $cancellation.Token).GetAwaiter().GetResult()
+                $body = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+                if ([int]$response.StatusCode -eq 200 -and $body -ceq 'acme parent root') { break }
+                $lastFailure = "HTTP $([int]$response.StatusCode) with unexpected fixture content."
+            } catch [Net.Http.HttpRequestException], [OperationCanceledException] {
+                $lastFailure = $_.Exception.Message
+            } finally {
+                if ($null -ne $response) { $response.Dispose() }
+                $cancellation.Dispose()
+            }
+            if ([DateTime]::UtcNow -ge $deadline) { throw "Owned Nginx fixture did not become ready within 30 seconds: $siteUri; $lastFailure" }
+            Start-Sleep -Milliseconds 100
+        } while ($true)
+    }
+}
+
 $source = Get-Content -LiteralPath (Join-Path $RepositoryRoot 'nginx/sites-enabled/fooddiary.club') -Raw
 # Exercise the real public server, including nested locations and inherited headers.
 $server = [regex]::Match($source, '(?ms)^server \{\r?\n    listen 443 ssl;\r?\n    listen 443 quic;.*?^\}').Value
@@ -68,7 +97,12 @@ http {
     $arguments = @('run', '--detach', "--pull=$PullPolicy", '--memory', '128m', '--cpus', '1', '--name', $container, '--publish', '127.0.0.1::8080', '--publish', '127.0.0.1::8081',
         '--mount', "type=bind,source=$fixture,target=/var/www/fooddiary.club,readonly",
         '--mount', "type=bind,source=$adminRoot,target=/var/www/admin.fooddiary.club,readonly",
-        '--mount', "type=bind,source=$configurationPath,target=/etc/nginx/nginx.conf,readonly", $Image)
+        '--mount', "type=bind,source=$configurationPath,target=/etc/nginx/nginx.conf,readonly")
+    if ($StartupDelaySeconds -gt 0) {
+        $arguments += @('--entrypoint', '/bin/sh', $Image, '-c', "sleep $StartupDelaySeconds; exec /docker-entrypoint.sh nginx -g 'daemon off;'")
+    } else {
+        $arguments += $Image
+    }
     & docker @arguments | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Unable to start the owned Nginx fixture.' }
     $started = $true
@@ -79,7 +113,9 @@ http {
     $baseUri = "http://$binding"
     $adminBinding = (& docker port $container '8081/tcp').Trim()
     if ($LASTEXITCODE -ne 0 -or $adminBinding -notmatch '^127\.0\.0\.1:\d+$') { throw 'Unexpected admin fixture binding.' }
-    foreach ($siteUri in @($baseUri, "http://$adminBinding")) {
+    $siteUris = @($baseUri, "http://$adminBinding")
+    Wait-PwaFixtureReady -Client $client -SiteUris $siteUris
+    foreach ($siteUri in $siteUris) {
         foreach ($url in @('/chunk-OLD12345.js', '/media/font-OLD12345.woff2')) {
             $response = $client.GetAsync("$siteUri$url").GetAwaiter().GetResult()
             try {
@@ -168,6 +204,16 @@ http {
         if ([int]$missing.StatusCode -ne 404) { throw 'Missing versioned shell must return 404 instead of SPA fallback.' }
     } finally { $missing.Dispose() }
     Write-Host 'PWA shell integrity passed: exact production public/admin servers, shell/navigation/security/cache checks, retained lazy chunks/fonts, missing-asset/manifest/worker 404, stable ACME roots.'
+} catch {
+    $failure = $_
+    if ($started) {
+        try {
+            Write-Host "Owned Nginx fixture diagnostics: $container"
+            & docker inspect --format 'status={{.State.Status}} exit={{.State.ExitCode}} oom={{.State.OOMKilled}}' $container
+            & docker logs --tail 50 $container
+        } catch { Write-Host "Unable to collect fixture diagnostics: $($_.Exception.Message)" }
+    }
+    throw $failure
 } finally {
     $client.Dispose()
     if ($started) { & docker rm --force $container | Out-Null }

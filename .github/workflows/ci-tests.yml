@@ -53,7 +53,7 @@ jobs:
 
       - name: Test PWA shell integrity headers
         shell: pwsh
-        run: ./scripts/Test-PwaShellIntegrity.ps1
+        run: ./scripts/Test-PwaShellIntegrity.ps1 -StartupDelaySeconds 2
 
       - name: Install Wiki compiler dependencies
         working-directory: FoodDiary.Web.Client
