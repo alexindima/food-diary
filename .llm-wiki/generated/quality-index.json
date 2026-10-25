@@ -279,20 +279,20 @@
       "structuralRiskScore": 165.16
     },
     {
-      "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-      "nonBlankLines": 570,
-      "decisionPoints": 101,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 164.9
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
       "nonBlankLines": 556,
       "decisionPoints": 101,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 164.62
+    },
+    {
+      "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
+      "nonBlankLines": 569,
+      "decisionPoints": 100,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 163.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
@@ -890,11 +890,11 @@
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-      "nonBlankLines": 570,
-      "decisionPoints": 101,
+      "nonBlankLines": 569,
+      "decisionPoints": 100,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 164.9
+      "structuralRiskScore": 163.38
     },
     {
       "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",

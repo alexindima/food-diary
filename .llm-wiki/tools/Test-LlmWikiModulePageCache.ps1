@@ -14,7 +14,7 @@ function Write-Fixture([string]$Path, [string]$Text) {
     [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($absolute))
     [IO.File]::WriteAllText($absolute, $Text, [Text.UTF8Encoding]::new($false))
 }
-function Run-Generator([string[]]$Argument, [int]$ExpectedExit = 0) {
+function Run-Generator([string[]]$Argument, [int]$ExpectedExit = 0, [switch]$HookEnvironment) {
     $start = [Diagnostics.ProcessStartInfo]::new()
     $start.FileName = $shell
     $start.WorkingDirectory = $fixture
@@ -22,6 +22,10 @@ function Run-Generator([string[]]$Argument, [int]$ExpectedExit = 0) {
     $start.RedirectStandardOutput = $true
     $start.RedirectStandardError = $true
     $start.Arguments = '-NoLogo -NoProfile -File "' + (Join-Path $fixture '.llm-wiki/tools/Build-LlmWikiModulePages.ps1') + '" ' + ($Argument -join ' ')
+    if ($HookEnvironment) {
+        $start.EnvironmentVariables['GIT_DIR'] = Join-Path $fixture '.git'
+        $start.EnvironmentVariables['GIT_WORK_TREE'] = '.'
+    }
     $process = [Diagnostics.Process]::Start($start)
     try {
         $stdout = $process.StandardOutput.ReadToEndAsync()
@@ -76,6 +80,11 @@ try {
     Run-Generator @() | Out-Null
     if ((Get-LlmWikiIndexOutputSetFingerprint $fixture $outputs) -cne $golden) { throw 'Forced and cached generation differ.' }
     $cases++
+    foreach ($argument in @(@('-Check'), $reuseCheck)) {
+        Run-Generator -Argument $argument -HookEnvironment | Out-Null
+        if ((Get-LlmWikiIndexOutputSetFingerprint $fixture $outputs) -cne $golden) { throw 'Git hook environment changed generated module pages.' }
+        $cases++
+    }
     Write-Fixture $probePath ($probeText + ' // changed')
     Assert-Cache $false $reuse
     Write-Fixture 'Modules/Users/Application/Added.cs' 'public class AddedQuery { }'

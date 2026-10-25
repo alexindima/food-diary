@@ -9,9 +9,8 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
-$repositoryRoot = @(& git -C $PSScriptRoot rev-parse --show-toplevel)
-if ($LASTEXITCODE -ne 0 -or $repositoryRoot.Count -ne 1) { throw 'Unable to resolve the module-page repository root.' }
-$repositoryRoot = [IO.Path]::GetFullPath([string]$repositoryRoot[0])
+# Git hooks can inherit a relative GIT_WORK_TREE that changes meaning under -C.
+$repositoryRoot = [IO.Path]::GetFullPath((Join-Path $wikiRoot '..'))
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $boundaryManifestPath = Join-Path $repositoryRoot 'docs/architecture/backend-modules.json'
 $outputRoot = Join-Path $wikiRoot 'generated/modules'

@@ -158,6 +158,8 @@ Missing, extra or changed output pages invalidate reuse. A successful forced
 generation also refreshes the receipt; failed checks and changing inputs never
 publish success. The pipeline forwards this opt-in with `-ReuseUnchangedChecks`.
 Use the generator without the flag to force reconstruction of every page.
+The generator resolves the checkout root from its own source location, so a Git
+hook's inherited relative `GIT_WORK_TREE` cannot redirect its manifest lookup.
 
 The pipeline also reuses an unchanged complete update result. It obtains the
 writer lock and recovers orphan transactions before consulting its schema 2
@@ -827,7 +829,7 @@ Module generation shares captured C# text with its contract-consumer scans only
 within the request. Compiled substring and path-prefix matching retain the same
 ordinal/case rules, source ordering and live inherited test evidence. Cache
 fingerprints include the native implementation and its loader dependencies.
-The 24 cache-invalidation scenarios use a two-module fixture with multiple
+The 26 cache and hook-environment scenarios use a two-module fixture with multiple
 outputs and Users contract evidence; full index verification checks all modules.
 
 To profile the complete focused catalog even when a regression fails, run
