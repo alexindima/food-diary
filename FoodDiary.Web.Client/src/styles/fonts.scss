@@ -1,3 +1,28 @@
+// Match Inter's vertical metrics while local fonts render during font-display: swap.
+// Width adjustment approximates the public English/Russian copy; it cannot make
+// different typefaces share every glyph advance or guarantee zero layout shift.
+@font-face {
+    font-family: 'Inter Fallback';
+    font-style: normal;
+    font-weight: 400 500;
+    src: local('Arial'), local('Liberation Sans');
+    size-adjust: 108%;
+    ascent-override: 89.7%;
+    descent-override: 22.33%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: 'Inter Fallback';
+    font-style: normal;
+    font-weight: 600 900;
+    src: local('Arial Bold'), local('Liberation Sans Bold');
+    size-adjust: 100.9%;
+    ascent-override: 96.01%;
+    descent-override: 23.91%;
+    line-gap-override: 0%;
+}
+
 // cyrillic-ext
 @font-face {
     font-family: Inter;

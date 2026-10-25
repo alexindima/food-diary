@@ -10,14 +10,28 @@ const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 test('local Inter assets retain pinned WOFF2 data, license and complete font-face metadata', () => {
     assert.equal(manifest.files.length, 7);
     assert.equal(hash(readFileSync(new URL(manifest.license.file, directory))), manifest.license.sha256);
-    const faces = [];
+    const allFaces = [];
     parse(readFileSync(new URL('../src/styles/fonts.scss', import.meta.url), 'utf8')).walkAtRules('font-face', rule => {
         const declarations = {};
         rule.walkDecls(declaration => {
             declarations[declaration.prop] = declaration.value;
         });
-        faces.push(declarations);
+        allFaces.push(declarations);
     });
+    const family = face => face['font-family'].replaceAll(/['"]/gu, '');
+    const faces = allFaces.filter(face => family(face) === manifest.family);
+    const fallbacks = allFaces.filter(face => family(face) === 'Inter Fallback');
+    assert.equal(allFaces.length, faces.length + fallbacks.length, 'Unexpected font family.');
+    assert.equal(fallbacks.length, 2);
+    for (const face of fallbacks) {
+        assert.match(face.src, /^local\('[^']+'\), local\('[^']+'\)$/u, 'Fallbacks must use local fonts without another download.');
+        assert.ok(Number.parseFloat(face['size-adjust']) > 0);
+        assert.ok(Number.parseFloat(face['ascent-override']) > 0);
+        assert.ok(Number.parseFloat(face['descent-override']) > 0);
+        assert.equal(face['line-gap-override'], '0%');
+    }
+    const tokens = readFileSync(new URL('../src/styles/design-tokens.scss', import.meta.url), 'utf8');
+    assert.match(tokens, /font-family: '"Inter", "Inter Fallback",/u);
     assert.equal(faces.length, manifest.files.length);
     for (const font of manifest.files) {
         const bytes = readFileSync(new URL(font.file, directory));
