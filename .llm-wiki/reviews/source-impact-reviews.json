@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "8dc2889b6be22a04d5026adc4ea3ea62bba636bcd9b385a2d9cef128dfc868c9",
-          "reviewReason": "Reviewed frontend navigation against the updated WebQuality workflow: the same source, owner, three-engine, journey and performance requirements remain automatic; production assets and their receipt are shared with six isolated jobs; the final gate rejects every non-success result. Primary Inter and explicit manual/field limitations remain accurate."
+          "sha256": "29b60bad38dca6f1a860a8dca7901087beec39e061ac9c8806d60df302891d79",
+          "reviewReason": "Reviewed the documented UID1001 executor correction against native Git/Firefox before-after reproduction and the official Playwright GitHub container example. All six independent audits, source/output receipt verification and non-success aggregate gating remain mandatory; application source and performance budgets are unchanged."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -58,10 +58,10 @@
           "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
         }
       ],
-      "reason": "Reviewed frontend navigation against the updated WebQuality workflow: the same source, owner, three-engine, journey and performance requirements remain automatic; production assets and their receipt are shared with six isolated jobs; the final gate rejects every non-success result. Primary Inter and explicit manual/field limitations remain accurate.",
+      "reason": "Reviewed the documented UID1001 executor correction against native Git/Firefox before-after reproduction and the official Playwright GitHub container example. All six independent audits, source/output receipt verification and non-success aggregate gating remain mandatory; application source and performance budgets are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c80bba0d1dc023e860b0248cf9b6414318ea5c64",
-      "reviewedAtUtc": "2026-10-25T18:51:51.6216399Z"
+      "gitHead": "942b8855fec5471e27a5577a68e94bae912b8081",
+      "reviewedAtUtc": "2026-10-25T20:27:42.4038353Z"
     },
     {
       "pageId": "module.mail-services",

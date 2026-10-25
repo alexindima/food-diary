@@ -280,7 +280,9 @@ Six matrix jobs then run concurrently on separate runners: checker fixtures,
 Chromium, Firefox, WebKit, authenticated journeys and Lighthouse. Each job uses
 the official Playwright Noble container, whose version must match the frontend
 lockfile. It already includes the browser engines and OS dependencies, avoiding
-an APT/browser installation on every run. Lighthouse keeps its sequential cold
+an APT/browser installation on every run. The job runs as UID 1001, matching
+GitHub's checkout and HOME ownership; Git provenance and Firefox require this
+consistent user/session identity. Lighthouse keeps its sequential cold
 samples on its own runner; no other audit or build competes for that runner's CPU.
 The container changes the measurement environment, so saved baselines from a
 different OS context require a new comparable pair; unchanged absolute budgets

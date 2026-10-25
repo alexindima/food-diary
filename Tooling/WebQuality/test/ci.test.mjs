@@ -32,6 +32,7 @@ test('PR, mainline and scheduled CI automatically run every web quality engine',
     assert.equal(workloads.filter(item => item.profile === 'performance').length, 1, 'Lighthouse owns an isolated runner.');
     const lock = JSON.parse(readFileSync(new URL('../../../FoodDiary.Web.Client/package-lock.json', import.meta.url), 'utf8'));
     assert.equal(audit.container.image, `mcr.microsoft.com/playwright:v${lock.packages['node_modules/@playwright/test'].version}-noble`);
+    assert.match(audit.container.options, /(?:^|\s)--user\s+1001(?:\s|$)/u, 'Container user must match the GitHub workspace and HOME owner.');
     const commands = audit.steps.map(step => step.run ?? '').join('\n');
     assert.doesNotMatch(commands, /install --with-deps/u, 'The image already contains browser engines and OS dependencies.');
     assert.match(commands, /verify-browser\.mjs/u);
