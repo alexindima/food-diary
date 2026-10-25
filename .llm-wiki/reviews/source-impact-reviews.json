@@ -795,14 +795,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "d545f54a397abb75ca23ae59b5240033685cd2194dbef9e62e0727cde049eeab",
-          "reviewReason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed."
+          "sha256": "adf455f0b8090f092e8b76acf6d79aea98acba63a0f340e97ce4a2c3d03d00cb",
+          "reviewReason": "Only the obsolete qs override is removed from package.json; all scripts, browser QA commands and frontend visual-evidence requirements remain unchanged. Dependency versions and lockfile updates do not change rendered UI sources, so the current workflow remains accurate."
         }
       ],
-      "reason": "Reviewed current frontend visual-evidence instructions against the final package change: four additive quality wrappers only. Existing Chrome/browser identity, interaction, viewport, screenshot and console guidance and existing scripts remain accurate; no page text update is needed.",
-      "baseRef": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
-      "gitHead": "e84a5afa34d28090c1dafd4d95375a7c4ae49008",
-      "reviewedAtUtc": "2026-10-24T21:22:15.9626927Z"
+      "reason": "Only the obsolete qs override is removed from package.json; all scripts, browser QA commands and frontend visual-evidence requirements remain unchanged. Dependency versions and lockfile updates do not change rendered UI sources, so the current workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
+      "reviewedAtUtc": "2026-10-25T13:40:12.5110798Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
