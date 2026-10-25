@@ -25,8 +25,11 @@ affected checks retain their scoped result without promoting that state.
 
 ## PowerShell prerequisite
 
-Project-scoped MCP paths are relative to `.codex/config.toml`'s directory:
-`cwd = ".."` selects the repository root before resolving `scripts/...`.
+MCP subprocess paths are relative to the repository working directory:
+`cwd = "."` preserves that directory before resolving `scripts/...`.
+Using `cwd = ".."` starts the subprocess above the checkout and breaks the
+relative PowerShell launcher. The diagnostic and test transport use the same
+working-directory semantics as Codex.
 Run `node scripts/ai/development-mcp-diagnostics.mjs` to validate the configured
 launcher, initialize the actual server, list its tools and call server status.
 The probe starts its own bounded connection and may build stale MCP outputs;

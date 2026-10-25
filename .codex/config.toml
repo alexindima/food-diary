@@ -1,8 +1,8 @@
 [mcp_servers.fooddiary_development]
 command = "powershell.exe"
 args = ["-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts\\Start-FoodDiaryDevelopmentMcp.ps1", "-BuildMode", "--build-if-stale"]
-# Codex resolves project configuration paths from this .codex directory.
-cwd = ".."
+# MCP subprocesses resolve relative paths from the repository working directory.
+cwd = "."
 startup_timeout_sec = 120
 tool_timeout_sec = 210
 enabled = true
@@ -11,9 +11,9 @@ enabled_tools = ["get_change_context", "get_development_context", "trace_backend
 default_tools_approval_mode = "auto"
 
 [mcp_servers.angular_cli]
-command = "scripts\\Start-AngularMcp.cmd"
-args = ["--read-only"]
-cwd = ".."
+command = "node"
+args = ["FoodDiary.Web.Client/node_modules/@angular/cli/bin/ng.js", "mcp", "--read-only"]
+cwd = "."
 startup_timeout_sec = 60
 tool_timeout_sec = 150
 enabled = true
