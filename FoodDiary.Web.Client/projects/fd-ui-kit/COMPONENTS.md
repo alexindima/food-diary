@@ -475,6 +475,8 @@ Primary button component.
 
 The native `hidden` attribute on the component host removes the button from layout and keyboard navigation. Bind `[hidden]` when the action should remain mounted while temporarily unavailable.
 
+On coarse-pointer devices, buttons retain a 48px minimum target by default. Dense secondary action rows can set `--fd-button-touch-min-size: var(--fd-size-control-sm)` to use a 32px minimum while preserving each button's requested size. Keep this override scoped to the compact row; it controls both minimum width and height.
+
 Danger buttons retain red destructive semantics across themes. Solid fill pairs the darker danger palette with white text; outline and text fills mix the theme's danger and text tokens for readable labels, including hover and active states. Customize these through the existing `--fd-button-danger-*` tokens rather than changing the global danger color.
 
 Primary outline and text fills use the readable primary foreground in each theme, retaining that foreground during hover and active states. Their existing `--fd-button-outline-*` and `--fd-button-ghost-*` tokens remain the styling hooks.

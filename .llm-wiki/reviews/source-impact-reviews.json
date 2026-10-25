@@ -811,18 +811,18 @@
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
           "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
-          "reviewReason": "Reviewed package.json after adding offline pinned Inter asset contracts to test:performance-build. Existing Chrome/session, responsive interaction and screenshot workflow remains accurate. Current headed Chrome evidence confirms local Cyrillic/Latin font resources, readable RU at 200% on 390px, same-document skip focus and first-Enter registration; screenshots and logs are retained under .artifacts/web-guidance-release-*. Automated browser matrices and failing-font journeys are additional evidence, not substitutes for this workflow."
+          "reviewReason": "Reviewed the merged package: Google-guidance and theme-token checks remain in verify and production contracts; the master dependency update removes the obsolete qs override without altering browser ownership, UI interaction, screenshot or responsive evidence rules. Current workflow accurately describes both changes."
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "f3cc37ca59b4172661715064eb6a4b81dc899a6e156812e36280ff5a265b930c",
-          "reviewReason": "Reviewed package.json: test:performance-build adds the offline Sass/PostCSS theme-token payload and selector-equivalence suite. Browser commands, runtime identity, Chrome ownership, screenshot and interaction evidence obligations remain accurate; the startup optimization has headed Chrome token comparisons and separate real Storybook controls."
+          "sha256": "d88aa898a7e4be6c307dee9d9b35337e71ea1ce3cc55d51740f21e87adeceb32",
+          "reviewReason": "Reviewed the merged package: Google-guidance and theme-token checks remain in verify and production contracts; the master dependency update removes the obsolete qs override without altering browser ownership, UI interaction, screenshot or responsive evidence rules. Current workflow accurately describes both changes."
         }
       ],
-      "reason": "Reviewed package.json: test:performance-build adds the offline Sass/PostCSS theme-token payload and selector-equivalence suite. Browser commands, runtime identity, Chrome ownership, screenshot and interaction evidence obligations remain accurate; the startup optimization has headed Chrome token comparisons and separate real Storybook controls.",
-      "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T13:39:52.2627842Z"
+      "reason": "Reviewed the merged package: Google-guidance and theme-token checks remain in verify and production contracts; the master dependency update removes the obsolete qs override without altering browser ownership, UI interaction, screenshot or responsive evidence rules. Current workflow accurately describes both changes.",
+      "baseRef": "origin/master",
+      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
+      "reviewedAtUtc": "2026-10-25T14:25:58.6006559Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -981,14 +981,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "e9136ef8dd4675d5c5fe7eae68ac7458c4264503e3a66919ce950f2689a9b91e",
-          "reviewReason": "Reviewed the task-finish delta: one hash-chained observation for the completed WebQuality task was appended with root/frontend instruction hashes, completion/retrospective bindings and outcome metadata. No experiment, instruction or policy logic changed; the documented append-only observation and correlation limits remain accurate. Instruction-outcome verification passes."
+          "sha256": "37fbe30570d8b9b30e70564e80805586e58cff7b8ccd73fdd60a3e2cafd3e141",
+          "reviewReason": "The master registry appends one sealed Telegram OIDC diagnostics task outcome with the existing instruction fingerprints, risk/cohort attribution and previous-event hash. The append-only chain validates. No schema, learning threshold, instruction experiment or adoption behavior changed; this workflow still correctly treats observations as evidence rather than authority to edit AGENTS.md."
         }
       ],
-      "reason": "Reviewed the task-finish delta: one hash-chained observation for the completed WebQuality task was appended with root/frontend instruction hashes, completion/retrospective bindings and outcome metadata. No experiment, instruction or policy logic changed; the documented append-only observation and correlation limits remain accurate. Instruction-outcome verification passes.",
-      "baseRef": "master",
-      "gitHead": "d9331ebcf9d57db844c66c0e48c87cb73f3eca01",
-      "reviewedAtUtc": "2026-10-24T22:06:18.9267372Z"
+      "reason": "The master registry appends one sealed Telegram OIDC diagnostics task outcome with the existing instruction fingerprints, risk/cohort attribution and previous-event hash. The append-only chain validates. No schema, learning threshold, instruction experiment or adoption behavior changed; this workflow still correctly treats observations as evidence rather than authority to edit AGENTS.md.",
+      "baseRef": "origin/master",
+      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
+      "reviewedAtUtc": "2026-10-25T14:28:34.8683352Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1307,8 +1307,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6e18351b21715d8dbb9a90bed998cbc2887cabfd099363d397386d8a2b44b3fa",
-          "reviewReason": "Refreshed runtime topology captures telemetry processor redaction and accepted CLS/INP events. No deployable host, recurring job or external analytics provider was added; five-metric HTTP transport and existing OpenAPI contracts passed."
+          "sha256": "f5ed5b8cb63a20b0600ead631b9bd2ed608e88c581bd0884c67b86347a930c5e",
+          "reviewReason": "Reviewed regenerated topology against the merged telemetry processor and TelegramOidcProvider sources: no host, worker, recurring job or external client was added. New timeout-policy and timeout-or-delay entries are inferred from Telegram diagnostic reason names; existing timeout/cancellation/provider endpoints remain unchanged. Telemetry redaction and CLS/INP acceptance preserve their owned HTTP boundary. The workflow still requires source verification of inferred signals and is accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1316,10 +1316,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Refreshed runtime topology captures telemetry processor redaction and accepted CLS/INP events. No deployable host, recurring job or external analytics provider was added; five-metric HTTP transport and existing OpenAPI contracts passed.",
-      "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T06:16:09.3881142Z"
+      "reason": "Reviewed regenerated topology against the merged telemetry processor and TelegramOidcProvider sources: no host, worker, recurring job or external client was added. New timeout-policy and timeout-or-delay entries are inferred from Telegram diagnostic reason names; existing timeout/cancellation/provider endpoints remain unchanged. Telemetry redaction and CLS/INP acceptance preserve their owned HTTP boundary. The workflow still requires source verification of inferred signals and is accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
+      "reviewedAtUtc": "2026-10-25T14:25:59.5935684Z"
     },
     {
       "pageId": "workflow-security-review",

@@ -211,3 +211,21 @@ export const MutedRowActions: Story = {
             <fd-ui-button appearance="muted-icon" variant="danger" fill="text" icon="delete" ariaLabel="Delete measurement" />`,
     }),
 };
+
+export const CompactTextActions: Story = {
+    parameters: {
+        docs: {
+            description: {
+                story: 'Secondary actions can opt into 32px touch targets. Other buttons retain the default 48px touch minimum.',
+            },
+        },
+    },
+    render: () => ({
+        template: `
+            <div style="display: flex; align-items: center; gap: var(--fd-space-xs); --fd-button-touch-min-size: var(--fd-size-control-sm); --fd-button-font-size: var(--fd-text-caption-size);">
+                <fd-ui-button variant="secondary" fill="text" size="sm" icon="add">Manually</fd-ui-button>
+                <fd-ui-button variant="secondary" fill="text" size="sm" icon="history" ariaLabel="Recognition history" />
+            </div>
+        `,
+    }),
+};

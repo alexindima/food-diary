@@ -32,6 +32,22 @@ Angular development serving and tests, client/admin and Storybook builds, and
 the TechRadar build. Keep the web workspace's direct safe Vite minimum while
 other direct Vite consumers still require it.
 
+## Removed qs override
+
+Removed on 2026-10-25. The web workspace's global `qs 6.16.0` override
+originated in dependency-security commit `b122206c83`. It is now unnecessary:
+the only consumers are `express 5.3.0`, which requires `^6.16.0`, and
+`body-parser 2.4.0`, which requires `^6.16.1`. Keeping the old override would
+force the latter below its declared minimum.
+
+The body-parser update fixes
+[GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828).
+A fresh isolated resolution of both exact parent versions without an override
+selects a single `qs 6.16.1`; the retained application lockfile uses that same
+version. Verify all copies, npm audit, nested-query/array-limit/prototype controls,
+and compressed JSON parsing when updating these parents. Keep the override
+removed while every consumer's declared range resolves a safe version.
+
 ## npm braces depth mitigation
 
 Reviewed on 2026-10-17. The web workspace resolves `braces 3.0.3` through

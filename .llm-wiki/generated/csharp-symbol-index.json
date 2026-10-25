@@ -15816,7 +15816,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ExchangeTelegramOidcCommandValidator",
@@ -16796,14 +16796,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "TelegramOidcTokenValidator",
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "GoogleAuthOptions",

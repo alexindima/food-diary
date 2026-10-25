@@ -9,6 +9,8 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
 using FoodDiary.Modules.Identity.Application.Authentication.Services;
 using FoodDiary.Results;
+using Microsoft.Extensions.Logging;
+using NSubstitute.Core;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
@@ -18,6 +20,7 @@ public sealed class TelegramAuthenticationBoundaryTests {
     private readonly ITelegramLoginTicketStore _tickets = Substitute.For<ITelegramLoginTicketStore>();
     private readonly ITelegramIdentityPolicy _policy = Substitute.For<ITelegramIdentityPolicy>();
     private readonly IUserTelegramAccountService _accounts = Substitute.For<IUserTelegramAccountService>();
+    private readonly ILogger<ExchangeTelegramOidcCommandHandler> _logger = Substitute.For<ILogger<ExchangeTelegramOidcCommandHandler>>();
 
     public TelegramAuthenticationBoundaryTests() {
         _policy.LoginEnabled.Returns(returnThis: true);
@@ -76,6 +79,12 @@ public sealed class TelegramAuthenticationBoundaryTests {
         Result<TelegramAuthenticationIntentModel> result = await Exchange().Handle(new ExchangeTelegramOidcCommand("code", "state", "browser"), CancellationToken.None);
         Assert.Equal(TelegramIdentityErrors.InvalidProof.Code, result.Error.Code);
         Assert.Empty(_provider.ReceivedCalls());
+        ICall log = Assert.Single(_logger.ReceivedCalls(), call => string.Equals(call.GetMethodInfo().Name, nameof(ILogger.Log), StringComparison.Ordinal));
+        var fields = Assert.IsAssignableFrom<IEnumerable<KeyValuePair<string, object?>>>(log.GetArguments()[2]).ToDictionary(StringComparer.Ordinal);
+        Assert.Equal("attempt", fields["Stage"]);
+        Assert.Equal(payload is null ? "attempt_unavailable" : "attempt_payload_invalid", fields["Reason"]);
+        Assert.Equal(new[] { "Reason", "Stage", "{OriginalFormat}" }, fields.Keys.Order(StringComparer.Ordinal).ToArray());
+        Assert.Null(log.GetArguments()[3]);
     }
 
     [Fact]
@@ -127,5 +136,5 @@ public sealed class TelegramAuthenticationBoundaryTests {
     }
 
     private TelegramAuthenticationIntentService Intents() => new(_tickets, _accounts, TimeProvider.System);
-    private ExchangeTelegramOidcCommandHandler Exchange() => new(_provider, _tickets, _policy, Intents());
+    private ExchangeTelegramOidcCommandHandler Exchange() => new(_provider, _tickets, _policy, Intents(), _logger);
 }

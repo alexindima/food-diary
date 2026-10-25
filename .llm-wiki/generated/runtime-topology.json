@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "952b1576f98b136dbcf2f9a32d52cf1a0ca650701a69858f227a44b9d1b41ed7",
+    "sourceFingerprint": "ef1b2de2faff7dab174504ab473930d892c6ff55a3561d2fa938bb57ef54d4ca",
     "sourceFileCount": 4613
   },
   "summary": {
@@ -1843,10 +1843,12 @@
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
       "securitySignals": [
         "ip-address-policy",
+        "timeout-policy",
         "uri-policy"
       ],
       "behaviorSignals": [
-        "cancellation-propagation-candidate"
+        "cancellation-propagation-candidate",
+        "timeout-or-delay"
       ],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",

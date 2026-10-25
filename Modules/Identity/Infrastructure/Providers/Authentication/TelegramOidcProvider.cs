@@ -8,10 +8,12 @@ using System.Text.Json;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
-public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<TelegramOidcOptions> options, ITelegramOidcTokenValidator tokens)
+public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<TelegramOidcOptions> options, ITelegramOidcTokenValidator tokens,
+    ILogger<TelegramOidcProvider> logger)
     : ITelegramOidcProvider {
     public bool IsEnabled => options.Value.Enabled && TelegramOidcOptions.IsValid(options.Value);
     public Result<string> CreateAuthorizationUrl(TelegramOidcAuthorizationRequest request) {
@@ -34,13 +36,14 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
 
     public async Task<Result<TelegramOidcIdentity>> ExchangeAsync(TelegramOidcTokenExchange exchange, CancellationToken cancellationToken) {
         if (!options.Value.Enabled || !TelegramOidcOptions.IsValid(options.Value)) {
+            LogRejection("token_exchange", "not_configured");
             return Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.NotConfigured);
         }
         string code = exchange.Code.Value;
         string codeVerifier = exchange.CodeVerifier.Value;
         string nonce = exchange.ExpectedNonce.Value;
         if (string.IsNullOrWhiteSpace(code) || code.Length > 4096 || codeVerifier.Length != 43 || string.IsNullOrWhiteSpace(nonce)) {
-            return Invalid();
+            return Invalid("token_exchange", "invalid_input");
         }
         using var request = new HttpRequestMessage(HttpMethod.Post, "https://oauth.telegram.org/token");
         request.Headers.Authorization = new AuthenticationHeaderValue("Basic",
@@ -53,27 +56,43 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
             ["code_verifier"] = codeVerifier,
         });
         Result<TelegramOidcIdentity> result;
+        string stage = "token_exchange";
         try {
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode) {
-                return Invalid();
+                return Invalid(stage, "http_error", (int)response.StatusCode);
             }
+            stage = "token_response";
             await response.Content.LoadIntoBufferAsync(32768, cancellationToken).ConfigureAwait(false);
             Stream content = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
             await using (content.ConfigureAwait(false)) {
                 using JsonDocument document = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (!document.RootElement.TryGetProperty("id_token", out JsonElement idToken) || idToken.ValueKind != JsonValueKind.String) {
-                    return Invalid();
+                    return Invalid(stage, "id_token_missing_or_invalid");
                 }
+                stage = "token_validation";
                 result = await tokens.ValidateAsync(idToken.GetString()!, exchange.ExpectedNonce, cancellationToken).ConfigureAwait(false);
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidOperationException or OperationCanceledException) {
-            return Invalid();
+            string reason = ex switch {
+                OperationCanceledException => "timeout",
+                JsonException => "invalid_json",
+                HttpRequestException => "http_request_failed",
+                _ => "invalid_response",
+            };
+            return Invalid(stage, reason, exception: ex);
         }
         return result;
     }
 
-    private static Result<TelegramOidcIdentity> Invalid() => Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof);
+    private Result<TelegramOidcIdentity> Invalid(string stage, string reason, int? httpStatusCode = null, Exception? exception = null) {
+        LogRejection(stage, reason, httpStatusCode, exception);
+        return Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.InvalidProof);
+    }
+
+    private void LogRejection(string stage, string reason, int? httpStatusCode = null, Exception? exception = null) =>
+        logger.LogInformation("Telegram OIDC rejected. Stage={Stage}; Reason={Reason}; HttpStatusCode={HttpStatusCode}; ExceptionType={ExceptionType}",
+            stage, reason, httpStatusCode, exception?.GetBaseException().GetType().Name);
 }
