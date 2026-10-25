@@ -16378,11 +16378,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "nonBlankLines": 123,
+      "nonBlankLines": 124,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.96
+      "structuralRiskScore": 27.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts",
@@ -36002,11 +36002,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 46,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.26
+      "structuralRiskScore": 10.42
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandValidator.cs",
@@ -37106,19 +37106,19 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcProvider.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 14,
+      "nonBlankLines": 93,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.5
+      "structuralRiskScore": 24.36
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 22,
+      "nonBlankLines": 130,
+      "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.78
+      "structuralRiskScore": 40.6
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs",
@@ -55878,7 +55878,7 @@
       "name": "ExchangeTelegramOidcCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommandHandler.cs",
-      "line": 11,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramAuthenticationBoundaryTests.cs"
@@ -64531,7 +64531,7 @@
       "name": "TelegramOidcTokenValidator",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
-      "line": 14,
+      "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcProviderTests.cs",

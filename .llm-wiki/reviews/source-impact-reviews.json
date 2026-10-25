@@ -1287,8 +1287,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1d38dc8273beeecc25fc75e125976929cc04263c92d558c360486130a524a0fb",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "e737737fff252cbffd3da92278f11ec20820b7a9f667cb4519a757b9133a67f0",
+          "reviewReason": "Reviewed the regenerated runtime-topology diff and TelegramOidcProvider. The new timeout-policy and timeout-or-delay entries are inferred from diagnostic reason names; the existing HttpClient timeout, provider endpoints, cancellation and key retrieval remain unchanged. No services, workers or jobs were introduced. The workflow already requires source verification of inferred behavior signals and remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1296,10 +1296,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate.",
+      "reason": "Reviewed the regenerated runtime-topology diff and TelegramOidcProvider. The new timeout-policy and timeout-or-delay entries are inferred from diagnostic reason names; the existing HttpClient timeout, provider endpoints, cancellation and key retrieval remain unchanged. No services, workers or jobs were introduced. The workflow already requires source verification of inferred behavior signals and remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:41:17.9934801Z"
+      "gitHead": "e13f0ec23467f95dabb341751a03e30b35394529",
+      "reviewedAtUtc": "2026-10-25T13:35:57.4241507Z"
     },
     {
       "pageId": "workflow-security-review",

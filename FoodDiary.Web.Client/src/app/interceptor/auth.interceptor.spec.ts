@@ -248,6 +248,32 @@ describe('AuthInterceptor locked writer errors', () => {
     });
 });
 
+describe('AuthInterceptor Telegram OIDC errors', () => {
+    it.each([false, true])('does not refresh or replay a rejected Telegram OIDC exchange (blob=%s)', blob => {
+        authServiceSpy.getToken.mockReturnValue('owner-token');
+        authServiceSpy.refreshToken.mockReturnValue(of('refreshed-token'));
+        const failed = vi.fn();
+        const url = '/api/v1/auth/telegram/oidc/exchange?source=callback';
+        const body = { error: 'Authentication.TelegramInvalidProof' };
+
+        const proof = { code: 'single-use-code', state: 'single-use-state' };
+        if (blob) {
+            http.post(url, proof, { responseType: 'blob' }).subscribe({ error: failed });
+        } else {
+            http.post(url, proof).subscribe({ error: failed });
+        }
+        const request = httpTesting.expectOne(url);
+        const response = blob ? new Blob([JSON.stringify(body)], { type: 'application/json' }) : body;
+        request.flush(response, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+
+        expect(authServiceSpy.refreshToken, 'Telegram OIDC exchanges must not refresh the session').not.toHaveBeenCalled();
+        expect(failed).toHaveBeenCalledOnce();
+        expect(failed).toHaveBeenCalledWith(expect.objectContaining({ error: response }));
+        httpTesting.expectNone(url);
+        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('AuthInterceptor error handling', () => {
     it('should not refresh for public auth requests', () => {
         authServiceSpy.getToken.mockReturnValue('some-token');
