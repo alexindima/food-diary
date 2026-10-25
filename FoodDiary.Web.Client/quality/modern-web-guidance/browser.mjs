@@ -163,6 +163,7 @@ export async function runBrowser({
     const browserType = (playwright.default ?? playwright)[browserName];
     const browser = await browserType.launch({ headless: true, ...(browserName === 'chromium' ? { channel } : {}) });
     const records = [];
+    const runtimeDiagnostics = [];
     await mkdir(path.join(artifactDirectory, 'screenshots'), { recursive: true });
     try {
         for (const scenario of scenarios) {
@@ -179,10 +180,22 @@ export async function runBrowser({
                 forcedColors: scenario.forcedColors ?? 'none',
                 serviceWorkers: 'block',
             });
+            const runtimeErrors = [];
+            // WebKit also emits pageerror for axe's handled CSSOM XHR failures.
+            // Observe uncaught errors before application scripts, in every frame.
+            await context.exposeBinding('__fdWebQualityRuntimeError', (_source, message) => runtimeErrors.push(message));
+            await context.addInitScript(() => {
+                addEventListener('error', event => {
+                    if (event instanceof ErrorEvent) void globalThis.__fdWebQualityRuntimeError(event.message || 'Uncaught browser error');
+                });
+                addEventListener('unhandledrejection', event => {
+                    const reason = event.reason instanceof Error ? event.reason.message : String(event.reason);
+                    void globalThis.__fdWebQualityRuntimeError(`Unhandled rejection: ${reason}`);
+                });
+            });
             const page = await context.newPage();
             page.setDefaultTimeout(15_000);
-            const runtimeErrors = [];
-            page.on('pageerror', error => runtimeErrors.push(error.message));
+            page.on('pageerror', error => runtimeDiagnostics.push({ case: scenario.id, message: error.message }));
             try {
                 const response = await page.goto(new URL(scenario.path, url).href, { waitUntil: 'domcontentloaded' });
                 if (!response || response.status() >= 400) throw new Error(`Page returned HTTP ${response?.status() ?? 'no response'}.`);
@@ -265,6 +278,8 @@ export async function runBrowser({
             version: browser.version(),
             origin: url.origin,
             scenarios,
+            runtimeErrorCapture: 'Uncaught window errors and unhandled rejections in all frames.',
+            runtimeDiagnostics,
         },
         results: requirements.map(requirement => {
             const matching = records.filter(record => record.requirement === requirement.id);

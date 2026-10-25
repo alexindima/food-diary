@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "98cd2abd00c081087d674e6ff67466860bf81ae4a4ff9d38020ac7eddf911fe3",
-          "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
+          "sha256": "d727faa8e80aad8603d3b752e9aa764abcf772b4daba38a7aa9163d60acd9650",
+          "reviewReason": "Reviewed the added runtime-evidence paragraph against the browser adapter and three-engine verifier: actual uncaught error/rejection events invalidate cases, raw Playwright diagnostics are retained, and axe rules/preloading and live provider controls remain enabled. The frontend module summary, applicability boundaries, CI wiring and manual review scope are unchanged."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -58,10 +58,10 @@
           "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
         }
       ],
-      "reason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit.",
+      "reason": "Reviewed the added runtime-evidence paragraph against the browser adapter and three-engine verifier: actual uncaught error/rejection events invalidate cases, raw Playwright diagnostics are retained, and axe rules/preloading and live provider controls remain enabled. The frontend module summary, applicability boundaries, CI wiring and manual review scope are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T05:28:15.8681054Z"
+      "gitHead": "6e1e105a207660b3a14a3361c9e9d32707de45f2",
+      "reviewedAtUtc": "2026-10-25T16:13:14.3994936Z"
     },
     {
       "pageId": "module.mail-services",

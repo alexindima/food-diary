@@ -108,6 +108,16 @@ URLs, scrolling exceptions and report interactions. A fixture failure blocks
 trust in the corresponding application result. Chrome is the local default;
 CI installs the browser engines locked by the frontend Playwright package.
 
+Runtime evidence uses early `error` and `unhandledrejection` listeners in every
+frame. Uncaught exceptions and rejected promises invalidate the scenario;
+handled failures do not. Raw Playwright `pageerror` messages remain in execution
+metadata as diagnostics. Linux WebKit also emits that event for the accessibility
+scanner's handled cross-origin CSSOM requests, so it cannot alone establish an
+uncaught application exception. The controlled verifier tests this distinction
+in all three engines against an owned CSS server, real exceptions, string promise
+rejections and errors in a cross-origin frame. Axe rules and CSSOM preloading
+remain enabled, including the live Google Sign-In widget in public audits.
+
 ### Client and admin journeys
 
 ```powershell

@@ -39,8 +39,48 @@ report.results[0] = {
 const reportHtml = renderReport(report, policy);
 const fixture = (bad) =>
     `<!doctype html><html lang="${bad ? "fr" : "en"}"><head><meta charset="utf-8"><title>${bad ? "" : "Quality fixture"}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui;${bad ? "min-width:2400px" : ""}}dialog{padding:2rem}label{display:block}</style></head><body><main><h1>Browser verification fixture</h1><p>This controlled document checks real browser assertions and modal keyboard behavior.</p><button id="open" type="button">Sign in</button></main><dialog aria-label="Account access"><form method="dialog"><label>Email<input type="email" autocomplete="username"></label><label>Password<input type="password" autocomplete="current-password"></label><button type="submit">Close</button></form></dialog><script>document.getElementById('open').onclick=()=>document.querySelector('dialog').showModal()</script></body></html>`;
+const stylesheetServer = createServer((request, response) => {
+    if (request.url === "/frame-error") {
+        response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+        response.end(
+            '<!doctype html><html lang="en"><title>Frame fixture</title><body><main><h1>Frame fixture</h1></main><script>throw new Error("Controlled frame exception")</script></body></html>',
+        );
+        return;
+    }
+    // Stylesheet inclusion is allowed; axe's CSSOM XHR gets no CORS permission.
+    response.writeHead(200, { "content-type": "text/css; charset=utf-8" });
+    response.end("body{color:#111;background:#fff}");
+});
+await new Promise((resolve) =>
+    stylesheetServer.listen(0, "127.0.0.1", resolve),
+);
+const stylesheetOrigin = `http://127.0.0.1:${stylesheetServer.address().port}`;
 const server = createServer((request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    const runtimeScripts = {
+        "/stylesheet-probe": "",
+        "/handled-rejection":
+            'Promise.reject(new Error("Controlled handled rejection")).catch(()=>{})',
+        "/uncaught-exception":
+            'throw new Error("Controlled runtime exception")',
+        "/unhandled-rejection":
+            'Promise.reject("Controlled runtime rejection")',
+        "/frame-exception": "",
+    };
+    if (Object.hasOwn(runtimeScripts, request.url)) {
+        response.end(
+            fixture(false)
+                .replace(
+                    "</head>",
+                    `<link rel="stylesheet" href="${stylesheetOrigin}/style.css"></head>`,
+                )
+                .replace(
+                    "</body>",
+                    `${request.url === "/frame-exception" ? `<iframe title="Runtime fixture" src="${stylesheetOrigin}/frame-error"></iframe>` : ""}<script>${runtimeScripts[request.url]}</script></body>`,
+                ),
+        );
+        return;
+    }
     if (request.url === "/client-redirect") {
         response.end(
             fixture(false).replace(
@@ -117,6 +157,54 @@ const scenario = {
     openDialog: "Sign in",
 };
 try {
+    const runtimePolicy = {
+        ...policy,
+        requirements: policy.requirements.filter((item) =>
+            ["axe", "page-title"].includes(item.id),
+        ),
+    };
+    for (const browserName of ["chromium", "firefox", "webkit"]) {
+        const runtime = await runBrowser({
+            policy: runtimePolicy,
+            baseURL: origin,
+            browserName,
+            scenarios: [
+                "stylesheet-probe",
+                "handled-rejection",
+                "uncaught-exception",
+                "unhandled-rejection",
+                "frame-exception",
+            ].map((id) => ({
+                ...scenario,
+                id,
+                path: `/${id}`,
+                kind: "public",
+                openDialog: undefined,
+            })),
+            artifactDirectory: path.join(output, `runtime-${browserName}`),
+        });
+        for (const result of runtime.results) {
+            for (const id of ["stylesheet-probe", "handled-rejection"]) {
+                const observed = result.cases.find((item) => item.id === id);
+                assert.ok(
+                    observed && !observed.error && observed.observations > 0,
+                    `${browserName} handled CSSOM/rejection diagnostics must preserve valid ${result.requirement} evidence: ${observed?.error}`,
+                );
+            }
+            for (const [id, message] of [
+                ["uncaught-exception", "Controlled runtime exception"],
+                ["unhandled-rejection", "Controlled runtime rejection"],
+                ["frame-exception", "Controlled frame exception"],
+            ]) {
+                assert.ok(
+                    result.cases
+                        .find((item) => item.id === id)
+                        ?.error?.includes(message),
+                    `${browserName} must reject ${id} in ${result.requirement} evidence`,
+                );
+            }
+        }
+    }
     const good = await runBrowser({
         policy: controlledPolicy,
         baseURL: origin,
@@ -263,4 +351,5 @@ try {
     );
 } finally {
     await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve) => stylesheetServer.close(resolve));
 }
