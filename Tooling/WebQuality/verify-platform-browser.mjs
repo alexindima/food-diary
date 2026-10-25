@@ -8,7 +8,7 @@ import {
 const require = createRequire(
     new URL("../../FoodDiary.Web.Client/package.json", import.meta.url),
 );
-const { chromium } = require("@playwright/test");
+const { chromium, firefox, webkit } = require("@playwright/test");
 const fixture = (
     bad,
 ) => `<!doctype html><html lang="en"><head><title>Platform assertions</title><style>
@@ -22,6 +22,51 @@ ${bad ? ".moving {animation:shift 10s infinite}.wide{width:1800px;height:2px}" :
 const server = createServer((request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
     let html = fixture(request.url === "/bad");
+    if (request.url.startsWith("/focus-replaced-")) {
+        html = html
+            .replace(
+                "</main>",
+                '<button id="replacement" type="button">Initial control</button></main>',
+            )
+            .replace(
+                "</style>",
+                ".missing-focus,.missing-focus:focus-visible {outline:none!important;box-shadow:none!important;border:2px solid gray!important}</style>",
+            )
+            .replace(
+                "</body>",
+                `<script>document.querySelector('main button').addEventListener('focus',()=>{const previous=document.getElementById('replacement');const next=previous.cloneNode(true);next.textContent='Updated control';${request.url.endsWith("-bad") ? "next.className='missing-focus';" : ""}previous.replaceWith(next);},{once:true})</script></body>`,
+            );
+    }
+    if (
+        [
+            "/focus-shadow",
+            "/focus-border",
+            "/focus-border-transition",
+            "/focus-constant",
+        ].includes(request.url)
+    ) {
+        const kind = request.url.slice("/focus-".length);
+        const focusStyle =
+            kind === "shadow"
+                ? "box-shadow:0 0 0 3px navy"
+                : kind.startsWith("border")
+                  ? "border-color:navy"
+                  : "";
+        const transition =
+            kind === "border-transition"
+                ? "transition:border-color 50ms linear;"
+                : "";
+        html = html.replace(
+            "</style>",
+            `button,button:focus-visible{outline:none!important;border:2px solid gray;box-shadow:${kind === "constant" ? "0 0 0 3px navy" : "none"};${transition}}button:focus-visible{${focusStyle}}</style>`,
+        );
+    }
+    if (request.url === "/focus-inert") {
+        html = html.replace(
+            "</main>",
+            '<div inert><button type="button" style="outline:none!important;box-shadow:none!important;border:0">Inert control</button></div></main>',
+        );
+    }
     if (request.url.startsWith("/nested")) {
         html = html.replace("<head>", '<head><base href="/">');
         if (!request.url.includes("broken"))
@@ -72,6 +117,83 @@ try {
             );
         }
         console.log(`Verified valid/invalid browser fixtures: ${check}`);
+    }
+    for (const [name, engine] of Object.entries({
+        chromium,
+        firefox,
+        webkit,
+    })) {
+        const focusBrowser =
+            name === "chromium"
+                ? browser
+                : await engine.launch({ headless: true });
+        const focusPage = await focusBrowser.newPage({
+            reducedMotion: "reduce",
+        });
+        try {
+            for (const kind of ["good", "bad"]) {
+                await focusPage.goto(
+                    `http://127.0.0.1:${server.address().port}/focus-replaced-${kind}`,
+                );
+                const result = await inspectPlatformPage(
+                    focusPage,
+                    "browser:focus-visible",
+                    {},
+                );
+                assert.equal(
+                    result.observations,
+                    2,
+                    `${name}: inspect both live controls after view replacement`,
+                );
+                assert.equal(
+                    result.findings.length > 0,
+                    kind === "bad",
+                    `${name}: replacement ${kind} focus treatment`,
+                );
+            }
+            for (const kind of [
+                "shadow",
+                "border",
+                "border-transition",
+                "constant",
+            ]) {
+                await focusPage.goto(
+                    `http://127.0.0.1:${server.address().port}/focus-${kind}`,
+                );
+                await focusPage.locator("main").focus();
+                const result = await inspectPlatformPage(
+                    focusPage,
+                    "browser:focus-visible",
+                    {},
+                );
+                assert.equal(result.observations, 1);
+                assert.equal(
+                    result.findings.length > 0,
+                    kind === "constant",
+                    `${name}: ${kind} decoration must be compared with an unfocused control`,
+                );
+            }
+            await focusPage.goto(
+                `http://127.0.0.1:${server.address().port}/focus-inert`,
+            );
+            const inert = await inspectPlatformPage(
+                focusPage,
+                "browser:focus-visible",
+                {},
+            );
+            assert.equal(
+                inert.observations,
+                1,
+                `${name}: inert controls cannot receive keyboard focus`,
+            );
+            assert.deepEqual(inert.findings, []);
+        } finally {
+            await focusPage.close();
+            if (focusBrowser !== browser) await focusBrowser.close();
+        }
+        console.log(
+            `Verified live focus targets, unfocused baselines and invalid indicators: ${name}`,
+        );
     }
     await page.goto(`http://127.0.0.1:${server.address().port}/good`);
     await page.locator("dialog").evaluate((element) => {

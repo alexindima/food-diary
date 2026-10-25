@@ -10,6 +10,32 @@ export const platformBrowserChecks = new Set([
     'browser:focus-visible',
 ]);
 
+async function focusStyles(element, blur = false) {
+    return element.evaluate(async (node, blur) => {
+        const owner = node.closest('.fd-ui-input__control-wrap, .fd-ui-select__control-wrap') ?? node;
+        if (blur) node.blur();
+        await Promise.allSettled(
+            owner
+                .getAnimations({ subtree: true })
+                .filter(animation => animation.playState === 'running' && Number.isFinite(animation.effect?.getComputedTiming().endTime))
+                .map(animation => animation.finished),
+        );
+        return {
+            focused: node === document.activeElement,
+            styles: [node, owner].map(element => {
+                const style = getComputedStyle(element);
+                return {
+                    outlineStyle: style.outlineStyle,
+                    outlineWidth: Number.parseFloat(style.outlineWidth),
+                    borderColor: style.borderColor,
+                    borderWidth: Number.parseFloat(style.borderWidth),
+                    shadow: style.boxShadow,
+                };
+            }),
+        };
+    }, blur);
+}
+
 async function inspectBounds(page) {
     return page.evaluate(() => {
         const findings = [],
@@ -70,31 +96,29 @@ export async function inspectPlatformPage(page, check, scenario) {
         const findings = [];
         let observations = 0;
         await page.keyboard.press('Tab');
-        for (const element of (await candidates.elementHandles()).slice(0, 12)) {
-            if (!(await element.isVisible()) || (await element.isDisabled())) continue;
-            const before = await element.evaluate(node => {
-                const owner = node.closest('.fd-ui-input__control-wrap, .fd-ui-select__control-wrap') ?? node;
-                const style = getComputedStyle(owner);
-                return { border: style.borderColor, shadow: style.boxShadow };
-            });
+        const count = Math.min(await candidates.count(), 12);
+        for (let index = 0; index < count; index++) {
+            const element = candidates.nth(index);
+            if (
+                !(await element.isVisible()) ||
+                (await element.isDisabled()) ||
+                (await element.evaluate(node => Boolean(node.closest('[inert]'))))
+            )
+                continue;
+            const before = await focusStyles(element, true);
             await element.focus();
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-            const visible = await element.evaluate((node, before) => {
-                const styles = [
-                    getComputedStyle(node),
-                    getComputedStyle(node.closest('.fd-ui-input__control-wrap, .fd-ui-select__control-wrap') ?? node),
-                ];
-                return styles.some(
-                    style =>
-                        (style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 1) ||
-                        (style.boxShadow !== 'none' && style.boxShadow !== before.shadow) ||
-                        (style.borderColor !== before.border && Number.parseFloat(style.borderWidth) >= 1),
-                );
-            }, before);
+            const after = await focusStyles(element);
+            const visible = after.styles.some(
+                (style, index) =>
+                    (style.outlineStyle !== 'none' && style.outlineWidth >= 1) ||
+                    (style.shadow !== 'none' && style.shadow !== before.styles[index].shadow) ||
+                    (style.borderColor !== before.styles[index].borderColor && style.borderWidth >= 1),
+            );
             observations++;
-            if (!visible)
+            if (!after.focused || !visible)
                 findings.push({
-                    message: `No visible keyboard focus treatment on ${await element.evaluate(node => `${node.tagName}#${node.id}`)}`,
+                    message: `${after.focused ? 'No visible keyboard focus treatment on' : 'Keyboard focus did not reach'} ${await element.evaluate(node => `${node.tagName}#${node.id} ${node.getAttribute('aria-label') ?? node.textContent?.trim().slice(0, 60) ?? ''}`)}`,
                 });
         }
         return {
