@@ -243,14 +243,30 @@ public sealed class TelemetrySecurityGuardrailTests {
         string[] fonts = ReadPolicySources(policy, "font-src");
         MatchCollection links = Regex.Matches(ReadSource(htmlPath), "<link\\b[^>]*\\bhref=\"(?<url>https://fonts\\.googleapis\\.com/[^\"]+)\"",
             RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
-        Assert.NotEmpty(links);
+        Assert.Multiple(
+            () => Assert.Contains("'self'", styles, StringComparer.Ordinal),
+            () => Assert.Contains("'self'", fonts, StringComparer.Ordinal));
 
         foreach (Match link in links) {
             string origin = new Uri(link.Groups["url"].Value).GetLeftPart(UriPartial.Authority);
             Assert.Contains(origin, styles, StringComparer.Ordinal);
         }
 
-        Assert.Contains("https://fonts.gstatic.com", fonts, StringComparer.Ordinal);
+        if (links.Count > 0) {
+            Assert.Contains("https://fonts.gstatic.com", fonts, StringComparer.Ordinal);
+        }
+
+        string fontStylesPath = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", "src", "styles", "fonts.scss");
+        MatchCollection files = Regex.Matches(File.ReadAllText(fontStylesPath), "url\\(['\"](?<url>[^'\"]+)['\"]\\)",
+            RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
+        Assert.NotEmpty(files);
+
+        foreach (Match file in files) {
+            string url = file.Groups["url"].Value;
+            Assert.StartsWith("../fonts/", url, StringComparison.Ordinal);
+            string path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(fontStylesPath)!, url));
+            Assert.True(File.Exists(path), $"Self-hosted font file is missing: {url}");
+        }
     }
 
     [Theory]
