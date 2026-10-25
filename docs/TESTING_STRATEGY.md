@@ -89,6 +89,48 @@ before rebalancing groups. Test binaries are not transferred between runners,
 so each group has some restore/build overhead in exchange for independent paths
 and dependencies. Do not run the same group concurrently in one checkout.
 
+## Docker readiness for local and AI-assisted tests
+
+Prepare Docker before a direct Docker-dependent `dotnet test` invocation:
+
+```powershell
+pwsh -NoProfile -File scripts/Ensure-Docker.ps1
+# Run the affected integration test project only after readiness succeeds.
+```
+
+The helper requires PowerShell 7 and `docker` on PATH. It probes the selected
+Engine with `docker info`, requires Linux containers, and waits up to 180 seconds.
+Each CLI probe also has a timeout, so a hung CLI cannot block indefinitely. If a
+local Docker Desktop endpoint is selected and unavailable, it requests
+`docker desktop start --detach` once and polls until the Engine answers. This
+requires the Docker Desktop CLI plugin. It never restarts Docker, switches
+contexts or container modes, stops containers, or removes data. SSH/TCP targets
+and native Linux sockets are probed without attempting local Desktop startup.
+CI and `-NoStart` disable startup while retaining the bounded readiness check.
+
+Use `-TimeoutSeconds 300` for slower machines or `-NoStart` to wait for an Engine
+managed elsewhere. A failure reports the readiness deadline, startup outcome and
+last Engine diagnostic. Missing CLI and Windows container mode fail immediately.
+Check `docker desktop status`, `docker desktop logs` and `docker context show`
+when the error persists; a WSL or Desktop failure still needs diagnosis.
+
+`scripts/ci/Invoke-BackendTests.ps1 -Group integration-1` (also `integration-2`
+and `integration-3`) performs this check automatically **before restore/build**.
+Its controls are `-DockerTimeoutSeconds 300` and `-NoDockerStart`. Fast/MCP groups
+and `-PlanOnly` do not invoke Docker. Readiness output is recorded in
+`.artifacts/backend-ci/<group>/logs/<group>-docker.log`; failure metadata reports
+`FAILED_AREA=docker` and the `docker-readiness` stage.
+
+Always prepare Docker before the test process starts: `DockerAvailability`
+caches its result for that process. After a readiness failure, fix the Engine and
+start a new test run. Docker-gated skips are not passing integration evidence.
+This preparation addresses unavailable or starting Engines; failures inside an
+already running PostgreSQL/Redis/RabbitMQ container still need their own diagnosis.
+
+Run `pwsh -NoProfile -File scripts/Test-DockerReadiness.ps1` for deterministic
+startup, timeout, endpoint and runner-order regressions. The existing CI backend
+partition check runs these fixtures without starting or stopping a real Engine.
+
 ## Backend Test Projects
 
 | Project | Purpose |

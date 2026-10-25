@@ -18,8 +18,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
-          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
+          "reviewReason": "Reviewed the new AGENTS.md Docker preflight command against the implemented Ensure-Docker.ps1 and integration runner. The root Wiki page remains a navigation map to authoritative guides; no link, module ownership or query protocol changed."
         },
         {
           "path": "docs/ARCHITECTURE.md",
@@ -37,10 +37,10 @@
           "reviewReason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities."
         }
       ],
-      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
+      "reason": "Reviewed the new AGENTS.md Docker preflight command against the implemented Ensure-Docker.ps1 and integration runner. The root Wiki page remains a navigation map to authoritative guides; no link, module ownership or query protocol changed.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:23.699783Z"
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:26.8700292Z"
     },
     {
       "pageId": "module.frontend",
@@ -169,8 +169,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
-          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
+          "reviewReason": "The new Docker readiness instruction belongs to the existing living-guidance layer. Evidence precedence, source-review hashes and compiled-knowledge update policy are unchanged."
         },
         {
           "path": "docs/adr/README.md",
@@ -178,10 +178,10 @@
           "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
         }
       ],
-      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
+      "reason": "The new Docker readiness instruction belongs to the existing living-guidance layer. Evidence precedence, source-review hashes and compiled-knowledge update policy are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T11:01:13.7040687Z"
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:27.7686067Z"
     },
     {
       "pageId": "system.quality-index",
@@ -1474,18 +1474,18 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "472c3f5d668bd55af6e4fc63996f28e38bfdc9195f0fd19b31329a3f108e9e3e",
+      "pageSha256": "b4274e109959320bfc495bc75c003ff342d0a08a635d46a79b1962ce59f81778",
       "sources": [
         {
-          "path": "docs/ai/AI_WORKFLOW.md",
-          "sha256": "9fd866dc6e1dedad145f62bed769fc85a54c970fc8b898fa50243a5de3ec9441",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "49f7c93cf55e1ace5e4b65762ce990f0999d0994e4bd82ee37abb5d5fb8ada0b",
+          "reviewReason": "Updated this page to require successful Ensure-Docker.ps1 readiness before direct Docker-dependent tests, matching docs/TESTING_STRATEGY.md and the integration runner. Focused test discovery and planner ranking are unchanged."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Updated this page to require successful Ensure-Docker.ps1 readiness before direct Docker-dependent tests, matching docs/TESTING_STRATEGY.md and the integration runner. Focused test discovery and planner ranking are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:12.1014564Z"
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:31.8351721Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1562,14 +1562,14 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
-          "reviewReason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced."
+          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
+          "reviewReason": "AGENTS.md now requires Docker readiness before Docker-dependent tests. This is implemented by the test runner and helper; it does not change the path-based policy engine, policy families or structural invariants described here."
         }
       ],
-      "reason": "Reviewed root MCP discovery routing. Code/scoped guides remain authoritative, Wiki remains derived navigation, and all existing architecture and verification rules remain. A standalone MCP probe is explicitly distinguished from the live chat catalog; no extra mandatory governance was introduced.",
+      "reason": "AGENTS.md now requires Docker readiness before Docker-dependent tests. This is implemented by the test runner and helper; it does not change the path-based policy engine, policy families or structural invariants described here.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:28.3836138Z"
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:28.6455653Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1645,8 +1645,8 @@
         },
         {
           "path": "AGENTS.md",
-          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
-          "reviewReason": "Reviewed graph and query contracts against the Roslyn bootstrap change: only complete content-hashed runtime preparation changes. SQLite selection, source freshness, privacy discovery and release gates retain their existing contracts. Real compilation covers a missing Roslyn DLL and same-time edits; graph research succeeds after recovery."
+          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
+          "reviewReason": "The added AGENTS.md preflight affects test execution only. MCP discovery, SQLite context ranking, cache identity, graph preparation and source-query contracts on this page are unchanged."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
@@ -1664,10 +1664,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed the repository-catalog delta: documentationPages increases from 241 to 242 and docs/frontend/WEB_QUALITY.md is added to the document inventory. Query/cache/ranking implementations, frozen corpora and provider semantics are unchanged; current query-context guidance remains accurate. The merged catalogue and other affected generated indexes passed their read-only checks.",
-      "baseRef": "master",
-      "gitHead": "d9331ebcf9d57db844c66c0e48c87cb73f3eca01",
-      "reviewedAtUtc": "2026-10-24T22:06:20.3547943Z"
+      "reason": "The added AGENTS.md preflight affects test execution only. MCP discovery, SQLite context ranking, cache identity, graph preparation and source-query contracts on this page are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:29.6706629Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1681,14 +1681,14 @@
         },
         {
           "path": "AGENTS.md",
-          "sha256": "73f81b8a9c599cd9032995134392e1f2c32cfcebdb2be9808d1d00b7fe033d5f",
-          "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
+          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
+          "reviewReason": "Docker preparation adds a test execution prerequisite without changing diff scope, baseline handling, semantic source review or verification receipt semantics documented here."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Docker preparation adds a test execution prerequisite without changing diff scope, baseline handling, semantic source review or verification receipt semantics documented here.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:08.1710312Z"
+      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
+      "reviewedAtUtc": "2026-10-25T17:58:30.6596842Z"
     },
     {
       "pageId": "workflow.self-maintenance",

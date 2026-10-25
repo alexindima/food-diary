@@ -41,6 +41,7 @@ The full catalog and Wiki are navigation; current code, tests, ADRs and scoped g
 - `dotnet build FoodDiary.slnx`
 - `cd FoodDiary.Web.Client && npm run build`
 - Focused architecture guardrails: `dotnet test Tooling/tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+- Before Docker-dependent tests, run `pwsh -NoProfile -File scripts/Ensure-Docker.ps1`. It probes the Engine, starts local Docker Desktop when needed, and waits for Linux readiness with a bounded timeout. Integration groups in `scripts/ci/Invoke-BackendTests.ps1` run this automatically before restore/build. Prepare Docker before starting a direct `dotnet test` process; Docker availability is cached inside that process. See `docs/TESTING_STRATEGY.md` for timeout and diagnostic options.
 - Backend coverage: `dotnet test FoodDiary.slnx --settings coverage.runsettings --collect:"XPlat Code Coverage" --results-directory .\TestResults\coverage-backend`
 - Frontend full verification: `cd FoodDiary.Web.Client && npm run verify`
 - The pre-commit hook only runs `git diff --cached --check`; formatting, linters, builds, and tests run before push or in CI.

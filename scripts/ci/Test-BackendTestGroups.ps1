@@ -51,3 +51,4 @@ Assert-Rejected 'missing-group' { param($p) $p.groups = @($p.groups | Select-Obj
 Assert-Rejected 'empty-group' { param($p) $p.groups[0].projects = @() } 'Empty test group'
 Assert-Rejected 'unknown-schema' { param($p) $p.schemaVersion = 2 } 'Unsupported backend test plan schema'
 Write-Host 'Backend test partition checks passed.'
+& (Join-Path $PSScriptRoot '../Test-DockerReadiness.ps1')

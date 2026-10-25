@@ -4,7 +4,9 @@ param(
     [ValidateSet('fast', 'integration-1', 'integration-2', 'integration-3', 'mcp')]
     [string]$Group,
     [string]$PlanPath = (Join-Path $PSScriptRoot 'backend-test-groups.json'),
-    [switch]$PlanOnly
+    [switch]$PlanOnly,
+    [ValidateRange(1, 600)][int]$DockerTimeoutSeconds = 180,
+    [switch]$NoDockerStart
 )
 
 $ErrorActionPreference = 'Stop'
@@ -55,6 +57,7 @@ $results = [Collections.Generic.List[object]]::new()
 $failure = $null
 $activeLog = ''
 $stage = 'prepare'
+$failureArea = 'dotnet'
 
 function Invoke-DotnetStep([string[]]$Arguments, [string]$LogPath) {
     Write-Host "dotnet $($Arguments -join ' ')"
@@ -64,6 +67,21 @@ function Invoke-DotnetStep([string[]]$Arguments, [string]$LogPath) {
 
 Push-Location $repositoryRoot
 try {
+    if ($Group -like 'integration-*') {
+        $failureArea = 'docker'
+        $stage = 'docker-readiness'
+        $activeLog = Join-Path $logsRoot "$Group-docker.log"
+        try {
+            & (Join-Path $PSScriptRoot '../Ensure-Docker.ps1') `
+                -TimeoutSeconds $DockerTimeoutSeconds -NoStart:$NoDockerStart 6>&1 |
+                Tee-Object -FilePath $activeLog | Out-Host
+        } catch {
+            $_ | Out-String | Add-Content -LiteralPath $activeLog
+            throw
+        }
+        $failureArea = 'dotnet'
+    }
+
     # Build only the selected projects and their transitive dependencies, once.
     # Keep all outputs at repository level, away from other local groups/servers.
     $groupSolution = Join-Path $outputRoot 'tests.slnx'
@@ -132,7 +150,7 @@ try {
 } catch {
     $failure = $_
     @(
-        'FAILED_AREA=dotnet'
+        "FAILED_AREA=$failureArea"
         "FAILED_TARGET=Backend $Group / $stage"
         "FAILED_LOG_FILE_NAME=$([IO.Path]::GetFileName($activeLog))"
     ) | Set-Content -LiteralPath (Join-Path $logsRoot "$Group-failure-meta.env")

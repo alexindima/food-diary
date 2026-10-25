@@ -32,6 +32,12 @@ sources:
 
 # Generate a change-aware test plan
 
+Before executing a direct Docker-dependent test command, run
+`pwsh -NoProfile -File scripts/Ensure-Docker.ps1` and require success before
+starting the test process. Backend integration groups perform readiness before
+restore/build automatically. See the Docker readiness section in
+`docs/TESTING_STRATEGY.md` for deadlines, startup controls and diagnostics.
+
 Discovery prunes build/dependency directories before walking them, preserves
 hidden/system exclusions, and captures matching test text once per invocation.
 Escaped symbol alternatives are prepared in bounded regex batches; selected
