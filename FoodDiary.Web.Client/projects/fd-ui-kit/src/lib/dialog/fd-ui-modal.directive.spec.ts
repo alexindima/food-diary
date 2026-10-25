@@ -12,6 +12,7 @@ class NestedModalComponent {}
     imports: [FdUiModalDirective],
     template: `
         <button (click)="open.set(true)">Open panel</button>
+        <input aria-label="Background field" value="1" />
         <ng-template [fdUiModal]="open()" [fdUiModalDisableClose]="busy()" fdUiModalLabel="Test panel" (fdUiModalClosed)="dismiss()">
             <input aria-label="Draft" value="Unsaved draft" />
             <button (click)="nested()">Nested</button>
@@ -53,6 +54,14 @@ function openPanel(): ComponentFixture<ModalHostComponent> {
     return fixture;
 }
 
+function draftInput(): HTMLInputElement {
+    const input = document.querySelector<HTMLInputElement>('[role="dialog"][aria-label="Test panel"] input[aria-label="Draft"]');
+    if (input === null) {
+        throw new Error('Expected draft input inside the test panel');
+    }
+    return input;
+}
+
 function escape(element: Element | null): void {
     if (element === null) {
         throw new Error('Expected open modal');
@@ -73,11 +82,13 @@ describe('template modal lifecycle', () => {
 
     it('consumes Escape only at the topmost modal, preserving the underlying draft', () => {
         const fixture = openPanel();
+        const input = draftInput();
         fixture.componentInstance.nested();
         fixture.detectChanges();
         escape(document.querySelectorAll('[role=dialog]').item(1));
         expect(document.querySelectorAll('[role=dialog]')).toHaveLength(1);
-        expect(document.querySelector('input')?.value).toBe('Unsaved draft');
+        expect(draftInput()).toBe(input);
+        expect(input.value).toBe('Unsaved draft');
         expect(fixture.componentInstance.open()).toBe(true);
         expect(fixture.componentInstance.dismissed).not.toHaveBeenCalled();
         escape(document.querySelector('[role=dialog]'));
@@ -88,16 +99,14 @@ describe('template modal lifecycle', () => {
 
     it('updates the dismissal guard without recreating the panel or its draft', () => {
         const fixture = openPanel();
-        const input = document.querySelector('input');
-        if (input === null) {
-            throw new Error('Expected draft input');
-        }
+        const input = draftInput();
         input.value = 'Edited draft';
         fixture.componentInstance.busy.set(true);
         fixture.detectChanges();
         escape(input);
         expect(fixture.componentInstance.open()).toBe(true);
-        expect(document.querySelector('input')).toBe(input);
+        expect(draftInput()).toBe(input);
+        expect(input.value).toBe('Edited draft');
         fixture.componentInstance.busy.set(false);
         fixture.detectChanges();
         escape(input);
