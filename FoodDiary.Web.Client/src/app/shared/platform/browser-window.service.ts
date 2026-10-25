@@ -19,6 +19,22 @@ export class BrowserWindowService {
         return this.getWindow() !== null;
     }
 
+    public async yieldToBrowserAsync(): Promise<void> {
+        const windowRef = this.getWindow();
+        if (windowRef === null) {
+            return;
+        }
+        // DOM typings include Scheduler even where the browser omits this API.
+        const scheduler = (windowRef as { scheduler?: Partial<Scheduler> }).scheduler;
+        if (typeof scheduler?.yield === 'function') {
+            await scheduler.yield();
+            return;
+        }
+        await new Promise<void>(resolve => {
+            windowRef.setTimeout(resolve, 0);
+        });
+    }
+
     public async runWithLockAsync<T>(name: string, operation: () => Promise<T>): Promise<T> {
         const locks = this.getWindow()?.navigator.locks;
         return locks === undefined ? operation() : locks.request(name, operation);

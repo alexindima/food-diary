@@ -24,6 +24,21 @@ matrix on both device presets with three samples per case; see
 job concurrently with either collection.
 Dynamic recipe pages and authenticated screens are outside this static inventory.
 
+Localization reuses a successfully loaded initial dictionary for the first route
+or application initialization. Concurrent requests for the same language and
+route share one in-flight load and one translation update. This avoids repeated
+dictionary merges and change notifications during startup. Empty initial results
+and failed requests remain retryable; different languages and routes retain
+independent cache keys.
+
+Localization, session restoration and application creation yield at their phase
+boundaries through the browser platform owner (`scheduler.yield()` or a zero-delay
+timer fallback; no scheduling during SSR). Below-fold SEO content remains complete
+in prerendered HTML and hydrates on viewport entry or interaction; client-side
+navigation loads it immediately. Hero actions hydrate with the page. The prerender
+guard requires native FAQ content, related links and the final CTA, and platform
+journeys verify keyboard FAQ interaction and related navigation in both locales.
+
 For a faster representative pass, build once and reuse the output:
 
 ```powershell

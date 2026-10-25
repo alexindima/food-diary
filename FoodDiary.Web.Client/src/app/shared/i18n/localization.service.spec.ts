@@ -206,6 +206,104 @@ describe('LocalizationService language preference', () => {
     });
 });
 
+describe('LocalizationService initial translations', () => {
+    it.each(['/', '/ru', '/calorie-counter', '/ru/calorie-counter'])(
+        'reuses successful initial public translations for the first navigation: %s',
+        async path => {
+            browserWindowSpy.getPathname.mockReturnValue(path);
+            translateSpy.getCurrentLang.mockReturnValue(path.startsWith('/ru') ? 'ru' : 'en');
+            translateSpy.use.mockReturnValue(of({ COMMON: { SAVE: 'Save' } }));
+
+            await service.initializeLocalizationAsync();
+            await service.loadTranslationsForRouteAsync(`${path}?source=footer#top`);
+
+            expect(translationLoaderSpy.loadRouteTranslations).not.toHaveBeenCalled();
+            expect(
+                translateSpy.setTranslation,
+                'Transferred initial dictionaries must not be merged and broadcast again',
+            ).not.toHaveBeenCalled();
+        },
+    );
+
+    it('reuses successful initial application translations for session preference loading', async () => {
+        translationLoaderSpy.isPublicRoute.mockReturnValue(false);
+        translateSpy.use.mockReturnValue(of({ COMMON: { SAVE: 'Save' } }));
+
+        await service.initializeLocalizationAsync();
+        await service.loadApplicationTranslationsAsync();
+
+        expect(translationLoaderSpy.loadApplicationTranslations).not.toHaveBeenCalled();
+        expect(translateSpy.setTranslation).not.toHaveBeenCalled();
+    });
+
+    it('retries an empty initial result instead of marking the route loaded', async () => {
+        browserWindowSpy.getPathname.mockReturnValue('/calorie-counter');
+        translateSpy.use.mockReturnValue(of({}));
+
+        await service.initializeLocalizationAsync();
+        await service.loadTranslationsForRouteAsync('/calorie-counter');
+
+        expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledExactlyOnceWith('en', '/calorie-counter');
+        expect(translateSpy.setTranslation).toHaveBeenCalledOnce();
+    });
+
+    it('loads a different route and language after the initial dictionary succeeds', async () => {
+        browserWindowSpy.getPathname.mockReturnValue('/calorie-counter');
+        translateSpy.use.mockReturnValue(of({ COMMON: { SAVE: 'Save' } }));
+
+        await service.initializeLocalizationAsync();
+        await service.loadRouteTranslationsAsync('/food-diary');
+        translateSpy.getCurrentLang.mockReturnValue('ru');
+        await service.loadRouteTranslationsAsync('/calorie-counter');
+
+        expect(translationLoaderSpy.loadRouteTranslations.mock.calls).toEqual([
+            ['en', '/food-diary'],
+            ['ru', '/calorie-counter'],
+        ]);
+        expect(translateSpy.setTranslation).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('LocalizationService concurrent translations', () => {
+    it.each(['application', 'route'] as const)('shares pending %s translations and broadcasts the dictionary once', async kind => {
+        const translations = new Subject<{ COMMON: { SAVE: string } }>();
+        const load = kind === 'application' ? translationLoaderSpy.loadApplicationTranslations : translationLoaderSpy.loadRouteTranslations;
+        load.mockReturnValue(translations.asObservable());
+        const requestAsync = async (): Promise<void> =>
+            kind === 'application' ? service.loadApplicationTranslationsAsync() : service.loadRouteTranslationsAsync('/food-diary');
+
+        const first = requestAsync();
+        const second = requestAsync();
+        const requestsBeforeCompletion = load.mock.calls.length;
+        translations.next({ COMMON: { SAVE: 'Save' } });
+        translations.complete();
+        await Promise.all([first, second]);
+
+        expect(requestsBeforeCompletion).toBe(1);
+        expect(translateSpy.setTranslation).toHaveBeenCalledExactlyOnceWith('en', { COMMON: { SAVE: 'Save' } }, true);
+        await requestAsync();
+        expect(load).toHaveBeenCalledOnce();
+    });
+
+    it.each(['application', 'route'] as const)('allows a new %s request after a shared pending request fails', async kind => {
+        const translations = new Subject<{ COMMON: { SAVE: string } }>();
+        const load = kind === 'application' ? translationLoaderSpy.loadApplicationTranslations : translationLoaderSpy.loadRouteTranslations;
+        load.mockReturnValueOnce(translations.asObservable());
+        const requestAsync = async (): Promise<void> =>
+            kind === 'application' ? service.loadApplicationTranslationsAsync() : service.loadRouteTranslationsAsync('/food-diary');
+
+        const first = requestAsync();
+        const second = requestAsync();
+        translations.error(new Error('offline'));
+        await Promise.all([first, second]);
+        expect(translateSpy.setTranslation).not.toHaveBeenCalled();
+
+        await requestAsync();
+        expect(load).toHaveBeenCalledTimes(2);
+        expect(translateSpy.setTranslation).toHaveBeenCalledOnce();
+    });
+});
+
 describe('LocalizationService translation loading', () => {
     it.each(['application', 'route'] as const)('retries failed %s translations before marking them loaded', async kind => {
         const load = kind === 'application' ? translationLoaderSpy.loadApplicationTranslations : translationLoaderSpy.loadRouteTranslations;

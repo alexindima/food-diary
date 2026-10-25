@@ -29,6 +29,11 @@ for (const route of routes) {
             if (!html.includes(`<${selector} `) && !html.includes(`<${selector}>`))
                 issues.push(`${route}: public ${selector} content is missing from SSR`);
     }
+    if (/<fd-seo-landing-page(?:\s|>)/u.test(html)) {
+        if (!/<details\b/u.test(html) || !/<summary\b/u.test(html)) issues.push(`${route}: native FAQ content is missing from SSR`);
+        for (const content of ['seo-landing__related-card', 'seo-landing__section--cta'])
+            if (!html.includes(content)) issues.push(`${route}: public ${content} content is missing from SSR`);
+    }
     const canonical = siteUrl + (route === '/' ? '' : route);
     const enUrl = siteUrl + (basePath === '/' ? '' : basePath);
     const ruUrl = siteUrl + (basePath === '/' ? '/ru' : `/ru${basePath}`);

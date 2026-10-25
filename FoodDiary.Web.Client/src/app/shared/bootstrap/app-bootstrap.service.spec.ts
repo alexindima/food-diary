@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { FrontendObservabilityService } from '../../services/frontend-observability.service';
 import { UserService } from '../api/user.service';
 import { LocalizationService } from '../i18n/localization.service';
+import { BrowserWindowService } from '../platform/browser-window.service';
 import { ThemeService } from '../theme/theme.service';
 import { AppBootstrapService } from './app-bootstrap.service';
 
@@ -29,6 +30,10 @@ let userService: {
 let observabilityService: {
     initialize: ReturnType<typeof vi.fn>;
 };
+let browserWindow: {
+    isAvailable: ReturnType<typeof vi.fn>;
+    yieldToBrowserAsync: ReturnType<typeof vi.fn<BrowserWindowService['yieldToBrowserAsync']>>;
+};
 
 beforeEach(() => {
     authService = {
@@ -50,6 +55,10 @@ beforeEach(() => {
     observabilityService = {
         initialize: vi.fn(),
     };
+    browserWindow = {
+        isAvailable: vi.fn().mockReturnValue(false),
+        yieldToBrowserAsync: vi.fn<BrowserWindowService['yieldToBrowserAsync']>().mockResolvedValue(undefined),
+    };
 
     TestBed.configureTestingModule({
         providers: [
@@ -59,6 +68,7 @@ beforeEach(() => {
             { provide: ThemeService, useValue: themeService },
             { provide: UserService, useValue: userService },
             { provide: FrontendObservabilityService, useValue: observabilityService },
+            { provide: BrowserWindowService, useValue: browserWindow },
         ],
     });
 
@@ -66,6 +76,50 @@ beforeEach(() => {
 });
 
 describe('AppBootstrapService', () => {
+    it.each([false, true])(
+        'keeps localization, session restoration and app creation in separate browser tasks: authenticated=%s',
+        async authenticated => {
+            authService.isAuthenticated.mockReturnValue(authenticated);
+            const continuePhases: Array<() => void> = [];
+            browserWindow.yieldToBrowserAsync.mockImplementation(
+                async () =>
+                    new Promise<void>(resolve => {
+                        continuePhases.push(resolve);
+                    }),
+            );
+            let completed = false;
+            const bootstrap = service.initializeSessionAsync().then(() => {
+                completed = true;
+            });
+
+            await vi.waitFor(() => {
+                expect(completed || continuePhases.length > 0).toBe(true);
+            });
+
+            expect(localizationService.initializeLocalizationAsync).not.toHaveBeenCalled();
+            continuePhases[0]?.();
+            await vi.waitFor(() => {
+                expect(completed || continuePhases.length > 1).toBe(true);
+            });
+            expect(localizationService.initializeLocalizationAsync).toHaveBeenCalled();
+            expect(authService.restoreSessionAsync).not.toHaveBeenCalled();
+            continuePhases[1]?.();
+            await vi.waitFor(() => {
+                expect(completed || continuePhases.length > 2).toBe(true);
+            });
+            expect(authService.restoreSessionAsync).toHaveBeenCalled();
+            expect(completed, 'App creation must wait for a browser task boundary after synchronous transferred-state initialization').toBe(
+                false,
+            );
+            expect(userService.getInfoSilently).not.toHaveBeenCalled();
+
+            continuePhases[2]?.();
+            await bootstrap;
+            expect(completed).toBe(true);
+            expect(userService.getInfoSilently).toHaveBeenCalledTimes(authenticated ? 1 : 0);
+        },
+    );
+
     it('initializes theme and observability through dedicated methods', () => {
         service.initializeTheme();
         service.initializeObservability();

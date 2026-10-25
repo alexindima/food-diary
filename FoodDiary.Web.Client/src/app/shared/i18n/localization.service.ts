@@ -2,8 +2,8 @@ import { DOCUMENT } from '@angular/common';
 import { DestroyRef, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { filter, firstValueFrom } from 'rxjs';
+import { TranslateService, type TranslationObject } from '@ngx-translate/core';
+import { filter, firstValueFrom, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { isPublicMarketingPath, publicSiteLocale } from '../../config/public-site-paths';
@@ -23,8 +23,8 @@ export class LocalizationService {
     private readonly translationLoader = inject(FoodDiaryTranslationLoader);
     private readonly russianDefaultHosts = new Set(environment.russianDefaultHosts);
     private readonly storageKey = 'fd_language';
-    private readonly applicationTranslationLanguages = new Set<string>();
-    private readonly routeTranslationKeys = new Set<string>();
+    private readonly loadedTranslationKeys = new Set<string>();
+    private readonly translationRequests = new Map<string, Promise<void>>();
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
@@ -53,7 +53,11 @@ export class LocalizationService {
         const routeLang = typeof initialPath === 'string' && isPublicMarketingPath(initialPath) ? publicSiteLocale(initialPath) : null;
         const normalizedLang = this.normalizeLanguage(routeLang ?? storedLang ?? domainLang ?? browserLang);
 
-        return firstValueFrom(this.translateService.use(normalizedLang)).then(() => {
+        return firstValueFrom(this.translateService.use(normalizedLang)).then(translations => {
+            if (typeof initialPath === 'string' && Object.keys(translations).length > 0) {
+                const publicPath = this.translationLoader.isPublicRoute(initialPath) ? initialPath : undefined;
+                this.loadedTranslationKeys.add(this.translationKey(normalizedLang, publicPath));
+            }
             this.document.documentElement.setAttribute('data-i18n-ready', normalizedLang);
         });
     }
@@ -80,16 +84,9 @@ export class LocalizationService {
 
     public async loadApplicationTranslationsAsync(): Promise<void> {
         const currentLang = this.getCurrentLanguage();
-        if (this.applicationTranslationLanguages.has(currentLang)) {
-            return;
-        }
-
-        return firstValueFrom(this.translationLoader.loadApplicationTranslations(currentLang))
-            .then(translations => {
-                this.translateService.setTranslation(currentLang, translations, true);
-                this.applicationTranslationLanguages.add(currentLang);
-            })
-            .catch(() => {});
+        return this.loadTranslationsOnceAsync(currentLang, this.translationKey(currentLang), () =>
+            this.translationLoader.loadApplicationTranslations(currentLang),
+        );
     }
 
     public async loadTranslationsForRouteAsync(pathname: string): Promise<void> {
@@ -100,22 +97,38 @@ export class LocalizationService {
 
     public async loadRouteTranslationsAsync(pathname: string): Promise<void> {
         const currentLang = this.getCurrentLanguage();
-        const normalizedPath = this.normalizeRouteKey(pathname);
-        const cacheKey = `${currentLang}:${normalizedPath}`;
-        if (this.routeTranslationKeys.has(cacheKey)) {
-            return;
-        }
-
-        return firstValueFrom(this.translationLoader.loadRouteTranslations(currentLang, pathname))
-            .then(translations => {
-                this.translateService.setTranslation(currentLang, translations, true);
-                this.routeTranslationKeys.add(cacheKey);
-            })
-            .catch(() => {});
+        return this.loadTranslationsOnceAsync(currentLang, this.translationKey(currentLang, pathname), () =>
+            this.translationLoader.loadRouteTranslations(currentLang, pathname),
+        );
     }
 
     public clearStoredLanguage(): void {
         this.storage.removeItem('local', this.storageKey);
+    }
+
+    private async loadTranslationsOnceAsync(language: string, key: string, load: () => Observable<TranslationObject>): Promise<void> {
+        if (this.loadedTranslationKeys.has(key)) {
+            return;
+        }
+        const pending = this.translationRequests.get(key);
+        if (pending !== undefined) {
+            return pending;
+        }
+        const request = firstValueFrom(load())
+            .then(translations => {
+                this.translateService.setTranslation(language, translations, true);
+                this.loadedTranslationKeys.add(key);
+            })
+            .catch(() => {})
+            .finally(() => {
+                this.translationRequests.delete(key);
+            });
+        this.translationRequests.set(key, request);
+        return request;
+    }
+
+    private translationKey(language: string, pathname?: string): string {
+        return pathname === undefined ? `application:${language}` : `route:${language}:${this.normalizeRouteKey(pathname)}`;
     }
 
     private normalizeLanguage(lang?: string | null): string {

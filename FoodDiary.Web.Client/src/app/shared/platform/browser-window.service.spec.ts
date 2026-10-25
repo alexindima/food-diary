@@ -126,6 +126,77 @@ describe('BrowserWindowService', () => {
     });
 });
 
+describe('BrowserWindowService task yielding', () => {
+    const originalScheduler = Object.getOwnPropertyDescriptor(window, 'scheduler');
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        if (originalScheduler === undefined) {
+            Reflect.deleteProperty(window, 'scheduler');
+        } else {
+            Object.defineProperty(window, 'scheduler', originalScheduler);
+        }
+    });
+
+    it('waits for the native scheduler continuation', async () => {
+        let continueTask: (() => void) | undefined;
+        const scheduler = {
+            yield: vi.fn(
+                async () =>
+                    new Promise<void>(resolve => {
+                        continueTask = resolve;
+                    }),
+            ),
+        };
+        Object.defineProperty(window, 'scheduler', { configurable: true, value: scheduler });
+        let completed = false;
+        const task = createService(document)
+            .yieldToBrowserAsync()
+            .then(() => (completed = true));
+
+        expect(scheduler.yield).toHaveBeenCalledOnce();
+        expect(scheduler.yield.mock.contexts[0]).toBe(scheduler);
+        expect(completed).toBe(false);
+        continueTask?.();
+        await task;
+        expect(completed).toBe(true);
+    });
+
+    it.each([undefined, {}])('waits for a browser timer when scheduler.yield is unavailable: %s', async scheduler => {
+        Object.defineProperty(window, 'scheduler', { configurable: true, value: scheduler });
+        let continueTask: (() => void) | undefined;
+        const timer = vi.spyOn(window, 'setTimeout').mockImplementation(callback => {
+            if (typeof callback === 'function') {
+                continueTask = (): void => {
+                    callback();
+                };
+            }
+            return 1;
+        });
+        let completed = false;
+        const task = createService(document)
+            .yieldToBrowserAsync()
+            .then(() => (completed = true));
+
+        expect(timer).toHaveBeenCalledWith(expect.any(Function), 0);
+        expect(completed).toBe(false);
+        continueTask?.();
+        await task;
+        expect(completed).toBe(true);
+    });
+
+    it('completes without browser work when rendering without a window', async () => {
+        const scheduler = { yield: vi.fn() };
+        Object.defineProperty(window, 'scheduler', { configurable: true, value: scheduler });
+        const timer = vi.spyOn(window, 'setTimeout');
+
+        await createService(document.implementation.createHTMLDocument()).yieldToBrowserAsync();
+
+        expect(scheduler.yield).not.toHaveBeenCalled();
+        expect(timer).not.toHaveBeenCalled();
+    });
+});
+
 describe('BrowserWindowService storage events', () => {
     it('observes local storage changes and stops listening after cleanup', () => {
         const service = createService(document);

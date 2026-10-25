@@ -7213,7 +7213,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "line": 12
+      "line": 13
     },
     {
       "name": "DevelopmentToolError",

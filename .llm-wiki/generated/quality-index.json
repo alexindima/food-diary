@@ -19426,11 +19426,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "nonBlankLines": 36,
+      "nonBlankLines": 43,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.72
+      "structuralRiskScore": 3.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/development/development-input.ts",
@@ -19522,11 +19522,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/localization.service.ts",
-      "nonBlankLines": 141,
-      "decisionPoints": 24,
+      "nonBlankLines": 154,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.82
+      "structuralRiskScore": 40.58
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/i18n/localized-date.pipe.ts",
@@ -20402,11 +20402,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/platform/browser-window.service.ts",
-      "nonBlankLines": 162,
-      "decisionPoints": 27,
+      "nonBlankLines": 177,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.74
+      "structuralRiskScore": 47.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/platform/current-local-day.service.ts",

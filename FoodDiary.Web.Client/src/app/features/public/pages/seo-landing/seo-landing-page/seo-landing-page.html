@@ -32,6 +32,10 @@
         </div>
     </section>
 
-    <fd-seo-landing-content-sections [audience]="audience" [features]="features" [steps]="steps" [faq]="faq" />
-    <fd-seo-landing-footer-sections [relatedPages]="relatedPages" [cta]="cta" [home]="home" />
+    @defer (on immediate; hydrate on viewport; hydrate on interaction) {
+        <fd-seo-landing-content-sections [audience]="audience" [features]="features" [steps]="steps" [faq]="faq" />
+    }
+    @defer (on immediate; hydrate on viewport; hydrate on interaction) {
+        <fd-seo-landing-footer-sections [relatedPages]="relatedPages" [cta]="cta" [home]="home" />
+    }
 </div>
