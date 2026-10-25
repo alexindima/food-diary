@@ -63,7 +63,9 @@ def install(root=Path("/")):
     original = policy.read_text(encoding="utf-8")
     if normalized(original) == normalized(managed):
         return False
-    if normalized(original) != normalized(LEGACY_POLICY):
+    # The reviewed host variant continues the prerotate block's closing line.
+    reviewed_legacy = (LEGACY_POLICY, LEGACY_POLICY.replace("        fi\n", "        fi \\\n"))
+    if normalized(original) not in {normalized(candidate) for candidate in reviewed_legacy}:
         raise ValueError("Unknown Nginx logrotate policy; review it before installation. Nothing changed.")
     if backup.exists() or backup.is_symlink():
         regular_file(backup)
