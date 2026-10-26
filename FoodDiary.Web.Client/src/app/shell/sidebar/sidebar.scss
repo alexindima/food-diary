@@ -411,6 +411,12 @@
         left: auto;
     }
 
+    &--sheet-open {
+        /* stylelint-disable-next-line declaration-property-value-disallowed-list -- The navigation shares the portaled modal interaction boundary. */
+        position: fixed;
+        inset: auto 0 0;
+    }
+
     &__progress {
         display: grid;
         gap: var(--fd-space-xxs);

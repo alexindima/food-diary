@@ -12,17 +12,17 @@ const DAILY_GOAL = 2000;
 const DAILY_PROGRESS = 42.5;
 const UNREAD_NOTIFICATION_COUNT = 3;
 
-describe('SidebarMobileComponent', () => {
-    beforeEach(() => {
-        TestBed.resetTestingModule();
-    });
+beforeEach(() => {
+    TestBed.resetTestingModule();
+});
 
+describe('SidebarMobileComponent', () => {
     it('derives open state and report links from selected mobile sheet', () => {
         createComponent('reports');
         const host = document.body;
         const links = host.querySelectorAll('.sidebar-mobile__sheet-link');
 
-        expect(document.querySelector('[role=dialog]')?.getAttribute('aria-label')).toBe('SIDEBAR.REPORTS_AND_GOALS');
+        expect(getDialogLabel()).toBe('SIDEBAR.REPORTS_AND_GOALS');
         expect(links.length).toBe(MOBILE_REPORT_ITEMS.length);
         expect(host.querySelectorAll('button.is-open').length).toBe(1);
     });
@@ -39,7 +39,72 @@ describe('SidebarMobileComponent', () => {
 
         expect(foodToggle).toHaveBeenCalledWith(foodButton);
     });
+});
 
+describe('SidebarMobileComponent modal navigation', () => {
+    it('keeps the bottom navigation inside the active modal so it remains interactive', () => {
+        createComponent('user');
+        const dialog = document.querySelector('[role="dialog"]');
+        const nav = document.querySelector('.sidebar-mobile');
+
+        expect(dialog?.contains(nav), 'Open mobile navigation must be inside the modal interaction boundary').toBe(true);
+        expect(nav?.closest('[inert]')).toBeNull();
+        expect(document.querySelectorAll('.sidebar-mobile')).toHaveLength(1);
+    });
+
+    it('switches sections within the same modal and closes with Escape', async () => {
+        const fixture = createComponent('user');
+        TestBed.tick();
+        await fixture.whenStable();
+        const component = fixture.componentInstance;
+        const dialog = document.querySelector('[role="dialog"]');
+        const bodyButton = document.querySelector<HTMLButtonElement>('[data-mobile-sheet="body"]');
+        component.bodyToggle.subscribe(() => {
+            fixture.componentRef.setInput('mobileSheet', 'body');
+        });
+        component.closeMenus.subscribe(() => {
+            fixture.componentRef.setInput('mobileSheet', null);
+        });
+
+        bodyButton?.click();
+        fixture.detectChanges();
+        TestBed.tick();
+        await fixture.whenStable();
+
+        expect(document.querySelector('[role="dialog"]')).toBe(dialog);
+        expect(getDialogLabel()).toBe('SIDEBAR.BODY_TRACKING');
+        expect(bodyButton?.getAttribute('aria-expanded')).toBe('true');
+        expect(document.querySelectorAll('.sidebar-mobile')).toHaveLength(1);
+
+        dialog?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
+        fixture.detectChanges();
+        TestBed.tick();
+        await fixture.whenStable();
+
+        expect(document.querySelector('[role="dialog"]')).toBeNull();
+        const restoredButton = document.querySelector('[data-mobile-sheet="body"]');
+        expect(restoredButton?.closest('[inert]')).toBeNull();
+        expect(document.querySelectorAll('.sidebar-mobile')).toHaveLength(1);
+    });
+
+    it('keeps Today available while a sheet is open and returns the navigation after closing', () => {
+        const fixture = createComponent('food');
+        const requested = vi.fn();
+        fixture.componentInstance.directRouteClick.subscribe(requested);
+        fixture.componentInstance.closeMenus.subscribe(() => {
+            fixture.componentRef.setInput('mobileSheet', null);
+        });
+
+        document.querySelector<HTMLAnchorElement>('.sidebar-mobile__item')?.click();
+        fixture.detectChanges();
+
+        expect(requested).toHaveBeenCalledWith({ route: '/', exact: true });
+        expect(document.querySelector('[role="dialog"]')).toBeNull();
+        expect(document.querySelectorAll('.sidebar-mobile')).toHaveLength(1);
+    });
+});
+
+describe('SidebarMobileComponent accessibility and actions', () => {
     it('provides accessible names when visual labels are hidden on narrow screens', () => {
         createComponent(null);
         const host = document.body;
@@ -86,6 +151,14 @@ describe('SidebarMobileComponent', () => {
         expect(badge.textContent.trim()).toBe(String(UNREAD_NOTIFICATION_COUNT));
     });
 });
+
+function getDialogLabel(): string | undefined {
+    const dialog = document.querySelector('[role="dialog"]');
+    const labelId = dialog?.getAttribute('aria-labelledby');
+    return labelId !== null && labelId !== undefined
+        ? document.getElementById(labelId)?.textContent.trim()
+        : (dialog?.getAttribute('aria-label') ?? undefined);
+}
 
 function createComponent(
     mobileSheet: 'food' | 'body' | 'reports' | 'user' | null,

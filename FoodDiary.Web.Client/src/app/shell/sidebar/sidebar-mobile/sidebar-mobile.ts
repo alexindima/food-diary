@@ -1,11 +1,10 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
-    afterNextRender,
+    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     computed,
-    DestroyRef,
     type ElementRef,
-    inject,
     input,
     output,
     signal,
@@ -22,14 +21,20 @@ import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route
 
 @Component({
     selector: 'fd-sidebar-mobile',
-    imports: [FdUiModalDirective, RouterModule, FdUiHintDirective, FdUiIconComponent, SidebarRouteLinksComponent, TranslatePipe],
+    imports: [
+        NgTemplateOutlet,
+        FdUiModalDirective,
+        RouterModule,
+        FdUiHintDirective,
+        FdUiIconComponent,
+        SidebarRouteLinksComponent,
+        TranslatePipe,
+    ],
     templateUrl: './sidebar-mobile.html',
     styleUrl: '../sidebar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarMobileComponent {
-    private readonly destroyRef = inject(DestroyRef);
-
     public readonly isProgressVisible = input.required<boolean>();
     public readonly dailyConsumedKcalRounded = input.required<number>();
     public readonly dailyGoalKcalRounded = input.required<number>();
@@ -49,6 +54,7 @@ export class SidebarMobileComponent {
     public readonly routeSelected = output<SidebarRouteItem>();
 
     private readonly mobileNav = viewChild<ElementRef<HTMLElement>>('mobileNav');
+    private lastOpenSheet: MobileSheetId = null;
     protected readonly sheetBottom = signal(0);
     protected readonly isFoodOpen = computed(() => this.mobileSheet() === 'food');
     protected readonly isBodyOpen = computed(() => this.mobileSheet() === 'body');
@@ -61,8 +67,11 @@ export class SidebarMobileComponent {
     );
 
     public constructor() {
-        afterNextRender(() => {
+        afterRenderEffect(onCleanup => {
             const nav = this.mobileNav()?.nativeElement;
+            const sheet = this.mobileSheet();
+            const previousSheet = this.lastOpenSheet;
+            this.lastOpenSheet = sheet;
             if (nav === undefined) {
                 return;
             }
@@ -74,9 +83,12 @@ export class SidebarMobileComponent {
             if (Observer !== undefined) {
                 const observer = new Observer(update);
                 observer.observe(nav);
-                this.destroyRef.onDestroy(() => {
+                onCleanup(() => {
                     observer.disconnect();
                 });
+            }
+            if (sheet === null && previousSheet !== null && nav.closest('[inert]') === null) {
+                nav.querySelector<HTMLElement>(`[data-mobile-sheet="${previousSheet}"]`)?.focus();
             }
         });
     }

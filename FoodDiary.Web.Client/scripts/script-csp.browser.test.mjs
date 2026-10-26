@@ -10,6 +10,8 @@ import { test } from 'node:test';
 
 import { chromium } from '@playwright/test';
 
+import { assertPwaCachePolicy } from './pwa-cache.assertions.mjs';
+
 const execute = promisify(execFile);
 const frontend = fileURLToPath(new URL('../', import.meta.url));
 const repository = path.dirname(frontend);
@@ -29,7 +31,7 @@ async function waitFor(url) {
 }
 
 test(
-    'production scripts remain usable while unapproved inline code is blocked in static and SSR documents',
+    'production scripts remain usable while unapproved inline code is blocked and PWA install assets revalidate in static and SSR documents',
     { timeout: 180_000 },
     async () => {
         const runId = randomUUID();
@@ -86,6 +88,7 @@ test(
             const boundPort = await docker('port', ownedContainers[1], '80/tcp');
             const origin = `http://localhost:${boundPort.split(':').at(-1)}`;
             await waitFor(`${origin}/index.csr.html`);
+            observations.installAssets = await assertPwaCachePolicy(origin);
             assert.equal((await fetch(`${origin}/explore`)).status, 200, 'SSR fixture must render before CSP checks.');
             browser = await chromium.launch(process.platform === 'win32' ? { channel: 'chrome' } : {});
             const context = await browser.newContext({ serviceWorkers: 'block' });

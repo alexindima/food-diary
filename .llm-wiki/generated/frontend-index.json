@@ -7620,7 +7620,7 @@
       "role": "Component",
       "selector": "fd-sidebar-mobile",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.ts",
-      "line": 30
+      "line": 37
     },
     {
       "name": "SidebarRouteLinksComponent",
