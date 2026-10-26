@@ -387,6 +387,11 @@
           "reviewReason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate."
         },
         {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
+          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
+        },
+        {
           "path": ".llm-wiki/tools/code-graph-dotnet-runtime.mjs",
           "sha256": "2675257154d4cbbca9841735499d792881334f95ee7ced9c3999aa75695e2df5",
           "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
@@ -437,10 +442,10 @@
           "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
         }
       ],
-      "reason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate.",
+      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T22:06:29.3377696Z"
+      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
+      "reviewedAtUtc": "2026-10-26T09:48:56.9688635Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1345,17 +1350,18 @@
     {
       "pageId": "workflow-security-review",
       "pagePath": ".llm-wiki/workflows/security-review.md",
-      "pageSha256": "f935366d43c011c5187443833e00da2994b5092dff5b60dc6cbd0759390944bf",
+      "pageSha256": "f10d6318ab2cef47b5959cb1a03876a7a08348a54b96015db8aa09f0ce0c30d9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b6e9ff47a140297fc3a4a188d5f1192024fd56bcd7e8f7424117575307aa7cbc"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
+          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
         }
       ],
-      "reason": "Reviewed telemetry against the owning request validator. Diagnostics omit raw worker reasons, error messages, stack traces and browser URLs, accept only SHA-shaped target versions, bound the recent-failure map and suppress duplicate/offline noise. The existing telemetry enable flag and SDK transport remain authoritative. No new identifiers, auth storage or HTTP surface were added.",
+      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
       "baseRef": "HEAD",
-      "gitHead": "cad3b107a511573d98baeea24f0269be32205f4a",
-      "reviewedAtUtc": "2026-10-21T02:55:44.6316333Z"
+      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
+      "reviewedAtUtc": "2026-10-26T09:48:57.6137179Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1644,12 +1650,17 @@
           "path": ".llm-wiki/generated/repository-catalog.json",
           "sha256": "566ff6dad86b12fcd79c43554dfc78691e72189a2e74014957fb863356f0f7c3",
           "reviewReason": "Reviewed current repository catalog and bounded query workflow. New recovery/CSP source and tests are discoverable records; scoped CLI/MCP query contracts, cache fingerprints and retrieval semantics remain unchanged. Catalog record additions do not require a workflow rewrite."
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
+          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
         }
       ],
-      "reason": "Reviewed current repository catalog and bounded query workflow. New recovery/CSP source and tests are discoverable records; scoped CLI/MCP query contracts, cache fingerprints and retrieval semantics remain unchanged. Catalog record additions do not require a workflow rewrite.",
+      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T05:58:01.9956056Z"
+      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
+      "reviewedAtUtc": "2026-10-26T09:48:57.3137533Z"
     },
     {
       "pageId": "workflow.review-diff",
