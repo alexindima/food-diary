@@ -388,16 +388,19 @@ describe('AppComponent public navigation', () => {
 function stubMatchMedia(): void {
     vi.stubGlobal(
         'matchMedia',
-        vi.fn((query: string): MediaQueryList => ({
-            matches: false,
-            media: query,
-            onchange: null,
-            addListener: vi.fn(),
-            removeListener: vi.fn(),
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            dispatchEvent: vi.fn(() => true),
-        })),
+        vi.fn((query: string): MediaQueryList => {
+            const mediaQuery = {
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(() => true),
+            };
+            return mediaQuery;
+        }),
     );
 }
 

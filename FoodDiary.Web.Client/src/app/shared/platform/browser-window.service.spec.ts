@@ -86,7 +86,7 @@ describe('BrowserWindowService', () => {
     });
 
     it('delegates viewport and scrolling operations to the browser window', () => {
-        const mediaQuery: MediaQueryList = {
+        const mediaQuery = {
             matches: true,
             media: '(max-width: 700px)',
             onchange: null,
