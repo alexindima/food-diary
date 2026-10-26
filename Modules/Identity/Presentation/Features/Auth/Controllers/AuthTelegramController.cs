@@ -47,7 +47,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
 
     [AllowAnonymous]
     [HttpPost("verify")]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.TelegramLoginRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
@@ -58,7 +58,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
 
     [AllowAnonymous]
     [HttpPost("login-widget")]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.TelegramLoginRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
@@ -82,7 +82,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     [AllowAnonymous]
     [HttpPost("bot/auth")]
     [RequireTelegramBotSecret]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.TelegramLoginRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]

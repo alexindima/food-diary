@@ -6,9 +6,9 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1704,
-    "credential": 167,
-    "identity": 182,
+    "candidateFields": 1709,
+    "credential": 170,
+    "identity": 184,
     "health": 797,
     "financial": 138,
     "privateContent": 420,
@@ -89,10 +89,17 @@
     },
     {
       "category": "credential",
+      "name": "PasswordLogin",
+      "type": "FixedWindowPolicyOptions",
+      "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+      "line": 21
+    },
+    {
+      "category": "credential",
       "name": "SecretVerification",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 66
+      "line": 73
     },
     {
       "category": "credential",
@@ -341,6 +348,13 @@
     },
     {
       "category": "credential",
+      "name": "OwnerToken",
+      "type": "string?",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/PasswordLoginAttempt.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
@@ -520,6 +534,13 @@
       "type": "DateTime?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 19
+    },
+    {
+      "category": "credential",
+      "name": "OwnerToken",
+      "type": "string?",
+      "path": "Modules/Identity/Infrastructure/Authentication/InMemoryPasswordLoginThrottle.cs",
+      "line": 88
     },
     {
       "category": "credential",
@@ -1226,7 +1247,7 @@
       "name": "Billing",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 71
+      "line": 78
     },
     {
       "category": "financial",
@@ -7789,6 +7810,13 @@
     },
     {
       "category": "identity",
+      "name": "TelegramLogin",
+      "type": "FixedWindowPolicyOptions",
+      "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
+      "line": 23
+    },
+    {
+      "category": "identity",
       "name": "UserEmail",
       "type": "string?",
       "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingPaymentReadModel.cs",
@@ -8465,6 +8493,13 @@
       "type": "string?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 14
+    },
+    {
+      "category": "identity",
+      "name": "MaximumTrackedEmails",
+      "type": "int",
+      "path": "Modules/Identity/Infrastructure/Authentication/PasswordLoginThrottleOptions.cs",
+      "line": 10
     },
     {
       "category": "identity",

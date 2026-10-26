@@ -3,6 +3,9 @@
 The user website and admin UI authenticate through opaque HttpOnly cookies in
 the existing API (ADR 0058). Telegram's server bot retains bearer authentication.
 
+Password failure cooldowns and the independent request budgets for each sign-in
+method are documented in [Authentication throttling](AUTHENTICATION_THROTTLING.md).
+
 ## Sign-in and restoration
 
 1. The existing password, Google, account restore, password reset or browser

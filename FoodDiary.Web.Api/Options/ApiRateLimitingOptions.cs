@@ -18,6 +18,13 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions PasswordLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
+    public FixedWindowPolicyOptions GoogleLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
+    public FixedWindowPolicyOptions TelegramLogin { get; init; } = new() { PermitLimit = 60, WindowSeconds = 60 };
+
+    public static bool HasValidLoginPolicies(ApiRateLimitingOptions options) =>
+        options.PasswordLogin.IsValid() && options.GoogleLogin.IsValid() && options.TelegramLogin.IsValid();
+
     public FixedWindowPolicyOptions SessionLogout { get; init; } = new() {
         PermitLimit = 30,
         WindowSeconds = 60,

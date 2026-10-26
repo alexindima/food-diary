@@ -287,6 +287,11 @@
         "resolved": "1.0.52",
         "contentHash": "oNv2JtYXhpdJrX63nibx1JT3uCESOBQ1LAk7Dtz/sr0+laW0KRM6eKp4CZ3MHDR2siIkKsY8MmUkeP5DKkQQ5w=="
       },
+      "RESPite": {
+        "type": "Transitive",
+        "resolved": "3.0.11",
+        "contentHash": "txORk48Kw4utEaKHD5AWyfsxj7ZTb8EuJM9RaQjPg0pt0YxjBHgFEohE4bia0o3Ik1F5MhoayaUy3hYvcsb5Ng=="
+      },
       "System.Composition": {
         "type": "Transitive",
         "resolved": "10.0.1",
@@ -339,6 +344,11 @@
         "type": "Transitive",
         "resolved": "6.0.0",
         "contentHash": "lcyUiXTsETK2ALsZrX+nWuHSIQeazhqPphLfaRxzdGaG93+0kELqpgEHtwWOlQe7+jSFnKwaCAgL4kjeZCQJnw=="
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       },
       "xunit.abstractions": {
         "type": "Transitive",
@@ -873,6 +883,7 @@
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
+          "StackExchange.Redis": "[3.0.11, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )",
           "System.Security.Cryptography.Xml": "[10.0.13, )"
         }
@@ -1570,6 +1581,17 @@
           "Microsoft.EntityFrameworkCore": "[10.0.4, 11.0.0)",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.4, 11.0.0)",
           "Npgsql": "10.0.3"
+        }
+      },
+      "StackExchange.Redis": {
+        "type": "CentralTransitive",
+        "requested": "[3.0.11, )",
+        "resolved": "3.0.11",
+        "contentHash": "aLUOeQ3hpTg1H7AT6nVS3Roy8lKPsTG7VIEhspT5sNXWqcKbYJo1ytx8JqTNEWmnl/Ou/LwrDJntbl2P32IGcQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.5",
+          "RESPite": "3.0.11",
+          "System.IO.Hashing": "10.0.5"
         }
       },
       "System.IdentityModel.Tokens.Jwt": {

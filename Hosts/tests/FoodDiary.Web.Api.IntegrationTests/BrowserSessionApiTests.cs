@@ -20,7 +20,7 @@ public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : I
     public async Task CredentialQuotaExhaustion_DoesNotBlockTabRestorationOrLogout() {
         await using WebApplicationFactory<Program> isolated = factory.WithWebHostBuilder(builder =>
             builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(
-                new Dictionary<string, string?>(StringComparer.Ordinal) { ["RateLimiting:Auth:PermitLimit"] = "5" })));
+                new Dictionary<string, string?>(StringComparer.Ordinal) { ["RateLimiting:PasswordLogin:PermitLimit"] = "5" })));
         using HttpClient browser = isolated.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         (_, string email) = await RegisterIdentityAsync(browser);
         for (int attempt = 0; attempt < 6; attempt++) {

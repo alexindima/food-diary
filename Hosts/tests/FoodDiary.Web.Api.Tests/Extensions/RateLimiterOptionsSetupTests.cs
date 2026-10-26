@@ -16,6 +16,40 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {
+    [Theory]
+    [InlineData("PresentationPasswordLoginRateLimit")]
+    [InlineData("PresentationGoogleLoginRateLimit")]
+    [InlineData("PresentationTelegramLoginRateLimit")]
+    public void LoginIpPolicies_AllowSixtyRequests_RegardlessOfAuthenticatedUser(string policyName) {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
+        Delegate factory = Assert.Single(GetDelegates(FindPolicy(options, policyName)));
+        var context = new DefaultHttpContext();
+        context.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
+        object partition = factory.DynamicInvoke(context)!;
+        context.User = new ClaimsPrincipal(new ClaimsIdentity(
+            [new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())], "test"));
+        Assert.Equal(GetPartitionKey(partition), GetPartitionKey(factory.DynamicInvoke(context)));
+        using RateLimiter limiter = CreateLimiter(partition);
+        using RateLimitLease batch = limiter.AttemptAcquire(60);
+        Assert.True(batch.IsAcquired);
+        using RateLimitLease overflow = limiter.AttemptAcquire();
+        Assert.False(overflow.IsAcquired);
+    }
+
+    [Fact]
+    public void PasswordGoogleAndTelegram_UseIndependentAuthenticationBudgets() {
+        string? password = typeof(AuthSessionController).GetMethod("Login")!
+            .GetCustomAttribute<EnableRateLimitingAttribute>()?.PolicyName;
+        string? google = typeof(AuthSessionController).GetMethod("GoogleLogin")!
+            .GetCustomAttribute<EnableRateLimitingAttribute>()?.PolicyName;
+        string? telegram = typeof(AuthTelegramController).GetMethod("TelegramLoginWidget")!
+            .GetCustomAttribute<EnableRateLimitingAttribute>()?.PolicyName;
+
+        Assert.Equal(3, new[] { password, google, telegram }.Distinct(StringComparer.Ordinal).Count());
+        Assert.All(new[] { password, google, telegram }, policy => Assert.NotNull(policy));
+    }
+
     [Fact]
     public void BrowserRestorationAndLogout_DoNotConsumeTheCredentialAuthenticationBudget() {
         EnableRateLimitingAttribute restore = Assert.IsType<EnableRateLimitingAttribute>(
@@ -62,7 +96,7 @@ public sealed class RateLimiterOptionsSetupTests {
         EnableRateLimitingAttribute? configurationPolicy = configuration.GetCustomAttribute<EnableRateLimitingAttribute>();
         Assert.NotNull(controllerPolicy);
         Assert.NotNull(configurationPolicy);
-        Assert.Equal(PresentationPolicyNames.AuthRateLimitPolicyName, controllerPolicy.PolicyName);
+        Assert.Equal(PresentationPolicyNames.TelegramLoginRateLimitPolicyName, controllerPolicy.PolicyName);
         Assert.Equal(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, configurationPolicy.PolicyName);
         MethodInfo[] posts = [.. controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
             .Where(method => method.GetCustomAttribute<HttpPostAttribute>() is not null)];

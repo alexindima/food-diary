@@ -102,7 +102,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new LoginCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
-            tokenService);
+            tokenService,
+            CreatePasswordLoginThrottle());
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(Assert.IsType<string>(user.Email), "secret"), CancellationToken.None);
 
@@ -118,7 +119,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var handler = new LoginCommandHandler(
             CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubDateTimeProvider(),
-            tokenService);
+            tokenService,
+            CreatePasswordLoginThrottle());
         var clientContext = new AuthenticationClientContext("password", "203.0.113.10", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(

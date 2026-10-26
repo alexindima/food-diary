@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4646,
-    "symbols": 4581,
+    "sourceFiles": 4654,
+    "symbols": 4589,
     "interfaceImplementationLinks": 206,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2370,
-      "enum": 72,
-      "interface": 420,
-      "record": 1578,
+      "class": 2375,
+      "enum": 73,
+      "interface": 421,
+      "record": 1579,
       "record struct": 141
     },
     "roles": {
@@ -31,8 +31,8 @@
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 73,
-      "Other": 1891,
+      "Options": 74,
+      "Other": 1898,
       "Query": 303,
       "QueryHandler": 217,
       "ReadModelRepository": 33,
@@ -2425,7 +2425,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 101
+      "line": 103
     },
     {
       "name": "ApiTaskConfigurationExtensions",
@@ -2593,7 +2593,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 110
+      "line": 117
     },
     {
       "name": "CorsOptionsSetup",
@@ -2642,7 +2642,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "Program",
@@ -15399,6 +15399,13 @@
       "line": 5
     },
     {
+      "name": "IPasswordLoginThrottle",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs",
+      "line": 4
+    },
+    {
       "name": "ITelegramAuthValidator",
       "kind": "interface",
       "role": "Validator",
@@ -15670,6 +15677,20 @@
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/IssuedBrowserSession.cs",
       "line": 4
+    },
+    {
+      "name": "PasswordLoginAttempt",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/PasswordLoginAttempt.cs",
+      "line": 2
+    },
+    {
+      "name": "PasswordLoginAttemptOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/PasswordLoginAttemptOutcome.cs",
+      "line": 2
     },
     {
       "name": "RefreshTokenSessionReadModel",
@@ -15977,7 +15998,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-      "line": 9
+      "line": 13
     },
     {
       "name": "LoginCommandValidator",
@@ -16768,7 +16789,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Contracts/Errors/IdentityErrors.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "EmailTemplate",
@@ -16834,11 +16855,39 @@
       "line": 6
     },
     {
+      "name": "InMemoryPasswordLoginThrottle",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/InMemoryPasswordLoginThrottle.cs",
+      "line": 6
+    },
+    {
       "name": "JwtTokenGenerator",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "line": 14
+    },
+    {
+      "name": "PasswordLoginThrottleKey",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/PasswordLoginThrottleKey.cs",
+      "line": 5
+    },
+    {
+      "name": "PasswordLoginThrottleOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Authentication/PasswordLoginThrottleOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "RedisPasswordLoginThrottle",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/RedisPasswordLoginThrottle.cs",
+      "line": 7
     },
     {
       "name": "IdentityAuthenticationRegistration",
@@ -17224,6 +17273,13 @@
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
       "line": 9
+    },
+    {
+      "name": "PasswordLoginRetryAfterAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Features/Auth/PasswordLoginRetryAfterAttribute.cs",
+      "line": 10
     },
     {
       "name": "AdminSsoExchangeHttpRequest",
@@ -33670,7 +33726,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 232
+      "line": 234
     },
     {
       "service": "IAdminDashboardReadService",

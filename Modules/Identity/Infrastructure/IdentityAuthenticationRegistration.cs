@@ -10,6 +10,9 @@ namespace FoodDiary.Modules.Identity.Infrastructure;
 
 public static class IdentityAuthenticationRegistration {
     public static IServiceCollection AddIdentityAuthenticationInfrastructure(this IServiceCollection services) {
+        services.AddOptions<PasswordLoginThrottleOptions>().BindConfiguration(PasswordLoginThrottleOptions.SectionName)
+            .Validate(PasswordLoginThrottleOptions.IsValid, "Password login throttle limits are invalid.").ValidateOnStart();
+        services.AddSingleton<IPasswordLoginThrottle, InMemoryPasswordLoginThrottle>();
         services.AddOptions<BrowserSessionRenewalOptions>().BindConfiguration(BrowserSessionRenewalOptions.SectionName)
             .Validate(BrowserSessionRenewalOptions.IsValid, "Browser session renewal limits are invalid.").ValidateOnStart();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();

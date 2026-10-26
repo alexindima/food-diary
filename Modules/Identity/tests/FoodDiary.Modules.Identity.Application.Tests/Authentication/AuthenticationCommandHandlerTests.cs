@@ -70,6 +70,15 @@ public sealed partial class AuthenticationCommandHandlerTests : IDisposable {
         IPasswordHasher? passwordHasher = null) =>
         new(userRepository, userRepository, userRepository, passwordHasher ?? new StubPasswordHasher());
 
+    private static IPasswordLoginThrottle CreatePasswordLoginThrottle() {
+        IPasswordLoginThrottle throttle = Substitute.For<IPasswordLoginThrottle>();
+        throttle.TryBeginAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(new PasswordLoginAttempt("email-fingerprint", "owner"));
+        throttle.CompleteAsync(Arg.Any<PasswordLoginAttempt>(), Arg.Any<PasswordLoginAttemptOutcome>(), Arg.Any<CancellationToken>())
+            .Returns(returnThis: true);
+        return throttle;
+    }
+
     private static UserAuthenticationRegistrationService CreateUserAuthenticationRegistrationService(StubUserRepository userRepository) =>
         new(userRepository, userRepository, userRepository, new StubPasswordHasher());
 

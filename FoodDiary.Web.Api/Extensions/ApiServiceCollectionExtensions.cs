@@ -35,6 +35,8 @@ using FoodDiary.Modules.Images.Presentation.Extensions;
 using FoodDiary.Modules.Hydration.Presentation.Extensions;
 using FoodDiary.Modules.Lessons.Presentation.Extensions;
 using FoodDiary.Modules.Identity.Infrastructure;
+using FoodDiary.Modules.Identity.Infrastructure.Authentication;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Modules.Gamification.Presentation.Extensions;
@@ -231,6 +233,7 @@ public static class ApiServiceCollectionExtensions {
             });
             services.AddSingleton<IIdempotencyStore, RedisIdempotencyStore>();
             services.Replace(ServiceDescriptor.Singleton<IAdminSsoCodeStore, RedisAdminSsoCodeStore>());
+            services.Replace(ServiceDescriptor.Singleton<IPasswordLoginThrottle, RedisPasswordLoginThrottle>());
 
             return services;
         }

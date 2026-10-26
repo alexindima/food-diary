@@ -2033,6 +2033,7 @@
           "FoodDiary.Persistence.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
+          "StackExchange.Redis": "[3.0.11, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },

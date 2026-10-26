@@ -76,6 +76,7 @@ public class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, 
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
+        builder.UseSetting("ConnectionStrings:Redis", string.Empty);
         builder.ConfigureLogging(logging => logging.Services.RemoveAll<ILoggerProvider>());
         builder.ConfigureAppConfiguration((_, configBuilder) => TestConfiguration.Add(configBuilder));
 

@@ -22,6 +22,7 @@ public sealed class TransportApiWebApplicationFactory : WebApplicationFactory<Pr
 
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
+        builder.UseSetting("ConnectionStrings:Redis", string.Empty);
         builder.ConfigureLogging(logging => logging.Services.RemoveAll<ILoggerProvider>());
         builder.ConfigureAppConfiguration((_, configuration) => {
             TestConfiguration.Add(configuration);

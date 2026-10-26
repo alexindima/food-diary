@@ -1,8 +1,17 @@
 using FoodDiary.Results;
+using System.Globalization;
 
 namespace FoodDiary.Modules.Identity.Contracts.Errors;
 
 public static class IdentityErrors {
+    public static Error PasswordLoginThrottled(int retryAfterSeconds) => new(
+        "RateLimit.Exceeded",
+        "Too many requests. Try again later.",
+        Kind: ErrorKind.RateLimited,
+        Details: new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["retryAfterSeconds"] = [Math.Max(1, retryAfterSeconds).ToString(CultureInfo.InvariantCulture)],
+        });
+
     public static Error GoogleInvalidToken => new(
         "Authentication.GoogleInvalidToken",
         "Google credential is invalid.",

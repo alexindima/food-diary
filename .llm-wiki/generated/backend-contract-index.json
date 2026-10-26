@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1366,
+    "contracts": 1367,
     "ambiguousContracts": 29,
-    "consumerEdges": 10950,
-    "productionConsumerEdges": 6112,
-    "testConsumerEdges": 4838,
-    "consumedContracts": 1366,
+    "consumerEdges": 10964,
+    "productionConsumerEdges": 6118,
+    "testConsumerEdges": 4846,
+    "consumedContracts": 1367,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -14264,6 +14264,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IPipelineBehavior",
       "roles": [
         "Other"
@@ -28185,6 +28202,20 @@
       "consumerPath": "Modules/Fasting/Presentation/Features/Logs/LogsController.cs",
       "isTest": false,
       "referenceCount": 3
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/PasswordLoginRetryAfterAttribute.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -101460,6 +101491,123 @@
       "referenceCount": 1
     },
     {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Authentication/InMemoryPasswordLoginThrottle.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Authentication/RedisPasswordLoginThrottle.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordLoginThrottlingApiTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisPasswordLoginThrottleIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IPasswordLoginThrottle",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Abstractions/IPasswordLoginThrottle.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
       "contract": "IPipelineBehavior",
       "roles": [
         "Other"
@@ -127663,6 +127811,19 @@
         "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IUserAuthenticationIdentityService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserAuthenticationIdentityService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BrowserSessionServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -138648,6 +138809,19 @@
         "Modules/Identity/Application/Authentication/Commands/Login/LoginCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.PasswordThrottle.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "LoginCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/Login/LoginCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs",
       "isTest": true,
       "referenceCount": 2
@@ -138846,6 +139020,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/ImpersonationRevocationTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "LoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordLoginThrottlingApiTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "LoginHttpRequest",
@@ -150945,6 +151132,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/MeasurementCalendarDateIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PasswordLoginThrottlingApiTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

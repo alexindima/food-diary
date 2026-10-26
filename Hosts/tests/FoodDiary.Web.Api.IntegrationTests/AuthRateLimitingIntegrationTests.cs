@@ -9,6 +9,26 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthRateLimitingIntegrationTests {
+    [Fact]
+    public async Task LoginMethodsAndRecovery_KeepIndependentHttpBudgetsAsync() {
+        await using var factory = new TransportApiWebApplicationFactory();
+        await using WebApplicationFactory<Program> app = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(
+                new Dictionary<string, string?>(StringComparer.Ordinal) {
+                    ["RateLimiting:PasswordLogin:PermitLimit"] = "2",
+                    ["RateLimiting:GoogleLogin:PermitLimit"] = "2",
+                    ["RateLimiting:TelegramLogin:PermitLimit"] = "2",
+                    ["RateLimiting:Auth:PermitLimit"] = "2",
+                })));
+        using HttpClient client = app.CreateClient();
+        foreach (string endpoint in new[] { "login", "google", "telegram/login-widget", "password-reset/request", "register" }) {
+            for (int attempt = 0; attempt < 3; attempt++) {
+                using HttpResponseMessage response = await client.PostAsJsonAsync($"/api/v1/auth/{endpoint}", new { });
+                Assert.Equal(attempt < 2 ? HttpStatusCode.BadRequest : HttpStatusCode.TooManyRequests, response.StatusCode);
+            }
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -20,6 +40,7 @@ public sealed class AuthRateLimitingIntegrationTests {
                     ["RateLimiting:Auth:PermitLimit"] = "2",
                     ["RateLimiting:Auth:WindowSeconds"] = "60",
                     ["RateLimiting:Auth:QueueLimit"] = "0",
+                    ["RateLimiting:PasswordLogin:PermitLimit"] = "2",
                 })));
         using HttpClient client = app.CreateClient();
 

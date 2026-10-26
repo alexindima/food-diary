@@ -39,10 +39,11 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
 
     [AllowAnonymous]
     [HttpPost("login")]
+    [PasswordLoginRetryAfter]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.PasswordLoginRateLimitPolicyName)]
     public Task<IActionResult> Login([FromBody] LoginHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
@@ -53,7 +54,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.GoogleLoginRateLimitPolicyName)]
     public Task<IActionResult> GoogleLogin([FromBody] GoogleLoginHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 

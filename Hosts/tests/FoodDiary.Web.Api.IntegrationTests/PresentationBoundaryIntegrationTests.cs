@@ -176,8 +176,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         await using WebApplicationFactory<Program> limitedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
                 configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
-                    ["RateLimiting:Auth:PermitLimit"] = "5",
-                    ["RateLimiting:Auth:WindowSeconds"] = "60",
+                    ["RateLimiting:PasswordLogin:PermitLimit"] = "5",
+                    ["RateLimiting:PasswordLogin:WindowSeconds"] = "60",
                 });
             });
         });

@@ -601,6 +601,11 @@
         "resolved": "1.9.0",
         "contentHash": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw=="
       },
+      "RESPite": {
+        "type": "Transitive",
+        "resolved": "3.0.11",
+        "contentHash": "txORk48Kw4utEaKHD5AWyfsxj7ZTb8EuJM9RaQjPg0pt0YxjBHgFEohE4bia0o3Ik1F5MhoayaUy3hYvcsb5Ng=="
+      },
       "SharpZipLib": {
         "type": "Transitive",
         "resolved": "1.4.2",
@@ -677,6 +682,11 @@
         "type": "Transitive",
         "resolved": "10.0.11",
         "contentHash": "QTXEoQBzz00SFWbo7nAg1Ogd4f99lwqcO9uAJ7MYSLEUR28f6As32QktrqG2Fr9cfAfd1GjLyGYspE7Ipj7P6w=="
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       },
       "System.Security.Cryptography.ProtectedData": {
         "type": "Transitive",
@@ -2079,6 +2089,7 @@
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
+          "StackExchange.Redis": "[3.0.11, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )",
           "System.Security.Cryptography.Xml": "[10.0.13, )"
         }
@@ -3704,6 +3715,17 @@
         "requested": "[4.151.1, )",
         "resolved": "4.151.1",
         "contentHash": "lqPwXxYhKlmRfCuq1vGRLYEtRo3tn3ij1IGi0tI2qzkKHU6HOznHqZW+NqHV8aSKasPmRawbwlKLLPI132+SEA=="
+      },
+      "StackExchange.Redis": {
+        "type": "CentralTransitive",
+        "requested": "[3.0.11, )",
+        "resolved": "3.0.11",
+        "contentHash": "aLUOeQ3hpTg1H7AT6nVS3Roy8lKPsTG7VIEhspT5sNXWqcKbYJo1ytx8JqTNEWmnl/Ou/LwrDJntbl2P32IGcQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.5",
+          "RESPite": "3.0.11",
+          "System.IO.Hashing": "10.0.5"
+        }
       },
       "Stripe.net": {
         "type": "CentralTransitive",

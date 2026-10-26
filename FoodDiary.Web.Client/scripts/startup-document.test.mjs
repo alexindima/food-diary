@@ -34,14 +34,21 @@ function loadStartup(path, storage = {}, blockedStorage = false) {
 
 test('conceals a published cookie-session hint until the API proves authentication', () => {
     const window = loadStartup('/', { accountAccess: JSON.stringify(['00000000-0000-4000-8000-000000000001', 'User']) });
-    assert.ok(window.document.documentElement.classList.contains('fd-session-route-pending'),
-        'Published account metadata must conceal the document while the cookie is proved.');
+    assert.ok(
+        window.document.documentElement.classList.contains('fd-session-route-pending'),
+        'Published account metadata must conceal the document while the cookie is proved.',
+    );
     window.close();
 });
 
 for (const path of ['/', '/ru', '/ru/', '/dashboard', '/dashboard?date=2026-10-22', '/meals', '/meals/create', '/explore']) {
     test(`conceals the initial document and restores dark preferences before startup at ${path}`, () => {
-        const window = loadStartup(path, { accountAccess: '["owner","User"]', fd_theme: 'dark', fd_ui_style: 'modern', fd_surface_style: 'matte' });
+        const window = loadStartup(path, {
+            accountAccess: '["owner","User"]',
+            fd_theme: 'dark',
+            fd_ui_style: 'modern',
+            fd_surface_style: 'matte',
+        });
         const root = window.document.documentElement;
         assert.ok(root.classList.contains('fd-session-route-pending'));
         assert.equal(root.dataset.theme, 'dark');
@@ -68,10 +75,17 @@ test('keeps the guest landing visible even when an old theme preference remains'
 });
 
 test('uses a neutral system color for guests and restores the saved theme before the first frame', () => {
-    for (const [theme, color] of [['ocean', '#ffffff'], ['leaf', '#ffffff'], ['dark', '#191c21']]) {
+    for (const [theme, color] of [
+        ['ocean', '#ffffff'],
+        ['leaf', '#ffffff'],
+        ['dark', '#191c21'],
+    ]) {
         const window = loadStartup('/dashboard', { accountAccess: '["owner","User"]', fd_theme: theme });
-        assert.equal(window.document.querySelector('meta[name="theme-color"]').content, color,
-            `Startup system color must follow the ${theme} theme before Angular starts.`);
+        assert.equal(
+            window.document.querySelector('meta[name="theme-color"]').content,
+            color,
+            `Startup system color must follow the ${theme} theme before Angular starts.`,
+        );
         window.close();
     }
     const guest = loadStartup('/ru', { fd_theme: 'dark' });
@@ -82,6 +96,18 @@ test('uses a neutral system color for guests and restores the saved theme before
 test('provides a neutral installed PWA fallback instead of a fixed brand color', () => {
     const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.webmanifest', import.meta.url), 'utf8'));
     assert.equal(manifest.theme_color, '#ffffff', 'Installed PWA fallback must use the light surface color.');
+});
+
+test('publishes the notification icon and badge referenced by the push payload', () => {
+    const sender = readFileSync(
+        new URL('../../Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs', import.meta.url),
+        'utf8',
+    );
+    const paths = [...sender.matchAll(/(?:icon|badge) = "(\/assets\/[^"]+)"/gu)].map(match => match[1]);
+    assert.ok(paths.length > 0, 'The push sender must declare its icon assets.');
+    for (const path of paths) {
+        assert.doesNotThrow(() => readFileSync(new URL(`..${path}`, import.meta.url)), `Push payload asset must exist: ${path}`);
+    }
 });
 
 test('ignores invalid preferences and tolerates unavailable browser storage', () => {

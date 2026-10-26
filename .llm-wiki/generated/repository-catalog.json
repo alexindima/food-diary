@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 22,
     "agentGuides": 297,
-    "documentationPages": 245
+    "documentationPages": 246
   },
   "dotnet": {
     "projects": [
@@ -578,6 +578,7 @@
           "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
           "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
+          "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
@@ -885,6 +886,7 @@
           "Modules/Identity/Application.Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Contracts/FoodDiary.Modules.Identity.Contracts.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
+          "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Images/Application.Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
@@ -6333,6 +6335,10 @@
           },
           {
             "name": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "version": null
+          },
+          {
+            "name": "StackExchange.Redis",
             "version": null
           },
           {
@@ -16062,6 +16068,7 @@
       "docs/backend/ADMIN_REPORTING.md",
       "docs/backend/AI_RECOGNITION_JOBS.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
+      "docs/backend/AUTHENTICATION_THROTTLING.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
       "docs/backend/BACKEND_ARCHITECTURE_REVIEW_2026-10-22.md",
       "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",

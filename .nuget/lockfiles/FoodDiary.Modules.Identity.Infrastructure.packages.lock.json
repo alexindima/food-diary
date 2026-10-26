@@ -99,6 +99,17 @@
         "resolved": "4.16.1",
         "contentHash": "AGzq3UZvIwTGSh9xyIna+Q9F666S8UaLlX/Pk3Iz21qIAWjL8iYporVCcX1k/oi5chrRZ8VJRahup4me4HZptw=="
       },
+      "StackExchange.Redis": {
+        "type": "Direct",
+        "requested": "[3.0.11, )",
+        "resolved": "3.0.11",
+        "contentHash": "aLUOeQ3hpTg1H7AT6nVS3Roy8lKPsTG7VIEhspT5sNXWqcKbYJo1ytx8JqTNEWmnl/Ou/LwrDJntbl2P32IGcQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.5",
+          "RESPite": "3.0.11",
+          "System.IO.Hashing": "10.0.5"
+        }
+      },
       "System.IdentityModel.Tokens.Jwt": {
         "type": "Direct",
         "requested": "[8.22.0, )",
@@ -270,6 +281,16 @@
         "dependencies": {
           "Microsoft.Extensions.Primitives": "10.0.11"
         }
+      },
+      "RESPite": {
+        "type": "Transitive",
+        "resolved": "3.0.11",
+        "contentHash": "txORk48Kw4utEaKHD5AWyfsxj7ZTb8EuJM9RaQjPg0pt0YxjBHgFEohE4bia0o3Ik1F5MhoayaUy3hYvcsb5Ng=="
+      },
+      "System.IO.Hashing": {
+        "type": "Transitive",
+        "resolved": "10.0.5",
+        "contentHash": "8IBJWcCT9+e4Bmevm4T7+fQEiAh133KGiz4oiVTgJckd3Q76OFdR1falgn9lpz7+C4HJvogCDJeAa2QmvbeVtg=="
       },
       "fooddiary.application.contracts": {
         "type": "Project",

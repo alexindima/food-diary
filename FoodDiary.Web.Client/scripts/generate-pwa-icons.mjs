@@ -19,11 +19,19 @@ try {
         );
         await page.screenshot({ path: fileURLToPath(new URL(`../assets/pwa/app-icon-${size}x${size}.png`, import.meta.url)) });
     }
-    // Preserve existing social preview URLs; launcher URLs change to bypass old immutable HTTP caches.
-    copyFileSync(
-        new URL('../assets/pwa/app-icon-512x512.png', import.meta.url),
-        new URL('../assets/pwa/icon-512x512.png', import.meta.url),
+    // Existing push payloads and social previews keep these public URLs.
+    for (const size of [192, 512]) {
+        copyFileSync(
+            new URL(`../assets/pwa/app-icon-${size}x${size}.png`, import.meta.url),
+            new URL(`../assets/pwa/icon-${size}x${size}.png`, import.meta.url),
+        );
+    }
+    // Android uses the alpha silhouette for its monochrome notification badge.
+    await page.setViewportSize({ width: 96, height: 96 });
+    await page.setContent(
+        `<style>html,body{margin:0;background:transparent}svg{display:block;width:100%;height:100%}</style><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">${paddedMark.replaceAll('#2563eb', '#ffffff')}</svg>`,
     );
+    await page.screenshot({ path: fileURLToPath(new URL('../assets/pwa/icon-96x96.png', import.meta.url)), omitBackground: true });
 } finally {
     await browser.close();
 }

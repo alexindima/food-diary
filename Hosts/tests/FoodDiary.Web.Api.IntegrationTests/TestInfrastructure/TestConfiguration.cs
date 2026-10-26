@@ -6,6 +6,7 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 internal static class TestConfiguration {
     public static void Add(IConfigurationBuilder configurationBuilder) {
         configurationBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:Redis"] = string.Empty,
             ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
             ["Jwt:Issuer"] = "fooddiary-tests",
             ["Jwt:Audience"] = "fooddiary-tests",
@@ -42,6 +43,9 @@ internal static class TestConfiguration {
             ["YooKassa:PremiumYearlyAmount"] = "",
             ["RateLimiting:Auth:PermitLimit"] = "1000",
             ["RateLimiting:Auth:WindowSeconds"] = "60",
+            ["RateLimiting:PasswordLogin:PermitLimit"] = "1000",
+            ["RateLimiting:GoogleLogin:PermitLimit"] = "1000",
+            ["RateLimiting:TelegramLogin:PermitLimit"] = "1000",
             ["RateLimiting:Ai:PermitLimit"] = "1000",
             ["RateLimiting:Ai:WindowSeconds"] = "60",
             ["RateLimiting:TestDelivery:PermitLimit"] = "1000",

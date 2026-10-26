@@ -2,6 +2,9 @@ namespace FoodDiary.Presentation.Api.Policies;
 
 public static class PresentationPolicyNames {
     public const string AuthRateLimitPolicyName = "PresentationAuthRateLimit";
+    public const string PasswordLoginRateLimitPolicyName = "PresentationPasswordLoginRateLimit";
+    public const string GoogleLoginRateLimitPolicyName = "PresentationGoogleLoginRateLimit";
+    public const string TelegramLoginRateLimitPolicyName = "PresentationTelegramLoginRateLimit";
     public const string AuthConfigurationRateLimitPolicyName = "PresentationAuthConfigurationRateLimit";
     public const string SessionRestoreRateLimitPolicyName = "PresentationSessionRestoreRateLimit";
     public const string SessionLogoutRateLimitPolicyName = "PresentationSessionLogoutRateLimit";

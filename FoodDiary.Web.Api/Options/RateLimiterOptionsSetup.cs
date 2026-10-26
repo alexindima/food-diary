@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net;
 using System.Threading.RateLimiting;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Modules.Billing.Presentation;
@@ -36,7 +37,13 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
         };
 
         options.AddPolicy<string>(PresentationPolicyNames.AuthRateLimitPolicyName, context =>
-            CreatePartition(settings.Auth, $"auth:{GetPartitionKey(context)}"));
+            CreatePartition(settings.Auth, $"auth:{context.GetEndpoint()?.DisplayName}:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.PasswordLoginRateLimitPolicyName, context =>
+            CreatePartition(settings.PasswordLogin, $"password-login:{GetIpPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.GoogleLoginRateLimitPolicyName, context =>
+            CreatePartition(settings.GoogleLogin, $"google-login:{GetIpPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.TelegramLoginRateLimitPolicyName, context =>
+            CreatePartition(settings.TelegramLogin, $"telegram-login:{GetIpPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, context =>
             CreatePartition(settings.Auth, $"auth-configuration:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.SessionRestoreRateLimitPolicyName, context =>
@@ -103,7 +110,14 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             return $"user:{userId.Value:D}";
         }
 
-        string? remoteIp = context.Connection.RemoteIpAddress?.MapToIPv4().ToString();
-        return $"ip:{remoteIp ?? "unknown"}";
+        return GetIpPartitionKey(context);
+    }
+
+    private static string GetIpPartitionKey(HttpContext context) {
+        IPAddress? address = context.Connection.RemoteIpAddress;
+        if (address?.IsIPv4MappedToIPv6 == true) {
+            address = address.MapToIPv4();
+        }
+        return $"ip:{address?.ToString() ?? "unknown"}";
     }
 }

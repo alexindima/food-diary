@@ -119,14 +119,17 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void AuthController_SensitiveActions_UseAuthRateLimitPolicy() {
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Register), PresentationPolicyNames.AuthRateLimitPolicyName);
-        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Login), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Login), PresentationPolicyNames.PasswordLoginRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.GoogleLogin), PresentationPolicyNames.GoogleLoginRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramLoginWidget), PresentationPolicyNames.TelegramLoginRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramVerify), PresentationPolicyNames.TelegramLoginRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.Refresh), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.RestoreAccount), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.VerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthSessionController), nameof(AuthSessionController.ResendVerifyEmail), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange), PresentationPolicyNames.AuthRateLimitPolicyName);
         AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.LinkTelegram), PresentationPolicyNames.AuthRateLimitPolicyName);
-        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth), PresentationPolicyNames.AuthRateLimitPolicyName);
+        AssertActionRateLimit(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth), PresentationPolicyNames.TelegramLoginRateLimitPolicyName);
     }
 
     [Fact]
