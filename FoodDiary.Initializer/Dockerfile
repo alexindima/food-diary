@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:230c3fbae0ceedc70bca04eed2bfb5694e8b248cadbb81010f41b7a993601f55 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:cc02b814237a76c4735fb6eeee87181597b5e56f2ce458a435e527674d91f4d7 AS restore
 
 WORKDIR /src
 
@@ -232,7 +232,7 @@ COPY Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj
 RUN dotnet restore FoodDiary.Initializer/FoodDiary.Initializer.csproj --locked-mode
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:230c3fbae0ceedc70bca04eed2bfb5694e8b248cadbb81010f41b7a993601f55 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:cc02b814237a76c4735fb6eeee87181597b5e56f2ce458a435e527674d91f4d7 AS build
 WORKDIR /src
 COPY --from=restore /root/.nuget/packages/ /root/.nuget/packages/
 COPY --from=restore /src/ /src/
