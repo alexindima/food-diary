@@ -14,7 +14,7 @@ RUN sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment
 
 RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin && npm run build:storybook
 
-FROM nginx:alpine@sha256:892bb2152464f0c5d8972593a5f5afaf8054552580b699d95f8ff4af08c2d33d
+FROM nginx:alpine@sha256:a3554c0d0b48177b1413c26e01f695334428020d9df01243fbae3e11cfd17417
 
 # The same immutable client image serves static assets and the separate recipe SSR service.
 RUN apk add --no-cache libstdc++
