@@ -109,6 +109,8 @@ export class AdminAcquisitionSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -189,6 +191,8 @@ export class AdminAcquisitionSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Hours', <any>hours, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

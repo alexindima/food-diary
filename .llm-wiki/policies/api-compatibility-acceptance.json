@@ -1,44 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "shopping-list-required-revision-f03-2026-10-23",
-  "baseCommit": "a09333d00e8cb10a18387fd10c096c51aee64c25",
-  "decision": "Accept only the four exact F03 required revision changes below. The user explicitly chose to require a revision from every client, including older applications, to prevent lost shopping-list updates. ADR 0056 and docs/frontend/API_SDK.md record this bounded compatibility exception. All other API compatibility requirements remain in force.",
-  "clientRollout": "Release the regenerated web SDK and updated web assets together with the API. Every shopping-list PATCH must send expectedRevision from the list that was read. Older applications must update; already open web tabs must reload and installed PWAs must activate the new version. No optional legacy-write bypass is permitted. A deployment has not been performed by this approval record; use the existing CI-gated deployment and validate 400 for missing revisions, 409 for stale revisions and successful current-client saves.",
+  "id": "browser-sessions-2026-10-26",
+  "baseCommit": "311e21be57522f05c62cd691b100d461df9b3b89",
+  "decision": "Accept only the two exact accessToken nullability changes below. The user explicitly authorized opaque HttpOnly browser/admin/impersonation sessions in the existing API and stated there are no existing external clients to preserve. ADR 0058 records removal of browser JWTs; bot and explicit Telegram Mini App bearer contracts remain supported. No unrelated compatibility exception is granted.",
+  "clientRollout": "Apply the nullable BrowserSecurityVersion migration first, then release matching API, user/admin SDK bundles and the admin same-origin API proxy together. Ordinary browser and impersonation responses omit JWTs and restore through POST auth/session. Reauthenticate older browser bundles; do not add a legacy browser JWT fallback. Verify independent devices, scoped logout, SSO, isolated support tabs and Telegram on the test stand. This record performs no deployment. Baseline is the latest successful ancestral master push CI run observed on 2026-10-25; changed baseline or snapshots require a fresh exact review.",
   "snapshots": [
     {
       "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-      "beforeSha256": "a422fbb32037a5fb95ae5406674ed0674b8afc13acd91614902c105f281947c5",
-      "afterSha256": "8aa1f29b3f39cc4330845b25f4fbc6bde89db376601d19498f55cc9f949205fd"
+      "beforeSha256": "8aa1f29b3f39cc4330845b25f4fbc6bde89db376601d19498f55cc9f949205fd",
+      "afterSha256": "ef4048ce84c76548820e9d9cf844a1e8618ee891ecfe676b30a3324acdeb113c"
     },
     {
       "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json",
-      "beforeSha256": "f7463d8ab2324bb7ef3fd20489dab2c10045c9a322371e1e2c2c3a03f4cfb90f",
+      "beforeSha256": "2a57a2cf3da9cf0418ddc619d2c1e453c646ef3ff2da65415e66e3f5fece35a1",
       "afterSha256": "2a57a2cf3da9cf0418ddc619d2c1e453c646ef3ff2da65415e66e3f5fece35a1"
     }
   ],
   "acceptedChanges": [
     {
-      "kind": "added-required-property",
-      "location": "ShoppingListHttpResponse.revision",
-      "description": "Schema property became required.",
+      "kind": "changed-http-dto-property",
+      "location": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs::AuthenticationHttpResponse.accessToken",
+      "description": "HTTP DTO property type changed from 'string' to 'string?'.",
       "dimension": "structural"
     },
     {
-      "kind": "added-required-property",
-      "location": "UpdateShoppingListHttpRequest.expectedRevision",
-      "description": "Schema property became required.",
-      "dimension": "structural"
-    },
-    {
-      "kind": "added-required-http-dto-property",
-      "location": "Modules/MealPlanning/Presentation/ShoppingLists/Requests/UpdateShoppingListHttpRequest.cs::UpdateShoppingListHttpRequest.expectedRevision",
-      "description": "Required serialized HTTP DTO property was added.",
-      "dimension": "structural"
-    },
-    {
-      "kind": "added-required-http-dto-property",
-      "location": "Modules/MealPlanning/Presentation/ShoppingLists/Responses/ShoppingListHttpResponse.cs::ShoppingListHttpResponse.revision",
-      "description": "Required serialized HTTP DTO property was added.",
+      "kind": "changed-http-dto-property",
+      "location": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs::ExchangeImpersonationHttpResponse.accessToken",
+      "description": "HTTP DTO property type changed from 'string' to 'string?'.",
       "dimension": "structural"
     }
   ]

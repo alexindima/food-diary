@@ -26,7 +26,7 @@ let navigationService: {
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
 };
 let authService: {
-    refreshToken: ReturnType<typeof vi.fn>;
+    refreshSession: ReturnType<typeof vi.fn>;
 };
 
 beforeEach(() => {
@@ -41,7 +41,7 @@ beforeEach(() => {
         navigateToHomeAsync: vi.fn().mockResolvedValue(void 0),
     };
     authService = {
-        refreshToken: vi.fn().mockReturnValue(of({})),
+        refreshSession: vi.fn().mockReturnValue(of({})),
     };
 });
 

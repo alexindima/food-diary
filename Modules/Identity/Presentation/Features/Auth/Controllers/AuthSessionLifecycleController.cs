@@ -65,6 +65,20 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
         HandleLogoutAsync(request);
 
     private async Task<IActionResult> HandleLogoutAsync(RefreshTokenHttpRequest? request) {
+        BrowserSessionCookieService browserCookies = HttpContext.RequestServices.GetRequiredService<BrowserSessionCookieService>();
+        if (ImpersonationCookieService.HasContext(HttpContext)) {
+            await HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>()
+                .DeleteAsync(HttpContext, HttpContext.RequestAborted).ConfigureAwait(false);
+            return NoContent();
+        }
+        if (HttpContext.Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" &&
+            browserCookies.Read(HttpContext) is { } browserCredential) {
+            try {
+                return await HandleNoContent(browserCredential.ToBrowserLogoutCommand()).ConfigureAwait(false);
+            } finally {
+                browserCookies.Delete(HttpContext);
+            }
+        }
         RefreshTokenCookieService refreshTokenCookies = HttpContext.RequestServices.GetRequiredService<RefreshTokenCookieService>();
         string? refreshToken = request?.RefreshToken ?? refreshTokenCookies.Read(HttpContext);
         try {

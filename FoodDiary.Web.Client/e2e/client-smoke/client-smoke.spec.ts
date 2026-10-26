@@ -12,8 +12,6 @@ import type { ShoppingListOverview } from '../../src/app/shared/models/shopping-
 import type { WaistHistoryPageSummary } from '../../src/app/shared/models/waist-entry.data';
 import type { WeightHistoryPageSummary } from '../../src/app/shared/models/weight-entry.data';
 
-const MS_PER_SECOND = 1000;
-const AUTH_TOKEN_TTL_SECONDS = 3600;
 const SESSION_RESTORE_DELAY_MS = 750;
 const ACCESSIBILITY_TEST_TIMEOUT_MS = 120_000;
 const API_RETRY_EXHAUSTION_TIMEOUT_MS = 15_000;
@@ -247,11 +245,11 @@ test.describe('client auth smoke', () => {
     test('renders and updates email verification pending state on mobile', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'false');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'false');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
         await page.route('**/hubs/**', async route => {
             await route.abort('failed');
         });
@@ -262,6 +260,15 @@ test.describe('client auth smoke', () => {
             await route.fulfill({ status: 204 });
         });
 
+        await page.route('**/api/v1/auth/session', async route =>
+            route.fulfill(
+                jsonFixture(fixtureContract, 'POST', route.request().url(), {
+                    sessionId: '00000000-0000-4000-8000-000000000002',
+                    roles: ['User'],
+                    user: { ...createUser(), isEmailConfirmed: false },
+                }),
+            ),
+        );
         await page.goto('/verify-pending');
         await expect(page.getByRole('heading', { name: 'Check your email', level: 1 })).toBeVisible();
         await page.getByRole('button', { name: "I've verified, refresh status" }).click();
@@ -324,11 +331,11 @@ test.describe('authenticated client smoke', () => {
 
     test('redirects authenticated user from landing to dashboard', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -358,12 +365,12 @@ test.describe('authenticated accessibility', () => {
             await page.addInitScript(
                 (tokens: { user: string; dietologist: string }) => {
                     const token = window.location.pathname === '/dietologist' ? tokens.dietologist : tokens.user;
-                    window.sessionStorage.setItem('authToken', token);
-                    window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-                    window.sessionStorage.setItem('emailConfirmed', 'true');
-                    window.sessionStorage.setItem('mustChangePassword', 'false');
+                    window.sessionStorage.setItem('fooddiary.fixture.role', token);
+                    window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+                    window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+                    window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
                 },
-                { user: createAuthenticatedUserJwt(), dietologist: createAuthenticatedUserJwt('Dietologist') },
+                { user: fixtureRole(), dietologist: fixtureRole('Dietologist') },
             );
             await mockAuthenticatedClientApiAsync(page);
 
@@ -586,15 +593,22 @@ function formatNetworkAuditTable(results: readonly NetworkAuditRouteResult[]): s
 test.describe('session routing smoke', () => {
     test('keeps the recipe catalog hidden until the authenticated shell is ready', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.localStorage.setItem('accountAccess', JSON.stringify(['00000000-0000-4000-8000-000000000001', 'User']));
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
         await mockAuthenticatedClientApiAsync(page);
-        await page.route('**/api/v1/users/info', async route => {
+        await page.route('**/api/v1/auth/session', async route => {
             await new Promise(resolve => setTimeout(resolve, SESSION_RESTORE_DELAY_MS));
-            await route.fulfill(jsonResponse(createUser()));
+            await route.fulfill(
+                jsonFixture(fixtureContract, 'POST', route.request().url(), {
+                    sessionId: '00000000-0000-4000-8000-000000000002',
+                    roles: ['User'],
+                    user: createUser(),
+                }),
+            );
         });
         await page.goto('/explore', { waitUntil: 'domcontentloaded' });
         await expect(page.locator('html')).toHaveClass(/fd-session-route-pending/);
@@ -609,15 +623,22 @@ test.describe('session routing smoke', () => {
 
     test('keeps prerendered landing hidden while an authenticated root route initializes', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.localStorage.setItem('accountAccess', JSON.stringify(['00000000-0000-4000-8000-000000000001', 'User']));
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
         await mockAuthenticatedClientApiAsync(page);
-        await page.route('**/api/v1/users/info', async route => {
+        await page.route('**/api/v1/auth/session', async route => {
             await new Promise(resolve => setTimeout(resolve, SESSION_RESTORE_DELAY_MS));
-            await route.fulfill(jsonResponse(createUser()));
+            await route.fulfill(
+                jsonFixture(fixtureContract, 'POST', route.request().url(), {
+                    sessionId: '00000000-0000-4000-8000-000000000002',
+                    roles: ['User'],
+                    user: createUser(),
+                }),
+            );
         });
 
         await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -661,11 +682,11 @@ test.describe('mobile navigation keyboard regression', () => {
 test.describe('authenticated feature smoke', () => {
     test('renders privacy policy without the authenticated shell', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
 
         await mockAuthenticatedClientApiAsync(page);
         await page.goto('/privacy-policy');
@@ -689,11 +710,11 @@ test.describe('authenticated feature smoke', () => {
     test('renders products page for authenticated user on mobile viewport', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -709,11 +730,11 @@ test.describe('authenticated feature smoke', () => {
 
     test('renders recommendations and marks selected item as read', async ({ page }) => {
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -729,11 +750,11 @@ test.describe('authenticated feature smoke', () => {
     test('keeps meal collage thumbnails inside the media slot', async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.addInitScript((token: string) => {
-            window.sessionStorage.setItem('authToken', token);
-            window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-            window.sessionStorage.setItem('emailConfirmed', 'true');
-            window.sessionStorage.setItem('mustChangePassword', 'false');
-        }, createAuthenticatedUserJwt());
+            window.sessionStorage.setItem('fooddiary.fixture.role', token);
+            window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+            window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+            window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+        }, fixtureRole());
 
         await mockAuthenticatedClientApiAsync(page);
 
@@ -1154,11 +1175,11 @@ function createDashboardRegressionFast(planType: 'Intermittent' | 'Extended' | '
 
 async function authenticateUserAsync(page: Page, role = 'User'): Promise<void> {
     await page.addInitScript((token: string) => {
-        window.sessionStorage.setItem('authToken', token);
-        window.sessionStorage.setItem('userId', '00000000-0000-4000-8000-000000000001');
-        window.sessionStorage.setItem('emailConfirmed', 'true');
-        window.sessionStorage.setItem('mustChangePassword', 'false');
-    }, createAuthenticatedUserJwt(role));
+        window.sessionStorage.setItem('fooddiary.fixture.role', token);
+        window.sessionStorage.setItem('fooddiary.fixture.userId', '00000000-0000-4000-8000-000000000001');
+        window.sessionStorage.setItem('fooddiary.fixture.emailConfirmed', 'true');
+        window.sessionStorage.setItem('fooddiary.fixture.mustChangePassword', 'false');
+    }, fixtureRole(role));
 }
 
 async function expectCollageFitsMediaSlotAsync(collage: ReturnType<Page['locator']>): Promise<void> {
@@ -1220,6 +1241,23 @@ async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
     });
 
     await page.route('**/api/v1/**', fulfillClientApiRouteAsync);
+    await page.route('**/api/v1/auth/session', async route => {
+        const fixture = await page.evaluate(() => ({
+            role: sessionStorage.getItem('fooddiary.fixture.role'),
+            confirmed: sessionStorage.getItem('fooddiary.fixture.emailConfirmed') !== 'false',
+        }));
+        if (fixture.role === null) {
+            await route.fulfill({ status: 401 });
+            return;
+        }
+        await route.fulfill(
+            jsonFixture(fixtureContract, 'POST', route.request().url(), {
+                sessionId: '00000000-0000-4000-8000-000000000002',
+                roles: [fixture.role],
+                user: { ...createUser(), isEmailConfirmed: fixture.confirmed },
+            }),
+        );
+    });
 }
 
 async function toggleDashboardSettingsAsync(page: Page): Promise<void> {
@@ -1771,21 +1809,8 @@ function jsonResponse(body: unknown): { status: number; contentType: string; bod
     };
 }
 
-function createJwt(payload: Record<string, unknown>): string {
-    return `${encodeSegment({ alg: 'none', typ: 'JWT' })}.${encodeSegment(payload)}.signature`;
-}
-
-function createAuthenticatedUserJwt(role = 'User'): string {
-    return createJwt({
-        sub: '00000000-0000-4000-8000-000000000001',
-        nameid: '00000000-0000-4000-8000-000000000001',
-        role,
-        exp: Math.floor(Date.now() / MS_PER_SECOND) + AUTH_TOKEN_TTL_SECONDS,
-    });
-}
-
-function encodeSegment(value: Record<string, unknown>): string {
-    return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+function fixtureRole(role = 'User'): string {
+    return role;
 }
 
 type ClientApiMock = {

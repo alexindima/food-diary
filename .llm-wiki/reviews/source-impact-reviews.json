@@ -23,8 +23,8 @@
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "a017096e94842a03a50b1accf6b74516ded9ea901777e004d82534149c80b9e6",
-          "reviewReason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result."
+          "sha256": "72fed76f3afe61c0d7cd3eb6750398c8d8be3f124734e4f852aae58e87754027",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
@@ -33,45 +33,56 @@
         },
         {
           "path": "docs/README.md",
-          "sha256": "76c19ff565165f5f4d46669e91393da0fb72876f18badaa2263b61d294aa3956",
-          "reviewReason": "Reviewed seven source-impact pages against the scoped final tooling and documentation changes. Frontend architecture, generated API contracts, localized product UI and browser ownership rules remain consistent. New opt-in public Lighthouse collection uses the prerender inventory, official device presets and repeated samples; deterministic checker/proxy/CLI tests are included in performance-build and verify. Docs navigation and testing commands link the owning workflow. Twenty focused performance tests and 48-route static preflight passed; npm audit has existing braces dev-tool findings without an available fix, production dependencies report zero vulnerabilities."
+          "sha256": "ae200b5649ab592b274d7d3f571d53f77c976302d640df460ddc7b005c71251b",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed the new AGENTS.md Docker preflight command against the implemented Ensure-Docker.ps1 and integration runner. The root Wiki page remains a navigation map to authoritative guides; no link, module ownership or query protocol changed.",
+      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:26.8700292Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:45.8274854Z"
     },
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "1a0c2850298b11bad778aba4cb2f224d8d7f4f2f401ba2851d4e1b8ec1829b0f",
+      "pageSha256": "3ca51572b9ba4b6011b4d70799e1d18bab8b7453c0aeb6f38ed1e7d40dbd7d78",
       "sources": [
         {
-          "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "29b60bad38dca6f1a860a8dca7901087beec39e061ac9c8806d60df302891d79",
-          "reviewReason": "Reviewed the documented UID1001 executor correction against native Git/Firefox before-after reproduction and the official Playwright GitHub container example. All six independent audits, source/output receipt verification and non-success aggregate gating remain mandatory; application source and performance budgets are unchanged."
+          "path": "docs/adr/0058-browser-sessions-in-the-existing-api.md",
+          "sha256": "002e6e54f5e61eaa52980c5ab9cc73173141e1658ccb735e58c11415914329b0",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         },
         {
-          "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "458c148cdca75dad57cc30b5e96b253f2c7bcb775b39a5d2311574ceade5dac9",
-          "reviewReason": "Reviewed the expanded Google guidance policy, owner boundary changes and generated frontend indexes. Added current WebQuality ownership and automatic CI navigation; manual and field assessments remain explicit."
+          "path": "docs/backend/BROWSER_SESSIONS.md",
+          "sha256": "c4fcbc32fdc7cdabdf7fc1c62c6f408e6bd7957ade1b25727c739b02208e2a47",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        },
+        {
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "aceaaac800f209ab9b2488e44b8e7db37b21eaf099f7e265e65c75da3dfdf878",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed the documented UID1001 executor correction against native Git/Firefox before-after reproduction and the official Playwright GitHub container example. All six independent audits, source/output receipt verification and non-success aggregate gating remain mandatory; application source and performance budgets are unchanged.",
+      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "942b8855fec5471e27a5577a68e94bae912b8081",
-      "reviewedAtUtc": "2026-10-25T20:27:42.4038353Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:46.6133575Z"
     },
     {
       "pageId": "module.mail-services",
       "pagePath": ".llm-wiki/modules/mail-services.md",
-      "pageSha256": "c97741bf3292821b9902858ef77a9b79daef938d25e689c0a17409bb8aabb28f",
-      "sources": [],
-      "reason": "Reviewed additive BugTriage display metadata and retention SQL, optional Admin DTO/SDK fields, regenerated indexes and passing architecture/contract/frontend tests. Current feature ownership, API compatibility workflow, trace/review guidance and MailInbox transport boundaries remain accurate; .artifacts/admin-problems/review.md records the final review and baseline test failure.",
+      "pageSha256": "cf1f87e3203058fa78ee08da1607c7b1af570508e86dd6378a73d5067771d929",
+      "sources": [
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "72fed76f3afe61c0d7cd3eb6750398c8d8be3f124734e4f852aae58e87754027",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        }
+      ],
+      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "94aa94482c377332762d16351aee49743aa0a4bc",
-      "reviewedAtUtc": "2026-10-13T13:03:40.7976729Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:47.4062372Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -92,18 +103,28 @@
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "64477f09594f638e6948a9bcd90fad0a10d4396a2a30bf63faa08626f636bb2d",
+      "pageSha256": "288dbfcf7448c966b6e94033564625c9799da175b4486e1ace233f84231aa5fb",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "72fed76f3afe61c0d7cd3eb6750398c8d8be3f124734e4f852aae58e87754027",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        },
+        {
+          "path": "docs/backend/BROWSER_SESSIONS.md",
+          "sha256": "c4fcbc32fdc7cdabdf7fc1c62c6f408e6bd7957ade1b25727c739b02208e2a47",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "caea95c52a57c50607bfaedcbed15b8cffeb29c07bd9ee7ccee3360e13a1622c",
-          "reviewReason": "Reviewed the final dependency matrix: only direct owner-contract references in three test projects were added; production module ownership, graph direction, coordinated contexts and composition remain unchanged."
+          "sha256": "31722fc72cd86f67f810be77bbe11f611e1edef363f36f38fff5925e98f81644",
+          "reviewReason": "Reviewed the exact Identity Presentation test-project matrix additions for Authentication.Contracts and Mediator. The new handler tests consume JwtOptions and ISender directly; production references, module ownership and runtime topology are unchanged. All 2283 architecture tests passed. The page remains accurate."
         }
       ],
-      "reason": "Reviewed the final dependency matrix: only direct owner-contract references in three test projects were added; production module ownership, graph direction, coordinated contexts and composition remain unchanged.",
+      "reason": "Reviewed the exact Identity Presentation test-project matrix additions for Authentication.Contracts and Mediator. The new handler tests consume JwtOptions and ISender directly; production references, module ownership and runtime topology are unchanged. All 2283 architecture tests passed. The page remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7a15981c7cae8328c32efe66b6af34f99d9c1e2b",
-      "reviewedAtUtc": "2026-10-23T15:36:36.3903311Z"
+      "gitHead": "ab972d2e5a146f3a5a569102e10f629411c37f14",
+      "reviewedAtUtc": "2026-10-26T00:36:10.2596639Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -174,14 +195,19 @@
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "633b2b5d0aab032429a79df1424f4d24a02bd73b348ad7e152ff5aaf909977a0",
-          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
+          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "ae200b5649ab592b274d7d3f571d53f77c976302d640df460ddc7b005c71251b",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "The new Docker readiness instruction belongs to the existing living-guidance layer. Evidence precedence, source-review hashes and compiled-knowledge update policy are unchanged.",
+      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:27.7686067Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:48.7441349Z"
     },
     {
       "pageId": "system.quality-index",
@@ -264,12 +290,17 @@
           "path": "docs/ai/AI_WORKFLOW.md",
           "sha256": "9fd866dc6e1dedad145f62bed769fc85a54c970fc8b898fa50243a5de3ec9441",
           "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+        },
+        {
+          "path": "scripts/ai/task-runtime.mjs",
+          "sha256": "2d7c2ee9c29804e4331d6f801fd8af70a6d5c9b33f23af685e3b0813f5f312fb",
+          "reviewReason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:04.2544276Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:51.8912260Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -287,15 +318,25 @@
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         },
         {
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "aceaaac800f209ab9b2488e44b8e7db37b21eaf099f7e265e65c75da3dfdf878",
+          "reviewReason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "70630ab9a45809960e13ae1b31a02bc5b8c8cdb4c6113097d11128f627e51c18",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "644d5ca4b5255cd42321ff18eca9ccd334b6fd0f0580f01a3d7fd45a8ce3d9bd",
+          "reviewReason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid."
+        },
+        {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "ef4048ce84c76548820e9d9cf844a1e8618ee891ecfe676b30a3324acdeb113c",
+          "reviewReason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid."
         }
       ],
-      "reason": "The new reusable CI quality job does not change API compatibility baseline selection. Existing OpenAPI snapshots passed unchanged; an additive five-metric telemetry HTTP behavior snapshot was added.",
+      "reason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T05:28:20.1094662Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:50.4184362Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -304,8 +345,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1940743592b7f961bce18d2ef05d3419ad5f201dcfee570f9b7420f815d331df",
-          "reviewReason": "Reviewed regenerated architecture-health records for the shared dialog navigation provider and dynamic Storybook dialog example. Production/test project edges and enforced drift remain unchanged; selector candidates still require runtime and DI review, so the existing architecture-health workflow remains accurate."
+          "sha256": "01d661a44c4c43685acc5e65ad27a54c77d648749dad277d33b2596e41f2f114",
+          "reviewReason": "Reviewed the intentional direct references used by new Identity cookie-handler tests. Only the exact test-project allowlist gained Authentication.Contracts and Mediator; dependency assertions and production-edge permissions are unchanged. The 2283-test architecture run confirms the documented enforcement workflow still applies."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -314,14 +355,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "caea95c52a57c50607bfaedcbed15b8cffeb29c07bd9ee7ccee3360e13a1622c",
-          "reviewReason": "Reviewed the regenerated architecture-health index and intentional narrow test-reference matrix entries. There are no new production edges, module cycles, projects or module ownership changes; the guide remains accurate."
+          "sha256": "31722fc72cd86f67f810be77bbe11f611e1edef363f36f38fff5925e98f81644",
+          "reviewReason": "Reviewed the intentional direct references used by new Identity cookie-handler tests. Only the exact test-project allowlist gained Authentication.Contracts and Mediator; dependency assertions and production-edge permissions are unchanged. The 2283-test architecture run confirms the documented enforcement workflow still applies."
         }
       ],
-      "reason": "Reviewed regenerated architecture-health records for the shared dialog navigation provider and dynamic Storybook dialog example. Production/test project edges and enforced drift remain unchanged; selector candidates still require runtime and DI review, so the existing architecture-health workflow remains accurate.",
+      "reason": "Reviewed the intentional direct references used by new Identity cookie-handler tests. Only the exact test-project allowlist gained Authentication.Contracts and Mediator; dependency assertions and production-edge permissions are unchanged. The 2283-test architecture run confirms the documented enforcement workflow still applies.",
       "baseRef": "HEAD",
-      "gitHead": "70f20b7bb0f53d9775fecd2c3811bf0055071f91",
-      "reviewedAtUtc": "2026-10-24T14:04:57.3870442Z"
+      "gitHead": "ab972d2e5a146f3a5a569102e10f629411c37f14",
+      "reviewedAtUtc": "2026-10-26T00:36:13.0921282Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -381,6 +422,11 @@
       "pageSha256": "ce2eb204b97c702ee45a2f610f331ca51ffb85bd444e23445559d17cf1a7c8f1",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "23da14acddbed8148e277c6c8bcf0b9f543e568886898e43391a12f131f10e33",
+          "reviewReason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate."
+        },
+        {
           "path": ".llm-wiki/tools/code-graph-dotnet-runtime.mjs",
           "sha256": "2675257154d4cbbca9841735499d792881334f95ee7ced9c3999aa75695e2df5",
           "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
@@ -431,10 +477,10 @@
           "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
         }
       ],
-      "reason": "Reviewed Recipes directory regression: named owning-test priority is limited to explicitly selected source files. Directory plans keep their prior downstream ordering, retaining the relocated Recipes feature tests; explicit Meals and Recipes service file priorities remain covered.",
+      "reason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T17:00:57.2988293Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T22:06:29.3377696Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -658,14 +704,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "633b2b5d0aab032429a79df1424f4d24a02bd73b348ad7e152ff5aaf909977a0",
-          "reviewReason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay."
+          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
+          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed runtime diagnostics and host rotation after integration with local master: hardened Nginx ownership and reopen are covered by real Docker rotations; native capture remains opt-in and private with a hard storage bound, no application file-size limit, and unchanged coordinated deployment semantics. No API, nutrition, locale or business-data contracts change. Current documentation and architecture guards match the final scripts and explicit overlay.",
+      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T11:01:14.7487037Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:49.4958151Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -726,8 +772,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "68718adbc807a53e051292003f3360e42e4a510d4497052f4706799aa4d0b2f4",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "c71125f102ace8b7de539b67c73a4b1661b8534011edb3a5a91404048007d462",
+          "reviewReason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -740,10 +786,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed migration diagnostic only: retained raw JSON sources remain available to projection and lineage checks. Domain readers, persistence rules, source hashes, cold/warm query checks and SQLite contracts described here are unchanged.",
+      "reason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:41:16.4483347Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:53.1027467Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -815,14 +861,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "d88aa898a7e4be6c307dee9d9b35337e71ea1ce3cc55d51740f21e87adeceb32",
-          "reviewReason": "Reviewed the merged package: Google-guidance and theme-token checks remain in verify and production contracts; the master dependency update removes the obsolete qs override without altering browser ownership, UI interaction, screenshot or responsive evidence rules. Current workflow accurately describes both changes."
+          "sha256": "366b6c9ec4c23f650d4945ec09cd8d9af912c0b37b7e0ed54ae97f6f62d34a89",
+          "reviewReason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate."
         }
       ],
-      "reason": "Reviewed the merged package: Google-guidance and theme-token checks remain in verify and production contracts; the master dependency update removes the obsolete qs override without altering browser ownership, UI interaction, screenshot or responsive evidence rules. Current workflow accurately describes both changes.",
-      "baseRef": "origin/master",
-      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
-      "reviewedAtUtc": "2026-10-25T14:25:58.6006559Z"
+      "reason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T22:06:30.4314815Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1144,8 +1190,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "de677c52608509156d23a34913571691fc5dad42e19b38422ddc981453ffcef9",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "7b819a61274dba89732512ee2ffd99b338d0e0d909a0e8fb7063abb8e5141ca8",
+          "reviewReason": "Reviewed new credential models, cookie filter, database proof hashing, protected impersonation cache and request/response handling. Ordinary browser JWTs are removed, secrets are redacted from mediator JSON/ToString, expiry and existing account deletion/session cleanup stay bounded. No additional health data or provider transfers are introduced; generated sensitive-data results remain navigation candidates and the privacy review workflow remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1158,10 +1204,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Checked privacy source review narrative and changed Node process boundary. Query ranking, privacy views and coalescing implementation are unchanged; the new subprocess diagnostics contain command output from source extraction and introduce no query/credential telemetry fields.",
+      "reason": "Reviewed new credential models, cookie filter, database proof hashing, protected impersonation cache and request/response handling. Ordinary browser JWTs are removed, secrets are redacted from mediator JSON/ToString, expiry and existing account deletion/session cleanup stay bounded. No additional health data or provider transfers are introduced; generated sensitive-data results remain navigation candidates and the privacy review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T10:04:00.5616671Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:55.2446404Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1317,8 +1363,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f5ed5b8cb63a20b0600ead631b9bd2ed608e88c581bd0884c67b86347a930c5e",
-          "reviewReason": "Reviewed regenerated topology against the merged telemetry processor and TelegramOidcProvider sources: no host, worker, recurring job or external client was added. New timeout-policy and timeout-or-delay entries are inferred from Telegram diagnostic reason names; existing timeout/cancellation/provider endpoints remain unchanged. Telemetry redaction and CLS/INP acceptance preserve their owned HTTP boundary. The workflow still requires source verification of inferred signals and is accurate."
+          "sha256": "b8dc483e1becf2cc8bdb31aa0c6a2f28ad3b702f8075ae2fb37f80191bd313ab",
+          "reviewReason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1326,10 +1372,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed regenerated topology against the merged telemetry processor and TelegramOidcProvider sources: no host, worker, recurring job or external client was added. New timeout-policy and timeout-or-delay entries are inferred from Telegram diagnostic reason names; existing timeout/cancellation/provider endpoints remain unchanged. Telemetry redaction and CLS/INP acceptance preserve their owned HTTP boundary. The workflow still requires source verification of inferred signals and is accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
-      "reviewedAtUtc": "2026-10-25T14:25:59.5935684Z"
+      "reason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed.",
+      "baseRef": "HEAD",
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:54.2768349Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1574,17 +1620,18 @@
     {
       "pageId": "workflow.evals",
       "pagePath": ".llm-wiki/workflows/evals.md",
-      "pageSha256": "a4d6f6e45856ad6956a6133f5a9156fdca0a4ab5131c41b49df6ae6204a3aae4",
+      "pageSha256": "f044998371629cb2301d51a7c855a2ab43336aabcbab7f4361b1271680392d80",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "30289f32a19ec4149c7f2137ca9b10aceb38b155814c0a75d47ccfec4a6e6a78"
+          "path": ".llm-wiki/evals/context-search-conversational.json",
+          "sha256": "1f5cd4f4e2c5ad20fc8f3be2c6b4ed22e4b97ce8f07792008c36d6f4423f09ff",
+          "reviewReason": "Reviewed current ADR 0058, architecture, browser-session runbook and SDK guide. Updated 41/263 and 22/73 scope counts, separate user/admin cookies, per-tab support contexts and explicit Mini transport. Index/ADR navigation and mail ownership remain accurate; no BFF host was added."
         }
       ],
-      "reason": "Compared implicit QA exclusions with the page scope contract. Tracked source paths and explicit caller paths still take precedence; source inventories and SQLite freshness remain exact. Task-scope, task-baseline and research-confidence regressions passed on these boundaries.",
+      "reason": "Reviewed current ADR 0058, architecture, browser-session runbook and SDK guide. Updated 41/263 and 22/73 scope counts, separate user/admin cookies, per-tab support contexts and explicit Mini transport. Index/ADR navigation and mail ownership remain accurate; no BFF host was added.",
       "baseRef": "HEAD",
-      "gitHead": "8a9d9c1e03d0e162f0cd4797c8a6c53b16911aed",
-      "reviewedAtUtc": "2026-10-13T22:26:44.7925821Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T22:06:29.9257294Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1609,8 +1656,8 @@
       "sources": [
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "edacb126059bbe3177997e6ba7588a902efbdaaf898da4f7efec102b3350c849",
-          "reviewReason": "API_SDK now documents independent admin SSO cookie policy and the narrow required-shopping-revision compatibility exception. Existing guide instructions trace transient authentication state and feature adapter to the concrete generated method, schema and scope manifest; they keep UI/error normalization and behavior checks separate from generated drift. Nothing in the current page promises revision-less PATCH or a shared admin/main-app session."
+          "sha256": "aceaaac800f209ab9b2488e44b8e7db37b21eaf099f7e265e65c75da3dfdf878",
+          "reviewReason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -1618,56 +1665,26 @@
           "reviewReason": "Reviewed SDK forwarding limited to headers, params, keepalive and priority. The generated-client ownership policy is preserved; API usage guard and telemetry owner contracts passed."
         }
       ],
-      "reason": "Reviewed SDK forwarding limited to headers, params, keepalive and priority. The generated-client ownership policy is preserved; API usage guard and telemetry owner contracts passed.",
+      "reason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T05:28:18.2482722Z"
+      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
+      "reviewedAtUtc": "2026-10-25T21:37:51.0964852Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "87680b84b452fc9d63b36e861fc7dc50eb8ff75963ae1c660383d8c01e5bf599",
+      "pageSha256": "97f4f2ccaea3a34424abb96692a719ec83c0b9e35d8aebb498405a9e73725f02",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "6aa4fc489da6273c83134f0bf1f7c313ea7a1d966b80bbe9d60d2da4f95b731e",
-          "reviewReason": "Reviewed the repository-catalog delta: documentationPages increases from 241 to 242 and docs/frontend/WEB_QUALITY.md is added to the document inventory. Query/cache/ranking implementations, frozen corpora and provider semantics are unchanged; current query-context guidance remains accurate. The merged catalogue and other affected generated indexes passed their read-only checks."
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "ff3d36f580dc3066a55b77112d40a2ebeff4a9ef5a1af78d9c5d3794a284d9f9",
-          "reviewReason": "Documented the image confirmation case relocation to InitialBaseline, verified IsConfirmed at line1060. Original question and100% image thresholds preserved; explicit migration intent now works with generic baseline names, schema-only owner intent retains its ranking. All22corpora/4parity corpora passed; no added ranking rules."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Reviewed merged repository catalog against HEAD 29143cc and the Wiki tooling audit: both production diagnostics documents remain listed and the audit report is added (241 documentation pages). Catalog project/endpoint and query ranking contracts remain unchanged. Preserved the prior runtime diagnostics review and inspected the bounded awaited graph worker changes; context freshness, SQLite queries and frozen corpus expectations remain intact. All ten current affected smoke groups passed before this catalog receipt update."
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
-          "reviewReason": "The added AGENTS.md preflight affects test execution only. MCP discovery, SQLite context ranking, cache identity, graph preparation and source-query contracts on this page are unchanged."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "b9af72c787c5e8c94171005dbd084aa7a558bff4d387c0d85b3591a81090e023",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
-          "sha256": "d2f0b0bbcc1b814376e9b601c58a6b5a2eff27b8c884ef033c14dca5f6dc38b6",
-          "reviewReason": "Reviewed the refreshed repository catalog and current SqliteFlowScopeReader source; both full context-search-evals and context-retrieval smoke groups passed. Exact snapshot fingerprint validation, scoped flow budgets, explicit unavailable/truncated results and the Node-only writer are retained. Ranking policies, candidate windows, corpora, thresholds and cache authorization did not change. Catalog source coordinates and added test/member identities require no change to this query guidance."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-          "sha256": "6959d7826e76fe149ac997d2a270da72f2450ee443dd3e1055c5b10536e4c3eb",
-          "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
+          "sha256": "1e67d4187f7ec4676b31b0c82938549c733e39ba5eb89abafeb637ec0f6a9eb4",
+          "reviewReason": "Reviewed the current page delta and regenerated repository catalog. The existing ADR 0058 paragraph accurately describes four explicit TokenStorageService query migrations to AuthMetadataStorageService; those queries, thresholds and ranking scripts were not changed in this test-only task. The current catalog additions are test sources and two direct test-contract references, so the query/cache workflow remains accurate."
         }
       ],
-      "reason": "The added AGENTS.md preflight affects test execution only. MCP discovery, SQLite context ranking, cache identity, graph preparation and source-query contracts on this page are unchanged.",
+      "reason": "Reviewed the current page delta and regenerated repository catalog. The existing ADR 0058 paragraph accurately describes four explicit TokenStorageService query migrations to AuthMetadataStorageService; those queries, thresholds and ranking scripts were not changed in this test-only task. The current catalog additions are test sources and two direct test-contract references, so the query/cache workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:29.6706629Z"
+      "gitHead": "ab972d2e5a146f3a5a569102e10f629411c37f14",
+      "reviewedAtUtc": "2026-10-26T00:38:55.1417464Z"
     },
     {
       "pageId": "workflow.review-diff",

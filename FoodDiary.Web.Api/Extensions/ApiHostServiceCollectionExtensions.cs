@@ -52,6 +52,18 @@ public static class ApiHostServiceCollectionExtensions {
                     In = ParameterLocation.Header,
                     Description = "JWT Authorization header using the Bearer scheme.",
                 });
+                options.AddSecurityDefinition("BrowserSession", new OpenApiSecurityScheme {
+                    Name = "__Host-fooddiary.browser",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Cookie,
+                    Description = "HttpOnly browser session; unsafe requests require X-Requested-With: XMLHttpRequest.",
+                });
+                options.AddSecurityDefinition("AdminSession", new OpenApiSecurityScheme {
+                    Name = "__Host-fooddiary.admin",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Cookie,
+                    Description = "Separate HttpOnly administrative session, established by the SSO exchange.",
+                });
             });
 
             return services;

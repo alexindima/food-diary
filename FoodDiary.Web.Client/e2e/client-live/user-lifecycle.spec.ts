@@ -6,7 +6,7 @@ import type { Page } from '@playwright/test';
 import type { AdminUserCreateHttpRequest } from '../../projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-user-create-http-request';
 import type { CreateMealHttpRequest } from '../../src/app/shared/api/sdk/generated/model/create-meal-http-request';
 import type { CreateProductHttpRequest } from '../../src/app/shared/api/sdk/generated/model/create-product-http-request';
-import { expect, test } from './owned-runtime';
+import { expect, readSessionCookie, test } from './owned-runtime';
 import { HTTP_CREATED, HTTP_NO_CONTENT, HTTP_OK, wireRecord, wireRecords, wireString } from './wire-values';
 
 const FILTER_DAY = 15;
@@ -34,7 +34,7 @@ test('ordinary-user login, cookie refresh and reload reach the same owned profil
     const email = `journey-${randomUUID()}@example.test`;
     const password = owned.credentials.password;
     const created = await request.post(`${owned.frontendUrl}/api/v1/admin/users`, {
-        headers: { authorization: `Bearer ${owned.token}` },
+        headers: owned.headers,
         data: {
             email,
             firstName: 'Owned',
@@ -59,34 +59,31 @@ test('ordinary-user login, cookie refresh and reload reach the same owned profil
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByRole('button', { name: 'Login', exact: true }).click();
         await expect(page).toHaveURL(/\/dashboard/u);
-        const refresh = await context.request.post('/api/v1/auth/refresh', { headers: { origin: owned.frontendUrl } });
-        expect(refresh.status()).toBe(HTTP_OK);
-        const refreshedToken = wireString(wireRecord(await refresh.json())['accessToken']);
-        await page.evaluate(value => {
-            localStorage.setItem('authToken', value);
-        }, refreshedToken);
+        const restored = await context.request.post('/api/v1/auth/session', {
+            headers: { origin: owned.frontendUrl, 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        expect(restored.status()).toBe(HTTP_OK);
+        const metadata = wireRecord(await restored.json());
+        expect(metadata['accessToken']).toBeUndefined();
+        expect(metadata['refreshToken']).toBeUndefined();
+        expect(wireString(metadata['sessionId'])).toBeTruthy();
         await page.reload();
         await expect(page.locator('fd-dashboard')).toBeVisible();
-        const token = await page.evaluate(() => localStorage.getItem('authToken'));
-        expect(token).not.toBeNull();
-        const profile = await request.get(`${owned.frontendUrl}/api/v1/users/info`, {
-            headers: { authorization: `Bearer ${token ?? ''}` },
-        });
+        expect(await page.evaluate(() => localStorage.getItem('authToken'))).toBeNull();
+        expect(await page.evaluate(() => sessionStorage.getItem('authToken'))).toBeNull();
+        const profile = await context.request.get('/api/v1/users/info');
         expect(profile.status()).toBe(HTTP_OK);
         expect(wireRecord(await profile.json())['id']).toBe(userId);
         await page.reload();
         await expect(page.locator('fd-dashboard')).toBeVisible();
     } finally {
-        const token = await page.evaluate(() => localStorage.getItem('authToken'));
-        if (typeof token === 'string') {
-            await request.delete(`${owned.frontendUrl}/api/v1/users`, { headers: { authorization: `Bearer ${token}` } });
-        }
+        await context.request.delete('/api/v1/users', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
         await context.close();
     }
 });
 
 test('meal date filtering excludes the adjacent day and exports a real PDF', async ({ page, request, owned }) => {
-    const headers = { authorization: `Bearer ${owned.token}` };
+    const headers = owned.headers;
     const marker = `Owned calendar ${randomUUID()}`;
     const ids: string[] = [];
     const productIds: string[] = [];
@@ -178,13 +175,13 @@ test('pasted recipe text creates a persisted draft without an external AI call',
         await page.reload();
         await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(marker);
         const read = await request.get(`${owned.frontendUrl}/api/v1/recipes/${id}`, {
-            headers: { authorization: `Bearer ${owned.token}` },
+            headers: owned.headers,
         });
         expect(read.status()).toBe(HTTP_OK);
         expect(wireRecord(await read.json())['name']).toBe(marker);
     } finally {
         const deleted = await request.delete(`${owned.frontendUrl}/api/v1/recipes/${id}`, {
-            headers: { authorization: `Bearer ${owned.token}` },
+            headers: owned.headers,
         });
         expect(deleted.status()).toBe(HTTP_NO_CONTENT);
     }
@@ -193,7 +190,7 @@ test('pasted recipe text creates a persisted draft without an external AI call',
 test('ordinary-user account deletion schedules removal and revokes existing access', async ({ browser, request, owned }) => {
     const email = `journey-delete-${randomUUID()}@example.test`;
     const created = await request.post(`${owned.frontendUrl}/api/v1/admin/users`, {
-        headers: { authorization: `Bearer ${owned.token}` },
+        headers: owned.headers,
         data: {
             email,
             firstName: 'Owned',
@@ -208,16 +205,15 @@ test('ordinary-user account deletion schedules removal and revokes existing acce
         } satisfies AdminUserCreateHttpRequest,
     });
     expect(created.status()).toBe(HTTP_CREATED);
-    const login = await request.post(`${owned.frontendUrl}/api/v1/auth/login`, { data: { email, password: owned.credentials.password } });
-    expect(login.status()).toBe(HTTP_OK);
-    const accessToken = wireString(wireRecord(await login.json())['accessToken']);
     const context = await browser.newContext({ baseURL: owned.frontendUrl, viewport: { width: 390, height: 844 } });
-    await context.addInitScript(value => {
-        localStorage.setItem('authToken', value);
-    }, accessToken);
+    const login = await context.request.post('/api/v1/auth/login', {
+        data: { email, password: owned.credentials.password },
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    });
+    expect(login.status()).toBe(HTTP_OK);
+    const oldCookie = readSessionCookie(login);
     const page = await context.newPage();
     try {
-        const token = accessToken;
         await page.goto('/profile');
         await page
             .locator('details')
@@ -233,7 +229,7 @@ test('ordinary-user account deletion schedules removal and revokes existing acce
         expect(deletedResponse.status()).toBe(HTTP_NO_CONTENT);
         await expect(page).toHaveURL(/\/(?:mobile\/login|\?auth=login)?$/u);
         const oldAccess = await request.get(`${owned.frontendUrl}/api/v1/users/info`, {
-            headers: { authorization: `Bearer ${token}` },
+            headers: { Cookie: oldCookie },
         });
         expect(oldAccess.status()).toBe(HTTP_UNAUTHORIZED);
     } finally {

@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Net;
 using System.Net.Http.Json;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -47,8 +46,8 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
                 ["TelegramOidc:RedirectUri"] = "https://app.example/auth/telegram/callback",
             }))
             .ConfigureServices(services => services.Replace(ServiceDescriptor.Singleton(provider))));
-        using HttpClient client = app.CreateClient();
-        using HttpClient foreignBrowser = app.CreateClient();
+        using HttpClient client = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        using HttpClient foreignBrowser = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         using HttpResponseMessage foreignStart = await foreignBrowser.PostAsync("/api/v1/auth/telegram/oidc/start", content: null);
         Assert.Equal(HttpStatusCode.OK, foreignStart.StatusCode);
         Guid registered = await CompleteAsync(client, foreignBrowser, "register");
@@ -110,10 +109,10 @@ public sealed class TelegramOidcPostgresTests(PostgresApiWebApplicationFactory f
         Assert.Equal(HttpStatusCode.OK, complete.StatusCode);
         using var authentication = JsonDocument.Parse(await complete.Content.ReadAsStringAsync());
         Assert.Equal(JsonValueKind.Null, authentication.RootElement.GetProperty("user").GetProperty("email").ValueKind);
-        Assert.False(string.IsNullOrWhiteSpace(authentication.RootElement.GetProperty("accessToken").GetString()));
+        Assert.False(string.IsNullOrWhiteSpace(authentication.RootElement.GetProperty("sessionId").GetString()));
         using HttpResponseMessage repeatedCompletion = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete", completionRequest);
         Assert.Equal(HttpStatusCode.Unauthorized, repeatedCompletion.StatusCode);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(complete));
         return authentication.RootElement.GetProperty("user").GetProperty("id").GetGuid();
     }
 }

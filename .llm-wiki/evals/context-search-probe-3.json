@@ -148,9 +148,9 @@
     },
     {
       "id": "token-storage-service-probe-3",
-      "query": "frontend service stores access tokens refresh tokens and user identity",
+      "query": "frontend service stores session metadata and user identity and removes legacy tokens",
       "changeType": "Frontend",
-      "expectedPaths": ["FoodDiary.Web.Client/src/app/services/token-storage.service.ts"]
+      "expectedPaths": ["FoodDiary.Web.Client/src/app/shared/auth/auth-metadata-storage.service.ts"]
     },
     {
       "id": "jwt-decoder-service-probe-3",

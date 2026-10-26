@@ -166,6 +166,13 @@
         "prefix": "/api/v{version}/auth/admin-sso"
     },
     {
+        "name": "AdminSession",
+        "operations": {
+            "POST /api/v{version}/auth/session": "postAuthSession"
+        },
+        "prefix": "/api/v{version}/auth/session"
+    },
+    {
         "name": "AdminTelemetry",
         "operations": {
             "GET /api/v{version}/admin/telemetry/fasting": "getAdminTelemetryFasting"

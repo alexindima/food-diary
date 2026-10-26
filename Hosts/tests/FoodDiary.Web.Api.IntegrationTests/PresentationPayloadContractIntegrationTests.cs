@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -57,8 +56,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task RecipeById_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage productResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
@@ -137,8 +136,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task Statistics_ForEmptyRange_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/statistics?dateFrom=2026-03-01&dateTo=2026-03-07&quantizationDays=1");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -153,8 +152,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task ShoppingListCurrent_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/shopping-lists",
@@ -190,8 +189,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task CurrentCycle_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/cycles",
@@ -227,8 +226,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task DashboardSnapshot_ForNewUser_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/dashboard?date=2026-03-26&page=1&pageSize=10&locale=en&trendDays=7");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -243,8 +242,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task UserInfo_AfterRegister_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/users/info");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -259,8 +258,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task UserAppearance_SurfaceStyle_IsPersistedAndValidated() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         HttpResponseMessage saved = await client.PatchAsJsonAsync("/api/v1/users/preferences/appearance",
             new { theme = "dark", uiStyle = "modern", surfaceStyle = "matte" });
         Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
@@ -277,8 +276,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task UserOverview_AfterRegister_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/users/overview");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -293,8 +292,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task HydrationDaily_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
 
         var createRequest = new CreateHydrationEntryHttpRequest(
@@ -323,8 +322,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task AiUsageMe_WithAuthenticatedUser_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/ai/usage/me");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -339,8 +338,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task DesiredWeight_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             "/api/v1/users/desired-weight",
@@ -360,8 +359,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task DesiredWaist_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             "/api/v1/users/desired-waist",
@@ -381,8 +380,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task DesiredWaist_BeforeMeasurements_FirstMeasurementStartsPersistedGoal() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("N"));
         (await client.PutAsJsonAsync("/api/v1/users/desired-waist", new UpdateDesiredWaistHttpRequest(75)))
             .EnsureSuccessStatusCode();
@@ -401,8 +400,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task WeightGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         (await client.PostAsJsonAsync("/api/v1/weight-entries", new { date = DateTime.UtcNow.Date, weightKg = 80 }))
             .EnsureSuccessStatusCode();
@@ -436,8 +435,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task WaistGoalHistory_AfterGoalReplacement_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("N"));
 
         (await client.PostAsJsonAsync("/api/v1/waist-entries", new { date = DateTime.UtcNow.Date, circumferenceCm = 90 }))
@@ -472,9 +471,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task ImageUploadUrl_WithValidPayload_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
@@ -488,7 +486,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("image-upload-url", actual);
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"api-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -497,8 +495,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static JsonObject BuildAdminUsersSnapshot(JsonElement root) {
@@ -699,5 +697,5 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string SessionId);
 }

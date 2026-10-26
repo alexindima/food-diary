@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -23,7 +22,7 @@ public sealed class MeasurementCalendarDateIntegrationTests(PostgresApiWebApplic
             new RegisterHttpRequest($"calendar-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
         var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         for (int offset = -1; offset <= 1; offset++) {
             var date = day.AddDays(offset).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);

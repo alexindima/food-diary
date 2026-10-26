@@ -1,6 +1,6 @@
+using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Modules.Recipes.Presentation.Requests;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -10,7 +10,7 @@ public sealed partial class RecipePostgresApiFlowTests {
     [RequiresDockerFact]
     public async Task PublicRecipes_AnonymousCatalogAndDetail_RespectVisibilityAndPrivateIngredients() {
         HttpClient owner = factory.CreateClient();
-        owner.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAndGetAccessTokenAsync(owner));
+        AuthenticationResponseCookies.ApplyBrowserSession(owner, await RegisterAndGetBrowserSessionAsync(owner));
         HttpClient guest = factory.CreateClient();
         Guid productId = (await CreateIngredientProductAsync(owner)).Id;
         string name = $"Public catalog {Guid.NewGuid():N}";

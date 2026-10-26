@@ -1,5 +1,12 @@
 # Architecture Test Guidelines
 
+ADR 0058 adds the direct Users.Contracts principal projection to Identity
+Presentation. Its focused presentation tests consume own Application/Contracts
+models and Users.Contracts explicitly; record those references in the exact
+matrix. The primary Nginx configuration has four API proxy locations, including
+the same-origin admin API, with canonical Host and X-Forwarded-Host on each.
+Controller dependency and claim parsing guards remain unchanged.
+
 Architecture guards must discover current project roots and assert non-empty coverage
 when the rule expects production sources. Do not freeze source-file counts or duplicate
 exact project-reference lists from ProjectDependencyMatrixTests in extraction tests.

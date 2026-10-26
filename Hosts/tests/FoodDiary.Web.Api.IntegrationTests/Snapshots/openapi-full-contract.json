@@ -6230,6 +6230,50 @@
       ]
     },
     {
+      "Path": "/api/v{version}/auth/session",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "403",
+            "429",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AuthenticationHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/sessions",
       "Operations": [
         {
@@ -24359,6 +24403,37 @@
           "Nullable": true
         },
         {
+          "Name": "impersonationContext",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "impersonationReason",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "rememberMe",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "roles",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        },
+        {
+          "Name": "sessionId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "user",
           "Required": false,
           "Reference": "#/components/schemas/UserHttpResponse",
@@ -28493,6 +28568,12 @@
       "Properties": [
         {
           "Name": "accessToken",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "contextId",
           "Required": false,
           "Type": "string",
           "Nullable": true

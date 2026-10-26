@@ -1,3 +1,4 @@
+import { browserSessionCookie } from "./task-runtime-browser.mjs";
 import { randomUUID } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -16,17 +17,17 @@ try {
         );
         const response = await fetch(`${state.apiUrl}/api/v1/auth/login`, {
             method: "POST",
-            headers: { "content-type": "application/json" },
+            headers: { "content-type": "application/json", "X-Requested-With": "XMLHttpRequest" },
             body: JSON.stringify(credentials),
         });
         if (!response.ok)
             throw new Error(`Owned login failed (${response.status})`);
-        auth.push(await response.json());
+        auth.push({ ...(await response.json()), cookie: browserSessionCookie(response) });
     }
     const entries = async (index) => {
         const response = await fetch(
             `${states[index].apiUrl}/api/v1/hydrations`,
-            { headers: { authorization: `Bearer ${auth[index].accessToken}` } },
+            { headers: { cookie: auth[index].cookie } },
         );
         if (!response.ok)
             throw new Error(`Owned read failed (${response.status})`);
@@ -36,7 +37,8 @@ try {
     const write = await fetch(`${states[0].apiUrl}/api/v1/hydrations`, {
         method: "POST",
         headers: {
-            authorization: `Bearer ${auth[0].accessToken}`,
+            cookie: auth[0].cookie,
+            "X-Requested-With": "XMLHttpRequest",
             "content-type": "application/json",
             "Idempotency-Key": randomUUID(),
         },

@@ -14,7 +14,7 @@ import { createServer } from "node:net";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { containedPath, repositoryRoot } from "./generate-feature.mjs";
-import { probeRenderedRuntime } from "./task-runtime-browser.mjs";
+import { browserSessionCookie, probeRenderedRuntime } from "./task-runtime-browser.mjs";
 import { recordBuildScope, requireDiskBudget } from "./resource-budget.mjs";
 import { prepareTaskFrontendWorkspace } from "./task-frontend-workspace.mjs";
 
@@ -747,7 +747,7 @@ export async function startRuntime(name, root = repositoryRoot) {
         );
         const login = await fetch(`${configuration.apiUrl}/api/v1/auth/login`, {
             method: "POST",
-            headers: { "content-type": "application/json" },
+            headers: { "content-type": "application/json", "X-Requested-With": "XMLHttpRequest" },
             body: JSON.stringify({
                 email: configuration.email,
                 password: configuration.accountPassword,
@@ -756,11 +756,9 @@ export async function startRuntime(name, root = repositoryRoot) {
         });
         if (!login.ok)
             throw new Error(`Owned account login failed (${login.status})`);
-        const auth = await login.json();
-        if (typeof auth.accessToken !== "string")
-            throw new Error("Owned account login has no token");
+        const cookie = browserSessionCookie(login);
         const user = await fetch(`${configuration.apiUrl}/api/v1/users/info`, {
-            headers: { authorization: `Bearer ${auth.accessToken}` },
+            headers: { cookie },
             redirect: "error",
         });
         if (!user.ok)
@@ -828,7 +826,7 @@ export async function startRuntime(name, root = repositoryRoot) {
         const proxied = await fetch(
             `${configuration.frontendUrl}/api/v1/users/info`,
             {
-                headers: { authorization: `Bearer ${auth.accessToken}` },
+                headers: { cookie },
                 redirect: "error",
             },
         );
@@ -838,7 +836,6 @@ export async function startRuntime(name, root = repositoryRoot) {
         state.browserProbe = await probeRenderedRuntime(
             root,
             configuration.frontendUrl,
-            auth.accessToken,
             ownedUser.id,
             {
                 credentials: { email: configuration.email, password: configuration.accountPassword },

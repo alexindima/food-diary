@@ -8,39 +8,39 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4612,
-    "symbols": 4547,
+    "sourceFiles": 4630,
+    "symbols": 4565,
     "interfaceImplementationLinks": 204,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2350,
+      "class": 2362,
       "enum": 71,
       "interface": 418,
-      "record": 1567,
+      "record": 1573,
       "record struct": 141
     },
     "roles": {
-      "Command": 233,
-      "CommandHandler": 227,
+      "Command": 236,
+      "CommandHandler": 230,
       "Configuration": 101,
-      "Controller": 112,
+      "Controller": 113,
       "Entity": 102,
       "Event": 19,
       "Factory": 15,
-      "Handler": 9,
+      "Handler": 10,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
       "Options": 71,
-      "Other": 1876,
-      "Query": 301,
-      "QueryHandler": 215,
+      "Other": 1879,
+      "Query": 303,
+      "QueryHandler": 217,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 178,
       "Response": 267,
-      "Service": 173,
+      "Service": 176,
       "Validator": 236,
       "ValueObject": 178,
       "WriteRepository": 47
@@ -2369,7 +2369,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -2433,6 +2433,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
       "line": 12
+    },
+    {
+      "name": "BrowserRequestProtectionMiddleware",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",
+      "line": 8
     },
     {
       "name": "DevelopmentRuntimeHeadersMiddleware",
@@ -15805,6 +15812,20 @@
       "line": 5
     },
     {
+      "name": "CreateBrowserSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateBrowserSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommandHandler.cs",
+      "line": 7
+    },
+    {
       "name": "ExchangeTelegramOidcCommand",
       "kind": "record",
       "role": "Command",
@@ -15922,6 +15943,20 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommandHandler.cs",
       "line": 9
+    },
+    {
+      "name": "LogoutBrowserSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/LogoutBrowserSession/LogoutBrowserSessionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "LogoutBrowserSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/LogoutBrowserSession/LogoutBrowserSessionCommandHandler.cs",
+      "line": 6
     },
     {
       "name": "RefreshTokenCommand",
@@ -16055,6 +16090,20 @@
       "role": "Validator",
       "path": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "RestoreBrowserSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "RestoreBrowserSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommandHandler.cs",
+      "line": 7
     },
     {
       "name": "RevokeOtherSessionsCommand",
@@ -16253,6 +16302,13 @@
       "line": 4
     },
     {
+      "name": "BrowserSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/BrowserSessionModel.cs",
+      "line": 5
+    },
+    {
       "name": "TelegramAuthenticationIntentModel",
       "kind": "record",
       "role": "Other",
@@ -16267,6 +16323,20 @@
       "line": 2
     },
     {
+      "name": "AuthenticateBrowserSessionQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "AuthenticateBrowserSessionQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetActiveSessionsQuery",
       "kind": "record",
       "role": "Query",
@@ -16279,6 +16349,20 @@
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
       "line": 12
+    },
+    {
+      "name": "GetBrowserSessionProfileQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetBrowserSessionProfile/GetBrowserSessionProfileQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetBrowserSessionProfileQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetBrowserSessionProfile/GetBrowserSessionProfileQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "GetLoginDeviceSummaryQueryHandler",
@@ -16334,6 +16418,13 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
+      "line": 14
+    },
+    {
+      "name": "BrowserSessionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
       "line": 14
     },
     {
@@ -16460,6 +16551,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Contracts/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "BrowserSessionCredential",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Contracts/Authentication/Common/BrowserSessionCredential.cs",
       "line": 2
     },
     {
@@ -16957,7 +17055,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthImpersonationController.cs",
-      "line": 23
+      "line": 25
     },
     {
       "name": "AuthPasswordController",
@@ -17002,6 +17100,13 @@
       "line": 29
     },
     {
+      "name": "BrowserSessionController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
+      "line": 19
+    },
+    {
       "name": "TelegramOperationsController",
       "kind": "class",
       "role": "Controller",
@@ -17013,14 +17118,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 30
+      "line": 34
     },
     {
       "name": "AuthHttpResponseMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "TelegramOnboardingHttpMappings",
@@ -17216,7 +17321,7 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "TelegramAuthenticationIntentHttpResponse",
@@ -17258,7 +17363,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
-      "line": 7
+      "line": 12
     },
     {
       "name": "SuppressRefreshTokenCookieAttribute",
@@ -17287,6 +17392,27 @@
       "role": "Options",
       "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
       "line": 2
+    },
+    {
+      "name": "BrowserSessionAuthenticationHandler",
+      "kind": "class",
+      "role": "Handler",
+      "path": "Modules/Identity/Presentation/Security/BrowserSessionAuthenticationHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "BrowserSessionCookieService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Presentation/Security/BrowserSessionCookieService.cs",
+      "line": 5
+    },
+    {
+      "name": "ImpersonationCookieService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
+      "line": 12
     },
     {
       "name": "RefreshTokenCookieService",
@@ -33411,7 +33537,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 43
+      "line": 66
     },
     {
       "service": "IIdempotencyStore",
@@ -33544,14 +33670,14 @@
       "implementation": "EmailSender",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 17
+      "line": 19
     },
     {
       "service": "IImageAssetAccessService",

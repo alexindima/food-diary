@@ -109,6 +109,8 @@ export class AdminCatalogSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -183,6 +185,8 @@ export class AdminCatalogSdk extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -267,6 +271,8 @@ export class AdminCatalogSdk extends BaseService {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -350,6 +356,8 @@ export class AdminCatalogSdk extends BaseService {
         const catalogProductHttpRequest = requestParameters?.catalogProductHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -442,6 +450,8 @@ export class AdminCatalogSdk extends BaseService {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -525,6 +535,8 @@ export class AdminCatalogSdk extends BaseService {
         const catalogRecipeHttpRequest = requestParameters?.catalogRecipeHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

@@ -7,7 +7,7 @@ import { AdminWebmcpService } from './admin-webmcp.service';
 
 describe('local admin WebMCP capabilities', () => {
     const session = 'test-session-value';
-    const auth = { isAuthenticated: vi.fn(), isAdmin: vi.fn(), getToken: vi.fn() };
+    const auth = { isAuthenticated: vi.fn(), isAdmin: vi.fn(), getSessionId: vi.fn() };
     const navigateByUrl = vi.fn().mockResolvedValue(true);
     let service: AdminWebmcpService;
     const callAsync = async (name: string, input: unknown): Promise<unknown> => {
@@ -21,7 +21,7 @@ describe('local admin WebMCP capabilities', () => {
         vi.clearAllMocks();
         auth.isAuthenticated.mockReturnValue(true);
         auth.isAdmin.mockReturnValue(true);
-        auth.getToken.mockReturnValue(session);
+        auth.getSessionId.mockReturnValue(session);
         TestBed.configureTestingModule({
             providers: [
                 { provide: AdminAuthService, useValue: auth },
@@ -40,9 +40,9 @@ describe('local admin WebMCP capabilities', () => {
     });
 
     it('refuses stale sessions and non-admin access', async () => {
-        auth.getToken.mockReturnValue('changed-session');
+        auth.getSessionId.mockReturnValue('changed-session');
         expect(await callAsync('open_section', { section: 'users' })).toMatchObject({ ok: false });
-        auth.getToken.mockReturnValue(session);
+        auth.getSessionId.mockReturnValue(session);
         auth.isAdmin.mockReturnValue(false);
         expect(await callAsync('read_screen_context', {})).toMatchObject({ ok: false });
         expect(navigateByUrl).not.toHaveBeenCalled();

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 
@@ -27,6 +29,14 @@ public sealed class AuthImpersonationController(ISender mediator) : BaseApiContr
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
-    public Task<IActionResult> ExchangeImpersonation([FromBody] ExchangeImpersonationHttpRequest request) =>
-        HandleOk(request.ToCommand(), static accessToken => new ExchangeImpersonationHttpResponse(accessToken));
+    public Task<IActionResult> ExchangeImpersonation([FromBody] ExchangeImpersonationHttpRequest request) => HandleExchangeAsync(request);
+
+    private async Task<IActionResult> HandleExchangeAsync(ExchangeImpersonationHttpRequest request) {
+        IActionResult result = await HandleOk(request.ToCommand(), static accessToken => accessToken).ConfigureAwait(false);
+        if (result is OkObjectResult { Value: string accessToken } response) {
+            ImpersonationCookieService cookies = HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>();
+            response.Value = await cookies.SetAsync(HttpContext, accessToken, HttpContext.RequestAborted).ConfigureAwait(false);
+        }
+        return result;
+    }
 }

@@ -3,8 +3,10 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, from, map, merge, type Observable, of, switchMap, throwError } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
+import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { getRecordProperty, getStringProperty } from '../shared/lib/unknown-value.utils';
 
@@ -17,12 +19,14 @@ type RequestSession = {
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private readonly authService = inject(AuthService);
+    private readonly browserSession = inject(BrowserSessionStateService);
     private sessionGeneration = 0;
     private readonly refreshExcludedAuthPaths = [
         '/auth/register',
         '/auth/login',
         '/auth/google',
         '/auth/refresh',
+        '/auth/session',
         '/auth/logout',
         '/auth/restore',
         '/auth/verify-email',
@@ -48,6 +52,31 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+        const apiRoot = environment.apiUrls.auth.replace(/\/auth$/, '');
+        if (!req.url.startsWith(`${apiRoot  }/`)) {
+            return next.handle(req);
+        }
+        let headers = req.headers
+            .set('X-Requested-With', 'XMLHttpRequest')
+            .set('X-FoodDiary-Client', this.browserSession.telegram ? 'telegram' : 'web');
+        const context = this.browserSession.contextId();
+        if (context !== null) {
+            headers = headers.set('X-FoodDiary-Context', context);
+        }
+        const expected = this.browserSession.sessionId();
+        const changesIdentity = [
+            '/auth/session',
+            '/auth/login',
+            '/auth/register',
+            '/auth/google',
+            '/auth/restore',
+            '/auth/password-reset/confirm',
+            '/auth/impersonation/exchange',
+        ].some(path => req.url.endsWith(path));
+        if (expected !== null && !changesIdentity && !headers.has('X-FoodDiary-Session')) {
+            headers = headers.set('X-FoodDiary-Session', expected);
+        }
+        req = req.clone({ headers, withCredentials: true });
         const skipAuth = req.context.get(SKIP_AUTH);
         if (skipAuth) {
             return next.handle(req);
@@ -69,6 +98,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: unknown) => {
+                if (this.shouldRevalidatePermissions(error, req.url, session)) {
+                    return this.authService.refreshSession().pipe(switchMap(() => throwError(() => error)));
+                }
                 if (!this.isUnauthorizedError(error) || this.shouldSkipRefresh(req.url) || !this.isCurrentSession(session)) {
                     return throwError(() => error);
                 }
@@ -108,10 +140,11 @@ export class AuthInterceptor implements HttpInterceptor {
         if (!this.isCurrentSession(session)) {
             return throwError(() => error);
         }
-        return this.authService.refreshToken().pipe(
-            switchMap(accessToken => {
-                if (accessToken !== null && accessToken.trim().length > 0 && this.isCurrentSession(session)) {
-                    const newRequest = req.clone({ headers: req.headers.set('Authorization', `Bearer ${accessToken}`) });
+        return this.authService.refreshSession().pipe(
+            switchMap(restored => {
+                if (restored && this.isCurrentSession(session)) {
+                    const token = this.authService.getToken();
+                    const newRequest = token === null ? req : req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) });
                     return next.handle(newRequest);
                 }
                 return throwError(() => error);
@@ -134,5 +167,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
     private isUnauthorizedError(error: unknown): boolean {
         return typeof error === 'object' && error !== null && 'status' in error && error.status === HttpStatusCode.Unauthorized;
+    }
+
+    private shouldRevalidatePermissions(error: unknown, url: string, session: RequestSession): boolean {
+        return !session.impersonating && this.authService.getToken() === null && !this.shouldSkipRefresh(url) &&
+            this.isCurrentSession(session) && typeof error === 'object' && error !== null && 'status' in error &&
+            error.status === HttpStatusCode.Forbidden &&
+            getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.Forbidden';
     }
 }

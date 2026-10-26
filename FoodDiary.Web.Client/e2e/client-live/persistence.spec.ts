@@ -10,7 +10,7 @@ const EDITED_AMOUNT_G = 175.5;
 const EXPECTED_CALORIES = 210.6;
 
 test('water added in the dashboard survives reload and appears in the real API', async ({ page, request, owned }) => {
-    const headers = { authorization: `Bearer ${owned.token}` };
+    const headers = owned.headers;
     const before = await request.get(`${owned.frontendUrl}/api/v1/hydrations`, { headers });
     expect(before.status()).toBe(HTTP_OK);
     const oldEntries = wireRecords(await before.json());
@@ -50,7 +50,7 @@ test('water added in the dashboard survives reload and appears in the real API',
 });
 
 test('editing a meal quantity recalculates nutrition and persists through reopen', async ({ page, request, owned }) => {
-    const headers = { authorization: `Bearer ${owned.token}` };
+    const headers = owned.headers;
     const productResponse = await request.post(`${owned.frontendUrl}/api/v1/products`, {
         headers,
         data: {

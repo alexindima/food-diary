@@ -21,6 +21,7 @@ import { AdminMealPlansSdk } from './api/admin-meal-plans.service';
 import { AdminModerationSdk } from './api/admin-moderation.service';
 import { AdminOutgoingEmailsSdk } from './api/admin-outgoing-emails.service';
 import { AdminRetentionSdk } from './api/admin-retention.service';
+import { AdminSessionSdk } from './api/admin-session.service';
 import { AdminTelemetrySdk } from './api/admin-telemetry.service';
 import { AdminUsersSdk } from './api/admin-users.service';
 
@@ -48,6 +49,7 @@ import { AdminUsersSdk } from './api/admin-users.service';
         AdminModerationSdk,
         AdminOutgoingEmailsSdk,
         AdminRetentionSdk,
+        AdminSessionSdk,
         AdminTelemetrySdk,
         AdminUsersSdk,
     ],

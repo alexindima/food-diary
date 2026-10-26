@@ -8,349 +8,149 @@ import {
 } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { type Observable, of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../environments/environment';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
-import { getNumberProperty } from '../shared/lib/unknown-value.utils';
+import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { AuthInterceptor } from './auth.interceptor';
 
-type AuthServiceMock = {
-    getToken: ReturnType<typeof vi.fn<() => string | null>>;
-    refreshToken: ReturnType<typeof vi.fn<() => Observable<string | null>>>;
-    onLogoutAsync: ReturnType<typeof vi.fn<(skipRedirect?: boolean) => Promise<void>>>;
-    getUserId: ReturnType<typeof vi.fn<() => string | null>>;
-    isImpersonating: ReturnType<typeof vi.fn<() => boolean>>;
+const root = environment.apiUrls.auth.replace(/\/auth$/, '');
+let http: HttpClient;
+let requests: HttpTestingController;
+let auth: {
+    getToken: ReturnType<typeof vi.fn>;
+    refreshSession: ReturnType<typeof vi.fn>;
+    getUserId: ReturnType<typeof vi.fn>;
+    isImpersonating: ReturnType<typeof vi.fn>;
 };
 
-let http: HttpClient;
-let httpTesting: HttpTestingController;
-let authServiceSpy: AuthServiceMock;
-
 beforeEach(() => {
-    authServiceSpy = {
-        getToken: vi.fn(),
-        refreshToken: vi.fn(),
-        onLogoutAsync: vi.fn(),
+    auth = {
+        getToken: vi.fn(() => null),
+        refreshSession: vi.fn(() => of(true)),
         getUserId: vi.fn(() => 'user-a'),
         isImpersonating: vi.fn(() => false),
     };
-    authServiceSpy.onLogoutAsync.mockResolvedValue(undefined);
-
     TestBed.configureTestingModule({
         providers: [
             provideHttpClient(withInterceptorsFromDi()),
             provideHttpClientTesting(),
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-            { provide: AuthService, useValue: authServiceSpy },
+            { provide: AuthService, useValue: auth },
         ],
     });
-
     http = TestBed.inject(HttpClient);
-    httpTesting = TestBed.inject(HttpTestingController);
+    requests = TestBed.inject(HttpTestingController);
 });
-
 afterEach(() => {
-    httpTesting.verify();
+    requests.verify();
 });
 
-describe('AuthInterceptor headers', () => {
-    it('should add Authorization header when token exists', () => {
-        authServiceSpy.getToken.mockReturnValue('test-token');
-
-        http.get('/api/data').subscribe();
-
-        const req = httpTesting.expectOne('/api/data');
-        expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
-        req.flush({});
+describe('browser session request protection', () => {
+    it('uses browser credentials and the CSRF header without adding a bearer token', () => {
+        http.post(`${root}/meals`, {}).subscribe();
+        const request = requests.expectOne(`${root}/meals`);
+        expect(request.request.withCredentials).toBe(true);
+        expect(request.request.headers.get('X-Requested-With')).toBe('XMLHttpRequest');
+        expect(request.request.headers.get('X-FoodDiary-Client')).toBe('web');
+        expect(request.request.headers.has('Authorization')).toBe(false);
+        request.flush({});
     });
 
-    it('should not add Authorization header when no token', () => {
-        authServiceSpy.getToken.mockReturnValue(null);
-
-        http.get('/api/data').subscribe();
-
-        const req = httpTesting.expectOne('/api/data');
-        expect(req.request.headers.has('Authorization')).toBe(false);
-        req.flush({});
-    });
-
-    it('should skip auth header when SKIP_AUTH context is true', () => {
-        authServiceSpy.getToken.mockReturnValue('test-token');
-
-        http.get('/api/upload', { context: new HttpContext().set(SKIP_AUTH, true) }).subscribe();
-
-        const req = httpTesting.expectOne('/api/upload');
-        expect(req.request.headers.has('Authorization')).toBe(false);
-        req.flush({});
-    });
-
-    it('should pass through request on success', () => {
-        authServiceSpy.getToken.mockReturnValue('test-token');
-        const responseData = { id: 1, name: 'Test' };
-
-        http.get<{ id: number; name: string }>('/api/data').subscribe(data => {
-            expect(data).toEqual(responseData);
-        });
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(responseData);
-    });
-});
-
-describe('AuthInterceptor refresh flow', () => {
-    it('should attempt token refresh on 401 error', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
-
-        http.get('/api/data').subscribe();
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
-
-        const retryReq = httpTesting.expectOne('/api/data');
-        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer new-token');
-        retryReq.flush({});
-    });
-
-    it('should retry original request with new token after successful refresh', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('refreshed-token'));
-        const responseData = { success: true };
-
-        http.get<{ success: boolean }>('/api/data').subscribe(data => {
-            expect(data).toEqual(responseData);
-        });
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        const retryReq = httpTesting.expectOne('/api/data');
-        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer refreshed-token');
-        retryReq.flush(responseData);
-    });
-
-    it('leaves session invalidation to AuthService when refresh fails', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(throwError(() => new Error('Refresh failed')));
-
-        http.get('/api/data').subscribe({
-            error: (error: unknown) => {
-                expect(error).toBeInstanceOf(Error);
-                if (error instanceof Error) {
-                    expect(error.message).toBe('Refresh failed');
-                }
-            },
-        });
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
-    });
-
-    it('propagates the original error without invalidating the session when refresh returns null', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(of(null));
-
-        http.get('/api/data').subscribe({
-            error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
-            },
-        });
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
-    });
-});
-
-describe('AuthInterceptor credential verification', () => {
-    it('preserves the session when a current password is incorrect', () => {
-        authServiceSpy.getToken.mockReturnValue('valid-token');
-        const onError = vi.fn();
-        http.post('/api/v1/users/password', {}).subscribe({ error: onError });
-
-        httpTesting
-            .expectOne('/api/v1/users/password')
-            .flush(
-                { error: 'User.InvalidPassword', message: 'The current password is incorrect.' },
-                { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' },
-            );
-
-        expect(onError).toHaveBeenCalledOnce();
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
-    });
-
-    it('preserves the session for a password error returned as a download blob', async () => {
-        authServiceSpy.getToken.mockReturnValue('valid-token');
-        const onError = vi.fn();
-        http.post('/api/v1/export/cycle/sensitive', {}, { responseType: 'blob' }).subscribe({ error: onError });
-
-        httpTesting
-            .expectOne('/api/v1/export/cycle/sensitive')
-            .flush(new Blob([JSON.stringify({ error: 'User.InvalidPassword' })], { type: 'application/json' }), {
-                status: HttpStatusCode.Unauthorized,
-                statusText: 'Unauthorized',
-            });
-
-        await vi.waitFor(() => {
-            expect(onError).toHaveBeenCalledOnce();
-        });
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
-    });
-
-    it('does not logout when a refreshed request returns an application error', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
-        const onError = vi.fn();
-        http.post('/api/v1/export/cycle/sensitive', {}).subscribe({ error: onError });
-        httpTesting
-            .expectOne('/api/v1/export/cycle/sensitive')
-            .flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-        httpTesting
-            .expectOne('/api/v1/export/cycle/sensitive')
-            .flush(null, { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
-
-        expect(onError).toHaveBeenCalledOnce();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
-    });
-});
-
-describe('AuthInterceptor locked writer errors', () => {
-    it.each([
-        '/auth/login',
-        '/auth/register',
-        '/auth/restore',
-        '/auth/google',
-        '/auth/password-reset/confirm',
-        '/auth/refresh',
-        '/auth/logout',
-        '/auth/telegram/complete',
-        '/auth/telegram/complete-link',
-        '/auth/telegram/link',
-    ])('propagates a locked writer 401 from %s without recursively acquiring its refresh lock', path => {
-        authServiceSpy.getToken.mockReturnValue('owner-token');
-        const failed = vi.fn();
-        const url = `/api/v1${path}`;
-        http.post(url, {}).subscribe({ error: failed });
-        const request = httpTesting.expectOne(url);
-        expect(request.request.headers.get('Authorization')).toBe('Bearer owner-token');
-        request.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-        expect(failed).toHaveBeenCalledOnce();
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-    });
-});
-
-describe('AuthInterceptor Telegram OIDC errors', () => {
-    it.each([false, true])('does not refresh or replay a rejected Telegram OIDC exchange (blob=%s)', blob => {
-        authServiceSpy.getToken.mockReturnValue('owner-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('refreshed-token'));
-        const failed = vi.fn();
-        const url = '/api/v1/auth/telegram/oidc/exchange?source=callback';
-        const body = { error: 'Authentication.TelegramInvalidProof' };
-
-        const proof = { code: 'single-use-code', state: 'single-use-state' };
-        if (blob) {
-            http.post(url, proof, { responseType: 'blob' }).subscribe({ error: failed });
-        } else {
-            http.post(url, proof).subscribe({ error: failed });
+    it('binds a mutation and logout to the expected session identity', () => {
+        TestBed.inject(BrowserSessionStateService).sessionId.set('session-a');
+        for (const path of ['/meals', '/auth/logout']) {
+            http.post(root + path, {}).subscribe();
+            const request = requests.expectOne(root + path);
+            expect(request.request.headers.get('X-FoodDiary-Session')).toBe('session-a');
+            request.flush({});
         }
-        const request = httpTesting.expectOne(url);
-        const response = blob ? new Blob([JSON.stringify(body)], { type: 'application/json' }) : body;
-        request.flush(response, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+    });
 
-        expect(authServiceSpy.refreshToken, 'Telegram OIDC exchanges must not refresh the session').not.toHaveBeenCalled();
-        expect(failed).toHaveBeenCalledOnce();
-        expect(failed).toHaveBeenCalledWith(expect.objectContaining({ error: response }));
-        httpTesting.expectNone(url);
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    it('does not pin login or session restoration to a previous identity', () => {
+        TestBed.inject(BrowserSessionStateService).sessionId.set('old-session');
+        http.post(`${root}/auth/session`, {}).subscribe();
+        const request = requests.expectOne(`${root}/auth/session`);
+        expect(request.request.headers.has('X-FoodDiary-Session')).toBe(false);
+        request.flush({});
+    });
+
+    it('adds an explicit impersonation context without exposing its secret', () => {
+        TestBed.inject(BrowserSessionStateService).contextId.set('context-a');
+        http.get(`${root}/users/info`).subscribe();
+        const request = requests.expectOne(`${root}/users/info`);
+        expect(request.request.headers.get('X-FoodDiary-Context')).toBe('context-a');
+        expect(request.request.headers.has('Authorization')).toBe(false);
+        request.flush({});
+    });
+
+    it('never sends authentication metadata or credentials to external storage', () => {
+        auth.getToken.mockReturnValue('telegram-access');
+        http.put('https://storage.example/upload', {}, { context: new HttpContext().set(SKIP_AUTH, true) }).subscribe();
+        const request = requests.expectOne('https://storage.example/upload');
+        expect(request.request.withCredentials).toBe(false);
+        expect(request.request.headers.keys()).toEqual([]);
+        request.flush({});
+    });
+
+    it('retains the explicit token transport used by Telegram', () => {
+        auth.getToken.mockReturnValue('telegram-access');
+        http.get(`${root}/meals`).subscribe();
+        const request = requests.expectOne(`${root}/meals`);
+        expect(request.request.headers.get('Authorization')).toBe('Bearer telegram-access');
+        request.flush({});
     });
 });
 
-describe('AuthInterceptor error handling', () => {
-    it('should not refresh for public auth requests', () => {
-        authServiceSpy.getToken.mockReturnValue('some-token');
-
-        http.get('/api/auth/login').subscribe({
-            error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
-            },
-        });
-
-        const req = httpTesting.expectOne('/api/auth/login');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+describe('browser session revalidation', () => {
+    it('updates role metadata after a policy denial without replaying the operation', () => {
+        const failed = vi.fn();
+        http.post(`${root}/products`, {}).subscribe({ error: failed });
+        requests.expectOne(`${root}/products`).flush({ error: 'Authentication.Forbidden' }, { status: 403, statusText: 'Forbidden' });
+        expect(auth.refreshSession).toHaveBeenCalledOnce();
+        requests.expectNone(`${root}/products`);
+        expect(failed).toHaveBeenCalledOnce();
     });
 
-    it('should not refresh for public nested auth requests', () => {
-        authServiceSpy.getToken.mockReturnValue('some-token');
-
-        http.post('/api/auth/telegram/verify', {}).subscribe({
-            error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.Unauthorized);
-            },
-        });
-
-        const req = httpTesting.expectOne('/api/auth/telegram/verify');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    it('revalidates a session on 401 and preserves the original mutation', () => {
+        const completed = vi.fn();
+        http.put(`${root}/meals/one`, { value: 3 }).subscribe(completed);
+        requests.expectOne(`${root}/meals/one`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        const retried = requests.expectOne(`${root}/meals/one`);
+        expect(auth.refreshSession).toHaveBeenCalledOnce();
+        expect(retried.request.body).toEqual({ value: 3 });
+        expect(retried.request.headers.has('Authorization')).toBe(false);
+        retried.flush({});
+        expect(completed).toHaveBeenCalledOnce();
     });
 
-    it('should refresh for protected auth requests', () => {
-        authServiceSpy.getToken.mockReturnValue('expired-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('new-token'));
-
-        http.post('/api/auth/verify-email/resend', {}).subscribe();
-
-        const req = httpTesting.expectOne('/api/auth/verify-email/resend');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
-
-        const retryReq = httpTesting.expectOne('/api/auth/verify-email/resend');
-        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer new-token');
-        retryReq.flush({});
+    it('does not retry when session revalidation fails', () => {
+        auth.refreshSession.mockReturnValue(of(false));
+        const failed = vi.fn();
+        http.put(`${root}/meals/one`, {}).subscribe({ error: failed });
+        requests.expectOne(`${root}/meals/one`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        requests.expectNone(`${root}/meals/one`);
+        expect(failed).toHaveBeenCalledOnce();
     });
 
-    it('should refresh and retry session management when a legacy access token lacks the session claim', () => {
-        authServiceSpy.getToken.mockReturnValue('legacy-access-token');
-        authServiceSpy.refreshToken.mockReturnValue(of('session-aware-token'));
-
-        http.get('/api/v1/auth/sessions').subscribe();
-
-        const req = httpTesting.expectOne('/api/v1/auth/sessions');
-        req.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(authServiceSpy.refreshToken).toHaveBeenCalledTimes(1);
-        const retryReq = httpTesting.expectOne('/api/v1/auth/sessions');
-        expect(retryReq.request.headers.get('Authorization')).toBe('Bearer session-aware-token');
-        retryReq.flush([]);
+    it('does not reinterpret an incorrect current password as an expired session', () => {
+        const failed = vi.fn();
+        http.post(`${root}/users/password`, {}).subscribe({ error: failed });
+        requests
+            .expectOne(`${root}/users/password`)
+            .flush({ error: 'User.InvalidPassword' }, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        expect(auth.refreshSession).not.toHaveBeenCalled();
+        expect(failed).toHaveBeenCalledOnce();
     });
 
-    it('should propagate non-401 errors without refresh attempt', () => {
-        authServiceSpy.getToken.mockReturnValue('test-token');
-
-        http.get('/api/data').subscribe({
-            error: (error: unknown) => {
-                expect(getNumberProperty(error, 'status')).toBe(HttpStatusCode.InternalServerError);
-            },
-        });
-
-        const req = httpTesting.expectOne('/api/data');
-        req.flush(null, { status: HttpStatusCode.InternalServerError, statusText: 'Internal Server Error' });
-
-        expect(authServiceSpy.refreshToken).not.toHaveBeenCalled();
-        expect(authServiceSpy.onLogoutAsync).not.toHaveBeenCalled();
+    it('does not recursively retry login or session restoration', () => {
+        for (const path of ['/auth/login', '/auth/session']) {
+            http.post(root + path, {}).subscribe({ error: () => {} });
+            requests.expectOne(root + path).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        }
+        expect(auth.refreshSession).not.toHaveBeenCalled();
     });
 });

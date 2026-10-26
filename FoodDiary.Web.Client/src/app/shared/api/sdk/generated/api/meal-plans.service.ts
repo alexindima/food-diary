@@ -111,6 +111,8 @@ export class MealPlansSdk extends BaseService {
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
+        // authentication (BrowserSession) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -200,6 +202,8 @@ export class MealPlansSdk extends BaseService {
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
+        // authentication (BrowserSession) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -279,6 +283,8 @@ export class MealPlansSdk extends BaseService {
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
@@ -363,6 +369,8 @@ export class MealPlansSdk extends BaseService {
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
+        // authentication (BrowserSession) required
+
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
@@ -445,6 +453,8 @@ export class MealPlansSdk extends BaseService {
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);

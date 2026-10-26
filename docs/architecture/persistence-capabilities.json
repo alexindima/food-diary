@@ -894,14 +894,15 @@
     "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs": {
       "module": "Identity",
       "capabilities": [
+        "call:UserRefreshTokenSession.RefreshBrowserSession",
         "call:UserRefreshTokenSession.Revoke",
         "call:UserRefreshTokenSession.Rotate",
         "entity:UserRefreshTokenSession",
         "tracked:UserRefreshTokenSession",
         "write:UserRefreshTokenSession"
       ],
-      "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "9cc7fa884f604489dfaf344b9e4ea6a1e81c728832f9f34ebd4d6904184e6529"
+      "reason": "Identity owns session rotation/revocation and atomic browser revalidation. Revalidation updates only security version and monotonic activity after owner, proof, expiry and revocation checks; it never rotates proof or extends expiry. Live transaction synchronization and existing no-tracking active-session projection remain. No User aggregate writes or context escapes added; ADR 0058.",
+      "technicalSourceSha256": "2bc2e8c988f084b7cdad2c47d55236cf0b1b5f6de11225763bbadd767ee3fc42"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

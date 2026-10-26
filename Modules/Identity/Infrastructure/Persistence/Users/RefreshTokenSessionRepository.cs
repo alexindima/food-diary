@@ -107,6 +107,39 @@ public sealed class RefreshTokenSessionRepository(
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
+    public async Task<bool> TryRevalidateBrowserSessionAsync(
+        RefreshTokenSessionId id,
+        UserId userId,
+        string expectedCredentialHash,
+        long securityVersion,
+        DateTime nowUtc,
+        CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        if (!database.IsRelational()) {
+            UserRefreshTokenSession? session = await sessions.FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken).ConfigureAwait(false);
+            if (session is null || session.UserId != userId || !session.IsActive ||
+                session.BrowserSecurityVersion is not { } version || version > securityVersion ||
+                session.ExpiresAtUtc is not { } expires || expires <= nowUtc ||
+                !string.Equals(session.RefreshTokenHash, expectedCredentialHash, StringComparison.Ordinal)) {
+                return false;
+            }
+            session.RefreshBrowserSession(securityVersion, nowUtc < session.LastRotatedAtUtc ? session.LastRotatedAtUtc : nowUtc);
+            return true;
+        }
+        int affected = await sessions.Where(session => session.Id == id && session.UserId == userId &&
+                session.RevokedAtUtc == null && session.ExpiresAtUtc > nowUtc &&
+                session.BrowserSecurityVersion != null && session.BrowserSecurityVersion <= securityVersion &&
+                session.RefreshTokenHash == expectedCredentialHash)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(session => session.BrowserSecurityVersion, securityVersion)
+                .SetProperty(session => session.LastRotatedAtUtc, session => session.LastRotatedAtUtc < nowUtc ? nowUtc : session.LastRotatedAtUtc)
+                .SetProperty(session => session.ModifiedOnUtc, session => session.LastRotatedAtUtc < nowUtc ? nowUtc : session.LastRotatedAtUtc),
+                cancellationToken).ConfigureAwait(false);
+        return affected == 1;
+    }
+
     public async Task<bool> TryRotateAsync(
         RefreshTokenSessionId id,
         UserId userId,

@@ -32,11 +32,11 @@
     {
       "id": "security-browser-token-storage",
       "cohort": "security-boundaries",
-      "query": "browser refresh token persistence localStorage service",
+      "query": "AuthMetadataStorageService browser session metadata and legacy credential cleanup",
       "changeType": "Frontend",
       "expectedPaths": [
         "FoodDiary.Web.Client/src/app/shared/platform/browser-storage.service.ts",
-        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+        "FoodDiary.Web.Client/src/app/shared/auth/auth-metadata-storage.service.ts"
       ]
     },
     {

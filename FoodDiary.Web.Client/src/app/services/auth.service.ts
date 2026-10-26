@@ -1,5 +1,6 @@
-import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { computed, DestroyRef, inject, PLATFORM_ID, Service, signal } from '@angular/core';
 import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -18,171 +19,95 @@ import type {
     RestoreAccountRequest,
 } from '../shared/auth/auth.data';
 import { AuthCookieSessionService } from '../shared/auth/auth-cookie-session.service';
+import { ACCOUNT_ACCESS_STORAGE_KEY, AuthMetadataStorageService } from '../shared/auth/auth-metadata-storage.service';
+import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
-import { getNumberProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
-import { FrontendLoggerService } from './frontend-logger.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
-import { ACCOUNT_ACCESS_STORAGE_KEY, TokenStorageService } from './token-storage.service';
 
-const TOKEN_EXPIRATION_LEEWAY_SECONDS = 30;
-type SessionIdentity = { userId: string; impersonating: boolean };
+const REJECTED_SESSION_STATUSES: ReadonlySet<number> = new Set([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden]);
 
 @Service()
 export class AuthService {
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly navigationService = inject(NavigationService);
     private readonly emailVerificationCooldown = inject(EmailVerificationCooldownService);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly cookieSessions = inject(AuthCookieSessionService);
     private readonly browserWindow = inject(BrowserWindowService);
+    private readonly browserSession = inject(BrowserSessionStateService);
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
-    private readonly tokenStorage = inject(TokenStorageService);
+    private readonly authMetadata = inject(AuthMetadataStorageService);
     private readonly jwtDecoder = inject(JwtDecoderService);
-    private readonly logger = inject(FrontendLoggerService);
     protected readonly baseUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);
     private readonly sdk = createSdkConnection(AuthSdk, this.baseUrl, this.http);
     private readonly telegram = createSdkConnection(TelegramAuthSdk, this.baseUrl, this.http);
-
-    private readonly authTokenSignal = signal<string | null>(this.tokenStorage.getToken());
-    private sessionIdentity = this.readSessionIdentity(this.authTokenSignal());
-    private initialized = false;
-    private restoredPolicyUnknown = false;
-    private readonly userSignal = signal<string | null>(this.sessionIdentity?.userId ?? null);
-    private readonly emailConfirmedSignal = signal<boolean | null>(
-        this.tokenStorage.loadEmailConfirmed(this.sessionIdentity?.userId ?? null),
-    );
-    private readonly mustChangePasswordSignal = signal<boolean>(
-        this.tokenStorage.loadMustChangePassword(this.sessionIdentity?.userId ?? null) ?? false,
-    );
-    private refreshInFlight$: Observable<string | null> | null = null;
-    private pendingLegacyRefreshToken: string | null = null;
-    private sessionRestorePromise: Promise<void> | null = null;
+    private readonly session = signal<AuthResponse | null>(null);
     private readonly authReadySignal = signal(false);
+    private readonly emailConfirmedSignal = signal<boolean | null>(null);
+    private readonly mustChangePasswordSignal = signal(false);
+    private refreshInFlight$: Observable<boolean> | null = null;
+    private sessionRestorePromise: Promise<void> | null = null;
     private sessionVersion = 0;
 
-    public readonly isAuthenticated = computed(() => this.authTokenSignal() !== null);
+    public readonly isAuthenticated = computed(() => this.session() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
     public readonly requiresEmailVerification = computed(
-        () => !this.isEmailConfirmed() && !this.jwtDecoder.isEmailOptional(this.authTokenSignal()),
+        () => !this.isEmailConfirmed() && this.session()?.user.email !== null && this.session()?.user.email !== undefined,
     );
     public readonly mustChangePassword = this.mustChangePasswordSignal.asReadonly();
     public readonly isAdmin = computed(() => this.hasRole('Admin'));
     public readonly isPremium = computed(() => this.hasRole('Premium'));
     public readonly isDietologist = computed(() => this.hasRole('Dietologist'));
-    public readonly isImpersonating = computed(() => this.jwtDecoder.isImpersonation(this.authTokenSignal()));
-    public readonly impersonationReason = computed(() => this.jwtDecoder.extractImpersonationReason(this.authTokenSignal()));
+    public readonly isImpersonating = computed(
+        () => this.session()?.impersonationContext !== null && this.session()?.impersonationContext !== undefined,
+    );
+    public readonly impersonationReason = computed(() => this.session()?.impersonationReason ?? null);
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public constructor() {
-        const token = this.authTokenSignal();
-        if (token !== null && this.sessionIdentity !== null) {
-            this.tokenStorage.pinToken(token, this.sessionIdentity.userId);
-        }
-        const stopListening = this.browserWindow.onLocalStorageChange(event => {
-            this.onSharedStorageChange(event);
+        // Previous browser bearer credentials are deliberately not restored.
+        this.authMetadata.clearTabSession();
+        const stop = this.browserWindow.onLocalStorageChange(event => {
+            if (this.isImpersonating() || event.key !== ACCOUNT_ACCESS_STORAGE_KEY) {
+                return;
+            }
+            const owner = this.getUserId();
+            if (owner !== null && this.authMetadata.hasForeignSession(owner)) {
+                this.invalidateLocalSession();
+            } else if (owner !== null) {
+                void firstValueFrom(this.refreshSession());
+            }
         });
-        inject(DestroyRef).onDestroy(stopListening);
-    }
-
-    private onSharedStorageChange(event: StorageEvent): void {
-        if (this.sessionIdentity?.impersonating === true) {
-            return;
-        }
-        const owner = this.sessionIdentity?.userId;
-        if (owner !== undefined && this.tokenStorage.hasForeignSession(owner)) {
-            this.invalidateLocalSession();
-            return;
-        }
-        if (this.isSharedSessionRemoved(event)) {
-            void this.onLogoutAsync(true);
-        }
-        if (event.key === ACCOUNT_ACCESS_STORAGE_KEY && this.hasUpdatedAccountAccess()) {
-            // The snapshot is only an invalidation hint; roles always come from the server.
-            void firstValueFrom(this.refreshToken());
-        }
-    }
-
-    private isSharedSessionRemoved(event: StorageEvent): boolean {
-        const sessionRemoved = event.key === 'refreshSession' && event.newValue === null;
-        return (sessionRemoved || event.key === null) && this.isAuthenticated() && !this.tokenStorage.hasRefreshSession();
+        inject(DestroyRef).onDestroy(stop);
     }
 
     public initializeAuth(): void {
-        let token = this.authTokenSignal() ?? (this.initialized ? null : this.tokenStorage.getToken());
-        this.initialized = true;
-        if (token === null || token.length === 0) {
-            if (this.sessionIdentity === null) {
-                this.clearStoredIdentity();
-            }
-            return;
-        }
-
-        const identity = this.readSessionIdentity(token);
-        if (identity === null) {
-            this.authTokenSignal.set(null);
-            this.tokenStorage.clearToken();
-            this.clearStoredIdentity();
-            return;
-        }
-
-        this.restoreTokenIdentity(token, identity);
-
-        if (this.clearExpiredToken(token)) {
-            token = null;
-        }
-
-        if (token === null || token.length === 0) {
-            return;
-        }
-
-        this.authTokenSignal.set(token);
-    }
-
-    private restoreTokenIdentity(token: string, identity: SessionIdentity): void {
-        this.sessionIdentity = identity;
-        this.tokenStorage.pinToken(token, identity.userId);
-        const emailConfirmed = this.tokenStorage.loadEmailConfirmed(identity.userId);
-        const mustChangePassword = this.tokenStorage.loadMustChangePassword(identity.userId);
-        this.restoredPolicyUnknown = !identity.impersonating && (emailConfirmed === null || mustChangePassword === null);
-        this.emailConfirmedSignal.set(emailConfirmed ?? identity.impersonating);
-        this.mustChangePasswordSignal.set(mustChangePassword ?? !identity.impersonating);
-        this.restoreUserIdFromToken(token, !this.restoredPolicyUnknown);
-    }
-
-    private restoreUserIdFromToken(token: string, persistMetadata: boolean): void {
-        const resolvedUserId = this.jwtDecoder.extractUserId(token);
-        if (resolvedUserId !== null && resolvedUserId.length > 0) {
-            if (persistMetadata) {
-                this.tokenStorage.setUserId(resolvedUserId);
-            }
-            this.userSignal.set(resolvedUserId);
-        }
+        // The HttpOnly session is restored by restoreSessionAsync before protected routing.
     }
 
     public async restoreSessionAsync(): Promise<void> {
+        if (!this.isBrowser) {
+            this.authReadySignal.set(true);
+            return;
+        }
         if (this.authReadySignal()) {
             return;
         }
-
-        if (this.sessionRestorePromise !== null) {
-            return this.sessionRestorePromise;
-        }
-
-        this.sessionRestorePromise = this.restoreSessionInternalAsync().finally(() => {
+        this.sessionRestorePromise ??= this.restoreSessionInternalAsync().finally(() => {
             this.authReadySignal.set(true);
             this.sessionRestorePromise = null;
         });
-
         return this.sessionRestorePromise;
     }
 
@@ -358,336 +283,195 @@ export class AuthService {
             .pipe(map(value => requireSdkFields(value, ['code', 'expiresAtUtc'])));
     }
 
-    public refreshToken(): Observable<string | null> {
-        if (this.sessionEvents.isLocalSessionInvalidated) {
-            return of(null);
-        }
-        if (this.sessionIdentity?.impersonating === true) {
-            this.invalidateLocalSession();
-            return of(null);
-        }
+    public refreshSession(): Observable<boolean> {
         if (this.refreshInFlight$ !== null) {
             return this.refreshInFlight$;
         }
-
-        if (!this.tokenStorage.hasRefreshSession()) {
-            void this.onLogoutAsync(true);
-            return of(null);
-        }
-
-        const refreshVersion = this.sessionVersion;
-        const expectedOwner = this.sessionIdentity?.userId ?? null;
-        const refreshRequest$ = this.cookieSessions
-            .run(() => this.createRefreshRequest(refreshVersion, expectedOwner))
-            .pipe(
-                finalize(() => {
-                    if (this.refreshInFlight$ === refreshRequest$) {
-                        this.refreshInFlight$ = null;
-                    }
-                }),
-                shareReplay(1),
-            );
-
-        this.refreshInFlight$ = refreshRequest$;
-        return refreshRequest$;
-    }
-
-    private createRefreshRequest(refreshVersion: number, expectedOwner: string | null): Observable<string | null> {
-        if (refreshVersion !== this.sessionVersion || !this.tokenStorage.hasRefreshSession()) {
-            return of(null);
-        }
-
-        if (expectedOwner !== null && this.tokenStorage.hasForeignSession(expectedOwner)) {
-            this.invalidateLocalSession();
-            return of(null);
-        }
-
-        this.pendingLegacyRefreshToken ??=
-            expectedOwner === null ? this.tokenStorage.peekLegacyRefreshTokenForBootstrap() : this.tokenStorage.consumeLegacyRefreshToken();
-        const legacyRefreshToken = this.pendingLegacyRefreshToken;
-        if (legacyRefreshToken !== null && expectedOwner !== null) {
-            this.tokenStorage.markRefreshSession();
-        }
-        const request = legacyRefreshToken === null ? {} : { refreshToken: legacyRefreshToken };
-        return this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
+        const version = this.sessionVersion;
+        const owner = this.getUserId();
+        const sessionId = this.browserSession.sessionId();
+        const contextId = this.browserSession.contextId();
+        const request =
+            this.browserSession.telegram && this.browserSession.contextId() === null
+                ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
+                : this.sdk.client.postAuthSession({ version: this.sdk.version });
+        const pending = request.pipe(
             map(authResponseFromSdk),
             map(response => {
-                if (refreshVersion !== this.sessionVersion) {
-                    return null;
+                if (version !== this.sessionVersion) {
+                    return false;
                 }
-                if (!this.isValidSessionResponse(response, expectedOwner)) {
+                if (
+                    (owner !== null && response.user.id !== owner) ||
+                    (sessionId !== null && response.sessionId !== sessionId) ||
+                    (contextId !== null && response.impersonationContext !== contextId)
+                ) {
                     this.invalidateLocalSession();
-                    return null;
+                    return false;
                 }
-                const accessToken = response.accessToken;
-                if (accessToken.length > 0) {
-                    if (expectedOwner === null) {
-                        this.sessionVersion++;
-                        this.sessionEvents.notifyAuthenticated();
-                    }
-                    this.applyAuthenticatedSession(response, expectedOwner === null ? this.tokenStorage.isRemembered() : undefined);
-                }
-                return accessToken;
+                this.applyAuthenticatedSession(response);
+                return true;
             }),
             catchError((error: unknown) => {
-                if (refreshVersion === this.sessionVersion && getNumberProperty(error, 'status') === HttpStatusCode.Unauthorized) {
-                    void this.onLogoutAsync(true);
+                if (
+                    version === this.sessionVersion &&
+                    error instanceof HttpErrorResponse &&
+                    REJECTED_SESSION_STATUSES.has(error.status)
+                ) {
+                    if (owner === null) {
+                        this.clearSession();
+                    } else {
+                        this.invalidateLocalSession();
+                    }
                 }
-                return fallbackApiError('refreshToken error', error, null);
+                return of(false);
             }),
+            finalize(() => {
+                if (this.refreshInFlight$ === pending) {
+                    this.refreshInFlight$ = null;
+                }
+            }),
+            shareReplay({ bufferSize: 1, refCount: true }),
         );
+        this.refreshInFlight$ = pending;
+        return pending;
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
-        if (this.sessionEvents.isLocalSessionInvalidated) {
-            await this.navigateAfterSessionEndAsync(redirectToAuth);
-            return;
-        }
-        if (this.requiresLocalLogout()) {
-            this.invalidateLocalSession(redirectToAuth);
-            return;
-        }
-        const logoutVersion = ++this.sessionVersion;
-        const logoutOwner = this.sessionIdentity === null ? null : this.sessionIdentity.userId;
-        const hasRefreshSession = this.tokenStorage.hasRefreshSession();
-        const legacyRefreshToken = this.pendingLegacyRefreshToken ?? this.tokenStorage.consumeLegacyRefreshToken();
-        this.pendingLegacyRefreshToken = null;
+        const version = ++this.sessionVersion;
         const cleanup = this.sessionEvents.prepareSessionEnd();
         if (cleanup !== null) {
             await cleanup.catch(() => {});
         }
-        if (logoutVersion !== this.sessionVersion) {
+        if (version !== this.sessionVersion) {
             return;
         }
-        if (hasRefreshSession) {
-            await firstValueFrom(
-                this.cookieSessions.run(() => this.createLogoutRequest(logoutVersion, logoutOwner, legacyRefreshToken, redirectToAuth)),
-            );
-        } else {
-            this.completeSessionEnd(logoutVersion, legacyRefreshToken);
-        }
-        if (logoutVersion !== this.sessionVersion) {
+        await firstValueFrom(
+            this.cookieSessions.run(() =>
+                version === this.sessionVersion
+                    ? this.sdk.client
+                          .postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: {} })
+                          .pipe(catchError(() => of(undefined)))
+                    : of(undefined),
+            ),
+        );
+        if (version !== this.sessionVersion) {
             return;
+        }
+        const impersonating = this.isImpersonating();
+        this.clearSession();
+        if (!impersonating) {
+            this.authMetadata.clearAll();
+            this.localizationService.clearStoredLanguage();
         }
         await this.navigateAfterSessionEndAsync(redirectToAuth);
     }
 
-    private requiresLocalLogout(): boolean {
-        return (
-            this.sessionIdentity !== null &&
-            (this.sessionIdentity.impersonating || this.tokenStorage.hasForeignSession(this.sessionIdentity.userId))
-        );
-    }
-
-    private createLogoutRequest(
-        logoutVersion: number,
-        owner: string | null,
-        legacyToken: string | null,
-        redirectToAuth: boolean,
-    ): Observable<void> {
-        if (logoutVersion !== this.sessionVersion) {
-            return of(undefined);
-        }
-        if (owner !== null && this.tokenStorage.hasForeignSession(owner)) {
-            this.invalidateLocalSession(redirectToAuth);
-            return of(undefined);
-        }
-        const request = legacyToken === null ? {} : { refreshToken: legacyToken };
-        return this.sdk.client.postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: request }).pipe(
-            catchError(() => of(undefined)),
-            tap(() => {
-                this.completeSessionEnd(logoutVersion, legacyToken);
-            }),
-        );
-    }
-
-    private completeSessionEnd(logoutVersion: number, legacyToken: string | null): void {
-        if (logoutVersion !== this.sessionVersion) {
-            return;
-        }
-        if (legacyToken !== null) {
-            this.tokenStorage.clearLegacyRefreshTokenIfMatches(legacyToken);
-        }
-        this.sessionEvents.notifySessionEnded();
-        this.sessionIdentity = null;
-        this.restoredPolicyUnknown = false;
-        this.authTokenSignal.set(null);
-        this.userSignal.set(null);
-        this.emailConfirmedSignal.set(null);
-        this.mustChangePasswordSignal.set(false);
-        this.tokenStorage.clearAll();
-        this.localizationService.clearStoredLanguage();
-    }
-
+    /** Only the explicitly supported Telegram token transport has an access token, held in memory. */
     public getToken(): string | null {
-        return this.authTokenSignal();
+        return this.session()?.accessToken ?? null;
+    }
+
+    public getSessionKey(): string | null {
+        const current = this.session();
+        return current?.sessionId ?? current?.impersonationContext ?? current?.accessToken ?? null;
+    }
+
+    public sessionHubUrl(url: string): string {
+        return this.browserSession.hubUrl(url);
     }
 
     public getUserId(): string | null {
-        return this.userSignal();
+        return this.session()?.user.id ?? null;
     }
 
     public setEmailConfirmed(value: boolean): void {
         this.emailConfirmedSignal.set(value);
-        this.tokenStorage.setEmailConfirmed(value);
+        this.authMetadata.setEmailConfirmed(value);
     }
 
     public async completeRequiredPasswordChangeAsync(newPassword: string): Promise<void> {
-        // Password changes revoke every old session. Acquire a fresh session before navigating.
-        const payload = this.jwtDecoder.decodePayload(this.getToken() ?? '');
-        const email = payload?.['email'] ?? payload?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
-        if (typeof email !== 'string' || email.length === 0) {
+        const email = this.session()?.user.email;
+        if (email === null || email === undefined || email.length === 0) {
             throw new Error('Missing session email');
         }
-        await firstValueFrom(this.login({ email, password: newPassword, rememberMe: this.tokenStorage.isRemembered() }));
+        await firstValueFrom(this.login({ email, password: newPassword, rememberMe: this.authMetadata.isRemembered() }));
     }
 
-    private onLogin(authResponse: AuthResponse, rememberMe: boolean): void {
-        if (!this.isValidSessionResponse(authResponse, null)) {
-            this.invalidateLocalSession();
-            throw new Error('Authentication response identity mismatch');
-        }
+    private onLogin(response: AuthResponse, rememberMe: boolean): void {
         this.sessionVersion++;
         this.refreshInFlight$ = null;
+        this.browserSession.setContext(null);
+        this.applyAuthenticatedSession(response, rememberMe);
         this.sessionEvents.notifyAuthenticated();
-        this.applyAuthenticatedSession(authResponse, rememberMe);
     }
 
     public acceptExternalAuthentication(response: AuthResponse): void {
         this.onLogin(response, false);
     }
 
-    private applyAuthenticatedSession(authResponse: AuthResponse, rememberMe?: boolean): void {
-        this.pendingLegacyRefreshToken = null;
-        this.restoredPolicyUnknown = false;
-        this.initialized = true;
-        this.sessionIdentity = this.readSessionIdentity(authResponse.accessToken);
-        this.tokenStorage.bindOwner(authResponse.user.id);
-        this.tokenStorage.setToken(authResponse.accessToken, rememberMe);
-        this.tokenStorage.saveAccountAccess(
-            authResponse.user.id,
-            this.jwtDecoder.extractRoles(authResponse.accessToken),
-            rememberMe !== undefined,
-        );
-        this.tokenStorage.markRefreshSession(rememberMe !== undefined);
-        this.authTokenSignal.set(authResponse.accessToken);
-
-        const preferredLanguage = authResponse.user.language;
-        if (preferredLanguage !== undefined && preferredLanguage.length > 0) {
-            void this.localizationService.applyLanguagePreferenceAsync(preferredLanguage);
+    private applyAuthenticatedSession(response: AuthResponse, rememberMe?: boolean): void {
+        if (!this.browserSession.telegram && response.accessToken !== undefined) {
+            throw new Error('Unexpected bearer credential in a browser session response');
         }
-
-        this.themeService.syncWithUserPreferences(authResponse.user.theme, authResponse.user.uiStyle, authResponse.user.surfaceStyle);
-
-        if (typeof authResponse.user.isEmailConfirmed === 'boolean') {
-            this.setEmailConfirmed(authResponse.user.isEmailConfirmed);
-        } else {
-            this.setEmailConfirmed(true);
+        this.session.set(response);
+        this.browserSession.sessionId.set(response.sessionId ?? null);
+        this.browserSession.setContext(response.impersonationContext ?? null);
+        this.authMetadata.bindOwner(response.user.id);
+        this.authMetadata.setRemembered(rememberMe ?? response.rememberMe ?? false);
+        if (!this.isImpersonating()) {
+            this.authMetadata.setUserId(response.user.id);
+            this.authMetadata.saveAccountAccess(response.user.id, this.roles(), rememberMe !== undefined);
         }
-
-        this.mustChangePasswordSignal.set(authResponse.user.mustChangePassword === true);
-        this.tokenStorage.setMustChangePassword(authResponse.user.mustChangePassword === true);
-
-        const userId = authResponse.user.id;
-        if (userId.length > 0) {
-            this.tokenStorage.setUserId(userId);
-            this.userSignal.set(userId);
-            this.tokenStorage.saveAccountAccess(userId, this.jwtDecoder.extractRoles(authResponse.accessToken), rememberMe !== undefined);
-        } else {
-            this.logger.warn('Auth response did not include user ID');
-            this.tokenStorage.clearUserId();
-            this.userSignal.set(null);
+        if (response.user.language !== undefined && response.user.language.length > 0) {
+            void this.localizationService.applyLanguagePreferenceAsync(response.user.language);
         }
-    }
-
-    private clearExpiredToken(token: string): boolean {
-        if (!this.jwtDecoder.isExpired(token, TOKEN_EXPIRATION_LEEWAY_SECONDS)) {
-            return false;
-        }
-
-        this.authTokenSignal.set(null);
-        this.tokenStorage.clearToken();
-        return true;
+        this.themeService.syncWithUserPreferences(response.user.theme, response.user.uiStyle, response.user.surfaceStyle);
+        this.setEmailConfirmed(response.user.isEmailConfirmed);
+        this.mustChangePasswordSignal.set(response.user.mustChangePassword === true);
+        this.authMetadata.setMustChangePassword(response.user.mustChangePassword === true);
     }
 
     private async restoreSessionInternalAsync(): Promise<void> {
-        const impersonationExchange = this.captureImpersonationCodeFromQueryAsync();
-        if (impersonationExchange !== null) {
-            await impersonationExchange;
-        }
-        this.initializeAuth();
-        if (this.isAuthenticated()) {
-            if (this.restoredPolicyUnknown && !this.tokenStorage.hasRefreshSession()) {
-                this.invalidateLocalSession();
-            } else if (this.restoredPolicyUnknown || this.hasUpdatedAccountAccess()) {
-                await firstValueFrom(this.refreshToken());
-                if (this.restoredPolicyUnknown) {
-                    this.invalidateLocalSession();
+        const href = this.browserWindow.getHref();
+        if (href !== null) {
+            const url = new URL(href);
+            const code = url.searchParams.get('impersonationCode');
+            if (code !== null) {
+                url.searchParams.delete('impersonationCode');
+                this.browserWindow.replaceCurrentUrl(url.pathname + url.search + url.hash);
+                const response = await firstValueFrom(
+                    this.sdk.client
+                        .postAuthImpersonationExchange({
+                            version: this.sdk.version,
+                            exchangeImpersonationHttpRequest: { code },
+                        })
+                        .pipe(catchError((error: unknown) => fallbackApiError('impersonation exchange error', error, null))),
+                );
+                const context = response?.contextId;
+                if (context === undefined || context === null || context.length === 0) {
+                    return;
                 }
+                this.browserSession.setContext(context);
             }
-            return;
         }
-
-        if (!this.tokenStorage.hasRefreshSession()) {
-            this.clearStoredIdentity();
-            return;
-        }
-
-        await firstValueFrom(this.refreshToken());
+        await firstValueFrom(this.refreshSession());
     }
 
-    private hasUpdatedAccountAccess(): boolean {
-        const token = this.authTokenSignal();
-        const userId = this.userSignal();
-        return (
-            token !== null &&
-            userId !== null &&
-            !this.isImpersonating() &&
-            this.tokenStorage.hasRefreshSession() &&
-            this.tokenStorage.hasUpdatedAccountAccess(userId, this.jwtDecoder.extractRoles(token))
-        );
-    }
-
-    private clearStoredIdentity(): void {
-        // A guest may still restore the shared HttpOnly cookie. Clearing local
-        // identity must not erase its marker or another tab's persisted owner.
-        this.tokenStorage.clearTabSession();
-        this.sessionIdentity = null;
-        this.restoredPolicyUnknown = false;
-        this.authTokenSignal.set(null);
-        this.userSignal.set(null);
-        this.emailConfirmedSignal.set(null);
-        this.mustChangePasswordSignal.set(false);
-    }
-
-    private readSessionIdentity(token: string | null): SessionIdentity | null {
-        const userId = this.jwtDecoder.extractUserId(token);
-        return userId === null ? null : { userId, impersonating: this.jwtDecoder.isImpersonation(token) };
-    }
-
-    private isValidSessionResponse(response: AuthResponse, expectedOwner: string | null): boolean {
-        const identity = this.readSessionIdentity(response.accessToken);
-        return (
-            identity !== null &&
-            !identity.impersonating &&
-            identity.userId === response.user.id &&
-            (expectedOwner === null || identity.userId === expectedOwner)
-        );
-    }
-
-    private invalidateLocalSession(redirectToAuth = true): void {
-        this.sessionEvents.notifyLocalSessionInvalidating();
+    private clearSession(): void {
         this.sessionVersion++;
-        this.initialized = true;
-        this.refreshInFlight$ = null;
-        this.pendingLegacyRefreshToken = null;
-        this.tokenStorage.clearTabSession();
-        this.sessionIdentity = null;
-        this.restoredPolicyUnknown = false;
-        this.authTokenSignal.set(null);
-        this.userSignal.set(null);
+        this.sessionEvents.notifySessionEnded();
+        this.session.set(null);
+        this.browserSession.sessionId.set(null);
+        this.browserSession.setContext(null);
         this.emailConfirmedSignal.set(null);
         this.mustChangePasswordSignal.set(false);
+        this.authMetadata.clearTabSession();
+    }
+
+    public invalidateLocalSession(redirectToAuth = true): void {
+        this.sessionEvents.notifyLocalSessionInvalidating();
+        this.clearSession();
         this.sessionEvents.notifyLocalSessionInvalidated();
         void this.navigateAfterSessionEndAsync(redirectToAuth);
     }
@@ -698,61 +482,20 @@ export class AuthService {
         );
     }
 
-    private hasRole(role: string): boolean {
-        const token = this.authTokenSignal();
-        if (token === null || token.length === 0) {
-            return false;
-        }
+    private roles(): readonly string[] {
+        const current = this.session();
+        return current?.roles !== undefined && current.roles.length > 0
+            ? current.roles
+            : this.jwtDecoder.extractRoles(current?.accessToken ?? '');
+    }
 
-        return this.jwtDecoder.extractRoles(token).includes(role);
+    private hasRole(role: string): boolean {
+        return this.roles().includes(role);
     }
 
     private getClientOrigin(): string | undefined {
         return this.browserWindow.getOrigin();
     }
-
-    private captureImpersonationCodeFromQueryAsync(): Promise<void> | null {
-        const currentHref = this.browserWindow.getHref();
-        if (currentHref === null) {
-            return null;
-        }
-
-        const url = new URL(currentHref);
-        const code = url.searchParams.get('impersonationCode');
-        if (code === null || code.length === 0) {
-            return null;
-        }
-
-        url.searchParams.delete('impersonationCode');
-        const nextUrl = `${url.pathname}${url.search}${url.hash}`;
-        this.browserWindow.replaceCurrentUrl(nextUrl);
-
-        return firstValueFrom(
-            this.sdk.client.postAuthImpersonationExchange({ version: this.sdk.version, exchangeImpersonationHttpRequest: { code } }).pipe(
-                map(value => requireSdkFields(value, ['accessToken'])),
-                catchError((error: unknown) => fallbackApiError('impersonation exchange error', error, null)),
-            ),
-        ).then(response => {
-            const token = response?.accessToken;
-            if (token === undefined || token.length === 0) {
-                return;
-            }
-
-            this.sessionVersion++;
-            this.tokenStorage.clearTabSession();
-            this.sessionIdentity = this.readSessionIdentity(token);
-            this.tokenStorage.bindOwner(this.sessionIdentity?.userId ?? null);
-            this.tokenStorage.setToken(token, false, false);
-            this.authTokenSignal.set(token);
-            this.userSignal.set(this.sessionIdentity?.userId ?? null);
-            this.emailConfirmedSignal.set(null);
-            this.mustChangePasswordSignal.set(false);
-            this.sessionEvents.notifyAuthenticated();
-        });
-    }
 }
 
-type AdminSsoStartResponse = {
-    code: string;
-    expiresAtUtc: string;
-};
+type AdminSsoStartResponse = { code: string; expiresAtUtc: string };

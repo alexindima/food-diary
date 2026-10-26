@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1673,
+    "productionProjectEdges": 1674,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 114,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 126,
-    "criticalSymbolsWithoutTestReferences": 38,
+    "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5512,6 +5512,16 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "CreateBrowserSessionCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommandHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "DeleteAdminDailyAdviceGroupCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
@@ -5532,10 +5542,30 @@
       "coveredThrough": []
     },
     {
+      "name": "LogoutBrowserSessionCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/LogoutBrowserSession/LogoutBrowserSessionCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "RequestTelegramBackupEmailCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommandHandler.cs",
       "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "RestoreBrowserSessionCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommandHandler.cs",
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5602,6 +5632,16 @@
       "coveredThrough": []
     },
     {
+      "name": "AuthenticateBrowserSessionQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminAiPromptScenariosQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
@@ -5626,6 +5666,16 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminDailyAdvices/GetAdminDailyAdvicesQueryHandler.cs",
       "line": 10,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetBrowserSessionProfileQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetBrowserSessionProfile/GetBrowserSessionProfileQueryHandler.cs",
+      "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

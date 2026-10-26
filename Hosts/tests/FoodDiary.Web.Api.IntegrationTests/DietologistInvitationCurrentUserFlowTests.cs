@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
-using System.IdentityModel.Tokens.Jwt;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Globalization;
 using System.Net;
@@ -294,7 +293,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
 
         Assert.NotNull(authPayload.User);
         var registeredUser = new AuthenticatedUser(client, email, authPayload.User.Id);
@@ -335,9 +334,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             [RoleNames.Dietologist],
             expiresAtUtc: null,
             securityVersion,
-            new RefreshTokenSessionId(Guid.Parse(new JwtSecurityTokenHandler()
-                .ReadJwtToken(user.Client.DefaultRequestHeaders.Authorization!.Parameter!)
-                .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value)));
+            new RefreshTokenSessionId(Guid.Parse(user.Client.DefaultRequestHeaders.GetValues("Cookie").Single().Split('=')[1][..32])));
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
@@ -348,7 +345,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         response.EnsureSuccessStatusCode();
         AuthPayload? authPayload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
-        user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(user.Client, AuthenticationResponseCookies.ReadBrowserSession(response));
     }
 
     private async Task<DietologistRelationshipPayload> GetRelationshipAsync(HttpClient client) {
@@ -371,7 +368,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, UserPayload User);
+    private sealed record AuthPayload(string SessionId, UserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record UserPayload(Guid Id);

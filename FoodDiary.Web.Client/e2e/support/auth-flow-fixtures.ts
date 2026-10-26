@@ -3,7 +3,6 @@ import type { Page, WebSocketRoute } from '@playwright/test';
 import type { UserHttpResponse } from '../../src/app/shared/api/sdk/generated/model/user-http-response';
 import { userFixture } from '../../src/testing/api-fixtures';
 import { jsonFixture, OpenApiFixtures } from './openapi-fixtures.mjs';
-import { syntheticAuthToken } from './synthetic-auth-token';
 
 const RECORD_SEPARATOR = '\u001E';
 const HTTP_NO_CONTENT = 204;
@@ -13,19 +12,24 @@ export async function seedClientSessionAsync(page: Page, user: UserHttpResponse)
     if (user.id === undefined) {
         throw new Error('The synthetic session requires an owning user ID.');
     }
-    await page.addInitScript(
-        state => {
-            if (sessionStorage.getItem('fooddiary.auth-flow-test-seeded') === 'true') {
-                return;
-            }
-            sessionStorage.setItem('fooddiary.auth-flow-test-seeded', 'true');
-            sessionStorage.setItem('authToken', state.token);
-            sessionStorage.setItem('userId', state.userId);
-            sessionStorage.setItem('emailConfirmed', String(state.confirmed));
-            sessionStorage.setItem('mustChangePassword', 'false');
-        },
-        { token: syntheticAuthToken(user.id), userId: user.id, confirmed: user.isEmailConfirmed === true },
-    );
+    let authenticated = true;
+    await page.route('**/api/v1/auth/session', async route => {
+        if (!authenticated) {
+            await route.fulfill({ status: 401 });
+            return;
+        }
+        await route.fulfill(
+            jsonFixture(contract, 'POST', route.request().url(), {
+                sessionId: '00000000-0000-4000-8000-000000000002',
+                roles: ['User'],
+                user,
+            }),
+        );
+    });
+    await page.route('**/api/v1/auth/logout', async route => {
+        authenticated = false;
+        await route.fulfill({ status: 204 });
+    });
 }
 
 export async function installClientAuthApiAsync(
@@ -34,9 +38,10 @@ export async function installClientAuthApiAsync(
 ): Promise<{
     user: UserHttpResponse;
     profileRequests: number;
+    authenticated: boolean;
     unexpectedRequests: string[];
 }> {
-    const state = { user, profileRequests: 0, unexpectedRequests: [] as string[] };
+    const state = { user, authenticated: false, profileRequests: 0, unexpectedRequests: [] as string[] };
     await page.route('**/hubs/**', async route => {
         await route.abort('blockedbyclient');
     });
@@ -44,6 +49,20 @@ export async function installClientAuthApiAsync(
     await page.route('**/api/v1/**', async route => {
         const { pathname } = new URL(route.request().url());
         const method = route.request().method();
+        if (method === 'POST' && pathname === '/api/v1/auth/session') {
+            if (!state.authenticated) {
+                await route.fulfill({ status: 401 });
+                return;
+            }
+            await route.fulfill(
+                jsonFixture(contract, method, pathname, {
+                    sessionId: '00000000-0000-4000-8000-000000000002',
+                    roles: ['User'],
+                    user: state.user,
+                }),
+            );
+            return;
+        }
         if (method === 'POST' && ['/api/v1/marketing/attribution-events', '/api/v1/auth/logout'].includes(pathname)) {
             contract.assertResponse(method, pathname, HTTP_NO_CONTENT, undefined);
             await route.fulfill({ status: HTTP_NO_CONTENT });

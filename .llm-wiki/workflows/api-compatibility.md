@@ -18,6 +18,7 @@ sources:
   - .llm-wiki/tools/LlmWikiApiAcceptance.ps1
   - .llm-wiki/policies/api-compatibility-acceptance.json
   - docs/adr/0056-shopping-list-content-revisions.md
+  - docs/adr/0058-browser-sessions-in-the-existing-api.md
   - docs/frontend/API_SDK.md
 ---
 
@@ -52,24 +53,19 @@ different baseline, either changed snapshot, changed identity, missing payload
 or stale change list cannot inherit the acceptance; malformed records fail closed.
 Synthetic comparisons never load a repository release decision.
 
-The current shopping-list acceptance records the coordinated required-revision
-transition described in [ADR 0056](../../docs/adr/0056-shopping-list-content-revisions.md)
-and the [SDK guide](../../docs/frontend/API_SDK.md). It accepts exactly four
-required-property changes: `ShoppingListHttpResponse.revision` and
-`UpdateShoppingListHttpRequest.expectedRevision`, each in the component schema
-and serialized HTTP DTO comparison, against commit
-`a09333d00e8cb10a18387fd10c096c51aee64c25`, the latest successful ancestral
-CI push, and the two exact snapshot pairs. Both baseline snapshots are
-byte-identical to those originally reviewed at the unpublished local commit
-`536c7a767ca451f2bf2840f9e5007c40bc1fb0af`; only the publication base binding
-changed.
-Every client must send the revision it read; a missing revision returns 400,
-and a stale revision returns 409. Release the regenerated SDK and web assets
-with the API through the existing CI-gated deployment. Older packaged clients
-need an update, open web tabs must reload, and installed PWAs must activate the
-new version. The acceptance record does not establish that deployment occurred.
-The normal successful ancestral CI baseline takes over after release; later
-incompatible changes require a new review.
+The current acceptance records exactly two nullable `accessToken` DTO changes
+for authentication and impersonation under
+[ADR 0058](../../docs/adr/0058-browser-sessions-in-the-existing-api.md). Ordinary
+browser responses omit JWTs and use HttpOnly sessions; explicit Mini App and bot
+transports retain bearer responses. The user authorized the coordinated migration
+without existing external browser clients to preserve.
+It binds both snapshot pairs to `311e21be57522f05c62cd691b100d461df9b3b89`, the
+latest successful ancestral master push observed during verification. Release the
+migration, API, user/admin bundles and admin proxy together; old browser bundles
+must reload and reauthenticate. This record performs no deployment and accepts
+no other breaks. A new baseline or snapshot pair requires a fresh exact review.
+The required shopping-list revisions from ADR 0056 are already in this baseline
+and remain mandatory without an active compatibility exception.
 
 The guard understands both a raw OpenAPI document and this repository's compact
 `Endpoints` contract snapshot. Property presence determines the format, so a

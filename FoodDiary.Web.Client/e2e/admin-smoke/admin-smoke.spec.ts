@@ -43,7 +43,7 @@ test.describe('admin guidance accessibility', () => {
 test.describe('admin smoke', () => {
     for (const session of ['empty', 'expired'] as const) {
         test(`opens from dashboard SSO on the first attempt with an ${session} session`, async ({ page }) => {
-            const freshToken = createJwt({ role: 'Admin', exp: 4102444800 });
+            const freshSession = '00000000-0000-4000-8000-000000000002';
             if (session === 'expired') {
                 await page.addInitScript(
                     token => {
@@ -58,14 +58,15 @@ test.describe('admin smoke', () => {
             page.on('request', request => {
                 if (request.url().includes('/admin/dashboard/overview')) {
                     dashboardRequests++;
-                    expect(request.headers()['authorization']).toBe(`Bearer ${freshToken}`);
+                    expect(request.headers()['authorization']).toBeUndefined();
+                    expect(request.headers()['x-fooddiary-session']).toBe(freshSession);
                 }
             });
             await page.route('**/api/v1/auth/admin-sso/exchange', async route => {
                 exchanges++;
                 expect(route.request().postDataJSON()).toEqual({ code: 'dashboard-code' });
                 expect(dashboardRequests).toBe(0);
-                await route.fulfill(jsonResponse({ accessToken: freshToken }));
+                await route.fulfill(jsonResponse({ sessionId: freshSession, roles: ['Admin'] }));
             });
 
             await page.goto('/#code=dashboard-code');
@@ -130,11 +131,8 @@ test.describe('admin smoke', () => {
 });
 
 async function authenticateAdminAsync(page: Page): Promise<void> {
-    await page.addInitScript(
-        (token: string) => {
-            window.localStorage.setItem('authToken', token);
-        },
-        createJwt({ role: 'Admin' }),
+    await page.route('**/api/v1/auth/session', async route =>
+        route.fulfill(jsonResponse({ sessionId: '00000000-0000-4000-8000-000000000002', roles: ['Admin'] })),
     );
 }
 

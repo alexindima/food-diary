@@ -74,7 +74,10 @@ beforeEach(() => {
         providers: [
             provideHttpClient(),
             provideHttpClientTesting(),
-            { provide: AuthService, useValue: { getUserId: user, getToken: (): string => 'test-token' } },
+            {
+                provide: AuthService,
+                useValue: { getUserId: user, getToken: (): string => 'test-token', sessionHubUrl: (hubUrl: string): string => hubUrl },
+            },
             {
                 provide: BrowserStorageService,
                 useValue: {

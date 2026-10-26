@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { AuthService } from '../../services/auth.service';
-import { ACCOUNT_ACCESS_STORAGE_KEY, TokenStorageService } from '../../services/token-storage.service';
+import { ACCOUNT_ACCESS_STORAGE_KEY, AuthMetadataStorageService } from '../auth/auth-metadata-storage.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
@@ -31,7 +31,7 @@ let authService: {
     isAuthenticated: ReturnType<typeof vi.fn>;
     isImpersonating: ReturnType<typeof vi.fn>;
     getUserId: ReturnType<typeof vi.fn>;
-    getToken: ReturnType<typeof vi.fn>;
+    getSessionKey: ReturnType<typeof vi.fn>;
 };
 let localizationService: { getCurrentLanguage: ReturnType<typeof vi.fn> };
 let notificationService: {
@@ -65,7 +65,7 @@ beforeEach(() => {
         isAuthenticated: vi.fn(() => true),
         isImpersonating: vi.fn(() => false),
         getUserId: vi.fn(() => 'user-a'),
-        getToken: vi.fn(() => 'token-a'),
+        getSessionKey: vi.fn(() => 'token-a'),
     };
     localizationService = {
         getCurrentLanguage: vi.fn(() => 'en'),
@@ -160,7 +160,7 @@ function ownerConflict(): { status: number; error: { error: string; message: str
 function publishBobAfterGuestSubscription(subscription: PushSubscription | null): void {
     authService.isAuthenticated.mockReturnValue(false);
     authService.getUserId.mockReturnValue(null);
-    authService.getToken.mockReturnValue(null);
+    authService.getSessionKey.mockReturnValue(null);
     localStorage.setItem('refreshSession', 'true');
     localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-a', 'User']));
     if (subscription !== null) {
@@ -172,7 +172,7 @@ function publishBobAfterGuestSubscription(subscription: PushSubscription | null)
     sessionEvents.notifyAuthenticated();
     authService.isAuthenticated.mockReturnValue(true);
     authService.getUserId.mockReturnValue('user-b');
-    authService.getToken.mockReturnValue('token-b');
+    authService.getSessionKey.mockReturnValue('token-b');
     localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
     TestBed.tick();
 }
@@ -183,7 +183,7 @@ describe('PushNotificationService subscription support', () => {
         confirmSubscriptionOwner(subscription, 'real-bob');
         authService.isImpersonating.mockReturnValue(true);
         authService.getUserId.mockReturnValue('impersonated-alice');
-        authService.getToken.mockReturnValue('impersonation-token');
+        authService.getSessionKey.mockReturnValue('impersonation-token');
         swPush.subscription = of(subscription);
         subscription$.next(subscription);
         sessionEvents.notifyAuthenticated();
@@ -241,8 +241,8 @@ describe('PushNotificationService subscription support', () => {
                     },
                 },
                 {
-                    provide: TokenStorageService,
-                    useFactory: (): TokenStorageService => {
+                    provide: AuthMetadataStorageService,
+                    useFactory: (): AuthMetadataStorageService => {
                         throw new Error('Unsupported push must not resolve owner storage');
                     },
                 },
@@ -304,7 +304,7 @@ describe('PushNotificationService registration authentication', () => {
             expect(notificationService.getWebPushConfiguration).toHaveBeenCalled();
         });
 
-        authService.getToken.mockReturnValue('refreshed-token-a');
+        authService.getSessionKey.mockReturnValue('refreshed-token-a');
         configuration$.next({ enabled: true, publicKey: 'public-key' });
         await expect(enabling).resolves.toBe('already-subscribed');
 
@@ -359,7 +359,7 @@ describe('PushNotificationService subscription failures', () => {
         localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
         if (processed) {
             authService.getUserId.mockReturnValue('user-b');
-            authService.getToken.mockReturnValue('token-b');
+            authService.getSessionKey.mockReturnValue('token-b');
             sessionEvents.notifyAuthenticated();
         }
         confirmSubscriptionOwner(bob, 'user-b');
@@ -478,7 +478,7 @@ describe('PushNotificationService automatic owner replacement', () => {
         const owner = signal<string | null>(null);
         authService.isAuthenticated.mockImplementation(() => owner() !== null);
         authService.getUserId.mockImplementation(() => owner());
-        authService.getToken.mockImplementation(() => (owner() === null ? null : 'token-b'));
+        authService.getSessionKey.mockImplementation(() => (owner() === null ? null : 'token-b'));
         swPush.subscription = of(null);
         subscription$.next(null);
         TestBed.tick();
@@ -498,7 +498,7 @@ describe('PushNotificationService offline endpoint ownership', () => {
     it.each(['unknown', 'foreign'])('revokes %s persisted ownership before offline reconciliation', async ownership => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/possibly-alice');
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         if (ownership === 'foreign') {
             confirmSubscriptionOwner(subscription, 'user-a');
         }
@@ -524,7 +524,7 @@ describe('PushNotificationService offline endpoint ownership', () => {
         sessionEvents.notifyLocalSessionInvalidating();
         authService.isAuthenticated.mockReturnValue(false);
         authService.getUserId.mockReturnValue(null);
-        authService.getToken.mockReturnValue(null);
+        authService.getSessionKey.mockReturnValue(null);
         sessionEvents.notifyLocalSessionInvalidated();
         await vi.waitFor(() => {
             expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(subscription.endpoint, 'token-a');
@@ -533,7 +533,7 @@ describe('PushNotificationService offline endpoint ownership', () => {
 
         authService.isAuthenticated.mockReturnValue(true);
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
         notificationService.getWebPushConfiguration.mockReturnValue(throwError(() => new Error('Offline')));
         notificationService.upsertWebPushSubscription.mockReturnValue(throwError(() => new Error('Offline')));
@@ -551,7 +551,7 @@ describe('PushNotificationService configuration failures', () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/offline-bob');
         confirmSubscriptionOwner(subscription, 'user-b');
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-b', 'User']));
         swPush.subscription = of(subscription);
         notificationService.getWebPushConfiguration.mockReturnValue(throwError(() => new Error('Offline')));
@@ -640,7 +640,7 @@ describe('PushNotificationService delayed browser subscription discovery', () =>
         expect(cleanupFinished).not.toHaveBeenCalled();
 
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         sessionEvents.notifyAuthenticated();
         TestBed.tick();
         subscription$.next(subscription);
@@ -665,7 +665,7 @@ describe('PushNotificationService delayed browser subscription discovery', () =>
         expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
 
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         sessionEvents.notifyAuthenticated();
         TestBed.tick();
         subscription$.next(subscription);
@@ -684,7 +684,7 @@ function invalidateAliceLocally(): void {
     sessionEvents.notifyLocalSessionInvalidating();
     authService.isAuthenticated.mockReturnValue(false);
     authService.getUserId.mockReturnValue(null);
-    authService.getToken.mockReturnValue(null);
+    authService.getSessionKey.mockReturnValue(null);
     sessionEvents.notifyLocalSessionInvalidated();
     TestBed.tick();
 }
@@ -791,7 +791,7 @@ describe('PushNotificationService invalidated discovery epochs', () => {
 
             if (intermediateLogin) {
                 authService.getUserId.mockReturnValue('user-b');
-                authService.getToken.mockReturnValue('token-b');
+                authService.getSessionKey.mockReturnValue('token-b');
                 sessionEvents.notifyAuthenticated();
             }
             invalidateAliceLocally();
@@ -809,7 +809,7 @@ describe('PushNotificationService invalidated discovery epochs', () => {
             await cleanup;
         }
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         sessionEvents.notifyAuthenticated();
         TestBed.tick();
         invalidateAliceLocally();
@@ -962,7 +962,7 @@ describe('PushNotificationService registration cleanup ordering', () => {
 
         const cleanup = sessionEvents.prepareSessionEnd();
         authService.getUserId.mockReturnValue('user-b');
-        authService.getToken.mockReturnValue('token-b');
+        authService.getSessionKey.mockReturnValue('token-b');
         sessionEvents.notifyAuthenticated();
         await expect(service.ensureSubscriptionAsync()).resolves.toBe('unavailable');
         expect(service.isSubscribed()).toBe(false);
@@ -1004,7 +1004,7 @@ describe('PushNotificationService unauthenticated cleanup and deadlines', () => 
     it('keeps a startup invalidation after Push is first instantiated from revoking Bob', async () => {
         authService.isAuthenticated.mockReturnValue(false);
         authService.getUserId.mockReturnValue(null);
-        authService.getToken.mockReturnValue(null);
+        authService.getSessionKey.mockReturnValue(null);
         sessionEvents.notifyLocalSessionInvalidated();
         const retainedEvents = sessionEvents;
         TestBed.resetTestingModule();

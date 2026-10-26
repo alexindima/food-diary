@@ -105,6 +105,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BootstrapInitialAdminCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BrowserSessionServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/CleanupLoginEventsCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/EmailSenderTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs`
@@ -119,7 +120,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAgentParserTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAuthenticationRegistrationServiceTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/AuthenticationContractTests.cs`
 
 ## Working Rule
 

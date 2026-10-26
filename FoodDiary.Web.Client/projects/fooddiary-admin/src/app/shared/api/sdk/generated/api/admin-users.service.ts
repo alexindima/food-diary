@@ -235,6 +235,8 @@ export class AdminUsersSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -314,6 +316,8 @@ export class AdminUsersSdk extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -398,6 +402,8 @@ export class AdminUsersSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -488,6 +494,8 @@ export class AdminUsersSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -587,6 +595,8 @@ export class AdminUsersSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'TargetId', <any>targetId, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -690,6 +700,8 @@ export class AdminUsersSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -774,6 +786,8 @@ export class AdminUsersSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -854,6 +868,8 @@ export class AdminUsersSdk extends BaseService {
         const adminUserUpdateHttpRequest = requestParameters?.adminUserUpdateHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -943,6 +959,8 @@ export class AdminUsersSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -1026,6 +1044,8 @@ export class AdminUsersSdk extends BaseService {
         const adminUserCreateHttpRequest = requestParameters?.adminUserCreateHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -1114,6 +1134,8 @@ export class AdminUsersSdk extends BaseService {
         const adminImpersonationStartHttpRequest = requestParameters?.adminImpersonationStartHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

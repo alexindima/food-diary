@@ -1,10 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Security.Claims;
 using System.Text.Json;
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
@@ -56,7 +52,7 @@ public sealed class ImpersonationRevocationTests(ApiWebApplicationFactory factor
         await LoginAsync(otherSession, email);
         await ExchangeAsync(delegated, await StartAsync(actor, targetId));
         await AssertReadAsync(delegated, HttpStatusCode.OK);
-        string sessionId = ClaimValue(actorToken, JwtSecurityClaimNames.RefreshSessionId);
+        string sessionId = actorToken;
 
         using HttpResponseMessage revoked = await otherSession.DeleteAsync(revokeAllOthers
             ? "/api/v1/auth/sessions"
@@ -103,19 +99,19 @@ public sealed class ImpersonationRevocationTests(ApiWebApplicationFactory factor
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register", new RegisterHttpRequest(email, "Password123!", "en"));
         response.EnsureSuccessStatusCode();
-        string token = await ReadAccessTokenAsync(response);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        return (Guid.Parse(ClaimValue(token, ClaimTypes.NameIdentifier)), email);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        return (json.RootElement.GetProperty("user").GetProperty("id").GetGuid(), email);
     }
 
     private static async Task<string> LoginAsync(HttpClient client, string email) {
-        client.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Remove("X-FoodDiary-Context");
+        client.DefaultRequestHeaders.Remove("X-FoodDiary-Client");
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/login", new LoginHttpRequest(email, "Password123!"));
         response.EnsureSuccessStatusCode();
-        string token = await ReadAccessTokenAsync(response);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        return token;
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
+        return await AuthenticationResponseCookies.UpgradeAdminSessionAsync(client);
     }
 
     private static async Task<string> StartAsync(HttpClient actor, Guid targetId) {
@@ -128,10 +124,15 @@ public sealed class ImpersonationRevocationTests(ApiWebApplicationFactory factor
 
     private static async Task ExchangeAsync(HttpClient client, string code) {
         client.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Remove("X-FoodDiary-Context");
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/impersonation/exchange", new ExchangeImpersonationHttpRequest(code));
         response.EnsureSuccessStatusCode();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(response));
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.False(json.RootElement.TryGetProperty("accessToken", out _));
+        string cookie = Assert.Single(response.Headers.GetValues("Set-Cookie")).Split(';')[0];
+        AuthenticationResponseCookies.ApplyBrowserSession(client, cookie);
+        client.DefaultRequestHeaders.Add("X-FoodDiary-Context", json.RootElement.GetProperty("contextId").GetString());
     }
 
     private static async Task AssertReadAsync(HttpClient client, HttpStatusCode expected) {
@@ -139,12 +140,4 @@ public sealed class ImpersonationRevocationTests(ApiWebApplicationFactory factor
         Assert.Equal(expected, response.StatusCode);
     }
 
-    private static async Task<string> ReadAccessTokenAsync(HttpResponseMessage response) {
-        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.False(json.RootElement.TryGetProperty("refreshToken", out _));
-        return json.RootElement.GetProperty("accessToken").GetString()!;
-    }
-
-    private static string ClaimValue(string token, string type) =>
-        new JwtSecurityTokenHandler().ReadJwtToken(token).Claims.Single(claim => string.Equals(claim.Type, type, StringComparison.Ordinal)).Value;
 }

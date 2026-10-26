@@ -18,6 +18,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     public string? PreviousRefreshTokenHash { get; private set; }
     public DateTime? PreviousRefreshTokenValidUntilUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
+    public long? BrowserSecurityVersion { get; private set; }
 
     private UserRefreshTokenSession() {
     }
@@ -59,8 +60,38 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
 
     public bool IsActive => RevokedAtUtc is null;
 
+    public void ConvertToBrowserSession(string credentialHash, long securityVersion, DateTime nowUtc, DateTime? maximumExpiresAtUtc = null) {
+        if (!IsActive || BrowserSecurityVersion.HasValue || securityVersion < 0) {
+            throw new InvalidOperationException("Only an active token session can become a browser session.");
+        }
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
+        RefreshTokenHash = NormalizeRequiredText(credentialHash, nameof(credentialHash), 512);
+        BrowserSecurityVersion = securityVersion;
+        PreviousRefreshTokenHash = null;
+        PreviousRefreshTokenValidUntilUtc = null;
+        if (maximumExpiresAtUtc is { } maximum) {
+            DateTime? normalized = NormalizeExpiration(maximum, normalizedNow);
+            if (ExpiresAtUtc is null || normalized < ExpiresAtUtc) {
+                ExpiresAtUtc = normalized;
+            }
+        }
+        SetModified(normalizedNow);
+    }
+
+    public void RefreshBrowserSession(long securityVersion, DateTime nowUtc) {
+        if (!IsActive || !BrowserSecurityVersion.HasValue || securityVersion < 0) {
+            throw new InvalidOperationException("Only an active browser session can be revalidated.");
+        }
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
+        BrowserSecurityVersion = securityVersion;
+        LastRotatedAtUtc = normalizedNow;
+        SetModified(normalizedNow);
+    }
+
     public void Rotate(string refreshTokenHash, bool rememberMe, DateTime nowUtc, TimeSpan previousTokenGracePeriod, DateTime? expiresAtUtc = null) {
-        if (!IsActive) {
+        if (!IsActive || BrowserSecurityVersion.HasValue) {
             throw new InvalidOperationException("Revoked refresh token session cannot be rotated.");
         }
 

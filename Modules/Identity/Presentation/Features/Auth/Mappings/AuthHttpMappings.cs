@@ -22,6 +22,10 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramLog
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSessions;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreBrowserSession;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.LogoutBrowserSession;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetBrowserSessionProfile;
+using FoodDiary.Modules.Identity.Application.Authentication.Queries.AuthenticateBrowserSession;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +33,17 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
 public static class AuthHttpMappings {
+    public static AuthenticateBrowserSessionQuery InvalidBrowserSessionQuery() => new(Credential: null);
+
+    extension(string? credential) {
+        public RestoreBrowserSessionCommand ToBrowserRestoreCommand() => new(credential);
+        public LogoutBrowserSessionCommand ToBrowserLogoutCommand() => new(credential);
+    }
+
+    extension(Guid userId) {
+        public GetBrowserSessionProfileQuery ToBrowserSessionProfileQuery() => new(new UserId(userId));
+    }
+
     extension(ExchangeImpersonationHttpRequest request) {
         public ExchangeAdminImpersonationCommand ToCommand() => new(request.Code);
     }

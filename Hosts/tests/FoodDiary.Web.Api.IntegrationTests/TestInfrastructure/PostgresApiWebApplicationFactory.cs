@@ -20,6 +20,15 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 public class PostgresApiWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime {
+    public PostgresApiWebApplicationFactory() {
+        ClientOptions.HandleCookies = false;
+    }
+
+    protected override void ConfigureClient(HttpClient client) {
+        base.ConfigureClient(client);
+        client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+    }
+
     private PostgreSqlContainer? _container;
     private string? _connectionString;
 

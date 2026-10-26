@@ -114,8 +114,8 @@ export class NotificationRealtimeService {
     }
 
     private hasSessionToken(): boolean {
-        const token = this.authService.getToken();
-        return typeof token === 'string' && token.trim().length > 0;
+        const key = this.authService.getSessionKey();
+        return this.authService.isAuthenticated() && key !== null && key.trim().length > 0;
     }
 
     private async synchronizeConnectionAsync(): Promise<void> {
@@ -133,7 +133,7 @@ export class NotificationRealtimeService {
             return;
         }
 
-        const token = this.authService.getToken();
+        const token = this.authService.getSessionKey();
         if (token === null || token.trim().length === 0) {
             return;
         }
@@ -141,15 +141,16 @@ export class NotificationRealtimeService {
         this.connecting.set(true);
 
         const { HubConnectionBuilder, LogLevel } = await import('@microsoft/signalr');
-        const currentToken = this.authService.getToken();
+        const currentToken = this.authService.getSessionKey();
         if (!this.canConnect() || currentToken?.trim() !== token.trim()) {
             this.connecting.set(false);
             return;
         }
 
         this.connection = new HubConnectionBuilder()
-            .withUrl(toNotificationHubUrl(environment.apiUrls.auth), {
+            .withUrl(this.authService.sessionHubUrl(toNotificationHubUrl(environment.apiUrls.auth)), {
                 accessTokenFactory: this.getConnectionTokenAsync.bind(this),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
@@ -269,7 +270,8 @@ export class NotificationRealtimeService {
             return '';
         }
         if (this.jwtDecoder.isExpired(token)) {
-            return (await firstValueFrom(this.authService.refreshToken())) ?? '';
+            const restored = await firstValueFrom(this.authService.refreshSession());
+            return restored ? (this.authService.getToken() ?? '') : '';
         }
         return token;
     }

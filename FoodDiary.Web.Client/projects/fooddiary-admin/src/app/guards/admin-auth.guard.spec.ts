@@ -7,7 +7,6 @@ import { adminAuthGuard } from './admin-auth.guard';
 
 let authService: {
     applySsoFromQueryAsync: ReturnType<typeof vi.fn>;
-    refreshTokenState: ReturnType<typeof vi.fn>;
     isAuthenticated: ReturnType<typeof vi.fn>;
     isAdmin: ReturnType<typeof vi.fn>;
     tryUpgradeToAdminAsync: ReturnType<typeof vi.fn>;
@@ -22,7 +21,6 @@ let state: RouterStateSnapshot;
 beforeEach(() => {
     authService = {
         applySsoFromQueryAsync: vi.fn(),
-        refreshTokenState: vi.fn(),
         isAuthenticated: vi.fn(),
         isAdmin: vi.fn(),
         tryUpgradeToAdminAsync: vi.fn(),
@@ -56,7 +54,6 @@ describe('adminAuthGuard', () => {
 
         expect(result).toBe(true);
         expect(authService.applySsoFromQueryAsync).toHaveBeenCalled();
-        expect(authService.refreshTokenState).toHaveBeenCalledTimes(1);
     });
 
     it('should redirect unauthenticated user to unauthorized page', async () => {
@@ -106,7 +103,6 @@ describe('adminAuthGuard', () => {
         const result = await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
 
         expect(authService.tryUpgradeToAdminAsync).toHaveBeenCalled();
-        expect(authService.refreshTokenState).toHaveBeenCalledTimes(2);
         expect(result).toBe(true);
     });
 

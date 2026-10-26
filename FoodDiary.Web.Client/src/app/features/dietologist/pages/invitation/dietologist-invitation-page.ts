@@ -94,7 +94,7 @@ export class DietologistInvitationPageComponent {
         this.dietologistFacade
             .acceptInvitationForCurrentUser(invitationId)
             .pipe(
-                switchMap(() => this.authService.refreshToken().pipe(catchError(() => of(null)))),
+                switchMap(() => this.authService.refreshSession().pipe(catchError(() => of(null)))),
                 takeUntil(this.invitationChanged(invitationId)),
                 finalize(() => {
                     this.isSubmitting.set(false);

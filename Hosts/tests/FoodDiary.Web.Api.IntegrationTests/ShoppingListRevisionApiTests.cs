@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -19,8 +18,8 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
         using HttpClient firstClient = factory.CreateClient();
         using HttpClient secondClient = factory.CreateClient();
         string token = await RegisterAsync(firstClient);
-        firstClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        secondClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        AuthenticationResponseCookies.ApplyBrowserSession(firstClient, token);
+        AuthenticationResponseCookies.ApplyBrowserSession(secondClient, token);
         ShoppingListHttpResponse created = await CreateListAsync(firstClient);
         string route = $"/api/v1/shopping-lists/{created.Id}";
         ShoppingListHttpResponse firstSnapshot = await GetListAsync(firstClient, route);
@@ -79,7 +78,7 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
     [InlineData("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", false)]
     public async Task MissingOrMalformedRevisionReturnsBadRequestAndPreservesListAsync(string? revision, bool omitRevision) {
         using HttpClient client = factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAsync(client));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, await RegisterAsync(client));
         ShoppingListHttpResponse created = await CreateListAsync(client);
         string route = $"/api/v1/shopping-lists/{created.Id}";
         object payload = omitRevision
@@ -99,8 +98,8 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
     public async Task ForeignOwnerCannotUseAnotherListsRevisionAsync() {
         using HttpClient owner = factory.CreateClient();
         using HttpClient stranger = factory.CreateClient();
-        owner.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAsync(owner));
-        stranger.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAsync(stranger));
+        AuthenticationResponseCookies.ApplyBrowserSession(owner, await RegisterAsync(owner));
+        AuthenticationResponseCookies.ApplyBrowserSession(stranger, await RegisterAsync(stranger));
         ShoppingListHttpResponse created = await CreateListAsync(owner);
         string route = $"/api/v1/shopping-lists/{created.Id}";
 
@@ -114,7 +113,7 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task RenameAndClearKeepTheirExistingOptionalFieldOmissionContractAsync() {
         using HttpClient client = factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAsync(client));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, await RegisterAsync(client));
         ShoppingListHttpResponse created = await CreateListAsync(client);
         string route = $"/api/v1/shopping-lists/{created.Id}";
         using HttpResponseMessage rename = await client.PatchAsJsonAsync(route,
@@ -135,7 +134,7 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task CreateCurrentDetailAndOverviewExposeTheSameCommittedRevisionAsync() {
         using HttpClient client = factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAsync(client));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, await RegisterAsync(client));
         ShoppingListHttpResponse created = await CreateListAsync(client);
         Assert.Matches("^[0-9a-f]{64}$", created.Revision);
         Assert.Equal(created.Revision, (await GetListAsync(client, $"/api/v1/shopping-lists/{created.Id}")).Revision);
@@ -154,8 +153,8 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
         Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
         AuthPayload? payload = await registration.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(registration);
     }
 
     private static async Task<ShoppingListHttpResponse> CreateListAsync(HttpClient client) {
@@ -184,7 +183,7 @@ public sealed class ShoppingListRevisionApiTests(PostgresApiWebApplicationFactor
             item.Aisle, item.Note, item.IsChecked, item.CheckedOnUtc, item.SortOrder);
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string SessionId);
 
     [ExcludeFromCodeCoverage]
     private sealed record ErrorPayload(string Error);

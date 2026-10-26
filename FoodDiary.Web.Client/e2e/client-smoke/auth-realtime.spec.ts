@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { FIXTURE_USER_ID, userFixture } from '../../src/testing/api-fixtures';
+import { userFixture } from '../../src/testing/api-fixtures';
 import { installClientAuthApiAsync, installVerificationHubAsync, seedClientSessionAsync } from '../support/auth-flow-fixtures';
 import { jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
-import { syntheticAuthToken } from '../support/synthetic-auth-token';
 
 const contract = new OpenApiFixtures();
 const TICKET = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG';
@@ -37,9 +36,14 @@ test('Telegram callback exchanges once, removes credentials from the URL and pre
     });
     await page.route('**/api/v1/auth/telegram/complete', async route => {
         completions++;
+        state.authenticated = true;
         expect(route.request().postDataJSON()).toMatchObject({ ticket: TICKET, action: 'login', language: 'en' });
         await route.fulfill(
-            jsonFixture(contract, 'POST', route.request().url(), { accessToken: syntheticAuthToken(FIXTURE_USER_ID), user: state.user }),
+            jsonFixture(contract, 'POST', route.request().url(), {
+                sessionId: '00000000-0000-4000-8000-000000000002',
+                roles: ['User'],
+                user: state.user,
+            }),
         );
     });
 

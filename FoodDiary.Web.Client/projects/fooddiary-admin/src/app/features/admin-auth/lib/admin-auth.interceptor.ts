@@ -4,25 +4,31 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
+import { environment } from '../../../../environments/environment';
 import { adminApiErrorCode } from '../../../shared/api/admin-api-error';
-import { readAdminAccessToken } from './admin-token-storage';
+import { AdminAuthService } from './admin-auth.service';
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
+    const apiRoot = environment.apiUrls.auth.replace(/\/auth$/, '');
+    if (!req.url.startsWith(`${apiRoot  }/`)) {
+        return next(req);
+    }
     const router = inject(Router);
     const documentRef = inject(DOCUMENT);
     const isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     const localStorageRef = getBrowserStorage(documentRef, isBrowser, 'localStorage');
     const sessionStorageRef = getBrowserStorage(documentRef, isBrowser, 'sessionStorage');
-    const token = readAdminAccessToken(localStorageRef, sessionStorageRef);
-    if (token === null || token.trim().length === 0) {
-        return next(req);
+    const auth = inject(AdminAuthService);
+    let headers = req.headers.set('X-FoodDiary-Client', 'admin').set('X-Requested-With', 'XMLHttpRequest');
+    const sessionId = auth.getSessionId();
+    if (sessionId !== null && !req.url.endsWith('/auth/session') && !req.url.endsWith('/admin-sso/exchange')) {
+        headers = headers.set('X-FoodDiary-Session', sessionId);
     }
 
     return next(
         req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers,
+            withCredentials: true,
         }),
     ).pipe(
         catchError((error: unknown) => {
@@ -33,6 +39,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
             const status = error instanceof HttpErrorResponse ? error.status : undefined;
 
             if (status === HttpStatusCode.Unauthorized) {
+                auth.invalidateSession();
                 localStorageRef?.removeItem('authToken');
                 localStorageRef?.removeItem('refreshToken');
                 sessionStorageRef?.removeItem('authToken');

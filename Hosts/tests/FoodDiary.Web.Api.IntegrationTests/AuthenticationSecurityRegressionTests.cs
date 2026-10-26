@@ -1,11 +1,8 @@
 using Microsoft.Net.Http.Headers;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
-using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
@@ -22,21 +19,19 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         using HttpResponseMessage registered = await browser.PostAsJsonAsync("/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en"));
         registered.EnsureSuccessStatusCode();
-        string oldAccess = await ReadAccessTokenAsync(registered);
-        string oldRefresh = AuthenticationResponseCookies.ReadRefreshToken(registered);
+        string oldSession = AuthenticationResponseCookies.ReadBrowserSession(registered);
+        AuthenticationResponseCookies.ApplyBrowserSession(browser, oldSession);
         using HttpResponseMessage otherLogin = await otherBrowser.PostAsJsonAsync("/api/v1/auth/login",
             new LoginHttpRequest(email, "Password123!"));
         otherLogin.EnsureSuccessStatusCode();
-        otherBrowser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(otherLogin));
+        AuthenticationResponseCookies.ApplyBrowserSession(otherBrowser, AuthenticationResponseCookies.ReadBrowserSession(otherLogin));
 
         using HttpResponseMessage repeated = await browser.PostAsJsonAsync("/api/v1/auth/login",
             new LoginHttpRequest(email, "Password123!", rememberMe));
         repeated.EnsureSuccessStatusCode();
-        browser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(repeated));
-        string replacementRefresh = AuthenticationResponseCookies.ReadRefreshToken(repeated);
-        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(replacementRefresh);
-        string setCookie = Assert.Single(repeated.Headers.GetValues("Set-Cookie"));
-        Assert.Equal(jwt.ValidTo, SetCookieHeaderValue.Parse(setCookie).Expires!.Value.UtcDateTime);
+        AuthenticationResponseCookies.ApplyBrowserSession(browser, AuthenticationResponseCookies.ReadBrowserSession(repeated));
+        string setCookie = Assert.Single(repeated.Headers.GetValues("Set-Cookie"), value => value.StartsWith("fooddiary.browser=", StringComparison.Ordinal));
+        Assert.Equal(rememberMe, SetCookieHeaderValue.Parse(setCookie).Expires.HasValue);
         using HttpResponseMessage listed = await browser.GetAsync("/api/v1/auth/sessions");
         listed.EnsureSuccessStatusCode();
         using var sessions = JsonDocument.Parse(await listed.Content.ReadAsStringAsync());
@@ -44,9 +39,9 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         Assert.Single(sessions.RootElement.EnumerateArray(), session => session.GetProperty("isCurrent").GetBoolean());
 
         using HttpClient staleAccessClient = factory.CreateClient();
-        staleAccessClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oldAccess);
+        AuthenticationResponseCookies.ApplyBrowserSession(staleAccessClient, oldSession);
         using HttpResponseMessage oldAccessDenied = await staleAccessClient.GetAsync("/api/v1/users/info");
-        using HttpResponseMessage oldRefreshDenied = await browser.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(oldRefresh));
+        using HttpResponseMessage oldRefreshDenied = await browser.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(oldSession.Split('=')[1]));
         using HttpResponseMessage otherAllowed = await otherBrowser.GetAsync("/api/v1/users/info");
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Unauthorized, oldAccessDenied.StatusCode),
@@ -59,7 +54,7 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         Assert.Equal(HttpStatusCode.OK, stillActive.StatusCode);
         using HttpResponseMessage again = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "Password123!"));
         again.EnsureSuccessStatusCode();
-        browser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(again));
+        AuthenticationResponseCookies.ApplyBrowserSession(browser, AuthenticationResponseCookies.ReadBrowserSession(again));
         using HttpResponseMessage afterAgain = await browser.GetAsync("/api/v1/auth/sessions");
         afterAgain.EnsureSuccessStatusCode();
         using var finalSessions = JsonDocument.Parse(await afterAgain.Content.ReadAsStringAsync());
@@ -69,19 +64,18 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
     [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task RevokeSession_ImmediatelyRejectsItsAccessAndRefreshTokensButKeepsCurrentSession(bool revokeAllOthers) {
+    public async Task RevokeSession_ImmediatelyRejectsCookieAndKeepsCurrentSession(bool revokeAllOthers) {
         using HttpClient first = factory.CreateClient();
         using HttpClient second = factory.CreateClient();
         string email = $"security-session-{Guid.NewGuid():N}@example.com";
         using HttpResponseMessage registered = await first.PostAsJsonAsync("/api/v1/auth/register", new RegisterHttpRequest(email, "Password123!", "en"));
         registered.EnsureSuccessStatusCode();
-        string firstAccess = await ReadAccessTokenAsync(registered);
-        string firstRefresh = AuthenticationResponseCookies.ReadRefreshToken(registered);
-        first.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", firstAccess);
+        string firstSession = AuthenticationResponseCookies.ReadBrowserSession(registered);
+        AuthenticationResponseCookies.ApplyBrowserSession(first, firstSession);
         using HttpResponseMessage loggedIn = await second.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "Password123!"));
         loggedIn.EnsureSuccessStatusCode();
-        second.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(loggedIn));
-        string sessionId = new JwtSecurityTokenHandler().ReadJwtToken(firstAccess).Claims.Single(claim => string.Equals(claim.Type, JwtSecurityClaimNames.RefreshSessionId, StringComparison.Ordinal)).Value;
+        AuthenticationResponseCookies.ApplyBrowserSession(second, AuthenticationResponseCookies.ReadBrowserSession(loggedIn));
+        string sessionId = (await registered.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("sessionId").GetString()!;
 
         using HttpResponseMessage revoked = await second.DeleteAsync(revokeAllOthers ? "/api/v1/auth/sessions" : $"/api/v1/auth/sessions/{sessionId}");
 
@@ -90,11 +84,11 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
         using HttpResponseMessage allowed = await second.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, allowed.StatusCode);
-        using HttpResponseMessage refresh = await first.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(firstRefresh));
+        using HttpResponseMessage refresh = await first.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(firstSession.Split('=')[1]));
         Assert.Equal(HttpStatusCode.Unauthorized, refresh.StatusCode);
-        using HttpResponseMessage currentRefresh = await second.PostAsJsonAsync("/api/v1/auth/refresh", new { });
+        using HttpResponseMessage currentRefresh = await second.PostAsJsonAsync("/api/v1/auth/session", new { });
         Assert.Equal(HttpStatusCode.OK, currentRefresh.StatusCode);
-        await ReadAccessTokenAsync(currentRefresh);
+        Assert.False((await currentRefresh.Content.ReadFromJsonAsync<JsonElement>()).TryGetProperty("accessToken", out _));
     }
 
     [RequiresDockerFact]
@@ -104,11 +98,11 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         var request = new RegisterHttpRequest(email, "Password123!", "en");
         using HttpResponseMessage registered = await client.PostAsJsonAsync("/api/v1/auth/register", request);
         registered.EnsureSuccessStatusCode();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await ReadAccessTokenAsync(registered));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
         using HttpResponseMessage active = await client.PostAsJsonAsync("/api/v1/auth/register", request);
         using HttpResponseMessage deleted = await client.DeleteAsync("/api/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, deleted.StatusCode);
-        client.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Remove("Cookie");
         using HttpResponseMessage duplicateDeleted = await client.PostAsJsonAsync("/api/v1/auth/register", request);
         using var activeJson = JsonDocument.Parse(await active.Content.ReadAsStringAsync());
         using var deletedJson = JsonDocument.Parse(await duplicateDeleted.Content.ReadAsStringAsync());
@@ -119,9 +113,4 @@ public sealed class AuthenticationSecurityRegressionTests(ApiWebApplicationFacto
         }
     }
 
-    private static async Task<string> ReadAccessTokenAsync(HttpResponseMessage response) {
-        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.False(json.RootElement.TryGetProperty("refreshToken", out _));
-        return json.RootElement.GetProperty("accessToken").GetString()!;
-    }
 }

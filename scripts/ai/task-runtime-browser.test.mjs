@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import test from "node:test";
 import { repositoryRoot } from "./generate-feature.mjs";
-import { probeRenderedRuntime } from "./task-runtime-browser.mjs";
+import { browserSessionCookie, probeRenderedRuntime } from "./task-runtime-browser.mjs";
 
 const { chromium } = createRequire(
     join(repositoryRoot, "FoodDiary.Web.Client/package.json"),
@@ -41,7 +41,7 @@ function installFailureProbe(t, respond) {
         requests,
         async expectFailure(message) {
             await assert.rejects(
-                probeRenderedRuntime(repositoryRoot, frontendUrl, "unused-token", expectedUserId, {
+                probeRenderedRuntime(repositoryRoot, frontendUrl, expectedUserId, {
                     credentials,
                     onDiagnostics: events => diagnostics.push(events),
                 }),
@@ -75,6 +75,7 @@ for (const status of [302, 307, 308]) {
         assert.deepEqual(probe.requests[0].options.data, credentials);
         assert.equal(probe.requests[0].options.maxRedirects, 0);
         assert.equal(probe.requests[0].options.timeout, 30_000);
+        assert.equal(probe.requests[0].options.headers["X-Requested-With"], "XMLHttpRequest");
     });
 }
 

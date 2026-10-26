@@ -408,6 +408,7 @@
             "POST /api/v{version}/auth/password-reset/confirm": "postAuthPasswordResetConfirm",
             "POST /api/v{version}/auth/password-reset/request": "postAuthPasswordResetRequest",
             "POST /api/v{version}/auth/refresh": "postAuthRefresh",
+            "POST /api/v{version}/auth/session": "postAuthSession",
             "POST /api/v{version}/auth/register": "postAuthRegister",
             "POST /api/v{version}/auth/restore": "postAuthRestore",
             "POST /api/v{version}/auth/verify-email": "postAuthVerifyEmail",

@@ -1,5 +1,5 @@
+using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -12,8 +12,8 @@ public sealed partial class PresentationBoundaryIntegrationTests {
     [RequiresDockerFact]
     public async Task GoalHistoryPages_BoundSummariesAndTraverseBothMetricsThroughAuthenticatedHttp() {
         using HttpClient client = apiFactory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         using var info = JsonDocument.Parse(await client.GetStringAsync("/api/v1/users/info"));
         Guid userId = info.RootElement.GetProperty("id").GetGuid();
         await using (AsyncServiceScope scope = apiFactory.Services.CreateAsyncScope()) {

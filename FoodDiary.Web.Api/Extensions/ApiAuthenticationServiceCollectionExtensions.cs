@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using FoodDiary.Modules.Identity.Presentation.Security;
+using Microsoft.AspNetCore.Authentication;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -34,10 +36,31 @@ public static class ApiAuthenticationServiceCollectionExtensions {
             services.AddCors(static _ => { });
 
             services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                .AddAuthentication("FoodDiary")
+                .AddPolicyScheme("FoodDiary", "FoodDiary client authentication", options => {
+                    options.ForwardDefaultSelector = context => {
+                        if (context.Request.Headers.Authorization.ToString().StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ||
+                            context.Request.Headers[BrowserSessionCookieService.ClientHeader] == "telegram" ||
+                            (context.Request.Path.StartsWithSegments("/hubs", StringComparison.OrdinalIgnoreCase) && context.Request.Query.ContainsKey("access_token"))) {
+                            return JwtBearerDefaults.AuthenticationScheme;
+                        }
+                        return ImpersonationCookieService.HasContext(context) ? ImpersonationCookieService.Scheme : BrowserSessionCookieService.Scheme;
+                    };
+                })
+                .AddJwtBearer()
+                .AddJwtBearer(ImpersonationCookieService.Scheme, static _ => { })
+                .AddScheme<AuthenticationSchemeOptions, BrowserSessionAuthenticationHandler>(BrowserSessionCookieService.Scheme, static _ => { });
             services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
                 .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions);
+            services.AddOptions<JwtBearerOptions>(ImpersonationCookieService.Scheme)
+                .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions)
+                .PostConfigure(options => options.Events.OnMessageReceived = async context => {
+                    context.Token = await context.HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>()
+                        .ReadTokenAsync(context.HttpContext, context.HttpContext.RequestAborted).ConfigureAwait(false);
+                    if (context.Token is null) {
+                        context.Fail("The impersonation context is invalid or expired.");
+                    }
+                });
 
             services.AddAuthorization();
             services.AddSingleton<IAuthorizationMiddlewareResultHandler, ApiAuthorizationMiddlewareResultHandler>();

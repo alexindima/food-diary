@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -130,7 +129,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         response.EnsureSuccessStatusCode();
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", payload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
         return client;
     }
 
@@ -155,7 +154,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string SessionId);
     [ExcludeFromCodeCoverage]
     private sealed record IdPayload(Guid Id);
     [ExcludeFromCodeCoverage]

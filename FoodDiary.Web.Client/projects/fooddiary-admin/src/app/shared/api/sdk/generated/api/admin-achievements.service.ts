@@ -99,6 +99,8 @@ export class AdminAchievementsSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -179,6 +181,8 @@ export class AdminAchievementsSdk extends BaseService {
         if (idempotencyKey !== undefined && idempotencyKey !== null) {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -267,6 +271,8 @@ export class AdminAchievementsSdk extends BaseService {
         const updateAdminAchievementDefinitionHttpRequest = requestParameters?.updateAdminAchievementDefinitionHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

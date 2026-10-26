@@ -263,6 +263,29 @@
                 "additionalProperties": false,
                 "properties": {
                     "accessToken": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationContext": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationReason": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "rememberMe": {
+                        "type": "boolean"
+                    },
+                    "roles": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "sessionId": {
+                        "nullable": true,
                         "type": "string"
                     },
                     "user": {
@@ -2638,6 +2661,11 @@
                 "additionalProperties": false,
                 "properties": {
                     "accessToken": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "contextId": {
+                        "nullable": true,
                         "type": "string"
                     }
                 },
@@ -9240,11 +9268,23 @@
             }
         },
         "securitySchemes": {
+            "AdminSession": {
+                "description": "Separate HttpOnly administrative session, established by the SSO exchange.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.admin",
+                "type": "apiKey"
+            },
             "Bearer": {
                 "bearerFormat": "JWT",
                 "description": "JWT Authorization header using the Bearer scheme.",
                 "scheme": "bearer",
                 "type": "http"
+            },
+            "BrowserSession": {
+                "description": "HttpOnly browser session; unsafe requests require X-Requested-With: XMLHttpRequest.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.browser",
+                "type": "apiKey"
             }
         }
     },
@@ -9465,6 +9505,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -9681,6 +9724,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -9898,6 +9944,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -9970,6 +10019,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10152,6 +10204,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10244,6 +10299,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10349,6 +10407,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10439,6 +10500,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10655,6 +10719,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10871,6 +10938,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -10934,6 +11004,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Ai"]
@@ -11167,6 +11240,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Auth"]
@@ -11541,6 +11617,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Auth"]
@@ -12692,6 +12771,115 @@
                 "tags": ["Auth"]
             }
         },
+        "/api/v{version}/auth/session": {
+            "post": {
+                "operationId": "postAuthSession",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [],
+                "tags": ["Auth"]
+            }
+        },
         "/api/v{version}/auth/sessions": {
             "delete": {
                 "operationId": "deleteAuthSessions",
@@ -12753,6 +12941,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AuthSessions"]
@@ -12865,6 +13056,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AuthSessions"]
@@ -12940,6 +13134,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AuthSessions"]
@@ -13087,6 +13284,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -13264,6 +13464,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -13458,6 +13661,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -14663,6 +14869,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -15016,6 +15225,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -15580,6 +15792,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -16072,6 +16287,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -16229,6 +16447,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["TelegramAuth"]
@@ -16759,6 +16980,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Auth"]
@@ -16975,6 +17199,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Billing"]
@@ -17058,6 +17285,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Billing"]
@@ -17222,6 +17452,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Billing"]
@@ -17346,6 +17579,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Billing"]
@@ -17551,6 +17787,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ClientTasks"]
@@ -17714,6 +17953,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ClientTasks"]
@@ -17848,6 +18090,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -17914,6 +18159,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18024,6 +18272,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18129,6 +18380,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18301,6 +18555,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18414,6 +18671,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18575,6 +18835,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18758,6 +19021,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -18889,6 +19155,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -19059,6 +19328,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -19222,6 +19494,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -19385,6 +19660,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Cycles"]
@@ -19536,6 +19814,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dashboard"]
@@ -19636,6 +19917,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dashboard"]
@@ -19763,6 +20047,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dashboard"]
@@ -19920,6 +20207,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20024,6 +20314,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20161,6 +20454,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20307,6 +20603,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20409,6 +20708,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20494,6 +20796,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20682,6 +20987,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20784,6 +21092,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -20897,6 +21208,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21069,6 +21383,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21182,6 +21499,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21374,6 +21694,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21521,6 +21844,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21613,6 +21939,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21718,6 +22047,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21810,6 +22142,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -21915,6 +22250,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22073,6 +22411,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22139,6 +22480,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22266,6 +22610,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22406,6 +22753,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22569,6 +22919,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22654,6 +23007,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22805,6 +23161,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -22980,6 +23339,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -23056,6 +23418,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -23120,6 +23485,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Dietologist"]
@@ -23228,6 +23596,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Exercises"]
@@ -23391,6 +23762,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Exercises"]
@@ -23456,6 +23830,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Exercises"]
@@ -23617,6 +23994,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Exercises"]
@@ -23745,6 +24125,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Export"]
@@ -23898,6 +24281,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Export"]
@@ -24058,6 +24444,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Export"]
@@ -24124,6 +24513,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24278,6 +24670,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24432,6 +24827,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24586,6 +24984,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24699,6 +25100,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24812,6 +25216,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -24905,6 +25312,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25006,6 +25416,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25069,6 +25482,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25132,6 +25548,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25286,6 +25705,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25349,6 +25771,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Fasting"]
@@ -25503,6 +25928,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteMeals"]
@@ -25575,6 +26003,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteMeals"]
@@ -25688,6 +26119,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteMeals"]
@@ -25773,6 +26207,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteMeals"]
@@ -25915,6 +26352,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteMeals"]
@@ -26069,6 +26509,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteProducts"]
@@ -26141,6 +26584,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteProducts"]
@@ -26254,6 +26700,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteProducts"]
@@ -26339,6 +26788,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteProducts"]
@@ -26500,6 +26952,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteProducts"]
@@ -26654,6 +27109,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteRecipes"]
@@ -26726,6 +27184,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteRecipes"]
@@ -26839,6 +27300,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteRecipes"]
@@ -26924,6 +27388,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["FavoriteRecipes"]
@@ -26995,6 +27462,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Gamification"]
@@ -27078,6 +27548,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Goals"]
@@ -27230,6 +27703,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Goals"]
@@ -27330,6 +27806,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -27504,6 +27983,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -27595,6 +28077,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -27758,6 +28243,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -27843,6 +28331,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -28024,6 +28515,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Hydration"]
@@ -28229,6 +28723,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Images"]
@@ -28354,6 +28851,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Images"]
@@ -28547,6 +29047,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Images"]
@@ -28706,6 +29209,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Lessons"]
@@ -28778,6 +29284,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Lessons"]
@@ -28843,6 +29352,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Lessons"]
@@ -29292,6 +29804,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Marketing"]
@@ -29412,6 +29927,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["MealPlans"]
@@ -29517,6 +30035,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["MealPlans"]
@@ -29587,6 +30108,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["MealPlans"]
@@ -29710,6 +30234,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["MealPlans"]
@@ -29833,6 +30360,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["MealPlans"]
@@ -29994,6 +30524,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30167,6 +30700,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30365,6 +30901,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30507,6 +31046,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30700,6 +31242,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30785,6 +31330,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -30875,6 +31423,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -31046,6 +31597,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -31230,6 +31784,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Meals"]
@@ -31302,6 +31859,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31385,6 +31945,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31537,6 +32100,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31600,6 +32166,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31707,6 +32276,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31822,6 +32394,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31894,6 +32469,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -31950,6 +32528,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -32125,6 +32706,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -32188,6 +32772,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -32273,6 +32860,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Notifications"]
@@ -32394,6 +32984,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["OpenFoodFacts"]
@@ -32496,6 +33089,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["OpenFoodFacts"]
@@ -32650,6 +33246,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -32823,6 +33422,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -32999,6 +33601,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33188,6 +33793,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33309,6 +33917,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33394,6 +34005,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33484,6 +34098,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33665,6 +34282,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33808,6 +34428,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Products"]
@@ -33971,6 +34594,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -34154,6 +34780,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -34294,6 +34923,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -34479,6 +35111,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -34893,6 +35528,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -34978,6 +35616,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35076,6 +35717,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35267,6 +35911,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35410,6 +36057,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35504,6 +36154,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35666,6 +36319,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35760,6 +36416,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -35920,6 +36579,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -36012,6 +36674,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -36177,6 +36842,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recipes"]
@@ -36271,6 +36939,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recommendations"]
@@ -36385,6 +37056,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recommendations"]
@@ -36577,6 +37251,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recommendations"]
@@ -36662,6 +37339,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Recommendations"]
@@ -36837,6 +37517,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Reports"]
@@ -37012,6 +37695,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37075,6 +37761,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37138,6 +37827,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37259,6 +37951,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37344,6 +38039,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37434,6 +38132,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37625,6 +38326,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["ShoppingLists"]
@@ -37752,6 +38456,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Statistics"]
@@ -37846,6 +38553,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Statistics"]
@@ -37980,6 +38690,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Statistics"]
@@ -38043,6 +38756,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Tdee"]
@@ -38144,6 +38860,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Usda"]
@@ -38265,6 +38984,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Usda"]
@@ -38347,6 +39069,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Usda"]
@@ -38412,6 +39137,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Usda"]
@@ -38536,6 +39264,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Usda"]
@@ -38612,6 +39343,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -38688,6 +39422,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -38762,6 +39499,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -38845,6 +39585,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -38997,6 +39740,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39080,6 +39826,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39232,6 +39981,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39315,6 +40067,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39467,6 +40222,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39550,6 +40308,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39707,6 +40468,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39844,6 +40608,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -39998,6 +40765,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -40120,6 +40890,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -40242,6 +41015,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Users"]
@@ -40370,6 +41146,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -40544,6 +41323,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -40610,6 +41392,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -40731,6 +41516,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -40850,6 +41638,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -40935,6 +41726,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -41116,6 +41910,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WaistEntries"]
@@ -41188,6 +41985,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41259,6 +42059,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41390,6 +42193,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41575,6 +42381,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41680,6 +42489,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41852,6 +42664,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["Wearables"]
@@ -41941,6 +42756,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeeklyCheckIn"]
@@ -42043,6 +42861,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeeklyGoals"]
@@ -42175,6 +42996,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeeklyGoals"]
@@ -42303,6 +43127,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -42476,6 +43303,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -42542,6 +43372,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -42663,6 +43496,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -42782,6 +43618,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -42867,6 +43706,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]
@@ -43048,6 +43890,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["WeightEntries"]

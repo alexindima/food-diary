@@ -23,7 +23,7 @@ const groups = {
     'contracts:app-platform': {
         project: 'food-diary-web-client',
         include: [
-            '**/token-storage.service.spec.ts',
+            '**/auth-metadata-storage.service.spec.ts',
             '**/auth.service.spec.ts',
             '**/frontend-observability.service.spec.ts',
             '**/browser-performance.service.spec.ts',

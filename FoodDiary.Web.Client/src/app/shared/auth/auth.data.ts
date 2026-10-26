@@ -65,6 +65,11 @@ export type TelegramAuthRequest = {
 };
 
 export type AuthResponse = {
-    accessToken: string;
+    accessToken?: string;
     user: User;
+    roles?: readonly string[];
+    sessionId?: string | null;
+    impersonationContext?: string | null;
+    impersonationReason?: string | null;
+    rememberMe?: boolean;
 };

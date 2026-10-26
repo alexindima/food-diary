@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Marketing.Presentation.Requests;
@@ -96,7 +95,7 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
         AuthPayload? auth = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>();
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
         Assert.NotNull(auth);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
 
         using var request = new HttpRequestMessage(HttpMethod.Post,
             "/api/v1/marketing/attribution-events/signup") {
@@ -113,5 +112,5 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string SessionId);
 }

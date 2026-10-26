@@ -111,6 +111,8 @@ export class AdminLessonsSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -194,6 +196,8 @@ export class AdminLessonsSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -274,6 +278,8 @@ export class AdminLessonsSdk extends BaseService {
         if (idempotencyKey !== undefined && idempotencyKey !== null) {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -366,6 +372,8 @@ export class AdminLessonsSdk extends BaseService {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -453,6 +461,8 @@ export class AdminLessonsSdk extends BaseService {
         const adminLessonUpdateHttpRequest = requestParameters?.adminLessonUpdateHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

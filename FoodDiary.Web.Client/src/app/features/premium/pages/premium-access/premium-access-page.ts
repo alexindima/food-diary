@@ -250,8 +250,8 @@ export class PremiumAccessPageComponent {
     }
 
     private async refreshAccountAccessAsync(): Promise<boolean> {
-        const refreshedSession = await firstValueFrom(this.authService.refreshToken());
-        if (refreshedSession !== null) {
+        const refreshedSession = await firstValueFrom(this.authService.refreshSession());
+        if (refreshedSession) {
             return true;
         }
         this.errorMessage.set(this.translateService.instant('PREMIUM_PAGE.ERROR_ACCESS_REFRESH'));
@@ -264,18 +264,18 @@ export class PremiumAccessPageComponent {
                 const overview = await firstValueFrom(this.billingService.getOverview());
                 this.overview.set(overview);
                 if (overview.isPremium) {
-                    await firstValueFrom(this.authService.refreshToken());
+                    await firstValueFrom(this.authService.refreshSession());
                     return;
                 }
 
                 await this.delayCheckoutActivationPollAsync();
             }
         } catch {
-            await firstValueFrom(this.authService.refreshToken());
+            await firstValueFrom(this.authService.refreshSession());
             return;
         }
 
-        await firstValueFrom(this.authService.refreshToken());
+        await firstValueFrom(this.authService.refreshSession());
     }
 
     private async delayCheckoutActivationPollAsync(): Promise<void> {

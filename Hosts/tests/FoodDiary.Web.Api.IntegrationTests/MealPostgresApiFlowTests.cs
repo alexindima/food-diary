@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -20,8 +19,8 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
     [RequiresDockerFact]
     public async Task CreateUpdateReadMeal_PersistsItemsAndOverviewPayloadAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         ProductPayload product = await CreateMealProductAsync(client);
         var createdExpected = new ExpectedMeal(
@@ -207,7 +206,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
         return payload;
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"postgres-meal-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -217,8 +216,8 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
@@ -232,7 +231,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, string RefreshToken, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

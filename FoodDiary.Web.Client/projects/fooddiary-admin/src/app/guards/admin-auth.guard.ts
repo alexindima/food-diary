@@ -8,7 +8,6 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
     const router = inject(Router);
 
     await authService.applySsoFromQueryAsync();
-    authService.refreshTokenState();
 
     if (!authService.isAuthenticated()) {
         return router.createUrlTree(['/unauthorized'], {
@@ -18,7 +17,6 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
 
     if (!authService.isAdmin()) {
         const upgraded = await authService.tryUpgradeToAdminAsync();
-        authService.refreshTokenState();
 
         if (upgraded && authService.isAdmin()) {
             return sanitizedAdminDestination(router, state.url);

@@ -34,11 +34,12 @@
                 }
 
                 try {
+                    // Public hints control the startup veil; the API still proves the HttpOnly session.
                     const hasStoredSession =
-                        localStorage.getItem('authToken') !== null ||
-                        sessionStorage.getItem('authToken') !== null ||
-                        localStorage.getItem('refreshSession') === 'true' ||
-                        localStorage.getItem('refreshToken') !== null;
+                        localStorage.getItem('accountAccess') !== null ||
+                        localStorage.getItem('userId') !== null ||
+                        sessionStorage.getItem('userId') !== null ||
+                        sessionStorage.getItem('impersonationContext') !== null;
 
                     if (hasStoredSession) {
                         const root = document.documentElement;

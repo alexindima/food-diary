@@ -35,7 +35,7 @@ public sealed class RefreshTokenCommandHandler(
         UserRefreshTokenSession? session = await refreshTokenSessionRepository
             .GetByIdAsync(refreshSessionId.Value, cancellationToken)
             .ConfigureAwait(false);
-        if (session is null || session.UserId != userId || !session.IsActive) {
+        if (session is null || session.UserId != userId || !session.IsActive || session.BrowserSecurityVersion.HasValue) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
 

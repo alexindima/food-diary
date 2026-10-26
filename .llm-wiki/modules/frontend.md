@@ -12,6 +12,8 @@ sources:
   - FoodDiary.Web.Client/projects/fd-webmcp/AGENTS.md
   - docs/frontend/FRONTEND_ARCHITECTURE.md
   - docs/frontend/API_SDK.md
+  - docs/backend/BROWSER_SESSIONS.md
+  - docs/adr/0058-browser-sessions-in-the-existing-api.md
   - docs/frontend/WEB_QUALITY.md
   - docs/adr/0055-atomic-frontend-publication-and-asset-retention.md
   - docs/adr/0056-shopping-list-content-revisions.md
@@ -63,7 +65,7 @@ does not certify every guide or every application screen.
 ## API SDK
 
 The user API has an OpenAPI-generated Angular SDK under `src/app/shared/api/sdk/`.
-The generated contract covers 41 groups and 262 operations. Forty-six user frontend
+The generated contract covers 41 groups and 263 operations. Forty-six user frontend
 services use generated clients, including meals/recipes, dashboard/statistics,
 cycles, the dietologist workspace, user profiles, notifications, auth/session,
 AI, image coordination, exports, telemetry and marketing. Feature
@@ -74,12 +76,19 @@ and preserve request identity across retries. Swagger retains C# nullable refere
 metadata in the isolated client schema; direct storage uploads and SignalR stay in their owning adapters.
 
 The admin app has a separate generated client under
-`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 21 groups and 72 operations
+`projects/fooddiary-admin/src/app/shared/api/sdk/`. Its 22 groups and 73 operations
 serve 21 existing admin adapters; generator tooling and schema selection are
 shared with the user app, while application imports and session ownership stay
 separate. Admin paging, dynamic filters, SSO cookie policy and import idempotency
 remain in the existing services. List meal plans use the actual summary model;
 the editor fetches full detail separately.
+
+Ordinary user and admin authentication use separate opaque HttpOnly cookies in
+the existing API. JavaScript holds only identity, roles and public session/context
+selectors; reload calls `POST /auth/session`. Impersonation selects an independent
+cookie per tab context. Explicit Telegram Mini App mode retains a bearer only in
+memory. See [browser sessions](../../docs/backend/BROWSER_SESSIONS.md) and ADR 0058
+for CSRF, device isolation, admin expiry and coordinated release requirements.
 
 The Telegram bot has its own generated C# client for 14 FoodDiary API operations
 under `FoodDiary.Telegram.Bot/Api/Generated/`. Existing adapters retain credentials,

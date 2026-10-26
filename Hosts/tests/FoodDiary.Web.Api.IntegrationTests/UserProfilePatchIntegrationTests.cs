@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -24,8 +23,7 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
             new RegisterHttpRequest($"height-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
 
         using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
             new { heightCm = 170, firstName = "QA" });
@@ -65,8 +63,7 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
             new RegisterHttpRequest($"avatar-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
 
         using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
             new { profileImage = "https://example.test/avatar.png", firstName = "QA" });
@@ -96,8 +93,7 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
             new RegisterHttpRequest($"birthdate-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
 
         using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
             new { birthDate = new DateTime(2000, 10, 2, 0, 0, 0, DateTimeKind.Utc), firstName = "QA" });

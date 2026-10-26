@@ -13,7 +13,7 @@ const EDITED_MEAL_CALORIES = 75;
 const EDITED_SERVINGS = 0.5;
 
 test('recipe grams decode to servings and a used recipe preserves the saved meal snapshot', async ({ page, request, owned }) => {
-    const headers = { authorization: `Bearer ${owned.token}` };
+    const headers = owned.headers;
     const productResponse = await request.post(`${owned.frontendUrl}/api/v1/products`, {
         headers,
         data: {

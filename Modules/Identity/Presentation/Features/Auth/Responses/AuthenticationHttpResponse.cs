@@ -4,6 +4,11 @@ using System.Text.Json.Serialization;
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 
 public sealed record AuthenticationHttpResponse(
-    string AccessToken,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? AccessToken,
     [property: JsonIgnore] string RefreshToken,
-    UserHttpResponse User);
+    UserHttpResponse User,
+    IReadOnlyList<string>? Roles = null,
+    string? SessionId = null,
+    string? ImpersonationContext = null,
+    string? ImpersonationReason = null,
+    bool RememberMe = false);

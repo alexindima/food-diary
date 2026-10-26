@@ -11,7 +11,8 @@ public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions, IW
             policy
                 .WithOrigins(origins)
                 .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Requested-With", "X-SignalR-User-Agent")
+                .WithHeaders("Content-Type", "Authorization", "Idempotency-Key", "X-Requested-With", "X-SignalR-User-Agent",
+                    "X-FoodDiary-Client", "X-FoodDiary-Session", "X-FoodDiary-Context")
                 .WithExposedHeaders("Location")
                 .AllowCredentials();
             if (environment?.IsDevelopment() == true) {

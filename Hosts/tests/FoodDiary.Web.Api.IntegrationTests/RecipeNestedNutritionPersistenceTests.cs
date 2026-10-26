@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Infrastructure.Persistence;
@@ -21,7 +20,7 @@ public sealed class RecipeNestedNutritionPersistenceTests(ApiWebApplicationFacto
             new RegisterHttpRequest($"nested-nutrition-{Guid.NewGuid():N}@example.test", "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
         Guid productId = await CreateAsync(client, "/api/v1/products", new {
             name = "Base product",
             productType = "Other",

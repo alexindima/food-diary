@@ -2,10 +2,18 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import { redactDiagnostic } from "./diagnostic-redaction.mjs";
 
+export function browserSessionCookie(response, admin = false) {
+    const name = admin ? "fooddiary.admin=" : "fooddiary.browser=";
+    const cookies = response.headers.getSetCookie().filter(value =>
+        value.startsWith(name) || value.startsWith("__Host-" + name));
+    if (cookies.length !== 1 || !/;\s*HttpOnly(?:;|$)/iu.test(cookies[0]))
+        throw new Error("Owned account login did not issue a browser session");
+    return cookies[0].split(";")[0];
+}
+
 export async function probeRenderedRuntime(
     root,
     frontendUrl,
-    accessToken,
     expectedUserId,
     { onDiagnostics = () => {}, probeFailure = false, credentials } = {},
 ) {
@@ -25,6 +33,7 @@ export async function probeRenderedRuntime(
             try {
                 login = await context.request.post(`${frontendUrl}/api/v1/auth/login`, {
                     data: credentials,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
                     maxRedirects: 0,
                     timeout: 30_000,
                 });
@@ -42,13 +51,8 @@ export async function probeRenderedRuntime(
             }
             if (identity?.user?.id !== expectedUserId)
                 throw new Error("Rendered runtime sign-in did not match the owned account");
-            // Restore policy and identity from the server using the real HttpOnly cookie.
-            await context.addInitScript(() => localStorage.setItem("refreshSession", "true"));
         } else {
-            await context.addInitScript(
-                (token) => localStorage.setItem("authToken", token),
-                accessToken,
-            );
+            throw new Error("Rendered runtime probe requires owned sign-in credentials");
         }
         const page = await context.newPage();
         page.on("pageerror", (error) =>

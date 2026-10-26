@@ -522,9 +522,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task CreateShoppingList_WithNameOverDomainLimit_ReturnsValidationErrorInsteadOfServerError() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/shopping-lists",
@@ -555,9 +554,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task ExportDiary_WithDateThatOverflowsDisplayOffset_ReturnsValidationErrorInsteadOfServerError() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         string maximumDate = Uri.EscapeDataString("9999-12-31T23:59:59.9999999Z");
 
         HttpResponseMessage response = await client.GetAsync(
@@ -584,9 +582,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task UsdaSearch_WithOversizedSearch_IsRejectedBeforeProviderCall() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         string search = new('s', UsdaRequestLimits.MaximumSearchLength + 1);
 
         HttpResponseMessage response = await client.GetAsync(
@@ -598,9 +595,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task RetrySensitiveWrite_WithoutIdempotencyKey_IsRejectedBeforeHandler() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/hydrations",
@@ -612,9 +608,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task GetProductById_WithMissingProduct_ReturnsNotFoundContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync($"/api/v1/products/{MissingProductId}");
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -628,9 +623,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task CreateWeightEntry_WithDuplicateDate_ReturnsConflictContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         var request = new CreateWeightEntryHttpRequest(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
@@ -651,9 +645,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task CreateWaistEntry_WithExactRetry_ReturnsExistingEntry() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         var request = new CreateWaistEntryHttpRequest(
             new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc),
@@ -683,9 +676,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task CreateRecipe_WithInvalidBody_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/v1/recipes", new { });
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -717,9 +709,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task DeleteImageAsset_AfterUploadUrl_ReturnsNoContent() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage uploadResponse = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
@@ -791,9 +782,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task Statistics_WithInvalidDateRangeQuery_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync("/api/v1/statistics?dateFrom=invalid&dateTo=invalid");
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -809,9 +799,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task Exercises_WithReversedDateRange_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync(
             "/api/v1/exercises?dateFrom=2026-08-20T00:00:00Z&dateTo=2026-08-19T00:00:00Z");
@@ -827,9 +816,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task Products_WithOversizedSearch_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         string search = new('s', PresentationQueryLimits.MaximumSearchLength + 1);
 
         HttpResponseMessage response = await client.GetAsync(
@@ -854,9 +842,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         string requestUri,
         string expectedErrorKey) {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.GetAsync(requestUri);
         ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
@@ -871,9 +858,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     [RequiresDockerFact]
     public async Task UpdateDesiredWeight_WithInvalidValue_ReturnsValidationErrorContract() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage response = await client.PutAsJsonAsync(
             "/api/v1/users/desired-weight",
@@ -1457,19 +1443,19 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode),
-            () => Assert.Contains(response.Headers.WwwAuthenticate, static header =>
-                string.Equals(header.Scheme, "Bearer", StringComparison.Ordinal)),
+            () => Assert.Null(response.Headers.Location),
             () => Assert.Equal("Authentication.Unauthorized", payload.Error),
             () => Assert.Equal("Authentication is required.", payload.Message),
             () => Assert.False(string.IsNullOrWhiteSpace(payload.TraceId)));
     }
 
     [RequiresDockerFact]
-    public async Task EmailVerificationHub_Negotiate_WithAccessTokenQuery_ReturnsConnectionInfo() {
+    public async Task EmailVerificationHub_Negotiate_WithBrowserSession_ReturnsConnectionInfo() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
 
-        HttpResponseMessage response = await client.PostAsync($"/hubs/email-verification/negotiate?negotiateVersion=1&access_token={accessToken}", content: null);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
+        HttpResponseMessage response = await client.PostAsync("/hubs/email-verification/negotiate?negotiateVersion=1", content: null);
         NegotiatePayload? payload = await response.Content.ReadFromJsonAsync<NegotiatePayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -1493,7 +1479,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         Assert.False(string.IsNullOrWhiteSpace(traceIdProperty.GetString()));
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"api-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -1502,8 +1488,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
 
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static HttpClient CreateTestUserClient(WebApplicationFactory<Program> factory, Guid userId) {
@@ -2020,7 +2006,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken);
+    private sealed record AuthPayload(string SessionId);
 
     [ExcludeFromCodeCoverage]
     private sealed record IdPayload(Guid Id);

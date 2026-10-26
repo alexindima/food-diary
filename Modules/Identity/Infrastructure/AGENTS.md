@@ -54,3 +54,9 @@ completion; There is no central Infrastructure reference. Shared authentication 
 ADR 0044: hosts explicitly compose AddSharedAuthentication and AddIdentityEmailOptions. Identity owns email link option binding; shared authentication owns JWT binding and fallback SSO storage.
 
 Use canonical FoodDiary.Modules.Identity project identities and folder namespaces, including tests. Projects are siblings. Preserve historical migration metadata and relational schema.
+
+ADR 0058: browser-session restoration uses an atomic owner-scoped update of
+security version and activity only. Preserve proof, expiry and revocation fences,
+monotonic activity and the live transaction binding; do not save a stale tracked
+session over concurrent logout. SQL and fallback behavior retain the reviewed
+persistence capability fingerprint and real PostgreSQL regression coverage.

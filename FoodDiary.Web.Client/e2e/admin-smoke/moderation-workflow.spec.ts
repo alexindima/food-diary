@@ -6,7 +6,6 @@ import type { AdminContentReportHttpResponse } from '../../projects/fooddiary-ad
 import type { AdminContentReportHttpResponsePagedHttpResponse } from '../../projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-content-report-http-response-paged-http-response';
 import type { ApiErrorHttpResponse } from '../../projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/api-error-http-response';
 import { fixtureUuid, jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
-import { syntheticAuthToken } from '../support/synthetic-auth-token';
 
 // eslint-disable-next-line security/detect-non-literal-fs-filename -- This fixed repository fixture URL contains no external input.
 const adminOpenApiDocument: unknown = JSON.parse(readFileSync(new URL('../../api-sdk/admin.openapi.json', import.meta.url), 'utf8'));
@@ -146,16 +145,14 @@ test('admin moderation locks the real dialog while a decision is in flight', asy
 });
 
 async function openModerationPageAsync(page: Page, options: BoundaryOptions = {}): Promise<ModerationBoundary> {
-    const token = syntheticAuthToken(ADMIN_ID, 'Admin');
-    await page.addInitScript(value => {
-        localStorage.setItem('authToken', value);
-    }, token);
+    const sessionId = ADMIN_ID;
     const boundary: ModerationBoundary = { status: 'Pending', adminNote: null, listLoads: 0, mutations: [] };
     await page.route('**/api/**', async route => {
         const request = route.request();
         const url = new URL(request.url());
         const method = request.method();
-        expect(request.headers()['authorization']).toBe(`Bearer ${token}`);
+        expect(request.headers()['authorization']).toBeUndefined();
+        expect(request.headers()['x-fooddiary-session']).toBe(sessionId);
         if (method === 'GET' && url.pathname === LIST_PATH) {
             boundary.listLoads++;
             expect(url.searchParams.get('page')).toBe('1');
@@ -184,6 +181,9 @@ async function openModerationPageAsync(page: Page, options: BoundaryOptions = {}
             return;
         }
         throw new Error(`Unexpected moderation fixture operation: ${method} ${url.pathname}`);
+    });
+    await page.route('**/api/v1/auth/session', async route => {
+        await route.fulfill(jsonFixture(contract, 'POST', route.request().url(), { sessionId, roles: ['Admin'] }));
     });
     await page.goto('/moderation?period=all&status=');
     await expect(reportRow(page).getByText('Pending', { exact: true })).toBeVisible();

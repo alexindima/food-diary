@@ -112,6 +112,8 @@ export class AdminMealPlansSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -191,6 +193,8 @@ export class AdminMealPlansSdk extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -275,6 +279,8 @@ export class AdminMealPlansSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -355,6 +361,8 @@ export class AdminMealPlansSdk extends BaseService {
         if (idempotencyKey !== undefined && idempotencyKey !== null) {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -443,6 +451,8 @@ export class AdminMealPlansSdk extends BaseService {
         const saveCatalogMealPlanHttpRequest = requestParameters?.saveCatalogMealPlanHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

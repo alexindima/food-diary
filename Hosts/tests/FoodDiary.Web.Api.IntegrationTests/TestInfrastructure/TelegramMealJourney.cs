@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
-using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -82,7 +81,7 @@ internal static class TelegramMealJourney {
             new { Email = $"telegram-other-{Guid.NewGuid():N}@example.com", Password = "Password123!", Language = "en" });
         Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
         using HttpResponseMessage create = await client.PostAsJsonAsync(route, new { OccurredAtUtc = occurredAt });
         Assert.Equal(HttpStatusCode.NotFound, create.StatusCode);
         using HttpResponseMessage undo = await client.PostAsync($"{route}/undo", content: null);

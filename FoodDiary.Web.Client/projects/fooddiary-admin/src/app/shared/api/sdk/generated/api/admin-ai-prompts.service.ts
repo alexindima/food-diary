@@ -121,6 +121,8 @@ export class AdminAiPromptsSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -205,6 +207,8 @@ export class AdminAiPromptsSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -279,6 +283,8 @@ export class AdminAiPromptsSdk extends BaseService {
         }
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -355,6 +361,8 @@ export class AdminAiPromptsSdk extends BaseService {
         const adminAiPromptDraftHttpRequest = requestParameters?.adminAiPromptDraftHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -447,6 +455,8 @@ export class AdminAiPromptsSdk extends BaseService {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -538,6 +548,8 @@ export class AdminAiPromptsSdk extends BaseService {
         const adminAiPromptUpsertHttpRequest = requestParameters?.adminAiPromptUpsertHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

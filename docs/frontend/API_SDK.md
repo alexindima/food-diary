@@ -1,7 +1,7 @@
 # Generated API clients
 
 FoodDiary generates an Angular `HttpClient` SDK from the actual host's OpenAPI
-document. The user API client covers 41 API groups and 262 operations. Generated transport contracts
+document. The user API client covers 41 API groups and 263 operations. Generated transport contracts
 live in `FoodDiary.Web.Client/src/app/shared/api/sdk/generated/`; application
 models, UI state and response normalization remain in the existing feature
 adapters. This keeps auth/refresh/retry interceptors and cookie behavior in the
@@ -72,8 +72,8 @@ operations have separate generated clients. Added or removed operations require
 a review of the frozen scope manifest. New modules can be
 added as separate slices instead of generating unrelated Admin APIs into
 the user app. The admin client has its own contract and frozen scope manifest:
-`api-sdk/admin.openapi.json` and `api-sdk/admin.scopes.json`. Its 21 groups and
-72 operations are generated into
+`api-sdk/admin.openapi.json` and `api-sdk/admin.scopes.json`. Its 22 groups and
+73 operations are generated into
 `projects/fooddiary-admin/src/app/shared/api/sdk/generated/` and consumed by
 21 existing admin services. Both applications reuse the pinned generator and
 contract selector while retaining their existing import boundary.
@@ -81,15 +81,16 @@ contract selector while retaining their existing import boundary.
 Admin adapters retain their application models, collection paging and legacy
 filter omission/whitespace rules. Open filter records use an explicit query
 bridge; fixed query values continue through generated request parameters.
-Admin HTTP keeps its existing interceptor pipeline and cookie policy: ordinary
-requests omit cross-origin credentials, while SSO exchange enables them.
-SSO tokens and state remain in `AdminAuthService`. Presigned admin image uploads
-continue through the existing `HttpBackend` client. Import/test idempotency keys
-are created once per invocation and survive re-subscription.
-
-Admin SSO exchange issues an independent admin bearer and preserves the main
-application's refresh cookie. The owning action declares this cookie policy;
-ordinary main-app authentication still sets its HttpOnly refresh cookie.
+Admin HTTP uses the admin origin's API proxy, credentials and the custom browser
+request headers. SSO exchange issues an independent opaque HttpOnly admin cookie;
+AdminAuthService stores only user, roles and public session metadata. Normal
+browser responses contain no access or refresh JWT. Reload uses the generated
+AdminSession operation (POST /auth/session); the user Auth client has the same
+restore operation. The owning interceptors preserve identity-pinned retries.
+Presigned admin image uploads continue through HttpBackend. Import/test
+idempotency keys are created once per invocation and survive re-subscription.
+See [Browser sessions](../backend/BROWSER_SESSIONS.md) for the cookie, CSRF,
+impersonation and explicit Telegram transport contracts.
 
 Admin meal-plan lists use `CatalogPlanSummary`, matching the actual summary
 response. Detail/editor flows still fetch `CatalogPlan` with days and meals.

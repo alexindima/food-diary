@@ -223,7 +223,12 @@ export class NotificationService {
     private webPushSessionOptions(sessionToken?: string): { context: HttpContext } {
         return sessionToken === undefined
             ? sdkRequestOptions()
-            : sdkRequestOptions(new HttpHeaders({ Authorization: `Bearer ${sessionToken}` }), new HttpContext().set(SKIP_AUTH, true));
+            : sdkRequestOptions(
+                  new HttpHeaders(
+                      sessionToken.includes('.') ? { Authorization: `Bearer ${sessionToken}` } : { 'X-FoodDiary-Session': sessionToken },
+                  ),
+                  new HttpContext().set(SKIP_AUTH, true),
+              );
     }
 
     public updateCount(count: number): void {

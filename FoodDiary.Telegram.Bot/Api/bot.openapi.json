@@ -31,6 +31,29 @@
                 "additionalProperties": false,
                 "properties": {
                     "accessToken": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationContext": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationReason": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "rememberMe": {
+                        "type": "boolean"
+                    },
+                    "roles": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "sessionId": {
+                        "nullable": true,
                         "type": "string"
                     },
                     "user": {
@@ -914,11 +937,23 @@
             }
         },
         "securitySchemes": {
+            "AdminSession": {
+                "description": "Separate HttpOnly administrative session, established by the SSO exchange.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.admin",
+                "type": "apiKey"
+            },
             "Bearer": {
                 "bearerFormat": "JWT",
                 "description": "JWT Authorization header using the Bearer scheme.",
                 "scheme": "bearer",
                 "type": "http"
+            },
+            "BrowserSession": {
+                "description": "HttpOnly browser session; unsafe requests require X-Requested-With: XMLHttpRequest.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.browser",
+                "type": "apiKey"
             }
         }
     },
@@ -1107,6 +1142,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -1201,6 +1239,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -2220,6 +2261,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -2385,6 +2429,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -2592,6 +2639,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -2787,6 +2837,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -2931,6 +2984,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -3126,6 +3182,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [
@@ -3222,6 +3281,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": [

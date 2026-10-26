@@ -87,6 +87,7 @@ public sealed class AuthSessionLifecycleControllerTests {
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
+        services.AddScoped<BrowserSessionCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(
             SubstituteSender.Create(Result.Success(), request => sentRequest = request)) {
@@ -115,6 +116,7 @@ public sealed class AuthSessionLifecycleControllerTests {
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
+        services.AddScoped<BrowserSessionCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(
             SubstituteSender.Create(Result.Success(), request => sentRequest = request)) {

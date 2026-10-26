@@ -212,7 +212,7 @@ async function executeLoad(name, root, options) {
                         env: {
                             ...process.env,
                             BASE_URL: client.state.apiUrl,
-                            AUTH_TOKEN: client.token,
+                            BROWSER_COOKIE: client.cookie,
                             VUS: String(vus),
                             RAMP_DURATION: "2s",
                             HOLD_DURATION: `${plan.holdSeconds}s`,

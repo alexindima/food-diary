@@ -6,8 +6,8 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1693,
-    "credential": 158,
+    "candidateFields": 1698,
+    "credential": 163,
     "identity": 181,
     "health": 796,
     "financial": 138,
@@ -48,7 +48,7 @@
     {
       "category": "credential",
       "name": "AccessToken",
-      "type": "string",
+      "type": "string?",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/AuthenticationHttpResponse.cs",
       "line": 9
     },
@@ -355,6 +355,13 @@
     },
     {
       "category": "credential",
+      "name": "RefreshToken",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
       "name": "Credential",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
@@ -383,6 +390,13 @@
     },
     {
       "category": "credential",
+      "name": "Credential",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Authentication/Commands/LogoutBrowserSession/LogoutBrowserSessionCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
@@ -404,6 +418,13 @@
     },
     {
       "category": "credential",
+      "name": "Credential",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
@@ -422,6 +443,20 @@
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "Credential",
+      "type": "string",
+      "path": "Modules/Identity/Application/Authentication/Models/BrowserSessionModel.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "Credential",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQuery.cs",
+      "line": 8
     },
     {
       "category": "credential",
@@ -545,7 +580,7 @@
     {
       "category": "credential",
       "name": "AccessToken",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
       "line": 7
     },
@@ -559,9 +594,9 @@
     {
       "category": "credential",
       "name": "AccessToken",
-      "type": "string",
+      "type": "string?",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
-      "line": 3
+      "line": 6
     },
     {
       "category": "credential",

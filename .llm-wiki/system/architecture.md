@@ -3,6 +3,8 @@ id: system.architecture
 kind: system
 status: current
 sources:
+  - docs/adr/0058-browser-sessions-in-the-existing-api.md
+  - docs/backend/BROWSER_SESSIONS.md
   - docs/adr/0054-independent-commit-verification-and-notification-reconciliation.md
   - docs/adr/0052-backend-transaction-and-delivery-reliability.md
   - docs/adr/0048-atomic-command-and-nutrition-boundaries.md
@@ -35,6 +37,12 @@ in [the architecture document](../../docs/ARCHITECTURE.md).
 - BugTriage owns a separate bug queue and consumes MailInbox through its client;
   code investigation and draft publication run on a local workstation.
 - PostgreSQL, RabbitMQ, and Redis provide persistence, messaging, and caching.
+
+User and admin browser sessions remain inside the existing API; no BFF host is
+added. Identity stores hashed opaque session proofs, while Presentation owns
+HttpOnly cookies and browser request checks. Admin SSO and per-tab impersonation
+have separate cookies. Telegram bot bearer transport and explicit Mini App token
+mode remain supported. See [ADR 0058](../../docs/adr/0058-browser-sessions-in-the-existing-api.md).
 
 ## Boundary Model
 

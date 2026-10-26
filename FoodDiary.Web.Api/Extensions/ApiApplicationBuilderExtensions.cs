@@ -31,7 +31,8 @@ public static class ApiApplicationBuilderExtensions {
 
             if (app.Environment.IsDevelopment()) {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options => options.UseRequestInterceptor(
+                    "request => { request.headers['X-Requested-With'] = 'XMLHttpRequest'; return request; }"));
             } else {
                 app.UseHsts();
             }
@@ -43,6 +44,7 @@ public static class ApiApplicationBuilderExtensions {
             app.UseCors(ApiCompositionConstants.CorsPolicyName);
             app.UseAuthentication();
             app.UseRateLimiter();
+            app.UseMiddleware<BrowserRequestProtectionMiddleware>();
             app.UseAuthorization();
             app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
             app.UseOutputCache();

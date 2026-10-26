@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -36,51 +35,34 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
         Assert.NotNull(authPayload);
-        Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(authPayload.SessionId));
         Assert.Equal(email, authPayload.User.Email);
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
     }
 
     [RequiresDockerFact]
-    public async Task Refresh_WithIssuedRefreshToken_ReturnsNewAccessTokenAgainstPostgres() {
-        HttpClient client = factory.CreateClient();
-        string email = $"postgres-refresh-tests-{Guid.NewGuid():N}@example.com";
-
-        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
-            "/api/v1/auth/register",
-            new RegisterHttpRequest(email, "Password123!", "en"));
-        AuthPayload? registerPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
-
-        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
-        Assert.NotNull(registerPayload);
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(registerResponse)));
-
-        string originalRefreshToken = AuthenticationResponseCookies.ReadRefreshToken(registerResponse);
-        HttpResponseMessage refreshResponse = await client.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(originalRefreshToken));
-        AuthPayload? refreshPayload = await refreshResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
-
-        Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
-        Assert.NotNull(refreshPayload);
-        Assert.False(string.IsNullOrWhiteSpace(refreshPayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(refreshResponse)));
-        Assert.NotEqual(originalRefreshToken, AuthenticationResponseCookies.ReadRefreshToken(refreshResponse), StringComparer.Ordinal);
-
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshPayload.AccessToken);
-        HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
-
-        Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
-
-        HttpResponseMessage replayResponse = await client.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(originalRefreshToken));
-
-        Assert.Equal(HttpStatusCode.Unauthorized, replayResponse.StatusCode);
+    public async Task BrowserSessionRestore_ReturnsSameSessionWithoutTokensAgainstPostgres() {
+        using HttpClient client = factory.CreateClient();
+        using HttpResponseMessage registration = await client.PostAsJsonAsync("/api/v1/auth/register",
+            new RegisterHttpRequest($"postgres-session-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
+        registration.EnsureSuccessStatusCode();
+        string cookie = AuthenticationResponseCookies.ReadBrowserSession(registration);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, cookie);
+        JsonElement original = await registration.Content.ReadFromJsonAsync<JsonElement>();
+        using HttpResponseMessage restored = await client.PostAsync("/api/v1/auth/session", content: null);
+        restored.EnsureSuccessStatusCode();
+        JsonElement current = await restored.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(original.GetProperty("sessionId").GetString(), current.GetProperty("sessionId").GetString());
+        Assert.False(current.TryGetProperty("accessToken", out _));
+        Assert.False(current.TryGetProperty("refreshToken", out _));
+        using HttpResponseMessage profile = await client.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.OK, profile.StatusCode);
+        using HttpResponseMessage mint = await client.PostAsJsonAsync("/api/v1/auth/refresh", new RefreshTokenHttpRequest(cookie.Split('=')[1]));
+        Assert.Equal(HttpStatusCode.Unauthorized, mint.StatusCode);
     }
 
     [RequiresDockerFact]
@@ -96,7 +78,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
         Assert.NotNull(registerPayload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", registerPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
 
         HttpResponseMessage deleteResponse = await client.DeleteAsync("/api/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
@@ -110,10 +92,10 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.OK, restoreResponse.StatusCode);
         Assert.NotNull(restorePayload);
-        Assert.False(string.IsNullOrWhiteSpace(restorePayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(restoreResponse)));
+        Assert.False(string.IsNullOrWhiteSpace(restorePayload.SessionId));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadBrowserSession(restoreResponse)));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", restorePayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(restoreResponse));
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
 
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
@@ -143,7 +125,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         PasswordResetMessage resetMessage = factory.EmailSender.GetRequiredPasswordResetMessage(email);
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", registerPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         HttpResponseMessage deleteResponse = await client.DeleteAsync("/api/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
 
@@ -226,11 +208,11 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.OK, confirmResponse.StatusCode);
         Assert.NotNull(confirmPayload);
-        Assert.False(string.IsNullOrWhiteSpace(confirmPayload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(confirmResponse)));
+        Assert.False(string.IsNullOrWhiteSpace(confirmPayload.SessionId));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadBrowserSession(confirmResponse)));
         Assert.Equal(email, confirmPayload.User.Email);
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", confirmPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(confirmResponse));
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
 
@@ -246,8 +228,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task CreateWeightEntry_WithDuplicateDate_ReturnsConflictAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         var request = new CreateWeightEntryHttpRequest(
             new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified),
@@ -266,8 +248,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task DeleteProduct_KeepsShoppingListItemButClearsProductReferenceAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
@@ -333,8 +315,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task DeleteImageAsset_BlocksReferencedRecipeAssets_ThenDeletesAfterRecipeDeletionAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
@@ -450,8 +432,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     [RequiresDockerFact]
     public async Task RecipeTextIngredients_RoundTripDuplicateAndNutritionAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         var steps = new[] { new { description = "Season", ingredients = new[] { new { textName = "Salt", amountText = "to taste", amount = 0 }, new { textName = "Tomatoes", amountText = "2 pieces", amount = 0 } } } };
         HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/recipes", new {
             name = "Text recipe",
@@ -533,7 +515,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
             string.Create(CultureInfo.InvariantCulture, $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"postgres-api-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -543,8 +525,8 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static async Task<ImageUploadPayload> CreateImageAssetAsync(HttpClient client, string fileName) {
@@ -565,7 +547,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, string RefreshToken, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

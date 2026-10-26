@@ -1,8 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Security.Claims;
 using System.Text.Json;
 using FoodDiary.Modules.Dietologist.Presentation.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -17,7 +14,7 @@ public sealed class SecurityAccessRegressionIntegrationTests(ApiWebApplicationFa
     private static readonly JsonSerializerOptions SnapshotOptions = new() { WriteIndented = true };
 
     [RequiresDockerFact]
-    public async Task Trial_RequiresEmailVerificationBeforeNewTokensReceivePremium() {
+    public async Task Trial_RequiresEmailVerificationBeforeSessionReceivesPremium() {
         TestUser user = await RegisterAsync(verify: false);
         using HttpResponseMessage overview = await user.Client.GetAsync("/api/v1/billing/overview");
         overview.EnsureSuccessStatusCode();
@@ -30,21 +27,21 @@ public sealed class SecurityAccessRegressionIntegrationTests(ApiWebApplicationFa
             () => Assert.Equal(HttpStatusCode.Conflict, rejected.StatusCode),
             () => Assert.Equal("User.EmailRequired", error.Error),
             () => Assert.False(overviewPayload.GetProperty("canStartPremiumTrial").GetBoolean()),
-            () => Assert.DoesNotContain(RoleNames.Premium, ReadRoles(unverified.AccessToken), StringComparer.Ordinal));
+            () => Assert.DoesNotContain(RoleNames.Premium, unverified.Roles, StringComparer.Ordinal));
 
         await VerifyAsync(user);
         using HttpResponseMessage started = await user.Client.PostAsync("/api/v1/billing/trial", content: null);
         started.EnsureSuccessStatusCode();
         AuthenticationPayload verified = await RefreshAsync(user.Client);
-        Assert.Contains(RoleNames.Premium, ReadRoles(verified.AccessToken), StringComparer.Ordinal);
+        Assert.Contains(RoleNames.Premium, verified.Roles, StringComparer.Ordinal);
         await PresentationBoundaryIntegrationTests.AssertSnapshotAsync("billing-trial-verification-contract.json",
             JsonSerializer.Serialize(new {
                 unverifiedTrialStatus = (int)rejected.StatusCode,
                 unverifiedError = error.Error,
                 unverifiedCanStartTrial = overviewPayload.GetProperty("canStartPremiumTrial").GetBoolean(),
-                unverifiedTokenHasPremium = ReadRoles(unverified.AccessToken).Contains(RoleNames.Premium, StringComparer.Ordinal),
+                unverifiedTokenHasPremium = unverified.Roles.Contains(RoleNames.Premium, StringComparer.Ordinal),
                 verifiedTrialStatus = (int)started.StatusCode,
-                verifiedTokenHasPremium = ReadRoles(verified.AccessToken).Contains(RoleNames.Premium, StringComparer.Ordinal),
+                verifiedTokenHasPremium = verified.Roles.Contains(RoleNames.Premium, StringComparer.Ordinal),
             }, SnapshotOptions));
     }
 
@@ -113,7 +110,7 @@ public sealed class SecurityAccessRegressionIntegrationTests(ApiWebApplicationFa
         response.EnsureSuccessStatusCode();
         AuthenticationPayload? authentication = await response.Content.ReadFromJsonAsync<AuthenticationPayload>();
         Assert.NotNull(authentication);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
         var user = new TestUser(authentication.User.Id, email, client);
         if (verify) {
             await VerifyAsync(user);
@@ -129,22 +126,19 @@ public sealed class SecurityAccessRegressionIntegrationTests(ApiWebApplicationFa
     }
 
     private static async Task<AuthenticationPayload> RefreshAsync(HttpClient client) {
-        using HttpResponseMessage response = await client.PostAsync("/api/v1/auth/refresh", content: null);
+        using HttpResponseMessage response = await client.PostAsync("/api/v1/auth/session", content: null);
         response.EnsureSuccessStatusCode();
         AuthenticationPayload? authentication = await response.Content.ReadFromJsonAsync<AuthenticationPayload>();
         Assert.NotNull(authentication);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.AccessToken);
+
         return authentication;
     }
-
-    private static IEnumerable<string> ReadRoles(string token) => new JwtSecurityTokenHandler().ReadJwtToken(token).Claims
-        .Where(claim => claim.Type is "role" or ClaimTypes.Role).Select(claim => claim.Value);
 
     [ExcludeFromCodeCoverage]
     private sealed record TestUser(Guid Id, string Email, HttpClient Client);
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthenticationPayload(string AccessToken, UserPayload User);
+    private sealed record AuthenticationPayload(string SessionId, string[] Roles, UserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record UserPayload(Guid Id);

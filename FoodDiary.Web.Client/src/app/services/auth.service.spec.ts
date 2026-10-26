@@ -1,51 +1,24 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom, Subject } from 'rxjs';
-import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { firstValueFrom } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
-import { LoginRequest, PasswordResetRequest, RegisterRequest } from '../shared/auth/auth.data';
+import { LoginRequest } from '../shared/auth/auth.data';
+import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
-import { entityId } from '../shared/models/semantics/entity-id';
-import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
-import { ACCOUNT_ACCESS_STORAGE_KEY, TokenStorageService } from './token-storage.service';
 
-const JWT_SECONDS_PER_MS = 1000;
-const JWT_ONE_MINUTE_SECONDS = 60;
-const JWT_ONE_HOUR_SECONDS = 3600;
-const authBaseUrl = environment.apiUrls.auth;
-
-function createFakeJwt(payload: Record<string, unknown>): string {
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const body = btoa(JSON.stringify(payload));
-    const sig = btoa('signature');
-    return `${header}.${body}.${sig}`;
-}
-
-const loginRequest = new LoginRequest({
-    email: 'test@example.com',
-    password: 'password123',
-    rememberMe: true,
-});
-
-const loginFakeToken = createFakeJwt({ nameid: 'user-123', role: 'User' });
-const authUserFields = {
-    hasPassword: true,
-    pushNotificationsEnabled: false,
-    fastingPushNotificationsEnabled: false,
-    socialPushNotificationsEnabled: false,
-    fastingCheckInReminderHours: 12,
-    fastingCheckInFollowUpReminderHours: 20,
-};
-
-const loginAuthResponse = {
-    accessToken: loginFakeToken,
+const base = environment.apiUrls.auth;
+const sessionId = 'dd281aa8-5d85-4fda-bc28-a7e1fd6085db';
+const response = {
+    sessionId,
+    roles: ['User'],
     user: {
-        id: entityId<'user'>('user-123'),
+        id: 'user-123',
         email: 'test@example.com',
         isActive: true,
         isEmailConfirmed: true,
@@ -58,1355 +31,198 @@ const loginAuthResponse = {
         language: 'en',
     },
 };
-
+const login = new LoginRequest({ email: response.user.email, password: 'test-password', rememberMe: true });
 let service: AuthService;
-let httpMock: HttpTestingController;
-let navigationServiceSpy: {
-    navigateToAuthAsync: ReturnType<typeof vi.fn>;
-    navigateToHomeAsync: ReturnType<typeof vi.fn>;
-    navigateToLandingAsync: ReturnType<typeof vi.fn>;
-};
-let localizationServiceSpy: {
-    applyLanguagePreferenceAsync: ReturnType<typeof vi.fn>;
-    clearStoredLanguage: ReturnType<typeof vi.fn>;
-};
-let sessionEventsSpy: {
-    notifyAuthenticated: ReturnType<typeof vi.fn>;
-    notifySessionEnded: ReturnType<typeof vi.fn>;
-    notifyLocalSessionInvalidated: ReturnType<typeof vi.fn>;
-    notifyLocalSessionInvalidating: ReturnType<typeof vi.fn>;
-    runSessionEndNavigationAsync: SessionEventsService['runSessionEndNavigationAsync'];
-    prepareSessionEnd: Mock<SessionEventsService['prepareSessionEnd']>;
-};
+let requests: HttpTestingController;
+let navigation: { navigateToAuthAsync: ReturnType<typeof vi.fn>; navigateToLandingAsync: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
-    window.history.replaceState({}, '', '/');
     localStorage.clear();
     sessionStorage.clear();
-
-    navigationServiceSpy = {
-        navigateToAuthAsync: vi.fn(),
-        navigateToHomeAsync: vi.fn(),
-        navigateToLandingAsync: vi.fn(),
+    window.history.replaceState({}, '', '/');
+    navigation = {
+        navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToLandingAsync: vi.fn().mockResolvedValue(undefined),
     };
-    navigationServiceSpy.navigateToAuthAsync.mockResolvedValue(undefined);
-    navigationServiceSpy.navigateToHomeAsync.mockResolvedValue(undefined);
-    navigationServiceSpy.navigateToLandingAsync.mockResolvedValue(undefined);
-
-    localizationServiceSpy = {
-        applyLanguagePreferenceAsync: vi.fn(),
-        clearStoredLanguage: vi.fn(),
-    };
-    localizationServiceSpy.applyLanguagePreferenceAsync.mockResolvedValue(undefined);
-
-    sessionEventsSpy = {
-        notifyAuthenticated: vi.fn(),
-        notifySessionEnded: vi.fn(),
-        notifyLocalSessionInvalidated: vi.fn(),
-        notifyLocalSessionInvalidating: vi.fn(),
-        runSessionEndNavigationAsync: async (navigate): Promise<void> => {
-            await navigate();
-        },
-        prepareSessionEnd: vi.fn<SessionEventsService['prepareSessionEnd']>(() => null),
-    };
-
     TestBed.configureTestingModule({
         providers: [
-            AuthService,
             provideHttpClient(),
             provideHttpClientTesting(),
-            { provide: NavigationService, useValue: navigationServiceSpy },
-            { provide: LocalizationService, useValue: localizationServiceSpy },
-            { provide: SessionEventsService, useValue: sessionEventsSpy },
+            { provide: NavigationService, useValue: navigation },
+            {
+                provide: LocalizationService,
+                useValue: { applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined), clearStoredLanguage: vi.fn() },
+            },
         ],
     });
-
     service = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController);
+    requests = TestBed.inject(HttpTestingController);
 });
 
 afterEach(() => {
-    httpMock.verify();
-    window.history.replaceState({}, '', '/');
+    requests.verify();
     localStorage.clear();
     sessionStorage.clear();
+    window.history.replaceState({}, '', '/');
 });
 
-describe('logout across tabs', () => {
-    it.each([true, false])('clears the cached user and token after another tab logs out (remembered=%s)', remembered => {
-        authenticateForCrossTabTest(remembered);
-        localStorage.removeItem('refreshSession');
-
-        window.dispatchEvent(createSessionRemovalEvent());
-
-        expect(service.isAuthenticated()).toBe(false);
-        expect(service.getUserId()).toBeNull();
-        expect(service.getToken()).toBeNull();
-        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
-        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-    });
-
-    it('ignores an old removal event after a new refresh session exists', () => {
-        authenticateForCrossTabTest(true);
-
-        window.dispatchEvent(createSessionRemovalEvent());
-
-        expect(service.isAuthenticated()).toBe(true);
-        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-    });
-
-    it('ignores a refresh response that arrives after logout in another tab', async () => {
-        authenticateForCrossTabTest(false);
-        const received = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        localStorage.removeItem('refreshSession');
-        window.dispatchEvent(createSessionRemovalEvent());
-
-        request.flush(loginAuthResponse);
-
-        expect(await received).toBeNull();
-        expect(service.isAuthenticated()).toBe(false);
-        expect(service.getToken()).toBeNull();
-        expect(localStorage.getItem('refreshSession')).toBeNull();
-    });
-
-    it('does not log out a newer login when an older refresh request fails', async () => {
-        authenticateForCrossTabTest(false);
-        const received = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        service.acceptExternalAuthentication(loginAuthResponse);
-
-        request.flush('Unauthorized', { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        expect(await received).toBeNull();
-        expect(service.isAuthenticated()).toBe(true);
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-    });
-});
-
-function authenticateForCrossTabTest(remembered: boolean): void {
-    service.login(new LoginRequest({ email: loginRequest.email, password: loginRequest.password, rememberMe: remembered })).subscribe();
-    httpMock.expectOne(`${authBaseUrl}/login`).flush(loginAuthResponse);
+function signIn(): void {
+    service.login(login).subscribe();
+    requests.expectOne(`${base}/login`).flush(response);
 }
 
-function createSessionRemovalEvent(): StorageEvent {
-    const event = new StorageEvent('storage', { key: 'refreshSession', oldValue: 'true', newValue: null });
-    Object.defineProperty(event, 'storageArea', { value: localStorage });
-    return event;
-}
-
-describe('account access across tabs', () => {
-    const premiumToken = createFakeJwt({ nameid: 'user-123', role: ['User', 'Premium'] });
-    const premiumResponse = { ...loginAuthResponse, accessToken: premiumToken };
-
-    function publishAccessSnapshot(snapshot: unknown): void {
-        const newValue = JSON.stringify(snapshot);
-        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, newValue);
-        const event = new StorageEvent('storage', { key: ACCOUNT_ACCESS_STORAGE_KEY, newValue });
-        Object.defineProperty(event, 'storageArea', { value: localStorage });
-        window.dispatchEvent(event);
-    }
-
-    it.each([true, false])('refreshes changed roles without granting the stored hint (remembered=%s)', async remembered => {
-        authenticateForCrossTabTest(remembered);
-
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-
-        expect(service.isPremium()).toBe(false);
-        const refreshed = firstValueFrom(service.refreshToken());
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(premiumResponse);
-        await refreshed;
-
-        expect(service.isPremium()).toBe(true);
-        expect(JSON.parse(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY) ?? 'null')).toEqual(['user-123', 'Premium', 'User']);
-        expect(localStorage.getItem('authToken')).toBeNull();
-        expect(sessionStorage.getItem('authToken')).toBe(premiumToken);
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
+describe('server-backed browser sessions', () => {
+    it('starts as a guest and accepts server session metadata without a bearer credential', () => {
+        expect(service.isAuthenticated()).toBe(false);
+        signIn();
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getUserId()).toBe('user-123');
+        expect(service.getSessionKey()).toBe(sessionId);
+        expect(service.getToken()).toBeNull();
+        for (const storage of [localStorage, sessionStorage]) {
+            expect(storage.getItem('authToken')).toBeNull();
+            expect(storage.getItem('refreshToken')).toBeNull();
+        }
     });
 
-    it('refreshes stale session-only roles when a tab is reloaded after the change', async () => {
-        authenticateForCrossTabTest(false);
-        localStorage.setItem(ACCOUNT_ACCESS_STORAGE_KEY, JSON.stringify(['user-123', 'Premium', 'User']));
-
+    it('restores the HttpOnly session from the API after a reload', async () => {
         const restored = service.restoreSessionAsync();
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(premiumResponse);
+        const request = requests.expectOne(`${base}/session`);
+        expect(request.request.method).toBe('POST');
+        request.flush(response);
         await restored;
-
-        expect(service.isPremium()).toBe(true);
-        expect(service.isAuthReady()).toBe(true);
-        expect(localStorage.getItem('authToken')).toBeNull();
-    });
-
-    it.each([['other-user', 'Premium'], ['user-123', 1], null])('ignores unrelated or invalid snapshots %j', snapshot => {
-        authenticateForCrossTabTest(false);
-        publishAccessSnapshot(snapshot);
-        expect(service.isPremium()).toBe(false);
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-    });
-
-    it('keeps valid access on a transient refresh failure', async () => {
-        authenticateForCrossTabTest(false);
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-        const refreshed = firstValueFrom(service.refreshToken());
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush('Unavailable', {
-            status: HttpStatusCode.ServiceUnavailable,
-            statusText: 'Unavailable',
-        });
-
-        expect(await refreshed).toBeNull();
         expect(service.isAuthenticated()).toBe(true);
-        expect(service.isPremium()).toBe(false);
-        expect(service.getToken()).toBe(loginFakeToken);
-    });
-
-    it('does not replace an impersonated identity with a cookie session', () => {
-        sessionStorage.setItem('authToken', createFakeJwt({ nameid: 'user-123', role: 'User', fd_impersonation: 'true' }));
-        service.initializeAuth();
-
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-
-        expect(service.isImpersonating()).toBe(true);
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-    });
-
-    it('does not restore access if another tab logs out during the refresh', async () => {
-        authenticateForCrossTabTest(false);
-        publishAccessSnapshot(['user-123', 'Premium', 'User']);
-        const refreshed = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        localStorage.removeItem('refreshSession');
-        window.dispatchEvent(createSessionRemovalEvent());
-        request.flush(premiumResponse);
-
-        expect(await refreshed).toBeNull();
-        expect(service.isAuthenticated()).toBe(false);
-        expect(localStorage.getItem(ACCOUNT_ACCESS_STORAGE_KEY)).toBeNull();
-    });
-});
-
-describe('refresh after a new login', () => {
-    it('does not replace a new user with an older refresh response', async () => {
-        authenticateForCrossTabTest(false);
-        const received = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        const nextToken = createFakeJwt({ nameid: 'user-456', role: 'User' });
-        service.acceptExternalAuthentication({
-            ...loginAuthResponse,
-            accessToken: nextToken,
-            user: { ...loginAuthResponse.user, id: entityId<'user'>('user-456') },
-        });
-
-        request.flush(loginAuthResponse);
-
-        expect(await received).toBeNull();
-        expect(service.getUserId()).toBe('user-456');
-        expect(service.getToken()).toBe(nextToken);
-    });
-
-    it('keeps the new session refresh shared when the old request completes', async () => {
-        authenticateForCrossTabTest(false);
-        const previous = firstValueFrom(service.refreshToken());
-        const oldRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        service.acceptExternalAuthentication(loginAuthResponse);
-        const current = firstValueFrom(service.refreshToken());
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-
-        oldRequest.flush(loginAuthResponse);
-        expect(await previous).toBeNull();
-        const currentRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        const shared = firstValueFrom(service.refreshToken());
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-        currentRequest.flush(loginAuthResponse);
-
-        expect(await Promise.all([current, shared])).toEqual([loginFakeToken, loginFakeToken]);
-    });
-});
-
-describe('token management', () => {
-    it('should get token from localStorage', () => {
-        localStorage.setItem('authToken', loginFakeToken);
-        service.initializeAuth();
-        expect(service.getToken()).toBe(loginFakeToken);
-    });
-
-    it('should get token from sessionStorage when not in localStorage', () => {
-        sessionStorage.setItem('authToken', loginFakeToken);
-        service.initializeAuth();
-        expect(service.getToken()).toBe(loginFakeToken);
-    });
-
-    it('should pin the session token instead of a different remembered account', () => {
-        localStorage.setItem('authToken', createFakeJwt({ nameid: 'other-user' }));
-        sessionStorage.setItem('authToken', loginFakeToken);
-        service.initializeAuth();
-        expect(service.getToken()).toBe(loginFakeToken);
-    });
-
-    it('should return null when no token exists', () => {
+        expect(service.isAuthReady()).toBe(true);
         expect(service.getToken()).toBeNull();
     });
 
-    it('should clear all token storage on logout', async () => {
-        localStorage.setItem('authToken', 'token');
-        sessionStorage.setItem('authToken', 'token');
+    it('coalesces simultaneous session checks and obtains updated roles from the server', async () => {
+        signIn();
+        const first = firstValueFrom(service.refreshSession());
+        const second = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush({ ...response, roles: ['User', 'Premium'] });
+        expect(await first).toBe(true);
+        expect(await second).toBe(true);
+        expect(service.isPremium()).toBe(true);
+    });
 
-        await service.onLogoutAsync(false);
+    it('does not apply an old response to a newer login', async () => {
+        signIn();
+        const pending = firstValueFrom(service.refreshSession());
+        const old = requests.expectOne(`${base}/session`);
+        service.login(login).subscribe();
+        requests.expectOne(`${base}/login`).flush({ ...response, sessionId: 'new-session' });
+        old.flush(response);
+        expect(await pending).toBe(false);
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getSessionKey()).toBe('new-session');
+    });
 
+    it('rejects a session response for another account instead of silently changing request ownership', async () => {
+        signIn();
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush({ ...response, user: { ...response.user, id: 'another-user' } });
+        expect(await restored).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(navigation.navigateToAuthAsync).toHaveBeenCalled();
+    });
+});
+
+describe('browser session failures and logout', () => {
+    it('ends local access when the server rejects a revoked session', async () => {
+        signIn();
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        expect(await restored).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+    });
+
+    it('preserves local identity on a temporary server failure', async () => {
+        signIn();
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        expect(await restored).toBe(false);
+        expect(service.isAuthenticated()).toBe(true);
+    });
+
+    it('cleans up before ending the server session and clears the local identity', async () => {
+        signIn();
+        const ended = service.onLogoutAsync();
+        requests.expectOne(`${base}/logout`).flush(null);
+        await ended;
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getToken()).toBeNull();
+        expect(navigation.navigateToLandingAsync).toHaveBeenCalled();
+    });
+
+    it('keeps impersonation selection local to the tab and never exposes its credential', async () => {
+        const state = TestBed.inject(BrowserSessionStateService);
+        state.setContext('context-one');
+        const restored = firstValueFrom(service.refreshSession());
+        requests
+            .expectOne(`${base}/session`)
+            .flush({ ...response, sessionId: null, impersonationContext: 'context-one', impersonationReason: 'Support request' });
+        expect(await restored).toBe(true);
+        expect(service.isImpersonating()).toBe(true);
+        expect(service.impersonationReason()).toBe('Support request');
+        expect(service.getToken()).toBeNull();
+        expect(sessionStorage.getItem('impersonationContext')).toBe('context-one');
+        expect(localStorage.getItem('impersonationContext')).toBeNull();
+        expect(service.sessionHubUrl('/hubs/test')).toBe('/hubs/test?fd_context=context-one');
+    });
+});
+
+describe('browser session policy and explicit Telegram mode', () => {
+    it('keeps the required-password-change flow and clears the server flag after a new login', async () => {
+        service.login(login).subscribe();
+        requests.expectOne(`${base}/login`).flush({ ...response, user: { ...response.user, mustChangePassword: true } });
+        expect(service.mustChangePassword()).toBe(true);
+        const completed = service.completeRequiredPasswordChangeAsync('updated-password');
+        const request = requests.expectOne(`${base}/login`);
+        expect(request.request.body).toMatchObject({ rememberMe: true });
+        request.flush({ ...response, user: { ...response.user, mustChangePassword: false } });
+        await completed;
+        expect(service.mustChangePassword()).toBe(false);
+    });
+
+    it('rejects an ordinary session response when restoring an impersonation context', async () => {
+        TestBed.inject(BrowserSessionStateService).setContext('selected-context');
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush(response);
+        expect(await restored).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+    });
+
+    it('keeps an explicit Mini App access token only in memory', async () => {
+        TestBed.resetTestingModule();
+        window.history.replaceState({}, '', '/#tgWebAppData=unit-fixture');
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                { provide: NavigationService, useValue: navigation },
+                {
+                    provide: LocalizationService,
+                    useValue: { applyLanguagePreferenceAsync: vi.fn().mockResolvedValue(undefined), clearStoredLanguage: vi.fn() },
+                },
+            ],
+        });
+        service = TestBed.inject(AuthService);
+        requests = TestBed.inject(HttpTestingController);
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/refresh`).flush({ user: response.user, accessToken: 'mini-access-token' });
+        expect(await restored).toBe(true);
+        expect(service.getToken()).toBe('mini-access-token');
         expect(localStorage.getItem('authToken')).toBeNull();
         expect(sessionStorage.getItem('authToken')).toBeNull();
-    });
-});
-
-describe('login', () => {
-    it('should POST to /api/v1/auth/login', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({
-            email: 'test@example.com',
-            password: 'password123',
-            rememberMe: true,
-        });
-        req.flush(loginAuthResponse);
-    });
-
-    it('should store the access token and only a refresh-session marker on successful login', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(localStorage.getItem('authToken')).toBeNull();
-        expect(sessionStorage.getItem('authToken')).toBe(loginFakeToken);
         expect(localStorage.getItem('refreshToken')).toBeNull();
-        expect(localStorage.getItem('refreshSession')).toBe('true');
+        expect(sessionStorage.getItem('refreshToken')).toBeNull();
     });
 
-    it('should store token in sessionStorage when rememberMe=false', () => {
-        const noRememberRequest = new LoginRequest({
-            email: 'test@example.com',
-            password: 'password123',
-            rememberMe: false,
-        });
-
-        service.login(noRememberRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(sessionStorage.getItem('authToken')).toBe(loginFakeToken);
-        expect(localStorage.getItem('authToken')).toBeNull();
-    });
-
-    it('should set isAuthenticated to true after login', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(service.isAuthenticated()).toBe(true);
-    });
-
-    it('should extract userId from response and store it', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(service.getUserId()).toBe('user-123');
-        expect(localStorage.getItem('userId')).toBe('user-123');
-    });
-
-    it('should apply language preference from response', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(localizationServiceSpy.applyLanguagePreferenceAsync).toHaveBeenCalledWith('en');
-    });
-
-    it('should not apply language preference when not in response', () => {
-        const responseNoLang = {
-            ...loginAuthResponse,
-            user: { ...loginAuthResponse.user, language: undefined },
-        };
-
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(responseNoLang);
-
-        expect(localizationServiceSpy.applyLanguagePreferenceAsync).not.toHaveBeenCalled();
-    });
-
-    it('should publish authenticated session event on login', () => {
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(loginAuthResponse);
-
-        expect(sessionEventsSpy.notifyAuthenticated).toHaveBeenCalled();
-    });
-
-    it('should set emailConfirmed from response', () => {
-        const responseUnconfirmed = {
-            ...loginAuthResponse,
-            user: { ...loginAuthResponse.user, isEmailConfirmed: false },
-        };
-
-        service.login(loginRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/login`);
-        req.flush(responseUnconfirmed);
-
-        expect(service.isEmailConfirmed()).toBe(false);
-        expect(service.requiresEmailVerification()).toBe(true);
-    });
-});
-
-describe('Telegram-only session policy', () => {
-    it('allows a session without pretending its email was verified, including restoration', () => {
-        const token = createFakeJwt({ nameid: 'telegram-user', fd_email_optional: 'true' });
-        service.login(loginRequest).subscribe();
-        httpMock.expectOne(`${authBaseUrl}/login`).flush({
-            ...loginAuthResponse,
-            accessToken: token,
-            user: { ...loginAuthResponse.user, id: 'telegram-user', email: null, isEmailConfirmed: false, hasTelegramIdentity: true },
-        });
-
-        expect(service.isEmailConfirmed()).toBe(false);
-        expect(service.requiresEmailVerification()).toBe(false);
-        service.initializeAuth();
-        expect(service.requiresEmailVerification()).toBe(false);
-
-        service.login(loginRequest).subscribe();
-        httpMock.expectOne(`${authBaseUrl}/login`).flush({
-            ...loginAuthResponse,
-            user: { ...loginAuthResponse.user, isEmailConfirmed: false },
-        });
-        expect(service.requiresEmailVerification()).toBe(true);
-    });
-});
-
-describe('register', () => {
-    const registerRequest = new RegisterRequest({
-        email: 'new@example.com',
-        password: 'password123',
-        language: 'ru',
-    });
-
-    const fakeToken = createFakeJwt({ nameid: 'new-user-456' });
-
-    const authResponse = {
-        accessToken: fakeToken,
-        user: {
-            ...authUserFields,
-            id: 'new-user-456',
-            email: 'new@example.com',
-            isActive: true,
-            isEmailConfirmed: true,
-        },
-    };
-
-    it('should POST to /api/v1/auth/register', () => {
-        service.register(registerRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/register`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({
-            email: 'new@example.com',
-            password: 'password123',
-            language: 'ru',
-            clientOrigin: window.location.origin,
-        });
-        req.flush(authResponse);
-    });
-
-    it('should store tokens on successful register', () => {
-        service.register(registerRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/register`);
-        req.flush(authResponse);
-
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.getUserId()).toBe('new-user-456');
-        expect(Number(sessionStorage.getItem('email-verification-cooldown:new-user-456'))).toBeGreaterThan(Date.now());
-    });
-
-    it('should store token in sessionStorage (rememberMe=false for register)', () => {
-        service.register(registerRequest).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/register`);
-        req.flush(authResponse);
-
-        expect(sessionStorage.getItem('authToken')).toBe(fakeToken);
-        expect(localStorage.getItem('authToken')).toBeNull();
-    });
-});
-
-describe('requestPasswordReset', () => {
-    it('should POST client origin with password reset request', () => {
-        service.requestPasswordReset(new PasswordResetRequest({ email: 'reset@example.com' })).subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/password-reset/request`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({
-            email: 'reset@example.com',
-            clientOrigin: window.location.origin,
-        });
-        req.flush(null);
-    });
-});
-
-describe('resendEmailVerification', () => {
-    it('should POST client origin with resend request', () => {
-        service.resendEmailVerification().subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/verify-email/resend`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ clientOrigin: window.location.origin });
-        req.flush(null);
-    });
-});
-
-describe('refreshToken', () => {
-    it('should POST to /api/v1/auth/refresh with refresh token', () => {
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-
-        service.refreshToken().subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ refreshToken: 'existing-refresh-token' });
-        req.flush({
-            accessToken: createFakeJwt({ sub: 'user-1' }),
-            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-    });
-
-    it('should update access token on success', () => {
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-        const newToken = createFakeJwt({ sub: 'user-1' });
-
-        service.refreshToken().subscribe(result => {
-            expect(result).toBe(newToken);
-        });
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush({
-            accessToken: newToken,
-            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-
-        expect(service.isAuthenticated()).toBe(true);
-    });
-
-    it('should share a single refresh request across concurrent subscribers', async () => {
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-        const newToken = createFakeJwt({ sub: 'user-1' });
-        const results = Promise.all([firstValueFrom(service.refreshToken()), firstValueFrom(service.refreshToken())]);
-
-        const requests = httpMock.match(`${authBaseUrl}/refresh`);
-        expect(requests).toHaveLength(1);
-
-        requests[0].flush({
-            accessToken: newToken,
-            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-
-        expect(await results).toEqual([newToken, newToken]);
-        expect(localStorage.getItem('refreshToken')).toBeNull();
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-    });
-});
-
-describe('queued session refresh', () => {
-    it('waits for the browser lock before sending a refresh request', async () => {
-        localStorage.setItem('refreshSession', 'true');
-        let releaseLock = (): void => {};
-        const gate = new Promise<void>(resolve => {
-            releaseLock = resolve;
-        });
-        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementation(
-            async <T>(_name: string, operation: () => Promise<T>): Promise<T> => gate.then(operation),
-        );
-        const result = firstValueFrom(service.refreshToken());
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-
-        releaseLock();
-        await gate;
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(loginAuthResponse);
-
-        expect(await result).toBe(loginFakeToken);
-    });
-
-    it('does not restore a session logged out while waiting for the browser lock', async () => {
-        authenticateForCrossTabTest(false);
-        let releaseLock = (): void => {};
-        const gate = new Promise<void>(resolve => {
-            releaseLock = resolve;
-        });
-        vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync').mockImplementation(
-            async <T>(_name: string, operation: () => Promise<T>): Promise<T> => gate.then(operation),
-        );
-        const result = firstValueFrom(service.refreshToken());
-        localStorage.removeItem('refreshSession');
-        window.dispatchEvent(createSessionRemovalEvent());
-        releaseLock();
-
-        expect(await result).toBeNull();
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-        expect(service.isAuthenticated()).toBe(false);
-    });
-});
-
-describe('refresh token storage and failure', () => {
-    it('should keep rotated refresh tokens out of Web Storage', () => {
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-
-        service.refreshToken().subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush({
-            accessToken: createFakeJwt({ sub: 'user-1' }),
-            user: { ...authUserFields, id: 'user-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-
-        expect(localStorage.getItem('refreshToken')).toBeNull();
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-    });
-
-    it('should return null and logout when no refresh token exists', () => {
-        service.refreshToken().subscribe(result => {
-            expect(result).toBeNull();
-        });
-
-        httpMock.expectNone(`${authBaseUrl}/refresh`);
-        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-    });
-
-    it('should logout on unauthorized refresh rejection', async () => {
-        localStorage.setItem('refreshToken', 'expired-token');
-
-        service.refreshToken().subscribe(result => {
-            expect(result).toBeNull();
-        });
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush('Unauthorized', { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-
-        httpMock.expectOne(`${authBaseUrl}/logout`).flush(null);
-        await vi.waitFor(() => {
-            expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-        });
-
-        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-    });
-});
-
-describe('temporary refresh failures', () => {
-    it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable])(
-        'preserves the current session and permits retry after HTTP %s',
-        async status => {
-            authenticateForCrossTabTest(false);
-            const failed = firstValueFrom(service.refreshToken());
-            httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, { status, statusText: 'Temporary failure' });
-
-            expect(await failed).toBeNull();
-            expect(service.isAuthenticated()).toBe(true);
-            expect(service.getUserId()).toBe(loginAuthResponse.user.id);
-            expect(localStorage.getItem('refreshSession')).toBe('true');
-            expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-            httpMock.expectNone(`${authBaseUrl}/logout`);
-
-            const retried = firstValueFrom(service.refreshToken());
-            httpMock.expectOne(`${authBaseUrl}/refresh`).flush(loginAuthResponse);
-            expect(await retried).toBe(loginFakeToken);
-        },
-    );
-
-    it('preserves the session after a network error', async () => {
-        authenticateForCrossTabTest(false);
-        const failed = firstValueFrom(service.refreshToken());
-        httpMock.expectOne(`${authBaseUrl}/refresh`).error(new ProgressEvent('error'));
-
-        expect(await failed).toBeNull();
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.getToken()).toBe(loginFakeToken);
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-    });
-});
-
-describe('legacy refresh retry', () => {
-    it('keeps the migration credential available until a validated retry succeeds', async () => {
-        localStorage.setItem('refreshToken', 'legacy-migration-token');
-        const failed = firstValueFrom(service.refreshToken());
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, {
-            status: HttpStatusCode.ServiceUnavailable,
-            statusText: 'Temporary failure',
-        });
-
-        expect(await failed).toBeNull();
-        expect(localStorage.getItem('refreshToken')).toBe('legacy-migration-token');
-        expect(localStorage.getItem('refreshSession')).toBeNull();
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-
-        const retried = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        expect(request.request.body).toEqual({ refreshToken: 'legacy-migration-token' });
-        request.flush(loginAuthResponse);
-        expect(await retried).toBe(loginFakeToken);
-
-        const rotated = firstValueFrom(service.refreshToken());
-        const rotatedRequest = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        expect(rotatedRequest.request.body).toEqual({});
-        rotatedRequest.flush(loginAuthResponse);
-        expect(await rotated).toBe(loginFakeToken);
-    });
-
-    it('discards a pending migration token when a new account signs in', async () => {
-        localStorage.setItem('refreshToken', 'previous-account-token');
-        const failed = firstValueFrom(service.refreshToken());
-        httpMock.expectOne(`${authBaseUrl}/refresh`).flush(null, {
-            status: HttpStatusCode.ServiceUnavailable,
-            statusText: 'Temporary failure',
-        });
-        await failed;
-        authenticateForCrossTabTest(false);
-
-        const refreshed = firstValueFrom(service.refreshToken());
-        const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        expect(request.request.body).toEqual({});
-        request.flush(loginAuthResponse);
-        expect(await refreshed).toBe(loginFakeToken);
-    });
-});
-
-describe('tokenless legacy session restoration', () => {
-    it.each([false, true])(
-        'restores a legacy credential without trusting historical identity or policy (access hint=%s)',
-        async accessHint => {
-            localStorage.setItem('userId', 'user-123');
-            localStorage.setItem('refreshToken', 'legacy-alice');
-            localStorage.setItem('emailConfirmed', 'true');
-            localStorage.setItem('mustChangePassword', 'true');
-            if (accessHint) {
-                localStorage.setItem('accountAccess', JSON.stringify(['user-123', 'Premium']));
-            }
-            const restoring = service.restoreSessionAsync();
-            const request = httpMock.expectOne(`${authBaseUrl}/refresh`);
-            const body: unknown = request.request.body;
-            expect(service.isAuthenticated()).toBe(false);
-            expect(service.getUserId()).toBeNull();
-            expect(service.mustChangePassword()).toBe(false);
-            request.flush({ ...loginAuthResponse, user: { ...loginAuthResponse.user, isEmailConfirmed: false } });
-            await restoring;
-
-            expect(body).toEqual({ refreshToken: 'legacy-alice' });
-            expect(service.getUserId()).toBe('user-123');
-            expect(service.getToken()).toBe(loginFakeToken);
-            expect(service.isEmailConfirmed()).toBe(false);
-            expect(service.isPremium()).toBe(false);
-            expect(localStorage.getItem('refreshToken')).toBeNull();
-            expect(localStorage.getItem('refreshSession')).toBe('true');
-        },
-    );
-
-    it('keeps same-owner refresh detection available during pending migration and a temporary failure', async () => {
-        localStorage.setItem('userId', 'user-123');
-        localStorage.setItem('accountAccess', JSON.stringify(['user-123', 'User']));
-        localStorage.setItem('refreshToken', 'legacy-alice');
-        service.initializeAuth();
-        const failed = firstValueFrom(service.refreshToken());
-        const initial = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        expect(TestBed.inject(TokenStorageService).hasRefreshSession()).toBe(true);
-        expect(localStorage.getItem('refreshToken')).toBe('legacy-alice');
-        initial.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Temporary failure' });
-        expect(await failed).toBeNull();
-        expect(service.getUserId()).toBeNull();
-        expect(localStorage.getItem('refreshToken')).toBe('legacy-alice');
-        expect(TestBed.inject(TokenStorageService).hasRefreshSession()).toBe(true);
-        expect(localStorage.getItem('refreshSession')).toBeNull();
-
-        const retried = firstValueFrom(service.refreshToken());
-        const retry = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        const body: unknown = retry.request.body;
-        retry.flush(loginAuthResponse);
-        expect(await retried).toBe(loginFakeToken);
-        expect(body).toEqual({ refreshToken: 'legacy-alice' });
-    });
-});
-
-describe('session restore', () => {
-    it('should exchange a one-time impersonation code without storing the code in the URL', async () => {
-        sessionEventsSpy.notifyAuthenticated.mockImplementation(() => {
-            expect(service.isImpersonating()).toBe(true);
-        });
-        const impersonationToken = createFakeJwt({
-            sub: 'impersonated-user',
-            fd_impersonation: 'true',
-            exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
-        });
-        window.history.replaceState({}, '', '/dashboard?impersonationCode=one-time-code&foo=1');
-
-        const restorePromise = service.restoreSessionAsync();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/impersonation/exchange`);
-        expect(req.request.body).toEqual({ code: 'one-time-code' });
-        expect(window.location.search).toBe('?foo=1');
-        req.flush({ accessToken: impersonationToken });
-        await restorePromise;
-
-        expect(service.getToken()).toBe(impersonationToken);
-        expect(sessionStorage.getItem('authToken')).toBe(impersonationToken);
-        expect(localStorage.getItem('authToken')).toBeNull();
-    });
-
-    it('should restore the session from refresh token when access token is missing', async () => {
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-        const restoredToken = createFakeJwt({
-            sub: 'user-restore-1',
-            exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
-        });
-
-        const restorePromise = service.restoreSessionAsync();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush({
-            accessToken: restoredToken,
-            user: { ...authUserFields, id: 'user-restore-1', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-
-        await restorePromise;
-
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.getToken()).toBe(restoredToken);
-        expect(service.isAuthReady()).toBe(true);
-    });
-
-    it('should restore the session when initializeAuth saw an expired token', async () => {
-        const expiredToken = createFakeJwt({
-            sub: 'user-expired',
-            exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) - JWT_ONE_MINUTE_SECONDS,
-        });
-        const restoredToken = createFakeJwt({
-            sub: 'user-expired',
-            exp: Math.floor(Date.now() / JWT_SECONDS_PER_MS) + JWT_ONE_HOUR_SECONDS,
-        });
-
-        localStorage.setItem('authToken', expiredToken);
-        localStorage.setItem('refreshToken', 'existing-refresh-token');
-
-        service.initializeAuth();
-        expect(service.isAuthenticated()).toBe(false);
-        expect(service.isAuthReady()).toBe(false);
-
-        const restorePromise = service.restoreSessionAsync();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/refresh`);
-        req.flush({
-            accessToken: restoredToken,
-            user: { ...authUserFields, id: 'user-expired', email: 'test@example.com', isActive: true, isEmailConfirmed: true },
-        });
-
-        await restorePromise;
-
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.getToken()).toBe(restoredToken);
-        expect(service.isAuthReady()).toBe(true);
-    });
-
-    it('keeps an unowned stored hint out of guest state without erasing another owner', async () => {
-        localStorage.setItem('userId', 'stale-user');
-        localStorage.setItem('emailConfirmed', 'false');
-
-        await service.restoreSessionAsync();
-
-        expect(service.getUserId()).toBeNull();
-        expect(service.isEmailConfirmed()).toBe(true);
-        expect(localStorage.getItem('userId')).toBe('stale-user');
-        expect(localStorage.getItem('emailConfirmed')).toBe('false');
-        expect(service.isAuthReady()).toBe(true);
-    });
-});
-
-describe('logout', () => {
-    beforeEach(seedLogoutSession);
-
-    it('should clear all auth data', async () => {
-        await completeLogoutAsync();
-
-        expect(localStorage.getItem('authToken')).toBeNull();
-        expect(localStorage.getItem('refreshToken')).toBeNull();
-        expect(localStorage.getItem('userId')).toBeNull();
-        expect(localStorage.getItem('emailConfirmed')).toBeNull();
-    });
-
-    it('should revoke the server session and navigate to login when redirectToAuth is true', async () => {
-        await completeLogoutAsync(true);
-
-        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-        expect(navigationServiceSpy.navigateToHomeAsync).not.toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToLandingAsync).not.toHaveBeenCalled();
-    });
-
-    it('should navigate to landing when redirectToAuth is false', async () => {
-        await completeLogoutAsync();
-
-        expect(navigationServiceSpy.navigateToLandingAsync).toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
-    });
-
-    it('should set isAuthenticated to false', async () => {
-        // First, ensure authenticated state via signal
-        service.initializeAuth();
-        expect(service.isAuthenticated()).toBe(true);
-
-        await completeLogoutAsync();
-
-        expect(service.isAuthenticated()).toBe(false);
-    });
-
-    it('should clear stored language', async () => {
-        await completeLogoutAsync();
-
-        expect(localizationServiceSpy.clearStoredLanguage).toHaveBeenCalled();
-    });
-
-    it('should publish session ended event', async () => {
-        await completeLogoutAsync();
-
-        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
-    });
-});
-
-describe('logout preparation', () => {
-    beforeEach(seedLogoutSession);
-
-    it('waits for session cleanup with the old bearer before server logout and local clearing', async () => {
-        service.initializeAuth();
-        const oldToken = service.getToken();
-        const cleanup = new Subject<void>();
-        sessionEventsSpy.prepareSessionEnd.mockImplementationOnce(async () => {
-            expect(service.getToken()).toBe(oldToken);
-            expect(service.isAuthenticated()).toBe(true);
-            await firstValueFrom(cleanup);
-        });
-
-        const pending = service.onLogoutAsync();
-
-        expect(sessionEventsSpy.prepareSessionEnd).toHaveBeenCalledOnce();
-        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-        expect(service.getToken()).toBe(oldToken);
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-
-        cleanup.next();
-        const request = await vi.waitFor(() => httpMock.expectOne(`${authBaseUrl}/logout`));
-        expect(request.request.body).toEqual({ refreshToken: 'refresh' });
-        expect(request.request.withCredentials).toBe(true);
-        expect(service.getToken()).toBe(oldToken);
-        request.flush(null);
-        await pending;
-
-        expect(service.getToken()).toBeNull();
-        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
-        expect(navigationServiceSpy.navigateToLandingAsync).toHaveBeenCalledOnce();
-    });
-
-    it('continues logout when preparation rejects', async () => {
-        service.initializeAuth();
-        sessionEventsSpy.prepareSessionEnd.mockRejectedValueOnce(new Error('cleanup failed'));
-
-        const pending = service.onLogoutAsync(true);
-        const request = await vi.waitFor(() => httpMock.expectOne(`${authBaseUrl}/logout`));
-        request.flush(null, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
-        await pending;
-
-        expect(service.isAuthenticated()).toBe(false);
-        expect(service.getToken()).toBeNull();
-        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
-        expect(navigationServiceSpy.navigateToAuthAsync).toHaveBeenCalledWith('login');
-    });
-
-    it('does not send old logout or clear a new login after pending cleanup finishes', async () => {
-        service.initializeAuth();
-        const cleanup = new Subject<void>();
-        sessionEventsSpy.prepareSessionEnd.mockReturnValueOnce(firstValueFrom(cleanup));
-        const pending = service.onLogoutAsync(true);
-
-        authenticateForCrossTabTest(true);
-        cleanup.next();
-        await pending;
-
-        expect(service.getToken()).toBe(loginFakeToken);
-        expect(service.getUserId()).toBe(loginAuthResponse.user.id);
-        expect(service.isAuthenticated()).toBe(true);
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToLandingAsync).not.toHaveBeenCalled();
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-    });
-});
-
-describe('logout concurrency', () => {
-    beforeEach(seedLogoutSession);
-
-    it('lets the latest logout finish when an older logout is still preparing', async () => {
-        service.initializeAuth();
-        localStorage.setItem('refreshSession', 'true');
-        const cleanup = new Subject<void>();
-        sessionEventsSpy.prepareSessionEnd.mockReturnValueOnce(firstValueFrom(cleanup));
-        const older = service.onLogoutAsync(true);
-
-        const latest = service.onLogoutAsync();
-        const request = httpMock.expectOne(`${authBaseUrl}/logout`);
-        expect(request.request.body).toEqual({});
-        request.flush(null);
-        await latest;
-        cleanup.next();
-        await older;
-
-        expect(sessionEventsSpy.notifySessionEnded).toHaveBeenCalledOnce();
-        expect(navigationServiceSpy.navigateToLandingAsync).toHaveBeenCalledOnce();
-        expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
-        httpMock.expectNone(`${authBaseUrl}/logout`);
-    });
-
-    it('preserves a new login when the old server logout response arrives late', async () => {
-        service.initializeAuth();
-        const pending = service.onLogoutAsync(true);
-        const oldLogout = httpMock.expectOne(`${authBaseUrl}/logout`);
-
-        service.acceptExternalAuthentication(loginAuthResponse);
-        oldLogout.flush(null);
-        await pending;
-
-        expect(service.getToken()).toBe(loginFakeToken);
-        expect(service.getUserId()).toBe(loginAuthResponse.user.id);
-        expect(service.isAuthenticated()).toBe(true);
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-        expect(sessionEventsSpy.notifySessionEnded).not.toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToAuthAsync).not.toHaveBeenCalled();
-        expect(navigationServiceSpy.navigateToLandingAsync).not.toHaveBeenCalled();
-    });
-});
-
-function seedLogoutSession(): void {
-    localStorage.setItem('authToken', createFakeJwt({ sub: 'logout-user' }));
-    localStorage.setItem('refreshToken', 'refresh');
-    localStorage.setItem('userId', 'user-1');
-    localStorage.setItem('emailConfirmed', 'true');
-    service.initializeAuth();
-}
-
-async function completeLogoutAsync(redirectToAuth = false): Promise<void> {
-    const logoutPromise = service.onLogoutAsync(redirectToAuth);
-    const request = httpMock.expectOne(`${authBaseUrl}/logout`);
-    expect(request.request.withCredentials).toBe(true);
-    expect(request.request.body).toEqual({ refreshToken: 'refresh' });
-    request.flush(null);
-    await logoutPromise;
-}
-
-describe('JWT decoding', () => {
-    it('should extract userId from nameid claim', () => {
-        const token = createFakeJwt({ nameid: 'user-from-nameid' });
-        // Use initializeAuth to test extractUserIdFromToken indirectly
-        localStorage.setItem('authToken', token);
-
-        // Create a new service instance to pick up the token
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBe('user-from-nameid');
-    });
-
-    it('should extract userId from sub claim', () => {
-        const token = createFakeJwt({ sub: 'user-from-sub' });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBe('user-from-sub');
-    });
-
-    it('should extract userId from long nameidentifier claim', () => {
-        const token = createFakeJwt({
-            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': 'user-long-claim',
-        });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBe('user-long-claim');
-    });
-
-    it('should return null for invalid token', () => {
-        localStorage.setItem('authToken', 'not-a-jwt');
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBeNull();
-        expect(freshService.isAuthenticated()).toBe(false);
-        expect(localStorage.getItem('authToken')).toBeNull();
-    });
-
-    it('should return null for non-JWT string with wrong segment count', () => {
-        localStorage.setItem('authToken', 'only.two');
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBeNull();
-    });
-
-    it('should return null for token with invalid base64 payload', () => {
-        localStorage.setItem('authToken', 'header.!!!invalid!!!.signature');
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.getUserId()).toBeNull();
-    });
-});
-
-describe('role checking', () => {
-    it('should detect Admin role', () => {
-        const token = createFakeJwt({ nameid: 'admin-1', role: 'Admin' });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isAdmin()).toBe(true);
-    });
-
-    it('should detect Premium role', () => {
-        const token = createFakeJwt({ nameid: 'premium-1', role: 'Premium' });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isPremium()).toBe(true);
-    });
-
-    it('should return false when no token', () => {
-        expect(service.isAdmin()).toBe(false);
-        expect(service.isPremium()).toBe(false);
-    });
-
-    it('should handle array of roles', () => {
-        const token = createFakeJwt({ nameid: 'multi-role', role: ['Admin', 'Premium'] });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isAdmin()).toBe(true);
-        expect(freshService.isPremium()).toBe(true);
-    });
-
-    it('should handle single role string', () => {
-        const token = createFakeJwt({ nameid: 'user-1', role: 'User' });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isAdmin()).toBe(false);
-        expect(freshService.isPremium()).toBe(false);
-    });
-
-    it('should handle roles from Microsoft claims schema', () => {
-        const token = createFakeJwt({
-            nameid: 'ms-user',
-            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': 'Admin',
-        });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isAdmin()).toBe(true);
-    });
-
-    it('should return false when token has no role claims', () => {
-        const token = createFakeJwt({ nameid: 'no-roles' });
-        localStorage.setItem('authToken', token);
-
-        const freshService = TestBed.inject(AuthService);
-        freshService.initializeAuth();
-        expect(freshService.isAdmin()).toBe(false);
-        expect(freshService.isPremium()).toBe(false);
-    });
-});
-
-describe('computed signals', () => {
-    it('should be not authenticated initially when no token exists', () => {
-        expect(service.isAuthenticated()).toBe(false);
-    });
-
-    it('should compute isEmailConfirmed as true when null (default)', () => {
-        // When emailConfirmed is not stored, loadEmailConfirmed returns null,
-        // and the computed signal defaults to true via ?? true
-        expect(service.isEmailConfirmed()).toBe(true);
-    });
-
-    it('should compute isEmailConfirmed as false when set to false', () => {
-        service.setEmailConfirmed(false);
-        expect(service.isEmailConfirmed()).toBe(false);
-    });
-
-    it('should compute isAuthenticated as true when token exists in localStorage', () => {
-        const token = createFakeJwt({ sub: 'user-1' });
-        localStorage.setItem('authToken', token);
-
-        service.initializeAuth();
-        expect(service.isAuthenticated()).toBe(true);
-    });
-
-    it('should compute isAuthenticated as true when token exists in sessionStorage', () => {
-        const token = createFakeJwt({ sub: 'user-1' });
-        sessionStorage.setItem('authToken', token);
-
-        service.initializeAuth();
-        expect(service.isAuthenticated()).toBe(true);
-    });
-});
-
-describe('initializeAuth', () => {
-    it('should set auth token signal from storage', () => {
-        const token = createFakeJwt({ nameid: 'init-user' });
-        localStorage.setItem('authToken', token);
-
-        service.initializeAuth();
-
-        expect(service.isAuthenticated()).toBe(true);
-        expect(service.getUserId()).toBe('init-user');
-    });
-
-    it('ignores an unowned userId when no token exists', () => {
-        localStorage.setItem('userId', 'stale-user');
-
-        service.initializeAuth();
-
-        expect(service.getUserId()).toBeNull();
-        expect(localStorage.getItem('userId')).toBe('stale-user');
-    });
-
-    it('resolves the token owner without binding unknown persisted policy metadata', () => {
-        const token = createFakeJwt({ sub: 'resolved-user' });
-        localStorage.setItem('authToken', token);
-        // userId not stored
-
-        service.initializeAuth();
-
-        expect(service.getUserId()).toBe('resolved-user');
-        expect(localStorage.getItem('userId')).toBeNull();
-    });
-});
-
-describe('verifyEmail', () => {
-    it('should POST to /api/v1/auth/verify-email', () => {
-        service.verifyEmail('user-1', 'verify-token').subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ userId: 'user-1', token: 'verify-token' });
-        req.flush(null, { status: 204, statusText: 'No Content' });
-    });
-
-    it('updates emailConfirmed after confirming the current owner', () => {
-        authenticateForCrossTabTest(false);
-        service.setEmailConfirmed(false);
-        service.verifyEmail('user-123', 'token').subscribe();
-
-        const req = httpMock.expectOne(`${authBaseUrl}/verify-email`);
-        req.flush(null, { status: 204, statusText: 'No Content' });
-
-        expect(service.isEmailConfirmed()).toBe(true);
-    });
-});
-
-describe('email verification session ownership', () => {
-    function acceptUnverifiedUser(userId: string): void {
-        service.acceptExternalAuthentication({
-            ...loginAuthResponse,
-            accessToken: createFakeJwt({ nameid: userId, role: 'User' }),
-            user: { ...loginAuthResponse.user, id: entityId<'user'>(userId), isEmailConfirmed: false },
-        });
-    }
-
-    it('keeps Bob unverified when an Alice link succeeds', () => {
-        acceptUnverifiedUser('bob');
-        service.verifyEmail('alice', 'alice-link').subscribe();
-        httpMock.expectOne(`${authBaseUrl}/verify-email`).flush(null, { status: 204, statusText: 'No Content' });
-
-        expect(service.getUserId()).toBe('bob');
-        expect(service.isEmailConfirmed()).toBe(false);
-        expect(service.requiresEmailVerification()).toBe(true);
-        expect(sessionStorage.getItem('emailConfirmed')).toBe('false');
-    });
-
-    it.each(['bob', 'alice'])('ignores an old Alice success after a new %s session is accepted', userId => {
-        acceptUnverifiedUser('alice');
-        service.verifyEmail('alice', 'alice-link').subscribe();
-        const request = httpMock.expectOne(`${authBaseUrl}/verify-email`);
-        acceptUnverifiedUser(userId);
-        request.flush(null, { status: 204, statusText: 'No Content' });
-
-        expect(service.getUserId()).toBe(userId);
-        expect(service.isEmailConfirmed()).toBe(false);
-        expect(service.requiresEmailVerification()).toBe(true);
-    });
-
-    it('completes a guest link without publishing local account policy', async () => {
-        const verified = firstValueFrom(service.verifyEmail('alice', 'alice-link'));
-        httpMock.expectOne(`${authBaseUrl}/verify-email`).flush(null, { status: 204, statusText: 'No Content' });
-
-        await verified;
-        expect(service.getUserId()).toBeNull();
-        expect(service.isAuthenticated()).toBe(false);
-        expect(sessionStorage.getItem('emailConfirmed')).toBeNull();
-        expect(localStorage.getItem('emailConfirmed')).toBeNull();
-    });
-});
-
-describe('email confirmed storage', () => {
-    it('should persist emailConfirmed as true', () => {
-        authenticateForCrossTabTest(false);
-        service.setEmailConfirmed(true);
-
-        expect(localStorage.getItem('emailConfirmed')).toBe('true');
-        expect(service.isEmailConfirmed()).toBe(true);
-    });
-
-    it('should persist emailConfirmed as false', () => {
-        authenticateForCrossTabTest(false);
-        service.setEmailConfirmed(false);
-
-        expect(localStorage.getItem('emailConfirmed')).toBe('false');
-        expect(service.isEmailConfirmed()).toBe(false);
-    });
-});
-
-describe('Required password change session renewal', () => {
-    it('gets a new session with the changed password before clearing the required-change flag', async () => {
-        service.login(loginRequest).subscribe();
-        const oldToken = createFakeJwt({ nameid: 'user-123', email: loginRequest.email });
-        httpMock
-            .expectOne(`${authBaseUrl}/login`)
-            .flush({ ...loginAuthResponse, accessToken: oldToken, user: { ...loginAuthResponse.user, mustChangePassword: true } });
-        expect(service.mustChangePassword()).toBe(true);
-        const completion = service.completeRequiredPasswordChangeAsync('changed-password');
-        const request = httpMock.expectOne(`${authBaseUrl}/login`);
-        expect(request.request.body).toEqual({ email: loginRequest.email, password: 'changed-password', rememberMe: true });
-        expect(service.mustChangePassword()).toBe(true);
-        request.flush({ ...loginAuthResponse, user: { ...loginAuthResponse.user, mustChangePassword: false } });
-        await completion;
-        expect(service.mustChangePassword()).toBe(false);
-        expect(service.getToken()).toBe(loginFakeToken);
+    it('publishes session lifecycle events for dependent feature cleanup', () => {
+        const authenticated = vi.fn();
+        TestBed.inject(SessionEventsService).authenticated$.subscribe(authenticated);
+        signIn();
+        expect(authenticated).toHaveBeenCalledOnce();
     });
 });

@@ -4,7 +4,6 @@ using FoodDiary.Domain.Primitives;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Products.Domain.Entities;
@@ -38,36 +37,35 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     };
 
     [RequiresDockerFact]
-    public async Task Refresh_WithWarmTokenRotation_StaysWithinLatencyBudget() {
+    public async Task Restore_WithWarmBrowserSession_StaysWithinLatencyBudget() {
         HttpClient client = factory.CreateClient();
         string email = $"perf-refresh-{Guid.NewGuid():N}@example.com";
 
-        AuthPayload registerPayload = await RegisterAsync(client, email);
-        AuthPayload firstWarmPayload = await RefreshAsync(client, registerPayload.RefreshToken);
-        AuthPayload warmedPayload = await RefreshAsync(client, firstWarmPayload.RefreshToken);
+        await RegisterAsync(client, email);
+        await RestoreAsync(client);
+        await RestoreAsync(client);
 
         var stopwatch = Stopwatch.StartNew();
         HttpResponseMessage measuredResponse = await client.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(warmedPayload.RefreshToken));
+            "/api/v1/auth/session",
+            new { });
         stopwatch.Stop();
 
         AuthPayload? measuredPayload = await measuredResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, measuredResponse.StatusCode);
         Assert.NotNull(measuredPayload);
-        Assert.False(string.IsNullOrWhiteSpace(measuredPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(measuredPayload.SessionId));
         Assert.True(
             stopwatch.Elapsed <= RefreshLatencyBudget,
-            string.Create(CultureInfo.InvariantCulture, $"Expected auth.refresh to stay within {RefreshLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+            string.Create(CultureInfo.InvariantCulture, $"Expected auth.session to stay within {RefreshLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
     public async Task Products_FirstOwnedPage_StaysWithinEndpointLatencyBudget() {
         HttpClient client = factory.CreateClient();
         string email = $"perf-products-{Guid.NewGuid():N}@example.com";
-        AuthPayload authPayload = await RegisterAsync(client, email);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        await RegisterAsync(client, email);
 
         await SeedProductsAsync(email, SeedCount);
 
@@ -92,8 +90,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     public async Task Recipes_FirstOwnedPage_StaysWithinEndpointLatencyBudget() {
         HttpClient client = factory.CreateClient();
         string email = $"perf-recipes-{Guid.NewGuid():N}@example.com";
-        AuthPayload authPayload = await RegisterAsync(client, email);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        await RegisterAsync(client, email);
 
         await SeedRecipesAsync(email, SeedCount);
 
@@ -118,8 +115,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     public async Task Meals_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget() {
         HttpClient client = factory.CreateClient();
         string email = $"perf-meals-{Guid.NewGuid():N}@example.com";
-        AuthPayload authPayload = await RegisterAsync(client, email);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        await RegisterAsync(client, email);
 
         await SeedMealsAsync(client, SeedCount);
 
@@ -146,8 +142,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     public async Task ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget() {
         HttpClient client = factory.CreateClient();
         string email = $"perf-images-{Guid.NewGuid():N}@example.com";
-        AuthPayload authPayload = await RegisterAsync(client, email);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        await RegisterAsync(client, email);
 
         _ = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
@@ -172,10 +167,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     [RequiresDockerFact]
     public async Task BillingOverview_WithAuthenticatedUser_StaysWithinLatencyBudget() {
         HttpClient client = factory.CreateClient();
-        AuthPayload authPayload = await RegisterAsync(
+        await RegisterAsync(
             client,
             $"perf-billing-{Guid.NewGuid():N}@example.com");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         _ = await client.GetAsync("/api/v1/billing/overview");
 
@@ -199,21 +193,22 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
-        return payload with { RefreshToken = AuthenticationResponseCookies.ReadRefreshToken(response) };
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
+        return payload;
     }
 
-    private static async Task<AuthPayload> RefreshAsync(HttpClient client, string refreshToken) {
+    private static async Task<AuthPayload> RestoreAsync(HttpClient client) {
         HttpResponseMessage response = await client.PostAsJsonAsync(
-            "/api/v1/auth/refresh",
-            new RefreshTokenHttpRequest(refreshToken)).ConfigureAwait(false);
+            "/api/v1/auth/session",
+            new { }).ConfigureAwait(false);
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
-        return payload with { RefreshToken = AuthenticationResponseCookies.ReadRefreshToken(response) };
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        Assert.False(response.Headers.Contains("Set-Cookie"));
+        return payload;
     }
 
     private async Task SeedProductsAsync(string email, int count) {
@@ -317,7 +312,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

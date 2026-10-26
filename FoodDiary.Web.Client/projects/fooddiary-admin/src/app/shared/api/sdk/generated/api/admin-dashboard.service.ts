@@ -87,6 +87,8 @@ export class AdminDashboardSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -173,6 +175,8 @@ export class AdminDashboardSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'AllTime', <any>allTime, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
@@ -54,14 +53,14 @@ public sealed class PasswordResetRevocationIntegrationTests(PostgresApiWebApplic
         } else if (string.Equals(operation, "initial", StringComparison.Ordinal)) {
             endpoint += "/set";
         }
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         using HttpResponseMessage replacement = operation switch {
             "change" => await client.PatchAsJsonAsync(endpoint, new ChangePasswordHttpRequest(oldPassword, newPassword)),
             "administrator" => await client.PatchAsJsonAsync(endpoint, new AdminUserSetPasswordHttpRequest(newPassword)),
             _ => await client.PatchAsJsonAsync(endpoint, new SetPasswordHttpRequest(newPassword)),
         };
         Assert.Equal(HttpStatusCode.NoContent, replacement.StatusCode);
-        client.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Remove("Cookie");
 
         using HttpResponseMessage stale = await client.PostAsJsonAsync(
             "/api/v1/auth/password-reset/confirm", new ConfirmPasswordResetHttpRequest(userId, reset.Token, "AttackerPassword789!"));
@@ -104,8 +103,9 @@ public sealed class PasswordResetRevocationIntegrationTests(PostgresApiWebApplic
         }
         using HttpResponseMessage login = await client.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, password));
         login.EnsureSuccessStatusCode();
-        using var payload = JsonDocument.Parse(await login.Content.ReadAsStringAsync());
-        return payload.RootElement.GetProperty("accessToken").GetString()!;
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(login));
+        await AuthenticationResponseCookies.UpgradeAdminSessionAsync(client);
+        return client.DefaultRequestHeaders.GetValues("Cookie").Single();
     }
 
     private static async Task<(Guid UserId, string Token)> RegisterAsync(HttpClient client, string email, string password) {
@@ -114,6 +114,6 @@ public sealed class PasswordResetRevocationIntegrationTests(PostgresApiWebApplic
         response.EnsureSuccessStatusCode();
         using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         return (payload.RootElement.GetProperty("user").GetProperty("id").GetGuid(),
-            payload.RootElement.GetProperty("accessToken").GetString()!);
+            AuthenticationResponseCookies.ReadBrowserSession(response));
     }
 }

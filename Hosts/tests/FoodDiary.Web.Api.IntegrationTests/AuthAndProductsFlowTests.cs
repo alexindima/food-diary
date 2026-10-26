@@ -20,7 +20,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     };
 
     [RequiresDockerFact]
-    public async Task Register_ReturnsAuthenticationTokens() {
+    public async Task Register_ReturnsBrowserSessionWithoutTokens() {
         HttpClient client = factory.CreateClient();
         string email = $"api-tests-{Guid.NewGuid():N}@example.com";
         var request = new RegisterHttpRequest(email, "Password123!", "en");
@@ -33,9 +33,10 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? payload = JsonSerializer.Deserialize<AuthPayload>(body, JsonOptions);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(response)));
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadBrowserSession(response)));
         Assert.DoesNotContain("refreshToken", body, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("accessToken", body, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(email, payload.User.Email);
     }
 
@@ -75,7 +76,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [RequiresDockerFact]
-    public async Task Products_RequiresAuth_AndReturnsOkWithBearerToken() {
+    public async Task Products_RequiresAuth_AndReturnsOkWithBrowserSession() {
         HttpClient client = factory.CreateClient();
         HttpResponseMessage anonymousResponse = await client.GetAsync("/api/v1/products");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
@@ -88,16 +89,16 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
-        Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(authPayload.SessionId));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         HttpResponseMessage authorizedResponse = await client.GetAsync("/api/v1/products");
 
         Assert.Equal(HttpStatusCode.OK, authorizedResponse.StatusCode);
     }
 
     [RequiresDockerFact]
-    public async Task Products_WithRefreshTokenAsBearer_ReturnsUnauthorized() {
+    public async Task Products_WithBrowserCredentialAsBearer_ReturnsUnauthorized() {
         HttpClient client = factory.CreateClient();
         string email = $"api-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
@@ -107,16 +108,16 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
-        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadRefreshToken(registerResponse)));
+        Assert.False(string.IsNullOrWhiteSpace(AuthenticationResponseCookies.ReadBrowserSession(registerResponse)));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationResponseCookies.ReadRefreshToken(registerResponse));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         HttpResponseMessage response = await client.GetAsync("/api/v1/products");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [RequiresDockerFact]
-    public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBearerToken() {
+    public async Task UsersInfo_RequiresAuth_AndReturnsOkWithBrowserSession() {
         HttpClient client = factory.CreateClient();
         HttpResponseMessage anonymousResponse = await client.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.Unauthorized, anonymousResponse.StatusCode);
@@ -129,9 +130,9 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
         Assert.NotNull(authPayload);
-        Assert.False(string.IsNullOrWhiteSpace(authPayload.AccessToken));
+        Assert.False(string.IsNullOrWhiteSpace(authPayload.SessionId));
 
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         HttpResponseMessage authorizedResponse = await client.GetAsync("/api/v1/users/info");
 
         Assert.NotEqual(HttpStatusCode.Unauthorized, authorizedResponse.StatusCode);
@@ -335,7 +336,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
         return client;
     }
 
@@ -370,7 +371,7 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, string RefreshToken, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

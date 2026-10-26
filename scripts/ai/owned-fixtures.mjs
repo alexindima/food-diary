@@ -71,7 +71,7 @@ export async function runFixtures(action, name, runId) {
             }
             const tokens = {};
             for (const label of ['client', 'dietologist']) {
-                tokens[label] = (await request(state, null, 'POST', '/api/v1/auth/login', credentials[label])).accessToken;
+                tokens[label] = (await request(state, null, 'POST', '/api/v1/auth/login', credentials[label])).browserCookie;
                 if ((await request(state, tokens[label], 'GET', '/api/v1/users/info')).id !== manifest.accounts[label].id) throw new Error('Fixture credentials do not match the owned account');
             }
             readToken = tokens.client;
@@ -138,8 +138,8 @@ export async function runFixtures(action, name, runId) {
                 const account = lifecycle.find(item => item.id === manifest.accounts[label].id);
                 if (account === undefined || account.deleted) { manifest.accounts[label].softDeleted = true; checkpoint(); continue; }
                 const auth = await request(state, null, 'POST', '/api/v1/auth/login', credentials[label]);
-                if ((await request(state, auth.accessToken, 'GET', '/api/v1/users/info')).id !== manifest.accounts[label].id) throw new Error('Cleanup credentials do not match the manifest account');
-                await request(state, auth.accessToken, 'DELETE', '/api/v1/users');
+                if ((await request(state, auth.browserCookie, 'GET', '/api/v1/users/info')).id !== manifest.accounts[label].id) throw new Error('Cleanup credentials do not match the manifest account');
+                await request(state, auth.browserCookie, 'DELETE', '/api/v1/users');
                 manifest.accounts[label].softDeleted = true; checkpoint();
             }
             const scope = state.apiDiagnosticsBuild?.artifactScope ?? join(state.directory, 'build', 'bin', 'FoodDiary.Web.Api', 'debug');
@@ -161,7 +161,7 @@ export async function runFixtures(action, name, runId) {
         let statistics = null;
         let recipeNutrition = null;
         if (action !== 'cleanup' && manifest.status !== 'cleaned' && manifest.accounts.client) {
-            readToken ??= (await request(state, null, 'POST', '/api/v1/auth/login', credentials.client)).accessToken;
+            readToken ??= (await request(state, null, 'POST', '/api/v1/auth/login', credentials.client)).browserCookie;
             const summary = await request(state, readToken, 'GET', '/api/v1/statistics/summary?dateFrom=2025-01-01T00%3A00%3A00Z&dateTo=2025-01-25T23%3A59%3A59.999Z&quantizationDays=1&timeZoneId=UTC');
             const trackedDays = summary.nutrition.reduce((sum, bucket) => sum + (bucket.trackedDayCount ?? 0), 0);
             const totalCalories = summary.nutrition.reduce((sum, bucket) => sum + bucket.totalCalories, 0);

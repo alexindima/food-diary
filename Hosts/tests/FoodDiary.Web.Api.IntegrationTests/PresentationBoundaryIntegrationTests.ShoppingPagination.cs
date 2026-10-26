@@ -1,6 +1,6 @@
+using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -10,7 +10,7 @@ public sealed partial class PresentationBoundaryIntegrationTests {
     [RequiresDockerFact]
     public async Task ShoppingListPages_AreBoundedSearchableAndUserScoped() {
         using HttpClient client = apiFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAndGetAccessTokenAsync(client));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, await RegisterAndGetBrowserSessionAsync(client));
         for (int index = 0; index < 3; index++) {
             using HttpResponseMessage created = await client.PostAsJsonAsync("/api/v1/shopping-lists", new {
                 name = "Pagination " + index.ToString(CultureInfo.InvariantCulture),
@@ -33,7 +33,7 @@ public sealed partial class PresentationBoundaryIntegrationTests {
         using HttpResponseMessage invalid = await client.GetAsync("/api/v1/shopping-lists/page?limit=1000");
         Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
         using HttpClient other = apiFactory.CreateClient();
-        other.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await RegisterAndGetAccessTokenAsync(other));
+        AuthenticationResponseCookies.ApplyBrowserSession(other, await RegisterAndGetBrowserSessionAsync(other));
         using var empty = JsonDocument.Parse(await other.GetStringAsync("/api/v1/shopping-lists/page"));
         Assert.Equal(0, empty.RootElement.GetArrayLength());
         using var emptyOverview = JsonDocument.Parse(await other.GetStringAsync("/api/v1/shopping-lists/overview"));

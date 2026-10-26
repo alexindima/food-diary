@@ -32,7 +32,8 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
                 ["TelegramAuth:BotToken"] = "123:test-token",
             })).ConfigureLogging(logging => logging.AddProvider(diagnostics))
             .ConfigureServices(TelegramRecognitionProvider.Configure));
-        using HttpClient client = app.CreateClient();
+        using HttpClient client = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        client.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
         using HttpResponseMessage quarantined = await client.PostAsJsonAsync(
             "/api/v1/auth/telegram/mini-app/begin", new { InitData = CreateInitData() });
         Assert.Equal(HttpStatusCode.Unauthorized, quarantined.StatusCode);
@@ -50,7 +51,7 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
         Assert.False(string.IsNullOrEmpty(body.RootElement.GetProperty("accessToken").GetString()));
         Assert.Equal(JsonValueKind.Null, body.RootElement.GetProperty("user").GetProperty("email").ValueKind);
         await VerifySessionAsync(client, body.RootElement);
-        using HttpClient otherUserClient = app.CreateClient();
+        using HttpClient otherUserClient = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         await TelegramMealJourney.VerifyAsync(client, otherUserClient, app.Services);
         await VerifyLinkConflictAsync(otherUserClient);
         using HttpResponseMessage replay = await client.PostAsJsonAsync("/api/v1/auth/telegram/complete",
@@ -126,7 +127,8 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
     }
 
     private static async Task VerifySubsequentLoginAsync(WebApplicationFactory<Program> app, string? expectedUserId, string? expectedEmail = null) {
-        using HttpClient client = app.CreateClient();
+        using HttpClient client = app.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        client.DefaultRequestHeaders.Add("X-FoodDiary-Client", "telegram");
         string initData = CreateInitData();
         using HttpResponseMessage begin = await client.PostAsJsonAsync("/api/v1/auth/telegram/mini-app/begin", new { InitData = initData });
         Assert.Equal(HttpStatusCode.OK, begin.StatusCode);
@@ -198,16 +200,19 @@ public sealed class TelegramRegistrationPostgresTests(PostgresApiWebApplicationF
     }
 
     private static async Task VerifySessionAsync(HttpClient client, JsonElement authentication, string? expectedEmail = null) {
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.GetProperty("accessToken").GetString());
+        bool tokenMode = authentication.TryGetProperty("accessToken", out JsonElement token);
+        client.DefaultRequestHeaders.Authorization = tokenMode ? new AuthenticationHeaderValue("Bearer", token.GetString()) : null;
         using HttpResponseMessage profile = await client.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, profile.StatusCode);
         using var profileBody = JsonDocument.Parse(await profile.Content.ReadAsStringAsync());
         Assert.Equal(expectedEmail, profileBody.RootElement.GetProperty("email").GetString());
-        using HttpResponseMessage refresh = await client.PostAsJsonAsync("/api/v1/auth/refresh",
+        using HttpResponseMessage refresh = await client.PostAsJsonAsync(tokenMode ? "/api/v1/auth/refresh" : "/api/v1/auth/session",
             new { });
         Assert.Equal(HttpStatusCode.OK, refresh.StatusCode);
         using var refreshed = JsonDocument.Parse(await refresh.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshed.RootElement.GetProperty("accessToken").GetString());
+        if (tokenMode) {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshed.RootElement.GetProperty("accessToken").GetString());
+        }
         using HttpResponseMessage refreshedProfile = await client.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, refreshedProfile.StatusCode);
     }

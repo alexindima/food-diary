@@ -18,6 +18,10 @@ sources:
   - .llm-wiki/evals/context-search-holdout-100.json
   - .llm-wiki/evals/context-search-holdout.json
   - .llm-wiki/evals/context-search-probe-4.json
+  - .llm-wiki/evals/context-search-probe-3.json
+  - .llm-wiki/evals/context-search-conversational.json
+  - .llm-wiki/evals/context-search-security-regression.json
+  - docs/adr/0058-browser-sessions-in-the-existing-api.md
   - .llm-wiki/policies/context-search-ranking.json
   - .llm-wiki/tools/Test-LlmWikiContextRanking.ps1
   - .llm-wiki/evals/context-search-unseen-20260826.json
@@ -222,6 +226,14 @@ layout case now targets the active `FdPageContainerDirective` after removal of
 the unused `FdLayoutPageDirective`; its question is unchanged. Case counts and
 all quality thresholds remain unchanged. These migrated cases are regression
 evidence for the current owners.
+
+ADR 0058 retires `TokenStorageService`: ordinary browser credentials now live in
+HttpOnly cookies. The two conversational session-storage cases, probe-3 token
+storage case and security token-storage case now ask about non-secret session
+metadata and legacy credential cleanup, targeting `AuthMetadataStorageService`.
+Case counts, quality thresholds and ranking rules are unchanged. These explicit
+query migrations test the new architecture and are regression evidence, not a
+new blind retrieval assessment.
 
 Explicit SSR/prerender route questions prefer the server-route composition
 convention `*.routes.server.ts`. The structural role requires an explicit SSR/prerender

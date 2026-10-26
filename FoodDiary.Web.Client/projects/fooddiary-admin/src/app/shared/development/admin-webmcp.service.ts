@@ -68,7 +68,7 @@ export class AdminWebmcpService {
                     if (!authenticated || context === undefined) {
                         return;
                     }
-                    const session = this.auth.getToken();
+                    const session = this.auth.getSessionId();
                     this.sessionRevision++;
                     const tools = untracked(() => this.tools(session));
                     onCleanup(
@@ -256,7 +256,7 @@ export class AdminWebmcpService {
     }
 
     private requireSession(session: string | null): void {
-        if (session === null || !this.auth.isAuthenticated() || !this.auth.isAdmin() || this.auth.getToken() !== session) {
+        if (session === null || !this.auth.isAuthenticated() || !this.auth.isAdmin() || this.auth.getSessionId() !== session) {
             throw new Error('Session changed.');
         }
     }

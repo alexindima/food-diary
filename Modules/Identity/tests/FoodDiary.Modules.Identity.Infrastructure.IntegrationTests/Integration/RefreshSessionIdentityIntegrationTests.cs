@@ -6,6 +6,7 @@ using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.Integration;
@@ -13,6 +14,37 @@ namespace FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.Integration
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class RefreshSessionIdentityIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task BrowserRevalidation_PreservesProofExpiryOwnerAndRevocationFences() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var owner = User.Create($"browser-revalidation-{Guid.NewGuid():N}@example.com", "hash");
+        DateTime now = new(DateTime.UtcNow.Ticks / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond, DateTimeKind.Utc);
+        DateTime expires = now.AddHours(1);
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), owner.Id, "token-hash", rememberMe: false,
+            authProvider: null, ipAddress: null, userAgent: null, nowUtc: now, expiresAtUtc: expires);
+        session.ConvertToBrowserSession("browser-hash", 7, now);
+        context.Users.Add(owner);
+        context.UserRefreshTokenSessions.Add(session);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database, TimeProvider.System, Options.Create(new JwtOptions()));
+
+        Assert.False(await repository.TryRevalidateBrowserSessionAsync(session.Id, UserId.New(), "browser-hash", 8, now));
+        Assert.False(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "wrong-hash", 8, now));
+        Assert.False(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "browser-hash", 6, now));
+        Assert.False(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "browser-hash", 8, expires));
+        Assert.True(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "browser-hash", 8, now.AddMinutes(5)));
+        Assert.True(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "browser-hash", 8, now));
+        UserRefreshTokenSession restored = (await repository.GetByIdAsync(session.Id))!;
+        Assert.Equal(8, restored.BrowserSecurityVersion);
+        Assert.Equal(now.AddMinutes(5), restored.LastRotatedAtUtc);
+        Assert.Equal(expires, restored.ExpiresAtUtc);
+        Assert.Equal("browser-hash", restored.RefreshTokenHash);
+        await repository.RevokeByIdAsync(session.Id, owner.Id, now.AddMinutes(6));
+        Assert.False(await repository.TryRevalidateBrowserSessionAsync(session.Id, owner.Id, "browser-hash", 8, now.AddMinutes(7)));
+        Assert.False(await repository.IsActiveAsync(owner.Id, session.Id));
+    }
+
     [RequiresDockerFact]
     public async Task TypedSessionKeys_PreserveSchemaRotationAndOwnerCurrentSessionFences() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

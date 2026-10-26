@@ -1,3 +1,4 @@
+import { browserSessionCookie } from "./task-runtime-browser.mjs";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -48,7 +49,7 @@ export async function ownedApi(name, root = repositoryRoot) {
     const loginRequest = () =>
         fetch(`${state.apiUrl}/api/v1/auth/login`, {
             method: "POST",
-            headers: { "content-type": "application/json" },
+            headers: { "content-type": "application/json", "X-Requested-With": "XMLHttpRequest" },
             body: JSON.stringify(credentials),
             redirect: "error",
             signal: AbortSignal.timeout(30_000),
@@ -67,21 +68,19 @@ export async function ownedApi(name, root = repositoryRoot) {
     }
     if (login.status !== 200)
         throw new Error(`Owned login failed (${login.status})`);
-    const auth = await login.json();
-    if (typeof auth.accessToken !== "string")
-        throw new Error("Owned login returned no access token");
-    const token = auth.accessToken;
+    const cookie = browserSessionCookie(login);
     return {
         state,
         // This value is used only in an ignored env file or in memory; never log the client.
-        token,
+        cookie,
         async request(method, path, body, expected = [200]) {
             if (!path.startsWith("/api/v1/") || path.includes("://"))
                 throw new Error("Only owned relative API paths are permitted");
             const response = await fetch(`${state.apiUrl}${path}`, {
                 method,
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    cookie,
+                    "X-Requested-With": "XMLHttpRequest",
                     "content-type": "application/json",
                 },
                 ...(body === undefined ? {} : { body: JSON.stringify(body) }),

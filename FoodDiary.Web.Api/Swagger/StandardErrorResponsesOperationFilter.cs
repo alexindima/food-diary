@@ -48,6 +48,9 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
 
         operation.Security = [new OpenApiSecurityRequirement {
             [new OpenApiSecuritySchemeReference("Bearer", context.Document, externalResource: null)] = [],
+        }, new OpenApiSecurityRequirement {
+            [new OpenApiSecuritySchemeReference(context.ApiDescription.RelativePath?.Contains("/admin/", StringComparison.Ordinal) == true
+                ? "AdminSession" : "BrowserSession", context.Document, externalResource: null)] = [],
         }];
 
         AddApiErrorResponse(operation, context, StatusCodes.Status401Unauthorized);

@@ -1,5 +1,11 @@
 # Identity logical module
 
+Browser/admin session cookies and impersonation transport belong to Presentation
+(ADR 0058). Controllers retain mediator-only constructors, use request services
+for cookie transport, and leave claim parsing in `Security/`. Request and response
+translation stays in auth mappings. The direct Users.Contracts reference supplies
+the current principal projection and permits no Users aggregate access.
+
 Telegram HTTP transport is split between legacy authentication, onboarding,
 browser backup-email proof and bot operations controllers, with unchanged route
 prefixes. Build application requests in HTTP mappings. Anonymous onboarding

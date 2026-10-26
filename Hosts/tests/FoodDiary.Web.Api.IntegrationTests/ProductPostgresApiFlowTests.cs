@@ -2,7 +2,6 @@ using FoodDiary.Modules.Meals.Presentation.Requests;
 using FoodDiary.Modules.Favorites.Presentation.Features.FavoriteProducts.Requests;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -22,8 +21,8 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
     [MemberData(nameof(ProductCreateUpdateReadCases))]
     public async Task CreateUpdateReadProduct_PersistsRepresentativePayloadsAgainstPostgres(ProductCreateUpdateReadCase testCase) {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/products", testCase.CreateRequest);
         ProductPayload? product = await createResponse.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
@@ -317,8 +316,8 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
     [RequiresDockerFact]
     public async Task ProductsOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         Guid firstProductId = await CreateProductAsync(client, "Overview Apple");
         Guid favoriteProductId = await CreateProductAsync(client, "Overview Chicken");
 
@@ -403,7 +402,7 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
         return payload.Id;
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"postgres-product-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -413,8 +412,8 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
@@ -459,7 +458,7 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, string RefreshToken, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

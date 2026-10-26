@@ -6,7 +6,17 @@ namespace FoodDiary.Telegram.Bot.Api.Generated.Model;
 
 internal sealed class AuthenticationHttpResponse {
     [JsonPropertyName("accessToken")]
-    public string AccessToken { get; init; } = default!;
+    public string? AccessToken { get; init; } = default!;
+    [JsonPropertyName("impersonationContext")]
+    public string? ImpersonationContext { get; init; } = default!;
+    [JsonPropertyName("impersonationReason")]
+    public string? ImpersonationReason { get; init; } = default!;
+    [JsonPropertyName("rememberMe")]
+    public bool RememberMe { get; init; } = default!;
+    [JsonPropertyName("roles")]
+    public List<string>? Roles { get; init; } = default!;
+    [JsonPropertyName("sessionId")]
+    public string? SessionId { get; init; } = default!;
     [JsonPropertyName("user")]
     public UserHttpResponse User { get; init; } = default!;
 }

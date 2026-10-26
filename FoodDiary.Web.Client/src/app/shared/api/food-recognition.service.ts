@@ -175,8 +175,9 @@ export class FoodRecognitionService {
                 return;
             }
             const connection = new HubConnectionBuilder()
-                .withUrl(buildRealtimeHubUrl(environment.apiUrls.auth, '/hubs/food-recognition'), {
+                .withUrl(this.auth.sessionHubUrl(buildRealtimeHubUrl(environment.apiUrls.auth, '/hubs/food-recognition')), {
                     accessTokenFactory: () => this.auth.getToken() ?? '',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 })
                 .withAutomaticReconnect()
                 .configureLogging(LogLevel.None)

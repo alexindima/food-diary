@@ -117,7 +117,7 @@
         "test:guidance:platform": "playwright test --config quality/modern-web-guidance/platform.config.mjs",
         "test:guidance:contrast": "playwright test --config quality/modern-web-guidance/platform.config.mjs --grep=SEO",
         "test:guidance:telemetry": "ng test food-diary-web-client --watch=false --include=**/frontend-observability.service.spec.ts --include=**/browser-window.service.spec.ts",
-        "test:guidance:session": "ng test food-diary-web-client --watch=false --include=**/token-storage.service.spec.ts --include=**/auth.service.spec.ts",
+        "test:guidance:session": "ng test food-diary-web-client --watch=false --include=**/auth-metadata-storage.service.spec.ts --include=**/auth.service.spec.ts",
         "test:guidance:admin-session": "ng test fooddiary-admin --watch=false --include=**/admin-auth.service.spec.ts --include=**/admin-auth.interceptor.spec.ts",
         "test:guidance:rum": "ng test food-diary-web-client --watch=false --include=**/logging-api.service.spec.ts --include=**/browser-performance.service.spec.ts --include=**/frontend-observability.service.spec.ts",
         "test:guidance:loading": "playwright test --config quality/modern-web-guidance/platform.config.mjs --grep=offscreen",

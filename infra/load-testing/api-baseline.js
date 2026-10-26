@@ -28,6 +28,9 @@ export const options = {
 };
 
 export function setup() {
+    if (__ENV.BROWSER_COOKIE) {
+        return { cookie: __ENV.BROWSER_COOKIE };
+    }
     if (__ENV.AUTH_TOKEN) {
         return { accessToken: __ENV.AUTH_TOKEN };
     }
@@ -39,7 +42,7 @@ export function setup() {
     const response = http.post(
         `${baseUrl}/api/v1/auth/login`,
         JSON.stringify({ email: __ENV.TEST_EMAIL, password: __ENV.TEST_PASSWORD, rememberMe: false }),
-        { headers: { 'Content-Type': 'application/json' }, tags: { endpoint: 'login-setup' } },
+        { headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, tags: { endpoint: 'login-setup' } },
     );
 
     const authenticated = check(response, { 'load-test login succeeded': value => value.status === 200 });
@@ -47,12 +50,15 @@ export function setup() {
         fail(`Login failed with HTTP ${response.status}.`);
     }
 
-    return { accessToken: response.json('accessToken') };
+    const name = baseUrl.startsWith('https:') ? '__Host-fooddiary.browser' : 'fooddiary.browser';
+    const cookie = response.cookies[name]?.[0];
+    if (!cookie) fail('Login did not return a browser session cookie.');
+    return { cookie: `${name}=${cookie.value}` };
 }
 
 export default function (data) {
     const params = {
-        headers: { Authorization: `Bearer ${data.accessToken}` },
+        headers: data.cookie ? { Cookie: data.cookie } : { Authorization: `Bearer ${data.accessToken}` },
     };
 
     request(`/api/v1/dashboard?date=${encodeURIComponent(__ENV.DASHBOARD_DATE || '2026-09-15T00:00:00.000Z')}&timeZoneId=UTC&timeZoneOffsetMinutes=0&page=1&limit=25&locale=en&trendDays=7`, 'dashboard', params);

@@ -9,7 +9,7 @@
   },
   "summary": {
     "typescriptFiles": 2711,
-    "symbols": 856,
+    "symbols": 858,
     "routes": 108,
     "features": 46,
     "specs": 815,
@@ -20,7 +20,7 @@
       "Facade": 88,
       "Other": 41,
       "Pipe": 5,
-      "Service": 207
+      "Service": 209
     }
   },
   "features": [
@@ -2362,7 +2362,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 16
+      "line": 14
     },
     {
       "name": "AdminBillingService",
@@ -2894,7 +2894,7 @@
       "role": "Other",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api.module.ts",
-      "line": 55
+      "line": 57
     },
     {
       "name": "AdminAchievementsSdk",
@@ -3028,6 +3028,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-retention.service.ts",
       "line": 32
+    },
+    {
+      "name": "AdminSessionSdk",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-session.service.ts",
+      "line": 27
     },
     {
       "name": "AdminTelemetrySdk",
@@ -6646,7 +6653,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "line": 18
+      "line": 20
     },
     {
       "name": "FrontendObservabilityInterceptor",
@@ -6674,7 +6681,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 40
+      "line": 39
     },
     {
       "name": "GlobalErrorHandler",
@@ -6745,13 +6752,6 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/seo.service.ts",
       "line": 51
-    },
-    {
-      "name": "TokenStorageService",
-      "role": "Service",
-      "selector": null,
-      "path": "FoodDiary.Web.Client/src/app/services/token-storage.service.ts",
-      "line": 9
     },
     {
       "name": "UnsavedChangesService",
@@ -6828,7 +6828,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
-      "line": 120
+      "line": 124
     },
     {
       "name": "BillingSdk",
@@ -7139,6 +7139,13 @@
       "line": 9
     },
     {
+      "name": "AuthMetadataStorageService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/auth-metadata-storage.service.ts",
+      "line": 9
+    },
+    {
       "name": "LoginRequest",
       "role": "Other",
       "selector": null,
@@ -7172,6 +7179,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.data.ts",
       "line": 50
+    },
+    {
+      "name": "BrowserSessionStateService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/browser-session-state.service.ts",
+      "line": 8
     },
     {
       "name": "EmailVerificationCooldownService",
@@ -7213,7 +7227,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DevelopmentToolError",

@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -63,7 +62,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
 
         if (confirmEmail) {
             string token = factory.EmailSender.GetRequiredEmailVerificationToken(email);
@@ -103,7 +102,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(Guid Id);

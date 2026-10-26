@@ -148,6 +148,8 @@ export class AdminBillingSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -249,6 +251,8 @@ export class AdminBillingSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'ToUtc', <any>toUtc, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -352,6 +356,8 @@ export class AdminBillingSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -453,6 +459,8 @@ export class AdminBillingSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'ToUtc', <any>toUtc, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

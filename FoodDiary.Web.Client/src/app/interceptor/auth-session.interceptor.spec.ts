@@ -5,26 +5,27 @@ import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { environment } from '../../environments/environment';
 import { AuthService } from '../services/auth.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { AuthInterceptor } from './auth.interceptor';
 
-const path = '/api/v1/notifications/read-all';
+const path = `${environment.apiUrls.auth.replace(/\/auth$/, '')  }/notifications/read-all`;
 let http: HttpClient;
 let requests: HttpTestingController;
 let sessions: SessionEventsService;
 let userId: ReturnType<typeof signal<string>>;
 let impersonating: ReturnType<typeof signal<boolean>>;
-let refresh: Subject<string | null>;
-let refreshToken: ReturnType<typeof vi.fn>;
+let refresh: Subject<boolean>;
+let refreshSession: ReturnType<typeof vi.fn>;
 let completed: ReturnType<typeof vi.fn<(value: unknown) => void>>;
 let failed: ReturnType<typeof vi.fn<(error: unknown) => void>>;
 
 beforeEach(() => {
     userId = signal('user-a');
     impersonating = signal(false);
-    refresh = new Subject<string | null>();
-    refreshToken = vi.fn(() => refresh);
+    refresh = new Subject<boolean>();
+    refreshSession = vi.fn(() => refresh);
     completed = vi.fn();
     failed = vi.fn();
     TestBed.configureTestingModule({
@@ -34,7 +35,7 @@ beforeEach(() => {
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             {
                 provide: AuthService,
-                useValue: { getToken: vi.fn(() => 'old-token'), getUserId: userId, isImpersonating: impersonating, refreshToken },
+                useValue: { getToken: vi.fn(() => null), getUserId: userId, isImpersonating: impersonating, refreshSession },
             },
         ],
     });
@@ -55,7 +56,7 @@ describe('AuthInterceptor request owner before refresh', () => {
         sessions.notifyAuthenticated();
         original.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(refreshToken).not.toHaveBeenCalled();
+        expect(refreshSession).not.toHaveBeenCalled();
         requests.expectNone(path);
         expect(completed).not.toHaveBeenCalled();
         expect(failed).toHaveBeenCalledWith(expect.objectContaining({ status: HttpStatusCode.Unauthorized }));
@@ -68,7 +69,7 @@ describe('AuthInterceptor request owner before refresh', () => {
         sessions.notifyAuthenticated();
         original.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(refreshToken).not.toHaveBeenCalled();
+        expect(refreshSession).not.toHaveBeenCalled();
         requests.expectNone(path);
         expect(failed).toHaveBeenCalledOnce();
     });
@@ -79,7 +80,7 @@ describe('AuthInterceptor request owner before refresh', () => {
         impersonating.set(true);
         original.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(refreshToken).not.toHaveBeenCalled();
+        expect(refreshSession).not.toHaveBeenCalled();
         requests.expectNone(path);
         expect(failed).toHaveBeenCalledOnce();
     });
@@ -89,10 +90,10 @@ describe('AuthInterceptor request owner after refresh', () => {
     it('does not replay the PUT when the account changes while refresh is pending', () => {
         http.put(path, {}).subscribe({ next: completed, error: failed });
         requests.expectOne(path).flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-        expect(refreshToken).toHaveBeenCalledOnce();
+        expect(refreshSession).toHaveBeenCalledOnce();
         userId.set('user-b');
         sessions.notifyAuthenticated();
-        refresh.next('new-account-token');
+        refresh.next(true);
         refresh.complete();
 
         requests.expectNone(path);
@@ -104,15 +105,15 @@ describe('AuthInterceptor request owner after refresh', () => {
         const body = { marker: 'same-account-payload' };
         http.put(path, body).subscribe({ next: completed, error: failed });
         const original = requests.expectOne(path);
-        expect(original.request.headers.get('Authorization')).toBe('Bearer old-token');
+        expect(original.request.headers.get('Authorization')).toBeNull();
         original.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
-        refresh.next('refreshed-same-account-token');
+        refresh.next(true);
         refresh.complete();
 
         const retry = requests.expectOne(path);
         expect(retry.request.method).toBe('PUT');
         expect(retry.request.body).toEqual(body);
-        expect(retry.request.headers.get('Authorization')).toBe('Bearer refreshed-same-account-token');
+        expect(retry.request.headers.get('Authorization')).toBeNull();
         retry.flush(null);
         expect(completed).toHaveBeenCalledOnce();
         expect(failed).not.toHaveBeenCalled();

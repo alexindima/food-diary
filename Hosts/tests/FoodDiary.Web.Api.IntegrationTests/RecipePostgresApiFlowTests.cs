@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -32,8 +31,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
     [RequiresDockerFact]
     public async Task RecipesOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
         HttpClient client = factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", await RegisterAndGetAccessTokenAsync(client));
+        AuthenticationResponseCookies.ApplyBrowserSession(client, await RegisterAndGetBrowserSessionAsync(client));
         Guid ingredientId = (await CreateIngredientProductAsync(client)).Id;
         Guid firstRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Salad");
         Guid favoriteRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Soup");
@@ -120,11 +118,9 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
     [RequiresDockerFact]
     public async Task NestedRecipe_CycleAccessDuplicateAndDeletion_PreservePostgresBoundaries() {
         using HttpClient owner = factory.CreateClient();
-        owner.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", await RegisterAndGetAccessTokenAsync(owner));
+        AuthenticationResponseCookies.ApplyBrowserSession(owner, await RegisterAndGetBrowserSessionAsync(owner));
         using HttpClient stranger = factory.CreateClient();
-        stranger.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "Bearer", await RegisterAndGetAccessTokenAsync(stranger));
+        AuthenticationResponseCookies.ApplyBrowserSession(stranger, await RegisterAndGetBrowserSessionAsync(stranger));
         ProductPayload product = await CreateIngredientProductAsync(owner);
         var expected = new ExpectedRecipe("Nested base", "Description", "Private note", "main_courses",
             5, 10, 4, "Private", "Cook", "Cook ingredient", 100, 400, 20, 10, 60, 8, 0);
@@ -209,8 +205,8 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
     [RequiresDockerFact]
     public async Task CreateUpdateReadRecipe_PersistsIngredientsAndOverviewPayloadAgainstPostgres() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
 
         ProductPayload product = await CreateIngredientProductAsync(client);
         var createdExpected = new ExpectedRecipe(
@@ -410,7 +406,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
         return payload;
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         string email = $"postgres-recipe-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
@@ -420,8 +416,8 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
-        Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
-        return payload.AccessToken;
+        Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
@@ -435,7 +431,7 @@ public sealed partial class RecipePostgresApiFlowTests(PostgresApiWebApplication
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, string RefreshToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, string RefreshToken, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(string Email);

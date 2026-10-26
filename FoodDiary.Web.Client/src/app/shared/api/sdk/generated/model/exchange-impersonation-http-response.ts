@@ -9,5 +9,6 @@
  */
 
 export interface ExchangeImpersonationHttpResponse {
-    accessToken?: string;
+    accessToken?: string | null;
+    contextId?: string | null;
 }

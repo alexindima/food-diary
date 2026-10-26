@@ -22,8 +22,7 @@ export class EmailVerificationRealtimeService {
             return;
         }
 
-        const token = authService.getToken();
-        if (token === null || token.trim().length === 0) {
+        if (!authService.isAuthenticated()) {
             return;
         }
 
@@ -36,8 +35,9 @@ export class EmailVerificationRealtimeService {
             }
 
             const connection = new HubConnectionBuilder()
-                .withUrl(toEmailVerificationHubUrl(environment.apiUrls.auth), {
+                .withUrl(authService.sessionHubUrl(toEmailVerificationHubUrl(environment.apiUrls.auth)), {
                     accessTokenFactory: () => authService.getToken() ?? '',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 })
                 .withAutomaticReconnect()
                 .configureLogging(LogLevel.Warning)

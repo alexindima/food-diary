@@ -14,6 +14,7 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
 
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<BrowserSessionService>();
         services.AddScoped<TelegramAuthenticationIntentService>();
         services.AddScoped<TelegramBackupEmailService>();
         services.AddScoped<IEmailSender, EmailSender>();

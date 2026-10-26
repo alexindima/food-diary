@@ -106,6 +106,10 @@ export interface PostAuthRestoreRequestParams {
     restoreAccountHttpRequest?: RestoreAccountHttpRequest;
 }
 
+export interface PostAuthSessionRequestParams {
+    version: string;
+}
+
 export interface PostAuthVerifyEmailRequestParams {
     version: string;
     verifyEmailHttpRequest?: VerifyEmailHttpRequest;
@@ -247,6 +251,8 @@ export class AuthSdk extends BaseService {
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
@@ -404,6 +410,8 @@ export class AuthSdk extends BaseService {
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
@@ -1096,6 +1104,78 @@ export class AuthSdk extends BaseService {
     }
 
     /**
+     * @endpoint post /api/v{version}/auth/session
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAuthSession(
+        requestParameters: PostAuthSessionRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AuthenticationHttpResponse>;
+    public postAuthSession(
+        requestParameters: PostAuthSessionRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AuthenticationHttpResponse>>;
+    public postAuthSession(
+        requestParameters: PostAuthSessionRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AuthenticationHttpResponse>>;
+    public postAuthSession(
+        requestParameters: PostAuthSessionRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAuthSession.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/auth/session`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AuthenticationHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
      * @endpoint post /api/v{version}/auth/verify-email
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -1217,6 +1297,8 @@ export class AuthSdk extends BaseService {
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
             options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);

@@ -108,6 +108,8 @@ export class AdminEmailTemplatesSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -192,6 +194,8 @@ export class AdminEmailTemplatesSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -271,6 +275,8 @@ export class AdminEmailTemplatesSdk extends BaseService {
         if (idempotencyKey !== undefined && idempotencyKey !== null) {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -363,6 +369,8 @@ export class AdminEmailTemplatesSdk extends BaseService {
         const adminEmailTemplateUpsertHttpRequest = requestParameters?.adminEmailTemplateUpsertHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

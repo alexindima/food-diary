@@ -119,6 +119,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -201,6 +203,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -286,6 +290,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
 
         let localVarHeaders = this.defaultHeaders;
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -369,6 +375,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
         if (idempotencyKey !== undefined && idempotencyKey !== null) {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
@@ -461,6 +469,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
             localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
         }
 
+        // authentication (AdminSession) required
+
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
 
@@ -548,6 +558,8 @@ export class AdminDailyAdvicesSdk extends BaseService {
         const adminDailyAdviceGroupUpdateHttpRequest = requestParameters?.adminDailyAdviceGroupUpdateHttpRequest;
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
 
         // authentication (Bearer) required
         localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');

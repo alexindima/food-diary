@@ -15,6 +15,11 @@ namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 // so these checks perform no database or provider I/O.
 [ExcludeFromCodeCoverage]
 public sealed class TransportApiWebApplicationFactory : WebApplicationFactory<Program> {
+    protected override void ConfigureClient(HttpClient client) {
+        base.ConfigureClient(client);
+        client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         builder.UseEnvironment("Development");
         builder.ConfigureLogging(logging => logging.Services.RemoveAll<ILoggerProvider>());

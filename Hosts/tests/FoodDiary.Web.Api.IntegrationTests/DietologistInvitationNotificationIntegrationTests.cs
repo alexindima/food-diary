@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
-using System.IdentityModel.Tokens.Jwt;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using System.Net;
 using System.Net.Http.Headers;
@@ -207,9 +206,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
             [RoleNames.Dietologist],
             expiresAtUtc: null,
             securityVersion,
-            new RefreshTokenSessionId(Guid.Parse(new JwtSecurityTokenHandler()
-                .ReadJwtToken(user.Client.DefaultRequestHeaders.Authorization!.Parameter!)
-                .Claims.Single(claim => string.Equals(claim.Type, "refresh_session_id", StringComparison.Ordinal)).Value)));
+            new RefreshTokenSessionId(Guid.Parse(user.Client.DefaultRequestHeaders.GetValues("Cookie").Single().Split('=')[1][..32])));
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
@@ -223,7 +220,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
 
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
 
         Assert.NotEqual(Guid.Empty, authPayload.User.Id);
         string token = factory.EmailSender.GetRequiredEmailVerificationToken(email);
@@ -245,7 +242,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed record AuthPayload(string AccessToken, AuthUserPayload User);
+    private sealed record AuthPayload(string SessionId, AuthUserPayload User);
 
     [ExcludeFromCodeCoverage]
     private sealed record AuthUserPayload(Guid Id);

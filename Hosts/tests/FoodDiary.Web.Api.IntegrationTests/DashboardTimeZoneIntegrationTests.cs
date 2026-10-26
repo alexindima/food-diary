@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Diagnostics.Metrics;
@@ -38,7 +37,7 @@ public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationF
         using HttpResponseMessage registration = await client.PostAsJsonAsync("/api/v1/auth/register", new RegisterHttpRequest(email, "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.RootElement.GetProperty("accessToken").GetString());
+        AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
         var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
         DateTime start = Midnight(day, zone);

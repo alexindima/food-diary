@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -34,8 +33,8 @@ public sealed class WeeklyGoalCalendarValidationIntegrationTests(ApiWebApplicati
         await using WebApplicationFactory<Program> clocked = factory.WithWebHostBuilder(builder => builder.ConfigureTestServices(services =>
             services.Replace(ServiceDescriptor.Singleton<TimeProvider>(clock))));
         using HttpClient client = clocked.CreateClient();
-        string? accessToken = auth.RootElement.GetProperty("accessToken").GetString();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string browserSession = AuthenticationResponseCookies.ReadBrowserSession(registration);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, browserSession);
         DateOnly nextWeek = localMonday.AddDays(7);
         string weekLabel = nextWeek.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 

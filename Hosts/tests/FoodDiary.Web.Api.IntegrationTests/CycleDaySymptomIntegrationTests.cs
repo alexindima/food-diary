@@ -1,6 +1,5 @@
 using FoodDiary.Modules.Cycles.Domain.Contracts.Enums;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -15,8 +14,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task UpsertFactor_WithId_ChangesDateWithoutDuplicatingAndRejectsCollision() {
         HttpClient client = factory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         Guid profileId = await CreateCycleAsync(client);
         var request = new UpsertCycleFactorHttpRequest((int)CycleFactorType.HormonalContraception,
             new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), EndDate: null, Notes: "first", ClearNotes: false);
@@ -47,8 +46,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task CreateCycle_WithOversizedNotes_ReturnsValidationErrorAndAcceptsTrimmedLimit() {
         HttpClient client = factory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         var request = new CreateCycleHttpRequest(
             new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
             (int)CycleTrackingMode.PeriodTracking,
@@ -71,8 +70,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task CreateCycle_RejectsMissingTrackingStartDateWithoutChangingStoredProfile() {
         HttpClient client = factory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         var request = new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["mode"] = (int)CycleTrackingMode.PeriodTracking,
             ["averageCycleLength"] = 28,
@@ -141,8 +140,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task DeleteCycle_WithOwnedProfile_ReturnsNoContentAndClearsCurrentCycle() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         Guid cycleProfileId = await CreateCycleAsync(client);
 
         HttpResponseMessage deleteResponse = await client.DeleteAsync($"/api/v1/cycles/{cycleProfileId}");
@@ -167,12 +166,12 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task DeleteCycle_WithForeignProfile_ReturnsNotFoundAndPreservesOwnerCycle() {
         HttpClient ownerClient = factory.CreateClient();
-        string ownerToken = await RegisterAndGetAccessTokenAsync(ownerClient);
-        ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
+        string ownerToken = await RegisterAndGetBrowserSessionAsync(ownerClient);
+        AuthenticationResponseCookies.ApplyBrowserSession(ownerClient, ownerToken);
         Guid cycleProfileId = await CreateCycleAsync(ownerClient);
         HttpClient otherClient = factory.CreateClient();
-        string otherToken = await RegisterAndGetAccessTokenAsync(otherClient);
-        otherClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+        string otherToken = await RegisterAndGetBrowserSessionAsync(otherClient);
+        AuthenticationResponseCookies.ApplyBrowserSession(otherClient, otherToken);
 
         HttpResponseMessage deleteResponse = await otherClient.DeleteAsync($"/api/v1/cycles/{cycleProfileId}");
         HttpResponseMessage currentResponse = await ownerClient.GetAsync("/api/v1/cycles/current");
@@ -186,8 +185,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task UpsertDay_WithClearedSymptomCategory_PreservesOtherDayObservations() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         Guid cycleProfileId = await CreateCycleAsync(client);
         DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
 
@@ -236,8 +235,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task UpsertDay_WithClearedFertilitySignal_PreservesOtherDayObservations() {
         HttpClient client = factory.CreateClient();
-        string accessToken = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         Guid cycleProfileId = await CreateCycleAsync(client);
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
 
@@ -270,8 +269,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task UpsertFertility_RejectsInvalidValuesAndPersistsBoundaries() {
         HttpClient client = factory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         Guid profileId = await CreateCycleAsync(client);
         var signal = new FertilitySignalHttpModel(BasalBodyTemperatureCelsius: 36.62,
             OvulationTestResult: null, CervicalFluid: "saved", HadSex: false, Notes: null, ClearNotes: false);
@@ -320,8 +319,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
     [RequiresDockerFact]
     public async Task UpdateEpisode_RejectsEndBeforeStartAndAcceptsDateBoundaries() {
         HttpClient client = factory.CreateClient();
-        string token = await RegisterAndGetAccessTokenAsync(client);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        string token = await RegisterAndGetBrowserSessionAsync(client);
+        AuthenticationResponseCookies.ApplyBrowserSession(client, token);
         Guid profileId = await CreateCycleAsync(client);
         var start = new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
         HttpResponseMessage confirmed = await client.PutAsJsonAsync($"/api/v1/cycles/{profileId}/period-start", new { Date = start });
@@ -373,12 +372,12 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         return json.RootElement.GetProperty("id").GetGuid();
     }
 
-    private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest($"cycle-symptom-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         response.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        return json.RootElement.GetProperty("accessToken").GetString()!;
+        return AuthenticationResponseCookies.ReadBrowserSession(response);
     }
 }

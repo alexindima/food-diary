@@ -1,3 +1,4 @@
+import { browserSessionCookie } from "./task-runtime-browser.mjs";
 import { readFileSync } from 'node:fs';
 import { OpenApiFixtures } from '../../FoodDiary.Web.Client/e2e/support/openapi-fixtures.mjs';
 
@@ -12,7 +13,7 @@ export async function requestOwnedApi(state, token, method, path, body, key) {
     const schema = operation.requestBody?.content?.['application/json']?.schema;
     if (schema !== undefined) contract.validate(schema, body, operation.operationId);
     const send = () => fetch(`${state.apiUrl}${path}`, {
-        method, headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}), ...(key ? { 'Idempotency-Key': key } : {}) },
+        method, headers: { 'content-type': 'application/json', 'X-Requested-With': 'XMLHttpRequest', ...(token ? { cookie: token } : {}), ...(key ? { 'Idempotency-Key': key } : {}) },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }), redirect: 'error', signal: AbortSignal.timeout(30_000),
     });
     let response = await send();
@@ -24,10 +25,13 @@ export async function requestOwnedApi(state, token, method, path, body, key) {
     if (!response.ok) throw new Error(`Owned API ${method} failed (HTTP ${response.status})`);
     const result = response.status === 204 ? undefined : await response.json();
     contract.assertResponse(method, path, response.status, result);
+    if (path === '/api/v1/auth/login' || path === '/api/v1/auth/admin-sso/exchange') {
+        return { ...result, browserCookie: browserSessionCookie(response, path.endsWith('/admin-sso/exchange')) };
+    }
     return result ?? null;
 }
 
 export async function ownedAdminToken(client) {
     const sso = await client.request('POST', '/api/v1/auth/admin-sso/start', {});
-    return (await requestOwnedApi(client.state, null, 'POST', '/api/v1/auth/admin-sso/exchange', { code: sso.code })).accessToken;
+    return (await requestOwnedApi(client.state, null, 'POST', '/api/v1/auth/admin-sso/exchange', { code: sso.code })).browserCookie;
 }

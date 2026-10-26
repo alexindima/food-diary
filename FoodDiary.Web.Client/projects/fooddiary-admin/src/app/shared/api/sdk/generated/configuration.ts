@@ -102,10 +102,32 @@ export class Configuration {
         this.encodeParam = encodeParam ?? (param => this.defaultEncodeParam(param));
         this.credentials = credentials ?? {};
 
+        // init default AdminSession credential
+        if (!this.credentials['AdminSession']) {
+            this.credentials['AdminSession'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['AdminSession'] || this.apiKeys['__Host-fooddiary.admin'];
+                }
+            };
+        }
+
         // init default Bearer credential
         if (!this.credentials['Bearer']) {
             this.credentials['Bearer'] = () => {
                 return typeof this.accessToken === 'function' ? this.accessToken() : this.accessToken;
+            };
+        }
+
+        // init default BrowserSession credential
+        if (!this.credentials['BrowserSession']) {
+            this.credentials['BrowserSession'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['BrowserSession'] || this.apiKeys['__Host-fooddiary.browser'];
+                }
             };
         }
     }

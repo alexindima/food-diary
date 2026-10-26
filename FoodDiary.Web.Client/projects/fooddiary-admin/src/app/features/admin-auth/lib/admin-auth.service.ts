@@ -1,270 +1,142 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminAuthSdk } from '../../../shared/api/sdk/generated/api/admin-auth.service';
+import { AdminSessionSdk } from '../../../shared/api/sdk/generated/api/admin-session.service';
 import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
-import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
-import { readAdminAccessToken } from './admin-token-storage';
 
-const BASE64_BLOCK_SIZE = 4;
-const BASE64_REMAINDER_NONE = 0;
+type AdminSession = { id: string; roles: readonly string[] };
 
 @Service()
 export class AdminAuthService {
-    private readonly authUrl = environment.apiUrls.auth;
-    private readonly http = inject(HttpClient);
-    private readonly sdk = createSdkConnection(AdminAuthSdk, this.authUrl, this.http);
-    private readonly cookieSdk = createSdkConnection(AdminAuthSdk, this.authUrl, this.http, true);
+    private readonly sdk = createSdkConnection(AdminAuthSdk, environment.apiUrls.auth, inject(HttpClient), true);
+    private readonly sessionSdk = createSdkConnection(AdminSessionSdk, environment.apiUrls.auth, inject(HttpClient), true);
     private readonly document = inject(DOCUMENT);
-    private readonly platformId = inject(PLATFORM_ID);
-    private readonly isBrowser = isPlatformBrowser(this.platformId);
-    private readonly tokenSignal = signal<string | null>(this.getToken());
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly session = signal<AdminSession | null>(null);
     private readonly ssoRateLimitedSignal = signal(false);
     public readonly ssoRateLimited = this.ssoRateLimitedSignal.asReadonly();
 
-    public getToken(): string | null {
-        return readAdminAccessToken(this.localStorageRef, this.sessionStorageRef);
+    public constructor() {
+        this.clearLegacyCredentials();
+    }
+
+    public getSessionId(): string | null {
+        return this.session()?.id ?? null;
     }
 
     public isAuthenticated(): boolean {
-        return Boolean(this.tokenSignal());
+        return this.session() !== null;
     }
 
     public isAdmin(): boolean {
-        const token = this.tokenSignal();
-        if (token === null || token.length === 0) {
-            return false;
-        }
-
-        const roles = this.extractRolesFromToken(token);
-        return roles.includes('Admin');
+        return this.session()?.roles.includes('Admin') === true;
     }
 
-    public refreshTokenState(): void {
-        this.tokenSignal.set(this.getToken());
+    public invalidateSession(): void {
+        this.session.set(null);
+    }
+
+    public async restoreSessionAsync(force = false): Promise<void> {
+        if (!this.isBrowser || (!force && this.session() !== null)) {
+            return;
+        }
+        try {
+            this.applySession(await firstValueFrom(this.sessionSdk.client.postAuthSession({ version: this.sessionSdk.version })));
+        } catch {
+            this.session.set(null);
+        }
     }
 
     public async applySsoFromQueryAsync(): Promise<void> {
         if (!this.isBrowser) {
             return;
         }
-
         const params = new URLSearchParams(this.document.location.search);
-        const fragmentParams = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
-        const code = fragmentParams.get('code') ?? params.get('code');
+        const fragments = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
+        const code = fragments.get('code') ?? params.get('code');
         if (code === null || code.length === 0) {
+            await this.restoreSessionAsync();
             return;
         }
-
-        // A new SSO code takes precedence over a cached token, which may have expired or been revoked.
-        if (this.wasCodeProcessed(code)) {
-            this.clearCodeFromUrl(params);
-            this.tokenSignal.set(this.getToken());
-            return;
-        }
-
         const success = await this.exchangeSsoCodeAsync(code);
-        this.markCodeProcessed(code);
-
         params.delete('code');
         if (!success) {
             params.set('ssoError', '1');
         }
-
         this.replaceCurrentUrl(params);
-        this.tokenSignal.set(this.getToken());
     }
 
     public async tryApplySsoFromReturnUrlAsync(returnUrl: string): Promise<string | null> {
-        const result = this.extractCodeFromUrl(returnUrl);
-        if (result === null) {
+        let url: URL;
+        try {
+            url = new URL(returnUrl, this.document.location.origin);
+        } catch {
             return null;
         }
-
-        if (this.wasCodeProcessed(result.code)) {
-            return result.cleanedUrl;
+        const fragments = new URLSearchParams(url.hash.replace(/^#/, ''));
+        const code = fragments.get('code') ?? url.searchParams.get('code');
+        if (code === null || code.length === 0) {
+            return null;
         }
-
-        const success = await this.exchangeSsoCodeAsync(result.code);
-        this.markCodeProcessed(result.code);
-        this.tokenSignal.set(this.getToken());
-        return success ? result.cleanedUrl : null;
+        const success = await this.exchangeSsoCodeAsync(code);
+        url.searchParams.delete('code');
+        fragments.delete('code');
+        url.hash = fragments.toString();
+        return success ? url.pathname + url.search + url.hash : null;
     }
 
     public async tryUpgradeToAdminAsync(): Promise<boolean> {
-        if (this.isAdmin()) {
-            return true;
-        }
-
-        const token = this.getToken();
-        if (token === null || token.length === 0) {
-            return false;
-        }
-
-        try {
-            const response = await firstValueFrom(
-                this.sdk.client.postAuthAdminSsoStart({ version: this.sdk.version }).pipe(map(value => requireSdkFields(value, ['code']))),
-            );
-            if (response.code.length === 0) {
-                return false;
-            }
-
-            const success = await this.exchangeSsoCodeAsync(response.code);
-            this.tokenSignal.set(this.getToken());
-            return success;
-        } catch {
-            return false;
-        }
+        await this.restoreSessionAsync(true);
+        return this.isAdmin();
     }
 
     public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
         this.ssoRateLimitedSignal.set(false);
         try {
-            const response = await firstValueFrom(
-                this.cookieSdk.client
-                    .postAuthAdminSsoExchange({ version: this.cookieSdk.version, adminSsoExchangeHttpRequest: { code } })
-                    .pipe(map(value => requireSdkFields(value, ['accessToken']))),
+            this.applySession(
+                await firstValueFrom(
+                    this.sdk.client.postAuthAdminSsoExchange({
+                        version: this.sdk.version,
+                        adminSsoExchangeHttpRequest: { code },
+                    }),
+                ),
             );
-
-            if (response.accessToken.length === 0) {
-                return false;
-            }
-
-            this.sessionStorageRef?.setItem('authToken', response.accessToken);
-            this.localStorageRef?.removeItem('authToken');
-            this.localStorageRef?.removeItem('refreshToken');
-            return true;
+            this.clearLegacyCredentials();
+            return this.isAdmin();
         } catch (error: unknown) {
+            this.session.set(null);
             this.ssoRateLimitedSignal.set(error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests));
             return false;
         }
     }
 
-    private clearCodeFromUrl(params: URLSearchParams): void {
-        params.delete('code');
-        this.replaceCurrentUrl(params);
+    private applySession(value: { sessionId?: string | null; roles?: string[] | null }): void {
+        if (value.sessionId === null || value.sessionId === undefined || value.sessionId.length === 0 || !Array.isArray(value.roles)) {
+            throw new Error('Missing administrative session metadata');
+        }
+        this.session.set({ id: value.sessionId, roles: value.roles });
     }
 
     private replaceCurrentUrl(params: URLSearchParams): void {
+        const query = params.toString();
+        this.document.defaultView?.history.replaceState({}, '', this.document.location.pathname + (query.length > 0 ? `?${query}` : ''));
+    }
+
+    private clearLegacyCredentials(): void {
         if (!this.isBrowser) {
             return;
         }
-
-        const nextQuery = params.toString();
-        const nextUrl = nextQuery.length > 0 ? `${this.document.location.pathname}?${nextQuery}` : this.document.location.pathname;
-        this.document.defaultView?.history.replaceState({}, '', nextUrl);
-    }
-
-    private wasCodeProcessed(code: string): boolean {
-        return this.sessionStorageRef?.getItem('adminSsoCode') === code;
-    }
-
-    private markCodeProcessed(code: string): void {
-        this.sessionStorageRef?.setItem('adminSsoCode', code);
-    }
-
-    private extractRolesFromToken(token: string): string[] {
-        const payload = this.decodePayload(token);
-        if (payload === null) {
-            return [];
-        }
-
-        const roleClaim =
-            payload['role'] ??
-            payload['roles'] ??
-            payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??
-            payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'];
-
-        if (Array.isArray(roleClaim)) {
-            return roleClaim.filter((role): role is string => typeof role === 'string');
-        }
-
-        if (typeof roleClaim === 'string') {
-            return [roleClaim];
-        }
-
-        return [];
-    }
-
-    private extractCodeFromUrl(value: string): { code: string; cleanedUrl: string } | null {
-        const decoded = this.safeDecode(value);
-        if (decoded.length === 0) {
-            return null;
-        }
-
-        try {
-            const url = new URL(decoded, this.document.location.origin);
-            const fragmentParams = new URLSearchParams(url.hash.replace(/^#/, ''));
-            const code = fragmentParams.get('code') ?? url.searchParams.get('code');
-            if (code === null || code.length === 0) {
-                return null;
+        for (const name of ['localStorage', 'sessionStorage'] as const) {
+            try {
+                this.document.defaultView?.[name].removeItem('authToken');
+                this.document.defaultView?.[name].removeItem('refreshToken');
+            } catch {
+                // Optional browser storage must not prevent cookie authentication.
             }
-
-            url.searchParams.delete('code');
-            fragmentParams.delete('code');
-            url.hash = fragmentParams.toString();
-            const cleanedSearch = url.searchParams.toString();
-            const cleanedHash = url.hash.length > 0 ? url.hash : '';
-            const cleanedUrl = `${cleanedSearch.length > 0 ? `${url.pathname}?${cleanedSearch}` : url.pathname}${cleanedHash}`;
-            return { code, cleanedUrl };
-        } catch {
-            return null;
-        }
-    }
-
-    private safeDecode(value: string): string {
-        try {
-            return decodeURIComponent(value);
-        } catch {
-            return value;
-        }
-    }
-
-    private decodePayload(token: string): Record<string, unknown> | null {
-        const tokenSegments = token.split('.');
-        if (tokenSegments.length < 2 || tokenSegments[1].length === 0) {
-            return null;
-        }
-
-        const payloadSegment = tokenSegments[1];
-        try {
-            const normalized = payloadSegment.replaceAll('-', '+').replaceAll('_', '/');
-            const remainder = normalized.length % BASE64_BLOCK_SIZE;
-            const padLength =
-                (BASE64_BLOCK_SIZE - (remainder === BASE64_REMAINDER_NONE ? BASE64_BLOCK_SIZE : remainder)) % BASE64_BLOCK_SIZE;
-            const padded = normalized.padEnd(normalized.length + padLength, '=');
-            const decoded = atob(padded);
-            const parsed: unknown = JSON.parse(decoded);
-            return this.isRecord(parsed) ? parsed : null;
-        } catch {
-            return null;
-        }
-    }
-
-    private isRecord(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' && value !== null && !Array.isArray(value);
-    }
-
-    private get localStorageRef(): Storage | null {
-        return this.getBrowserStorage('localStorage');
-    }
-
-    private get sessionStorageRef(): Storage | null {
-        return this.getBrowserStorage('sessionStorage');
-    }
-
-    private getBrowserStorage(storageName: 'localStorage' | 'sessionStorage'): Storage | null {
-        if (!this.isBrowser) {
-            return null;
-        }
-
-        try {
-            return this.document.defaultView?.[storageName] ?? null;
-        } catch {
-            return null;
         }
     }
 }

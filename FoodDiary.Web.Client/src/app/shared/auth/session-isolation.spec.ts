@@ -9,9 +9,9 @@ import { userFixture } from '../../../testing/api-fixtures';
 import { AuthInterceptor } from '../../interceptor/auth.interceptor';
 import { AuthService } from '../../services/auth.service';
 import { NavigationService } from '../../services/navigation.service';
-import { ACCOUNT_ACCESS_STORAGE_KEY } from '../../services/token-storage.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { ThemeService } from '../theme/theme.service';
+import { ACCOUNT_ACCESS_STORAGE_KEY } from './auth-metadata-storage.service';
 import { SessionEventsService } from './session-events.service';
 
 const authUrl = environment.apiUrls.auth;
@@ -20,12 +20,8 @@ const navigation = {
     navigateToLandingAsync: vi.fn().mockResolvedValue(undefined),
 };
 
-function token(userId: string, extra: Record<string, unknown> = {}): string {
-    return `${btoa('{}')}.${btoa(JSON.stringify({ sub: userId, role: 'User', ...extra }))}.signature`;
-}
-
-function response(userId: string, accessToken = token(userId)): { accessToken: string; user: ReturnType<typeof userFixture> } {
-    return { accessToken, user: userFixture({ id: userId, isEmailConfirmed: userId === 'alice' }) };
+function response(userId: string, sessionId = `session-${userId}`): object {
+    return { sessionId, roles: ['User'], user: userFixture({ id: userId, isEmailConfirmed: userId === 'alice' }) };
 }
 
 function context(): { auth: AuthService; http: HttpClient; requests: HttpTestingController; sessions: SessionEventsService } {
@@ -51,7 +47,6 @@ function context(): { auth: AuthService; http: HttpClient; requests: HttpTesting
 }
 
 function publishBob(): void {
-    localStorage.setItem('authToken', token('bob'));
     localStorage.setItem('userId', 'bob');
     localStorage.setItem('emailConfirmed', 'false');
     localStorage.setItem('mustChangePassword', 'true');
@@ -72,13 +67,14 @@ beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
     vi.clearAllMocks();
+    window.history.replaceState({}, '', '/');
 });
 afterEach(() => {
     TestBed.inject(HttpTestingController).verify();
 });
 
-describe('tab session identity boundary', () => {
-    it('sends Bob login only after Alice logout has applied both its cookie response and local session end', async () => {
+describe('browser session identity boundary', () => {
+    it('serializes logout and the next login through the cookie response', async () => {
         const { auth, requests, http } = context();
         auth.login({ email: 'alice@example.test', password: 'password', rememberMe: false }).subscribe();
         requests.expectOne(`${authUrl}/login`).flush(response('alice'));
@@ -86,170 +82,108 @@ describe('tab session identity boundary', () => {
         const ending = await vi.waitFor(() => requests.expectOne(`${authUrl}/logout`));
         auth.login({ email: 'bob@example.test', password: 'password', rememberMe: false }).subscribe();
         requests.expectNone(`${authUrl}/login`);
-
+        expect(ending.request.headers.get('X-FoodDiary-Session')).toBe('session-alice');
         ending.flush(null);
-
         const receiving = await vi.waitFor(() => requests.expectOne(`${authUrl}/login`));
         expect(receiving.request.headers.has('Authorization')).toBe(false);
-        expect(auth.getToken()).toBeNull();
         receiving.flush(response('bob'));
         await logout;
         expect(auth.getUserId()).toBe('bob');
-        http.get('/api/v1/users/current').subscribe();
-        const ownProfile = requests.expectOne('/api/v1/users/current');
-        expect(ownProfile.request.headers.get('Authorization')).toBe(`Bearer ${token('bob')}`);
-        ownProfile.flush({ id: 'bob' });
+        const url = `${authUrl.replace(/\/auth$/, '')}/users/info`;
+        http.get(url).subscribe();
+        const profile = requests.expectOne(url);
+        expect(profile.request.headers.has('Authorization')).toBe(false);
+        expect(profile.request.headers.get('X-FoodDiary-Session')).toBe('session-bob');
+        profile.flush({});
     });
 
-    it.each([true, false])('pins the initial mutation to Alice before a foreign storage event (remembered=%s)', remembered => {
+    it.each([true, false])('pins mutations before the foreign account event (remembered=%s)', remembered => {
         const { auth, http, requests, sessions } = context();
         auth.login({ email: 'alice@example.test', password: 'password', rememberMe: remembered }).subscribe();
         requests.expectOne(`${authUrl}/login`).flush(response('alice'));
         publishBob();
-        http.post('/api/v1/hydrations', { amount: 100 }).subscribe();
-        const mutation = requests.expectOne('/api/v1/hydrations');
-        expect(auth.getUserId()).toBe('alice');
-        expect(mutation.request.headers.get('Authorization')).toBe(`Bearer ${token('alice')}`);
+        const url = `${authUrl.replace(/\/auth$/, '')}/hydrations`;
+        http.post(url, { amount: 100 }).subscribe();
+        const mutation = requests.expectOne(url);
+        expect(mutation.request.headers.get('X-FoodDiary-Session')).toBe('session-alice');
         mutation.flush({});
         dispatchAccountChange();
-        expect(auth.getToken()).toBeNull();
         expect(auth.getUserId()).toBeNull();
         expect(sessions.isLocalSessionInvalidated).toBe(true);
-        expect(navigation.navigateToAuthAsync).toHaveBeenCalledWith('login');
-        expect(localStorage.getItem('authToken')).toBe(token('bob'));
-        expect(localStorage.getItem('refreshSession')).toBe('true');
-        requests.expectNone(`${authUrl}/logout`);
-    });
-});
-
-describe('tab session identity restore', () => {
-    it('restores pinned subject and owner metadata with identical roles after another tab signs in', async () => {
-        sessionStorage.setItem('authToken', token('alice'));
-        sessionStorage.setItem('userId', 'alice');
-        sessionStorage.setItem('emailConfirmed', 'true');
-        sessionStorage.setItem('mustChangePassword', 'false');
-        publishBob();
-        const { auth, requests } = context();
-        await auth.restoreSessionAsync();
-        expect(auth.getToken()).toBe(token('alice'));
-        expect(auth.getUserId()).toBe('alice');
-        expect(auth.isEmailConfirmed()).toBe(true);
-        expect(auth.mustChangePassword()).toBe(false);
-        requests.expectNone(`${authUrl}/refresh`);
-    });
-
-    it.each([false, true])('rejects a foreign cookie refresh without clearing Bob storage (expired=%s)', async expired => {
-        sessionStorage.setItem('authToken', token('alice', expired ? { exp: 1 } : {}));
-        sessionStorage.setItem('userId', 'alice');
-        localStorage.setItem('refreshSession', 'true');
-        const { auth, requests, sessions } = context();
-        const pending = expired ? auth.restoreSessionAsync() : firstValueFrom(auth.refreshToken());
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
-        publishBob();
-        refresh.flush(response('bob'));
-        await pending;
-        expect(auth.getToken()).toBeNull();
-        expect(auth.getUserId()).toBeNull();
-        expect(sessions.isLocalSessionInvalidated).toBe(true);
-        expect(localStorage.getItem('authToken')).toBe(token('bob'));
         expect(localStorage.getItem('userId')).toBe('bob');
-        expect(localStorage.getItem('refreshSession')).toBe('true');
         requests.expectNone(`${authUrl}/logout`);
-    });
-
-    it('rejects disagreeing JWT and response subjects even during tokenless cookie bootstrap', async () => {
-        localStorage.setItem('refreshSession', 'true');
-        const { auth, requests } = context();
-        auth.initializeAuth();
-        auth.initializeAuth();
-        const pending = auth.restoreSessionAsync();
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
-        refresh.flush(response('bob', token('alice')));
-        await pending;
-        expect(auth.isAuthenticated()).toBe(false);
-        expect(auth.getUserId()).toBeNull();
-        requests.expectNone(`${authUrl}/logout`);
-    });
-
-    it('permits consistent tokenless cookie bootstrap', async () => {
-        localStorage.setItem('refreshSession', 'true');
-        const { auth, requests } = context();
-        const pending = auth.restoreSessionAsync();
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
-        refresh.flush(response('alice'));
-        await pending;
-        expect(auth.getUserId()).toBe('alice');
-        expect(auth.getToken()).toBe(token('alice'));
     });
 });
 
-describe('tab session policy and impersonation', () => {
-    it('does not rebind unowned policy metadata and requires owner confirmation on restore', async () => {
-        sessionStorage.setItem('authToken', token('alice'));
+describe('browser session restoration boundaries', () => {
+    it('discards legacy credentials and confirms identity and policy on the server', async () => {
+        sessionStorage.setItem('authToken', 'old-access');
+        localStorage.setItem('refreshToken', 'old-refresh');
         localStorage.setItem('emailConfirmed', 'true');
-        localStorage.setItem('mustChangePassword', 'false');
-        localStorage.setItem('refreshSession', 'true');
         const { auth, requests } = context();
-        auth.initializeAuth();
-        auth.initializeAuth();
+        expect(auth.isAuthenticated()).toBe(false);
+        expect(sessionStorage.getItem('authToken')).toBeNull();
+        expect(localStorage.getItem('refreshToken')).toBeNull();
         const pending = auth.restoreSessionAsync();
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
-        expect(auth.isEmailConfirmed()).toBe(false);
-        expect(auth.mustChangePassword()).toBe(true);
-
-        refresh.flush(response('alice'));
+        const restore = await vi.waitFor(() => requests.expectOne(`${authUrl}/session`));
+        restore.flush(response('alice'));
         await pending;
-
         expect(auth.getUserId()).toBe('alice');
         expect(auth.isEmailConfirmed()).toBe(true);
-        expect(auth.mustChangePassword()).toBe(false);
+        expect(auth.getToken()).toBeNull();
     });
 
-    it('rejects Bob cookie while restoring legacy Alice without owner-bound metadata', async () => {
-        sessionStorage.setItem('authToken', token('alice'));
-        localStorage.setItem('refreshSession', 'true');
+    it('rejects restoration into a different server session without logging it out', async () => {
         const { auth, requests, sessions } = context();
-        const pending = auth.restoreSessionAsync();
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
+        auth.login({ email: 'alice@example.test', password: 'password', rememberMe: false }).subscribe();
+        requests.expectOne(`${authUrl}/login`).flush(response('alice'));
+        const pending = firstValueFrom(auth.refreshSession());
         publishBob();
-        refresh.flush(response('bob'));
-        await pending;
-
+        requests.expectOne(`${authUrl}/session`).flush(response('bob'));
+        expect(await pending).toBe(false);
         expect(auth.isAuthenticated()).toBe(false);
         expect(sessions.isLocalSessionInvalidated).toBe(true);
-        expect(localStorage.getItem('authToken')).toBe(token('bob'));
+        expect(localStorage.getItem('userId')).toBe('bob');
         requests.expectNone(`${authUrl}/logout`);
-        expect(await firstValueFrom(auth.refreshToken())).toBeNull();
-        await auth.onLogoutAsync(true);
-        requests.expectNone(`${authUrl}/refresh`);
-        requests.expectNone(`${authUrl}/logout`);
-        expect(localStorage.getItem('refreshSession')).toBe('true');
     });
 
-    it('closes a restored token whose unknown policy cannot be confirmed', async () => {
-        sessionStorage.setItem('authToken', token('alice'));
-        localStorage.setItem('refreshSession', 'true');
+    it('does not restore local policy hints when the server is unavailable', async () => {
+        publishBob();
         const { auth, requests } = context();
         const pending = auth.restoreSessionAsync();
-        const refresh = await vi.waitFor(() => requests.expectOne(`${authUrl}/refresh`));
-        refresh.flush(null, { status: 503, statusText: 'Unavailable' });
+        const restore = await vi.waitFor(() => requests.expectOne(`${authUrl}/session`));
+        restore.flush(null, { status: 503, statusText: 'Unavailable' });
         await pending;
         expect(auth.isAuthenticated()).toBe(false);
         requests.expectNone(`${authUrl}/logout`);
     });
 
-    it('keeps impersonation separate from a remembered account and never refreshes its shared cookie', async () => {
-        const impersonatedToken = token('alice', { fd_impersonation: 'true' });
-        sessionStorage.setItem('authToken', impersonatedToken);
+    it('restores an isolated impersonation context and ignores ordinary account events', async () => {
+        sessionStorage.setItem('impersonationContext', 'support-context');
         publishBob();
         const { auth, requests } = context();
-        auth.initializeAuth();
+        const pending = auth.restoreSessionAsync();
+        const restore = await vi.waitFor(() => requests.expectOne(`${authUrl}/session`));
+        expect(restore.request.headers.get('X-FoodDiary-Context')).toBe('support-context');
+        restore.flush({ roles: ['User'], impersonationContext: 'support-context', user: userFixture({ id: 'alice' }) });
+        await pending;
         dispatchAccountChange();
         expect(auth.getUserId()).toBe('alice');
-        expect(auth.getToken()).toBe(impersonatedToken);
-        expect(await firstValueFrom(auth.refreshToken())).toBeNull();
-        expect(localStorage.getItem('authToken')).toBe(token('bob'));
-        requests.expectNone(`${authUrl}/refresh`);
+        expect(auth.isImpersonating()).toBe(true);
+        expect(auth.getToken()).toBeNull();
+        expect(localStorage.getItem('userId')).toBe('bob');
+        requests.expectNone(`${authUrl}/logout`);
+    });
+
+    it('never falls back to the ordinary account after a rejected impersonation context', async () => {
+        sessionStorage.setItem('impersonationContext', 'expired-context');
+        const { auth, requests } = context();
+        const pending = auth.restoreSessionAsync();
+        const restore = await vi.waitFor(() => requests.expectOne(`${authUrl}/session`));
+        restore.flush(null, { status: 401, statusText: 'Unauthorized' });
+        await pending;
+        expect(auth.isAuthenticated()).toBe(false);
+        requests.expectNone(`${authUrl}/session`);
         requests.expectNone(`${authUrl}/logout`);
     });
 });

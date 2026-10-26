@@ -2055,10 +2055,12 @@
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Presentation.Mappings": "[1.0.0, )",
-          "FoodDiary.Presentation.Api": "[1.0.0, )"
+          "FoodDiary.Presentation.Api": "[1.0.0, )",
+          "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },
       "fooddiary.modules.images.application": {

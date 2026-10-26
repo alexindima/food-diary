@@ -240,6 +240,10 @@ public class AuthenticationTokenServiceTests {
         public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
 
+        public Task<bool> TryRevalidateBrowserSessionAsync(RefreshTokenSessionId id, UserId userId, string expectedCredentialHash,
+            long securityVersion, DateTime nowUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException("This fixture exercises refresh token issuance only.");
+
         public Task<bool> TryRotateAsync(
             RefreshTokenSessionId id,
             UserId userId,

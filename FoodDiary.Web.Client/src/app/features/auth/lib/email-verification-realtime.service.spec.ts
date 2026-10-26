@@ -56,7 +56,10 @@ beforeEach(() => {
     hub.connection.stop.mockReset().mockResolvedValue(undefined);
     getToken = vi.fn().mockReturnValue('current-session-token');
     TestBed.configureTestingModule({
-        providers: [EmailVerificationRealtimeService, { provide: AuthService, useValue: { getToken } }],
+        providers: [
+            EmailVerificationRealtimeService,
+            { provide: AuthService, useValue: { getToken, isAuthenticated: vi.fn(() => true), sessionHubUrl: (hubUrl: string): string => hubUrl } },
+        ],
     });
     service = TestBed.inject(EmailVerificationRealtimeService);
     auth = TestBed.inject(AuthService);
@@ -78,8 +81,9 @@ describe('toEmailVerificationHubUrl', () => {
 });
 
 describe('EmailVerificationRealtimeService connection and verification', () => {
-    it.each([null, '', '   '])('stays disconnected without a usable session token (%j)', async token => {
+    it.each([null, '', '   '])('stays disconnected without an authenticated session (%j)', async token => {
         getToken.mockReturnValue(token);
+        vi.spyOn(auth, 'isAuthenticated').mockReturnValue(false);
         const onVerified = vi.fn();
 
         await service.connectAsync(auth, onVerified);

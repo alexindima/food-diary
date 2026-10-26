@@ -10,6 +10,11 @@
 import { UserHttpResponse } from './user-http-response';
 
 export interface AuthenticationHttpResponse {
-    accessToken?: string;
+    accessToken?: string | null;
+    impersonationContext?: string | null;
+    impersonationReason?: string | null;
+    rememberMe?: boolean;
+    roles?: Array<string> | null;
+    sessionId?: string | null;
     user?: UserHttpResponse;
 }

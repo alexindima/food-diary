@@ -48,8 +48,9 @@ public sealed class SwaggerOperationFilterTests {
         Assert.Equal("Unauthorized", operation.Responses["401"].Description);
         Assert.NotNull(operation.Responses["401"].Content);
         Assert.True(operation.Responses["401"].Content!.ContainsKey("application/json"));
-        OpenApiSecurityRequirement requirement = Assert.Single(operation.Security!);
-        Assert.IsType<OpenApiSecuritySchemeReference>(Assert.Single(requirement.Keys));
+        Assert.Equal(2, operation.Security!.Count);
+        Assert.All(operation.Security, requirement =>
+            Assert.IsType<OpenApiSecuritySchemeReference>(Assert.Single(requirement.Keys)));
     }
 
     [Fact]

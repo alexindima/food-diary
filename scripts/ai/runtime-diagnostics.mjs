@@ -15,7 +15,7 @@ import {
     processIdentity,
     sourceFingerprint,
 } from "./task-runtime.mjs";
-import { probeRenderedRuntime } from "./task-runtime-browser.mjs";
+import { browserSessionCookie, probeRenderedRuntime } from "./task-runtime-browser.mjs";
 import { redactDiagnostic, errorLines } from "./diagnostic-redaction.mjs";
 
 export function serverDiagnosticEvents(value) {
@@ -196,7 +196,7 @@ export async function collectRuntimeDiagnostics(
     );
     const login = await fetch(`${diagnostics.apiUrl}/api/v1/auth/login`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "X-Requested-With": "XMLHttpRequest" },
         body: JSON.stringify({
             email: credentials.email,
             password: credentials.password,
@@ -208,9 +208,9 @@ export async function collectRuntimeDiagnostics(
         throw new Error(
             `Owned diagnostic authentication failed (${login.status})`,
         );
-    const auth = await login.json();
+    const cookie = browserSessionCookie(login);
     const user = await fetch(`${diagnostics.apiUrl}/api/v1/users/info`, {
-        headers: { authorization: `Bearer ${auth.accessToken}` },
+        headers: { cookie },
         signal: AbortSignal.timeout(10_000),
         redirect: "error",
     });
@@ -221,7 +221,6 @@ export async function collectRuntimeDiagnostics(
         await probeRenderedRuntime(
             root,
             diagnostics.frontendUrl,
-            auth.accessToken,
             identity.id,
             {
                 credentials,

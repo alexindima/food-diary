@@ -17,6 +17,7 @@ export * from './admin-meal-plans.service';
 export * from './admin-moderation.service';
 export * from './admin-outgoing-emails.service';
 export * from './admin-retention.service';
+export * from './admin-session.service';
 export * from './admin-telemetry.service';
 export * from './admin-users.service';
 import { AdminAchievementsSdk } from './admin-achievements.service';
@@ -38,6 +39,7 @@ import { AdminMealPlansSdk } from './admin-meal-plans.service';
 import { AdminModerationSdk } from './admin-moderation.service';
 import { AdminOutgoingEmailsSdk } from './admin-outgoing-emails.service';
 import { AdminRetentionSdk } from './admin-retention.service';
+import { AdminSessionSdk } from './admin-session.service';
 import { AdminTelemetrySdk } from './admin-telemetry.service';
 import { AdminUsersSdk } from './admin-users.service';
 export const APIS = [
@@ -60,6 +62,7 @@ export const APIS = [
     AdminModerationSdk,
     AdminOutgoingEmailsSdk,
     AdminRetentionSdk,
+    AdminSessionSdk,
     AdminTelemetrySdk,
     AdminUsersSdk,
 ];

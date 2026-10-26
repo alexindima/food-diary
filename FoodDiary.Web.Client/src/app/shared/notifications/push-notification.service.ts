@@ -7,7 +7,7 @@ import { SwPush } from '@angular/service-worker';
 import { firstValueFrom, from, take, timeout } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
-import { TokenStorageService } from '../../services/token-storage.service';
+import { AuthMetadataStorageService } from '../auth/auth-metadata-storage.service';
 import { SessionEventsService } from '../auth/session-events.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { getNumberProperty, getRecordProperty, getStringProperty } from '../lib/unknown-value.utils';
@@ -46,7 +46,7 @@ export class PushNotificationService {
     private readonly document = inject(DOCUMENT);
     private readonly sessionEvents = inject(SessionEventsService);
     private readonly browserContext = this.swPush.isEnabled
-        ? { storage: inject(BrowserStorageService), window: inject(BrowserWindowService), tokens: inject(TokenStorageService) }
+        ? { storage: inject(BrowserStorageService), window: inject(BrowserWindowService), metadata: inject(AuthMetadataStorageService) }
         : null;
     private browserMutationQueue: Promise<void> | null = null;
     private sessionVersion = 0;
@@ -643,11 +643,11 @@ export class PushNotificationService {
             return false;
         }
         if (session === null) {
-            return this.readSessionOwner() === null && !context.tokens.hasPublishedSession();
+            return this.readSessionOwner() === null && !context.metadata.hasPublishedSession();
         }
         return (
             session.localInvalidationVersion === this.localInvalidationVersion &&
-            !context.tokens.hasForeignSession(session.owner) &&
+            !context.metadata.hasForeignSession(session.owner) &&
             !this.hasForeignConfirmedOwner(subscription, session.owner)
         );
     }
@@ -707,7 +707,7 @@ export class PushNotificationService {
             this.sessionOwner = owner;
             this.sessionVersion++;
         }
-        const token = this.authService.getToken();
+        const token = this.authService.getSessionKey();
         if (
             owner === null ||
             token === null ||
@@ -727,7 +727,7 @@ export class PushNotificationService {
             !this.sessionEnding &&
             session.version === this.sessionVersion &&
             session.owner === this.readSessionOwner() &&
-            this.browserContext?.tokens.hasForeignSession(session.owner) === false
+            this.browserContext?.metadata.hasForeignSession(session.owner) === false
         );
     }
 
@@ -803,7 +803,7 @@ export class PushNotificationService {
             return;
         }
         const owner = this.readSessionOwner();
-        const token = this.authService.getToken();
+        const token = this.authService.getSessionKey();
         const session =
             owner !== null && token !== null
                 ? { version: this.sessionVersion, owner, token, localInvalidationVersion: this.localInvalidationVersion }

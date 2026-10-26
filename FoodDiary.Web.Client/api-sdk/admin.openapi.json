@@ -2768,6 +2768,29 @@
                 "additionalProperties": false,
                 "properties": {
                     "accessToken": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationContext": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "impersonationReason": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "rememberMe": {
+                        "type": "boolean"
+                    },
+                    "roles": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true,
+                        "type": "array"
+                    },
+                    "sessionId": {
+                        "nullable": true,
                         "type": "string"
                     },
                     "user": {
@@ -4209,11 +4232,23 @@
             }
         },
         "securitySchemes": {
+            "AdminSession": {
+                "description": "Separate HttpOnly administrative session, established by the SSO exchange.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.admin",
+                "type": "apiKey"
+            },
             "Bearer": {
                 "bearerFormat": "JWT",
                 "description": "JWT Authorization header using the Bearer scheme.",
                 "scheme": "bearer",
                 "type": "http"
+            },
+            "BrowserSession": {
+                "description": "HttpOnly browser session; unsafe requests require X-Requested-With: XMLHttpRequest.",
+                "in": "cookie",
+                "name": "__Host-fooddiary.browser",
+                "type": "apiKey"
             }
         }
     },
@@ -4322,6 +4357,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAchievements"]
@@ -4495,6 +4533,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAchievements"]
@@ -4678,6 +4719,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAchievements"]
@@ -4833,6 +4877,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAcquisition"]
@@ -4917,6 +4964,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAcquisition"]
@@ -5021,6 +5071,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5155,6 +5208,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5237,6 +5293,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5443,6 +5502,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5615,6 +5677,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5735,6 +5800,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiPrompts"]
@@ -5832,6 +5900,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAiUsage"]
@@ -5957,6 +6028,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminRetention"]
@@ -6128,6 +6202,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminAudit"]
@@ -6291,6 +6368,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBilling"]
@@ -6454,6 +6534,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBilling"]
@@ -6617,6 +6700,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBilling"]
@@ -6780,6 +6866,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBilling"]
@@ -6935,6 +7024,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBugs"]
@@ -7098,6 +7190,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminBugs"]
@@ -7200,6 +7295,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -7386,6 +7484,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -7530,6 +7631,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -7632,6 +7736,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -7818,6 +7925,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -7962,6 +8072,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminCatalog"]
@@ -8066,6 +8179,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8170,6 +8286,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8356,6 +8475,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8441,6 +8563,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8602,6 +8727,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8788,6 +8916,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDailyAdvices"]
@@ -8872,6 +9003,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDashboard"]
@@ -8989,6 +9123,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminDashboard"]
@@ -9093,6 +9230,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminEmailTemplates"]
@@ -9261,6 +9401,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminEmailTemplates"]
@@ -9413,6 +9556,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminEmailTemplates"]
@@ -9533,6 +9679,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminEmailTemplates"]
@@ -9637,6 +9786,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminLessons"]
@@ -9800,6 +9952,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminLessons"]
@@ -9986,6 +10141,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminLessons"]
@@ -10071,6 +10229,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminLessons"]
@@ -10232,6 +10393,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminLessons"]
@@ -10368,6 +10532,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMailInbox"]
@@ -10546,6 +10713,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMailInbox"]
@@ -10648,6 +10818,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMailInbox"]
@@ -10733,6 +10906,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMailInbox"]
@@ -10837,6 +11013,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMealPlans"]
@@ -11000,6 +11179,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMealPlans"]
@@ -11101,6 +11283,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMealPlans"]
@@ -11203,6 +11388,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMealPlans"]
@@ -11364,6 +11552,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminMealPlans"]
@@ -11528,6 +11719,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminModeration"]
@@ -11664,6 +11858,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminModeration"]
@@ -11800,6 +11997,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminModeration"]
@@ -11971,6 +12171,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminOutgoingEmails"]
@@ -12055,6 +12258,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminTelemetry"]
@@ -12242,6 +12448,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -12394,6 +12603,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -12515,6 +12727,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -12670,6 +12885,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -12833,6 +13051,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -12951,6 +13172,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13073,6 +13297,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13234,6 +13461,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13397,6 +13627,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13543,6 +13776,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13685,6 +13921,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
                     }
                 ],
                 "tags": ["AdminUsers"]
@@ -13918,9 +14157,121 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AdminAuth"]
+            }
+        },
+        "/api/v{version}/auth/session": {
+            "post": {
+                "operationId": "postAuthSession",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthenticationHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Too Many Requests"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [],
+                "tags": ["AdminSession"]
             }
         },
         "/api/v{version}/images/upload-url": {
@@ -14123,6 +14474,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AdminImages"]
@@ -14248,6 +14602,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AdminImages"]
@@ -14441,6 +14798,9 @@
                 "security": [
                     {
                         "Bearer": []
+                    },
+                    {
+                        "BrowserSession": []
                     }
                 ],
                 "tags": ["AdminImages"]

@@ -11,6 +11,14 @@ public interface IRefreshTokenSessionWriteRepository {
 
     Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);
 
+    Task<bool> TryRevalidateBrowserSessionAsync(
+        RefreshTokenSessionId id,
+        UserId userId,
+        string expectedCredentialHash,
+        long securityVersion,
+        DateTime nowUtc,
+        CancellationToken cancellationToken = default);
+
     Task<bool> TryRotateAsync(
         RefreshTokenSessionId id,
         UserId userId,

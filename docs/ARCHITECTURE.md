@@ -254,6 +254,13 @@ shared one-time store/Redis selection and Admin impersonation protocol retain
 their owners; see `docs/ai/identity-sso-ownership.md`. No host, EF or HTTP behavior
 changes accompany this physical move.
 
+Browser and admin authentication now use opaque HttpOnly sessions in the same
+API; no separate BFF is deployed. Identity owns conversion, validation and the
+existing session registry. Admin SSO has a separate cookie, while impersonation
+uses protected cached credentials selected per tab. Explicit Telegram bot/Mini
+App token transports remain supported. See [Browser sessions](backend/BROWSER_SESSIONS.md)
+and [ADR 0058](adr/0058-browser-sessions-in-the-existing-api.md).
+
 ## Persistence capabilities
 
 One shared DbContext, ChangeTracker, unit of work and migration history remain intentional. Module adapter access is reviewed in `docs/architecture/persistence-capabilities.json` and checked against current Roslyn source evidence by `PersistenceCapabilityTests`. New entity access, writes, tracked queries and context escape APIs require an explicit review. Adapters with SQL/ChangeTracker/context access also carry a source fingerprint, so an existing Database permission cannot silently authorize new SQL.

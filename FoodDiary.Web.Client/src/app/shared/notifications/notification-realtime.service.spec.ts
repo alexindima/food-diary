@@ -266,7 +266,10 @@ describe('NotificationRealtimeService expired sessions', () => {
         setup(true, AUTH_TOKEN);
         const expired = vi.spyOn(TestBed.inject(JwtDecoderService), 'isExpired').mockReturnValue(true);
         const refreshedToken = 'refreshed-session';
-        const refresh = vi.spyOn(TestBed.inject(AuthService), 'refreshToken').mockReturnValue(of(refreshedToken));
+        const refresh = vi.spyOn(TestBed.inject(AuthService), 'refreshSession').mockImplementation(() => {
+            vi.spyOn(TestBed.inject(AuthService), 'getToken').mockReturnValue(refreshedToken);
+            return of(true);
+        });
         await waitForAsync(() => signalrMock.connection.start.mock.calls.length > 0);
         const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
         const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
@@ -278,7 +281,7 @@ describe('NotificationRealtimeService expired sessions', () => {
     it('does not reuse the expired token when refresh fails', async () => {
         setup(true, AUTH_TOKEN);
         vi.spyOn(TestBed.inject(JwtDecoderService), 'isExpired').mockReturnValue(true);
-        vi.spyOn(TestBed.inject(AuthService), 'refreshToken').mockReturnValue(of(null));
+        vi.spyOn(TestBed.inject(AuthService), 'refreshSession').mockReturnValue(of(false));
         await waitForAsync(() => signalrMock.connection.start.mock.calls.length > 0);
         const withUrlCall = signalrMock.builder.withUrl.mock.calls.at(-1) as unknown[] | undefined;
         const options = withUrlCall?.[1] as { accessTokenFactory: () => Promise<string> };
@@ -341,7 +344,9 @@ function setup(
                     isImpersonating: impersonating,
                     getUserId: vi.fn(() => 'user-a'),
                     getToken: vi.fn(() => token),
-                    refreshToken: vi.fn(() => of(null)),
+                    getSessionKey: vi.fn(() => token),
+                    sessionHubUrl: (hubUrl: string): string => hubUrl,
+                    refreshSession: vi.fn(() => of(false)),
                 },
             },
             { provide: NotificationService, useValue: notificationService },

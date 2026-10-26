@@ -27,20 +27,20 @@
     },
     {
       "id": "new100-02-ru",
-      "query": "Где браузер сохраняет токены сессии и очищает их при выходе?",
+      "query": "Где браузер сохраняет метаданные сессии и очищает старые токены?",
       "cohort": "ru",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+        "FoodDiary.Web.Client/src/app/shared/auth/auth-metadata-storage.service.ts"
       ]
     },
     {
       "id": "new100-02-en",
-      "query": "Locate browser session token persistence and cleanup on sign out.",
+      "query": "Locate browser session metadata persistence and legacy token cleanup.",
       "cohort": "en",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts"
+        "FoodDiary.Web.Client/src/app/shared/auth/auth-metadata-storage.service.ts"
       ]
     },
     {

@@ -32,7 +32,7 @@ let authService: {
     getUserId: ReturnType<typeof vi.fn>;
     isImpersonating: ReturnType<typeof vi.fn>;
     getToken: ReturnType<typeof vi.fn>;
-    refreshToken: ReturnType<typeof vi.fn>;
+    refreshSession: ReturnType<typeof vi.fn>;
 };
 
 beforeEach(() => {
@@ -40,8 +40,8 @@ beforeEach(() => {
         isAuthenticated: vi.fn(() => true),
         getUserId: vi.fn(() => 'user-a'),
         isImpersonating: vi.fn(() => false),
-        getToken: vi.fn(() => 'expired-token'),
-        refreshToken: vi.fn(() => of('refreshed-token')),
+        getToken: vi.fn(() => null),
+        refreshSession: vi.fn(() => of(true)),
     };
 
     TestBed.configureTestingModule({
@@ -399,7 +399,8 @@ describe('NotificationService push request session ownership', () => {
 
         const request = httpMock.expectOne(`${baseUrl}/push/subscription`);
         expect(request.request.method).toBe('DELETE');
-        expect(request.request.headers.get('Authorization')).toBe('Bearer token-a');
+        expect(request.request.headers.get('X-FoodDiary-Session')).toBe('token-a');
+        expect(request.request.headers.has('Authorization')).toBe(false);
         expect(request.request.context.get(SKIP_AUTH)).toBe(true);
         request.flush(null);
     });
@@ -458,14 +459,14 @@ describe('NotificationService push token refresh', () => {
         request$.subscribe({ complete: completed });
 
         const initial = httpMock.expectOne(`${baseUrl}/push/subscription`);
-        expect(initial.request.headers.get('Authorization')).toBe('Bearer expired-token');
+        expect(initial.request.headers.has('Authorization')).toBe(false);
         expect(initial.request.context.get(SKIP_AUTH)).toBe(false);
         initial.flush(null, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
 
-        expect(authService.refreshToken).toHaveBeenCalledTimes(1);
+        expect(authService.refreshSession).toHaveBeenCalledTimes(1);
         const retried = httpMock.expectOne(`${baseUrl}/push/subscription`);
         expect(retried.request.method).toBe(action === 'upsert' ? 'PUT' : 'DELETE');
-        expect(retried.request.headers.get('Authorization')).toBe('Bearer refreshed-token');
+        expect(retried.request.headers.has('Authorization')).toBe(false);
         expect(retried.request.context.get(SKIP_AUTH)).toBe(false);
         retried.flush(null);
         expect(completed).toHaveBeenCalledTimes(1);

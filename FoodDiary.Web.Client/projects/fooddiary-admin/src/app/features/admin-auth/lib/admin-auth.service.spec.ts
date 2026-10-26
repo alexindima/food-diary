@@ -1,211 +1,91 @@
 import { HttpStatusCode, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { waitForAsyncTasksAsync } from '../../../../../../../src/testing/async-testing';
 import { environment } from '../../../../environments/environment';
 import { AdminAuthService } from './admin-auth.service';
 
-const BASE_URL = environment.apiUrls.auth;
-
+const base = environment.apiUrls.auth;
+const response = { sessionId: 'admin-session', roles: ['User', 'Admin'], user: { id: 'admin-user' } };
 let service: AdminAuthService;
-let httpMock: HttpTestingController;
+let requests: HttpTestingController;
 
 beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
     window.history.replaceState({}, '', '/');
-
-    TestBed.configureTestingModule({
-        providers: [AdminAuthService, provideHttpClient(), provideHttpClientTesting()],
-    });
-
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
     service = TestBed.inject(AdminAuthService);
-    httpMock = TestBed.inject(HttpTestingController);
+    requests = TestBed.inject(HttpTestingController);
 });
-
 afterEach(() => {
-    httpMock.verify();
+    requests.verify();
     localStorage.clear();
     sessionStorage.clear();
     window.history.replaceState({}, '', '/');
 });
 
-describe('AdminAuthService token state', () => {
-    it('migrates a legacy credential into the current tab without persisting an access token', () => {
-        localStorage.setItem('authToken', 'legacy-admin');
-        expect(service.getToken()).toBe('legacy-admin');
-        expect(localStorage.getItem('authToken'), 'Admin access tokens must not persist in localStorage').toBeNull();
-        expect(sessionStorage.getItem('authToken')).toBe('legacy-admin');
-        localStorage.setItem('authToken', 'another-account');
-        expect(service.getToken()).toBe('legacy-admin');
+describe('administrative browser sessions', () => {
+    it('gets its administrative identity from the SSO response without persisting a token', async () => {
+        const exchanged = service.exchangeSsoCodeAsync('one-use-code');
+        const request = requests.expectOne(`${base  }/admin-sso/exchange`);
+        expect(request.request.withCredentials).toBe(true);
+        request.flush(response);
+        expect(await exchanged).toBe(true);
+        expect(service.isAdmin()).toBe(true);
+        expect(service.getSessionId()).toBe('admin-session');
+        expect(localStorage.getItem('authToken')).toBeNull();
+        expect(sessionStorage.getItem('authToken')).toBeNull();
     });
-    it('should detect admin role from token payload', () => {
-        localStorage.setItem('authToken', createToken({ role: 'Admin' }));
-        service.refreshTokenState();
 
+    it('restores the separate administrative cookie after reloading', async () => {
+        const restored = service.restoreSessionAsync();
+        requests.expectOne(`${base  }/session`).flush(response);
+        await restored;
         expect(service.isAuthenticated()).toBe(true);
         expect(service.isAdmin()).toBe(true);
     });
 
-    it('should treat malformed token as non-admin instead of throwing', () => {
-        localStorage.setItem('authToken', 'malformed-token');
-        service.refreshTokenState();
-
-        expect(service.isAuthenticated()).toBe(true);
+    it('does not treat a legacy bearer credential in storage as a signed-in session', () => {
+        localStorage.setItem('authToken', 'old-token');
+        expect(service.isAuthenticated()).toBe(false);
         expect(service.isAdmin()).toBe(false);
     });
 
-    it('should ignore legacy auth token query parameters', () => {
-        window.history.replaceState({}, '', '/?authToken=query-token&foo=1');
-
-        service.refreshTokenState();
-
-        expect(service.getToken()).toBeNull();
-        expect(window.location.search).toBe('?authToken=query-token&foo=1');
-    });
-});
-
-describe('AdminAuthService SSO exchange', () => {
-    it.each(['/?code=fresh-code', '/#code=fresh-code'])('replaces a stale session before continuing from %s', async url => {
-        localStorage.setItem('authToken', createToken({ role: 'Admin', exp: 1 }));
-        service.refreshTokenState();
-        window.history.replaceState({}, '', url);
-        const freshToken = createToken({ role: 'Admin', exp: 4102444800 });
-
-        const pending = service.applySsoFromQueryAsync();
-        const request = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
-        expect(request.request.body).toEqual({ code: 'fresh-code' });
-        request.flush({ accessToken: freshToken });
-        await pending;
-
-        expect(service.getToken()).toBe(freshToken);
-        expect(service.isAdmin()).toBe(true);
-        expect(window.location.search).toBe('');
+    it('exchanges a fragment code and removes the code from the visible URL', async () => {
+        window.history.replaceState({}, '', '/users?page=2#code=one-use-code');
+        const applied = service.applySsoFromQueryAsync();
+        requests.expectOne(`${base  }/admin-sso/exchange`).flush(response);
+        await applied;
         expect(window.location.hash).toBe('');
-        await service.applySsoFromQueryAsync();
-        httpMock.expectNone(`${BASE_URL}/admin-sso/exchange`);
+        expect(window.location.search).toBe('?page=2');
+        expect(service.isAdmin()).toBe(true);
     });
 
-    it('exchanges a fresh return-url code even when a token already exists', async () => {
-        localStorage.setItem('authToken', createToken({ role: 'Admin', exp: 1 }));
-        service.refreshTokenState();
-        const freshToken = createToken({ role: 'Admin', exp: 4102444800 });
-
-        const pending = service.tryApplySsoFromReturnUrlAsync('/users?page=2#code=recovery-code');
-        const request = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
-        expect(request.request.body).toEqual({ code: 'recovery-code' });
-        request.flush({ accessToken: freshToken });
-
-        await expect(pending).resolves.toBe('/users?page=2');
-        expect(service.getToken()).toBe(freshToken);
+    it('cleans a return URL only after a successful one-use exchange', async () => {
+        const applied = service.tryApplySsoFromReturnUrlAsync('/users?page=3#code=code-for-return');
+        requests.expectOne(`${base  }/admin-sso/exchange`).flush(response);
+        expect(await applied).toBe('/users?page=3');
     });
 
-    it('should exchange sso code from query and clear code from url', async () => {
-        const replaceStateSpy = vi.spyOn(window.history, 'replaceState');
-        window.history.replaceState({}, '', '/admin?code=sso-code&foo=1');
-
-        const promise = service.applySsoFromQueryAsync();
-
-        const req = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ code: 'sso-code' });
-        expect(req.request.withCredentials).toBe(true);
-        req.flush({
-            accessToken: createToken({ role: 'Admin' }),
-            refreshToken: 'refresh-token',
-        });
-
-        await promise;
-
-        expect(localStorage.getItem('authToken')).toBeNull();
-        expect(sessionStorage.getItem('authToken')).toBeTruthy();
-        expect(localStorage.getItem('refreshToken')).toBeNull();
-        expect(sessionStorage.getItem('adminSsoCode')).toBe('sso-code');
-        expect(replaceStateSpy).toHaveBeenCalledWith({}, '', '/admin?foo=1');
+    it('does not infer administrator permissions from an incomplete response', async () => {
+        const applied = service.exchangeSsoCodeAsync('invalid-response');
+        requests.expectOne(`${base  }/admin-sso/exchange`).flush({ sessionId: 'admin-session' });
+        expect(await applied).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
     });
 
-    it('should extract code from return url and return cleaned path after successful exchange', async () => {
-        const resultPromise = service.tryApplySsoFromReturnUrlAsync(encodeURIComponent('/users?page=2&code=return-code'));
-
-        const req = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ code: 'return-code' });
-        expect(req.request.withCredentials).toBe(true);
-        req.flush({
-            accessToken: createToken({ role: 'Admin' }),
-            refreshToken: 'refresh-token',
-        });
-
-        await expect(resultPromise).resolves.toBe('/users?page=2');
-        expect(sessionStorage.getItem('adminSsoCode')).toBe('return-code');
-    });
-});
-
-describe('AdminAuthService SSO rate feedback', () => {
-    it.each([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden])(
-        'clears a prior throttling hint when the next response is %s',
-        async status => {
-            const limited = service.exchangeSsoCodeAsync('limited-code');
-            httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status: 429, statusText: 'Too Many Requests' });
-            await expect(limited).resolves.toBe(false);
-            expect(service.ssoRateLimited()).toBe(true);
-
-            const denied = service.exchangeSsoCodeAsync('denied-code');
-            expect(service.ssoRateLimited()).toBe(false);
-            httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status, statusText: 'Denied' });
-            await expect(denied).resolves.toBe(false);
-            expect(service.ssoRateLimited()).toBe(false);
-        },
-    );
-
-    it('clears a throttling hint on a new successful exchange', async () => {
-        const limited = service.exchangeSsoCodeAsync('limited-code');
-        httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({}, { status: 429, statusText: 'Too Many Requests' });
-        await limited;
+    it('preserves the rate-limit hint and clears it on a subsequent successful exchange', async () => {
+        const limited = service.exchangeSsoCodeAsync('limited');
+        requests
+            .expectOne(`${base  }/admin-sso/exchange`)
+            .flush({}, { status: HttpStatusCode.TooManyRequests, statusText: 'Too Many Requests' });
+        expect(await limited).toBe(false);
         expect(service.ssoRateLimited()).toBe(true);
-
-        const recovered = service.exchangeSsoCodeAsync('recovered-code');
-        httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`).flush({ accessToken: createToken({ role: 'Admin' }) });
-        await expect(recovered).resolves.toBe(true);
+        const next = service.exchangeSsoCodeAsync('new-code');
+        requests.expectOne(`${base  }/admin-sso/exchange`).flush(response);
+        expect(await next).toBe(true);
         expect(service.ssoRateLimited()).toBe(false);
     });
 });
-
-describe('AdminAuthService admin upgrade', () => {
-    it('should start admin sso and exchange returned code when upgrading to admin', async () => {
-        localStorage.setItem('authToken', createToken({ role: 'User' }));
-        service.refreshTokenState();
-
-        const promise = service.tryUpgradeToAdminAsync();
-
-        const startReq = httpMock.expectOne(`${BASE_URL}/admin-sso/start`);
-        expect(startReq.request.method).toBe('POST');
-        startReq.flush({ code: 'upgrade-code' });
-
-        await waitForAsyncTasksAsync();
-
-        const exchangeReq = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
-        expect(exchangeReq.request.method).toBe('POST');
-        expect(exchangeReq.request.body).toEqual({ code: 'upgrade-code' });
-        expect(exchangeReq.request.withCredentials).toBe(true);
-        exchangeReq.flush({
-            accessToken: createToken({ role: 'Admin' }),
-            refreshToken: 'refresh-token',
-        });
-
-        await expect(promise).resolves.toBe(true);
-        expect(service.isAdmin()).toBe(true);
-    });
-});
-
-function createToken(payload: Record<string, unknown>): string {
-    const header = encodeSegment({ alg: 'none', typ: 'JWT' });
-    const body = encodeSegment(payload);
-    return `${header}.${body}.signature`;
-}
-
-function encodeSegment(value: Record<string, unknown>): string {
-    return btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/u, '');
-}
