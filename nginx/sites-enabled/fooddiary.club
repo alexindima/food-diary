@@ -226,6 +226,19 @@ server {
         try_files $uri =404;
     }
 
+    location = /assets/manifest.webmanifest {
+        default_type application/manifest+json;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
+    # Install metadata has stable URLs and must not inherit the immutable asset
+    # policy. ^~ also wins over the image-extension regex locations below.
+    location ^~ /assets/pwa/ {
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";

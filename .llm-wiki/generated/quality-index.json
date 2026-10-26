@@ -37298,11 +37298,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 52,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
+      "structuralRiskScore": 2.54
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
@@ -37434,11 +37434,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
-      "nonBlankLines": 130,
+      "nonBlankLines": 138,
       "decisionPoints": 24,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.6
+      "structuralRiskScore": 40.76
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs",

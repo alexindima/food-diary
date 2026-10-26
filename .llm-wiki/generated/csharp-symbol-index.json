@@ -16915,7 +16915,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "EmailTemplateRepository",

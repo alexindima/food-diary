@@ -98,6 +98,17 @@ test('provides a neutral installed PWA fallback instead of a fixed brand color',
     assert.equal(manifest.theme_color, '#ffffff', 'Installed PWA fallback must use the light surface color.');
 });
 
+test('escapes previously immutable install metadata without changing the PWA identity', () => {
+    const window = loadStartup('/auth/telegram');
+    const manifest = new URL(window.document.querySelector('link[rel="manifest"]').href);
+    assert.equal(manifest.pathname, '/assets/manifest.webmanifest');
+    assert.ok(manifest.searchParams.get('v'), 'An existing fresh HTTP cache must not reuse the obsolete manifest.');
+    const metadata = JSON.parse(readFileSync(new URL('../assets/manifest.webmanifest', import.meta.url), 'utf8'));
+    assert.equal(metadata.id, '/');
+    assert.equal(metadata.start_url, '/');
+    window.close();
+});
+
 test('publishes the notification icon and badge referenced by the push payload', () => {
     const sender = readFileSync(
         new URL('../../Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs', import.meta.url),

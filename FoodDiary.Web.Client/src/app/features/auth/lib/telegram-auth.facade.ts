@@ -83,7 +83,7 @@ export class TelegramAuthFacade {
         try {
             this.saveIntent(await firstValueFrom(this.api.exchange(code, state)));
         } catch {
-            this.errorKey.set('AUTH.TELEGRAM.EXPIRED');
+            this.errorKey.set('AUTH.TELEGRAM.VERIFICATION_FAILED');
         } finally {
             this.busy.set(false);
         }

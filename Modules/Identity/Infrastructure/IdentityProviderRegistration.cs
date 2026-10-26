@@ -2,6 +2,7 @@ using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstrac
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 using FoodDiary.Modules.Identity.Infrastructure.Providers.Options;
+using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -38,6 +39,11 @@ public static class IdentityProviderRegistration {
                 "Enabled Telegram OIDC must use the same bot identity as Mini App authentication.")
             .ValidateOnStart();
         services.AddSingleton<ITelegramOidcTokenValidator, TelegramOidcTokenValidator>();
+        services.AddHttpClient(TelegramOidcTokenValidator.MetadataClientName, client => client.Timeout = TimeSpan.FromSeconds(20))
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler {
+                AllowAutoRedirect = false,
+                AutomaticDecompression = DecompressionMethods.All,
+            });
         services.AddHttpClient<ITelegramOidcProvider, TelegramOidcProvider>(client => client.Timeout = TimeSpan.FromSeconds(20))
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
         services.AddSingleton<IGoogleTokenValidator, GoogleTokenValidator>();

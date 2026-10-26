@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../../services/auth.service';
 import type { AuthResponse } from '../../../shared/auth/auth.data';
-import { telegramLoginTicket } from '../../../shared/auth/telegram-oidc-values';
+import { telegramLoginTicket, telegramOAuthCode, telegramOAuthState } from '../../../shared/auth/telegram-oidc-values';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { BrowserStorageService } from '../../../shared/platform/browser-storage.service';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
@@ -15,6 +15,21 @@ import { TelegramAuthFacade } from './telegram-auth.facade';
 const FUTURE_EXPIRY = '2099-01-01T00:00:00Z';
 const TICKET = telegramLoginTicket('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG');
 const intent: TelegramIntent = { ticket: TICKET, nextAction: 'onboarding', expiresAtUtc: FUTURE_EXPIRY };
+const response: AuthResponse = {
+    accessToken: 'access',
+    user: {
+        id: entityId<'user'>('user'),
+        email: null,
+        hasPassword: false,
+        isActive: true,
+        isEmailConfirmed: false,
+        pushNotificationsEnabled: false,
+        fastingPushNotificationsEnabled: false,
+        socialPushNotificationsEnabled: false,
+        fastingCheckInReminderHours: 1,
+        fastingCheckInFollowUpReminderHours: 1,
+    },
+};
 
 describe('TelegramAuthFacade', () => {
     const api = {
@@ -76,22 +91,15 @@ describe('TelegramAuthFacade', () => {
         expect(facade.errorKey()).toBe('AUTH.TELEGRAM.ERROR');
     });
 
+    it('does not claim that a failed provider exchange expired', async () => {
+        api.exchange.mockReturnValue(throwError(() => new Error('Provider metadata could not be read')));
+        await facade.exchangeAsync(telegramOAuthCode('code'), telegramOAuthState('state'));
+        expect(facade.errorKey()).toBe('AUTH.TELEGRAM.VERIFICATION_FAILED');
+        expect(facade.intent()).toBeNull();
+        expect(facade.busy()).toBe(false);
+    });
+
     it('accepts a Telegram-only session and clears the used ticket', async () => {
-        const response: AuthResponse = {
-            accessToken: 'access',
-            user: {
-                id: entityId<'user'>('user'),
-                email: null,
-                hasPassword: false,
-                isActive: true,
-                isEmailConfirmed: false,
-                pushNotificationsEnabled: false,
-                fastingPushNotificationsEnabled: false,
-                socialPushNotificationsEnabled: false,
-                fastingCheckInReminderHours: 1,
-                fastingCheckInFollowUpReminderHours: 1,
-            },
-        };
         facade.intent.set(intent);
         api.complete.mockReturnValue(of(response));
         expect(await facade.completeAsync('register', 'ru', 'Asia/Tbilisi')).toBe(true);

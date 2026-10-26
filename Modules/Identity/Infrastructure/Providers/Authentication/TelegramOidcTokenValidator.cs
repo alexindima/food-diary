@@ -13,28 +13,37 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
-public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> options, TimeProvider timeProvider,
-    ILogger<TelegramOidcTokenValidator> logger)
-    : ITelegramOidcTokenValidator {
+public sealed class TelegramOidcTokenValidator : ITelegramOidcTokenValidator {
+    internal const string MetadataClientName = "TelegramOidcMetadata";
     private const string Issuer = "https://oauth.telegram.org";
     private const int MaxTokenLength = 16384;
-    private readonly IConfigurationManager<OpenIdConnectConfiguration> _configurationManager =
+    private readonly IOptions<TelegramOidcOptions> _options;
+    private readonly TimeProvider _timeProvider;
+    private readonly ILogger<TelegramOidcTokenValidator> _logger;
+    private readonly IConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
+
+    public TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> options, TimeProvider timeProvider,
+        IHttpClientFactory httpClientFactory, ILogger<TelegramOidcTokenValidator> logger) : this(options, timeProvider,
         new ConfigurationManager<OpenIdConnectConfiguration>(
             Issuer + "/.well-known/openid-configuration",
             new OpenIdConnectConfigurationRetriever(),
-            new HttpDocumentRetriever { RequireHttps = true });
+            new HttpDocumentRetriever(httpClientFactory.CreateClient(MetadataClientName)) { RequireHttps = true }), logger) {
+    }
 
     internal TelegramOidcTokenValidator(
         IOptions<TelegramOidcOptions> options,
         TimeProvider timeProvider,
-        IConfigurationManager<OpenIdConnectConfiguration> configurationManager, ILogger<TelegramOidcTokenValidator> logger) : this(options, timeProvider, logger) {
+        IConfigurationManager<OpenIdConnectConfiguration> configurationManager, ILogger<TelegramOidcTokenValidator> logger) {
+        _options = options;
+        _timeProvider = timeProvider;
+        _logger = logger;
         _configurationManager = configurationManager;
     }
 
     public async Task<Result<TelegramOidcIdentity>> ValidateAsync(
         string idToken, TelegramOidcNonce expectedNonce, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        if (!options.Value.Enabled || !TelegramOidcOptions.IsValid(options.Value)) {
+        if (!_options.Value.Enabled || !TelegramOidcOptions.IsValid(_options.Value)) {
             LogRejection("token_validation", "not_configured");
             return Result.Failure<TelegramOidcIdentity>(TelegramIdentityErrors.NotConfigured);
         }
@@ -57,12 +66,12 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
                 ValidateIssuer = true,
                 ValidIssuer = Issuer,
                 ValidateAudience = true,
-                ValidAudience = options.Value.ClientId,
+                ValidAudience = _options.Value.ClientId,
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
                 LifetimeValidator = (notBefore, expires, _, _) => {
-                    DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+                    DateTime now = _timeProvider.GetUtcNow().UtcDateTime;
                     return expires > now && (!notBefore.HasValue || notBefore.Value <= now);
                 },
             }, out _);
@@ -79,7 +88,7 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
             if (string.IsNullOrWhiteSpace(subject) || subject.Length > 255) {
                 return Invalid(stage, "subject_invalid");
             }
-            if (authorizedParty is not null && !string.Equals(authorizedParty, options.Value.ClientId, StringComparison.Ordinal)) {
+            if (authorizedParty is not null && !string.Equals(authorizedParty, _options.Value.ClientId, StringComparison.Ordinal)) {
                 return Invalid(stage, "authorized_party_mismatch");
             }
             if (!long.TryParse(SingleClaim(principal, "id"), NumberStyles.None, CultureInfo.InvariantCulture, out long userId) || userId <= 0) {
@@ -88,7 +97,7 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
             if (!long.TryParse(SingleClaim(principal, "iat"), NumberStyles.None, CultureInfo.InvariantCulture, out long issuedAt)) {
                 return Invalid(stage, "issued_at_invalid");
             }
-            if (issuedAt > timeProvider.GetUtcNow().ToUnixTimeSeconds()) {
+            if (issuedAt > _timeProvider.GetUtcNow().ToUnixTimeSeconds()) {
                 return Invalid(stage, "issued_at_in_future");
             }
             if (principal.FindAll("aud").Count() != 1) {
@@ -115,8 +124,8 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
                 SecurityTokenInvalidSignatureException => "signature_invalid",
                 SecurityTokenInvalidAlgorithmException => "algorithm_invalid",
                 SecurityTokenNoExpirationException => "expiration_missing",
-                SecurityTokenInvalidLifetimeException lifetime when lifetime.Expires <= timeProvider.GetUtcNow().UtcDateTime => "token_expired",
-                SecurityTokenInvalidLifetimeException lifetime when lifetime.NotBefore > timeProvider.GetUtcNow().UtcDateTime => "token_not_yet_valid",
+                SecurityTokenInvalidLifetimeException lifetime when lifetime.Expires <= _timeProvider.GetUtcNow().UtcDateTime => "token_expired",
+                SecurityTokenInvalidLifetimeException lifetime when lifetime.NotBefore > _timeProvider.GetUtcNow().UtcDateTime => "token_not_yet_valid",
                 SecurityTokenInvalidLifetimeException => "lifetime_invalid",
                 _ => "token_invalid",
             };
@@ -135,6 +144,6 @@ public sealed class TelegramOidcTokenValidator(IOptions<TelegramOidcOptions> opt
     }
 
     private void LogRejection(string stage, string reason, Exception? exception = null) =>
-        logger.LogInformation("Telegram OIDC rejected. Stage={Stage}; Reason={Reason}; ExceptionType={ExceptionType}",
+        _logger.LogInformation("Telegram OIDC rejected. Stage={Stage}; Reason={Reason}; ExceptionType={ExceptionType}",
             stage, reason, exception?.GetBaseException().GetType().Name);
 }

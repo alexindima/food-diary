@@ -30,6 +30,53 @@ async function waitFor(url) {
     throw new Error(`Owned CSP test service did not become ready: ${url}`);
 }
 
+test('deployed public Nginx revalidates PWA install metadata', { timeout: 60_000 }, async () => {
+    const artifacts = path.join(repository, '.artifacts/pwa-telegram-investigation', randomUUID());
+    await mkdir(artifacts, { recursive: true });
+    const source = await readFile(path.join(repository, 'nginx/sites-enabled/fooddiary.club'), 'utf8');
+    const start = source.lastIndexOf('server {', source.indexOf('root /var/www/fooddiary.club/current;'));
+    assert.ok(start >= 0, 'The deployed public site must have an explicit server block.');
+    let end = start + 'server {'.length;
+    let depth = 1;
+    while (depth > 0 && end < source.length) {
+        depth += Number(source[end] === '{') - Number(source[end] === '}');
+        end++;
+    }
+    assert.equal(depth, 0, 'The deployed server block must be complete.');
+    // Preserve every production location and header; substitute only TLS,
+    // filesystem paths and upstream addresses for the isolated HTTP fixture.
+    const server = source
+        .slice(start, end)
+        .replace(/^\s*(?:listen|http2|ssl_\w+|access_log|error_log)\s+[^;]+;/gmu, '')
+        .replace(/root\s+[^;]+;/gu, 'root /usr/share/nginx/html;')
+        .replace(/proxy_pass\s+[^;]+;/gu, 'proxy_pass http://127.0.0.1:9;')
+        .replace('server {', 'server {\nlisten 80;');
+    await writeFile(path.join(artifacts, 'nginx.conf'), `map $http_upgrade $connection_upgrade { default upgrade; '' close; }\n${server}`);
+    const dockerfile = await readFile(path.join(frontend, 'Dockerfile'), 'utf8');
+    const nginxImage = /^FROM (nginx:\S+)/mu.exec(dockerfile)[1];
+    let container;
+    try {
+        container = await docker(
+            'run',
+            '--detach',
+            '--publish',
+            '127.0.0.1::80',
+            '--mount',
+            `type=bind,source=${path.join(frontend, 'dist/browser')},target=/usr/share/nginx/html,readonly`,
+            '--mount',
+            `type=bind,source=${path.join(artifacts, 'nginx.conf')},target=/etc/nginx/conf.d/default.conf,readonly`,
+            nginxImage,
+        );
+        const boundPort = await docker('port', container, '80/tcp');
+        const origin = `http://localhost:${boundPort.split(':').at(-1)}`;
+        await waitFor(`${origin}/index.csr.html`);
+        const observations = await assertPwaCachePolicy(origin);
+        await writeFile(path.join(artifacts, 'cache-observations.json'), JSON.stringify(observations, null, 2));
+    } finally {
+        if (container) await docker('rm', '--force', container);
+    }
+});
+
 test(
     'production scripts remain usable while unapproved inline code is blocked and PWA install assets revalidate in static and SSR documents',
     { timeout: 180_000 },
