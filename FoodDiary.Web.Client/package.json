@@ -148,7 +148,7 @@
         "webmcp-types": "0.1.10"
     },
     "devDependencies": {
-        "@analogjs/vite-plugin-angular": "^2.8.1",
+        "@analogjs/vite-plugin-angular": "^2.9.2",
         "@angular-eslint/eslint-plugin": "^22.6.0",
         "@angular-eslint/eslint-plugin-template": "^22.6.0",
         "@angular-eslint/template-parser": "^22.6.0",
