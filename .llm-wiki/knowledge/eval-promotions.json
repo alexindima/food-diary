@@ -1135,6 +1135,105 @@
       },
       "reason": "",
       "eventHash": "c710d5b3ac731103c344d8481447c47760085ad49dd55526d11b57d0790ad388"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 6,
+      "kind": "observed",
+      "candidateId": "learned-20296a2df4f8ca6b",
+      "createdAtUtc": "2026-10-26T18:08:24.0532753Z",
+      "previousHash": "c710d5b3ac731103c344d8481447c47760085ad49dd55526d11b57d0790ad388",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/api-disclosure-hardening",
+        "retrospectiveHash": "d95921cc956ce183cae67e3c2d274fcebe2af3e091452439c29321540b0bab3b",
+        "packetFingerprint": "5253397af2e06137f9554e12509587797dc10aaee73379d91e6491e42ec16b61",
+        "signals": [
+          {
+            "id": "cost-api-compatibility",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "api-compatibility",
+              "error=8900%"
+            ]
+          },
+          {
+            "id": "cost-api-integration-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'api-integration-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "api-integration-tests",
+              "error=4081.82%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=2757.14%"
+            ]
+          },
+          {
+            "id": "cost-presentation-api-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=4073.91%",
+              "presentation-api-tests"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-20296a2df4f8ca6b",
+          "changedPaths": [
+            ".github/workflows/deploy.yml",
+            "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
+            "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
+            "FoodDiary.Web.Api/CONFIGURATION.md",
+            "FoodDiary.Web.Api/Program.cs",
+            "FoodDiary.Web.Client/nginx.conf",
+            "FoodDiary.Web.Client/nginx.telegram-test.conf",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BackendDisclosureTransportTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/backend-disclosure-contract.json",
+            "nginx.conf",
+            "nginx/sites-enabled/fooddiary.club",
+            "scripts/deploy/test_api_disclosure_nginx.py"
+          ],
+          "expectedModules": [],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Contracts",
+            "Deployment",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "api-contract",
+            "backend-boundaries",
+            "configuration-contract",
+            "deployment-rollout",
+            "quality-critical-path"
+          ],
+          "expectedChecks": [
+            "api-compatibility",
+            "api-integration-tests",
+            "architecture-tests",
+            "presentation-api-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "ad9cf402327f5c0f2cc4a865f56e2b2f25110cf7dc483f9f20dc58300e13c5df"
+      },
+      "reason": "",
+      "eventHash": "487df5e41b1f6e6e437bec9bdb3f9faf4b939d683b919ec364c306a661a3da3a"
     }
   ]
 }

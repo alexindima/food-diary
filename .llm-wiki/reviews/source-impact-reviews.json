@@ -293,15 +293,20 @@
           "reviewReason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened."
         },
         {
+          "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "2662acbfafc3d1f1a4173143b31e0b95b24fe30095075af8c414bb67d95218c4",
+          "reviewReason": "Only the deployment metadata test moved from public version aliases to internal/version; snapshot builder and compatibility normalization remain unchanged. Transport regression and all five OpenApiSdkExportTests passed, including all three existing schema snapshots."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
           "sha256": "7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19",
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened.",
+      "reason": "Only the deployment metadata test moved from public version aliases to internal/version; snapshot builder and compatibility normalization remain unchanged. Transport regression and all five OpenApiSdkExportTests passed, including all three existing schema snapshots.",
       "baseRef": "HEAD",
-      "gitHead": "cf30f8696696df3bc40ae7c45d3dbfb45f137840",
-      "reviewedAtUtc": "2026-10-26T14:08:43.8698997Z"
+      "gitHead": "770e476bcd6b5efa3043562e46c333a664991116",
+      "reviewedAtUtc": "2026-10-26T17:49:11.6468658Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1338,8 +1343,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4132e1ba60586bdf4e2c044ed36dd01e63f6f711105935a196bbb85bd0eadcab",
-          "reviewReason": "Reviewed current topology and the UserSessionsCleanup registration/implementation. The added daily bounded cleanup uses existing retry/cancellation/observer wiring and has provider/unit tests; lifetime default now has no absolute cap under the explicit user answer. No extra host/provider/network or recurring job is introduced by the default change. Runtime workflow continues to distinguish inferred signals from actual target behavior proof."
+          "sha256": "fe7b222c02f8f4798d826243ce969cb9dd640a2d6e1ba7323b75312ce7b07c62",
+          "reviewReason": "Runtime topology source fingerprint changed after transport/configuration hardening; topology records remain the same and the workflow still describes current runtime-impact discovery. Deploy now queries internal/version through the same loopback listener; no process, provider or service topology changed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1347,10 +1352,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed current topology and the UserSessionsCleanup registration/implementation. The added daily bounded cleanup uses existing retry/cancellation/observer wiring and has provider/unit tests; lifetime default now has no absolute cap under the explicit user answer. No extra host/provider/network or recurring job is introduced by the default change. Runtime workflow continues to distinguish inferred signals from actual target behavior proof.",
+      "reason": "Runtime topology source fingerprint changed after transport/configuration hardening; topology records remain the same and the workflow still describes current runtime-impact discovery. Deploy now queries internal/version through the same loopback listener; no process, provider or service topology changed.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T08:13:55.8219205Z"
+      "gitHead": "770e476bcd6b5efa3043562e46c333a664991116",
+      "reviewedAtUtc": "2026-10-26T17:54:26.2622352Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1663,8 +1668,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "566ff6dad86b12fcd79c43554dfc78691e72189a2e74014957fb863356f0f7c3",
-          "reviewReason": "Reviewed current repository catalog and bounded query workflow. New recovery/CSP source and tests are discoverable records; scoped CLI/MCP query contracts, cache fingerprints and retrieval semantics remain unchanged. Catalog record additions do not require a workflow rewrite."
+          "sha256": "6d90b46a4c9313a22f15c95b6c1a1adf6b3dbfe3ed91e93713925f42f0f6b9ed",
+          "reviewReason": "Repository catalog now records the internal version route and one fewer public alias. Query ranking, freshness rules and compiled-context behavior described here are unchanged; the generated catalog diff was checked against VersionController."
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
@@ -1672,10 +1677,10 @@
           "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
         }
       ],
-      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
+      "reason": "Repository catalog now records the internal version route and one fewer public alias. Query ranking, freshness rules and compiled-context behavior described here are unchanged; the generated catalog diff was checked against VersionController.",
       "baseRef": "HEAD",
-      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
-      "reviewedAtUtc": "2026-10-26T09:48:57.3137533Z"
+      "gitHead": "770e476bcd6b5efa3043562e46c333a664991116",
+      "reviewedAtUtc": "2026-10-26T17:54:24.9943943Z"
     },
     {
       "pageId": "workflow.review-diff",

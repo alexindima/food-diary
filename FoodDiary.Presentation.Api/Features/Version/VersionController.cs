@@ -11,13 +11,12 @@ namespace FoodDiary.Presentation.Api.Features.Version;
 [ApiController]
 [ApiVersionNeutral]
 [AllowAnonymous]
-[Route("api")]
+[Route("internal")]
 [ApiExplorerSettings(IgnoreApi = true)]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 [SuppressRequestAccessLog]
 public sealed class VersionController(ISender mediator, IApiVersionInfo versionInfo) : BaseApiController(mediator) {
     [HttpGet("version")]
-    [HttpGet("v1/version")]
     public IActionResult GetVersion() =>
         Ok(new ApiVersionHttpResponse(
             versionInfo.CommitSha,

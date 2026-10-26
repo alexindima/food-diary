@@ -4730,6 +4730,234 @@
       "targetId": "",
       "reason": "",
       "eventHash": "7e0746c56cffa8b64584549d13beeceddd03066e70b34cb1b2c834a31562aa18"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 29,
+      "kind": "observed",
+      "id": "learning-e4648757d7268d402408",
+      "createdAtUtc": "2026-10-26T18:08:23.5157496Z",
+      "previousHash": "7e0746c56cffa8b64584549d13beeceddd03066e70b34cb1b2c834a31562aa18",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/api-disclosure-hardening",
+        "retrospectiveHash": "d95921cc956ce183cae67e3c2d274fcebe2af3e091452439c29321540b0bab3b",
+        "completionFingerprint": "72a2399ead3d39472d48cf8ee6f68aab831e7779f2e35df8b3e09da8a06e28ca",
+        "packetFingerprint": "5253397af2e06137f9554e12509587797dc10aaee73379d91e6491e42ec16b61",
+        "sourceCandidateId": "cost-api-compatibility",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-compatibility'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1350s versus 15s, error 8900%.",
+        "score": 70,
+        "evidence": [
+          "api-compatibility",
+          "error=8900%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-compatibility",
+          "recommendedSeconds": 15.0,
+          "expectedSeconds": 1350.0,
+          "errorPercent": 8900.0
+        },
+        "changedPaths": [
+          ".github/workflows/deploy.yml",
+          "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
+          "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
+          "FoodDiary.Web.Api/CONFIGURATION.md",
+          "FoodDiary.Web.Api/Program.cs",
+          "FoodDiary.Web.Client/nginx.conf",
+          "FoodDiary.Web.Client/nginx.telegram-test.conf",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BackendDisclosureTransportTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/backend-disclosure-contract.json",
+          "nginx.conf",
+          "nginx/sites-enabled/fooddiary.club",
+          "scripts/deploy/test_api_disclosure_nginx.py"
+        ],
+        "subjectIds": [
+          "api-compatibility"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "9c6c3b88d238f4a2f50cb0d707f0abdb7bab4ad3c8f12cb8e5053ae1ecbd9c02"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 30,
+      "kind": "observed",
+      "id": "learning-b3771e08dbc9a591368e",
+      "createdAtUtc": "2026-10-26T18:08:23.5157496Z",
+      "previousHash": "9c6c3b88d238f4a2f50cb0d707f0abdb7bab4ad3c8f12cb8e5053ae1ecbd9c02",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/api-disclosure-hardening",
+        "retrospectiveHash": "d95921cc956ce183cae67e3c2d274fcebe2af3e091452439c29321540b0bab3b",
+        "completionFingerprint": "72a2399ead3d39472d48cf8ee6f68aab831e7779f2e35df8b3e09da8a06e28ca",
+        "packetFingerprint": "5253397af2e06137f9554e12509587797dc10aaee73379d91e6491e42ec16b61",
+        "sourceCandidateId": "cost-api-integration-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'api-integration-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1380s versus 33s, error 4081.82%.",
+        "score": 70,
+        "evidence": [
+          "api-integration-tests",
+          "error=4081.82%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "api-integration-tests",
+          "recommendedSeconds": 33.0,
+          "expectedSeconds": 1380.0,
+          "errorPercent": 4081.82
+        },
+        "changedPaths": [
+          ".github/workflows/deploy.yml",
+          "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
+          "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
+          "FoodDiary.Web.Api/CONFIGURATION.md",
+          "FoodDiary.Web.Api/Program.cs",
+          "FoodDiary.Web.Client/nginx.conf",
+          "FoodDiary.Web.Client/nginx.telegram-test.conf",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BackendDisclosureTransportTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/backend-disclosure-contract.json",
+          "nginx.conf",
+          "nginx/sites-enabled/fooddiary.club",
+          "scripts/deploy/test_api_disclosure_nginx.py"
+        ],
+        "subjectIds": [
+          "api-integration-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "13ffe60d605a94ca6033479c51bbcd646c50dba8a595fd3bdf1ad26f0aa27d5d"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 31,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-10-26T18:08:23.5157496Z",
+      "previousHash": "13ffe60d605a94ca6033479c51bbcd646c50dba8a595fd3bdf1ad26f0aa27d5d",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/api-disclosure-hardening",
+        "retrospectiveHash": "d95921cc956ce183cae67e3c2d274fcebe2af3e091452439c29321540b0bab3b",
+        "completionFingerprint": "72a2399ead3d39472d48cf8ee6f68aab831e7779f2e35df8b3e09da8a06e28ca",
+        "packetFingerprint": "5253397af2e06137f9554e12509587797dc10aaee73379d91e6491e42ec16b61",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1800s versus 63s, error 2757.14%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=2757.14%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 63.0,
+          "expectedSeconds": 1800.0,
+          "errorPercent": 2757.14
+        },
+        "changedPaths": [
+          ".github/workflows/deploy.yml",
+          "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
+          "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
+          "FoodDiary.Web.Api/CONFIGURATION.md",
+          "FoodDiary.Web.Api/Program.cs",
+          "FoodDiary.Web.Client/nginx.conf",
+          "FoodDiary.Web.Client/nginx.telegram-test.conf",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BackendDisclosureTransportTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/backend-disclosure-contract.json",
+          "nginx.conf",
+          "nginx/sites-enabled/fooddiary.club",
+          "scripts/deploy/test_api_disclosure_nginx.py"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "b0de673fe1a23f51effda102d332b746543068bd9f7d3fcf91e0e85e16ead463"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 32,
+      "kind": "observed",
+      "id": "learning-4f0d2a0ad218ad3fcfad",
+      "createdAtUtc": "2026-10-26T18:08:23.5157496Z",
+      "previousHash": "b0de673fe1a23f51effda102d332b746543068bd9f7d3fcf91e0e85e16ead463",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/api-disclosure-hardening",
+        "retrospectiveHash": "d95921cc956ce183cae67e3c2d274fcebe2af3e091452439c29321540b0bab3b",
+        "completionFingerprint": "72a2399ead3d39472d48cf8ee6f68aab831e7779f2e35df8b3e09da8a06e28ca",
+        "packetFingerprint": "5253397af2e06137f9554e12509587797dc10aaee73379d91e6491e42ec16b61",
+        "sourceCandidateId": "cost-presentation-api-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'presentation-api-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 960s versus 23s, error 4073.91%.",
+        "score": 70,
+        "evidence": [
+          "error=4073.91%",
+          "presentation-api-tests"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "presentation-api-tests",
+          "recommendedSeconds": 23.0,
+          "expectedSeconds": 960.0,
+          "errorPercent": 4073.91
+        },
+        "changedPaths": [
+          ".github/workflows/deploy.yml",
+          "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
+          "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
+          "FoodDiary.Web.Api/CONFIGURATION.md",
+          "FoodDiary.Web.Api/Program.cs",
+          "FoodDiary.Web.Client/nginx.conf",
+          "FoodDiary.Web.Client/nginx.telegram-test.conf",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BackendDisclosureTransportTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/backend-disclosure-contract.json",
+          "nginx.conf",
+          "nginx/sites-enabled/fooddiary.club",
+          "scripts/deploy/test_api_disclosure_nginx.py"
+        ],
+        "subjectIds": [
+          "presentation-api-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "da744a14a17b300c92611b9bd157c1aa69acd086bea9ce14d23b1bce348694d0"
     }
   ],
   "hashSchemaVersion": 2

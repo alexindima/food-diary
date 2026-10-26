@@ -4082,11 +4082,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 56,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.1
+      "structuralRiskScore": 1.12
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/ResultExtensions.cs",
@@ -4122,11 +4122,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
+      "structuralRiskScore": 2.5
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/EnableIdempotencyAttribute.cs",
@@ -5610,11 +5610,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Program.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.44
+      "structuralRiskScore": 3.46
     },
     {
       "path": "FoodDiary.Web.Api/Properties/AssemblyInfo.cs",

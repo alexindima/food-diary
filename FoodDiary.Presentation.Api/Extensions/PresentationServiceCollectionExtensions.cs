@@ -26,6 +26,7 @@ public static class PresentationServiceCollectionExtensions {
                     options.Filters.AddService<TelemetryActionFilter>();
                     options.Filters.AddService<IdempotencyFilter>();
                 })
+                .AddJsonOptions(options => options.AllowInputFormatterExceptionMessages = false)
                 .ConfigureApiBehaviorOptions(options => {
                     options.InvalidModelStateResponseFactory = context => {
                         var errors = context.ModelState

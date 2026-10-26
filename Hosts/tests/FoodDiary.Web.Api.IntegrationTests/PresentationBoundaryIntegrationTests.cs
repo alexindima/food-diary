@@ -873,10 +873,8 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeightKg", StringComparison.Ordinal));
     }
 
-    [RequiresDockerTheory]
-    [InlineData("/api/version")]
-    [InlineData("/api/v1/version")]
-    public async Task ApiVersion_ReturnsConfiguredBuildMetadata(string requestUri) {
+    [RequiresDockerFact]
+    public async Task ApiVersion_ReturnsConfiguredBuildMetadata() {
         await using WebApplicationFactory<Program> versionedFactory = apiFactory.WithWebHostBuilder(builder => {
             builder.ConfigureAppConfiguration((_, configBuilder) => {
                 configBuilder.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -887,7 +885,7 @@ public sealed partial class PresentationBoundaryIntegrationTests(
         });
         HttpClient client = versionedFactory.CreateClient();
 
-        HttpResponseMessage response = await client.GetAsync(requestUri);
+        HttpResponseMessage response = await client.GetAsync("/internal/version");
         ApiVersionPayload? payload = await response.Content.ReadFromJsonAsync<ApiVersionPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

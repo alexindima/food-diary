@@ -2,6 +2,12 @@
 
 This project uses safe repository defaults plus local overrides from `dotnet user-secrets`, environment variables, or deployment secret stores.
 
+## Operational metadata and public errors
+
+Deployment verification reads `GET /internal/version` directly through the host-loopback API port. It returns the deployed commit, image tag, environment, application version and start time with `Cache-Control: no-store`. The former `/api/version` and `/api/v1/version` routes are removed. Keep the API host port bound to loopback: the public, admin and Telegram-test nginx sites reject `/internal/` instead of proxying it. This network boundary also works when Docker translates the source address of a local deployment request.
+
+Kestrel omits its `Server` header, and nginx suppresses its version number. MVC returns generic JSON conversion errors while preserving explicit field-validation messages and trace identifiers. Swagger snapshots do not cover the hidden operational endpoint or runtime error details; `backend-disclosure-contract.json` and the transport tests cover these separately.
+
 ## Tracked Files
 
 - `appsettings.json`: safe defaults only, no real secrets

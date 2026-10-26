@@ -8,6 +8,7 @@ builder.Configuration.AddTaskConfiguration(
     Environment.GetEnvironmentVariable("FOODDIARY_TASK_CONFIG"));
 
 builder.WebHost.ConfigureKestrel(options => {
+    options.AddServerHeader = false;
     options.Limits.MaxRequestBodySize = 1024 * 1024; // 1 MB by default; larger endpoints opt in explicitly.
 });
 

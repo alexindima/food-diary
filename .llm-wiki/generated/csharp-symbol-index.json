@@ -2649,7 +2649,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Program.cs",
-      "line": 28
+      "line": 29
     },
     {
       "name": "NotificationTestScheduler",
@@ -33656,7 +33656,7 @@
       "implementation": "UserIdProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 50
+      "line": 51
     },
     {
       "service": "IAuthorizationMiddlewareResultHandler",

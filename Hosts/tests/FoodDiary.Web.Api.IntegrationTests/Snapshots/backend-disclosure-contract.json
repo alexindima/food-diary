@@ -1,0 +1,16 @@
+{
+  "publicVersionRoutes": [
+    "/api/version",
+    "/api/version/",
+    "/API/VERSION",
+    "/api/v1/version",
+    "/api/v1/version/",
+    "/API/V1/VERSION"
+  ],
+  "publicVersionStatus": 404,
+  "internalVersionRoute": "/internal/version",
+  "metadataKeys": ["applicationVersion", "commitSha", "environment", "imageTag", "startedAtUtc"],
+  "jsonError": "Validation.Invalid",
+  "jsonMessage": "One or more validation errors occurred.",
+  "forbiddenJsonDiagnostics": ["System.", "RegisterHttpRequest", "BytePositionInLine", "LineNumber"]
+}

@@ -20,7 +20,7 @@
     "extractedApplicationModules": 34,
     "backendBusinessModules": 34,
     "controllers": 10,
-    "endpoints": 23,
+    "endpoints": 22,
     "agentGuides": 297,
     "documentationPages": 245
   },
@@ -15404,17 +15404,12 @@
       {
         "name": "VersionController",
         "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-        "routePrefix": "api",
+        "routePrefix": "internal",
         "endpoints": [
           {
             "verb": "GET",
-            "route": "/api/version",
+            "route": "/internal/version",
             "line": 19
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v1/version",
-            "line": 20
           }
         ]
       },

@@ -683,7 +683,7 @@ jobs:
             exit 1
           fi
 
-          version_json=$(curl -fsS "${api_base_url}/api/v1/version")
+          version_json=$(curl -fsS "${api_base_url}/internal/version")
           echo "Actual API version payload: $version_json"
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
