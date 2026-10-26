@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "119bbe61178a581d45f7c387b3a0de8a0d477f828808704f9e55eaf97ea2792b",
-    "sourceFileCount": 4631
+    "sourceFingerprint": "6d5823106b8569db3ab125cb5b35274c87677e9a10f2d1bf49b090cef81d0546",
+    "sourceFileCount": 4647
   },
   "summary": {
     "composeServices": 18,
     "hostedServices": 16,
     "httpClients": 22,
     "webhooks": 22,
-    "recurringJobRegistrations": 17,
+    "recurringJobRegistrations": 18,
     "networkPolicies": 42
   },
   "semantics": {
@@ -1190,6 +1190,14 @@
     {
       "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.UserLoginEventsCleanup",
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [],
+      "behaviorSignalScope": "registration-expression",
+      "targetBehaviorEvidence": "not-expanded; inspect the registered job implementation before making retry, cancellation, or idempotency claims"
+    },
+    {
+      "api": "recurringJobManager.AddOrUpdate",
+      "detail": "RecurringJobIds.UserSessionsCleanup",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
       "behaviorSignals": [],
       "behaviorSignalScope": "registration-expression",

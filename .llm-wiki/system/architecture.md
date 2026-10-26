@@ -44,6 +44,14 @@ HttpOnly cookies and browser request checks. Admin SSO and per-tab impersonation
 have separate cookies. Telegram bot bearer transport and explicit Mini App token
 mode remain supported. See [ADR 0058](../../docs/adr/0058-browser-sessions-in-the-existing-api.md).
 
+Ordinary browser renewal uses a persisted eligibility flag and an atomic
+Identity-owned expiry update fenced by owner, proof, security version, previous
+expiry and revocation. Ordinary sessions have no absolute maximum by default;
+admin and unclassified sessions stay fixed. The policy, optional absolute cap
+and eligibility migration are described in
+[browser sessions](../../docs/backend/BROWSER_SESSIONS.md); no host, storage
+service or HTTP wire shape is added by renewal.
+
 ## Boundary Model
 
 Primary backend dependency direction is inward:

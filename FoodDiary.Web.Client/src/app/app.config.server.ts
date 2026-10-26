@@ -1,4 +1,4 @@
-import { type ApplicationConfig, mergeApplicationConfig } from '@angular/core';
+import { type ApplicationConfig, CSP_NONCE, inject, mergeApplicationConfig, REQUEST_CONTEXT } from '@angular/core';
 import { provideServerRendering, withRoutes } from '@angular/ssr';
 
 import englishApp from '../../assets/i18n/en/app.json';
@@ -15,12 +15,14 @@ import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
 import { PUBLIC_RECIPE_API_URL } from './features/recipes/api/public-recipe-api.token';
 import { SERVER_TRANSLATIONS } from './shared/i18n/server-translations.token';
+import { getStringProperty } from './shared/lib/unknown-value.utils';
 
 const publicApiOrigin = process.env['SSR_API_ORIGIN'] ?? 'http://localhost:5300';
 
 const serverConfig: ApplicationConfig = {
     providers: [
         provideServerRendering(withRoutes(serverRoutes)),
+        { provide: CSP_NONCE, useFactory: () => getStringProperty(inject(REQUEST_CONTEXT), 'cspNonce') ?? null },
         {
             provide: SERVER_TRANSLATIONS,
             useValue: {

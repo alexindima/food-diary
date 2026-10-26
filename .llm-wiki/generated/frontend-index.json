@@ -8,19 +8,19 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2711,
-    "symbols": 858,
+    "typescriptFiles": 2722,
+    "symbols": 860,
     "routes": 108,
     "features": 46,
-    "specs": 815,
+    "specs": 823,
     "localeFiles": 5,
     "roles": {
-      "Component": 497,
+      "Component": 498,
       "Directive": 18,
       "Facade": 88,
       "Other": 41,
       "Pipe": 5,
-      "Service": 209
+      "Service": 210
     }
   },
   "features": [
@@ -129,7 +129,8 @@
       "routes": [],
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.interceptor.spec.ts",
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.spec.ts"
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-restoration-transport.spec.ts"
       ]
     },
     {
@@ -2362,7 +2363,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "line": 14
+      "line": 17
     },
     {
       "name": "AdminBillingService",
@@ -3217,6 +3218,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/components/shared/appearance-dialog/appearance.facade.ts",
       "line": 28
+    },
+    {
+      "name": "AuthRecoveryNoticeComponent",
+      "role": "Component",
+      "selector": "fd-auth-recovery-notice",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/auth-recovery-notice/auth-recovery-notice.ts",
+      "line": 17
     },
     {
       "name": "BadgeComponent",
@@ -5729,7 +5737,7 @@
       "role": "Component",
       "selector": "fd-public-site-header",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
-      "line": 15
+      "line": 23
     },
     {
       "name": "PublicAuthDialogService",
@@ -6681,7 +6689,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 39
+      "line": 43
     },
     {
       "name": "GlobalErrorHandler",
@@ -7146,6 +7154,13 @@
       "line": 9
     },
     {
+      "name": "AuthRecoveryStateService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/auth-recovery-state.service.ts",
+      "line": 22
+    },
+    {
       "name": "LoginRequest",
       "role": "Other",
       "selector": null,
@@ -7227,7 +7242,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "line": 12
+      "line": 13
     },
     {
       "name": "DevelopmentToolError",
@@ -7584,7 +7599,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 75
+      "line": 77
     },
     {
       "name": "AdminPanelLauncherService",
@@ -8191,8 +8206,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1253,
-      "russianProperties": 1253,
+      "englishProperties": 1260,
+      "russianProperties": 1260,
       "countsMatch": true
     },
     {

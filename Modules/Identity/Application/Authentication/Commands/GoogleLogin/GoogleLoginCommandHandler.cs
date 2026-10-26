@@ -50,7 +50,7 @@ public sealed class GoogleLoginCommandHandler(
         IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
             .ConfigureAwait(false);
-        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 
     private static async Task EnsurePasswordSetupReminderAsync(

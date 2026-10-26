@@ -1,13 +1,13 @@
-import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 import { computed, DestroyRef, inject, PLATFORM_ID, Service, signal } from '@angular/core';
-import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap } from 'rxjs';
+import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap, timeout } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
 import { AuthSdk } from '../shared/api/sdk/generated/api/auth.service';
 import { TelegramAuthSdk } from '../shared/api/sdk/generated/api/telegram-auth.service';
-import { createSdkConnection } from '../shared/api/sdk/sdk-connection';
+import { createSdkConnection, sdkRequestOptions } from '../shared/api/sdk/sdk-connection';
 import { requireSdkFields } from '../shared/api/sdk/sdk-response';
 import { userFromSdk } from '../shared/api/sdk/user-sdk.mapper';
 import type {
@@ -20,6 +20,7 @@ import type {
 } from '../shared/auth/auth.data';
 import { AuthCookieSessionService } from '../shared/auth/auth-cookie-session.service';
 import { ACCOUNT_ACCESS_STORAGE_KEY, AuthMetadataStorageService } from '../shared/auth/auth-metadata-storage.service';
+import { AuthRecoveryStateService, type PendingLogout } from '../shared/auth/auth-recovery-state.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { EmailVerificationCooldownService } from '../shared/auth/email-verification-cooldown.service';
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
@@ -27,6 +28,7 @@ import { SessionEventsService } from '../shared/auth/session-events.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
+import { getStringProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { ThemeService } from '../shared/theme/theme.service';
@@ -34,10 +36,13 @@ import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
 
 const REJECTED_SESSION_STATUSES: ReadonlySet<number> = new Set([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden]);
+const SESSION_ACTIVITY_REVALIDATION_MS = 3_600_000;
+const SESSION_RESTORATION_TIMEOUT_MS = 30_000;
 
 @Service()
 export class AuthService {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly document = inject(DOCUMENT);
     private readonly navigationService = inject(NavigationService);
     private readonly emailVerificationCooldown = inject(EmailVerificationCooldownService);
     private readonly sessionEvents = inject(SessionEventsService);
@@ -47,6 +52,7 @@ export class AuthService {
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
     private readonly authMetadata = inject(AuthMetadataStorageService);
+    private readonly recovery = inject(AuthRecoveryStateService);
     private readonly jwtDecoder = inject(JwtDecoderService);
     protected readonly baseUrl = environment.apiUrls.auth;
     private readonly http = inject(HttpClient);
@@ -59,6 +65,7 @@ export class AuthService {
     private refreshInFlight$: Observable<boolean> | null = null;
     private sessionRestorePromise: Promise<void> | null = null;
     private sessionVersion = 0;
+    private lastRenewalAttemptAt = Date.now();
 
     public readonly isAuthenticated = computed(() => this.session() !== null);
     public readonly isEmailConfirmed = computed(() => this.emailConfirmedSignal() ?? true);
@@ -79,6 +86,14 @@ export class AuthService {
         // Previous browser bearer credentials are deliberately not restored.
         this.authMetadata.clearTabSession();
         const stop = this.browserWindow.onLocalStorageChange(event => {
+            if (
+                this.recovery.isLogoutStorageKey(event.key) &&
+                this.recovery.pendingLogout() !== null &&
+                this.recovery.pendingLogout()?.sessionId === this.browserSession.sessionId()
+            ) {
+                this.invalidateLocalSession(false);
+                return;
+            }
             if (this.isImpersonating() || event.key !== ACCOUNT_ACCESS_STORAGE_KEY) {
                 return;
             }
@@ -90,10 +105,43 @@ export class AuthService {
             }
         });
         inject(DestroyRef).onDestroy(stop);
+        this.observeSessionActivity();
     }
 
     public initializeAuth(): void {
         // The HttpOnly session is restored by restoreSessionAsync before protected routing.
+    }
+
+    private observeSessionActivity(): void {
+        if (!this.isBrowser) {
+            return;
+        }
+        const renew = (): void => {
+            if (
+                this.document.visibilityState === 'hidden' ||
+                !this.isAuthenticated() ||
+                this.browserSession.telegram ||
+                this.browserSession.contextId() !== null ||
+                this.recovery.pendingLogout() !== null
+            ) {
+                return;
+            }
+            const now = Date.now();
+            if (now - this.lastRenewalAttemptAt < SESSION_ACTIVITY_REVALIDATION_MS) {
+                return;
+            }
+            this.lastRenewalAttemptAt = now;
+            void firstValueFrom(this.refreshSession());
+        };
+        const events = ['pointerdown', 'keydown', 'visibilitychange'] as const;
+        events.forEach(event => {
+            this.document.addEventListener(event, renew, { passive: true });
+        });
+        inject(DestroyRef).onDestroy(() => {
+            events.forEach(event => {
+                this.document.removeEventListener(event, renew);
+            });
+        });
     }
 
     public async restoreSessionAsync(): Promise<void> {
@@ -105,7 +153,7 @@ export class AuthService {
             return;
         }
         this.sessionRestorePromise ??= this.restoreSessionInternalAsync().finally(() => {
-            this.authReadySignal.set(true);
+            this.authReadySignal.set(this.recovery.issue() === null);
             this.sessionRestorePromise = null;
         });
         return this.sessionRestorePromise;
@@ -284,6 +332,9 @@ export class AuthService {
     }
 
     public refreshSession(): Observable<boolean> {
+        if (this.recovery.pendingLogout() !== null || !this.recovery.canRetry()) {
+            return of(false);
+        }
         if (this.refreshInFlight$ !== null) {
             return this.refreshInFlight$;
         }
@@ -294,77 +345,161 @@ export class AuthService {
         const request =
             this.browserSession.telegram && this.browserSession.contextId() === null
                 ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
-                : this.sdk.client.postAuthSession({ version: this.sdk.version });
-        const pending = request.pipe(
-            map(authResponseFromSdk),
-            map(response => {
-                if (version !== this.sessionVersion) {
-                    return false;
-                }
-                if (
-                    (owner !== null && response.user.id !== owner) ||
-                    (sessionId !== null && response.sessionId !== sessionId) ||
-                    (contextId !== null && response.impersonationContext !== contextId)
-                ) {
-                    this.invalidateLocalSession();
-                    return false;
-                }
-                this.applyAuthenticatedSession(response);
-                return true;
-            }),
-            catchError((error: unknown) => {
-                if (
-                    version === this.sessionVersion &&
-                    error instanceof HttpErrorResponse &&
-                    REJECTED_SESSION_STATUSES.has(error.status)
-                ) {
-                    if (owner === null) {
-                        this.clearSession();
-                    } else {
-                        this.invalidateLocalSession();
+                : this.sdk.client.postAuthSession(
+                      { version: this.sdk.version },
+                      'body',
+                      false,
+                      sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
+                  );
+        const pending = this.cookieSessions
+            .run(() =>
+                defer(() => {
+                    if (version !== this.sessionVersion || this.recovery.pendingLogout() !== null) {
+                        return of(false);
                     }
-                }
-                return of(false);
-            }),
-            finalize(() => {
-                if (this.refreshInFlight$ === pending) {
-                    this.refreshInFlight$ = null;
-                }
-            }),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        );
+                    return request.pipe(
+                        timeout(SESSION_RESTORATION_TIMEOUT_MS),
+                        map(authResponseFromSdk),
+                        map(response => {
+                            if (version !== this.sessionVersion || this.recovery.pendingLogout() !== null) {
+                                return false;
+                            }
+                            if (
+                                (owner !== null && response.user.id !== owner) ||
+                                (sessionId !== null && response.sessionId !== sessionId) ||
+                                (contextId !== null && response.impersonationContext !== contextId)
+                            ) {
+                                this.invalidateLocalSession();
+                                return false;
+                            }
+                            this.applyAuthenticatedSession(response);
+                            this.recovery.restorationSucceeded();
+                            this.authReadySignal.set(true);
+                            return true;
+                        }),
+                        catchError((error: unknown) => {
+                            if (version === this.sessionVersion) {
+                                if (error instanceof HttpErrorResponse && REJECTED_SESSION_STATUSES.has(error.status)) {
+                                    this.recovery.restorationSucceeded();
+                                    this.authReadySignal.set(true);
+                                    if (owner === null) {
+                                        this.clearSession();
+                                    } else {
+                                        this.invalidateLocalSession();
+                                    }
+                                } else {
+                                    this.recovery.restorationFailed(
+                                        error instanceof HttpErrorResponse ? error.headers.get('Retry-After') : null,
+                                    );
+                                }
+                            }
+                            return of(false);
+                        }),
+                    );
+                }),
+            )
+            .pipe(
+                finalize(() => {
+                    if (this.refreshInFlight$ === pending) {
+                        this.refreshInFlight$ = null;
+                    }
+                }),
+                shareReplay({ bufferSize: 1, refCount: true }),
+            );
         this.refreshInFlight$ = pending;
         return pending;
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
-        const version = ++this.sessionVersion;
+        if (this.recovery.pendingLogout() !== null && !this.isAuthenticated()) {
+            await this.retryPendingLogoutAsync();
+            return;
+        }
+        const pending = this.currentLogoutSelection();
+        const impersonating = this.isImpersonating();
+        this.recovery.beginLogout(pending);
         const cleanup = this.sessionEvents.prepareSessionEnd();
+        this.clearSession();
+        const version = this.sessionVersion;
+        if (!impersonating) {
+            this.authMetadata.clearAll();
+            this.localizationService.clearStoredLanguage();
+        }
         if (cleanup !== null) {
             await cleanup.catch(() => {});
         }
         if (version !== this.sessionVersion) {
             return;
         }
-        await firstValueFrom(
-            this.cookieSessions.run(() =>
-                version === this.sessionVersion
-                    ? this.sdk.client
-                          .postAuthLogout({ version: this.sdk.version, refreshTokenHttpRequest: {} })
-                          .pipe(catchError(() => of(undefined)))
-                    : of(undefined),
-            ),
-        );
+        await this.retryPendingLogoutAsync();
         if (version !== this.sessionVersion) {
             return;
         }
-        const impersonating = this.isImpersonating();
-        this.clearSession();
-        if (!impersonating) {
-            this.authMetadata.clearAll();
-            this.localizationService.clearStoredLanguage();
-        }
         await this.navigateAfterSessionEndAsync(redirectToAuth);
+    }
+
+    public async retryPendingLogoutAsync(): Promise<void> {
+        const pending = this.recovery.pendingLogout();
+        if (pending === null || this.recovery.busy() || !this.recovery.canRetry()) {
+            return;
+        }
+        this.recovery.busy.set(true);
+        try {
+            const headers = this.pendingLogoutHeaders(pending);
+            await firstValueFrom(
+                this.cookieSessions.run(() =>
+                    this.sdk.client.postAuthLogout(
+                        { version: this.sdk.version, refreshTokenHttpRequest: {} },
+                        'body',
+                        false,
+                        sdkRequestOptions(headers),
+                    ),
+                ),
+            );
+            this.recovery.confirmLogout(pending);
+        } catch (error: unknown) {
+            this.handleLogoutFailure(error, pending);
+        } finally {
+            this.recovery.busy.set(false);
+        }
+        if (this.recovery.issue() === null && !this.isAuthenticated()) {
+            this.authReadySignal.set(true);
+        }
+    }
+
+    private currentLogoutSelection(): PendingLogout {
+        const tokenSession = this.jwtDecoder.decodePayload(this.getToken() ?? '')?.['refresh_session_id'];
+        return {
+            sessionId: this.browserSession.sessionId() ?? (typeof tokenSession === 'string' ? tokenSession : null),
+            contextId: this.browserSession.contextId(),
+            telegram: this.browserSession.telegram,
+        };
+    }
+
+    private pendingLogoutHeaders(pending: PendingLogout): HttpHeaders {
+        let headers = new HttpHeaders({ 'X-FoodDiary-Client': pending.telegram ? 'telegram' : 'web' });
+        if (pending.sessionId !== null) {
+            headers = headers.set('X-FoodDiary-Session', pending.sessionId);
+        }
+        if (pending.contextId !== null) {
+            headers = headers.set('X-FoodDiary-Context', pending.contextId);
+        }
+        return headers;
+    }
+
+    private handleLogoutFailure(error: unknown, pending: PendingLogout): void {
+        if (this.recovery.pendingLogout() !== pending) {
+            return;
+        }
+        if (
+            error instanceof HttpErrorResponse &&
+            error.status === Number(HttpStatusCode.Unauthorized) &&
+            getStringProperty(error.error, 'error') === 'Authentication.SessionChanged'
+        ) {
+            this.recovery.confirmLogout(pending);
+        } else {
+            this.recovery.restorationFailed(error instanceof HttpErrorResponse ? error.headers.get('Retry-After') : null);
+        }
     }
 
     /** Only the explicitly supported Telegram token transport has an access token, held in memory. */
@@ -401,6 +536,7 @@ export class AuthService {
     private onLogin(response: AuthResponse, rememberMe: boolean): void {
         this.sessionVersion++;
         this.refreshInFlight$ = null;
+        this.recovery.clear();
         this.browserSession.setContext(null);
         this.applyAuthenticatedSession(response, rememberMe);
         this.sessionEvents.notifyAuthenticated();
@@ -433,6 +569,10 @@ export class AuthService {
     }
 
     private async restoreSessionInternalAsync(): Promise<void> {
+        if (this.recovery.pendingLogout() !== null) {
+            await this.retryPendingLogoutAsync();
+            return;
+        }
         const href = this.browserWindow.getHref();
         if (href !== null) {
             const url = new URL(href);

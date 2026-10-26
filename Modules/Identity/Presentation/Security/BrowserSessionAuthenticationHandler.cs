@@ -26,11 +26,11 @@ public sealed class BrowserSessionAuthenticationHandler(
         if (credential is null) {
             return AuthenticateResult.NoResult();
         }
-        Result<BrowserSessionModel> result = await sender.Send(new AuthenticateBrowserSessionQuery(credential), Context.RequestAborted).ConfigureAwait(false);
+        Result<BrowserSessionIdentityModel> result = await sender.Send(new AuthenticateBrowserSessionQuery(credential), Context.RequestAborted).ConfigureAwait(false);
         if (result.IsFailure) {
             return AuthenticateResult.Fail("The browser session is no longer valid.");
         }
-        BrowserSessionModel session = result.Value;
+        BrowserSessionIdentityModel session = result.Value;
         string expected = Request.Headers[BrowserSessionCookieService.SessionHeader].ToString();
         if (expected.Length > 0 && !string.Equals(expected, session.SessionId.ToString("D"), StringComparison.Ordinal)) {
             return AuthenticateResult.Fail("The request belongs to another browser session.");

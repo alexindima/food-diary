@@ -72,6 +72,7 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<AtomicCommandReceiptCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserLoginEventCleanupJob>()),
+            () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserSessionCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<MarketingAttributionCleanupJob>()),
             () => Assert.NotNull(scope.ServiceProvider.GetRequiredService<FastingTelemetryCleanupJob>()));
     }
@@ -89,6 +90,7 @@ public sealed class DependencyInjectionTests {
             () => Assert.NotNull(provider.GetRequiredService<IOptions<ImageCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<UserCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value),
+            () => Assert.NotNull(provider.GetRequiredService<IOptions<UserSessionCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<MarketingAttributionCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<FastingTelemetryCleanupOptions>>().Value),
             () => Assert.NotNull(provider.GetRequiredService<IOptions<NotificationCleanupOptions>>().Value),

@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -22,7 +22,13 @@ export class UnauthorizedComponent {
 
     protected readonly reason: string | null;
     protected readonly returnUrl: string;
-    protected readonly rateLimited = computed(() => this.reason === 'unauthenticated' && this.authService.ssoRateLimited());
+    private readonly rejectedReason = signal<string | null>(null);
+    protected readonly retryBusy = signal(false);
+    protected readonly effectiveReason = computed(() => this.rejectedReason() ?? this.reason);
+    protected readonly restoreUnavailable = computed(
+        () => this.rejectedReason() === null && (this.effectiveReason() === 'unavailable' || this.authService.sessionUnavailable()),
+    );
+    protected readonly rateLimited = computed(() => this.effectiveReason() === 'unauthenticated' && this.authService.ssoRateLimited());
 
     public constructor() {
         this.reason = this.route.snapshot.queryParamMap.get('reason');
@@ -47,6 +53,25 @@ export class UnauthorizedComponent {
             url.searchParams.set('adminReturnUrl', adminReturnUrl);
         }
         this.document.defaultView?.location.assign(url.toString());
+    }
+
+    protected async retryRestoreAsync(): Promise<void> {
+        if (this.retryBusy()) {
+            return;
+        }
+        this.retryBusy.set(true);
+        try {
+            await this.authService.restoreSessionAsync(true);
+            if (!this.authService.sessionUnavailable()) {
+                if (this.authService.isAdmin()) {
+                    await this.router.navigateByUrl(this.normalizeReturnUrl(this.returnUrl), { replaceUrl: true });
+                } else {
+                    this.rejectedReason.set(this.authService.isAuthenticated() ? 'forbidden' : 'unauthenticated');
+                }
+            }
+        } finally {
+            this.retryBusy.set(false);
+        }
     }
 
     private async tryRecoverFromSsoAsync(returnUrl: string): Promise<void> {

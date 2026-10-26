@@ -14,6 +14,7 @@ sources:
   - docs/frontend/API_SDK.md
   - docs/backend/BROWSER_SESSIONS.md
   - docs/adr/0058-browser-sessions-in-the-existing-api.md
+  - docs/frontend/SCRIPT_CSP.md
   - docs/frontend/WEB_QUALITY.md
   - docs/adr/0055-atomic-frontend-publication-and-asset-retention.md
   - docs/adr/0056-shopping-list-content-revisions.md
@@ -89,6 +90,20 @@ selectors; reload calls `POST /auth/session`. Impersonation selects an independe
 cookie per tab context. Explicit Telegram Mini App mode retains a bearer only in
 memory. See [browser sessions](../../docs/backend/BROWSER_SESSIONS.md) and ADR 0058
 for CSRF, device isolation, admin expiry and coordinated release requirements.
+
+Foreground activity in the main browser/PWA client can revalidate an ordinary
+session at most hourly. Eligible sessions renew through `POST /auth/session`
+within the server policy's renewal window. Ordinary sessions have no absolute
+maximum by default; an explicit server policy can optionally impose one. These cookie writes
+share the sign-in/logout queue and origin Web Lock; admin and impersonation do
+not gain this automatic renewal. The wire response fields remain unchanged.
+
+Transient session restoration has visible retry in both apps. Pending logout
+persists public selectors across reload and cannot revoke a replacement account;
+the main app and admin reject stale responses for a newer selection. Production
+main-site builds add trusted per-document script hashes and SSR responses use a
+fresh nonce. Keep their finalized PWA manifest and private SSR hash manifest in
+the same artifact; see [script CSP](../../docs/frontend/SCRIPT_CSP.md).
 
 The Telegram bot has its own generated C# client for 14 FoodDiary API operations
 under `FoodDiary.Telegram.Bot/Api/Generated/`. Existing adapters retain credentials,

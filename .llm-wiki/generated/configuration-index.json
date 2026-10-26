@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 65,
+    "optionTypes": 67,
     "configurationFiles": 8,
-    "configurationKeys": 273,
+    "configurationKeys": 286,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -100,6 +100,8 @@
         "PermitLimit",
         "QueueLimit",
         "SecretVerification",
+        "SessionLogout",
+        "SessionRestore",
         "TestDelivery",
         "Wearable",
         "Webhook",
@@ -127,6 +129,15 @@
         "Provider"
       ],
       "path": "FoodDiary.JobManager/Services/BillingRenewalOptions.cs"
+    },
+    {
+      "type": "BrowserSessionRenewalOptions",
+      "section": "BrowserSessions",
+      "properties": [
+        "AbsoluteLifetimeDays",
+        "RenewalWindowDays"
+      ],
+      "path": "Modules/Identity/Infrastructure/Authentication/BrowserSessionRenewalOptions.cs"
     },
     {
       "type": "BugAcknowledgementOptions",
@@ -741,6 +752,18 @@
       "path": "FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs"
     },
     {
+      "type": "UserSessionCleanupOptions",
+      "section": "UserSessionCleanup",
+      "properties": [
+        "BatchSize",
+        "Cron",
+        "Enabled",
+        "MaxBatches",
+        "RetentionDays"
+      ],
+      "path": "FoodDiary.JobManager/Services/UserSessionCleanupOptions.cs"
+    },
+    {
       "type": "WebPushOptions",
       "section": "WebPush",
       "properties": [
@@ -835,7 +858,12 @@
         "UserLoginEventCleanup:BatchSize",
         "UserLoginEventCleanup:Cron",
         "UserLoginEventCleanup:Enabled",
-        "UserLoginEventCleanup:RetentionDays"
+        "UserLoginEventCleanup:RetentionDays",
+        "UserSessionCleanup:BatchSize",
+        "UserSessionCleanup:Cron",
+        "UserSessionCleanup:Enabled",
+        "UserSessionCleanup:MaxBatches",
+        "UserSessionCleanup:RetentionDays"
       ]
     },
     {
@@ -864,6 +892,8 @@
       "keys": [
         "AllowedHosts",
         "Billing:Provider",
+        "BrowserSessions:AbsoluteLifetimeDays",
+        "BrowserSessions:RenewalWindowDays",
         "ConnectionStrings:DefaultConnection",
         "ConnectionStrings:Redis",
         "DataProtection:ApplicationName",
@@ -946,6 +976,12 @@
         "RateLimiting:SecretVerification:PermitLimit",
         "RateLimiting:SecretVerification:QueueLimit",
         "RateLimiting:SecretVerification:WindowSeconds",
+        "RateLimiting:SessionLogout:PermitLimit",
+        "RateLimiting:SessionLogout:QueueLimit",
+        "RateLimiting:SessionLogout:WindowSeconds",
+        "RateLimiting:SessionRestore:PermitLimit",
+        "RateLimiting:SessionRestore:QueueLimit",
+        "RateLimiting:SessionRestore:WindowSeconds",
         "RateLimiting:TestDelivery:PermitLimit",
         "RateLimiting:TestDelivery:QueueLimit",
         "RateLimiting:TestDelivery:WindowSeconds",

@@ -10,11 +10,92 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : IClassFixture<ApiWebApplicationFactory> {
+    [RequiresDockerFact]
+    public async Task CredentialQuotaExhaustion_DoesNotBlockTabRestorationOrLogout() {
+        await using WebApplicationFactory<Program> isolated = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(
+                new Dictionary<string, string?>(StringComparer.Ordinal) { ["RateLimiting:Auth:PermitLimit"] = "5" })));
+        using HttpClient browser = isolated.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        (_, string email) = await RegisterIdentityAsync(browser);
+        for (int attempt = 0; attempt < 6; attempt++) {
+            using HttpResponseMessage login = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "WrongPassword123!"));
+            Assert.Equal(attempt < 5 ? HttpStatusCode.Unauthorized : HttpStatusCode.TooManyRequests, login.StatusCode);
+        }
+        for (int tab = 0; tab < 6; tab++) {
+            using HttpResponseMessage restored = await browser.PostAsync("/api/v1/auth/session", content: null);
+            Assert.Equal(HttpStatusCode.OK, restored.StatusCode);
+        }
+        using HttpResponseMessage logout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
+        Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
+        using HttpResponseMessage denied = await browser.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
+    }
+
+    [RequiresDockerFact]
+    public async Task MiniAppSelectedLogout_ProtectsReplacementAndPreservesTheWebsiteSession() {
+        using HttpClient browser = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        (Guid owner, string email) = await RegisterIdentityAsync(browser);
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "telegram");
+        string oldSession = await MiniAppLoginAsync(browser, email);
+        string currentSession = await MiniAppLoginAsync(browser, email);
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.SessionHeader, oldSession);
+
+        using HttpResponseMessage staleLogout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
+        Assert.Equal(HttpStatusCode.Unauthorized, staleLogout.StatusCode);
+        Assert.False(staleLogout.Headers.Contains("Set-Cookie"));
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.SessionHeader);
+        using HttpResponseMessage stillActive = await browser.PostAsJsonAsync("/api/v1/auth/refresh", new { });
+        stillActive.EnsureSuccessStatusCode();
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.SessionHeader, currentSession);
+        using HttpResponseMessage selectedLogout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
+        Assert.Equal(HttpStatusCode.NoContent, selectedLogout.StatusCode);
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.SessionHeader);
+        using HttpResponseMessage rejectedRefresh = await browser.PostAsJsonAsync("/api/v1/auth/refresh", new { });
+        // Logout removes the refresh cookie, so an empty refresh request fails input validation.
+        Assert.Equal(HttpStatusCode.BadRequest, rejectedRefresh.StatusCode);
+
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.ClientHeader);
+        await AssertIdentityAsync(browser, owner);
+    }
+
+    [RequiresDockerFact]
+    public async Task MiniAppLogout_WithoutRefreshProof_DoesNotClaimReplacementOrClearWebsiteCookie() {
+        using HttpClient browser = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
+        (Guid owner, _) = await RegisterIdentityAsync(browser);
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "telegram");
+        browser.DefaultRequestHeaders.Add(BrowserSessionCookieService.SessionHeader, Guid.NewGuid().ToString("D"));
+        using HttpResponseMessage logout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
+        Assert.Equal(HttpStatusCode.Unauthorized, logout.StatusCode);
+        JsonElement error = await logout.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Authentication.InvalidToken", error.GetProperty("error").GetString());
+        Assert.False(logout.Headers.Contains("Set-Cookie"));
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.ClientHeader);
+        browser.DefaultRequestHeaders.Remove(BrowserSessionCookieService.SessionHeader);
+        await AssertIdentityAsync(browser, owner);
+    }
+
+    private static async Task<string> MiniAppLoginAsync(HttpClient browser, string email) {
+        using HttpResponseMessage login = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "Password123!"));
+        login.EnsureSuccessStatusCode();
+        JsonElement response = await login.Content.ReadFromJsonAsync<JsonElement>();
+        browser.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.GetProperty("accessToken").GetString());
+        try {
+            using HttpResponseMessage listed = await browser.GetAsync("/api/v1/auth/sessions");
+            listed.EnsureSuccessStatusCode();
+            JsonElement sessions = await listed.Content.ReadFromJsonAsync<JsonElement>();
+            return sessions.EnumerateArray().Single(session => session.GetProperty("isCurrent").GetBoolean())
+                .GetProperty("id").GetString()!;
+        } finally {
+            browser.DefaultRequestHeaders.Authorization = null;
+        }
+    }
+
     [RequiresDockerFact]
     public async Task ParallelRestoration_AllTabsKeepTheSameActiveSession() {
         using HttpClient browser = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });

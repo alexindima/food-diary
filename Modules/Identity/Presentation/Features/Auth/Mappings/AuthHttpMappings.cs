@@ -25,7 +25,6 @@ using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSes
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreBrowserSession;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.LogoutBrowserSession;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetBrowserSessionProfile;
-using FoodDiary.Modules.Identity.Application.Authentication.Queries.AuthenticateBrowserSession;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +32,7 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
 public static class AuthHttpMappings {
-    public static AuthenticateBrowserSessionQuery InvalidBrowserSessionQuery() => new(Credential: null);
+    public static RestoreBrowserSessionCommand InvalidBrowserSessionRestoration() => new(Credential: null);
 
     extension(string? credential) {
         public RestoreBrowserSessionCommand ToBrowserRestoreCommand() => new(credential);
@@ -204,6 +203,10 @@ public static class AuthHttpMappings {
     }
 
     extension(ConfirmPasswordResetHttpRequest request) {
+        public ConfirmPasswordResetCommand ToCommand(HttpContext context) => request.ToCommand() with {
+            ClientContext = context.ToAuthenticationClientContext("password-reset"),
+        };
+
         public ConfirmPasswordResetCommand ToCommand() {
             return new ConfirmPasswordResetCommand(
                 UserId: request.UserId,
@@ -238,11 +241,20 @@ public static class AuthHttpMappings {
 
     extension(HttpContext httpContext) {
         internal AuthenticationClientContext ToAuthenticationClientContext(string authProvider, bool replaceBrowserSession = true) {
+            bool admin = string.Equals(authProvider, "admin-sso", StringComparison.Ordinal);
+            bool bearer = !admin && (string.Equals(authProvider, "telegram-bot", StringComparison.Ordinal) ||
+                httpContext.Request.Headers[BrowserSessionCookieService.ClientHeader] == "telegram");
+            AuthenticationCredentialKind kind = admin ? AuthenticationCredentialKind.AdminBrowser : AuthenticationCredentialKind.Browser;
+            if (bearer) {
+                kind = AuthenticationCredentialKind.Bearer;
+            }
             return new AuthenticationClientContext(
                 authProvider,
                 httpContext.Connection.RemoteIpAddress?.ToString(),
                 httpContext.Request.Headers.UserAgent.ToString(),
-                replaceBrowserSession ? httpContext.Request.Cookies[RefreshTokenCookieService.CookieName] : null);
+                replaceBrowserSession ? httpContext.Request.Cookies[RefreshTokenCookieService.CookieName] : null,
+                kind,
+                bearer ? null : httpContext.Request.Cookies[BrowserSessionCookieService.CookieName(httpContext, admin)]);
         }
     }
 }

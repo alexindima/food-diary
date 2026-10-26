@@ -36,5 +36,5 @@ public sealed class AuthPasswordController(ISender mediator) : BaseApiController
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> ConfirmPasswordReset([FromBody] ConfirmPasswordResetHttpRequest request) =>
-        HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 }

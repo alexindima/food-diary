@@ -8,12 +8,12 @@ using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Application.Common;
 
 using FoodDiary.Modules.Users.Domain.Entities;
-using FoodDiary.Modules.Users.Domain.Contracts.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using System.Security.Cryptography;
+using FoodDiary.Modules.Users.Domain.Common;
 
 namespace FoodDiary.Modules.Users.Application.Services;
 
@@ -390,15 +390,8 @@ internal sealed class UserAuthenticationIdentityService(
     }
 
     internal static UserAuthenticationPrincipalModel ToAuthenticationPrincipal(User user, DateTime authenticatedAtUtc) {
-        var roles = user.GetRoleNames().ToList();
-        bool hasActivePremiumTrial = user.HasActivePremiumTrial(authenticatedAtUtc);
-        if (hasActivePremiumTrial && !roles.Contains(RoleNames.Premium, StringComparer.Ordinal)) {
-            roles.Add(RoleNames.Premium);
-        }
-
-        DateTime? accessTokenCapUtc = user.HasRole(RoleNames.Premium) || !hasActivePremiumTrial
-            ? null
-            : user.PremiumTrialEndsAtUtc;
+        (IReadOnlyCollection<string> roles, DateTime? accessTokenCapUtc) = UserAuthenticationPrivileges.Evaluate(
+            user.GetRoleNames(), user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, authenticatedAtUtc);
         return new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,

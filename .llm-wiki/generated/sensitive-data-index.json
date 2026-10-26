@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1698,
-    "credential": 163,
-    "identity": 181,
-    "health": 796,
+    "candidateFields": 1704,
+    "credential": 167,
+    "identity": 182,
+    "health": 797,
     "financial": 138,
     "privateContent": 420,
     "boundaryFiles": 226,
@@ -92,7 +92,7 @@
       "name": "SecretVerification",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 56
+      "line": 66
     },
     {
       "category": "credential",
@@ -327,31 +327,45 @@
     },
     {
       "category": "credential",
+      "name": "CredentialHash",
+      "type": "string",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/BrowserSessionProof.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "Credential",
+      "type": "string",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/IssuedBrowserSession.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 3
+      "line": 5
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 3
+      "line": 5
     },
     {
       "category": "credential",
       "name": "Token",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-      "line": 9
+      "line": 10
     },
     {
       "category": "credential",
       "name": "NewPassword",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-      "line": 10
+      "line": 11
     },
     {
       "category": "credential",
@@ -435,14 +449,14 @@
       "name": "AccessToken",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "credential",
@@ -582,14 +596,14 @@
       "name": "AccessToken",
       "type": "string?",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 7
+      "line": 8
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "credential",
@@ -709,6 +723,20 @@
       "type": "string",
       "path": "Modules/Users/Contracts/Models/UserRegistrationModel.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "AccessTokenCapUtc",
+      "type": "DateTime?",
+      "path": "Modules/Users/Contracts/Models/UserSessionPrincipalModel.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "AccessTokenCapUtc",
+      "type": "DateTime?",
+      "path": "Modules/Users/Domain/Common/UserAuthenticationPrivileges.cs",
+      "line": 6
     },
     {
       "category": "credential",
@@ -1191,14 +1219,14 @@
       "name": "BillingWebhookInbox",
       "type": "BillingRenewal,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 27
+      "line": 28
     },
     {
       "category": "financial",
       "name": "Billing",
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 61
+      "line": 71
     },
     {
       "category": "financial",
@@ -2150,7 +2178,14 @@
       "name": "FastingNotifications",
       "type": "PaddleNotificationRecovery,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 29
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "FastingTelemetryCleanup",
+      "type": "MarketingAttributionCleanup,",
+      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
+      "line": 38
     },
     {
       "category": "health",
@@ -7708,7 +7743,7 @@
       "name": "EmailOutbox",
       "type": "ImageObjectDeletionOutbox,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "identity",
@@ -8710,6 +8745,13 @@
       "type": "DateTime",
       "path": "Modules/Users/Contracts/Models/UserRegistrationModel.cs",
       "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string?",
+      "path": "Modules/Users/Contracts/Models/UserSessionPrincipalModel.cs",
+      "line": 6
     },
     {
       "category": "identity",

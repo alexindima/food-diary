@@ -48,6 +48,11 @@ public sealed class ActiveSessionProjectionIntegrationTests(PostgresDatabaseFixt
             () => Assert.Equal(all.Select(session => session.Id), pages.Select(session => session.Id)),
             () => Assert.Empty(context.ChangeTracker.Entries()));
         Assert.Equal(all.Select(session => session.Id), (await repository.GetActiveByUserIdAsync(owner.Id)).Select(session => session.Id));
+        foreach (UserRefreshTokenSession session in await context.UserRefreshTokenSessions.Where(session => session.UserId == owner.Id).ToListAsync()) {
+            bool expected = all.Any(active => active.Id == session.Id);
+            Assert.True(await repository.IsActiveAsync(owner.Id, session.Id) == expected,
+                "Session access checks must enforce explicit and legacy expiration, including the exact expiry boundary.");
+        }
     }
 
     [RequiresDockerFact]

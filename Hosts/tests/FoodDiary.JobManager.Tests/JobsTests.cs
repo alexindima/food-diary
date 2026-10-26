@@ -1131,6 +1131,15 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task RecurringJobsHostedService_RegistersSessionRetentionCleanup() {
+        var manager = new RecordingRecurringJobManager();
+        var verifier = new RecordingRecurringJobRegistrationVerifier();
+        await CreateRecurringJobsHostedService(manager, verifier).StartAsync(CancellationToken.None);
+        Assert.True(manager.JobIds.Contains("user-sessions-cleanup", StringComparer.Ordinal),
+            "Expired and revoked session retention cleanup must be scheduled.");
+    }
+
+    [Fact]
     public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new RecordingRecurringJobRegistrationVerifier();
@@ -1153,6 +1162,7 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.UserLoginEventsCleanup,
+                "user-sessions-cleanup",
                 RecurringJobIds.MarketingAttributionCleanup,
                 RecurringJobIds.FastingTelemetryCleanup,
                 RecurringJobIds.ClientTaskReminders,
@@ -1174,6 +1184,7 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.AchievementEvaluationOutbox,
                 RecurringJobIds.UserLoginEventsCleanup,
+                "user-sessions-cleanup",
                 RecurringJobIds.MarketingAttributionCleanup,
                 RecurringJobIds.FastingTelemetryCleanup,
                 RecurringJobIds.ClientTaskReminders,

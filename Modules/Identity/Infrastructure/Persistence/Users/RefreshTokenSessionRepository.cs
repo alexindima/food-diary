@@ -17,6 +17,67 @@ public sealed class RefreshTokenSessionRepository(
     TimeProvider timeProvider,
     IOptions<JwtOptions> jwtOptions,
     Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+    public async Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        return await sessions.AsNoTracking().Where(session => session.Id == id)
+            .Select(session => new BrowserSessionProof(session.Id, session.UserId, session.RefreshTokenHash,
+                session.BrowserSecurityVersion, session.ExpiresAtUtc, session.RevokedAtUtc, session.LastRotatedAtUtc,
+                session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled))
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<bool> TryRecordBrowserActivityAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime lastActiveBeforeUtc, CancellationToken cancellationToken = default) {
+        if (proof.SecurityVersion is not { } version) {
+            return false;
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
+                session.RevokedAtUtc == null && session.ExpiresAtUtc > nowUtc && session.BrowserSecurityVersion == version &&
+                session.RefreshTokenHash == proof.CredentialHash && session.LastRotatedAtUtc <= lastActiveBeforeUtc)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.LastRotatedAtUtc, nowUtc)
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+        return affected == 1;
+    }
+
+    public async Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default) {
+        if (proof.SecurityVersion is not { } version || proof.ExpiresAtUtc is not { } previous || previous <= nowUtc || expiresAtUtc <= previous) {
+            return false;
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
+                session.BrowserSlidingExpirationEnabled && session.RevokedAtUtc == null && session.ExpiresAtUtc == previous &&
+                session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.ExpiresAtUtc, expiresAtUtc)
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+        return affected == 1;
+    }
+
+    public async Task<int> DeleteInactiveBeforeAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(batchSize);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(batchSize, 1000);
+        if (olderThanUtc.Kind != DateTimeKind.Utc || olderThanUtc > timeProvider.GetUtcNow().UtcDateTime) {
+            throw new ArgumentOutOfRangeException(nameof(olderThanUtc), "Session retention requires a past UTC cutoff.");
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        JwtOptions options = jwtOptions.Value;
+        DateTime regularCutoff = olderThanUtc.AddDays(-(options.RefreshTokenExpirationDays > 0 ? options.RefreshTokenExpirationDays : 7));
+        DateTime rememberedCutoff = olderThanUtc.AddDays(-(options.RememberMeRefreshTokenExpirationDays > 0 ? options.RememberMeRefreshTokenExpirationDays : 90));
+        return await sessions.Where(session => session.RevokedAtUtc <= olderThanUtc || session.ExpiresAtUtc <= olderThanUtc ||
+                (session.ExpiresAtUtc == null &&
+                    ((session.RememberMe && session.LastRotatedAtUtc <= rememberedCutoff) ||
+                     (!session.RememberMe && session.LastRotatedAtUtc <= regularCutoff))))
+            .OrderBy(session => session.CreatedAtUtc).ThenBy(session => session.Id).Take(batchSize)
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private IQueryable<UserRefreshTokenSession> GetUnexpiredSessions(UserId userId) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         JwtOptions options = jwtOptions.Value;
@@ -67,8 +128,8 @@ public sealed class RefreshTokenSessionRepository(
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await sessions.AsNoTracking().AnyAsync(
-            session => session.UserId == userId && session.Id == sessionId && session.RevokedAtUtc == null,
+        return await GetUnexpiredSessions(userId).AsNoTracking().AnyAsync(
+            session => session.Id == sessionId,
             cancellationToken).ConfigureAwait(false);
     }
 

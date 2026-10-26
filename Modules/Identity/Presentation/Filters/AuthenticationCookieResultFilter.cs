@@ -7,6 +7,8 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.CreateBrows
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Results;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Presentation.Filters;
 
@@ -15,7 +17,9 @@ public sealed class AuthenticationCookieResultFilter(
     BrowserSessionCookieService browserCookies,
     ISender sender) : IAsyncResultFilter {
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next) {
-        if (context.Result is ObjectResult { Value: AuthenticationHttpResponse authentication } response &&
+        if (context.Result is ObjectResult { Value: AuthenticationHttpResponse { BrowserSession: { } issued } direct } directResponse) {
+            SetIssuedSession(context.HttpContext, directResponse, direct, issued);
+        } else if (context.Result is ObjectResult { Value: AuthenticationHttpResponse authentication } response &&
             !string.IsNullOrEmpty(authentication.RefreshToken)) {
             string path = context.HttpContext.Request.Path.Value ?? string.Empty;
             bool bot = path.EndsWith("/telegram/bot/auth", StringComparison.OrdinalIgnoreCase);
@@ -53,5 +57,16 @@ public sealed class AuthenticationCookieResultFilter(
         }
 
         await next().ConfigureAwait(false);
+    }
+
+    private void SetIssuedSession(HttpContext context, ObjectResult response, AuthenticationHttpResponse authentication, IssuedBrowserSession session) {
+        browserCookies.Set(context, session);
+        if (!session.IsAdmin && context.Request.Cookies.ContainsKey(RefreshTokenCookieService.CookieName)) {
+            refreshTokenCookies.Delete(context);
+        }
+        response.Value = authentication with {
+            AccessToken = null, RefreshToken = string.Empty, Roles = session.Roles.ToArray(),
+            SessionId = session.SessionId.ToString("D"), RememberMe = session.RememberMe,
+        };
     }
 }

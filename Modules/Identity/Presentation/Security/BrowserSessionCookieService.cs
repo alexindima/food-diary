@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using Microsoft.AspNetCore.Http;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Presentation.Security;
 
@@ -22,6 +23,10 @@ public sealed class BrowserSessionCookieService {
 
     public void Set(HttpContext context, BrowserSessionModel session, bool admin = false) =>
         context.Response.Cookies.Append(CookieName(context, admin), session.Credential,
+            Options(context, session.RememberMe ? new DateTimeOffset(session.ExpiresAtUtc) : null));
+
+    public void Set(HttpContext context, IssuedBrowserSession session) =>
+        context.Response.Cookies.Append(CookieName(context, session.IsAdmin), session.Credential,
             Options(context, session.RememberMe ? new DateTimeOffset(session.ExpiresAtUtc) : null));
 
     public void Delete(HttpContext context) => context.Response.Cookies.Delete(CookieName(context), Options(context, expires: null));

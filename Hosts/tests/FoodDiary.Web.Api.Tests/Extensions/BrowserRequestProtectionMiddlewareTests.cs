@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using FoodDiary.Modules.Identity.Presentation.Security;
+using FoodDiary.Modules.Identity.Contracts.Authentication.Common;
 using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,26 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class BrowserRequestProtectionMiddlewareTests {
+    [Fact]
+    public async Task ExplicitTelegramLogout_DoesNotCompareItsSelectorWithTheUnrelatedWebsiteCookie() {
+        var context = new DefaultHttpContext();
+        context.Request.Scheme = "https";
+        context.Request.Host = new HostString("fooddiary.example");
+        context.Request.Path = "/api/v1/auth/logout";
+        context.Request.Method = HttpMethods.Post;
+        context.Request.Headers.XRequestedWith = "XMLHttpRequest";
+        context.Request.Headers[BrowserSessionCookieService.ClientHeader] = "telegram";
+        context.Request.Headers[BrowserSessionCookieService.SessionHeader] = Guid.NewGuid().ToString("D");
+        context.Request.Headers.Cookie = $"__Host-{BrowserSessionCookieService.BrowserCookieName}={BrowserSessionCredential.Create(Guid.NewGuid())}";
+        context.Response.Body = new MemoryStream();
+        bool invoked = false;
+        var middleware = new BrowserRequestProtectionMiddleware(_ => { invoked = true; return Task.CompletedTask; });
+
+        await middleware.InvokeAsync(context, CorsOptionsFactory.Create(new ApiCorsOptions { Origins = [] }), Substitute.For<IWebHostEnvironment>());
+
+        Assert.True(invoked, "Explicit Telegram logout must reach its own refresh-session proof check.");
+    }
+
     [Theory]
     [InlineData(null, null, false)]
     [InlineData("XMLHttpRequest", "https://evil.example", false)]

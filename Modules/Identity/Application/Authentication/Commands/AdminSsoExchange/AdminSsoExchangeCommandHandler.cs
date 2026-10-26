@@ -46,6 +46,6 @@ public sealed class AdminSsoExchangeCommandHandler(
         IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
             .ConfigureAwait(false);
-        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

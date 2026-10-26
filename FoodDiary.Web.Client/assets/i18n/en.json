@@ -1,5 +1,13 @@
 {
+    "SESSION_RECOVERY": {
+        "TITLE": "Connection needed",
+        "RESTORE_UNAVAILABLE": "We could not check your sign-in session. Your session has not been rejected. Check your connection and try again; if you have made several attempts, wait a moment.",
+        "LOGOUT_PENDING": "You have left this app, but the server has not confirmed sign-out. Reconnect and retry to finish signing out. This device will not automatically sign back into that session.",
+        "RETRY": "Try again"
+    },
     "ADMIN_AUTH": {
+        "SESSION_UNAVAILABLE_TITLE": "Could not check your admin session",
+        "SESSION_UNAVAILABLE_MESSAGE": "The session check is temporarily unavailable. Check your connection and try again. If you have made several attempts, wait a moment before retrying.",
         "RATE_LIMITED_TITLE": "Sign-in is temporarily paused",
         "RATE_LIMITED_MESSAGE": "There have been too many sign-in requests. Wait a moment and try signing in again."
     },

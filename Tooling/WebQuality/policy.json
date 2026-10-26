@@ -951,7 +951,7 @@
       "statement": "Review deployed cookie/header policies and stage stricter CSP and Trusted Types against real integrations.",
       "severity": "error",
       "scopes": ["client", "admin"],
-      "procedure": "Inspect actual HTTPS headers, refresh-cookie HttpOnly/Secure/SameSite/path and expiration, logout and cross-tab ownership. Existing API security-header/cookie tests run in the backend CI. The frontend nginx CSP still permits unsafe-inline for current startup/prerender and OAuth/provider dependencies; this is an explicit compatibility limitation, not strict CSP compliance. Review a nonce/hash and Trusted Types rollout with Google/Telegram/Paddle, Angular hydration and every published locale before enforcement. Record deployed revision and evidence; static source checks cannot certify reverse-proxy configuration."
+      "procedure": "Inspect actual HTTPS cookie attributes, expiration, logout recovery and cross-tab ownership. Website/admin secrets use HttpOnly cookies; explicit Mini App access JWTs are memory-only. Verify that every static document has its build-owned script hash meta policy before scripts and that SSR sends a fresh nonce header and no-store. Edge compatibility headers combine with these policies. Real Nginx/Chromium enforcement tests do not certify deployed headers, provider/device flows, Trusted Types or a nonce-only strict-dynamic policy. Record deployed revision and Google/Telegram/Paddle, hydration and locale evidence; see docs/frontend/SCRIPT_CSP.md."
     }
   ],
   "exceptions": [],
@@ -3113,9 +3113,11 @@
         "owner-admin-platform",
         "privacy-review"
       ],
-      "reason": "Health/account data requires minimal first-party telemetry, bounded storage and explicit permission actions. Session and telemetry owners provide executable protections. Data-purpose adequacy, consent language and deletion UX remain human review; passing source checks is not a privacy certification. Newly issued bearer tokens stay in tab storage; existing HttpOnly refresh-cookie restore and non-secret cross-tab ownership hints are preserved. Legacy persistent credentials migrate once. Telemetry URL/text masking, low-priority keepalive delivery and official full-lifetime vitals have executed owner assertions.",
+      "reason": "Health/account data requires minimal first-party telemetry, bounded storage and explicit permission actions. Session and telemetry owners provide executable protections. Data-purpose adequacy, consent language and deletion UX remain human review; passing source checks is not a privacy certification. Ordinary website/admin session credentials are HttpOnly; explicit Mini App bearer tokens stay in memory. Legacy stored credentials are discarded. Pending logout stores only public selectors and prevents implicit restoration while revocation is unconfirmed. Telemetry URL/text masking, low-priority keepalive delivery and official full-lifetime vitals have executed owner assertions.",
       "evidence": [
-        "FoodDiary.Web.Client/src/app/services/token-storage.service.ts",
+        "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+        "FoodDiary.Web.Client/src/app/shared/auth/browser-session-state.service.ts",
+        "FoodDiary.Web.Client/src/app/shared/auth/auth-recovery-state.service.ts",
         "FoodDiary.Web.Client/src/app/services/frontend-observability.service.ts",
         "FoodDiary.Web.Client/src/app/features/profile"
       ],
@@ -3633,7 +3635,7 @@
         "owner-admin-platform",
         "security-policy-review"
       ],
-      "reason": "Use Angular sanitization and safe DOM construction, validate origin boundaries and retain secure server cookie/transport policies. Stage any stricter CSP/Trusted Types rollout against actual framework, OAuth and inline-prerender dependencies before enforcement. Newly issued bearer tokens stay in tab storage; existing HttpOnly refresh-cookie restore and non-secret cross-tab ownership hints are preserved. Legacy persistent credentials migrate once. Telemetry URL/text masking, low-priority keepalive delivery and official full-lifetime vitals have executed owner assertions.",
+      "reason": "Use Angular sanitization and safe DOM construction, validate origin boundaries and retain secure server cookie/transport policies. Stage any stricter CSP/Trusted Types rollout against actual framework, OAuth and inline-prerender dependencies before enforcement. Website/admin credentials use separate HttpOnly cookies; explicit Mini App access JWTs are memory-only and its refresh-cookie protocol remains separate. Browser storage holds public ownership/context/pending-logout selectors, and legacy stored credentials are discarded. Telemetry URL/text masking, low-priority keepalive delivery and official full-lifetime vitals have executed owner assertions.",
       "evidence": [
         "FoodDiary.Web.Client/nginx.conf",
         "FoodDiary.Web.Client/src/app/features/auth",

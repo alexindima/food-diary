@@ -42,11 +42,11 @@ public sealed class ConfirmPasswordResetCommandHandler(
 
         UserAuthenticationPrincipalModel principal = resetResult.Value;
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken)
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
             .ConfigureAwait(false);
 
         auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
 
-        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

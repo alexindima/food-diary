@@ -65,7 +65,7 @@ public sealed class RefreshTokenCommandHandler(
         if (tokens is null) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
-        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 
     private bool VerifyRefreshToken(string refreshToken, string refreshTokenHash) =>

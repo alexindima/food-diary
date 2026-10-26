@@ -1,0 +1,14 @@
+@if (recovery.issue() !== null) {
+    <div class="auth-recovery-notice" role="status" aria-live="polite" [attr.aria-busy]="recovery.busy()">
+        <fd-ui-inline-alert
+            appearance="notice"
+            severity="warning"
+            [title]="'SESSION_RECOVERY.TITLE' | translate"
+            [message]="
+                (recovery.issue() === 'logout' ? 'SESSION_RECOVERY.LOGOUT_PENDING' : 'SESSION_RECOVERY.RESTORE_UNAVAILABLE') | translate
+            "
+            [primaryActionLabel]="recovery.busy() ? null : ('SESSION_RECOVERY.RETRY' | translate)"
+            (primaryAction)="retryAsync()"
+        />
+    </div>
+}

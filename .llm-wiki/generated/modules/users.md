@@ -39,15 +39,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 98
+- Public contract files: 100
 - Observed external consumer groups: 33
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 98
-- Interfaces: 36
-- DTO/read-model/projection types: 37
+- Public contract types: 100
+- Interfaces: 37
+- DTO/read-model/projection types: 38
 - Enums: 2
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
@@ -81,7 +81,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserGamificationProfileReadService`
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
-- ... 68 more type(s)
+- ... 70 more type(s)
 
 ## Extraction Readiness
 
@@ -101,6 +101,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/UserSessionCleanupJobTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/AiConsentTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CleanupDeletedUsersCommandHandlerTests.cs`
@@ -130,7 +131,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/CopiedUserUpdateTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/FastingReminderSettingsTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/MiscDomainInvariantTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/PremiumTrialOverflowTests.cs`
 
 ## Working Rule
 

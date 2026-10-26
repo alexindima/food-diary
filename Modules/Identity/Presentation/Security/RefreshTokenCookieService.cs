@@ -8,6 +8,18 @@ public sealed class RefreshTokenCookieService(IJwtTokenGenerator jwtTokenGenerat
 
     public string? Read(HttpContext context) => context.Request.Cookies[CookieName];
 
+    public string? GetSelectionErrorCode(HttpContext context, string? refreshToken) {
+        string expected = context.Request.Headers[BrowserSessionCookieService.SessionHeader].ToString();
+        if (expected.Length == 0) {
+            return null;
+        }
+        if (string.IsNullOrWhiteSpace(refreshToken) || jwtTokenGenerator.ValidateToken(refreshToken) is not { refreshSessionId: { } sessionId }) {
+            return "Authentication.InvalidToken";
+        }
+        return Guid.TryParseExact(expected, "D", out Guid expectedId) && expectedId == sessionId.Value
+            ? null : "Authentication.SessionChanged";
+    }
+
     public void Set(HttpContext context, string refreshToken) {
         DateTime expiresAtUtc = jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken);
         context.Response.Cookies.Append(CookieName, refreshToken, CreateOptions(context, new DateTimeOffset(expiresAtUtc)));

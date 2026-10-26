@@ -1,20 +1,32 @@
 import { join } from 'node:path';
 
 import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse } from '@angular/ssr/node';
-import express from 'express';
+import express, { type Request } from 'express';
+
+import { assertScriptCspReady, createSsrScriptPolicy } from './server/script-csp';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const DEFAULT_PORT = 4000;
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+const enforceScriptCsp = isMainModule(import.meta.url) || process.env['pm_id'] !== undefined;
+const requestNonces = new WeakMap<Request, string>();
 
 app.get('/health/ssr', (_req, res) => {
+    if (enforceScriptCsp) {
+        assertScriptCspReady();
+    }
     res.type('text/plain').send('Healthy');
 });
 
-app.use('/explore', (_req, res, next) => {
+app.use('/explore', (req, res, next) => {
     res.setHeader('Cache-Control', 'no-store');
+    if (enforceScriptCsp) {
+        const { nonce, policy } = createSsrScriptPolicy();
+        requestNonces.set(req, nonce);
+        res.setHeader('Content-Security-Policy', policy);
+    }
     next();
 });
 
@@ -46,7 +58,7 @@ app.use(
  */
 app.use((req, res, next) => {
     void angularApp
-        .handle(req)
+        .handle(req, { cspNonce: requestNonces.get(req) })
         .then(response => {
             if (response !== null) {
                 void writeResponseToNodeResponse(response, res);

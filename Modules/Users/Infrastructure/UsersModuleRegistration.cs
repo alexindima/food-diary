@@ -52,6 +52,8 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserAdminReadModelRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
         services.AddScoped<IUserAccessTokenSecurityReader>(provider => new UserAccessTokenSecurityReader(
             provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
+        services.AddScoped<IUserSessionPrincipalReader>(provider => new UserSessionPrincipalReader(
+            provider.GetRequiredService<UsersDbContext>().Users, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserRoleCatalogService>(provider => new UserRoleCatalogService(
             provider.GetRequiredService<UsersDbContext>().Roles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserRoleMembershipService>(provider => new UserRoleMembershipService(

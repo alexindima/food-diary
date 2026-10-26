@@ -1,14 +1,17 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminAuthSdk } from '../../../shared/api/sdk/generated/api/admin-auth.service';
 import { AdminSessionSdk } from '../../../shared/api/sdk/generated/api/admin-session.service';
-import { createSdkConnection } from '../../../shared/api/sdk/sdk-connection';
+import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
 
 type AdminSession = { id: string; roles: readonly string[] };
+const RESTORATION_TIMEOUT_MS = 30_000;
+const MAX_RETRY_AFTER_SECONDS = 3600;
+const MILLISECONDS_PER_SECOND = 1000;
 
 @Service()
 export class AdminAuthService {
@@ -18,7 +21,12 @@ export class AdminAuthService {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly session = signal<AdminSession | null>(null);
     private readonly ssoRateLimitedSignal = signal(false);
+    private readonly sessionUnavailableSignal = signal(false);
+    private generation = 0;
+    private retryAt = 0;
+    private restoration: { generation: number; promise: Promise<void> } | null = null;
     public readonly ssoRateLimited = this.ssoRateLimitedSignal.asReadonly();
+    public readonly sessionUnavailable = this.sessionUnavailableSignal.asReadonly();
 
     public constructor() {
         this.clearLegacyCredentials();
@@ -37,18 +45,67 @@ export class AdminAuthService {
     }
 
     public invalidateSession(): void {
+        this.generation++;
         this.session.set(null);
+        this.sessionUnavailableSignal.set(false);
+        this.retryAt = 0;
     }
 
     public async restoreSessionAsync(force = false): Promise<void> {
-        if (!this.isBrowser || (!force && this.session() !== null)) {
+        if (!this.isBrowser || Date.now() < this.retryAt || (!force && this.session() !== null && !this.sessionUnavailable())) {
             return;
         }
-        try {
-            this.applySession(await firstValueFrom(this.sessionSdk.client.postAuthSession({ version: this.sessionSdk.version })));
-        } catch {
-            this.session.set(null);
+        const generation = this.generation;
+        if (this.restoration?.generation === generation) {
+            return this.restoration.promise;
         }
+        const promise = this.restoreInternalAsync(this.getSessionId(), generation).finally(() => {
+            if (this.restoration?.promise === promise) {
+                this.restoration = null;
+            }
+        });
+        this.restoration = { generation, promise };
+        return promise;
+    }
+
+    private async restoreInternalAsync(expected: string | null, generation: number): Promise<void> {
+        try {
+            const headers = expected === null ? undefined : new HttpHeaders({ 'X-FoodDiary-Session': expected });
+            const response = await firstValueFrom(
+                this.sessionSdk.client
+                    .postAuthSession({ version: this.sessionSdk.version }, 'body', false, sdkRequestOptions(headers))
+                    .pipe(timeout(RESTORATION_TIMEOUT_MS)),
+            );
+            if (generation !== this.generation) {
+                return;
+            }
+            if (expected !== null && response.sessionId !== expected) {
+                this.invalidateSession();
+                return;
+            }
+            this.applySession(response);
+            this.sessionUnavailableSignal.set(false);
+            this.retryAt = 0;
+        } catch (error: unknown) {
+            if (generation !== this.generation) {
+                return;
+            }
+            this.handleRestorationFailure(error);
+        }
+    }
+
+    private handleRestorationFailure(error: unknown): void {
+        if (
+            error instanceof HttpErrorResponse &&
+            (error.status === Number(HttpStatusCode.Unauthorized) || error.status === Number(HttpStatusCode.Forbidden))
+        ) {
+            this.invalidateSession();
+            return;
+        }
+        this.sessionUnavailableSignal.set(true);
+        const seconds = error instanceof HttpErrorResponse ? Number(error.headers.get('Retry-After')) : 0;
+        this.retryAt =
+            Number.isFinite(seconds) && seconds > 0 ? Date.now() + Math.min(seconds, MAX_RETRY_AFTER_SECONDS) * MILLISECONDS_PER_SECOND : 0;
     }
 
     public async applySsoFromQueryAsync(): Promise<void> {
@@ -91,24 +148,32 @@ export class AdminAuthService {
 
     public async tryUpgradeToAdminAsync(): Promise<boolean> {
         await this.restoreSessionAsync(true);
-        return this.isAdmin();
+        return !this.sessionUnavailable() && this.isAdmin();
     }
 
     public async exchangeSsoCodeAsync(code: string): Promise<boolean> {
+        const generation = ++this.generation;
+        this.sessionUnavailableSignal.set(false);
+        this.retryAt = 0;
         this.ssoRateLimitedSignal.set(false);
         try {
-            this.applySession(
-                await firstValueFrom(
-                    this.sdk.client.postAuthAdminSsoExchange({
-                        version: this.sdk.version,
-                        adminSsoExchangeHttpRequest: { code },
-                    }),
-                ),
+            const response = await firstValueFrom(
+                this.sdk.client.postAuthAdminSsoExchange({
+                    version: this.sdk.version,
+                    adminSsoExchangeHttpRequest: { code },
+                }),
             );
+            if (generation !== this.generation) {
+                return false;
+            }
+            this.applySession(response);
             this.clearLegacyCredentials();
             return this.isAdmin();
         } catch (error: unknown) {
-            this.session.set(null);
+            if (generation !== this.generation) {
+                return false;
+            }
+            this.invalidateSession();
             this.ssoRateLimitedSignal.set(error instanceof HttpErrorResponse && error.status === Number(HttpStatusCode.TooManyRequests));
             return false;
         }

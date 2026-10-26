@@ -1,10 +1,19 @@
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Domain.Entities.Users;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Common;
 
 public interface IRefreshTokenSessionWriteRepository {
+    Task<int> DeleteInactiveBeforeAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default);
+
+    Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default);
+
+    Task<bool> TryRecordBrowserActivityAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime lastActiveBeforeUtc, CancellationToken cancellationToken = default);
+
+    Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default);
+
     Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default);
 
     Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);

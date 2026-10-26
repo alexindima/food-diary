@@ -15,7 +15,7 @@ public sealed class CookieSessionExpiryApiTests(CookieExpiryApiWebApplicationFac
     [RequiresDockerTheory]
     [InlineData(false, 30)]
     [InlineData(true, 90)]
-    public async Task BrowserSession_ExpiresAtItsOriginalBoundaryAndRestorationCannotExtendIt(bool rememberMe, int days) {
+    public async Task BrowserSession_ExpiresAtItsIdleBoundaryWithoutRestoration(bool rememberMe, int days) {
         factory.Clock.UtcNow = DateTimeOffset.FromUnixTimeSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
         DateTimeOffset started = factory.Clock.UtcNow;
         using HttpClient browser = CookieAuthenticationScenario.CreateBrowser(factory);
@@ -26,9 +26,6 @@ public sealed class CookieSessionExpiryApiTests(CookieExpiryApiWebApplicationFac
         Assert.Equal(started.AddDays(days), expiry);
         factory.Clock.UtcNow = expiry.AddTicks(-10);
         await CookieAuthenticationScenario.AssertIdentityAsync(browser, identity.Id);
-        using HttpResponseMessage before = await browser.PostAsync("/api/v1/auth/session", content: null);
-        Assert.Equal(HttpStatusCode.OK, before.StatusCode);
-        Assert.Equal(expiry, await ReadSessionExpiryAsync(browser));
         factory.Clock.UtcNow = expiry;
         await CookieAuthenticationScenario.AssertRejectedSessionAsync(browser);
     }

@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Users.Presentation.Contracts.Responses;
 using System.Text.Json.Serialization;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 
@@ -11,4 +12,5 @@ public sealed record AuthenticationHttpResponse(
     string? SessionId = null,
     string? ImpersonationContext = null,
     string? ImpersonationReason = null,
-    bool RememberMe = false);
+    bool RememberMe = false,
+    [property: JsonIgnore] IssuedBrowserSession? BrowserSession = null);

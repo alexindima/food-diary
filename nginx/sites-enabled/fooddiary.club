@@ -151,6 +151,8 @@ server {
     add_header_inherit merge;
 
     root /var/www/fooddiary.club/current;
+    # Script hashes travel with each static HTML release; SSR supplies its nonce
+    # policy. They combine with the compatibility header above (SCRIPT_CSP.md).
     index index.html;
 
     location ^~ /.well-known/acme-challenge/ {

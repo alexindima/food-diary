@@ -13,6 +13,16 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions SessionRestore { get; init; } = new() {
+        PermitLimit = 120,
+        WindowSeconds = 60,
+    };
+
+    public FixedWindowPolicyOptions SessionLogout { get; init; } = new() {
+        PermitLimit = 30,
+        WindowSeconds = 60,
+    };
+
     public FixedWindowPolicyOptions Ai { get; init; } = new() {
         PermitLimit = 10,
         WindowSeconds = 60,
@@ -69,6 +79,10 @@ public sealed class ApiRateLimitingOptions {
     };
 
     public static bool HasValidAuth(ApiRateLimitingOptions options) => options.Auth.IsValid();
+
+    public static bool HasValidSessionRestore(ApiRateLimitingOptions options) => options.SessionRestore.IsValid();
+
+    public static bool HasValidSessionLogout(ApiRateLimitingOptions options) => options.SessionLogout.IsValid();
 
     public static bool HasValidImages(ApiRateLimitingOptions options) => options.Images.IsValid();
 

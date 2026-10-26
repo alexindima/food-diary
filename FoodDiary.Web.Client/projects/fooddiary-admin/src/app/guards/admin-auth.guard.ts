@@ -9,6 +9,12 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
 
     await authService.applySsoFromQueryAsync();
 
+    if (authService.sessionUnavailable()) {
+        return router.createUrlTree(['/unauthorized'], {
+            queryParams: { reason: 'unavailable', returnUrl: state.url },
+        });
+    }
+
     if (!authService.isAuthenticated()) {
         return router.createUrlTree(['/unauthorized'], {
             queryParams: { reason: 'unauthenticated', returnUrl: state.url },
@@ -17,6 +23,12 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
 
     if (!authService.isAdmin()) {
         const upgraded = await authService.tryUpgradeToAdminAsync();
+
+        if (authService.sessionUnavailable()) {
+            return router.createUrlTree(['/unauthorized'], {
+                queryParams: { reason: 'unavailable', returnUrl: state.url },
+            });
+        }
 
         if (upgraded && authService.isAdmin()) {
             return sanitizedAdminDestination(router, state.url);

@@ -8,6 +8,9 @@ public sealed record BrowserSessionModel(
     Guid SessionId,
     DateTime ExpiresAtUtc,
     bool RememberMe,
-    UserAuthenticationPrincipalModel Principal) {
+    UserAuthenticationPrincipalModel Principal,
+    bool SlidingExpirationEnabled = false,
+    DateTime CreatedAtUtc = default,
+    bool Renewed = false) {
     public override string ToString() => $"BrowserSessionModel {{ SessionId = {SessionId}, Credential = [redacted] }}";
 }

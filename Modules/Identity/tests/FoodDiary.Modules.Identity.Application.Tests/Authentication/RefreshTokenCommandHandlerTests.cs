@@ -397,6 +397,17 @@ public sealed class RefreshTokenCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRefreshTokenSessionRepository : IRefreshTokenSessionRepository {
+        public Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+        public Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> TryRecordBrowserActivityAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime lastActiveBeforeUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<int> DeleteInactiveBeforeAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
         private readonly List<UserRefreshTokenSession> _sessions = [];
 
         public InMemoryRefreshTokenSessionRepository() {

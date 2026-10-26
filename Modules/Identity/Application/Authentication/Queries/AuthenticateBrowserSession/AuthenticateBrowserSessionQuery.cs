@@ -5,6 +5,6 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Queries.AuthenticateBrowserSession;
 
-public sealed record AuthenticateBrowserSessionQuery([property: JsonIgnore] string? Credential) : IQuery<Result<BrowserSessionModel>> {
+public sealed record AuthenticateBrowserSessionQuery([property: JsonIgnore] string? Credential) : IQuery<Result<BrowserSessionIdentityModel>> {
     public override string ToString() => "AuthenticateBrowserSessionQuery { Credential = [redacted] }";
 }

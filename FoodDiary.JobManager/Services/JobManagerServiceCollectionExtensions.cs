@@ -15,6 +15,7 @@ public static class JobManagerServiceCollectionExtensions {
 
         private void AddJobManagerOptions(IConfiguration configuration) {
             services.AddAchievementOutboxOptions(configuration);
+            services.AddSessionCleanupOptions(configuration);
             services.AddOptions<ImageCleanupOptions>()
                 .Bind(configuration.GetSection(ImageCleanupOptions.SectionName))
                 .Validate(ImageCleanupOptions.HasValidConfiguration,
@@ -88,6 +89,13 @@ public static class JobManagerServiceCollectionExtensions {
                 .ValidateOnStart();
         }
 
+        private void AddSessionCleanupOptions(IConfiguration configuration) =>
+            services.AddOptions<UserSessionCleanupOptions>()
+                .Bind(configuration.GetSection(UserSessionCleanupOptions.SectionName))
+                .Validate(UserSessionCleanupOptions.HasValidConfiguration,
+                    "UserSessionCleanup requires positive retention, batch size 1-1000, max batches 1-100 and a Cron when enabled.")
+                .ValidateOnStart();
+
         private void AddAchievementOutboxOptions(IConfiguration configuration) {
             services.AddOptions<AchievementEvaluationOutboxOptions>()
                 .Bind(configuration.GetSection(AchievementEvaluationOutboxOptions.SectionName))
@@ -113,6 +121,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<AtomicCommandReceiptCleanupJob>();
             services.AddTransient<UserCleanupJob>();
             services.AddTransient<UserLoginEventCleanupJob>();
+            services.AddTransient<UserSessionCleanupJob>();
             services.AddTransient<MarketingAttributionCleanupJob>();
             services.AddTransient<FastingTelemetryCleanupJob>();
             services.AddTransient<ClientTaskReminderJob>();

@@ -212,6 +212,7 @@ public sealed class JobManagerGuardrailTests {
             Path.Combine(servicesRoot, "NotificationWebPushOutboxJob.cs"),
             Path.Combine(servicesRoot, "UserCleanupJob.cs"),
             Path.Combine(servicesRoot, "UserLoginEventCleanupJob.cs"),
+            Path.Combine(servicesRoot, "UserSessionCleanupJob.cs"),
         ];
 
         string[] violations = [.. migratedJobFiles
@@ -248,6 +249,7 @@ public sealed class JobManagerGuardrailTests {
             "ImageObjectDeletionOutbox",
             "NotificationWebPushOutbox",
             "UserLoginEventsCleanup",
+            "UserSessionsCleanup",
         ];
         string[] expectedJobTypes = [
             "BillingRenewalJob",
@@ -256,6 +258,7 @@ public sealed class JobManagerGuardrailTests {
             "ImageObjectDeletionOutboxJob",
             "NotificationWebPushOutboxJob",
             "UserLoginEventCleanupJob",
+            "UserSessionCleanupJob",
         ];
 
         foreach (string expectedJobId in expectedJobIds) {

@@ -15,12 +15,16 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.SignalR;
+using FoodDiary.Web.Api.Extensions.Filters;
 
 namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiAuthenticationServiceCollectionExtensions {
     extension(IServiceCollection services) {
         internal IServiceCollection AddApiAuthentication() {
+            services.AddSingleton<SessionSecurityHubFilter>();
+            services.AddSignalR(options => options.AddFilter<SessionSecurityHubFilter>());
             services.AddSingleton<IConfigureOptions<CorsOptions>, CorsOptionsSetup>();
             services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
             services.AddSingleton<IConfigureOptions<RateLimiterOptions>, RateLimiterOptionsSetup>();

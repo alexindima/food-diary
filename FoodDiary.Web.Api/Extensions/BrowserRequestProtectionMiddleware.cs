@@ -23,7 +23,7 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
         }
         string origin = context.Request.Headers.Origin.ToString();
         string expectedSession = context.Request.Headers[BrowserSessionCookieService.SessionHeader].ToString();
-        if (!bearer && expectedSession.Length > 0 &&
+        if (!bearer && context.Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" && expectedSession.Length > 0 &&
             BrowserSessionCredential.TryReadSessionId(context.Request.Cookies[BrowserSessionCookieService.CookieName(context)], out Guid actualSession) &&
             !string.Equals(expectedSession, actualSession.ToString("D"), StringComparison.Ordinal)) {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;

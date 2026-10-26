@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6757,
+    "productionFiles": 6776,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 1023,
-    "criticalSymbolsWithTestReferences": 980,
+    "criticalSymbols": 1024,
+    "criticalSymbolsWithTestReferences": 981,
     "criticalSymbolsWithoutTestReferences": 43,
     "debtMarkers": 12
   },
@@ -295,6 +295,14 @@
       "structuralRiskScore": 162.2
     },
     {
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "nonBlankLines": 358,
+      "decisionPoints": 102,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 160.16
+    },
+    {
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
       "nonBlankLines": 562,
       "decisionPoints": 97,
@@ -317,6 +325,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 155.44
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "nonBlankLines": 595,
+      "decisionPoints": 94,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 152.9
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionExperiment.ps1",
@@ -517,14 +533,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 118.56
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 301,
-      "decisionPoints": 75,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.52
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
@@ -759,22 +767,6 @@
       "structuralRiskScore": 103.78
     },
     {
-      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 383,
-      "decisionPoints": 64,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 103.66
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 460,
-      "decisionPoints": 62,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 102.2
-    },
-    {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
       "nonBlankLines": 817,
       "decisionPoints": 57,
@@ -805,6 +797,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 99.24
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
+      "nonBlankLines": 377,
+      "decisionPoints": 61,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 99.04
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-lessons.service.ts",
@@ -3794,11 +3794,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "nonBlankLines": 120,
+      "nonBlankLines": 128,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.4
+      "structuralRiskScore": 2.56
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetry.cs",
@@ -3898,19 +3898,19 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.78
+      "structuralRiskScore": 0.82
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-      "nonBlankLines": 148,
+      "nonBlankLines": 155,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.96
+      "structuralRiskScore": 12.1
     },
     {
       "path": "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
@@ -3954,6 +3954,22 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.24
+    },
+    {
+      "path": "FoodDiary.JobManager/Services/UserSessionCleanupJob.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.6
+    },
+    {
+      "path": "FoodDiary.JobManager/Services/UserSessionCleanupOptions.cs",
       "nonBlankLines": 12,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -4210,11 +4226,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/PresentationPolicyNames.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/PresentationQueryLimits.cs",
@@ -5322,11 +5338,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "nonBlankLines": 111,
+      "nonBlankLines": 115,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.22
+      "structuralRiskScore": 20.3
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthorizationMiddlewareResultHandler.cs",
@@ -5362,11 +5378,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
-      "nonBlankLines": 113,
+      "nonBlankLines": 117,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
+      "structuralRiskScore": 2.34
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
@@ -5403,10 +5419,10 @@
     {
       "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",
       "nonBlankLines": 51,
-      "decisionPoints": 28,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.02
+      "structuralRiskScore": 44.52
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/DevelopmentRuntimeHeadersMiddleware.cs",
@@ -5415,6 +5431,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 11.56
+    },
+    {
+      "path": "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.02
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
@@ -5530,11 +5554,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "nonBlankLines": 75,
+      "nonBlankLines": 85,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.5
+      "structuralRiskScore": 4.7
     },
     {
       "path": "FoodDiary.Web.Api/Options/CorsOptionsSetup.cs",
@@ -5578,11 +5602,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Options/RateLimiterOptionsSetup.cs",
-      "nonBlankLines": 95,
+      "nonBlankLines": 99,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.9
+      "structuralRiskScore": 7.98
     },
     {
       "path": "FoodDiary.Web.Api/Program.cs",
@@ -7322,19 +7346,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.interceptor.ts",
-      "nonBlankLines": 64,
-      "decisionPoints": 11,
+      "nonBlankLines": 77,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.78
+      "structuralRiskScore": 22.54
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-auth/lib/admin-auth.service.ts",
-      "nonBlankLines": 126,
-      "decisionPoints": 23,
+      "nonBlankLines": 189,
+      "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.02
+      "structuralRiskScore": 60.78
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/admin-billing.routes.ts",
@@ -8098,11 +8122,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.ts",
-      "nonBlankLines": 67,
-      "decisionPoints": 10,
+      "nonBlankLines": 91,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.34
+      "structuralRiskScore": 25.82
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-retention/admin-retention.routes.ts",
@@ -8362,11 +8386,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/guards/admin-auth.guard.ts",
-      "nonBlankLines": 37,
-      "decisionPoints": 8,
+      "nonBlankLines": 47,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.74
+      "structuralRiskScore": 15.94
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/admin-api-error.ts",
@@ -9714,11 +9738,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/app.config.server.ts",
-      "nonBlankLines": 34,
-      "decisionPoints": 1,
+      "nonBlankLines": 36,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
+      "structuralRiskScore": 3.72
     },
     {
       "path": "FoodDiary.Web.Client/src/app/app.config.ts",
@@ -9895,6 +9919,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 24.1
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/components/shared/auth-recovery-notice/auth-recovery-notice.ts",
+      "nonBlankLines": 49,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/badge/badge.ts",
@@ -14522,11 +14554,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
-      "nonBlankLines": 27,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/public/contracts/auth-dialog.ts",
@@ -16370,19 +16402,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/guards/auth.guard.ts",
-      "nonBlankLines": 25,
-      "decisionPoints": 3,
+      "nonBlankLines": 31,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5
+      "structuralRiskScore": 6.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/guards/dietologist.guard.ts",
-      "nonBlankLines": 24,
-      "decisionPoints": 3,
+      "nonBlankLines": 31,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.98
+      "structuralRiskScore": 6.62
     },
     {
       "path": "FoodDiary.Web.Client/src/app/guards/logged-in.guard.ts",
@@ -16402,11 +16434,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "nonBlankLines": 163,
-      "decisionPoints": 30,
+      "nonBlankLines": 169,
+      "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 48.26
+      "structuralRiskScore": 49.88
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts",
@@ -16434,11 +16466,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 460,
-      "decisionPoints": 62,
+      "nonBlankLines": 595,
+      "decisionPoints": 94,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 102.2
+      "structuralRiskScore": 152.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -19353,6 +19385,14 @@
       "structuralRiskScore": 24.28
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/auth-recovery-state.service.ts",
+      "nonBlankLines": 98,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.96
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/auth.constants.ts",
       "nonBlankLines": 19,
       "decisionPoints": 0,
@@ -20610,11 +20650,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "nonBlankLines": 242,
+      "nonBlankLines": 244,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.34
+      "structuralRiskScore": 30.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/admin-panel-launcher.service.ts",
@@ -20778,11 +20818,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/server.ts",
-      "nonBlankLines": 68,
-      "decisionPoints": 8,
+      "nonBlankLines": 79,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.36
+      "structuralRiskScore": 18.08
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/server/script-csp.ts",
+      "nonBlankLines": 21,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.92
     },
     {
       "path": "FoodDiary.Web.Client/src/test-setup.ts",
@@ -35690,11 +35738,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.84
+      "structuralRiskScore": 0.94
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
@@ -35810,11 +35858,35 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationCredentialKind.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/BrowserSessionProof.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/IssuedBrowserSession.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
@@ -35823,6 +35895,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationSessionLifetimePolicy.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
@@ -35834,11 +35914,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Identity/Application/AssemblyInfo.cs",
@@ -35969,6 +36049,14 @@
       "structuralRiskScore": 3.94
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Commands/CleanupSessions/CleanupSessionsCommandHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.46
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramAuthentication/CompleteTelegramAuthenticationCommand.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
@@ -36010,11 +36098,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
@@ -36578,19 +36666,27 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Models/BrowserSessionIdentityModel.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Identity/Application/Authentication/Models/BrowserSessionModel.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Identity/Application/Authentication/Models/TelegramAuthenticationIntentModel.cs",
@@ -36714,19 +36810,19 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "nonBlankLines": 147,
-      "decisionPoints": 8,
+      "nonBlankLines": 185,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.94
+      "structuralRiskScore": 27.7
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "nonBlankLines": 93,
-      "decisionPoints": 29,
+      "nonBlankLines": 144,
+      "decisionPoints": 49,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.36
+      "structuralRiskScore": 76.38
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -36850,6 +36946,14 @@
     },
     {
       "path": "Modules/Identity/Contracts/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommand.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Identity/Contracts/Authentication/Commands/CleanupSessions/CleanupSessionsCommand.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -37058,11 +37162,11 @@
     },
     {
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "nonBlankLines": 146,
-      "decisionPoints": 18,
+      "nonBlankLines": 148,
+      "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.92
+      "structuralRiskScore": 31.46
     },
     {
       "path": "Modules/Identity/Domain/ValueObjects/Ids/RefreshTokenSessionId.cs",
@@ -37079,6 +37183,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.28
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Authentication/AuthenticationSessionLifetimePolicy.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.64
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Authentication/BrowserSessionRenewalOptions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.66
     },
     {
       "path": "Modules/Identity/Infrastructure/Authentication/ImpersonationTokenIssuer.cs",
@@ -37098,11 +37218,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.4
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityEmailOptionsRegistration.cs",
@@ -37194,11 +37314,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 301,
-      "decisionPoints": 75,
+      "nonBlankLines": 358,
+      "decisionPoints": 102,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 118.52
+      "structuralRiskScore": 160.16
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -37458,11 +37578,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 6,
+      "nonBlankLines": 91,
+      "decisionPoints": 9,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.66
+      "structuralRiskScore": 17.32
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramBackupEmailController.cs",
@@ -37490,11 +37610,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 2,
+      "nonBlankLines": 41,
+      "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 7.32
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
@@ -37506,19 +37626,19 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "nonBlankLines": 225,
-      "decisionPoints": 1,
+      "nonBlankLines": 236,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6
+      "structuralRiskScore": 10.72
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpResponseMappings.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
+      "structuralRiskScore": 0.94
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
@@ -37730,11 +37850,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
@@ -37786,11 +37906,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 13,
+      "nonBlankLines": 68,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.58
+      "structuralRiskScore": 25.36
     },
     {
       "path": "Modules/Identity/Presentation/Filters/SuppressRefreshTokenCookieAttribute.cs",
@@ -37834,11 +37954,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Security/BrowserSessionCookieService.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 34,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.1
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Identity/Presentation/Security/ImpersonationCookieService.cs",
@@ -37850,11 +37970,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
+      "nonBlankLines": 33,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 6.66
     },
     {
       "path": "Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs",
@@ -47978,11 +48098,11 @@
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 383,
-      "decisionPoints": 64,
+      "nonBlankLines": 377,
+      "decisionPoints": 61,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 103.66
+      "structuralRiskScore": 99.04
     },
     {
       "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
@@ -48279,6 +48399,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Contracts/Common/IUserSessionPrincipalReader.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Users/Contracts/Common/IUserSessionRevocationService.cs",
@@ -48601,6 +48729,14 @@
       "structuralRiskScore": 0.16
     },
     {
+      "path": "Modules/Users/Contracts/Models/UserSessionPrincipalModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
       "path": "Modules/Users/Contracts/Models/UserTdeeProfileModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -48831,6 +48967,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Users/Domain/Common/UserAuthenticationPrivileges.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.86
     },
     {
       "path": "Modules/Users/Domain/Entities/Role.cs",
@@ -49345,6 +49489,14 @@
       "structuralRiskScore": 18.5
     },
     {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserSessionPrincipalReader.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.54
+    },
+    {
       "path": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
@@ -49354,11 +49506,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 71,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.88
+      "structuralRiskScore": 2.92
     },
     {
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
@@ -55211,6 +55363,19 @@
       "coveredThrough": []
     },
     {
+      "name": "CleanupSessionsCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CleanupSessions/CleanupSessionsCommandHandler.cs",
+      "line": 6,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Hosts/tests/FoodDiary.JobManager.Tests/UserSessionCleanupJobTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/CleanupSessionsCommandHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ClearCycleDayCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
@@ -58233,10 +58398,12 @@
       "name": "AuthSessionLifecycleController",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
-      "line": 25,
-      "testReferenceCount": 2,
+      "line": 27,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/LogoutRevocationFailureTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -58358,8 +58525,9 @@
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
       "line": 19,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

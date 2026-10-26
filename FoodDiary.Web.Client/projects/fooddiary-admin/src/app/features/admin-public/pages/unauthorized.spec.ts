@@ -7,10 +7,18 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { AdminAuthService } from '../../admin-auth/contracts/admin-session';
 import { UnauthorizedComponent } from './unauthorized';
 
+// eslint-disable-next-line max-lines-per-function -- Keep component setup with its recovery and SSO outcomes.
 describe('UnauthorizedComponent', () => {
     let component: UnauthorizedComponent;
     let fixture: ComponentFixture<UnauthorizedComponent>;
-    let authService: { tryApplySsoFromReturnUrlAsync: ReturnType<typeof vi.fn>; ssoRateLimited: WritableSignal<boolean> };
+    let authService: {
+        tryApplySsoFromReturnUrlAsync: ReturnType<typeof vi.fn>;
+        ssoRateLimited: WritableSignal<boolean>;
+        sessionUnavailable: WritableSignal<boolean>;
+        restoreSessionAsync: ReturnType<typeof vi.fn>;
+        isAdmin: ReturnType<typeof vi.fn>;
+        isAuthenticated: ReturnType<typeof vi.fn>;
+    };
     let router: { navigateByUrl: ReturnType<typeof vi.fn> };
     let routeSnapshot: { queryParamMap: ReturnType<typeof convertToParamMap> };
 
@@ -18,6 +26,10 @@ describe('UnauthorizedComponent', () => {
         authService = {
             tryApplySsoFromReturnUrlAsync: vi.fn(),
             ssoRateLimited: signal(false),
+            sessionUnavailable: signal(false),
+            restoreSessionAsync: vi.fn().mockResolvedValue(undefined),
+            isAdmin: vi.fn().mockReturnValue(true),
+            isAuthenticated: vi.fn().mockReturnValue(true),
         };
         router = {
             navigateByUrl: vi.fn(),
@@ -56,6 +68,31 @@ describe('UnauthorizedComponent', () => {
         expect(component['returnUrl']).toBe('/users?code=sso-code&page=2');
     });
 
+    it('offers restoration retry and returns to the requested route after recovery', async () => {
+        routeSnapshot.queryParamMap = convertToParamMap({ reason: 'unavailable', returnUrl: '/users?page=2' });
+        authService.sessionUnavailable.set(true);
+        createComponent();
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelector('h1')?.textContent, 'An outage must offer session recovery instead of permission denial').toContain(
+            'ADMIN_AUTH.SESSION_UNAVAILABLE_TITLE',
+        );
+        let complete = (): void => {};
+        authService.restoreSessionAsync.mockReturnValue(
+            new Promise<void>(resolve => {
+                complete = (): void => {
+                    resolve();
+                };
+            }),
+        );
+        element.querySelector('button')?.click();
+        authService.sessionUnavailable.set(false);
+        complete();
+        await fixture.whenStable();
+        expect(authService.restoreSessionAsync).toHaveBeenCalledWith(true);
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/users?page=2', { replaceUrl: true });
+    });
+
     it('should try to recover from sso return url on init', async () => {
         authService.tryApplySsoFromReturnUrlAsync.mockResolvedValue('/users?page=2');
 
@@ -87,7 +124,10 @@ function createRateFeedback(reason: string): HTMLElement {
         imports: [UnauthorizedComponent],
         providers: [
             provideTranslateTesting(),
-            { provide: AdminAuthService, useValue: { ssoRateLimited: signal(true), tryApplySsoFromReturnUrlAsync: vi.fn() } },
+            {
+                provide: AdminAuthService,
+                useValue: { ssoRateLimited: signal(true), sessionUnavailable: signal(false), tryApplySsoFromReturnUrlAsync: vi.fn() },
+            },
             { provide: Router, useValue: { navigateByUrl: vi.fn() } },
             { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ reason, returnUrl: '/users' }) } } },
         ],

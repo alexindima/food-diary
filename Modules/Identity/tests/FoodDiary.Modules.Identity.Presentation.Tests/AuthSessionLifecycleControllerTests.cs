@@ -15,11 +15,45 @@ using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetActiveSes
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AuthSessionLifecycleControllerTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Logout_OnlyRevokesTheSelectedRefreshSession(bool matches) {
+        var currentId = Guid.NewGuid();
+        Guid expectedId = matches ? currentId : Guid.NewGuid();
+        IJwtTokenGenerator tokens = Substitute.For<IJwtTokenGenerator>();
+        tokens.ValidateToken("replacement-refresh-token").Returns(
+            (new UserId(Guid.NewGuid()), "user@example.com", false, new RefreshTokenSessionId(currentId)));
+        await using ServiceProvider services = new ServiceCollection()
+            .AddSingleton(tokens).AddScoped<RefreshTokenCookieService>().AddScoped<BrowserSessionCookieService>()
+            .BuildServiceProvider();
+        int sent = 0;
+        var controller = new AuthSessionLifecycleController(SubstituteSender.Create(Result.Success(), _ => sent++)) {
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { RequestServices = services } },
+        };
+        controller.Request.Headers.Cookie = $"{RefreshTokenCookieService.CookieName}=replacement-refresh-token";
+        controller.Request.Headers[BrowserSessionCookieService.ClientHeader] = "telegram";
+        controller.Request.Headers[BrowserSessionCookieService.SessionHeader] = expectedId.ToString("D");
+
+        IActionResult result = await controller.Logout();
+
+        Assert.Equal(matches ? 1 : 0, sent);
+        if (matches) {
+            Assert.IsType<NoContentResult>(result);
+            Assert.True(controller.Response.Headers.SetCookie.Count > 0);
+        } else {
+            ObjectResult error = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(StatusCodes.Status401Unauthorized, error.StatusCode);
+            Assert.Equal(0, controller.Response.Headers.SetCookie.Count);
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

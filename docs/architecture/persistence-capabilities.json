@@ -901,8 +901,8 @@
         "tracked:UserRefreshTokenSession",
         "write:UserRefreshTokenSession"
       ],
-      "reason": "Identity owns session rotation/revocation and atomic browser revalidation. Revalidation updates only security version and monotonic activity after owner, proof, expiry and revocation checks; it never rotates proof or extends expiry. Live transaction synchronization and existing no-tracking active-session projection remain. No User aggregate writes or context escapes added; ADR 0058.",
-      "technicalSourceSha256": "2bc2e8c988f084b7cdad2c47d55236cf0b1b5f6de11225763bbadd767ee3fc42"
+      "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and changes only expiry plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation, User aggregate writes or context escapes; transaction synchronization remains; ADR 0058.",
+      "technicalSourceSha256": "e152e764b58a0290ed0fcc4f1d383d151325b328d32f54c73cc58924ea6706ad"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
@@ -1268,6 +1268,14 @@
         "tracked:UsdaFood"
       ],
       "reason": "Usda-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserSessionPrincipalReader.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:Role",
+        "entity:User"
+      ],
+      "reason": "Users owns the uncached scalar session-principal projection: account ID, email, security version, roles and trial dates. One no-tracking query excludes inactive/deleted accounts and credential/profile columns; the shared Users domain privilege policy preserves live trial roles and access caps. No aggregate writes, saves, commits or context escapes."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs": {
       "module": "Users",
@@ -1811,7 +1819,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "0ae1d898ad04c9722f426724f4e46d69d7ac28b1c87da6d4b5ff0db747f67ffc"
+      "technicalSourceSha256": "5c17608f994f44990878266fda8e233c8e134f1fa545734e028c0e7e33bc45b8"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",

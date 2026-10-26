@@ -18,6 +18,7 @@
         }
     }
     <main class="fd-root__main" id="main-content" tabindex="-1">
+        <fd-auth-recovery-notice />
         @defer (when usesAuthenticatedShell()) {
             <fd-app-update-notice [visible]="usesAuthenticatedShell()" [confirmReload]="confirmAppReloadAsync" />
         }

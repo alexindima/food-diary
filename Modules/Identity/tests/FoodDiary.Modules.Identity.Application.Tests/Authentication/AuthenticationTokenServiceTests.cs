@@ -17,13 +17,77 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public class AuthenticationTokenServiceTests {
+    private static readonly IAuthenticationSessionLifetimePolicy Lifetimes = CreateLifetimePolicy();
+
+    private static IAuthenticationSessionLifetimePolicy CreateLifetimePolicy() {
+        IAuthenticationSessionLifetimePolicy policy = Substitute.For<IAuthenticationSessionLifetimePolicy>();
+        policy.GetLifetime(AuthenticationCredentialKind.Browser, rememberMe: false).Returns(TimeSpan.FromDays(30));
+        policy.GetLifetime(AuthenticationCredentialKind.Browser, rememberMe: true).Returns(TimeSpan.FromDays(90));
+        policy.GetLifetime(AuthenticationCredentialKind.AdminBrowser, Arg.Any<bool>()).Returns(TimeSpan.FromHours(1));
+        return policy;
+    }
+
+    [Theory]
+    [InlineData(AuthenticationCredentialKind.Browser, false, 43200)]
+    [InlineData(AuthenticationCredentialKind.Browser, true, 129600)]
+    [InlineData(AuthenticationCredentialKind.AdminBrowser, false, 5)]
+    public async Task BrowserIssuance_CreatesOnlyHashedOpaqueProofAndPreservesLifetimePolicy(AuthenticationCredentialKind kind, bool remember, int lifetimeMinutes) {
+        var clock = new StubDateTimeProvider();
+        DateTime now = clock.GetUtcNow().UtcDateTime;
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var loginEvents = new InMemoryUserLoginEventRepository();
+        IJwtTokenGenerator jwt = Substitute.For<IJwtTokenGenerator>();
+        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), clock, Lifetimes);
+        var principal = new UserAuthenticationPrincipalModel(UserId.New(), "opaque@example.com", ["User", "Premium"], now.AddMinutes(5), User: null!, SecurityVersion: 7);
+        IssuedAuthenticationTokens issued = await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
+            new AuthenticationClientContext("password", IpAddress: null, UserAgent: null, CredentialKind: kind), remember);
+        IssuedBrowserSession browser = Assert.IsType<IssuedBrowserSession>(issued.BrowserSession);
+        UserRefreshTokenSession session = Assert.Single(sessions.Items);
+        Assert.Equal(kind == AuthenticationCredentialKind.Browser, session.BrowserSlidingExpirationEnabled);
+        Assert.Empty(jwt.ReceivedCalls());
+        Assert.Empty(issued.AccessToken);
+        Assert.Empty(issued.RefreshToken);
+        Assert.True(SecurityTokenGenerator.VerifyFastStorageHash(browser.Credential, session.RefreshTokenHash));
+        Assert.DoesNotContain(browser.Credential, browser.ToString(), StringComparison.Ordinal);
+        Assert.Equal(session.Id.Value, browser.SessionId);
+        Assert.Equal(7, session.BrowserSecurityVersion);
+        Assert.Equal(now.AddMinutes(lifetimeMinutes), session.ExpiresAtUtc);
+        Assert.Equal(remember, session.RememberMe);
+        Assert.Single(loginEvents.Items);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task BrowserIssuance_ReplacesOnlyThePreviousProvenCookieEvenWhenItBelongsToAnotherAccount(bool validProof) {
+        var clock = new StubDateTimeProvider();
+        DateTime now = clock.GetUtcNow().UtcDateTime;
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var id = RefreshTokenSessionId.New();
+        string previousCredential = BrowserSessionCredential.Create(id.Value);
+        var previous = UserRefreshTokenSession.Create(id, UserId.New(), SecurityTokenGenerator.HashForStorage(previousCredential),
+            rememberMe: false, "password", ipAddress: null, userAgent: null, now.AddDays(-1), now.AddDays(1));
+        previous.ConvertToBrowserSession(previous.RefreshTokenHash, 7, now.AddDays(-1));
+        sessions.Items.Add(previous);
+        var principal = new UserAuthenticationPrincipalModel(UserId.New(), "new-account@example.com", ["User"], AccessTokenCapUtc: null, User: null!);
+        var service = new AuthenticationTokenService(new InMemoryUserLoginEventRepository(), sessions, Substitute.For<IJwtTokenGenerator>(),
+            Substitute.For<IPasswordHasher>(), clock, Lifetimes);
+        string proof = validProof ? previousCredential : BrowserSessionCredential.Create(id.Value);
+        IssuedAuthenticationTokens issued = await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
+            new AuthenticationClientContext("password", IpAddress: null, UserAgent: null, CredentialKind: AuthenticationCredentialKind.Browser,
+                ExistingBrowserCredential: proof));
+        Assert.Equal(validProof, previous.RevokedAtUtc.HasValue);
+        Assert.NotEqual(id.Value, issued.BrowserSession!.SessionId);
+        Assert.Equal(2, sessions.Items.Count);
+        Assert.True(sessions.Items.Single(session => session.Id != id).IsActive);
+    }
     [Fact]
     public async Task IssueFromPrincipalAsync_StoresSessionWithoutMutatingUserAggregate() {
         User user = CreateUser("principal@example.com");
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider(), Lifetimes);
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,
@@ -51,7 +115,7 @@ public class AuthenticationTokenServiceTests {
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(loginEvents, sessions, jwt, Substitute.For<IPasswordHasher>(), new StubDateTimeProvider(), Lifetimes);
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,
@@ -89,7 +153,7 @@ public class AuthenticationTokenServiceTests {
             sessions,
             jwt,
             Substitute.For<IPasswordHasher>(),
-            dateTimeProvider);
+            dateTimeProvider, Lifetimes);
         var principal = new UserAuthenticationPrincipalModel(
             user.Id,
             user.Email,
@@ -157,7 +221,7 @@ public class AuthenticationTokenServiceTests {
                     cookieState is "missing-session" ? RefreshTokenSessionId.New() : previous.Id),
         };
         var service = new AuthenticationTokenService(new InMemoryUserLoginEventRepository(), sessions, jwt,
-            Substitute.For<IPasswordHasher>(), clock);
+            Substitute.For<IPasswordHasher>(), clock, Lifetimes);
         var principal = new UserAuthenticationPrincipalModel(user.Id, user.Email, ["User"], AccessTokenCapUtc: null, user.ToModel());
 
         await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
@@ -221,6 +285,17 @@ public class AuthenticationTokenServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRefreshTokenSessionRepository : IRefreshTokenSessionRepository {
+        public Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+        public Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> TryRecordBrowserActivityAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime lastActiveBeforeUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<int> DeleteInactiveBeforeAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
         public List<UserRefreshTokenSession> Items { get; } = [];
 
         public Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>

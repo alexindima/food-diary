@@ -12,6 +12,8 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
+using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
@@ -129,7 +131,7 @@ public sealed class BrowserSessionServiceTests {
         var scenario = new Scenario(Now.AddSeconds(remainingSeconds));
         string credential = BrowserSessionCredential.Create(scenario.Session.Id.Value);
         scenario.Session.ConvertToBrowserSession(SecurityTokenGenerator.HashForStorage(credential), 7, Now.AddMinutes(-1));
-        Result<BrowserSessionModel> result = await scenario.Service.AuthenticateAsync(credential, CancellationToken.None);
+        Result<BrowserSessionIdentityModel> result = await scenario.Service.AuthenticateAsync(credential, CancellationToken.None);
         Assert.Equal(allowed, result.IsSuccess);
     }
 
@@ -202,6 +204,7 @@ public sealed class BrowserSessionServiceTests {
         public UserAuthenticationPrincipalModel Principal { get; set; }
         public BrowserSessionService Service { get; }
         public IUserAuthenticationIdentityService Users { get; } = Substitute.For<IUserAuthenticationIdentityService>();
+        public IUserSessionPrincipalReader Principals { get; } = Substitute.For<IUserSessionPrincipalReader>();
         public IJwtTokenGenerator Tokens { get; } = Substitute.For<IJwtTokenGenerator>();
         public FixedTimeProvider Clock { get; } = new();
 
@@ -212,6 +215,11 @@ public sealed class BrowserSessionServiceTests {
                 SecurityTokenGenerator.HashForStorage("refresh-proof"), rememberMe: false, authProvider: "password",
                 ipAddress: null, userAgent: null, Now.AddHours(-1), noExpiry ? null : expires ?? Now.AddDays(30));
             Sessions.GetByIdAsync(Session.Id, Arg.Any<CancellationToken>()).Returns(Session);
+            Sessions.ReadBrowserSessionProofAsync(Session.Id, Arg.Any<CancellationToken>()).Returns(_ => new BrowserSessionProof(
+                Session.Id, Session.UserId, Session.RefreshTokenHash, Session.BrowserSecurityVersion, Session.ExpiresAtUtc,
+                Session.RevokedAtUtc, Session.LastRotatedAtUtc));
+            Principals.GetCurrentAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(_ => Result.Success(
+                new UserSessionPrincipalModel(Principal.UserId, Principal.Email, Principal.Roles, Principal.AccessTokenCapUtc, Principal.SecurityVersion)));
             Sessions.TryRevalidateBrowserSessionAsync(Session.Id, user.Id, Arg.Any<string>(), Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
                 .Returns(call => {
                     if (!Session.IsActive || Session.BrowserSecurityVersion is null ||
@@ -224,7 +232,7 @@ public sealed class BrowserSessionServiceTests {
                 });
             Users.GetAuthenticationPrincipalAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(_ => Result.Success(Principal));
             Tokens.ValidateToken("refresh-proof").Returns((user.Id, user.Email, false, (RefreshTokenSessionId?)Session.Id));
-            Service = new BrowserSessionService(Sessions, Users, Tokens, Clock);
+            Service = new BrowserSessionService(Sessions, Users, Tokens, Clock, Principals, Substitute.For<IAuthenticationSessionLifetimePolicy>());
         }
     }
 

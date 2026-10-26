@@ -46,6 +46,6 @@ public sealed class RegisterCommandHandler(
             command.ClientOrigin);
         await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

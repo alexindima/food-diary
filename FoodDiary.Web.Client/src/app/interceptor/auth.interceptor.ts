@@ -53,14 +53,51 @@ export class AuthInterceptor implements HttpInterceptor {
 
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const apiRoot = environment.apiUrls.auth.replace(/\/auth$/, '');
-        if (!req.url.startsWith(`${apiRoot  }/`)) {
+        if (!req.url.startsWith(`${apiRoot}/`)) {
             return next.handle(req);
         }
-        let headers = req.headers
-            .set('X-Requested-With', 'XMLHttpRequest')
-            .set('X-FoodDiary-Client', this.browserSession.telegram ? 'telegram' : 'web');
+        req = this.withSessionTransport(req);
+        const skipAuth = req.context.get(SKIP_AUTH);
+        if (skipAuth) {
+            return next.handle(req);
+        }
+
+        const token = this.authService.getToken();
+        const session: RequestSession = {
+            generation: this.sessionGeneration,
+            userId: this.authService.getUserId(),
+            impersonating: this.authService.isImpersonating(),
+        };
+        let request = req;
+
+        if (token !== null && token.trim().length > 0) {
+            request = req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) });
+        }
+
+        return next.handle(request).pipe(
+            catchError((error: unknown) => {
+                if (this.shouldRevalidatePermissions(error, req.url, session)) {
+                    return this.authService.refreshSession().pipe(switchMap(() => throwError(() => error)));
+                }
+                if (!this.isUnauthorizedError(error) || this.shouldSkipRefresh(req.url) || !this.isCurrentSession(session)) {
+                    return throwError(() => error);
+                }
+                return this.isCredentialVerificationFailure(error).pipe(
+                    switchMap(isCredentialFailure =>
+                        isCredentialFailure ? throwError(() => error) : this.refreshRequest(req, next, error, session),
+                    ),
+                );
+            }),
+        );
+    }
+
+    private withSessionTransport(req: HttpRequest<unknown>): HttpRequest<unknown> {
+        let headers = req.headers.set('X-Requested-With', 'XMLHttpRequest');
+        if (!headers.has('X-FoodDiary-Client')) {
+            headers = headers.set('X-FoodDiary-Client', this.browserSession.telegram ? 'telegram' : 'web');
+        }
         const context = this.browserSession.contextId();
-        if (context !== null) {
+        if (context !== null && !headers.has('X-FoodDiary-Context')) {
             headers = headers.set('X-FoodDiary-Context', context);
         }
         const expected = this.browserSession.sessionId();
@@ -76,45 +113,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (expected !== null && !changesIdentity && !headers.has('X-FoodDiary-Session')) {
             headers = headers.set('X-FoodDiary-Session', expected);
         }
-        req = req.clone({ headers, withCredentials: true });
-        const skipAuth = req.context.get(SKIP_AUTH);
-        if (skipAuth) {
-            return next.handle(req);
-        }
-
-        const token = this.authService.getToken();
-        const session: RequestSession = {
-            generation: this.sessionGeneration,
-            userId: this.authService.getUserId(),
-            impersonating: this.authService.isImpersonating(),
-        };
-        let request = req;
-
-        if (token !== null && token.trim().length > 0) {
-            request = req.clone({
-                headers: req.headers.set('Authorization', `Bearer ${token}`),
-            });
-        }
-
-        return next.handle(request).pipe(
-            catchError((error: unknown) => {
-                if (this.shouldRevalidatePermissions(error, req.url, session)) {
-                    return this.authService.refreshSession().pipe(switchMap(() => throwError(() => error)));
-                }
-                if (!this.isUnauthorizedError(error) || this.shouldSkipRefresh(req.url) || !this.isCurrentSession(session)) {
-                    return throwError(() => error);
-                }
-
-                return this.isCredentialVerificationFailure(error).pipe(
-                    switchMap(isCredentialFailure => {
-                        if (isCredentialFailure) {
-                            return throwError(() => error);
-                        }
-                        return this.refreshRequest(req, next, error, session);
-                    }),
-                );
-            }),
-        );
+        return req.clone({ headers, withCredentials: true });
     }
 
     private isCredentialVerificationFailure(error: unknown): Observable<boolean> {
@@ -170,9 +169,16 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     private shouldRevalidatePermissions(error: unknown, url: string, session: RequestSession): boolean {
-        return !session.impersonating && this.authService.getToken() === null && !this.shouldSkipRefresh(url) &&
-            this.isCurrentSession(session) && typeof error === 'object' && error !== null && 'status' in error &&
+        return (
+            !session.impersonating &&
+            this.authService.getToken() === null &&
+            !this.shouldSkipRefresh(url) &&
+            this.isCurrentSession(session) &&
+            typeof error === 'object' &&
+            error !== null &&
+            'status' in error &&
             error.status === HttpStatusCode.Forbidden &&
-            getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.Forbidden';
+            getStringProperty(getRecordProperty(error, 'error'), 'error') === 'Authentication.Forbidden'
+        );
     }
 }

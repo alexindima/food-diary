@@ -39,6 +39,10 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             CreatePartition(settings.Auth, $"auth:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.AuthConfigurationRateLimitPolicyName, context =>
             CreatePartition(settings.Auth, $"auth-configuration:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.SessionRestoreRateLimitPolicyName, context =>
+            CreatePartition(settings.SessionRestore, $"session-restore:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.SessionLogoutRateLimitPolicyName, context =>
+            CreatePartition(settings.SessionLogout, $"session-logout:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.ImagesRateLimitPolicyName, context =>
             CreatePartition(settings.Images, $"images:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.AiRateLimitPolicyName, context =>

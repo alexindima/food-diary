@@ -23,17 +23,22 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [EnableRateLimiting(PresentationPolicyNames.SessionRestoreRateLimitPolicyName)]
     public Task<IActionResult> Restore() => HandleRestoreAsync();
 
     private Task<IActionResult> HandleRestoreAsync() {
         if (ImpersonationCookieService.HasContext(HttpContext)) {
             if (!ImpersonationCookieService.TryReadAuthenticatedUserId(HttpContext, out Guid userId)) {
-                return HandleOk(AuthHttpMappings.InvalidBrowserSessionQuery(), static value => value.ToHttpResponse());
+                return HandleOk(AuthHttpMappings.InvalidBrowserSessionRestoration(), static value => value.ToHttpResponse());
             }
             return HandleOk(userId.ToBrowserSessionProfileQuery(), value => value.ToImpersonationHttpResponse(HttpContext));
         }
         BrowserSessionCookieService cookies = HttpContext.RequestServices.GetRequiredService<BrowserSessionCookieService>();
-        return HandleOk(cookies.Read(HttpContext).ToBrowserRestoreCommand(), static value => value.ToHttpResponse());
+        return HandleOk(cookies.Read(HttpContext).ToBrowserRestoreCommand(), value => {
+            if (value.Renewed) {
+                cookies.Set(HttpContext, value, BrowserSessionCookieService.IsAdmin(HttpContext));
+            }
+            return value.ToHttpResponse();
+        });
     }
 }

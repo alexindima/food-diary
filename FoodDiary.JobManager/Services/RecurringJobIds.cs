@@ -14,6 +14,7 @@ public static class RecurringJobIds {
     public const string NotificationWebPushOutbox = "notification-web-push-outbox";
     public const string AchievementEvaluationOutbox = "achievement-evaluation-outbox";
     public const string UserLoginEventsCleanup = "user-login-events-cleanup";
+    public const string UserSessionsCleanup = "user-sessions-cleanup";
     public const string MarketingAttributionCleanup = "marketing-attribution-cleanup";
     public const string FastingTelemetryCleanup = "fasting-telemetry-cleanup";
     public const string ClientTaskReminders = "client-task-reminders";
@@ -33,6 +34,7 @@ public static class RecurringJobIds {
         NotificationWebPushOutbox,
         AchievementEvaluationOutbox,
         UserLoginEventsCleanup,
+        UserSessionsCleanup,
         MarketingAttributionCleanup,
         FastingTelemetryCleanup,
         ClientTaskReminders,

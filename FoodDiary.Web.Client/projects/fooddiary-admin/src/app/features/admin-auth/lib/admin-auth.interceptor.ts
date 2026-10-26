@@ -10,7 +10,7 @@ import { AdminAuthService } from './admin-auth.service';
 
 export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
     const apiRoot = environment.apiUrls.auth.replace(/\/auth$/, '');
-    if (!req.url.startsWith(`${apiRoot  }/`)) {
+    if (!req.url.startsWith(`${apiRoot}/`)) {
         return next(req);
     }
     const router = inject(Router);
@@ -32,7 +32,11 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
         }),
     ).pipe(
         catchError((error: unknown) => {
-            if (req.url.includes('/admin-sso/exchange')) {
+            if (isSessionHandshake(req.url)) {
+                return throwError(() => error);
+            }
+
+            if (auth.getSessionId() !== sessionId) {
                 return throwError(() => error);
             }
 
@@ -50,7 +54,7 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
                 });
             }
 
-            if (status === HttpStatusCode.Forbidden && adminApiErrorCode(error) !== 'Ai.ConsentRequired') {
+            if (isAccessDenied(error)) {
                 void router.navigate(['/unauthorized'], {
                     queryParams: { reason: 'forbidden', returnUrl: router.url },
                 });
@@ -60,6 +64,18 @@ export const adminAuthInterceptor: HttpInterceptorFn = (req, next) => {
         }),
     );
 };
+
+function isSessionHandshake(url: string): boolean {
+    return url.endsWith('/auth/session') || url.includes('/admin-sso/exchange');
+}
+
+function isAccessDenied(error: unknown): boolean {
+    return (
+        error instanceof HttpErrorResponse &&
+        error.status === Number(HttpStatusCode.Forbidden) &&
+        adminApiErrorCode(error) !== 'Ai.ConsentRequired'
+    );
+}
 
 function getBrowserStorage(documentRef: Document, isBrowser: boolean, storageName: 'localStorage' | 'sessionStorage'): Storage | null {
     if (!isBrowser) {

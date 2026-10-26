@@ -19,6 +19,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
     public DateTime? PreviousRefreshTokenValidUntilUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
     public long? BrowserSecurityVersion { get; private set; }
+    public bool BrowserSlidingExpirationEnabled { get; private set; }
 
     private UserRefreshTokenSession() {
     }
@@ -60,7 +61,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
 
     public bool IsActive => RevokedAtUtc is null;
 
-    public void ConvertToBrowserSession(string credentialHash, long securityVersion, DateTime nowUtc, DateTime? maximumExpiresAtUtc = null) {
+    public void ConvertToBrowserSession(string credentialHash, long securityVersion, DateTime nowUtc, DateTime? maximumExpiresAtUtc = null, bool allowRenewal = false) {
         if (!IsActive || BrowserSecurityVersion.HasValue || securityVersion < 0) {
             throw new InvalidOperationException("Only an active token session can become a browser session.");
         }
@@ -68,6 +69,7 @@ public sealed class UserRefreshTokenSession : Entity<RefreshTokenSessionId> {
         EnsureNotBeforeLastRotation(normalizedNow, nameof(nowUtc));
         RefreshTokenHash = NormalizeRequiredText(credentialHash, nameof(credentialHash), 512);
         BrowserSecurityVersion = securityVersion;
+        BrowserSlidingExpirationEnabled = allowRenewal && maximumExpiresAtUtc is null;
         PreviousRefreshTokenHash = null;
         PreviousRefreshTokenValidUntilUtc = null;
         if (maximumExpiresAtUtc is { } maximum) {

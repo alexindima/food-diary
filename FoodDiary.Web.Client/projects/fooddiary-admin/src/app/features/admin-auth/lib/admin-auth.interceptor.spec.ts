@@ -28,12 +28,14 @@ beforeEach(() => {
     http = TestBed.inject(HttpClient);
     requests = TestBed.inject(HttpTestingController);
 });
-afterEach(() => { requests.verify(); });
+afterEach(() => {
+    requests.verify();
+});
 
 describe('administrative cookie transport', () => {
     it('sends administrative selectors and the CSRF header without a bearer credential', () => {
-        http.get(`${root  }/admin/users`).subscribe();
-        const request = requests.expectOne(`${root  }/admin/users`);
+        http.get(`${root}/admin/users`).subscribe();
+        const request = requests.expectOne(`${root}/admin/users`);
         expect(request.request.headers.get('X-FoodDiary-Client')).toBe('admin');
         expect(request.request.headers.get('X-FoodDiary-Session')).toBe('admin-session');
         expect(request.request.headers.get('X-Requested-With')).toBe('XMLHttpRequest');
@@ -51,18 +53,27 @@ describe('administrative cookie transport', () => {
     });
 
     it('invalidates local administrative state on 401', () => {
-        http.get(`${root  }/admin/users`).subscribe({ error: () => {} });
-        requests.expectOne(`${root  }/admin/users`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+        http.get(`${root}/admin/users`).subscribe({ error: () => {} });
+        requests.expectOne(`${root}/admin/users`).flush({}, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
         expect(auth.invalidateSession).toHaveBeenCalledOnce();
         expect(router.navigate).toHaveBeenCalledWith(['/unauthorized'], {
             queryParams: { reason: 'unauthenticated', returnUrl: '/users?page=2' },
         });
     });
 
+    it.each([HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden])('ignores a late %s belonging to a replaced session', status => {
+        http.get(`${root}/admin/users`).subscribe({ error: () => {} });
+        const pending = requests.expectOne(`${root}/admin/users`);
+        auth.getSessionId.mockReturnValue('fresh-admin-session');
+        pending.flush({}, { status, statusText: 'Denied' });
+        expect(auth.invalidateSession, 'A stale response must not invalidate the new administrative session').not.toHaveBeenCalled();
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
+
     it('retains feature-specific handling for AI consent failures', () => {
-        http.post(`${root  }/admin/ai-prompts/test`, {}).subscribe({ error: () => {} });
+        http.post(`${root}/admin/ai-prompts/test`, {}).subscribe({ error: () => {} });
         requests
-            .expectOne(`${root  }/admin/ai-prompts/test`)
+            .expectOne(`${root}/admin/ai-prompts/test`)
             .flush({ error: 'Ai.ConsentRequired' }, { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' });
         expect(router.navigate).not.toHaveBeenCalled();
     });

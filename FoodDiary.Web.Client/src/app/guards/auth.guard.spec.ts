@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
+import { AuthRecoveryStateService } from '../shared/auth/auth-recovery-state.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { authGuard } from './auth.guard';
 
@@ -119,6 +120,17 @@ describe('authGuard', () => {
         expect(result).toBe(false);
         expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/products');
+    });
+
+    it('keeps a temporarily unknown session out of both protected routes and the sign-in redirect', async () => {
+        TestBed.inject(AuthRecoveryStateService).restorationFailed(null);
+
+        const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
+
+        expect(result).toBe(false);
+        expect(navigationServiceMock.navigateToAuthAsync, 'Unknown session state must not redirect to sign-in').not.toHaveBeenCalled();
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
+        expect(TestBed.inject(AuthRecoveryStateService).returnUrl).toBe('/products');
     });
 
     it('should include returnUrl in login redirect', async () => {

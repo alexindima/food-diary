@@ -17,13 +17,17 @@ public sealed class AuthenticationTokenService(
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    IAuthenticationSessionLifetimePolicy lifetimes)
     : IAuthenticationTokenService {
     public async Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
         UserAuthenticationPrincipalModel principal,
         CancellationToken cancellationToken,
         AuthenticationClientContext? clientContext = null,
         bool rememberMe = false) {
+        if (clientContext is { CredentialKind: not AuthenticationCredentialKind.Bearer }) {
+            return await IssueBrowserAsync(principal, clientContext, rememberMe, cancellationToken).ConfigureAwait(false);
+        }
         var resolvedRefreshSessionId = RefreshTokenSessionId.New();
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
@@ -52,6 +56,37 @@ public sealed class AuthenticationTokenService(
             jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken),
             cancellationToken).ConfigureAwait(false);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
+    }
+
+    private async Task<IssuedAuthenticationTokens> IssueBrowserAsync(
+        UserAuthenticationPrincipalModel principal, AuthenticationClientContext client,
+        bool rememberMe, CancellationToken cancellationToken) {
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
+        bool admin = client.CredentialKind == AuthenticationCredentialKind.AdminBrowser;
+        DateTime expires = now.Add(lifetimes.GetLifetime(client.CredentialKind, rememberMe));
+        if (admin && principal.AccessTokenCapUtc is { } cap && cap < expires) {
+            expires = cap;
+        }
+        var id = RefreshTokenSessionId.New();
+        string credential = BrowserSessionCredential.Create(id.Value);
+        await RevokeExistingBrowserSessionAsync(principal.UserId, client.ExistingRefreshToken, now, cancellationToken).ConfigureAwait(false);
+        await RevokeExistingOpaqueSessionAsync(client.ExistingBrowserCredential, now, cancellationToken).ConfigureAwait(false);
+        await PersistAuthenticationArtifactsAsync(principal.UserId, SecurityTokenGenerator.HashForStorage(credential),
+            rememberMe, id, client, now, expires, cancellationToken, principal.SecurityVersion).ConfigureAwait(false);
+        return new IssuedAuthenticationTokens(string.Empty, string.Empty,
+            new IssuedBrowserSession(credential, id.Value, expires, rememberMe, principal.Roles, admin));
+    }
+
+    private async Task RevokeExistingOpaqueSessionAsync(string? credential, DateTime nowUtc, CancellationToken cancellationToken) {
+        if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid id)) {
+            return;
+        }
+        UserRefreshTokenSession? previous = await refreshTokenSessionRepository.GetByIdAsync(new RefreshTokenSessionId(id), cancellationToken).ConfigureAwait(false);
+        if (previous is { IsActive: true, BrowserSecurityVersion: not null } &&
+            SecurityTokenGenerator.VerifyFastStorageHash(credential!, previous.RefreshTokenHash)) {
+            previous.Revoke(nowUtc);
+            await refreshTokenSessionRepository.UpdateAsync(previous, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     public async Task<IssuedAuthenticationTokens?> RotateFromPrincipalAsync(
@@ -125,7 +160,8 @@ public sealed class AuthenticationTokenService(
         AuthenticationClientContext? clientContext,
         DateTime nowUtc,
         DateTime expiresAtUtc,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        long? browserSecurityVersion = null) {
         var session = UserRefreshTokenSession.Create(
             resolvedRefreshSessionId,
             userId,
@@ -136,6 +172,10 @@ public sealed class AuthenticationTokenService(
             clientContext?.UserAgent,
             nowUtc,
             expiresAtUtc);
+        if (browserSecurityVersion is { } version) {
+            session.ConvertToBrowserSession(hashedRefreshToken, version, nowUtc,
+                allowRenewal: clientContext?.CredentialKind == AuthenticationCredentialKind.Browser);
+        }
         await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
 
         if (clientContext is not null) {

@@ -19,6 +19,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Build: `npm run build`
 - Production build: `npm run build:prod`
 - PWA production/staging builds must use the npm build scripts: they emit browser stats and finalize `ngsw.json` so only the startup graph and home landing are prefetched. Other versioned JavaScript loads on demand, with used files updated eagerly. Run `npm run test:performance-build` for the graph/manifest regression checks; a direct `ng build` retains the safe but larger prefetch fallback.
+- These main-site build scripts also protect trusted HTML inline scripts and synchronize its PWA hashes. SSR requires the generated private script-hash manifest and per-response nonce. Use `npm run test:script-csp:browser` after a build for real Nginx/Chrome enforcement; direct `ng build` omits this production hardening. See `docs/frontend/SCRIPT_CSP.md` at repository root.
 - Admin build: `npm run build:admin`
 - Lint: `npm run lint`
 - Dependency graph lint: `npm run lint:deps:strict`

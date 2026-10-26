@@ -628,25 +628,25 @@ export class AuthSdk extends BaseService {
         requestParameters: PostAuthLogoutRequestParams,
         observe?: 'body',
         reportProgress?: boolean,
-        options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext; transferCache?: boolean },
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
     ): Observable<void>;
     public postAuthLogout(
         requestParameters: PostAuthLogoutRequestParams,
         observe?: 'response',
         reportProgress?: boolean,
-        options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext; transferCache?: boolean },
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
     ): Observable<HttpResponse<void>>;
     public postAuthLogout(
         requestParameters: PostAuthLogoutRequestParams,
         observe?: 'events',
         reportProgress?: boolean,
-        options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext; transferCache?: boolean },
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
     ): Observable<HttpEvent<void>>;
     public postAuthLogout(
         requestParameters: PostAuthLogoutRequestParams,
         observe: any = 'body',
         reportProgress: boolean = false,
-        options?: { httpHeaderAccept?: 'application/json'; context?: HttpContext; transferCache?: boolean },
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
     ): Observable<any> {
         const version = requestParameters?.version;
         if (version === null || version === undefined) {
@@ -657,7 +657,7 @@ export class AuthSdk extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined =
-            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json']);
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }

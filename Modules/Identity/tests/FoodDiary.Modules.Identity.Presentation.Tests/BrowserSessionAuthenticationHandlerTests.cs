@@ -26,9 +26,9 @@ public sealed class BrowserSessionAuthenticationHandlerTests {
         DateTime now = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var id = Guid.NewGuid();
         var userId = UserId.New();
-        var principal = new UserAuthenticationPrincipalModel(userId, "session@example.com", ["Premium"],
-            capMinutes.HasValue ? now.AddMinutes(capMinutes.Value) : null, User: null!, SecurityVersion: 7);
-        var session = new BrowserSessionModel(BrowserSessionCredential.Create(id), id, now.AddMinutes(sessionMinutes), RememberMe: false, principal);
+        var principal = new UserSessionPrincipalModel(userId, "session@example.com", ["Premium"],
+            capMinutes.HasValue ? now.AddMinutes(capMinutes.Value) : null, SecurityVersion: 7);
+        var session = new BrowserSessionIdentityModel(id, now.AddMinutes(sessionMinutes), principal);
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton<IOptions<JwtOptions>>(OptionsFactory.Create(new JwtOptions { ExpirationMinutes = 60 }));
@@ -39,7 +39,7 @@ public sealed class BrowserSessionAuthenticationHandlerTests {
             .AddScheme<AuthenticationSchemeOptions, BrowserSessionAuthenticationHandler>(BrowserSessionCookieService.Scheme, _ => { });
         await using ServiceProvider provider = services.BuildServiceProvider();
         var context = new DefaultHttpContext { RequestServices = provider };
-        context.Request.Headers.Cookie = BrowserSessionCookieService.BrowserCookieName + "=" + session.Credential;
+        context.Request.Headers.Cookie = BrowserSessionCookieService.BrowserCookieName + "=" + BrowserSessionCredential.Create(id);
         context.Request.Headers["X-Test-Role"] = "Admin";
         AuthenticateResult result = await context.AuthenticateAsync(BrowserSessionCookieService.Scheme);
         Assert.True(result.Succeeded);

@@ -217,17 +217,20 @@ convert review coverage into an aggregate conformance percentage.
 Seven manual requirements retain concrete procedures for screen readers, actual
 OS text scaling, motion comfort, browser/device fallbacks and system palettes,
 field performance, privacy purposes/retention/deletion, and deployed security
-policies. The current frontend CSP permits `unsafe-inline` for existing startup,
-prerender and provider dependencies; strict nonce/hash CSP and Trusted Types need
-a staged integration review. The automatic checks do not certify that rollout,
+policies. Build-owned script hashes protect static HTML, and the SSR entry point
+adds a per-response script nonce. Existing edge headers combine with these
+representation policies. See [script CSP](SCRIPT_CSP.md) for atomic publication,
+PWA hashing, browser proof and the remaining provider/deployment checks. Trusted
+Types and further CSP restrictions need a staged review. Automatic checks do not certify rollout,
 privacy compliance, reverse-proxy configuration or every application screen.
 
-Access credentials now remain in tab storage. Remember-me and reload recovery
-use the existing HttpOnly refresh-cookie flow. Legacy persistent credentials
-migrate once; non-secret cross-tab ownership/invalidation hints remain separate.
-Session storage still requires application script isolation and is not an
-HttpOnly credential boundary. Owner suites protect account switching, logout,
-SSO, impersonation and late responses.
+Ordinary website and admin credentials live in separate HttpOnly cookies.
+Explicit Mini App access JWTs remain only in memory; its refresh-cookie protocol
+and the bot's bearer transport are separate. JavaScript stores public ownership,
+context and pending-logout selectors rather than browser credentials. XSS can
+still perform actions in an authenticated page. Owner suites protect account
+switching, logout recovery, SSO, impersonation and late responses. See
+[browser sessions](../backend/BROWSER_SESSIONS.md).
 
 Exit codes are `0` for no blocking findings in the executed scope, `1` for
 blocking findings or requested incomplete coverage, and `2` for engine or

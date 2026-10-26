@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
+import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
 import { LoginRequest } from '../shared/auth/auth.data';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
@@ -110,8 +111,7 @@ describe('server-backed browser sessions', () => {
         signIn();
         const pending = firstValueFrom(service.refreshSession());
         const old = requests.expectOne(`${base}/session`);
-        service.login(login).subscribe();
-        requests.expectOne(`${base}/login`).flush({ ...response, sessionId: 'new-session' });
+        service.acceptExternalAuthentication(authResponseFromSdk({ ...response, sessionId: 'new-session' }));
         old.flush(response);
         expect(await pending).toBe(false);
         expect(service.isAuthenticated()).toBe(true);
@@ -129,6 +129,48 @@ describe('server-backed browser sessions', () => {
 });
 
 describe('browser session failures and logout', () => {
+    it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.ServiceUnavailable])(
+        'allows initial restoration to be retried after a temporary %s response',
+        async status => {
+            const initial = service.restoreSessionAsync();
+            requests.expectOne(`${base}/session`).flush({}, { status, statusText: 'Temporarily unavailable' });
+            await initial;
+
+            expect(service.isAuthReady(), 'Temporary restoration failure must remain retryable').toBe(false);
+            expect(service.isAuthenticated()).toBe(false);
+            expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+
+            const retry = service.restoreSessionAsync();
+            requests.expectOne(`${base}/session`).flush(response);
+            await retry;
+            expect(service.isAuthReady()).toBe(true);
+            expect(service.isAuthenticated()).toBe(true);
+        },
+    );
+
+    it('does not silently restore a session after its logout failed', async () => {
+        signIn();
+        const logout = service.onLogoutAsync();
+        requests.expectOne(`${base}/logout`).flush({}, { status: HttpStatusCode.ServiceUnavailable, statusText: 'Unavailable' });
+        await logout;
+
+        const restoration = service.restoreSessionAsync();
+        const retries = requests.match(`${base}/logout`);
+        for (const request of retries) {
+            expect(request.request.headers.get('X-FoodDiary-Session')).toBe(sessionId);
+            request.flush(null);
+        }
+        // Drain the old implementation's unintended request so the failure is an
+        // assertion about restored access, rather than an unfinished HTTP request.
+        for (const request of requests.match(`${base}/session`)) {
+            request.flush(response);
+        }
+        await restoration;
+
+        expect(service.isAuthenticated(), 'Pending logout must block implicit restoration').toBe(false);
+        expect(retries).toHaveLength(1);
+    });
+
     it('ends local access when the server rejects a revoked session', async () => {
         signIn();
         const restored = firstValueFrom(service.refreshSession());

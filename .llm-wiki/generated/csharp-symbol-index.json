@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4630,
-    "symbols": 4565,
-    "interfaceImplementationLinks": 204,
+    "sourceFiles": 4646,
+    "symbols": 4581,
+    "interfaceImplementationLinks": 206,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2362,
-      "enum": 71,
-      "interface": 418,
-      "record": 1573,
+      "class": 2370,
+      "enum": 72,
+      "interface": 420,
+      "record": 1578,
       "record struct": 141
     },
     "roles": {
-      "Command": 236,
-      "CommandHandler": 230,
+      "Command": 237,
+      "CommandHandler": 231,
       "Configuration": 101,
       "Controller": 113,
       "Entity": 102,
@@ -31,8 +31,8 @@
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 71,
-      "Other": 1879,
+      "Options": 73,
+      "Other": 1891,
       "Query": 303,
       "QueryHandler": 217,
       "ReadModelRepository": 33,
@@ -1193,6 +1193,20 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/UserLoginEventCleanupOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "UserSessionCleanupJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/UserSessionCleanupJob.cs",
+      "line": 8
+    },
+    {
+      "name": "UserSessionCleanupOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.JobManager/Services/UserSessionCleanupOptions.cs",
       "line": 2
     },
     {
@@ -2369,7 +2383,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 20
+      "line": 22
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -2447,6 +2461,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/DevelopmentRuntimeHeadersMiddleware.cs",
       "line": 10
+    },
+    {
+      "name": "SessionSecurityHubFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/Filters/SessionSecurityHubFilter.cs",
+      "line": 8
     },
     {
       "name": "ImpersonationAccessGuardMiddleware",
@@ -2572,7 +2593,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 96
+      "line": 110
     },
     {
       "name": "CorsOptionsSetup",
@@ -15522,7 +15543,7 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ITelegramAssertionReplayGuard",
@@ -15630,11 +15651,39 @@
       "line": 4
     },
     {
+      "name": "AuthenticationCredentialKind",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationCredentialKind.cs",
+      "line": 2
+    },
+    {
+      "name": "BrowserSessionProof",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/BrowserSessionProof.cs",
+      "line": 6
+    },
+    {
+      "name": "IssuedBrowserSession",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Models/IssuedBrowserSession.cs",
+      "line": 4
+    },
+    {
       "name": "RefreshTokenSessionReadModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "line": 3
+    },
+    {
+      "name": "IAuthenticationSessionLifetimePolicy",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationSessionLifetimePolicy.cs",
+      "line": 4
     },
     {
       "name": "IAuthenticationTokenService",
@@ -15648,7 +15697,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "AcquireTelegramOperationCommand",
@@ -15756,6 +15805,13 @@
       "line": 6
     },
     {
+      "name": "CleanupSessionsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CleanupSessions/CleanupSessionsCommandHandler.cs",
+      "line": 6
+    },
+    {
       "name": "CompleteTelegramAuthenticationCommand",
       "kind": "record",
       "role": "Command",
@@ -15795,7 +15851,7 @@
       "kind": "record",
       "role": "Command",
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ConfirmPasswordResetCommandHandler",
@@ -16299,6 +16355,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
+      "line": 6
+    },
+    {
+      "name": "BrowserSessionIdentityModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/BrowserSessionIdentityModel.cs",
       "line": 4
     },
     {
@@ -16425,7 +16488,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "EmailSender",
@@ -16545,6 +16608,13 @@
       "role": "Command",
       "path": "Modules/Identity/Contracts/Authentication/Commands/CleanupLoginEvents/CleanupLoginEventsCommand.cs",
       "line": 3
+    },
+    {
+      "name": "CleanupSessionsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Contracts/Authentication/Commands/CleanupSessions/CleanupSessionsCommand.cs",
+      "line": 4
     },
     {
       "name": "AccountCreatedMessage",
@@ -16743,6 +16813,20 @@
       "line": 7
     },
     {
+      "name": "AuthenticationSessionLifetimePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/AuthenticationSessionLifetimePolicy.cs",
+      "line": 7
+    },
+    {
+      "name": "BrowserSessionRenewalOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Authentication/BrowserSessionRenewalOptions.cs",
+      "line": 2
+    },
+    {
       "name": "ImpersonationTokenIssuer",
       "kind": "class",
       "role": "Other",
@@ -16761,7 +16845,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "IdentityEmailOptionsRegistration",
@@ -17076,7 +17160,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthSessionLifecycleController.cs",
-      "line": 25
+      "line": 27
     },
     {
       "name": "AuthTelegramBackupEmailController",
@@ -17118,7 +17202,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 34
+      "line": 33
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -17314,7 +17398,7 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/AuthenticationHttpResponse.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ExchangeImpersonationHttpResponse",
@@ -17363,7 +17447,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "SuppressRefreshTokenCookieAttribute",
@@ -17405,7 +17489,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Presentation/Security/BrowserSessionCookieService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ImpersonationCookieService",
@@ -26340,6 +26424,13 @@
       "line": 4
     },
     {
+      "name": "IUserSessionPrincipalReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IUserSessionPrincipalReader.cs",
+      "line": 6
+    },
+    {
       "name": "IUserSessionRevocationService",
       "kind": "interface",
       "role": "Service",
@@ -26620,6 +26711,13 @@
       "line": 2
     },
     {
+      "name": "UserSessionPrincipalModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Models/UserSessionPrincipalModel.cs",
+      "line": 4
+    },
+    {
       "name": "UserTdeeProfileModel",
       "kind": "record",
       "role": "Other",
@@ -26814,6 +26912,13 @@
       "role": "ValueObject",
       "path": "Modules/Users/Domain.Contracts/ValueObjects/UserPreferenceUpdate.cs",
       "line": 2
+    },
+    {
+      "name": "UserAuthenticationPrivileges",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Domain/Common/UserAuthenticationPrivileges.cs",
+      "line": 4
     },
     {
       "name": "Role",
@@ -27255,6 +27360,13 @@
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
       "line": 8
+    },
+    {
+      "name": "UserSessionPrincipalReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserSessionPrincipalReader.cs",
+      "line": 11
     },
     {
       "name": "UsersDbContext",
@@ -32145,6 +32257,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IAuthenticationSessionLifetimePolicy",
+      "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationSessionLifetimePolicy.cs",
+      "implementation": "AuthenticationSessionLifetimePolicy",
+      "implementationPath": "Modules/Identity/Infrastructure/Authentication/AuthenticationSessionLifetimePolicy.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IAuthenticationTokenService",
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "implementation": "AuthenticationTokenService",
@@ -33363,6 +33482,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IUserSessionPrincipalReader",
+      "interfacePath": "Modules/Users/Contracts/Common/IUserSessionPrincipalReader.cs",
+      "implementation": "UserSessionPrincipalReader",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserSessionPrincipalReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IUserTelegramAccountService",
       "interfacePath": "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs",
       "implementation": "UserTelegramAccountService",
@@ -33495,28 +33621,28 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 100
+      "line": 108
     },
     {
       "service": "INotificationTestScheduler",
       "implementation": "UnavailableNotificationTestScheduler",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 101
+      "line": 109
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 102
+      "line": 110
     },
     {
       "service": "IJobExecutionStateTracker",
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 124
+      "line": 133
     },
     {
       "service": "IIdempotencyStore",
@@ -33537,7 +33663,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 66
+      "line": 70
     },
     {
       "service": "IIdempotencyStore",

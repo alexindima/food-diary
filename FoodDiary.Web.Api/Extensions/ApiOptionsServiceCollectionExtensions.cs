@@ -67,6 +67,10 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:Images requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidAuth,
                     "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidSessionRestore,
+                    "RateLimiting:SessionRestore requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidSessionLogout,
+                    "RateLimiting:SessionLogout requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidAi,
                     "RateLimiting:Ai requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidWebhook,

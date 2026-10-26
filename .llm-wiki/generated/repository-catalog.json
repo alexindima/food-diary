@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 23,
     "agentGuides": 297,
-    "documentationPages": 244
+    "documentationPages": 245
   },
   "dotnet": {
     "projects": [
@@ -16102,6 +16102,7 @@
       "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
       "docs/frontend/PUBLIC_LIGHTHOUSE.md",
       "docs/frontend/PUBLIC_RECIPES.md",
+      "docs/frontend/SCRIPT_CSP.md",
       "docs/frontend/TEMPLATE_LINTING.md",
       "docs/frontend/WEB_QUALITY.md",
       "docs/frontend/angular-22-tech-debt.md",

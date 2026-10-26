@@ -60,3 +60,16 @@ security version and activity only. Preserve proof, expiry and revocation fences
 monotonic activity and the live transaction binding; do not save a stale tracked
 session over concurrent logout. SQL and fallback behavior retain the reviewed
 persistence capability fingerprint and real PostgreSQL regression coverage.
+
+Ordinary authentication reads `BrowserSessionProof` without tracking. Its
+five-minute activity touch is atomic and checks owner, proof, exact browser
+security version, expiry, revocation and the previous activity cutoff. It never
+rotates credentials or extends lifetime. Explicit restoration may extend eligible
+ordinary browser sessions within the configured renewal window and absolute cap.
+The renewal update must compare owner, proof, exact security version, previous
+expiry and revocation, and require the persisted eligibility flag. Admin and
+unknown sessions remain fixed; concurrent renewals re-read proof on a lost CAS.
+Session retention uses bounded SQL
+deletes after a past UTC cutoff, preserving active/recent records and legacy
+expiry semantics; JobManager dispatches the owner request without a whole-job
+transaction. Refresh the reviewed persistence fingerprints after SQL changes.

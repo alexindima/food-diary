@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, DefaultUrlSerializer, Router, RouterStateSnapshot } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,6 +11,7 @@ let authService: {
     isAuthenticated: ReturnType<typeof vi.fn>;
     isAdmin: ReturnType<typeof vi.fn>;
     tryUpgradeToAdminAsync: ReturnType<typeof vi.fn>;
+    sessionUnavailable: ReturnType<typeof signal<boolean>>;
 };
 let router: {
     createUrlTree: ReturnType<typeof vi.fn>;
@@ -24,6 +26,7 @@ beforeEach(() => {
         isAuthenticated: vi.fn(),
         isAdmin: vi.fn(),
         tryUpgradeToAdminAsync: vi.fn(),
+        sessionUnavailable: signal(false),
     };
     authService.applySsoFromQueryAsync.mockResolvedValue(void 0);
     authService.tryUpgradeToAdminAsync.mockResolvedValue(false);
@@ -46,6 +49,16 @@ beforeEach(() => {
 });
 
 describe('adminAuthGuard', () => {
+    it.each([false, true])('routes unavailable restoration to recovery even with known metadata %s', async known => {
+        authService.isAuthenticated.mockReturnValue(known);
+        authService.isAdmin.mockReturnValue(known);
+        authService.sessionUnavailable.set(true);
+        await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+        expect(router.createUrlTree, 'An unavailable session must use the recovery reason').toHaveBeenCalledWith(['/unauthorized'], {
+            queryParams: { reason: 'unavailable', returnUrl: state.url },
+        });
+    });
+
     it('should allow authenticated admin', async () => {
         authService.isAuthenticated.mockReturnValue(true);
         authService.isAdmin.mockReturnValue(true);

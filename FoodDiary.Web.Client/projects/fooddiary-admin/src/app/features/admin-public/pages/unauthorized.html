@@ -1,16 +1,24 @@
 <section class="unauthorized fd-grid fd-gap-md">
-    @if (rateLimited()) {
-        <h1>{{ 'ADMIN_AUTH.RATE_LIMITED_TITLE' | translate }}</h1>
-        <p role="alert">{{ 'ADMIN_AUTH.RATE_LIMITED_MESSAGE' | translate }}</p>
+    @if (restoreUnavailable()) {
+        <h1>{{ 'ADMIN_AUTH.SESSION_UNAVAILABLE_TITLE' | translate }}</h1>
+        <p role="status">{{ 'ADMIN_AUTH.SESSION_UNAVAILABLE_MESSAGE' | translate }}</p>
+        <fd-ui-button type="button" [loading]="retryBusy()" [attr.aria-busy]="retryBusy()" (click)="retryRestoreAsync()">
+            {{ 'SESSION_RECOVERY.RETRY' | translate }}
+        </fd-ui-button>
     } @else {
-        <h1>Access denied</h1>
-        <p>
-            @if (reason === 'unauthenticated') {
-                Your admin session is missing or expired.
-            } @else {
-                You do not have permission to access this area.
-            }
-        </p>
+        @if (rateLimited()) {
+            <h1>{{ 'ADMIN_AUTH.RATE_LIMITED_TITLE' | translate }}</h1>
+            <p role="alert">{{ 'ADMIN_AUTH.RATE_LIMITED_MESSAGE' | translate }}</p>
+        } @else {
+            <h1>Access denied</h1>
+            <p>
+                @if (effectiveReason() === 'unauthenticated') {
+                    Your admin session is missing or expired.
+                } @else {
+                    You do not have permission to access this area.
+                }
+            </p>
+        }
+        <fd-ui-button type="button" (click)="goToLogin()">Go to login</fd-ui-button>
     }
-    <fd-ui-button type="button" (click)="goToLogin()">Go to login</fd-ui-button>
 </section>

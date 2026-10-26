@@ -17,6 +17,44 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 [ExcludeFromCodeCoverage]
 public sealed class RateLimiterOptionsSetupTests {
     [Fact]
+    public void BrowserRestorationAndLogout_DoNotConsumeTheCredentialAuthenticationBudget() {
+        EnableRateLimitingAttribute restore = Assert.IsType<EnableRateLimitingAttribute>(
+            typeof(BrowserSessionController).GetMethod("Restore")!.GetCustomAttribute<EnableRateLimitingAttribute>());
+        EnableRateLimitingAttribute logout = Assert.IsType<EnableRateLimitingAttribute>(
+            typeof(AuthSessionLifecycleController).GetMethod("Logout")!.GetCustomAttribute<EnableRateLimitingAttribute>());
+
+        Assert.Multiple(
+            () => Assert.NotEqual(PresentationPolicyNames.AuthRateLimitPolicyName, restore.PolicyName, StringComparer.Ordinal),
+            () => Assert.NotEqual(PresentationPolicyNames.AuthRateLimitPolicyName, logout.PolicyName, StringComparer.Ordinal),
+            () => Assert.NotEqual(restore.PolicyName, logout.PolicyName, StringComparer.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("PresentationSessionRestoreRateLimit", 120)]
+    [InlineData("PresentationSessionLogoutRateLimit", 30)]
+    public void SessionPolicies_HaveSeparateBoundedBudgets(string policyName, int limit) {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(MsOptions.Create(new ApiRateLimitingOptions())).Configure(options);
+        Delegate session = Assert.Single(GetDelegates(FindPolicy(options, policyName)));
+        Delegate auth = Assert.Single(GetDelegates(FindPolicy(options, PresentationPolicyNames.AuthRateLimitPolicyName)));
+        var context = new DefaultHttpContext();
+        context.Connection.RemoteIpAddress = IPAddress.Parse("198.51.100.25");
+
+        object partition = session.DynamicInvoke(context)!;
+        Assert.NotEqual(GetPartitionKey(partition), GetPartitionKey(auth.DynamicInvoke(context)), StringComparer.Ordinal);
+        using RateLimiter limiter = CreateLimiter(partition);
+        using RateLimitLease batch = limiter.AttemptAcquire(limit);
+        Assert.True(batch.IsAcquired);
+        using RateLimitLease overflow = limiter.AttemptAcquire();
+        Assert.False(overflow.IsAcquired);
+        using RateLimiter authLimiter = CreateLimiter(auth.DynamicInvoke(context)!);
+        using RateLimitLease authBatch = authLimiter.AttemptAcquire(5);
+        Assert.True(authBatch.IsAcquired);
+        using RateLimitLease authOverflow = authLimiter.AttemptAcquire();
+        Assert.False(authOverflow.IsAcquired);
+    }
+
+    [Fact]
     public void TelegramConfiguration_UsesSeparatePolicy_WhileAuthenticationPostsKeepAuthPolicy() {
         Type controller = typeof(AuthTelegramOnboardingController);
         EnableRateLimitingAttribute? controllerPolicy = controller.GetCustomAttribute<EnableRateLimitingAttribute>();

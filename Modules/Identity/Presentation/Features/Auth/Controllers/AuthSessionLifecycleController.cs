@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Results;
+using FoodDiary.Presentation.Api.Extensions;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 
@@ -60,7 +62,8 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
     [AllowAnonymous]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [EnableRateLimiting(PresentationPolicyNames.SessionLogoutRateLimitPolicyName)]
     public Task<IActionResult> Logout([FromBody] RefreshTokenHttpRequest? request = null) =>
         HandleLogoutAsync(request);
 
@@ -73,18 +76,23 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
         }
         if (HttpContext.Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" &&
             browserCookies.Read(HttpContext) is { } browserCredential) {
-            try {
-                return await HandleNoContent(browserCredential.ToBrowserLogoutCommand()).ConfigureAwait(false);
-            } finally {
+            IActionResult result = await HandleNoContent(browserCredential.ToBrowserLogoutCommand()).ConfigureAwait(false);
+            if (result is NoContentResult) {
                 browserCookies.Delete(HttpContext);
             }
+            return result;
         }
         RefreshTokenCookieService refreshTokenCookies = HttpContext.RequestServices.GetRequiredService<RefreshTokenCookieService>();
         string? refreshToken = request?.RefreshToken ?? refreshTokenCookies.Read(HttpContext);
-        try {
-            return await HandleNoContent(refreshToken.ToLogoutCommand()).ConfigureAwait(false);
-        } finally {
+        string? selectionError = refreshTokenCookies.GetSelectionErrorCode(HttpContext, refreshToken);
+        if (selectionError is not null) {
+            return Result.Failure(new Error(selectionError, "The selected session could not be verified.", ErrorKind.Unauthorized))
+                .ToNoContentActionResult(this);
+        }
+        IActionResult tokenResult = await HandleNoContent(refreshToken.ToLogoutCommand()).ConfigureAwait(false);
+        if (tokenResult is NoContentResult) {
             refreshTokenCookies.Delete(HttpContext);
         }
+        return tokenResult;
     }
 }

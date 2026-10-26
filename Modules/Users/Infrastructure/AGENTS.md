@@ -16,6 +16,13 @@ API/Identity owns token validation/issuance. Do not substitute an already
 tracked User or cache state. The Users-owned UserRepository lookup, Google,
 and write aliases still share one instance and scoped DbContext.
 
+`UserSessionPrincipalReader` supplies ordinary browser authentication with a
+single no-tracking scalar query for account ID, email, security version, roles
+and trial dates. Exclude inactive/deleted accounts and password/profile columns.
+Both this projection and full sign-in use Users Domain's
+`UserAuthenticationPrivileges`; preserve trial boundaries, paid roles and access
+caps. The reader never saves, tracks entities or caches principals.
+
 Own `UserAdministrationReadRepository` with both administrative read aliases on
 one scoped adapter. Preserve original paging/status/search/role loading and model
 mapping, including legacy entity-returning reads. All reads stay no-tracking;

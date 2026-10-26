@@ -81,7 +81,7 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
             }
         }
         IssuedAuthenticationTokens issued = await tokens.IssueFromPrincipalAsync(principal.Value, cancellationToken, command.ClientContext).ConfigureAwait(false);
-        return Result.Success(new AuthenticationModel(issued.AccessToken, issued.RefreshToken, principal.Value.User));
+        return Result.Success(new AuthenticationModel(issued.AccessToken, issued.RefreshToken, principal.Value.User, issued.BrowserSession));
     }
 
     internal static bool IsValidTimeZone(string? timeZoneId, Func<string, TimeZoneInfo> resolveTimeZone) {

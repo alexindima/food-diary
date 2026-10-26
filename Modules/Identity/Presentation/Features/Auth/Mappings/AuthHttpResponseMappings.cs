@@ -26,7 +26,8 @@ public static class AuthHttpResponseMappings {
             return new AuthenticationHttpResponse(
                 model.AccessToken,
                 model.RefreshToken,
-                model.User.ToHttpResponse()
+                model.User.ToHttpResponse(),
+                BrowserSession: model.BrowserSession
             );
         }
     }

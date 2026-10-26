@@ -3,6 +3,8 @@ namespace FoodDiary.Presentation.Api.Policies;
 public static class PresentationPolicyNames {
     public const string AuthRateLimitPolicyName = "PresentationAuthRateLimit";
     public const string AuthConfigurationRateLimitPolicyName = "PresentationAuthConfigurationRateLimit";
+    public const string SessionRestoreRateLimitPolicyName = "PresentationSessionRestoreRateLimit";
+    public const string SessionLogoutRateLimitPolicyName = "PresentationSessionLogoutRateLimit";
     public const string ImagesRateLimitPolicyName = "PresentationImagesRateLimit";
     public const string AiRateLimitPolicyName = "PresentationAiRateLimit";
     public const string WebhookRateLimitPolicyName = "PresentationWebhookRateLimit";
