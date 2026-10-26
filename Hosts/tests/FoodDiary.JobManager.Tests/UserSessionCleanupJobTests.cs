@@ -35,7 +35,9 @@ public sealed class UserSessionCleanupJobTests {
     [InlineData(30, 500, 20, true)]
     public void Options_RejectUnsafeRetentionOrUnboundedBatches(int retention, int batch, int maxBatches, bool expected) =>
         Assert.Equal(expected, UserSessionCleanupOptions.HasValidConfiguration(new UserSessionCleanupOptions {
-            RetentionDays = retention, BatchSize = batch, MaxBatches = maxBatches,
+            RetentionDays = retention,
+            BatchSize = batch,
+            MaxBatches = maxBatches,
         }));
 
     [ExcludeFromCodeCoverage]

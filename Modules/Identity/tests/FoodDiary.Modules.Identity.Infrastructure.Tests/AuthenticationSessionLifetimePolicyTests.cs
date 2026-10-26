@@ -64,7 +64,9 @@ public sealed class AuthenticationSessionLifetimePolicyTests {
     [InlineData(AuthenticationCredentialKind.AdminBrowser, true, 60)]
     public void GetLifetime_UsesConfiguredBrowserAndAdministrativeLimits(AuthenticationCredentialKind kind, bool remember, int minutes) {
         var policy = new AuthenticationSessionLifetimePolicy(Options.Create(new JwtOptions {
-            ExpirationMinutes = 60, RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90,
+            ExpirationMinutes = 60,
+            RefreshTokenExpirationDays = 30,
+            RememberMeRefreshTokenExpirationDays = 90,
         }), Options.Create(new BrowserSessionRenewalOptions()));
         Assert.Equal(TimeSpan.FromMinutes(minutes), policy.GetLifetime(kind, remember));
         Assert.Throws<ArgumentOutOfRangeException>(() => policy.GetLifetime(AuthenticationCredentialKind.Bearer, rememberMe: false));

@@ -37906,11 +37906,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 71,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.36
+      "structuralRiskScore": 25.42
     },
     {
       "path": "Modules/Identity/Presentation/Filters/SuppressRefreshTokenCookieAttribute.cs",
@@ -49490,11 +49490,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserSessionPrincipalReader.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 31,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.54
+      "structuralRiskScore": 6.62
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",

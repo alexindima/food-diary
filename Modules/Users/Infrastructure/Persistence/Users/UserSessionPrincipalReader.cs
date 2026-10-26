@@ -16,7 +16,11 @@ public sealed class UserSessionPrincipalReader(DbSet<User> users, Func<Cancellat
         }
         var data = await users.AsNoTracking().Where(user => user.Id == userId && user.IsActive && user.DeletedAt == null)
             .Select(user => new {
-                user.Id, user.Email, user.SecurityVersion, user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc,
+                user.Id,
+                user.Email,
+                user.SecurityVersion,
+                user.PremiumTrialStartedAtUtc,
+                user.PremiumTrialEndsAtUtc,
                 Roles = user.UserRoles.Select(membership => membership.Role.Name).ToList(),
             }).AsSingleQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         if (data is null) {

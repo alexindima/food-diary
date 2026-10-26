@@ -65,8 +65,11 @@ public sealed class AuthenticationCookieResultFilter(
             refreshTokenCookies.Delete(context);
         }
         response.Value = authentication with {
-            AccessToken = null, RefreshToken = string.Empty, Roles = session.Roles.ToArray(),
-            SessionId = session.SessionId.ToString("D"), RememberMe = session.RememberMe,
+            AccessToken = null,
+            RefreshToken = string.Empty,
+            Roles = session.Roles.ToArray(),
+            SessionId = session.SessionId.ToString("D"),
+            RememberMe = session.RememberMe,
         };
     }
 }
