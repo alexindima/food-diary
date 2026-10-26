@@ -58,7 +58,10 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         providers: [
             EmailVerificationRealtimeService,
-            { provide: AuthService, useValue: { getToken, isAuthenticated: vi.fn(() => true), sessionHubUrl: (hubUrl: string): string => hubUrl } },
+            {
+                provide: AuthService,
+                useValue: { getToken, isAuthenticated: vi.fn(() => true), sessionHubUrl: (hubUrl: string): string => hubUrl },
+            },
         ],
     });
     service = TestBed.inject(EmailVerificationRealtimeService);

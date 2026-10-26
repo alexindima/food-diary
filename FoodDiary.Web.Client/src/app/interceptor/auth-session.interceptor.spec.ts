@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { AuthInterceptor } from './auth.interceptor';
 
-const path = `${environment.apiUrls.auth.replace(/\/auth$/, '')  }/notifications/read-all`;
+const path = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/notifications/read-all`;
 let http: HttpClient;
 let requests: HttpTestingController;
 let sessions: SessionEventsService;

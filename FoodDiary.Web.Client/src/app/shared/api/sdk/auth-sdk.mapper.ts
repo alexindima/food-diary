@@ -8,10 +8,7 @@ export function authResponseFromSdk(response: AuthenticationHttpResponse): AuthR
     const accessToken = nonEmptyString(value.accessToken);
     const sessionId = nonEmptyString(value.sessionId);
     const impersonationContext = nonEmptyString(value.impersonationContext);
-    if (
-        accessToken === undefined &&
-        (!Array.isArray(value.roles) || (sessionId === undefined && impersonationContext === undefined))
-    ) {
+    if (accessToken === undefined && (!Array.isArray(value.roles) || (sessionId === undefined && impersonationContext === undefined))) {
         throw new Error('Missing browser session metadata');
     }
     return {

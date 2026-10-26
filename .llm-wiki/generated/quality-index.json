@@ -16618,11 +16618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/auth-sdk.mapper.ts",
-      "nonBlankLines": 28,
+      "nonBlankLines": 25,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.56
+      "structuralRiskScore": 9.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/cycle-sdk.mapper.ts",
