@@ -112,7 +112,7 @@ decimal nutrition totals. The isolated SDK export includes the three hidden web
 telemetry/attribution routes while published Swagger remains unchanged.
 
 `npm run check:api-client-usage` protects both Angular apps from handwritten HTTP
-requests and runs through lint, CI and pre-push. TypeScript source guards retain
+requests and runs through lint and CI. TypeScript source guards retain
 only reviewed method/verb/target exceptions for generated transport forwarding,
 interceptors, signed uploads and static translations. The architecture suite's
 `GeneratedApiClientUsageTests` applies the corresponding policy to the bot.

@@ -7,11 +7,12 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class BuildWorkflowGuardrailTests {
     [Fact]
-    public void PrePush_ChecksRetrievalBeforeBuildingTheSolution() {
-        string hook = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
-        int retrieval = hook.IndexOf("-File .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1 || exit 1", StringComparison.Ordinal);
-        Assert.True(retrieval >= 0);
-        Assert.True(retrieval < hook.IndexOf("command dotnet build", StringComparison.Ordinal));
+    public void Ci_RetainsFrontendChecksMovedFromPrePush() {
+        string workflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"));
+        Assert.Multiple(
+            () => Assert.Contains("npm run check:depcruise-baseline", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("npm run build:storybook", workflow, StringComparison.Ordinal),
+            () => Assert.Contains("-VerificationProfile Focused", workflow, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -57,9 +58,8 @@ public sealed class BuildWorkflowGuardrailTests {
     }
 
     [Fact]
-    public void CiAndPrePush_RunCompleteBackendSuitesWithBoundedParallelism() {
+    public void Ci_RunsCompleteBackendSuitesWithBoundedParallelism() {
         string ciWorkflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"));
-        string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
         string groupRunner = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "ci", "Invoke-BackendTests.ps1"));
 
         Assert.Multiple(
@@ -72,9 +72,7 @@ public sealed class BuildWorkflowGuardrailTests {
             () => Assert.Contains("needs: [backend-format, backend-fast, backend-slow]", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains(".result -ne 'success'", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains("foreach ($path in $selected)", groupRunner, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("--filter", groupRunner, StringComparison.Ordinal),
-            () => Assert.Contains("dotnet test FoodDiary.slnx", prePush, StringComparison.Ordinal),
-            () => Assert.Contains("--maxcpucount:1", prePush, StringComparison.Ordinal));
+            () => Assert.DoesNotContain("--filter", groupRunner, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -120,33 +118,18 @@ public sealed class BuildWorkflowGuardrailTests {
     }
 
     [Fact]
-    public void GitHooks_KeepCommitsFastAndIsolatePushArtifacts() {
+    public void GitHooks_KeepCommitsAndPushesFreeOfApplicationTooling() {
         string preCommit = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-commit"));
         string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
 
         Assert.Multiple(
-            () => Assert.Equal("# Keep local commits fast; full verification runs before push.\ngit diff --cached --check\n", preCommit.Replace("\r\n", "\n", StringComparison.Ordinal)),
-            () => Assert.Contains("PRE_PUSH_ARTIFACTS_PATH=\".artifacts/pre-push/$$\"", prePush, StringComparison.Ordinal),
-            () => Assert.True(CountOccurrences(prePush, "Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath") >= 2),
-            () => Assert.Equal(1, CountOccurrences(prePush, "dotnet build ")),
-            () => Assert.Contains("dotnet format FoodDiary.slnx --verify-no-changes --no-restore", prePush, StringComparison.Ordinal),
-            () => Assert.Contains("Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly", prePush, StringComparison.Ordinal),
-            () => Assert.Contains("npm run build:storybook", prePush, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("Clean-NestedDotnetArtifacts.ps1 -IncludeRoot", prePush, StringComparison.Ordinal));
-    }
-
-    [Fact]
-    public void PrePush_SkipsVerificationOnlyWhenEveryRefIsDeleted() {
-        string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
-        int deletionGuard = prePush.IndexOf("[ \"$saw_ref_update\" = true ] && [ \"$only_deletions\" = true ]", StringComparison.Ordinal);
-        int powerShellRequirement = prePush.IndexOf("command -v pwsh", StringComparison.Ordinal);
-
-        Assert.Multiple(
-            () => Assert.Contains("while read -r local_ref local_object_name remote_ref remote_object_name", prePush, StringComparison.Ordinal),
-            () => Assert.Contains("[ \"$local_ref\" != \"(delete)\" ] && [ \"$local_object_name\" != \"0000000000000000000000000000000000000000\" ]", prePush, StringComparison.Ordinal),
-            () => Assert.Contains("only_deletions=false", prePush, StringComparison.Ordinal),
-            () => Assert.True(deletionGuard >= 0, "The pure-deletion guard is missing."),
-            () => Assert.True(powerShellRequirement > deletionGuard, "Pure ref deletions must exit before PowerShell is required."));
+            () => Assert.Contains("git diff --cached --check", preCommit, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("npm", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("dotnet", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("pwsh", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("node ", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain(".llm-wiki/", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain(".artifacts/", preCommit + prePush, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -160,6 +143,4 @@ public sealed class BuildWorkflowGuardrailTests {
             () => Assert.Contains("^(?:[0-9a-fA-F]{32}|[0-9a-f]{64})$", launcher, StringComparison.Ordinal));
     }
 
-    private static int CountOccurrences(string source, string value) =>
-        source.Split(value, StringSplitOptions.None).Length - 1;
 }

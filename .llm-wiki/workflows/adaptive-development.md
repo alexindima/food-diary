@@ -325,8 +325,8 @@ For an explicitly grounded repository/query-performance fix, the compact brief
 replaces handler trace because request-handler discovery is the wrong tool for
 that edit boundary.
 Journeys and design remain optional unless the trace exposes a product decision
-or a second behavioral flow. Full verification stays enforced by pre-push and
-CI rather than blocking local bug completion.
+or a second behavioral flow. Full verification stays enforced by CI rather
+than blocking local bug completion.
 
 ## Grounded research
 
@@ -427,7 +427,7 @@ browser evidence when the final diff
 remains frontend-only and does not change contracts,
 dependencies, architecture, providers, persistence, privacy, security, or
 configuration. Full `npm run verify` and full Wiki verification are publication
-gates supplied by the repository pre-push hook and CI; they are not repeated
+gates supplied by CI; they are not repeated
 before local completion. Browser evidence covers the viewport named by scope.
 Mobile evidence is required only for responsive or mobile behavior; otherwise
 record mobile as explicitly out of scope.

@@ -13,7 +13,6 @@ public sealed class GeneratedApiClientUsageTests {
             Assert.Contains("check-api-client-usage.mjs", scripts.GetProperty("check:api-client-usage").GetString(), StringComparison.Ordinal);
             Assert.Contains("npm run check:api-client-usage", scripts.GetProperty("lint").GetString(), StringComparison.Ordinal);
             Assert.Contains("npm run lint", scripts.GetProperty("verify").GetString(), StringComparison.Ordinal);
-            Assert.Contains("npm run lint", File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push")), StringComparison.Ordinal);
             Assert.Contains("npm run lint", File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml")), StringComparison.Ordinal);
         });
     }

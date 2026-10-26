@@ -14,28 +14,35 @@ They also guard the allowed reference graph between test projects, so shared tes
 
 ## Local Git Hooks and CI
 
-`pre-commit` only runs `git diff --cached --check` so local commits stay fast.
-`pre-push` checks affected Wiki indexes, frontend checks/app unit tests, and
-Storybook when its inputs changed. It builds the backend solution once (including
-migrations), checks C# formatting when C# files changed, and runs unit and architecture
-tests. Changed paths cover every outgoing ref; new refs or missing remote objects
-use the full file inventory. Its backend filter excludes fully qualified names
-containing `IntegrationTests`, the slow `FoodDiary.Development.Mcp.Tests` suite,
-and tests with `Category=Integration` or `Category=Slow`. The name filter covers
-dedicated integration namespaces and repository integration classes in mixed
-unit-test projects. New integration tests should follow that convention or carry
-the explicit category.
+`pre-commit` only runs `git diff --cached --check`. `pre-push` uses Git to check
+whitespace in every outgoing commit for each updated ref, including root and
+merge commits. Deletion-only pushes need no checks. New refs and unavailable
+remote objects exclude commits already known through that remote's tracking
+refs. A manual invocation without ref input checks tracked changes against HEAD.
+The hook reads committed content during a push, so unrelated working changes do
+not affect the result. Neither hook needs npm, .NET, Docker or PowerShell, and
+neither hook builds the application or verifies Wiki indexes.
 
-`.github/workflows/ci-tests.yml` runs every backend test project without this
-filter, split into an early fast job and subsequent parallel slow jobs, plus
-frontend/E2E jobs. Local builds and
-remaining tests still take time; removing integration execution does not remove
-the solution build. When changing an integration boundary, run the affected test
-project manually before publishing. To run the complete backend suite locally:
+Run focused checks while developing the affected behavior. The full publication
+gate lives in `.github/workflows/ci-tests.yml`: Wiki verification, backend build,
+formatting and every test project, frontend formatting/linters/dependency baseline,
+coverage tests, production/library/Storybook builds, and browser smoke tests.
+When changing an integration boundary, run the affected test project locally.
+To run the complete backend suite locally:
 
 ```bash
 dotnet test FoodDiary.slnx --maxcpucount:1
 ```
+
+For every authorized production release, follow the exact published SHA through
+`CI Tests` and its resulting `Deploy` run until both have terminal results.
+Successful push, successful CI, and successful deployment are separate facts.
+Inspect failed job logs before diagnosing a failure. If a fix is authorized,
+follow its replacement SHA through the same chain. Report CI and deployment
+links/results and application health separately; a healthy endpoint alone does
+not prove which revision was deployed. A superseded or skipped deployment must
+not be reported as successful. See
+[fooddiary-delivery](../.agents/skills/fooddiary-delivery/SKILL.md).
 
 ### Backend CI order and completeness
 

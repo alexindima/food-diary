@@ -166,7 +166,7 @@ the full project test script and says why in `commandEvidence`.
 
 Commands are grouped by obligation. `required` covers triggered policy and direct
 owners, `recommended` covers close consumers, and `full-regression` is the broad
-safety net normally delegated to pre-push or CI. The causal reason is printed
+safety net normally delegated to CI. The causal reason is printed
 with every command.
 
 When more than three production projects reference a changed contract, the

@@ -15,7 +15,7 @@ $wikiFacadeText = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki
 $verificationCacheText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Raw
 Assert-Cache ($wikiFacadeText.Contains("Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments") -and
     $wikiFacadeText.Contains("`$verificationCacheArguments.Action = 'Record'") -and
-    $wikiFacadeText.Contains('Strict publication verification remains enforced by pre-push and CI.')) 'Verify-fast does not reuse and record a content-addressed local completion receipt.'
+    $wikiFacadeText.Contains('Strict publication verification remains enforced by CI.')) 'Verify-fast does not reuse and record a content-addressed local completion receipt.'
 Assert-Cache ($verificationCacheText -match "rev-parse', 'HEAD'" -and $verificationCacheText -match "ls-files', '--others', '--exclude-standard'" -and
     $verificationCacheText -match "diff', '--raw'" -and $verificationCacheText -match 'PSVersionTable' -and
     $verificationCacheText -match 'ChangedPath') 'Verification cache fingerprint omits repository, metadata, environment, or scope inputs.'

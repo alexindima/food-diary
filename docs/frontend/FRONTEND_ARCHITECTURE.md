@@ -70,7 +70,7 @@ Registration runs only after browser rendering in local development. The library
 does not save records, start sessions or request permissions.
 
 Dedicated `build:webmcp`, `test:ci:webmcp` and `test:coverage:webmcp` commands cover
-the public package and shared guards. Full verification, pre-push and CI include
+the public package and shared guards. Full verification and CI include
 the library; ESLint and Dependency Cruiser enforce its dependency boundary.
 
 ## Angular Conventions

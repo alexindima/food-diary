@@ -68,10 +68,11 @@ For compound subjects, adjacent query words are matched together in the path/tit
 ## Retrieval regression checks
 
 Application files are retrieval inputs: adding a renderer or moving a module can
-change rankings even when Wiki scripts are untouched. Pre-push runs
-`Test-LlmWikiSqlContextEvaluation.ps1` before solution builds, using the same
-frozen corpora, quality thresholds and Node/.NET parity checks as CI. Index
-freshness alone does not validate search quality.
+change rankings even when Wiki scripts are untouched. CI runs
+`Test-LlmWikiSqlContextEvaluation.ps1` through the focused Wiki regressions,
+using frozen corpora, quality thresholds and Node/.NET parity checks. Run it
+locally when changing retrieval behavior. Index freshness alone does not validate
+search quality; pre-push only checks outgoing whitespace.
 
 On failure, inspect `.artifacts/llm-wiki/context-evaluation/`. Reports contain
 per-case expected/actual paths, confidence, score margins and ranking reasons;

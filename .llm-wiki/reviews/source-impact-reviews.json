@@ -18,8 +18,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
-          "reviewReason": "Reviewed the new AGENTS.md Docker preflight command against the implemented Ensure-Docker.ps1 and integration runner. The root Wiki page remains a navigation map to authoritative guides; no link, module ownership or query protocol changed."
+          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         },
         {
           "path": "docs/ARCHITECTURE.md",
@@ -37,10 +37,10 @@
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:45.8274854Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:45.3901331Z"
     },
     {
       "pageId": "module.frontend",
@@ -154,13 +154,13 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed additive CLI options, environment health output, behavioral corpus and role views against their current generators. Existing source ownership and dispatch semantics remain accurately documented."
+          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "d72d1c03fce38155bf48a499c33e4595decfb0bbe706866d9f79ccdda0a72bd5",
-          "reviewReason": "Reviewed the current frontend guide and regenerated component/contract indexes. Recovery owns cross-session hints and uses existing UI-kit controls with both locales; generated SDK boundaries remain intact. Production build/CSP guidance does not change query contracts."
+          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
@@ -168,10 +168,10 @@
           "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
         }
       ],
-      "reason": "Reviewed the current frontend guide and regenerated component/contract indexes. Recovery owns cross-session hints and uses existing UI-kit controls with both locales; generated SDK boundaries remain intact. Production build/CSP guidance does not change query contracts.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T05:58:39.8667009Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:45.7352304Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -180,8 +180,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
-          "reviewReason": "The new Docker readiness instruction belongs to the existing living-guidance layer. Evidence precedence, source-review hashes and compiled-knowledge update policy are unchanged."
+          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         },
         {
           "path": "docs/adr/README.md",
@@ -194,10 +194,10 @@
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:48.7441349Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:45.9913981Z"
     },
     {
       "pageId": "system.quality-index",
@@ -298,9 +298,19 @@
       "pageSha256": "a8b79f4a425ff7af660bd33616e763ffbe6123cbd00304117baa354c8bb7634a",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "799f3b1c9abb5eea0dc7995a9b88919a6b935573fa8747ad7818323613aaa4fa",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
+        },
+        {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
           "sha256": "edf1c46c5d8ad86de3f6a27545f1b55ef1b7099851c258ff4da50e1c52a8f245",
           "reviewReason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened."
+        },
+        {
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
@@ -313,10 +323,10 @@
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "PresentationBoundaryIntegrationTests now targets the dedicated PasswordLogin budget. Routes, status-code declarations, success DTOs and the existing 429 envelope are preserved; the new result filter strips internal retry metadata into the header. Existing OpenAPI snapshots remain the verification boundary.",
+      "reason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.4996609Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:46.3608650Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -399,73 +409,18 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "ce2eb204b97c702ee45a2f610f331ca51ffb85bd444e23445559d17cf1a7c8f1",
+      "pageSha256": "91c9a80596373b16aaaf88c43fa44023e82adae4457a2516a02b39c55bdb9b90",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "23da14acddbed8148e277c6c8bcf0b9f543e568886898e43391a12f131f10e33",
-          "reviewReason": "Reviewed final owner boundaries, narrow dependency/capability receipts, real PostgreSQL atomic restoration and browser startup veil. Full backend suites, 5838 app tests, 388 admin tests, focused final frontend tests and real Chrome isolation passed. Migrated only four retired token-storage retrieval cases; complete SQL retrieval and .NET parity passed without changing ranking rules or quality thresholds. Runtime cookie probes and workflow limitations remain accurate."
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
-          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-dotnet-runtime.mjs",
-          "sha256": "2675257154d4cbbca9841735499d792881334f95ee7ced9c3999aa75695e2df5",
-          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-dotnet-runtime.test.mjs",
-          "sha256": "634d8c4082650d395fc9057251e805481076754609d3de324ab98c70c5a6230d",
-          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "3e8e795b25f508217d722b536be07b38ce1be12cdeac97f86386de74f82b5876",
-          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Reviewed graph ownership, extraction, lock and cancellation sections against all async call sites and dependency-runtime helper. Every production caller awaits the new Promise; projection/ranking/transaction logic is unchanged. Local subprocess deadline and cancellation cleanup add failure handling while retaining writer locking and dependency hashes."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
-          "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
-          "reviewReason": "Reviewed migration diagnostic and standalone route regression. JSON remains the Node projection source, SQLite remains the only query provider, and telemetry/parity routes remain active. The added C# consumer fixture proves zero scanned references cannot authorize deletion; graph schema and reader behavior are unchanged."
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-          "sha256": "a184f737563ef29494b8ddcc167b8ae9d6849dc4ab6045e47b8f26bb88233a2b",
-          "reviewReason": "Reviewed Recipes directory regression: named owning-test priority is limited to explicitly selected source files. Directory plans keep their prior downstream ordering, retaining the relocated Recipes feature tests; explicit Meals and Recipes service file priorities remain covered."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "ca48d58e9d57f8d6c45f85d08989a0df48b4a4c70996deb92bc077b669e696ea",
-          "reviewReason": "Reviewed bounded C# owning-test priority and its Meals/Recipes regressions. Cold-checkout regression fixtures now use a short repository-volume root with room for nested Git and SQLite paths; graph freshness, read-only isolation and required/recommended classification retain their documented behavior."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqliteColdCheckout.ps1",
-          "sha256": "cab9ad3aa720d4838e8b88d89440b9c04dfbf04371091fdc2c6caea467a1aaa8",
-          "reviewReason": "Reviewed bounded C# owning-test priority and its Meals/Recipes regressions. Cold-checkout regression fixtures now use a short repository-volume root with room for nested Git and SQLite paths; graph freshness, read-only isolation and required/recommended classification retain their documented behavior."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStandaloneIndexRoutes.ps1",
-          "sha256": "03dc4dc1f984abb654c29aa102d9c1a792f30b47fcc8f4df30c4e38d8c028134",
-          "reviewReason": "Reviewed migration diagnostic and standalone route regression. JSON remains the Node projection source, SQLite remains the only query provider, and telemetry/parity routes remain active. The added C# consumer fixture proves zero scanned references cannot authorize deletion; graph schema and reader behavior are unchanged."
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
-      "reviewedAtUtc": "2026-10-26T09:48:56.9688635Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:47.0675879Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -709,15 +664,20 @@
           "reviewReason": "Configuration records now include three independent login budgets and validated password cooldown options. The runbook documents migration of old Auth overrides, Redis selection, fail-closed behavior and rollback by ordinary code deployment. The existing centrally pinned StackExchange.Redis package is reused; there is no schema migration or new secret."
         },
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
           "sha256": "5f81ba7d58bbe1c40dd1e867ff6e3fa035847eac805f80b4363112712e4ef466",
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "Configuration records now include three independent login budgets and validated password cooldown options. The runbook documents migration of old Auth overrides, Redis selection, fail-closed behavior and rollback by ordinary code deployment. The existing centrally pinned StackExchange.Redis package is reused; there is no schema migration or new secret.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.7836629Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:47.4368948Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -846,19 +806,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "d72d1c03fce38155bf48a499c33e4595decfb0bbe706866d9f79ccdda0a72bd5",
-          "reviewReason": "Reviewed the build and browser-test scripts plus the owned Chrome evidence. Main static Nginx and admin static fixtures exercise outage retry, keyboard activation, Russian390px rendering, reload and two-tab replacement; the PWA run uses an actual controlled worker upgrade. SSR CSP check has deliberately unavailable data API and no provider/device claims. The existing visual-evidence procedure remains accurate."
-        },
-        {
-          "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "aab97d7053d3060e5ba984316774b69755bc5cf15d276fee3d4037eebd27ecea",
-          "reviewReason": "Reviewed the build and browser-test scripts plus the owned Chrome evidence. Main static Nginx and admin static fixtures exercise outage retry, keyboard activation, Russian390px rendering, reload and two-tab replacement; the PWA run uses an actual controlled worker upgrade. SSR CSP check has deliberately unavailable data API and no provider/device claims. The existing visual-evidence procedure remains accurate."
+          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Reviewed the build and browser-test scripts plus the owned Chrome evidence. Main static Nginx and admin static fixtures exercise outage retry, keyboard activation, Russian390px rendering, reload and two-tab replacement; the PWA run uses an actual controlled worker upgrade. SSR CSP check has deliberately unavailable data API and no provider/device claims. The existing visual-evidence procedure remains accurate.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T05:58:00.2405899Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:48.6926736Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1122,14 +1077,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb",
-          "reviewReason": "Current Services/MailInbox and Services/MailRelay infrastructure now receives the existing data-access review obligations. The 24-case regression verifies current real repositories/stores, synthetic persistence, exclusions and legacy paths."
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Current Services/MailInbox and Services/MailRelay infrastructure now receives the existing data-access review obligations. The 24-case regression verifies current real repositories/stores, synthetic persistence, exclusions and legacy paths.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "755c4ee5bb00ea025c5ad8321db12ec48386e496",
-      "reviewedAtUtc": "2026-10-04T10:05:47.30425Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:49.0402138Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1311,8 +1266,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "bc48a7567d8578a20088a6d21d74ffde80f069ea582c474d217d42decc2cd32a",
-          "reviewReason": "The reusable WebQuality job adds its own evidence artifacts; existing Wiki report generation and optional governance artifact behavior remain unchanged in CI."
+          "sha256": "799f3b1c9abb5eea0dc7995a9b88919a6b935573fa8747ad7818323613aaa4fa",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1325,10 +1280,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "The reusable WebQuality job adds its own evidence artifacts; existing Wiki report generation and optional governance artifact behavior remain unchanged in CI.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T05:28:21.8258077Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:49.9312898Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1352,9 +1307,9 @@
       "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "160356961f4082b77ca0f52796b9d8286700ce59f9a4d46489eed1b2e28d98b2",
-          "reviewReason": "The new Redis adapter reuses the existing API multiplexer and adds no host, worker or provider call. Atomic ownership and Redis TIME fence concurrent/stale attempts; exceptions release or expire leases, and Redis failure does not fall back to a fresh counter. No EF transaction semantics or existing provider validation changes."
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1362,10 +1317,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "The new Redis adapter reuses the existing API multiplexer and adds no host, worker or provider call. Atomic ownership and Redis TIME fence concurrent/stale attempts; exceptions release or expire leases, and Redis failure does not fall back to a fresh counter. No EF transaction semantics or existing provider validation changes.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:15.2547721Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:50.4011743Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1452,14 +1407,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:08.879311Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:51.2872441Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1562,8 +1517,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "81553df8d03f82af1b43cbf520b4ea4d3fcfc34ffd7d62be6842d5a2866937fb",
-          "reviewReason": "The planner still derives and integrity-binds its checks from the current policy. Only mail-service data-access path selection changed; check IDs, supersedence and commands are preserved, and both item-ID projections passed consolidated strict-mode regressions."
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
@@ -1571,10 +1526,10 @@
           "reviewReason": "InvokeTaskChecks still enforces the current policy ID, exact command and allowlist and derives failure from recorded terminal evidence. The change retains the real execution-owner log and artifact lineage rather than overwriting it with wrapper stdout. It does not change plan coverage, supersedence, fail-fast ordering or canonical plan verification, so the documented planner invariants remain accurate."
         }
       ],
-      "reason": "InvokeTaskChecks still enforces the current policy ID, exact command and allowlist and derives failure from recorded terminal evidence. The change retains the real execution-owner log and artifact lineage rather than overwriting it with wrapper stdout. It does not change plan coverage, supersedence, fail-fast ordering or canonical plan verification, so the documented planner invariants remain accurate.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "536c7a767ca451f2bf2840f9e5007c40bc1fb0af",
-      "reviewedAtUtc": "2026-10-22T23:42:42.6933899Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:51.7504724Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1608,15 +1563,20 @@
       "pageSha256": "f6340562c9cb1b9400acafcbeba632603a678221b6481c07dda81d8fd55d8714",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
-          "reviewReason": "AGENTS.md now requires Docker readiness before Docker-dependent tests. This is implemented by the test runner and helper; it does not change the path-based policy engine, policy families or structural invariants described here."
+          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         }
       ],
-      "reason": "AGENTS.md now requires Docker readiness before Docker-dependent tests. This is implemented by the test runner and helper; it does not change the path-based policy engine, policy families or structural invariants described here.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:28.6455653Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:46.6871394Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1640,15 +1600,20 @@
       "pageSha256": "75bfad8f245ea0fa9617ddff5ae268d54347223f66689cb822db15e79962b896",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+        },
+        {
           "path": "docs/ai/AI_WORKFLOW.md",
           "sha256": "9fd866dc6e1dedad145f62bed769fc85a54c970fc8b898fa50243a5de3ec9441",
           "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
         }
       ],
-      "reason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:16:07.0517525Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:47.8318982Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1657,19 +1622,19 @@
       "sources": [
         {
           "path": "docs/frontend/API_SDK.md",
-          "sha256": "aceaaac800f209ab9b2488e44b8e7db37b21eaf099f7e265e65c75da3dfdf878",
-          "reviewReason": "Reviewed changed auth DTOs, POST auth/session, all regenerated user/admin/bot SDKs and OpenAPI/payload assertions. Ordinary browser token removal is an intentional coordinated release documented by ADR 0058; Telegram bot/explicit Mini retain their token contract. Existing compatibility classification and generated transport/adapter ownership instructions remain valid."
+          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "d72d1c03fce38155bf48a499c33e4595decfb0bbe706866d9f79ccdda0a72bd5",
-          "reviewReason": "Reviewed the current frontend guide and regenerated component/contract indexes. Recovery owns cross-session hints and uses existing UI-kit controls with both locales; generated SDK boundaries remain intact. Production build/CSP guidance does not change query contracts."
+          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
         }
       ],
-      "reason": "Reviewed the current frontend guide and regenerated component/contract indexes. Recovery owns cross-session hints and uses existing UI-kit controls with both locales; generated SDK boundaries remain intact. Production build/CSP guidance does not change query contracts.",
+      "reason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T05:58:40.5325514Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:48.3102637Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1699,60 +1664,35 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced."
+          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         },
         {
           "path": "AGENTS.md",
-          "sha256": "7e8d8aa8cc5893f607ce8a9a2c1b3da41a44c919f889190a00e3ce166d5ea6d3",
-          "reviewReason": "Docker preparation adds a test execution prerequisite without changing diff scope, baseline handling, semantic source review or verification receipt semantics documented here."
+          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
+          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Docker preparation adds a test execution prerequisite without changing diff scope, baseline handling, semantic source review or verification receipt semantics documented here.",
+      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:30.6596842Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:49.4933250Z"
     },
     {
       "pageId": "workflow.self-maintenance",
       "pagePath": ".llm-wiki/workflows/self-maintenance.md",
-      "pageSha256": "891ba091baab5bb5ebac52ec2d8482eba48976374cc43486fa4fbbe800d24fa2",
+      "pageSha256": "95e3d3f9f3def07e12e906298c425d37920e54c1fd68fba8d9c9171c00711797",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph-context-projection.mjs",
-          "sha256": "5d96f898a23d83fcdeb5823ac41060ab769d79bb9b642b8428d5d55771824b55",
-          "reviewReason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-context-projection.test.mjs",
-          "sha256": "d8f923568a0cec993d11a73b8b523e8fafa54811b0e56c7eaa56541caf87ac57",
-          "reviewReason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-maintenance-recovery.test.mjs",
-          "sha256": "5196ab83ca7b28d13f8f83b060ebc5c76a432fa877da160882f1774ef37b95ae",
-          "reviewReason": "Recovery uses the full original feature derivation inside one transaction; missing mirrors repair narrowly, uncertainty uses full recovery, and injected interrupted repairs roll back before retry."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph-performance.test.mjs",
-          "sha256": "3e8e795b25f508217d722b536be07b38ce1be12cdeac97f86386de74f82b5876",
-          "reviewReason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite."
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Checked maintenance recovery and writer-only claims against graph cancellation changes and current tests. Ownership repair, transaction rollback, corruption classification and Markdown repair are unchanged; new failed/cancelled extractor path does not quarantine healthy SQLite."
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "ed120ac22e7de63f9d0f3130340a1c9159695e18dda2fd96b239a51fbfb8bdc4",
-          "reviewReason": "Reviewed facade parameter additions: frontend index generation and receipt semantics are unchanged; new regression parameters are consumed only by evidence-run."
+          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
+          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         }
       ],
-      "reason": "Reviewed facade parameter additions: frontend index generation and receipt semantics are unchanged; new regression parameters are consumed only by evidence-run.",
+      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
       "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:15:29.6007765Z"
+      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
+      "reviewedAtUtc": "2026-10-26T23:50:50.8596183Z"
     }
   ]
 }

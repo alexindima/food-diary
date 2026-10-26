@@ -134,47 +134,67 @@ try {
 
 $hookPath = Join-Path $repositoryRoot 'FoodDiary.Web.Client/.husky/pre-push'
 $hookText = [IO.File]::ReadAllText($hookPath)
-$hookPrefixEnd = $hookText.IndexOf('hook_progress_init ', [StringComparison]::Ordinal)
-if ($hookPrefixEnd -lt 0) { throw 'Pre-push path-selection boundary is missing.' }
 $shell = Get-Command sh -ErrorAction SilentlyContinue
 $shellPath = if ($null -ne $shell) { $shell.Source } elseif ($env:ProgramFiles -and (Test-Path -LiteralPath (Join-Path $env:ProgramFiles 'Git/bin/sh.exe'))) { Join-Path $env:ProgramFiles 'Git/bin/sh.exe' } else { throw 'Git hook scope regression requires sh.' }
 $hookFixture = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'pre-push-scope' -IndependentRepository
 try {
-    $stubRoot = Join-Path $hookFixture 'FoodDiary.Web.Client/.husky'
-    $null = New-Item -ItemType Directory -Path $stubRoot -Force
-    [IO.File]::WriteAllText((Join-Path $stubRoot 'progress.sh'), '')
-    $probe = Join-Path $hookFixture 'scope.sh'
-    [IO.File]::WriteAllText($probe, ($hookText.Substring(0, $hookPrefixEnd).Replace("`r`n", "`n") + "printf '%s\n' `"`$changed_paths`"`n"), [Text.UTF8Encoding]::new($false))
+    $probe = Join-Path $hookFixture 'pre-push.sh'
+    [IO.File]::WriteAllText($probe, $hookText.Replace("`r`n", "`n"), [Text.UTF8Encoding]::new($false))
     $null = Invoke-LlmWikiGitCommand $hookFixture @('init', '--quiet')
     foreach ($path in @('deleted.cs', 'moved.cs', $unicodePath)) {
         $absolute = Join-Path $hookFixture $path
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $absolute) -Force
-        [IO.File]::WriteAllText($absolute, $path)
+        [IO.File]::WriteAllText($absolute, "$path`n")
     }
-    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '--', 'deleted.cs', 'moved.cs', $unicodePath)
+    # Existing remote history may contain whitespace errors. A new branch must
+    # check its own outgoing commits rather than block on that old baseline.
+    [IO.File]::WriteAllText((Join-Path $hookFixture 'legacy.txt'), "legacy `n")
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '--', 'deleted.cs', 'moved.cs', $unicodePath, 'legacy.txt')
     $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'base')
     $base = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('update-ref', 'refs/remotes/origin/master', $base)
     Remove-Item -LiteralPath (Join-Path $hookFixture 'deleted.cs')
     $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '-u')
     $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'delete')
     $deleted = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
     $null = Invoke-LlmWikiGitCommand $hookFixture @('mv', '--', 'moved.cs', 'renamed.cs')
-    [IO.File]::AppendAllText((Join-Path $hookFixture $unicodePath), ' changed')
+    [IO.File]::AppendAllText((Join-Path $hookFixture $unicodePath), "changed`n")
     $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '-u')
     $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'move')
     $moved = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    [IO.File]::AppendAllText((Join-Path $hookFixture $unicodePath), "bad whitespace `n")
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('add', '-u')
+    $null = Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit', '--quiet', '-m', 'bad whitespace')
+    $bad = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', 'HEAD')).Lines[0].Trim()
+    $badTree = (Invoke-LlmWikiGitCommand $hookFixture @('rev-parse', "$bad`^{tree}")).Lines[0].Trim()
+    $merge = (Invoke-LlmWikiGitCommand $hookFixture @('-c', 'user.name=Wiki fixture', '-c', 'user.email=wiki@example.invalid', 'commit-tree', $badTree, '-p', $moved, '-p', $bad, '-m', 'merge')).Lines[0].Trim()
+    [IO.File]::WriteAllText((Join-Path $hookFixture $unicodePath), "local whitespace error `n")
+    $zero = '0' * 40
+    $missing = '1' * 40
     foreach ($case in @(
-        @{ input = "refs/heads/a $deleted refs/heads/a $base`n"; expected = @('deleted.cs') }
-        @{ input = "refs/heads/a $moved refs/heads/a $deleted`n"; expected = @('moved.cs', 'renamed.cs', $unicodePath) }
-        @{ input = "refs/heads/a $deleted refs/heads/a $base`nrefs/heads/b $moved refs/heads/b $deleted`n"; expected = @('deleted.cs', 'moved.cs', 'renamed.cs', $unicodePath) }
-        @{ input = "refs/heads/a $moved refs/heads/a $('0' * 40)`n"; expected = @('renamed.cs', $unicodePath) }
+        @{ name = 'delete file'; input = "refs/heads/a $deleted refs/heads/a $base`n"; pass = $true }
+        @{ name = 'rename and Unicode, ignoring dirty worktree'; input = "refs/heads/a $moved refs/heads/a $deleted`n"; pass = $true }
+        @{ name = 'multiple clean refs'; input = "refs/heads/a $deleted refs/heads/a $base`nrefs/heads/b $moved refs/heads/b $deleted`n"; pass = $true }
+        @{ name = 'new branch excludes known history'; input = "refs/heads/a $moved refs/heads/a $zero`n"; pass = $true }
+        @{ name = 'missing remote object'; input = "refs/heads/a $moved refs/heads/a $missing`n"; pass = $true }
+        @{ name = 'pure deletion'; input = "(delete) $zero refs/heads/a $bad`n"; pass = $true }
+        @{ name = 'forced rollback'; input = "refs/heads/a $moved refs/heads/a $bad`n"; pass = $true }
+        @{ name = 'outgoing whitespace'; input = "refs/heads/a $bad refs/heads/a $moved`n"; pass = $false }
+        @{ name = 'new branch with whitespace'; input = "refs/heads/a $bad refs/heads/a $zero`n"; pass = $false }
+        @{ name = 'second ref fails'; input = "refs/heads/a $moved refs/heads/a $deleted`nrefs/heads/b $bad refs/heads/b $moved`n"; pass = $false }
+        @{ name = 'deletion does not hide updated ref'; input = "(delete) $zero refs/heads/a $base`nrefs/heads/b $bad refs/heads/b $moved`n"; pass = $false }
+        @{ name = 'merge whitespace'; input = "refs/heads/a $merge refs/heads/a $bad`n"; pass = $false }
+        @{ name = 'root commit whitespace'; input = "refs/heads/a $base refs/heads/a $zero`n"; pass = $false; remote = 'untracked-remote' }
+        @{ name = 'invalid outgoing object'; input = "refs/heads/a $missing refs/heads/a $base`n"; pass = $false }
+        @{ name = 'manual invocation checks tracked changes'; input = ''; pass = $false }
     )) {
         $stdinPath = Join-Path $hookFixture 'input.txt'
         $stdoutPath = Join-Path $hookFixture 'stdout.txt'
         $stderrPath = Join-Path $hookFixture 'stderr.txt'
         [IO.File]::WriteAllText($stdinPath, $case.input, [Text.UTF8Encoding]::new($false))
         $window = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { @{ WindowStyle = 'Hidden' } } else { @{} }
-        $child = Start-Process @window -FilePath $shellPath -ArgumentList ('"' + $probe + '"') -WorkingDirectory $hookFixture -RedirectStandardInput $stdinPath -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
+        $remote = if ($case.ContainsKey('remote')) { $case.remote } else { 'origin' }
+        $child = Start-Process @window -FilePath $shellPath -ArgumentList @('-e', ('"' + $probe + '"'), $remote) -WorkingDirectory $hookFixture -RedirectStandardInput $stdinPath -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru
         try {
             # Windows PowerShell 5 needs the process handle cached before exit
             # to retain the native exit code on this Start-Process object.
@@ -183,8 +203,7 @@ try {
             # Unix Start-Process forwards output through asynchronous handlers.
             # The timed wait does not drain them before the files are inspected.
             $child.WaitForExit()
-            $actual = @([IO.File]::ReadAllLines($stdoutPath) | Where-Object { $_ })
-            if ($child.ExitCode -ne 0 -or @(Compare-Object @($case.expected | Sort-Object) @($actual | Sort-Object)).Count) { throw "Pre-push scope lost delete/rename/Unicode/multiple-ref paths: $($actual -join ', '); exit=$($child.ExitCode); expected=$($case.expected -join ', '); input=$($case.input.Trim()); $([IO.File]::ReadAllText($stderrPath))" }
+            if (($child.ExitCode -eq 0) -ne $case.pass) { throw "Pre-push case '$($case.name)' failed: exit=$($child.ExitCode); expected pass=$($case.pass); $([IO.File]::ReadAllText($stdoutPath)); $([IO.File]::ReadAllText($stderrPath))" }
         } finally { $child.Dispose() }
     }
 } finally {
@@ -192,4 +211,4 @@ try {
     if (-not [IO.Path]::GetFullPath($hookFixture).StartsWith($fixturePrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe pre-push fixture cleanup path.' }
     Remove-Item -LiteralPath $hookFixture -Recurse -Force
 }
-Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, batching, refs, worktrees, exit codes and real pre-push deletion/rename/multiple-ref scope.'
+Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, batching, refs, worktrees, exit codes and 15 real pre-push whitespace scenarios.'

@@ -353,7 +353,7 @@ The shared mechanism is the `fd-webmcp` Angular library under
 It owns native-browser detection, abortable tool registration, session-checked
 execution and screen contracts/registry. It has no client/admin, UI, API SDK,
 authentication, route or domain dependencies. Build with `npm run build:webmcp`
-and test with `npm run test:ci:webmcp`; full verification, pre-push and CI include
+and test with `npm run test:ci:webmcp`; full verification and CI include
 both targets.
 
 The client adapter remains under `src/app/composition/webmcp` and consumes the

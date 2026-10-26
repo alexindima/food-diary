@@ -471,7 +471,7 @@ During iteration, select only indexes affected by the current diff:
 `verify-fast` is the explicit local completion gate for tiny, visual UI,
 maintenance, and bounded bug work. It runs lint, the
 dependency-aware affected-index check, change policy, and source-impact review,
-while strict full verification remains enforced by pre-push and CI. When every
+while strict full verification remains enforced by CI. When every
 stale affected index artifact is already modified in the working tree, the fast
 gate reports the checks as deferred because parallel Wiki work is possible and
 tells the current session not to overwrite them. This is an iteration-only
@@ -580,7 +580,7 @@ immediately. In visual UI mode, a stylesheet-only delta since the last successfu
 receipt reuses prior source-index and source-review evidence, then reruns the cheap
 policy/impact checks only for that CSS/SCSS delta. Any non-style edit, commit, new
 or deleted non-style file, scope change, mode change, or runtime change invalidates
-that incremental reuse. Strict `verify`, `verify-full`, publication hooks, and CI
+that incremental reuse. Strict `verify`, `verify-full`, and CI
 never consume it.
 
 The deep-freshness receipt hashes every query dependency declared in
@@ -593,14 +593,14 @@ Only stale markerless initialization and incomplete `initializing` transactions
 are discarded. Unreadable or corrupt in-progress state is retained for diagnosis;
 legacy state uses its complete original backup, never its unverified checkpoint.
 
-The pre-commit hook runs `git diff --cached --check`. The pre-push hook runs the
-affected compiled-index freshness check for the pushed change set, followed by
-the applicable frontend and backend checks. Full Wiki regression remains a
-separate local/CI gate. Stylesheets do not select compiled-index generators.
-Existing-ref diffs include deletions and both rename endpoints with
-`--no-renames`; Git path output preserves Unicode. Changes to this hook select
-the real deletion/rename/new-ref/multiple-ref path regression and invalidate its
-cached receipt.
+The pre-commit hook runs `git diff --cached --check`. The pre-push hook only
+checks whitespace in outgoing commits with Git, including root and merge
+commits. It handles every updated ref, skips deleted refs and excludes history
+already known on the remote when a new ref is pushed. Wiki index freshness,
+retrieval regressions, frontend/backend checks and Storybook builds run in CI.
+Stylesheets do not select compiled-index generators. Changes to the hook select
+the real deletion/rename/Unicode/new-ref/multiple-ref/merge whitespace regression
+and invalidate its cached receipt.
 
 Adaptive routing regression, adaptive experience/lifecycle regression, the
 integration-scan contract, and three deterministic eval shards are independent
@@ -667,11 +667,11 @@ architecture-health analytics during feature iteration; the ordinary affected
 update/verify refreshes them once at publication finalization.
 After a cache miss that proves an output current, check mode refreshes the
 receipt as well. Consequently a manual verify pays the cold computation once
-and the pre-push freshness check can reuse that exact content-addressed proof;
-a later source edit still invalidates it.
+and a later affected freshness check can reuse that content-addressed proof;
+a source edit still invalidates it.
 The affected pipeline also records a tool-set-specific aggregate receipt over
 all relevant repository inputs and compiled outputs. This lets an immediately
-following pre-push freshness check return after one native hash pass instead
+following affected freshness check with `-ReuseUnchangedChecks` return after one native hash pass instead
 of replaying uncached catalog, symbol, domain, sensitive-data, and module-page
 generators. Strict affected verification and CI do not request this reuse.
 
@@ -688,16 +688,12 @@ not rerun the generators. If the worktree changed while it waited, it performs
 its own atomic update normally. The focused concurrency regression launches two
 real domain-index updates and requires the second process to take the reuse path.
 
-The pre-push hook isolates .NET outputs under the PID-specific
-`.artifacts/pre-push/<pid>` directory. The formatter receives the same absolute
-native `ArtifactsPath` and `UseArtifactsOutput=true`, so `--no-restore` loads the
-built package assets and generated sources in a fresh checkout. Its
-cleanup removes only the current hook's directory plus invalid nested
-`.artifacts` folders; it does not delete `.artifacts/llm-wiki`, another hook's
-build outputs, or another development session's task-scoped artifacts. This
-keeps the code graph, compiled helper runtimes, and index caches warm across
-commits and prevents a hook from deleting a SQLite database used by another
-session.
+The pre-push hook no longer builds .NET projects or performs artifact cleanup.
+For explicit isolated builds, use repository-level `--artifacts-path` and clean
+only the owned scope through `Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath`.
+The cleanup preserves `.artifacts/llm-wiki`, sibling build outputs and other
+sessions' task artifacts. This keeps compiled helper runtimes and index caches
+available and prevents cleanup from deleting another session's SQLite database.
 
 Nested cleanup prunes the repository root `.artifacts`, `.git`, dependencies
 and directory links before descending, and selects each project artifact tree

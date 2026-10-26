@@ -882,7 +882,7 @@ switch ($Command) {
         $verificationCache = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
         if ($verificationCache.hit) {
             Write-Host "Fast scoped verification cache hit: repository state and scope are unchanged ($($verificationCache.fingerprint.Substring(0, 12)))."
-            Write-Host 'Local completion remains valid. Strict publication verification is enforced by pre-push and CI.'
+            Write-Host 'Local completion remains valid. Strict publication verification is enforced by CI.'
             break
         }
         $effectiveChangedPath = if ($verificationCache.incrementalStyleOnly) {
@@ -922,9 +922,9 @@ switch ($Command) {
             $null = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') @verificationCacheArguments
         }
         if ($VisualUiCompletion) {
-            Write-Host 'Visual UI iteration gate passed. Run ./.llm-wiki/wiki.ps1 ui-finalize once before the final commit; pre-push and CI remain full publication gates.'
+            Write-Host 'Visual UI iteration gate passed. Run ./.llm-wiki/wiki.ps1 ui-finalize once before the final commit; CI remains the full publication gate.'
         } else {
-            Write-Host 'Fast scoped verification passed as the local completion gate. Strict publication verification remains enforced by pre-push and CI.'
+            Write-Host 'Fast scoped verification passed as the local completion gate. Strict publication verification remains enforced by CI.'
         }
     }
     'verify-strict-affected' {

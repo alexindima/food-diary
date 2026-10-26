@@ -1,135 +1,32 @@
-. FoodDiary.Web.Client/.husky/progress.sh
-
-only_deletions=true
+# Keep pushes fast. Builds, linters, tests and Wiki verification run in CI.
+remote_name=${1:-origin}
 saw_ref_update=false
-changed_paths=""
+
 while read -r local_ref local_object_name remote_ref remote_object_name; do
-  if [ -z "$local_ref" ]; then
+  [ -n "$local_ref" ] || continue
+  saw_ref_update=true
+  if [ "$local_ref" = "(delete)" ] || [ "$local_object_name" = "0000000000000000000000000000000000000000" ]; then
     continue
   fi
 
-  saw_ref_update=true
-  if [ "$local_ref" != "(delete)" ] && [ "$local_object_name" != "0000000000000000000000000000000000000000" ]; then
-    only_deletions=false
-    # New refs or unavailable remote objects require a conservative full inventory.
-    if [ "$remote_object_name" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$remote_object_name^{commit}" 2>/dev/null; then
-      # Treat moves as delete/add so both endpoints invalidate their owners.
-      ref_paths=$(git -c core.quotepath=false diff --no-renames --name-only "$remote_object_name" "$local_object_name" --) || exit 1
-    else
-      ref_paths=$(git -c core.quotepath=false ls-tree -r --name-only "$local_object_name") || exit 1
-    fi
-    changed_paths=$(printf '%s\n%s' "$changed_paths" "$ref_paths")
+  if [ "$remote_object_name" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$remote_object_name^{commit}" 2>/dev/null; then
+    commits=$(git rev-list "$remote_object_name..$local_object_name") || exit 1
+  else
+    # For new refs or unavailable remote objects, exclude history already known
+    # on this remote. Do not recheck the whole repository for a new branch.
+    commits=$(git rev-list "$local_object_name" --not --remotes="$remote_name") || exit 1
   fi
+
+  printf 'Checking outgoing whitespace: %s\n' "$local_ref"
+  for commit in $commits; do
+    # Include root commits and every merge parent; do not read working-tree files.
+    git diff-tree --check --root -r -m "$commit" -- || exit 1
+  done
 done
 
-if [ "$saw_ref_update" = true ] && [ "$only_deletions" = true ]; then
-  echo "Skipping pre-push verification for ref deletions only."
-  exit 0
-fi
-
-# Direct invocation has no ref input: check all tracked files.
 if [ "$saw_ref_update" = false ]; then
-  changed_paths=$(git -c core.quotepath=false ls-files) || exit 1
-fi
-changed_paths=$(printf '%s\n' "$changed_paths" | sort -u)
-hook_progress_init "pre-push" 4
-
-HOOK_POWERSHELL=$(command -v pwsh || true)
-if [ -z "$HOOK_POWERSHELL" ]; then
-  echo "PowerShell 7 (pwsh) is required for Wiki SQLite tooling and .NET artifact cleanup."
-  exit 1
-fi
-WIKI_PATH_FILE=".artifacts/llm-wiki/pre-push-paths-$$.txt"
-mkdir -p .artifacts/llm-wiki || exit 1
-printf '%s\n' "$changed_paths" > "$WIKI_PATH_FILE"
-hook_run "LLM Wiki affected index freshness" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ChangedPathFile "$WIKI_PATH_FILE" -ReuseUnchangedChecks
-WIKI_STATUS=$?
-rm -f "$WIKI_PATH_FILE"
-[ "$WIKI_STATUS" -eq 0 ] || exit "$WIKI_STATUS"
-
-# Application symbols can change retrieval rankings even when Wiki code is untouched.
-# Run the same corpus and Node/.NET parity gate as CI before the expensive builds.
-hook_run "LLM Wiki retrieval regressions" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1 || exit 1
-
-PRE_PUSH_ARTIFACTS_PATH=".artifacts/pre-push/$$"
-hook_run "Scoped and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH" || exit 1
-
-cleanup_pre_push_artifacts() {
-  if ! "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH"; then
-    echo "Warning: pre-push checks could not remove generated .NET artifacts." >&2
-  fi
-}
-
-# Failed and interrupted pushes must not leave several gigabytes of isolated build output behind.
-trap cleanup_pre_push_artifacts EXIT
-
-run_frontend_checks() {
-  cd FoodDiary.Web.Client || return 1
-  npm run check:format:ci || return 1
-  npm run lint || return 1
-  npm run lint:deps:strict || return 1
-  npm run check:depcruise-baseline || return 1
-  npm run stylelint || return 1
-  npm run audit:design-tokens || return 1
-  npm run build:webmcp || return 1
-  npm run test:ci:webmcp || return 1
-  npm run test:ci:app || return 1
-  npm run check:i18n || return 1
-  if printf '%s\n' "$changed_paths" | grep -Eq '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$'; then
-    npm run build:storybook || return 1
-  fi
-}
-
-run_backend_checks() {
-  command dotnet build FoodDiary.slnx --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" || return 1
-  # Format once, after restore/build; migrations are already part of the solution.
-  if printf '%s\n' "$changed_paths" | grep -Eq '\.cs$'; then
-    # Use the same assets and generated sources as the isolated build. An absolute
-    # native path avoids project-local artifact directories on Windows and Unix.
-    PRE_PUSH_ARTIFACTS_NATIVE_PATH=$("$HOOK_POWERSHELL" -NoLogo -NoProfile -Command "[System.IO.Path]::GetFullPath('$PRE_PUSH_ARTIFACTS_PATH')" | tr -d '\r') || return 1
-    [ -n "$PRE_PUSH_ARTIFACTS_NATIVE_PATH" ] || return 1
-    ArtifactsPath="$PRE_PUSH_ARTIFACTS_NATIVE_PATH" UseArtifactsOutput=true command dotnet format FoodDiary.slnx --verify-no-changes --no-restore || return 1
-  fi
-  # Integration namespaces/classes and the slow MCP process suite run in CI.
-  # Keep unit and architecture tests locally; also honor explicit test categories.
-  echo "Running backend unit and architecture tests; integration/slow suites run in CI."
-  command dotnet test FoodDiary.slnx --no-restore --no-build --maxcpucount:1 --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" \
-    --filter 'FullyQualifiedName!~IntegrationTests&FullyQualifiedName!~FoodDiary.Development.Mcp.Tests&Category!=Integration&Category!=Slow'
-}
-
-hook_step_start "Frontend and backend checks (parallel)"
-FRONTEND_LOG="$HOOK_LOG_DIR/02-frontend-checks.log"
-BACKEND_LOG="$HOOK_LOG_DIR/02-backend-checks.log"
-
-run_frontend_checks >"$FRONTEND_LOG" 2>&1 &
-FRONTEND_PID=$!
-run_backend_checks >"$BACKEND_LOG" 2>&1 &
-BACKEND_PID=$!
-
-# Husky invokes this script with errexit. Collect both failures before the EXIT
-# cleanup removes assemblies that the other check may still be using.
-FRONTEND_STATUS=0
-wait "$FRONTEND_PID" || FRONTEND_STATUS=$?
-BACKEND_STATUS=0
-wait "$BACKEND_PID" || BACKEND_STATUS=$?
-
-if [ "$FRONTEND_STATUS" -eq 0 ] && [ "$BACKEND_STATUS" -eq 0 ]; then
-  hook_step_done
-  printf '    frontend log: %s\n' "$FRONTEND_LOG"
-  printf '    backend log: %s\n' "$BACKEND_LOG"
-else
-  hook_step_fail
-  if [ "$FRONTEND_STATUS" -ne 0 ]; then
-    printf '    frontend checks failed with exit code %s\n    log: %s\n' "$FRONTEND_STATUS" "$FRONTEND_LOG" >&2
-    printf '%s\n' "--- last $HOOK_FAILURE_LOG_LINES frontend log lines ---" >&2
-    tail -n "$HOOK_FAILURE_LOG_LINES" "$FRONTEND_LOG" >&2 || true
-  fi
-  if [ "$BACKEND_STATUS" -ne 0 ]; then
-    printf '    backend checks failed with exit code %s\n    log: %s\n' "$BACKEND_STATUS" "$BACKEND_LOG" >&2
-    printf '%s\n' "--- last $HOOK_FAILURE_LOG_LINES backend log lines ---" >&2
-    tail -n "$HOOK_FAILURE_LOG_LINES" "$BACKEND_LOG" >&2 || true
-  fi
-  exit 1
+  # Manual invocation has no outgoing refs; inspect tracked local changes.
+  git diff --check HEAD -- || exit 1
 fi
 
-hook_progress_done
+printf 'Pre-push whitespace checks passed. Full verification runs in CI.\n'

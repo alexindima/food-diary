@@ -782,7 +782,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/frontend-checks-logs/dependency-graph.log"
           set +e
-          npm run lint:deps:strict 2>&1 | tee "$log_file"
+          (npm run lint:deps:strict && npm run check:depcruise-baseline) 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -1155,6 +1155,17 @@ jobs:
             exit "$status"
           fi
 
+      - name: Build Storybook
+        shell: bash
+        working-directory: FoodDiary.Web.Client
+        run: |
+          set -o pipefail
+          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-storybook.log"
+          if ! npm run build:storybook 2>&1 | tee "$log_file"; then
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Build Storybook\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            exit 1
+          fi
+
       - name: Run client smoke E2E
         shell: bash
         working-directory: FoodDiary.Web.Client
@@ -1235,7 +1246,7 @@ jobs:
             echo "| Setup | Install Playwright Chromium | $(status_for_log "${logs_dir}/playwright-install.log") | npx playwright install --with-deps chromium |"
             echo "| Quality | i18n consistency | $(status_for_log "${logs_dir}/i18n-check.log") | npm run check:i18n |"
             echo "| Quality | ESLint | $(status_for_log "${logs_dir}/lint.log") | npm run lint |"
-            echo "| Quality | Dependency graph lint | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps:strict |"
+            echo "| Quality | Dependency graph lint and empty baseline | $(status_for_log "${logs_dir}/dependency-graph.log") | npm run lint:deps:strict && npm run check:depcruise-baseline |"
             echo "| Quality | Component logic boundaries | $(status_for_log "${logs_dir}/component-logic.log") | npm run check:component-logic |"
             echo "| Quality | State ownership | $(status_for_log "${logs_dir}/state-ownership.log") | npm run check:state-ownership |"
             echo "| Quality | Design token references | $(status_for_log "${logs_dir}/design-tokens.log") | npm run audit:design-tokens |"
@@ -1253,6 +1264,7 @@ jobs:
             echo "| Build | Admin frontend build | $(status_for_log "${logs_dir}/build-admin-frontend.log") | npm run build:admin |"
             echo "| Build | fd-tour package | $(status_for_log "${logs_dir}/build-fd-tour.log") | npm run build:tour |"
             echo "| Build | fd-webmcp package | $(status_for_log "${logs_dir}/build-fd-webmcp.log") | npm run build:webmcp |"
+            echo "| Build | Storybook | $(status_for_log "${logs_dir}/build-storybook.log") | npm run build:storybook |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload frontend failure logs

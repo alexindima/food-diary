@@ -1,2 +1,2 @@
-# Keep local commits fast; full verification runs before push.
+# Keep local commits fast; full verification runs in CI.
 git diff --cached --check

@@ -295,8 +295,8 @@ The bounded cross-layer bug route treats layer count as transport shape rather
 than feature scope. Once current sources prove one root cause and one existing
 module flow, an additive Frontend/API/Backend fix uses a compact brief and trace,
 implementation, focused tests, then diff plus `verify-fast`. Journey mapping,
-design, and full local verification become conditional; publication hooks and
-CI remain strict. Grounded repository query fixes omit request-handler trace and
+design, and full local verification become conditional; CI retains full
+verification. Grounded repository query fixes omit request-handler trace and
 use their supplied source and integration-test paths as the discovery boundary.
 
 The `visual-ui-change` budget is a five-stage focused route for bounded frontend
@@ -310,8 +310,8 @@ evidence, and final diff plus `verify-fast`, avoiding a separate acceptance
 ceremony, a full research packet, and unrelated full-index refreshes. The brief
 constrains the work but does not invent the UX solution; current code, the
 design system, and browser inspection remain the design inputs. Repository
-pre-push and CI retain the complete frontend and Wiki verification as
-publication gates. Browser QA follows the declared viewport scope instead of
+CI retains the complete frontend and Wiki verification as the publication
+gate. Browser QA follows the declared viewport scope instead of
 requiring mobile proof for every desktop-only patch.
 
 Research packets expose five stable lanes—flow, tests, integrations, precedents,

@@ -104,7 +104,7 @@
     },
     {
       "id": "frontend-workspace",
-      "description": "Frontend behavior changes require the full frontend verification pipeline before publication; visual-ui-change may use its focused completion gate locally because pre-push and CI run this check.",
+      "description": "Frontend behavior changes require the full frontend verification pipeline before publication; visual-ui-change may use its focused completion gate locally because CI runs this check.",
       "pathPatterns": [
         "^FoodDiary\\.Web\\.Client/.+\\.(ts|html|scss|json)$"
       ],

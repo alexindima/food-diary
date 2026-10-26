@@ -34,7 +34,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Admin API client: `npm run sdk:admin:update` and `npm run sdk:admin:check:api`, with separate `api-sdk/admin.scopes.json` and `admin.openapi.json` inputs. Both generated outputs are checked by `npm run verify`.
 - Telegram bot API client: `npm run sdk:bot:update` and `npm run sdk:bot:check:api`; its contract/templates and C# output live in `FoodDiary.Telegram.Bot/Api/`. All three client outputs are checked by `npm run verify`.
 - Do not hand-edit `src/app/shared/api/sdk/generated/`. Use generated services/DTOs through feature API adapters; keep UI models, normalization and state outside generated code. Read concrete methods rather than loading the entire SDK into AI context.
-- `npm run check:api-client-usage` rejects manual HTTP/native fetch entrypoints in both apps; it also runs through `lint`, `verify`, CI and pre-push. Keep exceptions restricted to the reviewed transport method, verb and target shape. Do not exempt a whole API service or a feature folder.
+- `npm run check:api-client-usage` rejects manual HTTP/native fetch entrypoints in both apps; it also runs through `lint`, `verify` and CI. Keep exceptions restricted to the reviewed transport method, verb and target shape. Do not exempt a whole API service or a feature folder.
 - i18n check: `npm run check:i18n`
 - SEO prerender check: `npm run check:seo-prerender`
 - Public page Lighthouse: `npm run audit:lighthouse` (production build and repeated mobile/desktop audits of the prerender inventory). Quick collection: `npm run audit:lighthouse:smoke` after building. Budget/baseline commands and measurement limits: `../docs/frontend/PUBLIC_LIGHTHOUSE.md`. The reusable WebQuality CI automatically runs the four-route mobile/desktop smoke matrix with three cold samples per case, public browser checks in three engines and owned client/admin journeys; see `../docs/frontend/WEB_QUALITY.md`. Deterministic runner checks remain in `test:performance-build` and `verify`.
@@ -131,5 +131,5 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 ## Git Hooks
 
 - Never bypass `pre-commit` or `pre-push` with `--no-verify`.
-- Pre-push formatting must use `npm run check:format:ci`, the same command as GitHub Actions.
-- Hook step logs are stored under `.git/hook-logs/`. On failure, diagnose and fix the reported step, then rerun the original Git command.
+- Pre-push only checks outgoing commits for whitespace errors with Git. Frontend formatting (`npm run check:format:ci`), linters, builds and tests run in CI; use focused checks during development.
+- On a hook failure, fix the whitespace errors reported by Git, then rerun the original command. Full verification diagnostics belong to the corresponding CI run; older hook step logs remain under `.git/hook-logs/`.

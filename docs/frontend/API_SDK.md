@@ -172,8 +172,8 @@ Generation drift checks are complemented by source architecture guards. The
 frontend guard uses TypeScript types to reject direct HttpClient method references
 (including aliases, bracket calls and destructuring), HttpBackend dispatch, native
 fetch/XMLHttpRequest/beacon entrypoints, httpResource and alternate HTTP-library
-imports in both application roots. It runs through `lint`, `verify`, CI and
-pre-push. Generated output is exempt only at its two exact owned paths.
+imports in both application roots. It runs through `lint`, `verify` and CI.
+Generated output is exempt only at its two exact owned paths.
 
 Exceptions match the concrete file, owning method, HTTP verb and target shape:
 generated transport forwarding, existing interceptor forwarding, signed storage
