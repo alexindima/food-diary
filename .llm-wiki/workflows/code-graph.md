@@ -167,6 +167,11 @@ Trace layer, module, and path filters apply to exact results before an early
 return, as well as to ranked candidates. Fast test plans include the explicit
 CI workflow guardrail alongside graph-discovered tests.
 
+For directory requests, fast test plans inspect at most 500 graph consumers and
+prefer tests with the closest shared source-path ancestors before truncating the
+response. File-level owning-test priority and the distinction between required
+direct tests and recommended downstream tests remain unchanged.
+
 The experimental graph stores reconstructable code intelligence in
 `.artifacts/llm-wiki/code-graph/code-graph.sqlite`. It is a local cache and is
 never committed. Human-reviewed policy, acceptance, evidence, journeys, and

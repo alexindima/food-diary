@@ -1266,11 +1266,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-      "nonBlankLines": 95,
-      "decisionPoints": 23,
+      "nonBlankLines": 118,
+      "decisionPoints": 28,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.4
+      "structuralRiskScore": 46.36
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",

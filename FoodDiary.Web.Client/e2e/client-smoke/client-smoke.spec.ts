@@ -220,11 +220,13 @@ test.describe('client auth smoke', () => {
         });
 
         await page.goto('/verify-email?userId=e6785a80-61a4-5114-a8db-66feada82a8f&token=invalid-token');
-        await expect(page.getByText("We couldn't verify the email. Try again or request a new link.")).toBeVisible();
-        await page.getByRole('button', { name: 'Try again' }).click();
-        await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+        const verification = page.getByRole('region', { name: 'Email verification', exact: true });
+        const retry = verification.getByRole('button', { name: 'Try again', exact: true });
+        await expect(verification.getByText("We couldn't verify the email. Try again or request a new link.")).toBeVisible();
+        await retry.click();
+        await expect(retry).toBeVisible();
 
-        expect(verificationAttempts).toBe(2);
+        await expect.poll(() => verificationAttempts).toBe(2);
     });
 
     test('keeps password reset form available after an API error', async ({ page }) => {

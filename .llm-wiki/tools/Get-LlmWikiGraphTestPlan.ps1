@@ -11,11 +11,20 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $scope = [string[]]@((@($ProposedPath) + @($ChangedPath)) | Where-Object { $_ } | Sort-Object -Unique)
 if ($scope.Length -eq 0) { throw 'Fast graph test-plan requires -ChangedPath or -PlannedPath.' }
-$impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impact -ChangedPath $scope -Limit ([Math]::Min(500, $Limit * 10)) -SkipRefresh:$SkipRefresh -Format Json | ConvertFrom-Json
+$directoryScopes = @($scope | ForEach-Object {
+    $normalizedPath = ([string]$_).Replace('\', '/').TrimEnd('/')
+    if (Test-Path -LiteralPath (Join-Path $repositoryRoot $normalizedPath) -PathType Container) { $normalizedPath }
+})
+# Directory consumers span modules. Keep the existing bounded candidate horizon
+# independent of the response limit so alphabetically earlier foreign paths do
+# not prevent the selected directory's tests from reaching the ranking stage.
+$consumerLimit = if ($directoryScopes.Count -gt 0) { 500 } else { [Math]::Min(500, $Limit * 10) }
+$impact = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action impact -ChangedPath $scope -Limit $consumerLimit -SkipRefresh:$SkipRefresh -Format Json | ConvertFrom-Json
 $isTestPath = { param($Path) [string]$Path -match '(^|/)(?:tests?/|[^/]+\.Tests?/)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$|(^|/)Test-[^/]+\.ps1$' }
 $scoped = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $graphConsumers = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 $owningGraphTests = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+$directoryAffinity = [Collections.Generic.Dictionary[string, int]]::new([StringComparer]::OrdinalIgnoreCase)
 $explicitSourcePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($path in $scope) { [void]$explicitSourcePaths.Add(([string]$path).Replace('\', '/').TrimEnd('/')) }
 $explicitSourceTypes = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -61,6 +70,20 @@ foreach ($path in $scope) {
 foreach ($consumer in @($impact.consumers)) {
     if (& $isTestPath $consumer.path) {
         [void]$graphConsumers.Add([string]$consumer.path)
+        if (-not $directoryAffinity.ContainsKey([string]$consumer.path)) {
+            $candidateSegments = ([string]$consumer.path).Split('/')
+            $closestDirectory = 0
+            foreach ($directoryScope in $directoryScopes) {
+                $sourceSegments = $directoryScope.Split('/')
+                $shared = 0
+                while ($shared -lt $sourceSegments.Length -and $shared -lt $candidateSegments.Length -and
+                    [string]::Equals($sourceSegments[$shared], $candidateSegments[$shared], [StringComparison]::OrdinalIgnoreCase)) {
+                    $shared++
+                }
+                $closestDirectory = [Math]::Max($closestDirectory, $shared)
+            }
+            $directoryAffinity[[string]$consumer.path] = $closestDirectory
+        }
         # A graph-backed test of the selected type outranks broad downstream
         # consumers before the final response limit, including sibling projects.
         $testName = [IO.Path]::GetFileNameWithoutExtension([string]$consumer.path)
@@ -77,7 +100,7 @@ $required = @(
 $recommended = @(
     $graphConsumers |
         Where-Object { -not $scoped.Contains($_) } |
-        Sort-Object @{ Expression = { $owningGraphTests.Contains($_) }; Descending = $true }, @{ Expression = { $_ } } |
+        Sort-Object @{ Expression = { $owningGraphTests.Contains($_) }; Descending = $true }, @{ Expression = { $directoryAffinity[$_] }; Descending = $true }, @{ Expression = { $_ } } |
         Select-Object -First $Limit
 )
 $result = [pscustomobject][ordered]@{

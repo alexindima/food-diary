@@ -13,7 +13,9 @@ $expected = @{
     # documented module-page reuse. No assertions were removed; count is unchanged.
     # Include the symbol-index reuse approved in e19f1cf4d in the exact cache
     # allowlist assertion. All 336 Core assertions and their shard remain.
-    Core = @{ count = 336; hash = 'd024ea161d9b550374643d1c052aa14c9bc435d3e091704e899a4e707c2ebe7b' }
+    # The browser storage assertion now names the migrated non-secret session
+    # metadata owner. Its top-three requirement and all 336 assertions remain.
+    Core = @{ count = 336; hash = 'cf61c41740d3e71bbbd460da127b8bb5719a7487d3c31e10cf31765c67868854' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     # CI repair retains tamper rejection and adds separate stale-metadata and

@@ -748,7 +748,7 @@
       },
       "statement": "Execute session, telemetry, theme, preload and PWA lifecycle contracts.",
       "requiredSuites": [
-        "token-storage.service.spec.ts",
+        "auth-metadata-storage.service.spec.ts",
         "frontend-observability.service.spec.ts",
         "theme.service.spec.ts",
         "app-update.service.spec.ts",

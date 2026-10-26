@@ -956,8 +956,8 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "f67de155675b8b3386d1fb8f6d90ea45729c99f3fee2b644f0a57b345efc37f9",
-          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
+          "sha256": "8340bcc1c8986ba850c56fb09233674efcb88d2c88eb939f6fbc0cc45ea38e75",
+          "reviewReason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1",
@@ -976,8 +976,8 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "3b289ec9e9f9fc8383500b20cbfe359a7bdfd306aef196350cd4a900c1dc55c3",
-          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
+          "sha256": "0c3d3189a6ca3aa7679316138364924aafecf6c104c6e5582be56cf1914e1d91",
+          "reviewReason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
@@ -995,10 +995,10 @@
           "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
         }
       ],
-      "reason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added.",
+      "reason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed.",
       "baseRef": "HEAD",
-      "gitHead": "3d2ac4df07b946b070e00e8c4914dd54168f1c6a",
-      "reviewedAtUtc": "2026-10-25T15:15:33.0772354Z"
+      "gitHead": "993443a008d01862108ebdb002136c26bd220a6b",
+      "reviewedAtUtc": "2026-10-26T12:21:38.7087595Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1494,15 +1494,25 @@
       "pageSha256": "b4274e109959320bfc495bc75c003ff342d0a08a635d46a79b1962ce59f81778",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
+          "sha256": "019d92bd56e9900c048f30774578c5f4048c48e1aee6d31729d8c846b9add61b",
+          "reviewReason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGraphTestPlan.ps1",
+          "sha256": "25333b3a30c16b274d3461204936943bf78c750079e4445680c35f3903dd18af",
+          "reviewReason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed."
+        },
+        {
           "path": "docs/TESTING_STRATEGY.md",
           "sha256": "49f7c93cf55e1ace5e4b65762ce990f0999d0994e4bd82ee37abb5d5fb8ada0b",
           "reviewReason": "Updated this page to require successful Ensure-Docker.ps1 readiness before direct Docker-dependent tests, matching docs/TESTING_STRATEGY.md and the integration runner. Focused test discovery and planner ranking are unchanged."
         }
       ],
-      "reason": "Updated this page to require successful Ensure-Docker.ps1 readiness before direct Docker-dependent tests, matching docs/TESTING_STRATEGY.md and the integration runner. Focused test discovery and planner ranking are unchanged.",
+      "reason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed.",
       "baseRef": "HEAD",
-      "gitHead": "436be3a793e7a37934e6440dcf0e5a818d603721",
-      "reviewedAtUtc": "2026-10-25T17:58:31.8351721Z"
+      "gitHead": "993443a008d01862108ebdb002136c26bd220a6b",
+      "reviewedAtUtc": "2026-10-26T11:56:11.3421782Z"
     },
     {
       "pageId": "workflow-trace-feature",

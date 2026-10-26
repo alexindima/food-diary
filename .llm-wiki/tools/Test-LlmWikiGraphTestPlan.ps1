@@ -38,4 +38,12 @@ if (@($recipeDirectoryPlan.recommended | Where-Object { $_ -match 'RecipesFeatur
     @($recipeDirectoryPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 0) {
     throw 'Directory-scoped Recipes plan dropped its existing feature test while prioritizing file-scoped owners.'
 }
+foreach ($moduleName in @('Meals', 'Recipes')) {
+    $directoryPlan = & $planner -ProposedPath "Modules/$moduleName/Application" -Limit 1 -SkipRefresh -Format Json | ConvertFrom-Json
+    if (@($directoryPlan.recommended).Count -ne 1 -or
+        -not ([string]$directoryPlan.recommended[0]).StartsWith("Modules/$moduleName/tests/", [StringComparison]::Ordinal) -or
+        @($directoryPlan.required).Count -ne 0) {
+        throw "Bounded directory test plan omitted $moduleName owner tests or changed direct-test classification."
+    }
+}
 Write-Host 'Fast graph test-plan regressions passed (Meals flow, Recipes file ownership and directory scope).'
