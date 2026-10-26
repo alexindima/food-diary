@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "browser-sessions-2026-10-26",
-  "baseCommit": "311e21be57522f05c62cd691b100d461df9b3b89",
+  "baseCommit": "ab972d2e5a146f3a5a569102e10f629411c37f14",
   "decision": "Accept only the two exact accessToken nullability changes below. The user explicitly authorized opaque HttpOnly browser/admin/impersonation sessions in the existing API and stated there are no existing external clients to preserve. ADR 0058 records removal of browser JWTs; bot and explicit Telegram Mini App bearer contracts remain supported. No unrelated compatibility exception is granted.",
-  "clientRollout": "Apply the nullable BrowserSecurityVersion migration first, then release matching API, user/admin SDK bundles and the admin same-origin API proxy together. Ordinary browser and impersonation responses omit JWTs and restore through POST auth/session. Reauthenticate older browser bundles; do not add a legacy browser JWT fallback. Verify independent devices, scoped logout, SSO, isolated support tabs and Telegram on the test stand. This record performs no deployment. Baseline is the latest successful ancestral master push CI run observed on 2026-10-25; changed baseline or snapshots require a fresh exact review.",
+  "clientRollout": "Apply the nullable BrowserSecurityVersion migration first, then release matching API, user/admin SDK bundles and the admin same-origin API proxy together. Ordinary browser and impersonation responses omit JWTs and restore through POST auth/session. Reauthenticate older browser bundles; do not add a legacy browser JWT fallback. Verify independent devices, scoped logout, SSO, isolated support tabs and Telegram on the test stand. This record performs no deployment. Re-reviewed on 2026-10-26 against the latest successful ancestral master push selected by CI run 40328326603: ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; the current OpenAPI fingerprint includes session hardening. The same two approved change identities remain the complete breaking-change list, and the user/admin/bot contract-generation job passed for cf30f8696696df3bc40ae7c45d3dbfb45f137840. Changed baseline or snapshots require a fresh exact review.",
   "snapshots": [
     {
       "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
       "beforeSha256": "8aa1f29b3f39cc4330845b25f4fbc6bde89db376601d19498f55cc9f949205fd",
-      "afterSha256": "ef4048ce84c76548820e9d9cf844a1e8618ee891ecfe676b30a3324acdeb113c"
+      "afterSha256": "7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19"
     },
     {
       "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/payload-contract-snapshots.json",

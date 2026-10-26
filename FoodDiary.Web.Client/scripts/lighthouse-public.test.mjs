@@ -309,6 +309,47 @@ test('static server serves actual deep prerenders with gzip, HEAD and no SPA fal
     assert.equal((await rawGet(server.origin, '/app.js', {}, 'POST')).status, 405);
 });
 
+test('public audit session fixture is anonymous without masking other missing endpoints', async t => {
+    const root = temporary(t);
+    writeFileSync(path.join(root, 'index.html'), 'public');
+    const server = await startStaticServer(root);
+    t.after(() => server.close());
+    const response = await rawGet(server.origin, '/api/v1/auth/session', {}, 'POST');
+    assert.equal(response.status, 401);
+    assert.match(response.headers['content-type'], /^application\/json\b/u);
+    assert.equal(response.headers['cache-control'], 'no-store');
+    assert.equal(response.headers['set-cookie'], undefined);
+    assert.deepEqual(JSON.parse(response.body.toString()), {});
+    assert.equal((await rawGet(server.origin, '/api/v1/auth/session')).status, 404);
+    for (const endpoint of ['/api/v1/auth/logout', '/api/v1/auth/session-other'])
+        assert.equal((await rawGet(server.origin, endpoint, {}, 'POST')).status, 405);
+});
+
+test('configured session API preserves unavailability instead of using the anonymous fixture', async t => {
+    const root = temporary(t);
+    writeFileSync(path.join(root, 'index.html'), 'public');
+    const api = createServer((request, response) => {
+        assert.equal(request.method, 'POST');
+        assert.equal(request.url, '/api/v1/auth/session');
+        assert.equal(request.headers.authorization, undefined);
+        assert.equal(request.headers.cookie, undefined);
+        response.writeHead(503, { 'content-type': 'application/json' });
+        response.end('{"error":"unavailable"}');
+    });
+    await new Promise(resolve => api.listen(0, '127.0.0.1', resolve));
+    t.after(() => new Promise(resolve => api.close(resolve)));
+    const server = await startStaticServer(root, `http://127.0.0.1:${api.address().port}`);
+    t.after(() => server.close());
+    const response = await rawGet(
+        server.origin,
+        '/api/v1/auth/session',
+        { authorization: 'Bearer fixture', cookie: 'fixture=test' },
+        'POST',
+    );
+    assert.equal(response.status, 503);
+    assert.deepEqual(JSON.parse(response.body.toString()), { error: 'unavailable' });
+});
+
 test('explicit API proxy preserves real status/body/query and removes credentials', async t => {
     const root = temporary(t);
     writeFileSync(path.join(root, 'index.html'), 'public');

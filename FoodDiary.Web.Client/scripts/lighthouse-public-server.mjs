@@ -86,6 +86,12 @@ export async function startStaticServer(staticRoot, apiOrigin, { transport = 'ht
                 request.pipe(forward);
                 return;
             }
+            // Public-only audits have no authenticated browser session or live API.
+            if (!api && request.method === 'POST' && url.pathname === '/api/v1/auth/session') {
+                response.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+                response.end('{}');
+                return;
+            }
             if (!['GET', 'HEAD'].includes(request.method ?? '')) {
                 response.writeHead(405).end();
                 return;

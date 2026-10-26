@@ -45,18 +45,18 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "da7985750417b13cf1f53abd95135b202808d8396398cd21d0be4dc75be482a3",
+      "pageSha256": "e5ad676b6ad7f274fc31b04613d2143da2db59e6c14df5eb4508c02bc43fc2ae",
       "sources": [
         {
-          "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "25c97ea269884457c557afad28274fbd80c3a993d0b74db6c985cf38785e61f6",
-          "reviewReason": "Reviewed the changed browser-session runbook and Angular AuthService: foreground hourly revalidation now serializes with sign-in/logout, pins selectors, times out at 30 seconds and can renew eligible ordinary cookies; admin/Mini App/impersonation exclusions and generated wire fields remain. Added the behavior summary; SDK operation counts and feature boundaries are unchanged."
+          "path": "docs/frontend/WEB_QUALITY.md",
+          "sha256": "00808c88438c11d0fbbe542f855f2062d0b2ec0ab0423d481267b3e13ac3a7b7",
+          "reviewReason": "Public audit documentation now explains the anonymous POST auth/session fixture and preserved explicit API responses. Regression tests reproduce405 versus401 on the original helper and pass unchanged after the fix; all21 Lighthouse helper tests pass. Full frontend verify, all41 journeys and14 scenarios in each of Chrome, Firefox and WebKit pass. The explicit503 browser probe preserves the recovery notice and passes all306 text-resize observations. No accessibility or performance budget is relaxed."
         }
       ],
-      "reason": "Reviewed the changed browser-session runbook and Angular AuthService: foreground hourly revalidation now serializes with sign-in/logout, pins selectors, times out at 30 seconds and can renew eligible ordinary cookies; admin/Mini App/impersonation exclusions and generated wire fields remain. Added the behavior summary; SDK operation counts and feature boundaries are unchanged.",
+      "reason": "Public audit documentation now explains the anonymous POST auth/session fixture and preserved explicit API responses. Regression tests reproduce405 versus401 on the original helper and pass unchanged after the fix; all21 Lighthouse helper tests pass. Full frontend verify, all41 journeys and14 scenarios in each of Chrome, Firefox and WebKit pass. The explicit503 browser probe preserves the recovery notice and passes all306 text-resize observations. No accessibility or performance budget is relaxed.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T04:26:59.1312951Z"
+      "gitHead": "cf30f8696696df3bc40ae7c45d3dbfb45f137840",
+      "reviewedAtUtc": "2026-10-26T14:08:43.5120664Z"
     },
     {
       "pageId": "module.mail-services",
@@ -288,15 +288,20 @@
       "pageSha256": "a8b79f4a425ff7af660bd33616e763ffbe6123cbd00304117baa354c8bb7634a",
       "sources": [
         {
+          "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
+          "sha256": "edf1c46c5d8ad86de3f6a27545f1b55ef1b7099851c258ff4da50e1c52a8f245",
+          "reviewReason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
           "sha256": "7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19",
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved.",
+      "reason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened.",
       "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T05:58:01.0839717Z"
+      "gitHead": "cf30f8696696df3bc40ae7c45d3dbfb45f137840",
+      "reviewedAtUtc": "2026-10-26T14:08:43.8698997Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

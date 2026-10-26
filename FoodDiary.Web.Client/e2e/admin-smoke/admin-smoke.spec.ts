@@ -5,6 +5,7 @@ import type { AdminDashboardOverview } from '../../projects/fooddiary-admin/src/
 import { inspectPage } from '../../quality/modern-web-guidance/browser.mjs';
 
 const DAY_MS = 86_400_000;
+const HTTP_UNAUTHORIZED = 401;
 const GUIDANCE_MOBILE_WIDTH = 390;
 const GUIDANCE_DESKTOP_WIDTH = 1440;
 const GUIDANCE_TIMEOUT_MS = 120_000;
@@ -81,6 +82,7 @@ test.describe('admin smoke', () => {
     }
 
     test('redirects unauthenticated user to unauthorized page', async ({ page }) => {
+        await page.route('**/api/v1/auth/session', async route => route.fulfill({ status: HTTP_UNAUTHORIZED, json: {} }));
         await page.goto('/users');
 
         await expect(page).toHaveURL(/\/unauthorized\?reason=unauthenticated/);
