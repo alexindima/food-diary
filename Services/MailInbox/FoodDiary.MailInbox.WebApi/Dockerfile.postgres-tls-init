@@ -1,4 +1,4 @@
-FROM postgres:18-alpine@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+FROM postgres:18-alpine@sha256:898c60cb390d1085bc97bdd6a1ae968757421df394b071848b52b1c09c89d6a5
 
 # Alpine repositories replace old APK revisions; resolve OpenSSL with matching libraries.
 RUN apk add --no-cache openssl
