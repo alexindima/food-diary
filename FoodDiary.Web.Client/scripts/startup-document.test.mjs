@@ -67,6 +67,23 @@ test('keeps the guest landing visible even when an old theme preference remains'
     window.close();
 });
 
+test('uses a neutral system color for guests and restores the saved theme before the first frame', () => {
+    for (const [theme, color] of [['ocean', '#ffffff'], ['leaf', '#ffffff'], ['dark', '#191c21']]) {
+        const window = loadStartup('/dashboard', { accountAccess: '["owner","User"]', fd_theme: theme });
+        assert.equal(window.document.querySelector('meta[name="theme-color"]').content, color,
+            `Startup system color must follow the ${theme} theme before Angular starts.`);
+        window.close();
+    }
+    const guest = loadStartup('/ru', { fd_theme: 'dark' });
+    assert.equal(guest.document.querySelector('meta[name="theme-color"]').content, '#ffffff');
+    guest.close();
+});
+
+test('provides a neutral installed PWA fallback instead of a fixed brand color', () => {
+    const manifest = JSON.parse(readFileSync(new URL('../assets/manifest.webmanifest', import.meta.url), 'utf8'));
+    assert.equal(manifest.theme_color, '#ffffff', 'Installed PWA fallback must use the light surface color.');
+});
+
 test('ignores invalid preferences and tolerates unavailable browser storage', () => {
     for (const blocked of [false, true]) {
         const window = loadStartup('/dashboard', { accountAccess: '["owner","User"]', fd_theme: 'invalid' }, blocked);

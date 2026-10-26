@@ -65,7 +65,7 @@ describe('ThemeService initialization', () => {
         expect(service.uiStyle()).toBe('modern');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-ui-style')).toBe('modern');
-        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('#047857');
+        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('#ffffff');
     });
 });
 
@@ -168,7 +168,7 @@ describe('ThemeService preferences', () => {
 
         expect(localStorage.getItem('fd_theme')).toBe('leaf');
         expect(documentRef.documentElement.getAttribute('data-theme')).toBe('leaf');
-        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('#047857');
+        expect(documentRef.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe('#ffffff');
     });
 
     it('should persist a selected ui style', () => {

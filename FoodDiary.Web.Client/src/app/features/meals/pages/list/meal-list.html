@@ -63,9 +63,6 @@
             <fd-ai-input-action-bar
                 data-tour-id="meal-list-create"
                 mode="create"
-                manualActionLabelKey="AI_INPUT_BAR.MANUAL_ACTION"
-                historyLabelKey="MEALS_PREVIEW.HISTORY_ACTION"
-                [showManualPrefix]="false"
                 [isProcessing]="isAiMealSaving()"
                 [clearToken]="aiMealClearToken()"
                 (mealCreateRequested)="onAiMealCreateRequested($event)"

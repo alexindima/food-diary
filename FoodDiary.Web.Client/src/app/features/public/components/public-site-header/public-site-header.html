@@ -18,7 +18,20 @@
             >
         }
     </nav>
-    <fd-ui-button variant="secondary" fill="outline" [routerLink]="home()" [queryParams]="{ auth: 'login' }">
+    <fd-ui-button variant="secondary" fill="outline" size="sm" [routerLink]="home()" [queryParams]="{ auth: 'login' }">
         {{ 'PUBLIC_SITE.LOGIN' | translate }}
     </fd-ui-button>
+    <fd-ui-button
+        class="public-header__menu"
+        variant="secondary"
+        fill="text"
+        icon="menu"
+        [ariaLabel]="'PUBLIC_SITE.NAV.LABEL' | translate"
+        [fdUiMenuTrigger]="navigationMenu"
+    />
+    <fd-ui-menu #navigationMenu>
+        @for (link of links(); track link.path) {
+            <fd-ui-menu-item [routerLink]="link.path">{{ link.label | translate }}</fd-ui-menu-item>
+        }
+    </fd-ui-menu>
 </header>

@@ -25,13 +25,13 @@ export const APP_THEMES: readonly AppThemeDefinition[] = [
     {
         name: 'ocean',
         labelKey: 'SIDEBAR.THEME_OCEAN',
-        browserThemeColor: '#1d4ed8',
+        browserThemeColor: '#ffffff',
         colorScheme: 'light',
     },
     {
         name: 'leaf',
         labelKey: 'SIDEBAR.THEME_LEAF',
-        browserThemeColor: '#047857',
+        browserThemeColor: '#ffffff',
         colorScheme: 'light',
     },
     {

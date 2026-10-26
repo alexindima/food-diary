@@ -82,7 +82,7 @@
     </div>
 
     <ng-template [fdUiModal]="isSheetOpen()" [fdUiModalLabel]="activeSheetLabelKey() | translate" (fdUiModalClosed)="closeMenus.emit()">
-        <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMenus.emit()"></div>
+        <div class="sidebar-mobile__backdrop" aria-hidden="true" [style.bottom.px]="sheetBottom()" (click)="closeMenus.emit()"></div>
 
         <div class="sidebar-mobile__sheet" [style.--sidebar-mobile-sheet-offset.px]="sheetBottom()">
             @if (mobileSheet() === 'user') {

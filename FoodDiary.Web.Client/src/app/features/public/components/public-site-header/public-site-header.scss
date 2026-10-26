@@ -8,7 +8,6 @@
 .public-header {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: var(--fd-space-md);
     max-width: var(--fd-landing-container-max-width);
     margin: 0 auto;
@@ -25,12 +24,16 @@
     &__brand {
         font-weight: var(--fd-font-weight-bold);
         margin-right: auto;
+        white-space: nowrap;
     }
     &__links,
     &__languages {
         display: flex;
-        flex-wrap: wrap;
         gap: var(--fd-space-md);
+        white-space: nowrap;
+    }
+    &__menu {
+        display: none;
     }
     &__active,
     a[aria-current='page'] {
@@ -38,11 +41,21 @@
         font-weight: var(--fd-font-weight-bold);
     }
 
-    @media #{variables.$media-tablet} {
+    @media #{variables.$media-desktop} {
         &__links {
-            order: 1;
-            width: 100%;
-            font-size: var(--fd-text-body-sm-size);
+            display: none;
+        }
+        &__menu {
+            display: block;
+        }
+    }
+
+    @media #{variables.$media-mobile} {
+        gap: var(--fd-space-xs);
+        padding-inline: var(--fd-space-sm);
+
+        &__languages {
+            gap: var(--fd-space-xs);
         }
     }
 }

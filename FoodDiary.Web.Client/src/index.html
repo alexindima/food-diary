@@ -12,6 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="text-scale" content="scale" />
         <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#ffffff" />
         <style>
             html.fd-session-route-pending {
                 background: var(--fd-bg-body);
@@ -50,6 +51,7 @@
                         if (['ocean', 'leaf', 'dark'].includes(theme)) {
                             root.setAttribute('data-theme', theme);
                             root.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
+                            document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#191c21' : '#ffffff';
                         }
                         const uiStyle = localStorage.getItem('fd_ui_style');
                         if (['classic', 'modern'].includes(uiStyle)) {
@@ -68,7 +70,6 @@
         <link rel="icon" type="image/svg+xml" href="/assets/images/header/logo.svg" />
         <link rel="alternate icon" type="image/x-icon" href="/assets/images/favicon.ico" />
         <link rel="manifest" href="/assets/manifest.webmanifest" />
-        <meta name="theme-color" content="#1d4ed8" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />

@@ -17,12 +17,12 @@ export class AiInputActionBarComponent {
     protected readonly isPremium = inject(AuthService).isPremium;
     public readonly isProcessing = input(false);
     public readonly clearToken = input(0);
-    public readonly showManualPrefix = input(true);
-    public readonly historyLabelKey = input<string | null>(null);
+    public readonly showManualPrefix = input(false);
+    public readonly historyLabelKey = input<string | null>('MEALS_PREVIEW.HISTORY_ACTION');
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
     public readonly manualPrefixLabelKey = input('MEAL_LIST.MANUAL_ADD_OR');
-    public readonly manualActionLabelKey = input('MEAL_LIST.ADD_MANUALLY_BUTTON');
+    public readonly manualActionLabelKey = input('AI_INPUT_BAR.MANUAL_ACTION');
     public readonly manualActionIcon = input('add');
 
     public readonly mealRecognized = output<AiInputBarResult>();

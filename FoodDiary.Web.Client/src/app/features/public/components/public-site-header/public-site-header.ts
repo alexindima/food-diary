@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit';
 
 import { localizedPublicPath, publicSiteLocale } from '../../../../config/public-site-paths';
 
 @Component({
     selector: 'fd-public-site-header',
-    imports: [RouterLink, RouterLinkActive, TranslatePipe, FdUiButtonComponent],
+    imports: [
+        RouterLink,
+        RouterLinkActive,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiMenuComponent,
+        FdUiMenuItemComponent,
+        FdUiMenuTriggerDirective,
+    ],
     templateUrl: './public-site-header.html',
     styleUrl: './public-site-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
