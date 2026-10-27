@@ -15,6 +15,20 @@
       ]
     },
     {
+      "id": "dialog-scrollbar-layout-feedback",
+      "symptom": "Recognition smoke repeatedly times out waiting for an enabled Analyze photo button to become stable on Linux; the footer alternates by about 8 pixels.",
+      "cause": "Overflow detection adds gutter and inline padding. Narrower square image content becomes shorter and no longer overflows, so the observer removes the gutter and immediately restores overflow.",
+      "fix": "Reserve the default dialog gutter independently of overflow state; keep the edge inset policy unchanged. Wait for rendered cover selection in the smoke flow and retain failed browser traces in CI.",
+      "pathPatterns": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/",
+        "FoodDiary.Web.Client/src/app/components/shared/image-gallery-editor/"
+      ],
+      "verification": [
+        "Ubuntu 26.04, Node 22.23.4, Chromium 156: unchanged six-case command failed before and passed 6/6 after; test hash 361FE37E64D682C70B811303FA93F146DB304E3759F18E798E85FE18490F0222.",
+        "60 animation-frame samples showed two footer positions before and one after at desktop and 390px; UI-kit 644 passed and admin smoke 15 passed."
+      ]
+    },
+    {
       "id": "git-commit-hook-wrapper-timeout",
       "symptom": "The git commit command wrapper times out while pre-commit validation is still running.",
       "cause": "The repository pre-commit hook runs formatting, linters, and tests and can outlive a short command timeout; the commit may already have completed.",

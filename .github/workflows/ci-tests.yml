@@ -1358,6 +1358,15 @@ jobs:
           path: ${{ runner.temp }}/frontend-checks-logs/
           if-no-files-found: ignore
 
+      - name: Upload frontend browser failure evidence
+        if: failure() && matrix.group == 'smoke'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: frontend-browser-evidence-${{ github.run_attempt }}
+          path: FoodDiary.Web.Client/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload frontend coverage reports
         if: always() && (matrix.group == 'app-tests' || matrix.group == 'libraries')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

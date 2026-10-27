@@ -2798,6 +2798,8 @@ async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string)
     await dialog.getByRole('button', { name: 'Actions for photo 2' }).focus();
     await dialog.getByRole('button', { name: 'Actions for photo 2' }).press('Enter');
     await page.getByRole('menuitem', { name: 'Use as cover' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Use as cover' })).toHaveCount(0);
+    await expect(dialog.locator('.recognition-photos__item img').first()).toHaveAttribute('src', TEST_IMAGE_URLS[1]);
     await dialog.getByRole('button', { name: 'Analyze photo', exact: true }).click();
     const scanning = await verifyRecognitionScanAsync(page, dialog);
     state.finish = true;

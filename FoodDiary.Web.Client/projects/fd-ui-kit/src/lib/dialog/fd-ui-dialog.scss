@@ -147,12 +147,13 @@
     overflow-y: auto;
 }
 
-.fd-ui-dialog--body-scrollable .fd-ui-dialog__body {
+// Keep width-sensitive content from toggling overflow as the gutter appears.
+.fd-ui-dialog--body-scroll-default .fd-ui-dialog__body {
     scrollbar-gutter: stable;
     padding-inline-end: var(--fd-dialog-body-scrollbar-offset);
 }
 
-.fd-ui-dialog--body-scroll-edge.fd-ui-dialog--body-scrollable .fd-ui-dialog__body {
+.fd-ui-dialog--body-scroll-edge .fd-ui-dialog__body {
     scrollbar-gutter: auto;
     padding-inline-end: 0;
 }

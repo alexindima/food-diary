@@ -294,8 +294,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "0668c57f2cdfa872077b38020eebdf8311a23aa9b2e1b7d705b324c4e0b9eba5",
-          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
+          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
+          "reviewReason": "The CI diff only uploads retained browser failure files from the existing smoke job. API contract generation, accepted-baseline selection, snapshot comparisons and compatibility gates are unchanged, so this workflow remains accurate."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -318,10 +318,10 @@
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
-      "reviewedAtUtc": "2026-10-27T07:19:14.2582561Z"
+      "reason": "The CI diff only uploads retained browser failure files from the existing smoke job. API contract generation, accepted-baseline selection, snapshot comparisons and compatibility gates are unchanged, so this workflow remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
+      "reviewedAtUtc": "2026-10-27T18:54:50.5336626Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -764,14 +764,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/failures.json",
-          "sha256": "9068f3f1852c22e6b33d70f7ff1256bd269aace053ebcb5041fce020743f3dfc",
-          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
+          "sha256": "adbb648c4944d68c806a42e644524c201e8e0de94965cc929e7964eead8b1c4b",
+          "reviewReason": "Reviewed the new dialog overflow entry against the captured alternating geometry and unchanged Linux regression command. The failure workflow still requires verified causes, sanitized reusable fixes and exact verification; no workflow text changes are needed."
         }
       ],
-      "reason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass.",
-      "baseRef": "HEAD",
-      "gitHead": "d04aa29657cd3f0f79ad8e0030eaf3cb893205d4",
-      "reviewedAtUtc": "2026-10-21T10:35:33.6175861Z"
+      "reason": "Reviewed the new dialog overflow entry against the captured alternating geometry and unchanged Linux regression command. The failure workflow still requires verified causes, sanitized reusable fixes and exact verification; no workflow text changes are needed.",
+      "baseRef": "origin/master",
+      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
+      "reviewedAtUtc": "2026-10-27T18:50:22.8267982Z"
     },
     {
       "pageId": "workflow-failure-prediction",
@@ -897,78 +897,18 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "70d21e1ed23f88ff5e3554ecb26891b742a19cb320af9b43d97093b6618b4b73",
+      "pageSha256": "160955b9fc5fa27484afef55281fdc4447d223ecf3739633791e42dbb2a6a703",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "bc48a7567d8578a20088a6d21d74ffde80f069ea582c474d217d42decc2cd32a",
-          "reviewReason": "Reviewed ci-tests diff: automatic WebQuality adds a separate reusable job and leaves Wiki stage dependencies, affected index commands and full-audit scheduling intact. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "12b6312df110f1e853dcf63e3bf6c63c9d3585597040a53815813aa32554094c",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
-          "sha256": "2c51f8fdd50380bab443b96c77479f74bbbda19c4a30361bdc1f3fc375bac1e5",
-          "reviewReason": "Reviewed the generator bootstrap and existing cache fixture: checkout root now comes from the script location, while inventory isolation, receipts, output validation and pipeline order are preserved. The unchanged regression reproduced the missing manifest before the fix and all 26 scenarios pass afterward, including forced and cached checks with relative hook GIT_WORK_TREE. Updated the guide to describe root resolution and the actual scenario count."
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "ee058200c4f2c8ec94b9ad6fbbb9414b559a38fc21da94c47f1ad41be9d3f500",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/tools/LlmWikiRuntimeTopologyFingerprint.ps1",
-          "sha256": "e10bb714f75c9f2067ccc3ca32767f1819263f167e5db3fa9828f5de9e2ef813",
-          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "8340bcc1c8986ba850c56fb09233674efcb88d2c88eb939f6fbc0cc45ea38e75",
-          "reviewReason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiIndexPipelineCache.ps1",
-          "sha256": "bcd1ab78638f7ff05d20d410a167d780858dc75795b75b2abe5ddc5b519c4a0b",
-          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiModulePageCache.ps1",
-          "sha256": "9fa313b4c11b5c018d7011a0f036c1f5b54baf5a9995d8f8b65e2bcd5ac9e9cb",
-          "reviewReason": "Reviewed the generator bootstrap and existing cache fixture: checkout root now comes from the script location, while inventory isolation, receipts, output validation and pipeline order are preserved. The unchanged regression reproduced the missing manifest before the fix and all 26 scenarios pass afterward, including forced and cached checks with relative hook GIT_WORK_TREE. Updated the guide to describe root resolution and the actual scenario count."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSourceInventory.ps1",
-          "sha256": "52522fd321e7cb917523cdd0945157a2e8510a26dd31e6074465e4447a6a38e4",
-          "reviewReason": "Reviewed the CI repair at e84a5afa3: runtime source pruning now applies below the checkout root, with unchanged source-inventory tests failing before and passing after on Windows and Linux for .artifacts/tests/bin parent layouts. Core retains all 336 assertions and adds the symbol-index cache to the previously approved exact allowlist; the complete Core audit and the 718-assertion shard guard pass. Cache tests retain nonzero exit and unchanged receipt requirements, normalize only ANSI/gutter/whitespace presentation, reject unrelated failure text, and expose child output if the assertion fails. The original CI cache failure did not reproduce in isolated native runs; the diagnostic-format fixture reproduces the matcher weakness and both native suites pass after the change. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "0c3d3189a6ca3aa7679316138364924aafecf6c104c6e5582be56cf1914e1d91",
-          "reviewReason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed."
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "4928f5d0e3468c9c190f92e504f7b9d321cce0f512fd54da4b13181b92dc9104",
-          "reviewReason": "Reviewed backward outcome coverage and source-bound design review; role assignments preserve bundle budgets and privacy. Deterministic tests and actual paired behavioral transcripts are explicitly distinct; no agent execution or separate task state was introduced. Re-reviewed against the page update in this fix: this source is byte-equivalent after newline normalization, and the page edit only replaces duplicated audit counts with the authoritative inventory reference; its other claims remain unchanged. Re-reviewed against the added cleanup paragraph: this source and its documented claims are unchanged. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": "scripts/Clean-NestedDotnetArtifacts.ps1",
-          "sha256": "7f37c4eeb173268a6d3101b4e03890d6ab179df245a6f62f445370eb6278c99f",
-          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
-        },
-        {
-          "path": "scripts/Test-NestedDotnetArtifactsCleanup.ps1",
-          "sha256": "e4fdb0c694034b3c7a10f5d27f2abae0e97da4bd403dbdca604c1888be22c7ab",
-          "reviewReason": "Reproduced original cleanup removing a shared-cache fixture; the unchanged regression passes with pruned root caches, dependencies and links, one deletion per project artifact tree, and target validation before mutation. The page documents this owning-scope contract and CI runs the fixture. Existing hook invocation and scope isolation remain intact. Re-reviewed against the root-relative runtime inventory and cache diagnostic additions: this source and its documented claims remain unchanged. Re-reviewed against this additive page edit: source bytes and existing documented claims are unchanged; only generator root resolution and the expanded cache/hook scenario count are added."
+          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
+          "reviewReason": "Reviewed the current index/CI workflow and the frontend evidence uploader. Wiki checkout isolation, stage ordering, complete shard coverage and aggregate gates are unchanged; failed frontend browser artifacts gain retention."
         }
       ],
-      "reason": "Reviewed CI993443 repairs: current auth metadata suite and source replace the deleted token-storage owner, preserving the top3 requirement; the Core assertion inventory reflects only that renamed owner and message, with336 Core and718 total assertions unchanged. Directory graph planning retains file ownership and direct/recommended classification. Email retry E2E now targets the existing named verification region and preserves two-call verification;5/5 auth smoke tests pass. No runtime authentication behavior or test threshold is changed.",
-      "baseRef": "HEAD",
-      "gitHead": "993443a008d01862108ebdb002136c26bd220a6b",
-      "reviewedAtUtc": "2026-10-26T12:21:38.7087595Z"
+      "reason": "Reviewed the current index/CI workflow and the frontend evidence uploader. Wiki checkout isolation, stage ordering, complete shard coverage and aggregate gates are unchanged; failed frontend browser artifacts gain retention.",
+      "baseRef": "origin/master",
+      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
+      "reviewedAtUtc": "2026-10-27T18:54:50.8715564Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1261,8 +1201,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "0668c57f2cdfa872077b38020eebdf8311a23aa9b2e1b7d705b324c4e0b9eba5",
-          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
+          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
+          "reviewReason": "The frontend browser artifact upload does not change report generation, assessment provenance, optional governance handling, readiness semantics or publication of the Wiki review summary. Current guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1275,10 +1215,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
-      "reviewedAtUtc": "2026-10-27T07:19:14.9398981Z"
+      "reason": "The frontend browser artifact upload does not change report generation, assessment provenance, optional governance handling, readiness semantics or publication of the Wiki review summary. Current guidance remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
+      "reviewedAtUtc": "2026-10-27T18:54:51.2276454Z"
     },
     {
       "pageId": "workflow-risk-calibration",

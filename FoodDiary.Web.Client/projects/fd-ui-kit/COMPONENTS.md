@@ -618,6 +618,7 @@ Layout wrapper for dialog content.
 - Use `title` and `subtitle` for standard dialogs.
 - Use `[fdUiDialogFooter]` for footer actions.
 - Use `[fdUiDialogHeader]` only when the header needs badges, counters, tabs, or richer composition than the standard heading block.
+- The default body inset reserves scrollbar space consistently, so width-sensitive content cannot make the dialog alternate between scrolling and fitting.
 - Use `bodyScrollInset="edge"` when the body scrollbar should sit flush against the dialog edge, such as list-heavy or feed-like dialogs.
 
 **Dialog Token Policy**
