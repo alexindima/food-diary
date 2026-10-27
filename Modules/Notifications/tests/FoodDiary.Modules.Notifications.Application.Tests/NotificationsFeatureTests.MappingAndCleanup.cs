@@ -103,7 +103,7 @@ public partial class NotificationsFeatureTests {
     public async Task NotificationWriter_WhenWebPushRequested_EnqueuesOutboxMessage() {
         var repository = new InMemoryNotificationRepository();
         var outbox = new RecordingNotificationWebPushOutbox();
-        var writer = new NotificationWriter(repository, outbox);
+        var writer = new NotificationWriter(repository, outbox, NotificationWriterTests.CreateActiveAudience(), TimeProvider.System);
         var request = new NotificationRequest(UserId.New(), "info", "{}");
 
         await writer.AddAsync(request, sendWebPush: true, CancellationToken.None);

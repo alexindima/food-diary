@@ -86,6 +86,7 @@
                         [connectedDeviceItems]="notifications.connectedDeviceItems()"
                         [removingConnectedDeviceEndpoint]="notifications.removingConnectedDeviceEndpoint()"
                         (pushNotificationsToggle)="notifications.togglePushNotificationsAsync()"
+                        (pushNotificationsDeviceEnable)="notifications.enableDeviceNotificationsAsync()"
                         (fastingPushNotificationsToggle)="notifications.toggleFastingPushNotificationsAsync()"
                         (socialPushNotificationsToggle)="notifications.toggleSocialPushNotificationsAsync()"
                         (fastingReminderPresetApply)="notifications.applyFastingReminderPreset($event)"

@@ -97,15 +97,23 @@ export class UserManageNotificationsCardComponent {
         }
 
         return this.notificationPermission() === 'granted'
-            ? 'USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT'
+            ? 'USER_MANAGE.NOTIFICATIONS_PERMISSION_GRANTED_HINT'
             : 'USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT';
     });
+    protected readonly canEnableCurrentDevice = computed(
+        () =>
+            this.pushNotificationsEnabled() &&
+            this.pushNotificationsSupported() &&
+            !this.pushNotificationsSubscribed() &&
+            this.notificationPermission() !== 'denied',
+    );
     protected readonly activeFastingReminderPresetId = computed(() => {
         const presetId = resolveFastingReminderPresetId(this.fastingCheckInReminderHours(), this.fastingCheckInFollowUpReminderHours());
         return presetId === 'custom' ? null : presetId;
     });
 
     public readonly pushNotificationsToggle = output();
+    public readonly pushNotificationsDeviceEnable = output();
     public readonly fastingPushNotificationsToggle = output();
     public readonly socialPushNotificationsToggle = output();
     public readonly fastingReminderPresetApply = output<FastingReminderPreset>();

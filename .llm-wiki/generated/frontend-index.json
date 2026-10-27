@@ -5667,7 +5667,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.facade.ts",
-      "line": 29
+      "line": 30
     },
     {
       "name": "UserManageComponent",
@@ -8198,8 +8198,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4172,
-      "russianProperties": 4172,
+      "englishProperties": 4174,
+      "russianProperties": 4174,
       "countsMatch": true
     },
     {

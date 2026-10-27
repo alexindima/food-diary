@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,8 +37,10 @@ export class UserManageNotificationsFacade {
     private readonly frontendObservability = inject(FrontendObservabilityService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
+    private readonly document = inject(DOCUMENT);
     private readonly languageVersion = signal(0);
     private readonly hasTrackedNotificationsView = signal(false);
+    private readonly isEnablingDeviceNotifications = signal(false);
     private readonly invalidReminderFields = new Set<'first' | 'followUp'>();
 
     public readonly notificationPermission = signal<NotificationPermission | 'unsupported'>(this.browserNotifications.getPermission());
@@ -52,7 +55,7 @@ export class UserManageNotificationsFacade {
     public readonly fastingReminderPresets = FASTING_REMINDER_PRESETS;
     public readonly pushNotificationsSupported = this.pushNotifications.isSupported;
     public readonly pushNotificationsSubscribed = this.pushNotifications.isSubscribed;
-    public readonly pushNotificationsBusy = this.pushNotifications.isBusy;
+    public readonly pushNotificationsBusy = computed(() => this.isEnablingDeviceNotifications() || this.pushNotifications.isBusy());
     public readonly currentSubscriptionEndpoint = this.pushNotifications.currentSubscriptionEndpoint;
     public readonly connectedDevices = this.facade.webPushSubscriptions;
     public readonly isLoadingConnectedDevices = this.facade.isLoadingWebPushSubscriptions;
@@ -71,6 +74,17 @@ export class UserManageNotificationsFacade {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
+        if (this.notificationPermission() !== 'unsupported') {
+            const refreshPermission = (): void => {
+                this.notificationPermission.set(this.browserNotifications.getPermission());
+            };
+            this.document.addEventListener('visibilitychange', refreshPermission);
+            this.document.defaultView?.addEventListener('focus', refreshPermission);
+            this.destroyRef.onDestroy(() => {
+                this.document.removeEventListener('visibilitychange', refreshPermission);
+                this.document.defaultView?.removeEventListener('focus', refreshPermission);
+            });
+        }
     }
 
     public syncFromUser(user: User): void {
@@ -109,6 +123,41 @@ export class UserManageNotificationsFacade {
 
         const result = await this.pushNotifications.ensureSubscriptionAsync();
         this.handlePushSubscriptionResult(result);
+    }
+
+    public async enableDeviceNotificationsAsync(): Promise<void> {
+        const owner = this.facade.user();
+        if (owner === null || !this.canEnableDeviceNotifications()) {
+            return;
+        }
+
+        this.isEnablingDeviceNotifications.set(true);
+        try {
+            const permission = await this.browserNotifications.requestPermissionAsync();
+            if (!this.isCurrentNotificationUser(owner)) {
+                return;
+            }
+            this.notificationPermission.set(permission);
+            if (permission !== 'granted') {
+                this.handleDevicePermissionNotGranted(permission);
+                return;
+            }
+
+            const result = await this.pushNotifications.ensureSubscriptionAsync();
+            if (!this.isCurrentNotificationUser(owner)) {
+                return;
+            }
+            this.notificationPermission.set(this.browserNotifications.getPermission());
+            this.handlePushSubscriptionResult(result, false);
+        } catch {
+            if (!this.isCurrentNotificationUser(owner)) {
+                return;
+            }
+            this.notificationPermission.set(this.browserNotifications.getPermission());
+            this.handlePushSubscriptionResult('unavailable');
+        } finally {
+            this.isEnablingDeviceNotifications.set(false);
+        }
     }
 
     public async toggleFastingPushNotificationsAsync(): Promise<void> {
@@ -294,13 +343,40 @@ export class UserManageNotificationsFacade {
         this.toastService.info(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_DISABLED'));
     }
 
-    private handlePushSubscriptionResult(result: Awaited<ReturnType<PushNotificationService['ensureSubscriptionAsync']>>): void {
+    private canEnableDeviceNotifications(): boolean {
+        return (
+            this.pushNotificationsEnabled() &&
+            this.pushNotificationsSupported() &&
+            !this.pushNotificationsSubscribed() &&
+            !this.isUpdatingNotifications() &&
+            !this.pushNotificationsBusy()
+        );
+    }
+
+    private isCurrentNotificationUser(user: User): boolean {
+        return this.facade.user()?.id === user.id && this.pushNotificationsEnabled();
+    }
+
+    private handleDevicePermissionNotGranted(permission: Exclude<NotificationPermission | 'unsupported', 'granted'>): void {
+        if (permission === 'default') {
+            this.toastService.info(this.translateService.instant('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT'));
+            return;
+        }
+        this.handlePushSubscriptionResult(permission === 'denied' ? 'blocked' : 'unsupported');
+    }
+
+    private handlePushSubscriptionResult(
+        result: Awaited<ReturnType<PushNotificationService['ensureSubscriptionAsync']>>,
+        recordAccountPreference = true,
+    ): void {
         switch (result) {
             case 'subscribed':
             case 'already-subscribed': {
-                this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
-                    permission: this.notificationPermission(),
-                });
+                if (recordAccountPreference) {
+                    this.frontendObservability.recordNotificationPreferenceChanged('push', true, {
+                        permission: this.notificationPermission(),
+                    });
+                }
                 this.frontendObservability.recordNotificationSubscriptionEvent('subscription.ensure', 'success', { result });
                 this.toastService.success(this.translateService.instant('DASHBOARD.ACTIONS.PUSH_ENABLED'));
                 this.facade.refreshWebPushSubscriptions();

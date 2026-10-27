@@ -19,6 +19,37 @@ namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationWebPushOutboxTests {
     [Fact]
+    public async Task ActualSender_WhenAudienceDisappears_CompletesRetriedMessageWithoutAnotherDelivery() {
+        await using FoodDiaryDbContext context = CreateContext();
+        Notification notification = await SeedNotificationAsync(context, "revoked-push@example.com");
+        var time = new MutableTimeProvider();
+        var message = NotificationWebPushOutboxMessage.Create(notification.Id, time.UtcNow.AddMinutes(-10).UtcDateTime);
+        message.MarkFailed("previous provider failure", time.UtcNow.AddMinutes(-1).UtcDateTime);
+        context.NotificationWebPushOutbox.Add(message);
+        await context.SaveChangesAsync();
+        IWebPushDeliveryAudienceService audience = Substitute.For<IWebPushDeliveryAudienceService>();
+        audience.GetActiveAudienceAsync(notification.UserId, notification.Type, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WebPushDeliverySubscription>>([]));
+        IWebPushClientAdapter client = Substitute.For<IWebPushClientAdapter>();
+        var sender = new WebPushNotificationSender(audience, Substitute.For<INotificationTextRenderer>(),
+            MsOptions.Create(new WebPushOptions { Enabled = true, Subject = "https://example.com", PublicKey = "public", PrivateKey = "private" }),
+            client, time, NullLogger<WebPushNotificationSender>.Instance);
+        var processor = new NotificationWebPushOutboxProcessor(context, context.NotificationWebPushOutbox, sender,
+            MsOptions.Create(new OutboxProcessingOptions()), time, NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(10);
+
+        NotificationWebPushOutboxMessage stored = await context.NotificationWebPushOutbox.AsNoTracking().SingleAsync();
+        Assert.Multiple(
+            () => Assert.Equal(1, processed),
+            () => Assert.NotNull(stored.ProcessedOnUtc),
+            () => Assert.Equal(1, stored.AttemptCount),
+            () => Assert.Null(stored.LastError),
+            () => Assert.Null(stored.DeadLetteredOnUtc),
+            () => Assert.Empty(client.ReceivedCalls()));
+    }
+
+    [Fact]
     public async Task ActualSender_PersistsPartialSuccessAndRetriesOnlyTheFailedSubscription() {
         await using FoodDiaryDbContext context = CreateContext();
         Notification notification = await SeedNotificationAsync(context, "partial-push@example.com");

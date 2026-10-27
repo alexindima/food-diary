@@ -4,10 +4,10 @@
     "components": 505,
     "componentsWithoutDirectSpecs": 126,
     "inputs": 1640,
-    "outputs": 556,
+    "outputs": 557,
     "apiCalls": 318,
     "templatesWithTranslations": 366,
-    "translationKeys": 2188,
+    "translationKeys": 2189,
     "consumerEdges": 1290,
     "consumedComponents": 322,
     "unconsumedComponents": 182
@@ -10565,6 +10565,10 @@
       "outputs": [
         {
           "name": "pushNotificationsToggle",
+          "type": ""
+        },
+        {
+          "name": "pushNotificationsDeviceEnable",
           "type": ""
         },
         {
@@ -22769,6 +22773,7 @@
         "DISABLED_HINTS.PUSH_NOT_SUPPORTED",
         "USER_MANAGE.FASTING_NOTIFICATIONS",
         "USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE",
+        "USER_MANAGE.NOTIFICATIONS_ENABLE_DEVICE",
         "USER_MANAGE.NOTIFICATIONS_FASTING_HINT",
         "USER_MANAGE.NOTIFICATIONS_FASTING_LABEL",
         "USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST",
@@ -30396,7 +30401,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "disabled",
         "disabledReason",
@@ -43635,6 +43640,7 @@
         "fastingReminderHoursChange",
         "fastingReminderHoursSave",
         "fastingReminderPresetApply",
+        "pushNotificationsDeviceEnable",
         "pushNotificationsToggle",
         "socialPushNotificationsToggle",
         "testNotificationSchedule"

@@ -5,12 +5,14 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import { FASTING_REMINDER_PRESETS } from '../../../../../shared/lib/fasting-reminder-presets';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import type { User } from '../../../../../shared/models/user.data';
+import { BrowserNotificationCapabilityService } from '../../../../../shared/notifications/browser-notification-capability.service';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../../shared/notifications/push-notification.service';
 import { ProfileManageFacade } from '../../../lib/profile-manage.facade';
@@ -129,6 +131,101 @@ describe('UserManageNotificationsFacade push preferences', () => {
         expect(facade.refreshWebPushSubscriptions).not.toHaveBeenCalled();
         expect(observability.recordNotificationSubscriptionEvent).toHaveBeenCalledWith('subscription.ensure', result, { result });
         expect(toast.info).toHaveBeenCalledWith(messageKey);
+    });
+});
+
+describe('UserManageNotificationsFacade current-device permission', () => {
+    it('requests permission before any subscription work and leaves account preferences unchanged', async () => {
+        const { facade, pushNotifications, browserNotifications } = setup({ permission: 'default' });
+        const service = TestBed.inject(UserManageNotificationsFacade);
+
+        const pending = service.enableDeviceNotificationsAsync();
+
+        expect(browserNotifications.requestPermissionAsync).toHaveBeenCalledOnce();
+        expect(pushNotifications.ensureSubscriptionAsync).not.toHaveBeenCalled();
+        expect(service.pushNotificationsBusy()).toBe(true);
+        await pending;
+        expect(service.notificationPermission()).toBe('granted');
+        expect(pushNotifications.ensureSubscriptionAsync).toHaveBeenCalledOnce();
+        expect(facade.refreshWebPushSubscriptions).toHaveBeenCalledOnce();
+        expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+        expect(service.pushNotificationsBusy()).toBe(false);
+    });
+
+    it.each(['default', 'denied', 'unsupported'] as const)('does not subscribe when permission remains %s', async requestedPermission => {
+        const { facade, pushNotifications, toast } = setup({ permission: 'default', requestedPermission });
+        const service = TestBed.inject(UserManageNotificationsFacade);
+
+        await service.enableDeviceNotificationsAsync();
+
+        expect(service.notificationPermission()).toBe(requestedPermission);
+        expect(pushNotifications.ensureSubscriptionAsync).not.toHaveBeenCalled();
+        expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+        expect(toast.success).not.toHaveBeenCalled();
+        expect(service.pushNotificationsBusy()).toBe(false);
+    });
+
+    it('ignores repeated clicks while waiting for permission', async () => {
+        const { browserNotifications, pushNotifications } = setup({ permission: 'default' });
+        let resolvePermission: ((permission: NotificationPermission) => void) | undefined;
+        browserNotifications.requestPermissionAsync.mockImplementationOnce(
+            async () =>
+                new Promise<NotificationPermission>(resolve => {
+                    resolvePermission = resolve;
+                }),
+        );
+        const service = TestBed.inject(UserManageNotificationsFacade);
+
+        const pending = service.enableDeviceNotificationsAsync();
+        await service.enableDeviceNotificationsAsync();
+        expect(browserNotifications.requestPermissionAsync).toHaveBeenCalledOnce();
+        resolvePermission?.('granted');
+        await pending;
+        expect(pushNotifications.ensureSubscriptionAsync).toHaveBeenCalledOnce();
+    });
+
+    it('releases the busy state after a failed browser prompt without changing account preferences', async () => {
+        const { browserNotifications, facade, toast } = setup({ permission: 'default' });
+        browserNotifications.requestPermissionAsync.mockRejectedValueOnce(new Error('permission unavailable'));
+        const service = TestBed.inject(UserManageNotificationsFacade);
+
+        await service.enableDeviceNotificationsAsync();
+
+        expect(service.pushNotificationsBusy()).toBe(false);
+        expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+        expect(toast.info).toHaveBeenCalledWith('USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT');
+    });
+
+    it('does not subscribe a different account after an outstanding permission prompt', async () => {
+        const { browserNotifications, facade, pushNotifications } = setup({ permission: 'default' });
+        let resolvePermission: ((permission: NotificationPermission) => void) | undefined;
+        browserNotifications.requestPermissionAsync.mockImplementationOnce(
+            async () =>
+                new Promise<NotificationPermission>(resolve => {
+                    resolvePermission = resolve;
+                }),
+        );
+        const service = TestBed.inject(UserManageNotificationsFacade);
+
+        const pending = service.enableDeviceNotificationsAsync();
+        facade.user.set(createUser({ id: entityId<'user'>('user-2') }));
+        resolvePermission?.('granted');
+        await pending;
+
+        expect(pushNotifications.ensureSubscriptionAsync).not.toHaveBeenCalled();
+        expect(facade.updateNotificationPreferencesAsync).not.toHaveBeenCalled();
+    });
+
+    it('refreshes device permission when returning from system notification settings', () => {
+        const { browserNotifications } = setup({ permission: 'denied' });
+        const service = TestBed.inject(UserManageNotificationsFacade);
+        expect(service.notificationPermission()).toBe('denied');
+
+        browserNotifications.getPermission.mockReturnValue('granted');
+        document.dispatchEvent(new Event('visibilitychange'));
+
+        expect(service.notificationPermission()).toBe('granted');
+        expect(browserNotifications.requestPermissionAsync).not.toHaveBeenCalled();
     });
 });
 
@@ -265,6 +362,13 @@ type TestSetupOptions = {
     ensureSubscriptionResult?: EnsureSubscriptionResult;
     removeWebPushSubscriptionResult?: boolean;
     scheduleTestNotificationFails?: boolean;
+    permission?: NotificationPermission | 'unsupported';
+    requestedPermission?: NotificationPermission | 'unsupported';
+};
+
+type BrowserCapabilityMock = {
+    getPermission: ReturnType<typeof vi.fn<() => NotificationPermission | 'unsupported'>>;
+    requestPermissionAsync: ReturnType<typeof vi.fn<() => Promise<NotificationPermission | 'unsupported'>>>;
 };
 
 type ProfileManageFacadeMock = {
@@ -283,6 +387,7 @@ function setup(options: TestSetupOptions = {}): {
     pushNotifications: ReturnType<typeof createPushNotificationServiceMock>;
     toast: ReturnType<typeof createToastServiceMock>;
     observability: ReturnType<typeof createFrontendObservabilityServiceMock>;
+    browserNotifications: BrowserCapabilityMock;
 } {
     TestBed.resetTestingModule();
 
@@ -291,6 +396,15 @@ function setup(options: TestSetupOptions = {}): {
     const toast = createToastServiceMock();
     const observability = createFrontendObservabilityServiceMock();
     const notificationService = createNotificationServiceMock(options.scheduleTestNotificationFails === true);
+    let permission = options.permission ?? 'granted';
+    const browserNotifications: BrowserCapabilityMock = {
+        getPermission: vi.fn(() => permission),
+        requestPermissionAsync: vi.fn(async () => {
+            permission = options.requestedPermission ?? 'granted';
+            await waitForAsyncTasksAsync();
+            return permission;
+        }),
+    };
 
     TestBed.configureTestingModule({
         imports: [],
@@ -300,6 +414,7 @@ function setup(options: TestSetupOptions = {}): {
             { provide: ProfileManageFacade, useValue: facade },
             { provide: PushNotificationService, useValue: pushNotifications },
             { provide: NotificationService, useValue: notificationService },
+            { provide: BrowserNotificationCapabilityService, useValue: browserNotifications },
             { provide: FdUiToastService, useValue: toast },
             { provide: FrontendObservabilityService, useValue: observability },
             { provide: LocalizationService, useValue: { getCurrentLanguage: vi.fn(() => 'en') } },
@@ -311,7 +426,7 @@ function setup(options: TestSetupOptions = {}): {
     translateService.setFallbackLang('en');
     translateService.use('en');
 
-    return { facade, pushNotifications, toast, observability };
+    return { facade, pushNotifications, toast, observability, browserNotifications };
 }
 
 function createProfileManageFacadeMock(options: TestSetupOptions): ProfileManageFacadeMock {

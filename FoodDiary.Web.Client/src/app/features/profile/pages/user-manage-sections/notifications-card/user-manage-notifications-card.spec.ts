@@ -53,7 +53,7 @@ describe('UserManageNotificationsCardComponent status state', () => {
 
         fixture.componentRef.setInput('notificationPermission', 'granted');
         fixture.detectChanges();
-        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_UNAVAILABLE_HINT');
+        expect(component['pushNotificationsHintKey']()).toBe('USER_MANAGE.NOTIFICATIONS_PERMISSION_GRANTED_HINT');
         expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('USER_MANAGE.NOTIFICATIONS_SETUP_REQUIRED_HINT');
 
         fixture.componentRef.setInput('pushNotificationsSubscribed', true);
@@ -119,6 +119,39 @@ describe('Notification reminder draft protection', () => {
         expect(Array.from(presets).every(button => !button.disabled)).toBe(true);
         presets[0].click();
         expect(applied).toHaveBeenCalledExactlyOnceWith(FASTING_REMINDER_PRESETS[0]);
+    });
+});
+
+describe('Push setup on the current device', () => {
+    it('offers device setup when account notifications are enabled without a local subscription', async () => {
+        await createComponentAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('.user-manage__notifications-enable-device button');
+
+        expect(button, 'An enabled account needs a direct action to set up this PWA device.').not.toBeNull();
+        expect(button?.textContent).toContain('USER_MANAGE.NOTIFICATIONS_ENABLE_DEVICE');
+        expect(button?.disabled).toBe(false);
+    });
+
+    it.each([
+        { pushNotificationsEnabled: false },
+        { pushNotificationsSubscribed: true },
+        { pushNotificationsSupported: false },
+        { notificationPermission: 'denied' as const },
+    ])('does not offer a permission request for an inapplicable state %o', async overrides => {
+        await createComponentAsync(overrides);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.user-manage__notifications-enable-device')).toBeNull();
+    });
+
+    it('prevents repeated activation while device setup is busy', async () => {
+        await createComponentAsync({ pushNotificationsBusy: true });
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector<HTMLButtonElement>('.user-manage__notifications-enable-device button');
+
+        expect(button, 'Device setup must remain visible with a disabled button while requesting permission.').not.toBeNull();
+        expect(button?.disabled).toBe(true);
     });
 });
 

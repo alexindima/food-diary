@@ -3,6 +3,7 @@ using FoodDiary.Modules.Notifications.Application.Abstractions.Common;
 using FoodDiary.Modules.Notifications.Contracts.Common;
 using FoodDiary.Modules.Notifications.Application.Services;
 using FoodDiary.Modules.Notifications.Domain.Entities;
+using FoodDiary.Modules.Notifications.Application.Abstractions.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 
 namespace FoodDiary.Modules.Notifications.Application.Tests;
@@ -31,7 +32,7 @@ public sealed class NotificationWriterTests {
         });
         var request = new NotificationRequest(UserId.New(), " info ", "{}", " reference ");
 
-        await new NotificationWriter(repository, outbox).AddAsync(request, sendWebPush, cancellation.Token);
+        await new NotificationWriter(repository, outbox, CreateActiveAudience(), TimeProvider.System).AddAsync(request, sendWebPush, cancellation.Token);
 
         Assert.NotNull(saved);
         Assert.Multiple(
@@ -52,7 +53,7 @@ public sealed class NotificationWriterTests {
         INotificationWebPushOutbox outbox = Substitute.For<INotificationWebPushOutbox>();
         repository.AddAsync(Arg.Any<Notification>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException<Notification>(new InvalidOperationException("write failed")));
-        var writer = new NotificationWriter(repository, outbox);
+        var writer = new NotificationWriter(repository, outbox, CreateActiveAudience(), TimeProvider.System);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => writer.AddAsync(
             new NotificationRequest(UserId.New(), "info", "{}"), sendWebPush: true, CancellationToken.None));
@@ -64,12 +65,20 @@ public sealed class NotificationWriterTests {
     public async Task AddAsync_InvalidRequestDoesNotWriteOrEnqueue() {
         INotificationWriteRepository repository = Substitute.For<INotificationWriteRepository>();
         INotificationWebPushOutbox outbox = Substitute.For<INotificationWebPushOutbox>();
-        var writer = new NotificationWriter(repository, outbox);
+        var writer = new NotificationWriter(repository, outbox, CreateActiveAudience(), TimeProvider.System);
 
         await Assert.ThrowsAsync<ArgumentException>(() => writer.AddAsync(
             new NotificationRequest(UserId.Empty, "info", "{}"), sendWebPush: true, CancellationToken.None));
 
         await repository.DidNotReceiveWithAnyArgs().AddAsync(default!, default);
         await outbox.DidNotReceiveWithAnyArgs().EnqueueAsync(default, default);
+    }
+    internal static IWebPushDeliveryAudienceService CreateActiveAudience() {
+        IWebPushDeliveryAudienceService audience = Substitute.For<IWebPushDeliveryAudienceService>();
+        audience.GetActiveAudienceAsync(Arg.Any<UserId>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WebPushDeliverySubscription>>([
+                new(Guid.NewGuid(), "https://push.example.com/active", "key", "auth", "en"),
+            ]));
+        return audience;
     }
 }

@@ -1302,6 +1302,11 @@
       "pageSha256": "afc7b952845f0c1daab7be359147c5d79cf308618972038ea92bee91adf411c7",
       "sources": [
         {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "fe00b239147e571e8268d0905f6327d1fe4851d489c0e20db53ae84d2378ce0f",
+          "reviewReason": "Reviewed final runtime topology and notification delivery paths. Push enqueue now checks existing audience policy while preserving the feed; PWA permission flow uses an explicit click and owner/session guarded resume reconciliation. Safe provider HTTP status logging preserves retry, cancellation and invalidation behavior. No new hosts, routes, jobs, providers or configuration; the runtime workflow remains accurate."
+        },
+        {
           "path": ".llm-wiki/policies/change-policies.json",
           "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
           "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
@@ -1312,10 +1317,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Reviewed final runtime topology and notification delivery paths. Push enqueue now checks existing audience policy while preserving the feed; PWA permission flow uses an explicit click and owner/session guarded resume reconciliation. Safe provider HTTP status logging preserves retry, cancellation and invalidation behavior. No new hosts, routes, jobs, providers or configuration; the runtime workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:50.4011743Z"
+      "gitHead": "d58cbf1d5944d3291c97c82fa087279cb827a858",
+      "reviewedAtUtc": "2026-10-27T17:21:31.8857562Z"
     },
     {
       "pageId": "workflow-security-review",

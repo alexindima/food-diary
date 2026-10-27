@@ -20,6 +20,16 @@ export class BrowserNotificationCapabilityService {
         return this.getPermission() === 'denied';
     }
 
+    public async requestPermissionAsync(): Promise<NotificationPermission | 'unsupported'> {
+        const notification = this.document.defaultView?.Notification;
+        if (notification === undefined || !this.isBrowser) {
+            return 'unsupported';
+        }
+
+        // Keep the browser prompt in the click handler, before any network or subscription work.
+        return notification.permission === 'default' ? notification.requestPermission() : notification.permission;
+    }
+
     public getUserAgent(): string {
         return this.isBrowser ? (this.document.defaultView?.navigator.userAgent ?? '') : '';
     }

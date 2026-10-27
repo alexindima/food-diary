@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BrowserNotificationCapabilityService } from './browser-notification-capability.service';
 
@@ -65,6 +65,62 @@ describe('BrowserNotificationCapabilityService', () => {
 
         expect(service.toAppUrl(absoluteUrl)).toBe('/fasting?intent=check-in#top');
         expect(service.toAppUrl('/meals')).toBe('/meals');
+    });
+});
+
+describe('BrowserNotificationCapabilityService permission requests', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+    });
+
+    it('requests permission synchronously so the browser retains the user gesture', async () => {
+        const requestPermission = vi.fn().mockResolvedValue('granted');
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: DOCUMENT,
+                    useValue: createDocument({
+                        Notification: { permission: 'default', requestPermission },
+                    }),
+                },
+            ],
+        });
+        const service = TestBed.inject(BrowserNotificationCapabilityService);
+
+        const permission = service.requestPermissionAsync();
+
+        expect(requestPermission).toHaveBeenCalledOnce();
+        await expect(permission).resolves.toBe('granted');
+    });
+
+    it.each(['granted', 'denied'] as const)('does not re-prompt when permission is %s', async permission => {
+        const requestPermission = vi.fn();
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: DOCUMENT,
+                    useValue: createDocument({
+                        Notification: { permission, requestPermission },
+                    }),
+                },
+            ],
+        });
+
+        await expect(TestBed.inject(BrowserNotificationCapabilityService).requestPermissionAsync()).resolves.toBe(permission);
+        expect(requestPermission).not.toHaveBeenCalled();
+    });
+
+    it('does not request notification permission during server rendering', async () => {
+        const requestPermission = vi.fn();
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: PLATFORM_ID, useValue: 'server' },
+                { provide: DOCUMENT, useValue: createDocument({ Notification: { permission: 'default', requestPermission } }) },
+            ],
+        });
+
+        await expect(TestBed.inject(BrowserNotificationCapabilityService).requestPermissionAsync()).resolves.toBe('unsupported');
+        expect(requestPermission).not.toHaveBeenCalled();
     });
 });
 
@@ -153,7 +209,7 @@ describe('BrowserNotificationCapabilityService edge cases', () => {
 type TestDefaultView = {
     location?: { origin: string };
     navigator?: { userAgent: string };
-    Notification?: { permission: NotificationPermission };
+    Notification?: { permission: NotificationPermission; requestPermission?: typeof Notification.requestPermission };
     URL?: typeof URL;
 };
 

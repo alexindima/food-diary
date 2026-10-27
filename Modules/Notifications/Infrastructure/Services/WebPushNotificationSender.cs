@@ -124,11 +124,17 @@ public sealed class WebPushNotificationSender(
                             subscription.Id,
                             notification.UserId.Value);
                     } catch (Exception ex) {
+                        int? httpStatusCode = ex switch {
+                            WebPushException pushException => (int)pushException.StatusCode,
+                            HttpRequestException { StatusCode: { } statusCode } => (int)statusCode,
+                            _ => null,
+                        };
                         logger.LogWarning(
-                            "Failed to send web push notification {NotificationId} to subscription {SubscriptionId} ({ErrorType}).",
+                            "Failed to send web push notification {NotificationId} to subscription {SubscriptionId} ({ErrorType}). HttpStatusCode={HttpStatusCode}.",
                             notification.Id.Value,
                             subscription.Id,
-                            ex.GetType().Name);
+                            ex.GetType().Name,
+                            httpStatusCode);
                     }
                 }).ConfigureAwait(false);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {

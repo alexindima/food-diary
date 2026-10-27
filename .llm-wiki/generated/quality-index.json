@@ -64,11 +64,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "nonBlankLines": 782,
-      "decisionPoints": 163,
+      "nonBlankLines": 820,
+      "decisionPoints": 170,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 260.14
+      "structuralRiskScore": 271.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
@@ -14354,11 +14354,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.ts",
-      "nonBlankLines": 106,
-      "decisionPoints": 11,
+      "nonBlankLines": 114,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.62
+      "structuralRiskScore": 23.28
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.ts",
@@ -14410,11 +14410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.facade.ts",
-      "nonBlankLines": 306,
-      "decisionPoints": 34,
+      "nonBlankLines": 376,
+      "decisionPoints": 50,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.12
+      "structuralRiskScore": 82.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.mapper.ts",
@@ -20386,11 +20386,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/browser-notification-capability.service.ts",
-      "nonBlankLines": 39,
-      "decisionPoints": 8,
+      "nonBlankLines": 47,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.78
+      "structuralRiskScore": 15.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification-realtime.service.ts",
@@ -20410,11 +20410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "nonBlankLines": 782,
-      "decisionPoints": 163,
+      "nonBlankLines": 820,
+      "decisionPoints": 170,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 260.14
+      "structuralRiskScore": 271.4
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts",
@@ -42690,11 +42690,11 @@
     },
     {
       "path": "Modules/Notifications/Application/Services/NotificationWriter.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
+      "nonBlankLines": 27,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
+      "structuralRiskScore": 3.54
     },
     {
       "path": "Modules/Notifications/Application/Services/ProfileNotificationReadService.cs",
@@ -42994,11 +42994,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "nonBlankLines": 167,
-      "decisionPoints": 24,
+      "nonBlankLines": 173,
+      "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.34
+      "structuralRiskScore": 40.96
     },
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",

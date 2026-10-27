@@ -74,6 +74,18 @@ export class PushNotificationService {
             return;
         }
 
+        const resume = (): void => {
+            if (this.document.visibilityState === 'visible') {
+                void this.syncExistingSubscriptionAsync();
+            }
+        };
+        this.document.addEventListener('visibilitychange', resume);
+        this.document.defaultView?.addEventListener('focus', resume);
+        this.destroyRef.onDestroy(() => {
+            this.document.removeEventListener('visibilitychange', resume);
+            this.document.defaultView?.removeEventListener('focus', resume);
+        });
+
         const unregisterCleanup = this.sessionEvents.registerSessionEndCleanup(async () => this.endSessionAsync());
         this.destroyRef.onDestroy(unregisterCleanup);
         this.sessionEvents.authenticated$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -279,6 +291,7 @@ export class PushNotificationService {
             this.currentSubscription = subscription;
 
             if (subscription === null) {
+                this.setSubscriptionState(null);
                 if (revoked) {
                     await this.ensureSubscriptionForSessionAsync(session);
                 }
@@ -572,18 +585,29 @@ export class PushNotificationService {
             this.requireCurrentSession(session);
             const subscription = await this.readCurrentSubscriptionAsync();
             this.requireCurrentSession(session);
-            if (subscription === null || this.isConfirmedOwner(subscription, session.owner)) {
+            if (subscription === null) {
+                await this.removeMissingOwnedSubscriptionAsync(session);
+                return { subscription: null, revoked: false };
+            }
+            const confirmedOwner = this.isConfirmedOwner(subscription, session.owner);
+            if (confirmedOwner && !this.browserNotifications.isPermissionDenied()) {
                 return { subscription, revoked: false };
             }
-            // The receiving account must stop an unconfirmed endpoint before
-            // waiting for the API: its previous owner can still deliver offline.
+            // Stop a foreign or revoked endpoint before reconciling its server registration.
             const removed = await firstValueFrom(from(subscription.unsubscribe()).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)));
             if (!removed) {
                 throw new Error('The previous push subscription could not be revoked.');
             }
+            this.requireCurrentSession(session);
+            if (confirmedOwner) {
+                await firstValueFrom(
+                    this.notificationService.removeWebPushSubscription(subscription.endpoint).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)),
+                );
+                this.requireCurrentSession(session);
+            }
             this.forgetSubscription(subscription);
             this.requireCurrentSession(session);
-            return { subscription: null, revoked: true };
+            return { subscription: null, revoked: !confirmedOwner };
         });
     }
 
@@ -591,6 +615,23 @@ export class PushNotificationService {
         if (!this.isCurrentSession(session)) {
             throw new Error('The push session has changed.');
         }
+    }
+
+    private async removeMissingOwnedSubscriptionAsync(session: PushSession): Promise<void> {
+        const marker = this.browserContext?.storage.getJson('local', PUSH_OWNER_STORAGE_KEY);
+        const endpoint = getStringProperty(marker, 'endpoint');
+        if (endpoint === undefined || endpoint.length === 0 || getStringProperty(marker, 'userId') !== session.owner) {
+            return;
+        }
+
+        this.requireCurrentSession(session);
+        await firstValueFrom(this.notificationService.removeWebPushSubscription(endpoint).pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)));
+        this.requireCurrentSession(session);
+        const currentMarker = this.browserContext?.storage.getJson('local', PUSH_OWNER_STORAGE_KEY);
+        if (getStringProperty(currentMarker, 'userId') === session.owner && getStringProperty(currentMarker, 'endpoint') === endpoint) {
+            this.browserContext?.storage.removeItem('local', PUSH_OWNER_STORAGE_KEY);
+        }
+        this.knownSubscriptions.delete(endpoint);
     }
 
     private async requestSubscriptionForSessionAsync(publicKey: string, session: PushSession): Promise<PushSubscription> {

@@ -21563,7 +21563,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Application/Services/NotificationWriter.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ProfileNotificationReadService",

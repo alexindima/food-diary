@@ -12,6 +12,7 @@ import { SessionEventsService } from '../auth/session-events.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { BrowserNotificationCapabilityService } from './browser-notification-capability.service';
 import { NotificationService, type WebPushSubscriptionRequest } from './notification.service';
 import { PushNotificationService } from './push-notification.service';
 
@@ -1064,6 +1065,122 @@ describe('PushNotificationService unauthenticated cleanup and deadlines', () => 
         await expect(enabling).resolves.toBe('unavailable');
         expect(service.isBusy()).toBe(false);
         expect(service.isSubscribed()).toBe(false);
+    });
+});
+
+describe('PushNotificationService revoked device permission', () => {
+    it('removes a confirmed registration when permission is denied even if the browser still returns the old subscription', async () => {
+        const subscription = createPushSubscription('https://push.example.com/denied-existing-device');
+        confirmSubscriptionOwner(subscription, 'user-a');
+        swPush.subscription = of(subscription);
+        const permission = vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'isPermissionDenied').mockReturnValue(true);
+        try {
+            await expect(service.ensureSubscriptionAsync()).resolves.toBe('blocked');
+            expect(subscription.unsubscribeMock).toHaveBeenCalledOnce();
+            expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(subscription.endpoint);
+            expect(notificationService.upsertWebPushSubscription).not.toHaveBeenCalled();
+            expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
+        } finally {
+            permission.mockRestore();
+        }
+    });
+
+    it('clears the subscribed state when the browser subscription disappears while the PWA is suspended', async () => {
+        const subscription = createPushSubscription('https://push.example.com/suspended-device');
+        confirmSubscriptionOwner(subscription, 'user-a');
+        swPush.subscription = of(subscription);
+        await service.ensureSubscriptionAsync();
+        expect(service.isSubscribed()).toBe(true);
+        swPush.subscription = of(null);
+        const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible');
+        try {
+            window.dispatchEvent(new Event('focus'));
+            await vi.waitFor(() => {
+                expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(subscription.endpoint);
+            });
+            await vi.waitFor(() => {
+                expect(service.isSubscribed()).toBe(false);
+            });
+            expect(service.currentSubscriptionEndpoint()).toBeNull();
+        } finally {
+            visibility.mockRestore();
+        }
+    });
+
+    it('removes only the current account device registration when the browser has lost its subscription', async () => {
+        const mutation = vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync');
+        const oldSubscription = createPushSubscription('https://push.example.com/revoked-device');
+        confirmSubscriptionOwner(oldSubscription, 'user-a');
+        subscription$.next(null);
+
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(mutation).toHaveBeenCalled();
+        });
+        await mutation.mock.results[0].value;
+
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledExactlyOnceWith(oldSubscription.endpoint);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toBeNull();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it('preserves a different account registration when no browser subscription is present', async () => {
+        const mutation = vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync');
+        const oldSubscription = createPushSubscription('https://push.example.com/another-account');
+        confirmSubscriptionOwner(oldSubscription, 'user-b');
+        subscription$.next(null);
+
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(mutation).toHaveBeenCalled();
+        });
+        await mutation.mock.results[0].value;
+
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(localStorage.getItem(pushOwnerStorageKey)).toContain('user-b');
+    });
+
+    it('retains the ownership marker when server removal fails so reconciliation can retry', async () => {
+        const mutation = vi.spyOn(TestBed.inject(BrowserWindowService), 'runWithLockAsync');
+        const oldSubscription = createPushSubscription('https://push.example.com/revoked-retry');
+        confirmSubscriptionOwner(oldSubscription, 'user-a');
+        notificationService.removeWebPushSubscription.mockReturnValue(throwError(() => new Error('offline')));
+        subscription$.next(null);
+
+        TestBed.tick();
+        await vi.waitFor(() => {
+            expect(mutation).toHaveBeenCalled();
+        });
+        await expect(mutation.mock.results[0].value).rejects.toThrow('offline');
+
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(oldSubscription.endpoint);
+        expect(localStorage.getItem(pushOwnerStorageKey)).toContain(oldSubscription.endpoint);
+    });
+});
+
+describe('PushNotificationService revoked permission session ownership', () => {
+    it('does not remove the old account registration after the account changes during browser revocation', async () => {
+        const subscription = createPushSubscription('https://push.example.com/revoked-during-account-change');
+        const revoked = new Subject<boolean>();
+        confirmSubscriptionOwner(subscription, 'user-a');
+        swPush.subscription = of(subscription);
+        subscription.unsubscribeMock.mockReturnValue(firstValueFrom(revoked));
+        const permission = vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'isPermissionDenied').mockReturnValue(true);
+        try {
+            const pending = service.ensureSubscriptionAsync();
+            await vi.waitFor(() => {
+                expect(subscription.unsubscribeMock).toHaveBeenCalledOnce();
+            });
+            authService.getUserId.mockReturnValue('user-b');
+            authService.getSessionKey.mockReturnValue('token-b');
+            revoked.next(true);
+
+            await pending;
+            expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+            expect(localStorage.getItem(pushOwnerStorageKey)).toContain('user-a');
+        } finally {
+            permission.mockRestore();
+        }
     });
 });
 

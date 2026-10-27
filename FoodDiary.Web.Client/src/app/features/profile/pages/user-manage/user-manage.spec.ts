@@ -858,6 +858,7 @@ type UserManageNotificationsFacadeMock = {
     removingConnectedDeviceEndpoint: ReturnType<typeof signal<string | null>>;
     syncFromUser: ReturnType<typeof vi.fn>;
     togglePushNotificationsAsync: ReturnType<typeof vi.fn>;
+    enableDeviceNotificationsAsync: ReturnType<typeof vi.fn>;
     toggleFastingPushNotificationsAsync: ReturnType<typeof vi.fn>;
     toggleSocialPushNotificationsAsync: ReturnType<typeof vi.fn>;
     applyFastingReminderPreset: ReturnType<typeof vi.fn>;
@@ -1054,6 +1055,7 @@ function createUserManageNotificationsFacadeMock(
         removingConnectedDeviceEndpoint: signal<string | null>(null),
         syncFromUser: vi.fn(),
         togglePushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
+        enableDeviceNotificationsAsync: vi.fn().mockResolvedValue(void 0),
         toggleFastingPushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
         toggleSocialPushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
         applyFastingReminderPreset: vi.fn(),

@@ -14,6 +14,19 @@
             </div>
             <div class="user-manage__notifications-hint">{{ pushNotificationsHintKey() | translate }}</div>
             <div class="user-manage__notifications-device-note">{{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE' | translate }}</div>
+            @if (canEnableCurrentDevice()) {
+                <div class="user-manage__notifications-enable-device fd-row">
+                    <fd-ui-button
+                        type="button"
+                        size="sm"
+                        [disabled]="isUpdatingNotifications() || pushNotificationsBusy()"
+                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                        (click)="pushNotificationsDeviceEnable.emit()"
+                    >
+                        {{ 'USER_MANAGE.NOTIFICATIONS_ENABLE_DEVICE' | translate }}
+                    </fd-ui-button>
+                </div>
+            }
         </div>
         <fd-ui-switch
             [checked]="pushNotificationsEnabled()"
