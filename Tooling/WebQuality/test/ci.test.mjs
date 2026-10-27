@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 
@@ -28,11 +28,21 @@ test('PR, mainline and scheduled CI automatically run every web quality engine',
     assert.ok(audit.strategy['max-parallel'] > 1);
     const workloads = audit.strategy.matrix.include;
     assert.deepEqual(workloads.map(item => item.id).sort(), ['chromium', 'firefox', 'fixtures', 'journeys', 'performance', 'webkit']);
-    assert.deepEqual(workloads.filter(item => item.profile === 'browser').map(item => item.browser).sort(), ['chromium', 'firefox', 'webkit']);
+    assert.deepEqual(
+        workloads
+            .filter(item => item.profile === 'browser')
+            .map(item => item.browser)
+            .sort(),
+        ['chromium', 'firefox', 'webkit'],
+    );
     assert.equal(workloads.filter(item => item.profile === 'performance').length, 1, 'Lighthouse owns an isolated runner.');
     const lock = JSON.parse(readFileSync(new URL('../../../FoodDiary.Web.Client/package-lock.json', import.meta.url), 'utf8'));
     assert.equal(audit.container.image, `mcr.microsoft.com/playwright:v${lock.packages['node_modules/@playwright/test'].version}-noble`);
-    assert.match(audit.container.options, /(?:^|\s)--user\s+1001(?:\s|$)/u, 'Container user must match the GitHub workspace and HOME owner.');
+    assert.match(
+        audit.container.options,
+        /(?:^|\s)--user\s+1001(?:\s|$)/u,
+        'Container user must match the GitHub workspace and HOME owner.',
+    );
     const commands = audit.steps.map(step => step.run ?? '').join('\n');
     assert.doesNotMatch(commands, /install --with-deps/u, 'The image already contains browser engines and OS dependencies.');
     assert.match(commands, /verify-browser\.mjs/u);
@@ -54,14 +64,30 @@ test('PR, mainline and scheduled CI automatically run every web quality engine',
     assert.equal(gate.steps[0].env.WEB_QUALITY_JOBS, '${{ toJSON(needs) }}');
 });
 
+test('CI executes the owner PWA notification click suite after installing Angular', () => {
+    const entrypoint = new URL('./push-notification-click.test.mjs', import.meta.url);
+    assert.ok(existsSync(entrypoint), 'PWA notification click tests must be included in the CI test glob.');
+    assert.match(
+        readFileSync(entrypoint, 'utf8'),
+        /import ['"]\.\.\/\.\.\/\.\.\/FoodDiary\.Web\.Client\/scripts\/push-notification-click\.test\.mjs['"]/u,
+    );
+    const steps = workflow('web-quality.yml').jobs.prepare.steps;
+    const install = steps.findIndex(step => step.run?.includes('npm ci'));
+    const check = steps.findIndex(step => step.run?.includes('node --test Tooling/WebQuality/test/*.test.mjs'));
+    assert.ok(install >= 0 && check > install, 'Install the locked Angular worker before running its contracts.');
+    assert.equal(steps[check]['continue-on-error'], undefined);
+    assert.equal(steps[check].if, undefined);
+});
+
 test('the final Google gate rejects failed, cancelled, skipped and missing required execution', () => {
     const gate = workflow('web-quality.yml').jobs['web-quality'];
     const command = gate.steps[0].run?.match(/^node -e "([^"]+)"\s*$/u)?.[1];
     assert.ok(command, 'The aggregate gate must have an executable result check.');
-    const execute = results => spawnSync(process.execPath, ['-e', command], {
-        env: { ...process.env, WEB_QUALITY_JOBS: JSON.stringify(results) },
-        encoding: 'utf8',
-    });
+    const execute = results =>
+        spawnSync(process.execPath, ['-e', command], {
+            env: { ...process.env, WEB_QUALITY_JOBS: JSON.stringify(results) },
+            encoding: 'utf8',
+        });
     const passed = Object.fromEntries(gate.needs.map(id => [id, { result: 'success' }]));
     assert.equal(execute(passed).status, 0);
     for (const id of gate.needs)
