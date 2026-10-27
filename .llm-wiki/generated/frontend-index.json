@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2722,
+    "typescriptFiles": 2727,
     "symbols": 860,
     "routes": 108,
     "features": 46,
-    "specs": 823,
+    "specs": 827,
     "localeFiles": 5,
     "roles": {
       "Component": 498,
@@ -3777,7 +3777,7 @@
       "role": "Component",
       "selector": "fd-telegram-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "line": 40
+      "line": 42
     },
     {
       "name": "CyclesService",
@@ -6689,7 +6689,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 43
+      "line": 44
     },
     {
       "name": "GlobalErrorHandler",
@@ -7200,7 +7200,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/browser-session-state.service.ts",
-      "line": 8
+      "line": 10
     },
     {
       "name": "EmailVerificationCooldownService",
@@ -7235,14 +7235,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-web-app.service.ts",
-      "line": 9
+      "line": 13
     },
     {
       "name": "AppBootstrapService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "line": 13
+      "line": 16
     },
     {
       "name": "DevelopmentToolError",

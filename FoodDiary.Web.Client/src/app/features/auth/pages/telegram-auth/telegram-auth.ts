@@ -12,7 +12,9 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { TelegramBackupEmailFlowService } from '../../../../shared/auth/telegram-backup-email-flow.service';
+import { telegramMiniAppReturnUrl } from '../../../../shared/auth/telegram-mini-app-navigation';
 import { telegramOAuthCallbackFromRoute } from '../../../../shared/auth/telegram-oidc-values';
+import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
@@ -46,6 +48,7 @@ export class TelegramAuthComponent {
     private readonly browser = inject(BrowserWindowService);
     private readonly route = inject(ActivatedRoute);
     private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
+    private readonly telegram = inject(TelegramWebAppService);
     protected readonly ready = signal(false);
     protected readonly showExistingLogin = signal(false);
     protected readonly registrationModel = signal({ timeZoneId: 'UTC' });
@@ -118,7 +121,8 @@ export class TelegramAuthComponent {
         const rawState = this.route.snapshot.queryParamMap.get('state');
         const { code, state } = telegramOAuthCallbackFromRoute(rawCode, rawState);
         const denied = this.route.snapshot.queryParamMap.has('error');
-        if (code !== null || state !== null || denied) {
+        const isCallback = code !== null || state !== null || denied;
+        if (isCallback) {
             this.browser.replaceCurrentUrl('/auth/telegram');
             if (await this.backupEmailFlow.handleCallbackAsync(code, state, denied)) {
                 await this.navigation.navigateToProfileAsync();
@@ -133,7 +137,32 @@ export class TelegramAuthComponent {
             this.facade.restoreIntent();
         }
         await this.facade.loadConfigurationAsync();
-        this.ready.set(true);
+        try {
+            if (!isCallback) {
+                await this.signInMiniAppAsync();
+            }
+        } finally {
+            this.ready.set(true);
+        }
+    }
+
+    private async signInMiniAppAsync(): Promise<void> {
+        // Stored tickets retain explicit choices; only a fresh server-verified login is automatic.
+        if (
+            this.facade.configuration()?.loginEnabled !== true ||
+            this.facade.intent() !== null ||
+            !(await this.telegram.claimAutomaticSignInAsync())
+        ) {
+            return;
+        }
+        if (this.auth.isAuthenticated()) {
+            await this.navigateAfterAuthenticationAsync();
+            return;
+        }
+        await this.facade.beginAsync(false);
+        if (this.facade.intent()?.nextAction === 'login') {
+            await this.completeAsync('login');
+        }
     }
 
     private async completeAsync(action: 'login' | 'register' | 'link'): Promise<void> {
@@ -144,12 +173,21 @@ export class TelegramAuthComponent {
         if (!(await this.facade.completeAsync(action, this.locale.getCurrentLanguage(), this.registrationModel().timeZoneId))) {
             return;
         }
+        await this.navigateAfterAuthenticationAsync();
+    }
+
+    private async navigateAfterAuthenticationAsync(): Promise<void> {
         if (this.auth.requiresEmailVerification()) {
             await this.navigation.navigateToEmailVerificationPendingAsync();
         } else if (this.auth.mustChangePassword()) {
             await this.navigation.navigateToRequiredPasswordChangeAsync();
         } else {
-            await this.navigation.navigateToHomeAsync();
+            const returnUrl = telegramMiniAppReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+            if (returnUrl === null) {
+                await this.navigation.navigateToHomeAsync();
+            } else {
+                await this.navigation.navigateToReturnUrlAsync(returnUrl);
+            }
         }
     }
 }

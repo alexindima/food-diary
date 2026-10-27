@@ -12,6 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { TelegramBackupEmailFlowService } from '../../../../shared/auth/telegram-backup-email-flow.service';
 import { telegramLoginTicket } from '../../../../shared/auth/telegram-oidc-values';
+import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
@@ -77,11 +78,13 @@ class TelegramAuthDoubles {
         navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
         navigateToProfileAsync: vi.fn().mockResolvedValue(undefined),
         navigateToHomeAsync: vi.fn().mockResolvedValue(undefined),
+        navigateToReturnUrlAsync: vi.fn().mockResolvedValue(undefined),
         navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(undefined),
         navigateToRequiredPasswordChangeAsync: vi.fn().mockResolvedValue(undefined),
     };
     public readonly browser = { replaceCurrentUrl: vi.fn() };
     public readonly backupEmail = { handleCallbackAsync: vi.fn<() => Promise<boolean>>().mockResolvedValue(false) };
+    public readonly telegram = { claimAutomaticSignInAsync: vi.fn().mockResolvedValue(false) };
 }
 
 type TelegramAuthHarness = TelegramAuthDoubles & {
@@ -100,6 +103,7 @@ function createHarness(query: Record<string, string | undefined> = {}, doubles =
             { provide: AuthService, useValue: doubles.auth },
             { provide: UserFacade, useValue: doubles.users },
             { provide: NavigationService, useValue: doubles.navigation },
+            { provide: TelegramWebAppService, useValue: doubles.telegram },
             { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'ru' } },
             { provide: BrowserWindowService, useValue: doubles.browser },
             { provide: TelegramBackupEmailFlowService, useValue: doubles.backupEmail },
@@ -119,6 +123,13 @@ async function settleAsync(harness: TelegramAuthHarness): Promise<void> {
     harness.fixture.detectChanges();
     await harness.fixture.whenStable();
     harness.fixture.detectChanges();
+}
+
+async function expectAutomaticSignInSettledAsync(harness: TelegramAuthHarness): Promise<void> {
+    await vi.waitFor(() => {
+        harness.fixture.detectChanges();
+        expect(harness.root.querySelector('[role="status"]')).toBeNull();
+    });
 }
 
 function button(harness: TelegramAuthHarness, key: string): HTMLButtonElement {
@@ -141,6 +152,124 @@ async function createIntentHarnessAsync(nextAction: TelegramIntent['nextAction']
     await settleAsync(harness);
     return harness;
 }
+
+describe('Telegram automatic sign-in', () => {
+    it('opens the diary automatically for a freshly verified linked Mini App account', async () => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        doubles.facade.beginAsync.mockImplementation(async () => {
+            doubles.facade.intent.set({ ...INTENT, nextAction: 'login' });
+            await waitForAsyncTasksAsync();
+        });
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        await expectAutomaticSignInSettledAsync(harness);
+        expect(doubles.facade.beginAsync).toHaveBeenCalledExactlyOnceWith(false);
+        expect(doubles.facade.completeAsync).toHaveBeenCalledExactlyOnceWith('login', 'ru', expect.any(String));
+        expect(doubles.navigation.navigateToHomeAsync).toHaveBeenCalledOnce();
+    });
+
+    it.each(['onboarding', 'link'] as const)('keeps the %s action explicit for Mini App users', async nextAction => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        doubles.facade.beginAsync.mockImplementation(async () => {
+            doubles.facade.intent.set({ ...INTENT, nextAction });
+            await waitForAsyncTasksAsync();
+        });
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        expect(doubles.facade.beginAsync).toHaveBeenCalledWith(false);
+        expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+        expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
+        await expectAutomaticSignInSettledAsync(harness);
+    });
+});
+
+describe('Stored Telegram choices and failures', () => {
+    it.each(['login', 'onboarding', 'link'] as const)('does not automatically consume a previously stored %s ticket', async nextAction => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.facade.intent.set({ ...INTENT, nextAction });
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        expect(doubles.telegram.claimAutomaticSignInAsync).not.toHaveBeenCalled();
+        expect(doubles.facade.beginAsync).not.toHaveBeenCalled();
+        expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+    });
+
+    it('shows the Telegram error without entering a password flow or retrying invalid proof', async () => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        doubles.facade.beginAsync.mockImplementation(async () => {
+            doubles.facade.errorKey.set('AUTH.TELEGRAM.ERROR');
+            await waitForAsyncTasksAsync();
+        });
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        await settleAsync(harness);
+        expect(doubles.facade.beginAsync).toHaveBeenCalledOnce();
+        expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+        expect(harness.root.querySelector('[role="alert"]')?.textContent).toContain('AUTH.TELEGRAM.ERROR');
+        expect(harness.root.querySelector('fd-auth')).toBeNull();
+        expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
+    });
+
+    it('does not navigate to the diary when automatic completion fails', async () => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        doubles.facade.beginAsync.mockImplementation(async () => {
+            doubles.facade.intent.set({ ...INTENT, nextAction: 'login' });
+            await waitForAsyncTasksAsync();
+        });
+        doubles.facade.completeAsync.mockResolvedValue(false);
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        await expectAutomaticSignInSettledAsync(harness);
+        expect(doubles.facade.completeAsync).toHaveBeenCalledOnce();
+        expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
+        await expectAutomaticSignInSettledAsync(harness);
+    });
+});
+
+describe('Mini App destinations and callbacks', () => {
+    it('opens the requested settings after automatic login', async () => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        doubles.facade.beginAsync.mockImplementation(async () => {
+            doubles.facade.intent.set({ ...INTENT, nextAction: 'login' });
+            await waitForAsyncTasksAsync();
+        });
+        const harness = createHarness({ returnUrl: '/profile?tab=settings' }, doubles);
+        await settleAsync(harness);
+        await expectAutomaticSignInSettledAsync(harness);
+        expect(doubles.navigation.navigateToReturnUrlAsync).toHaveBeenCalledWith('/profile?tab=settings');
+        expect(doubles.navigation.navigateToHomeAsync).not.toHaveBeenCalled();
+    });
+
+    it('opens the diary when the Mini App session was already restored', async () => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.auth.isAuthenticated.set(true);
+        doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+        const harness = createHarness({}, doubles);
+        await settleAsync(harness);
+        expect(doubles.facade.beginAsync).not.toHaveBeenCalled();
+        expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+        expect(doubles.navigation.navigateToHomeAsync).toHaveBeenCalledOnce();
+    });
+
+    it.each([{ code: 'code', state: 'state' }, { error: 'denied' }])(
+        'preserves an explicit OAuth callback %s inside Telegram',
+        async query => {
+            const doubles = new TelegramAuthDoubles();
+            doubles.telegram.claimAutomaticSignInAsync.mockResolvedValue(true);
+            const harness = createHarness(query, doubles);
+            await settleAsync(harness);
+            expect(doubles.telegram.claimAutomaticSignInAsync).not.toHaveBeenCalled();
+            expect(doubles.facade.beginAsync).not.toHaveBeenCalled();
+            expect(doubles.facade.completeAsync).not.toHaveBeenCalled();
+        },
+    );
+});
 
 describe('Telegram authentication initialization', () => {
     it('keeps loading visible until configuration is ready after restoring the intent', async () => {

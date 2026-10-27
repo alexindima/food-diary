@@ -153,4 +153,18 @@ describe('browser session revalidation', () => {
         }
         expect(auth.refreshSession).not.toHaveBeenCalled();
     });
+
+    it.each(['/auth/telegram/mini-app/begin', '/auth/telegram/mini-app/begin-link'])(
+        'does not refresh a session when fresh Telegram proof is rejected at %s',
+        path => {
+            auth.refreshSession.mockReturnValue(of(false));
+            const failed = vi.fn();
+            http.post(root + path, { initData: 'invalid-proof' }).subscribe({ error: failed });
+            requests
+                .expectOne(root + path)
+                .flush({ error: 'Telegram.InvalidProof' }, { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' });
+            expect(auth.refreshSession).not.toHaveBeenCalled();
+            expect(failed).toHaveBeenCalledOnce();
+        },
+    );
 });

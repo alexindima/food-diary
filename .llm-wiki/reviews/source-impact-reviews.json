@@ -45,23 +45,18 @@
     {
       "pageId": "module.frontend",
       "pagePath": ".llm-wiki/modules/frontend.md",
-      "pageSha256": "e5ad676b6ad7f274fc31b04613d2143da2db59e6c14df5eb4508c02bc43fc2ae",
+      "pageSha256": "3182313dda8be0f1aa50facced82e4e3246a102445c5bd3d8c403d35a1b69378",
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c092524ae9004a094238ddd3b77dc6328f9e488228e25cbe1cff9480dc529e02",
-          "reviewReason": "The BrowserSessions source only gains a link to the authentication-throttling runbook. Existing cookie, SDK and frontend response contracts remain unchanged; the account guard retains RateLimit.Exceeded and uses Retry-After."
-        },
-        {
-          "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "00808c88438c11d0fbbe542f855f2062d0b2ec0ab0423d481267b3e13ac3a7b7",
-          "reviewReason": "Public audit documentation now explains the anonymous POST auth/session fixture and preserved explicit API responses. Regression tests reproduce405 versus401 on the original helper and pass unchanged after the fix; all21 Lighthouse helper tests pass. Full frontend verify, all41 journeys and14 scenarios in each of Chrome, Firefox and WebKit pass. The explicit503 browser probe preserves the recovery notice and passes all306 text-resize observations. No accessibility or performance budget is relaxed."
+          "sha256": "c780c7dbeb69d75d24eebe0dd26781a008cc668a2c39be0d414090ef078195d1",
+          "reviewReason": "Reviewed Mini App automatic entry against Browser Sessions Telegram section, bootstrap routing, TelegramAuthComponent and BrowserSessionStateService. Existing module page already states the separate memory-only Telegram transport and links the owning browser-session contract. New launch marker and SHA-256 logout marker are public tab selectors, not bearer storage; no SDK surface, feature boundary or cookie-session policy changes require a page edit."
         }
       ],
-      "reason": "The BrowserSessions source only gains a link to the authentication-throttling runbook. Existing cookie, SDK and frontend response contracts remain unchanged; the account guard retains RateLimit.Exceeded and uses Retry-After.",
+      "reason": "Reviewed Mini App automatic entry against Browser Sessions Telegram section, bootstrap routing, TelegramAuthComponent and BrowserSessionStateService. Existing module page already states the separate memory-only Telegram transport and links the owning browser-session contract. New launch marker and SHA-256 logout marker are public tab selectors, not bearer storage; no SDK surface, feature boundary or cookie-session policy changes require a page edit.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.2170905Z"
+      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
+      "reviewedAtUtc": "2026-10-27T07:59:04.0700071Z"
     },
     {
       "pageId": "module.mail-services",
@@ -102,8 +97,8 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c092524ae9004a094238ddd3b77dc6328f9e488228e25cbe1cff9480dc529e02",
-          "reviewReason": "The API composes the Identity-owned attempt port and Redis adapter through explicit direct references. The exact matrix records those two consumed references. No host, foreign aggregate write, module cycle or browser session protocol is added."
+          "sha256": "c780c7dbeb69d75d24eebe0dd26781a008cc668a2c39be0d414090ef078195d1",
+          "reviewReason": "Reviewed the new automatic Mini App entry against BROWSER_SESSIONS.md and the existing Identity begin/complete validation boundary. It composes existing endpoints and leaves bot bearer, browser cookies, Identity proof checks, host inventory and module ownership unchanged. The architecture page remains accurate and delegates detailed Telegram client behavior to the owning browser-session document."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -111,10 +106,10 @@
           "reviewReason": "The API composes the Identity-owned attempt port and Redis adapter through explicit direct references. The exact matrix records those two consumed references. No host, foreign aggregate write, module cycle or browser session protocol is added."
         }
       ],
-      "reason": "The API composes the Identity-owned attempt port and Redis adapter through explicit direct references. The exact matrix records those two consumed references. No host, foreign aggregate write, module cycle or browser session protocol is added.",
+      "reason": "Reviewed the new automatic Mini App entry against BROWSER_SESSIONS.md and the existing Identity begin/complete validation boundary. It composes existing endpoints and leaves bot bearer, browser cookies, Identity proof checks, host inventory and module ownership unchanged. The architecture page remains accurate and delegates detailed Telegram client behavior to the owning browser-session document.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.3212691Z"
+      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
+      "reviewedAtUtc": "2026-10-27T07:59:04.8899964Z"
     },
     {
       "pageId": "system.csharp-symbol-index",

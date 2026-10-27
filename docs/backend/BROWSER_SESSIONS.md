@@ -178,6 +178,20 @@ when their bearer is missing. Browser Telegram OIDC without that mode produces a
 ordinary browser session. A client header alone never replaces Telegram proof.
 
 Mini App browser binding and third-party cookie requirements are unchanged.
+On a fresh Mini App launch, anonymous users are routed to the Telegram entry
+with the launch fragment intact. A newly verified `login` intent completes
+automatically for an already linked account. Registration, linking and restored
+tickets retain their explicit actions. Ordinary website visits and OIDC callbacks
+keep their existing flows.
+
+A tab-scoped public marker preserves the Telegram transport after SPA navigation
+and reload; the marker never authenticates a request. Explicit logout suppresses
+automatic sign-in for that launch, including reloads, using a SHA-256 digest of
+the launch proof in session storage. The application does not persist the proof
+for this purpose. A newly opened launch with different proof can sign in again.
+Pending logout and session-recovery failures take precedence over automatic
+sign-in. Rejection of a fresh Mini App proof does not trigger session refresh.
+
 Local integration tests cannot establish Telegram Web, iOS or Android cookie
 compatibility; those device flows require the Telegram test stand.
 

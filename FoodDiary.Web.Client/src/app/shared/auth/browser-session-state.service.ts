@@ -3,6 +3,8 @@ import { inject, Service, signal } from '@angular/core';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 
+export const TELEGRAM_MINI_APP_CONTEXT_KEY = 'fooddiary.telegram.mini-app';
+
 /** Public request selectors. None of these values can authenticate without the matching HttpOnly cookie. */
 @Service()
 export class BrowserSessionStateService {
@@ -13,6 +15,10 @@ export class BrowserSessionStateService {
     public readonly telegram = this.isTelegramLaunch();
 
     public constructor() {
+        if (this.telegram) {
+            // A tab-scoped transport hint survives SPA navigation/reload; it is never authentication proof.
+            this.storage.setItem('session', TELEGRAM_MINI_APP_CONTEXT_KEY, 'true');
+        }
         for (const area of ['local', 'session'] as const) {
             this.storage.removeItem(area, 'authToken');
             this.storage.removeItem(area, 'refreshToken');
@@ -36,6 +42,7 @@ export class BrowserSessionStateService {
     private isTelegramLaunch(): boolean {
         const href = this.browser.getHref();
         return (
+            this.storage.getItem('session', TELEGRAM_MINI_APP_CONTEXT_KEY) === 'true' ||
             this.browser.getTelegramInitData() !== null ||
             (href !== null && new URLSearchParams(new URL(href).hash.slice(1)).has('tgWebAppData'))
         );

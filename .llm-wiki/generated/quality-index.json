@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6784,
+    "productionFiles": 6785,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1024,
@@ -319,20 +319,20 @@
       "structuralRiskScore": 156.56
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "nonBlankLines": 603,
+      "decisionPoints": 96,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 156.06
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-manage/recipe-manage.ts",
       "nonBlankLines": 872,
       "decisionPoints": 92,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 155.44
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 595,
-      "decisionPoints": 94,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 152.9
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiInstructionExperiment.ps1",
@@ -10882,11 +10882,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "nonBlankLines": 144,
-      "decisionPoints": 20,
+      "nonBlankLines": 180,
+      "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.88
+      "structuralRiskScore": 44.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
@@ -16434,11 +16434,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "nonBlankLines": 169,
+      "nonBlankLines": 171,
       "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.88
+      "structuralRiskScore": 49.92
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts",
@@ -16466,11 +16466,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 595,
-      "decisionPoints": 94,
+      "nonBlankLines": 603,
+      "decisionPoints": 96,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 152.9
+      "structuralRiskScore": 156.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -19410,11 +19410,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/browser-session-state.service.ts",
-      "nonBlankLines": 37,
-      "decisionPoints": 4,
+      "nonBlankLines": 43,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.74
+      "structuralRiskScore": 9.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/email-verification-cooldown.service.ts",
@@ -19457,6 +19457,14 @@
       "structuralRiskScore": 38.2
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-mini-app-navigation.ts",
+      "nonBlankLines": 18,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.36
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-oidc-values.ts",
       "nonBlankLines": 23,
       "decisionPoints": 0,
@@ -19466,19 +19474,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-web-app.service.ts",
-      "nonBlankLines": 51,
-      "decisionPoints": 7,
+      "nonBlankLines": 103,
+      "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.52
+      "structuralRiskScore": 32.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",
-      "nonBlankLines": 43,
-      "decisionPoints": 2,
+      "nonBlankLines": 60,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
+      "structuralRiskScore": 10.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/development/development-input.ts",

@@ -41,12 +41,13 @@ describe('TelegramAuthFacade', () => {
     };
     const auth = { acceptExternalAuthentication: vi.fn() };
     const browser = { getTelegramInitData: vi.fn(), getHref: vi.fn(), open: vi.fn(), runWithLockAsync };
-    const storage = { getJson: vi.fn(), setJson: vi.fn(), removeItem: vi.fn() };
+    const storage = { getItem: vi.fn(), getJson: vi.fn(), setJson: vi.fn(), removeItem: vi.fn() };
     let facade: TelegramAuthFacade;
 
     beforeEach(() => {
         vi.resetAllMocks();
         browser.getHref.mockReturnValue(null);
+        storage.getItem.mockReturnValue(null);
         TestBed.configureTestingModule({
             providers: [
                 TelegramAuthFacade,

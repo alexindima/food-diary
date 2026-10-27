@@ -26,6 +26,7 @@ import { EmailVerificationCooldownService } from '../shared/auth/email-verificat
 import type { GoogleLoginRequest } from '../shared/auth/google-auth.data';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import type { TelegramOAuthCode, TelegramOAuthState } from '../shared/auth/telegram-oidc-values';
+import { TelegramWebAppService } from '../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils';
 import { getStringProperty } from '../shared/lib/unknown-value.utils';
@@ -49,6 +50,7 @@ export class AuthService {
     private readonly cookieSessions = inject(AuthCookieSessionService);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly browserSession = inject(BrowserSessionStateService);
+    private readonly telegramWebApp = inject(TelegramWebAppService);
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
     private readonly authMetadata = inject(AuthMetadataStorageService);
@@ -411,6 +413,9 @@ export class AuthService {
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {
+        if (this.browserSession.telegram) {
+            await this.telegramWebApp.suppressAutomaticSignInAsync();
+        }
         if (this.recovery.pendingLogout() !== null && !this.isAuthenticated()) {
             await this.retryPendingLogoutAsync();
             return;
@@ -570,6 +575,9 @@ export class AuthService {
 
     private async restoreSessionInternalAsync(): Promise<void> {
         if (this.recovery.pendingLogout() !== null) {
+            if (this.browserSession.telegram) {
+                await this.telegramWebApp.suppressAutomaticSignInAsync();
+            }
             await this.retryPendingLogoutAsync();
             return;
         }

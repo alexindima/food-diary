@@ -33,6 +33,8 @@ export class AuthInterceptor implements HttpInterceptor {
         '/auth/password-reset/request',
         '/auth/password-reset/confirm',
         '/auth/telegram/verify',
+        '/auth/telegram/mini-app/begin',
+        '/auth/telegram/mini-app/begin-link',
         '/auth/telegram/login-widget',
         '/auth/telegram/oidc/exchange',
         '/auth/telegram/bot/auth',
