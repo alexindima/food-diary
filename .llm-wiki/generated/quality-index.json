@@ -42994,11 +42994,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "nonBlankLines": 173,
+      "nonBlankLines": 180,
       "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.96
+      "structuralRiskScore": 41.1
     },
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",

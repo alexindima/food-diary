@@ -239,7 +239,7 @@ Run from `FoodDiary.Web.Client`.
 | `npm run test:ci:admin` | Admin app unit tests. |
 | `npm run check:i18n` | Locale consistency. |
 | `npm run check:seo-prerender` | SEO prerender HTML checks. |
-| `npm run test:performance-build` | Startup/service-worker graph and deterministic public Lighthouse runner checks. |
+| `npm run test:performance-build` | Startup/service-worker graph, push-click contracts and deterministic public Lighthouse runner checks. |
 | `npm run audit:lighthouse` | Opt-in production build and repeated public-page mobile/desktop audits. See [public Lighthouse workflow](frontend/PUBLIC_LIGHTHOUSE.md). |
 | `npm run audit:lighthouse:check` | Enforce saved Lighthouse budgets and baseline regression tolerances without launching Chrome. |
 | `npm run verify` | Full frontend verification chain. |
@@ -248,6 +248,16 @@ User and Admin coverage excludes only their generated SDK directories. Feature
 adapters, response mappers, transport helpers, and other handwritten code remain
 in coverage with the existing thresholds. Generated clients are verified by the
 SDK generation and live API contract gates, alongside adapter HTTP tests.
+
+Web-push navigation is protected at both boundaries: Notifications Infrastructure
+payload tests cover every published notification type and require an explicit
+case for a new type; `scripts/push-notification-click.test.mjs` exercises the
+installed Angular worker's push and click handlers with controlled browser APIs.
+It verifies opening a closed PWA, navigating/focusing an existing window and
+preserving deep-link queries. These tests run in existing backend and frontend
+CI checks. Android notification permissions, background restrictions and the
+installed application's launch still require a device smoke check. Previously
+delivered notifications retain their original payload, so verify a new one.
 
 ## Contract Snapshots
 

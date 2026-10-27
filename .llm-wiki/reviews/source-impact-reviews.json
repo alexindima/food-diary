@@ -803,12 +803,17 @@
           "path": "FoodDiary.Web.Client/AGENTS.md",
           "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
           "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+        },
+        {
+          "path": "FoodDiary.Web.Client/package.json",
+          "sha256": "b17e0d1bba2095fbbab4f75b200d6b9a9f4fccf7877e7ce09240c6f1c084405f",
+          "reviewReason": "Reviewed package.json and the visual-evidence guide: the existing test:performance-build command now executes installed-worker push/click contract tests. This changes automated checks only; browser selection, screenshot evidence and rendered UI requirements remain accurate."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed package.json and the visual-evidence guide: the existing test:performance-build command now executes installed-worker push/click contract tests. This changes automated checks only; browser selection, screenshot evidence and rendered UI requirements remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:48.6926736Z"
+      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
+      "reviewedAtUtc": "2026-10-27T21:06:48.7720069Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1243,8 +1248,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fe00b239147e571e8268d0905f6327d1fe4851d489c0e20db53ae84d2378ce0f",
-          "reviewReason": "Reviewed final runtime topology and notification delivery paths. Push enqueue now checks existing audience policy while preserving the feed; PWA permission flow uses an explicit click and owner/session guarded resume reconciliation. Safe provider HTTP status logging preserves retry, cancellation and invalidation behavior. No new hosts, routes, jobs, providers or configuration; the runtime workflow remains accurate."
+          "sha256": "3d5ccfa8a4f3ab4a81e7d24b1c4543fb536058dbc0be5921fca7138f3f3cded5",
+          "reviewReason": "Reviewed the runtime topology diff and runtime-impact guide. Only sourceFingerprint changed after adding the worker click operation to the existing WebPushNotificationSender payload; service, worker, route and HTTP client topology is byte-for-byte unchanged. The runtime-impact discovery and validation instructions remain accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1257,10 +1262,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed final runtime topology and notification delivery paths. Push enqueue now checks existing audience policy while preserving the feed; PWA permission flow uses an explicit click and owner/session guarded resume reconciliation. Safe provider HTTP status logging preserves retry, cancellation and invalidation behavior. No new hosts, routes, jobs, providers or configuration; the runtime workflow remains accurate.",
+      "reason": "Reviewed the runtime topology diff and runtime-impact guide. Only sourceFingerprint changed after adding the worker click operation to the existing WebPushNotificationSender payload; service, worker, route and HTTP client topology is byte-for-byte unchanged. The runtime-impact discovery and validation instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d58cbf1d5944d3291c97c82fa087279cb827a858",
-      "reviewedAtUtc": "2026-10-27T17:21:31.8857562Z"
+      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
+      "reviewedAtUtc": "2026-10-27T21:08:28.4120979Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1410,14 +1415,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "2a226aa70eb72b3a21859de9c7d5fc451d2842b9d5cbac82dd0045bf231ebc97",
-          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
+          "sha256": "8c1a6d88ca8efc3ed0b20d6fb205c31aa159a891c19f4509fb6da9f1cf1d9f1a",
+          "reviewReason": "Reviewed TESTING_STRATEGY changes against the test-planning guide: new exhaustive payload cases and controlled Angular-worker tests run in existing backend/frontend CI checks; actual Android launch remains a documented device smoke check. Test discovery, Docker preparation, focused-check and regression-evidence instructions remain accurate."
         }
       ],
-      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
+      "reason": "Reviewed TESTING_STRATEGY changes against the test-planning guide: new exhaustive payload cases and controlled Angular-worker tests run in existing backend/frontend CI checks; actual Android launch remains a documented device smoke check. Test discovery, Docker preparation, focused-check and regression-evidence instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
-      "reviewedAtUtc": "2026-10-27T07:19:15.5826467Z"
+      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
+      "reviewedAtUtc": "2026-10-27T21:06:49.1593800Z"
     },
     {
       "pageId": "workflow-trace-feature",

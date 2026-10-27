@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Modules.Notifications.Infrastructure.Services;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
@@ -241,6 +242,92 @@ public sealed class WebPushNotificationSenderTests {
         Assert.Contains(NotificationTypes.NewRecommendation, payload, StringComparison.Ordinal);
         Assert.Contains("11111111-1111-1111-1111-111111111111", payload, StringComparison.Ordinal);
     }
+
+    [Theory]
+    [MemberData(nameof(ClickNavigationCases))]
+    public void BuildPayload_DefinesWorkerClickNavigationForClosedAndOpenApps(
+        string notificationType,
+        string? referenceId,
+        string defaultUrl,
+        string expectedTargetUrl) {
+        var user = User.Create("user@example.com", "hash");
+        WebPushNotificationSender sender = CreateSender(
+            FixedTime,
+            new RecordingSubscriptionRepository(),
+            new SingleUserRepository(user),
+            new WebPushOptions {
+                Enabled = true,
+                Subject = "https://example.com",
+                PublicKey = "public",
+                PrivateKey = "private",
+                DefaultUrl = defaultUrl,
+            });
+        var notification = Notification.Create(user.Id, notificationType, "{}", referenceId);
+
+        string payload = InvokePrivate<string>(sender, "BuildPayload", notification, new NotificationText("Title", "Body"));
+
+        using var document = JsonDocument.Parse(payload);
+        JsonElement data = document.RootElement.GetProperty("notification").GetProperty("data");
+        Assert.True(data.TryGetProperty("onActionClick", out JsonElement clickActions),
+            "Web push must define a default click operation so a closed PWA can open.");
+        JsonElement defaultAction = clickActions.GetProperty("default");
+        Assert.Multiple(
+            () => Assert.Equal("navigateLastFocusedOrOpen", defaultAction.GetProperty("operation").GetString()),
+            () => Assert.Equal(expectedTargetUrl, defaultAction.GetProperty("url").GetString()),
+            () => Assert.Equal(expectedTargetUrl, data.GetProperty("targetUrl").GetString()),
+            () => Assert.Equal(expectedTargetUrl, data.GetProperty("url").GetString()),
+            () => Assert.Equal(notificationType, data.GetProperty("type").GetString()),
+            () => Assert.Equal(referenceId, data.GetProperty("referenceId").GetString()));
+    }
+
+    [Fact]
+    public void ClickNavigationCases_CoverEveryPublishedNotificationType() {
+        string[] notificationTypes = [.. typeof(NotificationTypes)
+            .GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(field => field.IsLiteral && field.FieldType == typeof(string))
+            .Select(field => (string)field.GetRawConstantValue()!)
+            .Order(StringComparer.Ordinal)];
+        string[] coveredTypes = [.. ClickNavigationCases
+            .Select(testCase => (string)testCase[0])
+            .Where(type => !string.Equals(type, "unknown", StringComparison.Ordinal))
+            .Distinct(StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(notificationTypes, coveredTypes);
+    }
+
+    public static TheoryData<string, string?, string, string> ClickNavigationCases => new() {
+        { NotificationTypes.EatingWindowStarted, null, "/", "/fasting?intent=eating-window" },
+        { NotificationTypes.FastingWindowStarted, null, "/", "/fasting?intent=fasting-window" },
+        { NotificationTypes.FastingCompleted, null, "/", "/fasting?intent=session-complete" },
+        { NotificationTypes.FastingCheckInReminder, null, "/", "/fasting?intent=check-in" },
+        { NotificationTypes.NewRecommendation, "11111111-1111-1111-1111-111111111111", "https://example.com/", "https://example.com/recommendations?recommendationId=11111111-1111-1111-1111-111111111111" },
+        { NotificationTypes.NewRecommendation, null, "/", "/recommendations" },
+        { NotificationTypes.NewRecommendationComment, "11111111-1111-1111-1111-111111111111", "/", "/recommendations?recommendationId=11111111-1111-1111-1111-111111111111" },
+        { NotificationTypes.NewRecommendationComment, null, "/", "/recommendations" },
+        { NotificationTypes.NewRecommendationCommentForDietologist, "22222222-2222-2222-2222-222222222222|11111111-1111-1111-1111-111111111111", "/", "/dietologist/clients/22222222-2222-2222-2222-222222222222?recommendationId=11111111-1111-1111-1111-111111111111" },
+        { NotificationTypes.NewRecommendationCommentForDietologist, "invalid-reference", "/profile", "/profile" },
+        { NotificationTypes.NewClientTask, null, "/", "/recommendations" },
+        { NotificationTypes.ClientTaskCancelled, null, "/", "/recommendations" },
+        { NotificationTypes.ClientTaskDueSoon, null, "/", "/recommendations" },
+        { NotificationTypes.ClientTaskChangedForDietologist, "22222222-2222-2222-2222-222222222222", "/", "/dietologist/clients/22222222-2222-2222-2222-222222222222" },
+        { NotificationTypes.ClientTaskChangedForDietologist, null, "/profile", "/profile" },
+        { NotificationTypes.PasswordSetupSuggested, null, "/", "/profile?intent=set-password" },
+        { NotificationTypes.DietologistInvitationReceived, "33333333-3333-3333-3333-333333333333", "/", "/dietologist-invitations/33333333-3333-3333-3333-333333333333" },
+        { NotificationTypes.DietologistInvitationReceived, null, "/profile", "/profile" },
+        { NotificationTypes.DietologistInvitationAccepted, null, "/", "/profile" },
+        { NotificationTypes.DietologistInvitationDeclined, null, "/", "/profile" },
+        { NotificationTypes.WeeklyGoalReminder, null, "/", "/weekly-check-in" },
+        { NotificationTypes.NewComment, null, "/", "/" },
+        { NotificationTypes.WeeklyCheckIn, null, "/", "/" },
+        { NotificationTypes.Hydration, null, "/", "/" },
+        { NotificationTypes.GoalReached, null, "/", "/" },
+        { NotificationTypes.Lesson, null, "/", "/" },
+        { NotificationTypes.MealPlan, null, "/", "/" },
+        { NotificationTypes.Achievement, null, "/", "/" },
+        { "unknown", null, "/profile", "/profile" },
+        { "unknown", null, "https://example.com/profile", "https://example.com/profile" },
+    };
 
     [Fact]
     public void ResolveUrl_WhenDefaultUrlIsRelative_ReturnsRelativePath() {

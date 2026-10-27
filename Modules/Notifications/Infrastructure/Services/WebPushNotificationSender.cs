@@ -154,6 +154,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private string BuildPayload(Notification notification, NotificationText text) {
+        string targetUrl = ResolveUrl(notification);
         var payload = new {
             notification = new {
                 title = text.Title,
@@ -162,8 +163,14 @@ public sealed class WebPushNotificationSender(
                 icon = "/assets/pwa/icon-192x192.png",
                 badge = "/assets/pwa/icon-96x96.png",
                 data = new {
-                    targetUrl = ResolveUrl(notification),
-                    url = ResolveUrl(notification),
+                    targetUrl,
+                    url = targetUrl,
+                    onActionClick = new {
+                        @default = new {
+                            operation = "navigateLastFocusedOrOpen",
+                            url = targetUrl,
+                        },
+                    },
                     type = notification.Type,
                     referenceId = notification.ReferenceId,
                 },
