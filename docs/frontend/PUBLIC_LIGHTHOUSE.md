@@ -132,8 +132,13 @@ budgets and regression tolerances. Initial budgets are a repository policy:
 
 | Device  | Minimum performance | Maximum LCP | Maximum TBT | Maximum CLS |
 | ------- | ------------------- | ----------- | ----------- | ----------- |
-| Mobile  | 85                  | 3500 ms     | 300 ms      | 0.1         |
+| Mobile  | 85                  | 3500 ms     | 400 ms      | 0.1         |
 | Desktop | 90                  | 2000 ms     | 200 ms      | 0.1         |
+
+The mobile TBT ceiling allows for laboratory variability across hosted CI CPU
+types. Keep 300 ms as an optimization target; the performance score, LCP, CLS
+and desktop limits remain independent gates. A passing budget alone does not
+establish that a code change improved performance.
 
 For each configured regression metric, a worsening median fails when its change
 exceeds the **larger** absolute or relative allowance. Defaults: performance

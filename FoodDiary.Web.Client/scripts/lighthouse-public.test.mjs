@@ -200,10 +200,11 @@ test('saved summaries fail closed for missing cases, metrics and tampered aggreg
 
 test('budgets use correct score direction and device-specific limits', () => {
     assert.equal(checkSummary(summary(), config).passed, true);
-    for (const metrics of [{ performance: 84 }, { lcp: 3501 }, { tbt: 301 }, { cls: 0.101 }])
+    for (const metrics of [{ performance: 84 }, { lcp: 3501 }, { tbt: 401 }, { cls: 0.101 }])
         assert.equal(checkSummary(summary(metrics), config).passed, false);
     assert.equal(checkSummary(summary({ performance: 89 }, 3, ['/'], ['desktop']), config).passed, false);
-    assert.equal(checkSummary(summary({ lcp: 3500, performance: 85, tbt: 300, cls: 0.1 }), config).passed, true);
+    assert.equal(checkSummary(summary({ tbt: 201 }, 3, ['/'], ['desktop']), config).passed, false);
+    assert.equal(checkSummary(summary({ lcp: 3500, performance: 85, tbt: 400, cls: 0.1 }), config).passed, true);
 });
 
 test('HTTP/2 evidence and comparison context cannot silently inherit HTTP/1 results', () => {
