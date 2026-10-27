@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "shards": [
+    {
+      "name": "smoke-1",
+      "groups": [
+        "index-selection",
+        "trace-output",
+        "context-retrieval",
+        "verification-cache",
+        "task-scope",
+        "sensitive-data-query",
+        "contract-consumers",
+        "domain-data-query",
+        "workspace-policy",
+        "memory"
+      ]
+    },
+    {
+      "name": "smoke-2",
+      "groups": [
+        "code-graph-core",
+        "adaptive-evals",
+        "ui-continuation",
+        "implementation-plan",
+        "research-confidence",
+        "read-only-retrieval",
+        "reporting",
+        "workflow-improvements",
+        "knowledge-isolation",
+        "strict-shapes"
+      ]
+    },
+    {
+      "name": "smoke-3",
+      "groups": [
+        "context-search-evals",
+        "extraction-readiness",
+        "standalone-index-migration",
+        "read-only-isolation",
+        "frontend-contract-query",
+        "api-compatibility",
+        "verification-receipts",
+        "git-paths",
+        "dependency-analysis",
+        "context-feedback"
+      ]
+    },
+    {
+      "name": "smoke-4",
+      "groups": [
+        "sqlite-cold-checkout",
+        "governed-delivery",
+        "facade-contract",
+        "query-cache",
+        "task-baseline",
+        "usability",
+        "test-only-governance",
+        "backend-contract-query",
+        "change-policy"
+      ]
+    }
+  ]
+}

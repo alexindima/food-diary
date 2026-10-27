@@ -12,7 +12,7 @@ public sealed class BuildWorkflowGuardrailTests {
         Assert.Multiple(
             () => Assert.Contains("npm run check:depcruise-baseline", workflow, StringComparison.Ordinal),
             () => Assert.Contains("npm run build:storybook", workflow, StringComparison.Ordinal),
-            () => Assert.Contains("-VerificationProfile Focused", workflow, StringComparison.Ordinal));
+            () => Assert.Contains("Invoke-WikiCiChecks.ps1", workflow, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -21,25 +21,31 @@ public sealed class BuildWorkflowGuardrailTests {
             .Replace("\r\n", "\n", StringComparison.Ordinal);
         string focused = ReadJob("llm-wiki-focused");
         string audit = ReadJob("llm-wiki-audit");
+        string smoke = ReadJob("llm-wiki-smoke");
         string gate = ReadJob("llm-wiki");
         Assert.Multiple(
             () => Assert.DoesNotContain("needs:", focused, StringComparison.Ordinal),
             () => Assert.DoesNotContain("needs:", audit, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("needs:", smoke, StringComparison.Ordinal),
+            () => Assert.Contains("Get-WikiSmokeShard.ps1", smoke, StringComparison.Ordinal),
+            () => Assert.Contains("-RequestedGroup $groups -MaxConcurrency 2 -NoCache", smoke, StringComparison.Ordinal),
+            () => Assert.Contains("shard: [smoke-1, smoke-2, smoke-3, smoke-4]", smoke, StringComparison.Ordinal),
             () => Assert.Contains("fetch-depth: 0", focused, StringComparison.Ordinal),
             () => Assert.Contains("fetch-depth: 0", audit, StringComparison.Ordinal),
-            () => Assert.Contains("-VerificationProfile Focused", focused, StringComparison.Ordinal),
+            () => Assert.Contains("Invoke-WikiCiChecks.ps1", focused, StringComparison.Ordinal),
             () => Assert.DoesNotContain("-VerificationProfile Full", focused, StringComparison.Ordinal),
             () => Assert.Contains("if: github.event_name != 'pull_request'", audit, StringComparison.Ordinal),
             () => Assert.Contains("Test-LlmWikiTools.ps1 -Profile Full", audit, StringComparison.Ordinal),
             () => Assert.DoesNotContain("verify-full", audit, StringComparison.Ordinal),
             () => Assert.Contains("name: LLM Wiki verification", gate, StringComparison.Ordinal),
             () => Assert.Contains("if: always()", gate, StringComparison.Ordinal),
-            () => Assert.Contains("needs: [llm-wiki-focused, llm-wiki-audit]", gate, StringComparison.Ordinal),
+            () => Assert.Contains("needs: [llm-wiki-focused, llm-wiki-smoke, llm-wiki-audit]", gate, StringComparison.Ordinal),
             () => Assert.Contains("${{ needs.llm-wiki-focused.result }}", gate, StringComparison.Ordinal),
             () => Assert.Contains("${{ needs.llm-wiki-audit.result }}", gate, StringComparison.Ordinal),
+            () => Assert.Contains("${{ needs.llm-wiki-smoke.result }}", gate, StringComparison.Ordinal),
             () => Assert.Contains("Test-WikiCiResult.ps1", gate, StringComparison.Ordinal),
             () => Assert.Contains("Assert-WikiCiResult.ps1", gate, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("continue-on-error", focused + audit + gate, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("continue-on-error", focused + smoke + audit + gate, StringComparison.Ordinal),
             () => Assert.Contains("Test-LlmWikiApiCompatibility.ps1", focused, StringComparison.Ordinal),
             () => Assert.Contains("Get-LlmWikiDependencyChanges.ps1", focused, StringComparison.Ordinal),
             () => Assert.Contains("wiki.ps1 report", focused, StringComparison.Ordinal),
@@ -67,7 +73,7 @@ public sealed class BuildWorkflowGuardrailTests {
             () => Assert.Contains("Invoke-BackendTests.ps1 -Group '${{ matrix.group }}'", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains("Test-BackendTestGroups.ps1", ciWorkflow, StringComparison.Ordinal),
             () => Assert.DoesNotContain("tests/*/*.csproj", ciWorkflow, StringComparison.Ordinal),
-            () => Assert.Contains("needs: backend-fast", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("needs: backend-fast", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains("max-parallel: 4", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains("needs: [backend-format, backend-fast, backend-slow]", ciWorkflow, StringComparison.Ordinal),
             () => Assert.Contains(".result -ne 'success'", ciWorkflow, StringComparison.Ordinal),

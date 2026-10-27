@@ -76,7 +76,7 @@ $audit = [regex]::Match($workflow, '(?s)\n  llm-wiki-audit:.*?(?=\n  llm-wiki:)'
 foreach ($required in @('shard: [Core, Workspace, Orchestration]', 'fail-fast: false', '-Profile Full -AuditShard $env:WIKI_AUDIT_SHARD', 'llm-wiki-audit-${{ matrix.shard }}-failure-logs', 'actions/checkout@')) {
     if (-not $audit.Contains($required)) { throw "CI audit shard contract missing: $required" }
 }
-if (-not $workflow.Contains('needs: [llm-wiki-focused, llm-wiki-audit]') -or
+if (-not $workflow.Contains('needs: [llm-wiki-focused, llm-wiki-smoke, llm-wiki-audit]') -or
     -not $workflow.Contains('needs.llm-wiki-audit.result')) { throw 'Wiki gate must require the aggregate result of every audit shard.' }
 & (Join-Path $repositoryRoot 'scripts/ci/Test-WikiCiResult.ps1')
 $assertionCount = $groups.Core.Count + $groups.Governed.Count + $groups.Common.Count

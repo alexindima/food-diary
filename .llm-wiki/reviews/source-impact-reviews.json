@@ -299,8 +299,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "799f3b1c9abb5eea0dc7995a9b88919a6b935573fa8747ad7818323613aaa4fa",
-          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
+          "sha256": "0668c57f2cdfa872077b38020eebdf8311a23aa9b2e1b7d705b324c4e0b9eba5",
+          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -323,10 +323,10 @@
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps.",
+      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:46.3608650Z"
+      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
+      "reviewedAtUtc": "2026-10-27T07:19:14.2582561Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1266,8 +1266,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "799f3b1c9abb5eea0dc7995a9b88919a6b935573fa8747ad7818323613aaa4fa",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "0668c57f2cdfa872077b38020eebdf8311a23aa9b2e1b7d705b324c4e0b9eba5",
+          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
@@ -1280,10 +1280,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:49.9312898Z"
+      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
+      "reviewedAtUtc": "2026-10-27T07:19:14.9398981Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1466,28 +1466,18 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "b4274e109959320bfc495bc75c003ff342d0a08a635d46a79b1962ce59f81778",
+      "pageSha256": "119ffe5064c74294d4c54b286ed92f100d463be7d673a1cf5f8a81ee4fcf9a0d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-          "sha256": "019d92bd56e9900c048f30774578c5f4048c48e1aee6d31729d8c846b9add61b",
-          "reviewReason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiGraphTestPlan.ps1",
-          "sha256": "25333b3a30c16b274d3461204936943bf78c750079e4445680c35f3903dd18af",
-          "reviewReason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed."
-        },
-        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "49f7c93cf55e1ace5e4b65762ce990f0999d0994e4bd82ee37abb5d5fb8ada0b",
-          "reviewReason": "Updated this page to require successful Ensure-Docker.ps1 readiness before direct Docker-dependent tests, matching docs/TESTING_STRATEGY.md and the integration runner. Focused test discovery and planner ranking are unchanged."
+          "sha256": "2a226aa70eb72b3a21859de9c7d5fc451d2842b9d5cbac82dd0045bf231ebc97",
+          "reviewReason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged."
         }
       ],
-      "reason": "Repair observed CI failures for993443: keep current auth metadata owner-suite and top3 navigation assertions, prioritize same-owner graph consumers for directory plans without changing direct-test classification, and restrict the email retry E2E locator to the existing accessible verification region. Original targeted CI regressions now pass; no runtime auth behavior, security threshold or contract gate is relaxed.",
+      "reason": "Reviewed the CI scheduling change against the existing complete backend partition, all 24 unchanged frontend execution steps, the 39-group Wiki catalog, the event-specific Full audit gate, and failure diagnostics. Updated CI documentation and architecture guardrails; product contracts and test assertions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "993443a008d01862108ebdb002136c26bd220a6b",
-      "reviewedAtUtc": "2026-10-26T11:56:11.3421782Z"
+      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
+      "reviewedAtUtc": "2026-10-27T07:19:15.5826467Z"
     },
     {
       "pageId": "workflow-trace-feature",

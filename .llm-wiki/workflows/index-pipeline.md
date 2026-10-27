@@ -120,6 +120,10 @@ sources:
   - .github/workflows/ci-tests.yml
   - scripts/ci/Assert-WikiCiResult.ps1
   - scripts/ci/Test-WikiCiResult.ps1
+  - scripts/ci/Get-WikiSmokeShard.ps1
+  - scripts/ci/Invoke-WikiCiChecks.ps1
+  - scripts/ci/Test-WikiSmokeShards.ps1
+  - scripts/ci/wiki-smoke-shards.json
 ---
 
 # Run the Staged Index Pipeline
@@ -785,9 +789,14 @@ orchestration summary repeats one block and is not an additional phase.
 Full verification completes the index freshness checks before starting the stateful
 tools. This prevents tool-smoke readers from observing generated files while
 index workers are replacing them. Index workers remain concurrent within their
-dependency-aware stage, and every non-zero exit is propagated. CI runs this gate
-in its own job alongside backend, PostgreSQL, dependency, and frontend jobs, so
-Wiki verification does not serialize the backend test pipeline.
+dependency-aware stage, and every non-zero exit is propagated. CI runs the common
+checks and four complete focused smoke partitions in independent checkouts.
+Each smoke checkout owns its graph and retains the serial mutation rules;
+two child workers per shard bound contention. The checked partition must contain
+every `IncludeInAll` group exactly once. Common checks never publish a
+full-verification receipt. The stable Wiki aggregate requires common validation,
+all focused shards and every Full audit applicable to the event.
+These jobs run alongside backend and frontend checks.
 
 Use the focused commands before the full gate:
 

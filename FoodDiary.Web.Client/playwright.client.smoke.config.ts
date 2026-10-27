@@ -3,7 +3,8 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
     testDir: './e2e/client-smoke',
     timeout: 30_000,
-    fullyParallel: false,
+    fullyParallel: true,
+    workers: 2,
     retries: 0,
     reporter: 'list',
     grepInvert: /@network-audit/u,

@@ -8,7 +8,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '17 3 * * 1'
+    - cron: "17 3 * * 1"
 
 jobs:
   llm-wiki-focused:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Test protected runtime diagnostics and Nginx rotation
         env:
-          FOODDIARY_RUNTIME_DOCKER_TESTS: '1'
+          FOODDIARY_RUNTIME_DOCKER_TESTS: "1"
         run: |
           python3 -B -m unittest discover -s scripts/deploy -p 'test_install_nginx_logrotate.py'
           python3 -B -m unittest discover -s scripts/deploy -p 'test_runtime_diagnostics_docker.py'
@@ -106,9 +106,13 @@ jobs:
           "API_COMPAT_BASE_REF=$apiBaseRef" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
           Write-Host "API compatibility baseline: $apiBaseRef"
 
-      - name: Verify complete Wiki focused catalog
+      - name: Verify Wiki checks and focused partition
         shell: pwsh
-        run: ./.llm-wiki/wiki.ps1 verify-full -BaseRef $env:WIKI_BASE_REF -VerificationProfile Focused
+        run: |
+          node --test scripts/ci/ci-parallelism.test.mjs
+          if ($LASTEXITCODE -ne 0) { throw 'CI orchestration contracts failed.' }
+          ./scripts/ci/Test-WikiSmokeShards.ps1
+          ./scripts/ci/Invoke-WikiCiChecks.ps1 -BaseRef $env:WIKI_BASE_REF
 
       - name: Check Wiki API compatibility
         shell: pwsh
@@ -133,7 +137,6 @@ jobs:
             -OutputPath $reviewReport
           Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
-
       - name: Upload Wiki failure diagnostics
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -144,6 +147,51 @@ jobs:
             .artifacts/llm-wiki/**/*.log
             .artifacts/llm-wiki/verify-runs/**/summary.*
             .artifacts/llm-wiki/context-evaluation/*.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  llm-wiki-smoke:
+    name: LLM Wiki focused (${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [smoke-1, smoke-2, smoke-3, smoke-4]
+    steps:
+      - name: Checkout isolated Wiki shard
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js for Wiki compiler analysis
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - name: Install Wiki compiler dependencies
+        working-directory: FoodDiary.Web.Client
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node scripts/apply-dependency-patches.mjs
+      - name: Run complete focused partition
+        shell: pwsh
+        env:
+          WIKI_SMOKE_SHARD: ${{ matrix.shard }}
+        run: |
+          $groups = @(./scripts/ci/Get-WikiSmokeShard.ps1 -Shard $env:WIKI_SMOKE_SHARD)
+          ./.llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1 -RequestedGroup $groups -MaxConcurrency 2 -NoCache
+          if (-not $? -or $LASTEXITCODE -ne 0) { throw "Wiki smoke shard failed." }
+      - name: Upload Wiki focused timings and diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: llm-wiki-focused-${{ matrix.shard }}
+          include-hidden-files: true
+          path: |
+            .artifacts/llm-wiki/parallel-smoke/
+            .artifacts/llm-wiki/**/*.log
           if-no-files-found: warn
           retention-days: 7
 
@@ -206,7 +254,7 @@ jobs:
   llm-wiki:
     name: LLM Wiki verification
     if: always()
-    needs: [llm-wiki-focused, llm-wiki-audit]
+    needs: [llm-wiki-focused, llm-wiki-smoke, llm-wiki-audit]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Wiki gate
@@ -216,6 +264,7 @@ jobs:
         shell: pwsh
         env:
           WIKI_FOCUSED_RESULT: ${{ needs.llm-wiki-focused.result }}
+          WIKI_SMOKE_RESULT: ${{ needs.llm-wiki-smoke.result }}
           WIKI_AUDIT_RESULT: ${{ needs.llm-wiki-audit.result }}
           WIKI_EVENT_NAME: ${{ github.event_name }}
         run: |
@@ -223,6 +272,7 @@ jobs:
           ./scripts/ci/Assert-WikiCiResult.ps1 `
             -EventName $env:WIKI_EVENT_NAME `
             -FocusedResult $env:WIKI_FOCUSED_RESULT `
+            -SmokeResult $env:WIKI_SMOKE_RESULT `
             -AuditResult $env:WIKI_AUDIT_RESULT
 
   tech-radar:
@@ -426,7 +476,6 @@ jobs:
 
   backend-slow:
     name: Backend slow tests (${{ matrix.group }})
-    needs: backend-fast
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
@@ -697,16 +746,26 @@ jobs:
     name: Google web guidance
     uses: ./.github/workflows/web-quality.yml
 
-  frontend-checks:
-    name: Frontend checks, tests, and builds
+  frontend-lanes:
+    name: Frontend (${{ matrix.group }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: [quality-build, app-tests, libraries, smoke]
+    env:
+      FRONTEND_GROUP: ${{ matrix.group }}
 
     steps:
       - name: Initialize frontend diagnostics
         shell: bash
         run: |
-          mkdir -p "${RUNNER_TEMP}/frontend-checks-logs"
-          : > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+          logs_dir="${RUNNER_TEMP}/frontend-checks-logs/${FRONTEND_GROUP}"
+          mkdir -p "$logs_dir"
+          : > "$logs_dir/failure-meta.env"
+          echo "FRONTEND_LOG_DIR=$logs_dir" >> "$GITHUB_ENV"
 
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -723,7 +782,7 @@ jobs:
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/npm-ci.log"
+          log_file="${FRONTEND_LOG_DIR}/npm-ci.log"
           set +e
           npm ci 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -733,16 +792,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Install frontend dependencies"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Check i18n consistency
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/i18n-check.log"
+          log_file="${FRONTEND_LOG_DIR}/i18n-check.log"
           set +e
           npm run check:i18n 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -752,16 +812,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Check i18n consistency"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Lint frontend
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/lint.log"
+          log_file="${FRONTEND_LOG_DIR}/lint.log"
           set +e
           npm run lint 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -771,16 +832,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Lint frontend"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Lint frontend dependency graph
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/dependency-graph.log"
+          log_file="${FRONTEND_LOG_DIR}/dependency-graph.log"
           set +e
           (npm run lint:deps:strict && npm run check:depcruise-baseline) 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -790,16 +852,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Lint frontend dependency graph"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Lint styles
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/stylelint.log"
+          log_file="${FRONTEND_LOG_DIR}/stylelint.log"
           set +e
           npm run stylelint 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -809,16 +872,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Lint styles"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Check formatting
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/prettier.log"
+          log_file="${FRONTEND_LOG_DIR}/prettier.log"
           set +e
           npm run check:format:ci 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -828,16 +892,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Check formatting"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Run frontend app unit tests
+        if: matrix.group == 'app-tests'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/unit-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/unit-tests.log"
           set +e
           npm run test:coverage:app -- --reporters=default > "$log_file" 2>&1
           status=$?
@@ -865,17 +930,18 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run frontend unit tests"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Verify measurement and dashboard time zones
+        if: matrix.group == 'libraries'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/timezone-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/timezone-tests.log"
           set +e
           npm run test:ci:measurement-timezones > "$log_file" 2>&1
           status=$?
@@ -886,17 +952,18 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Verify measurement and dashboard time zones"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
           grep -E 'calendar tests:|Test Files|Tests|Duration' "$log_file" || true
 
       - name: Run fd-tour unit tests
+        if: matrix.group == 'libraries'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-tour-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/fd-tour-tests.log"
           set +e
           npm run test:coverage:tour > "$log_file" 2>&1
           status=$?
@@ -907,16 +974,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run fd-tour unit tests"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Run fd-webmcp unit tests
+        if: matrix.group == 'libraries'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-webmcp-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/fd-webmcp-tests.log"
           set +e
           npm run test:coverage:webmcp > "$log_file" 2>&1
           status=$?
@@ -927,22 +995,24 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run fd-webmcp unit tests"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Cache Playwright browsers
+        if: matrix.group == 'smoke'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('FoodDiary.Web.Client/package-lock.json') }}
 
       - name: Install Playwright Chromium
+        if: matrix.group == 'smoke'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/playwright-install.log"
+          log_file="${FRONTEND_LOG_DIR}/playwright-install.log"
           set +e
           npx playwright install --with-deps chromium 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -952,50 +1022,54 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Install Playwright Chromium"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Check component logic boundaries
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/component-logic.log"
+          log_file="${FRONTEND_LOG_DIR}/component-logic.log"
           if ! npm run check:component-logic 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check component logic boundaries\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check component logic boundaries\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
       - name: Audit design token references
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/design-tokens.log"
+          log_file="${FRONTEND_LOG_DIR}/design-tokens.log"
           if ! npm run audit:design-tokens 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Audit design token references\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Audit design token references\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
       - name: Check frontend state ownership
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/state-ownership.log"
+          log_file="${FRONTEND_LOG_DIR}/state-ownership.log"
           if ! npm run check:state-ownership 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check frontend state ownership\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Check frontend state ownership\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
       - name: Run admin frontend unit tests
+        if: matrix.group == 'libraries'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/admin-unit-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/admin-unit-tests.log"
           set +e
           npm run test:coverage:admin -- --reporters=default > "$log_file" 2>&1
           status=$?
@@ -1020,17 +1094,18 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run admin frontend unit tests"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Run fd-ui-kit unit tests
+        if: matrix.group == 'libraries'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/fd-ui-kit-tests.log"
+          log_file="${FRONTEND_LOG_DIR}/fd-ui-kit-tests.log"
           set +e
           npm run test:coverage:ui-kit -- --reporters=default > "$log_file" 2>&1
           status=$?
@@ -1055,17 +1130,18 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Run fd-ui-kit unit tests"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
           grep -E 'Test Files|Tests|Duration' "$log_file" | tail -n 5 || true
 
       - name: Build frontend
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-frontend.log"
+          log_file="${FRONTEND_LOG_DIR}/build-frontend.log"
           set +e
           npm run build:prod 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -1075,16 +1151,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build frontend"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Check prerendered SEO HTML
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/seo-prerender-check.log"
+          log_file="${FRONTEND_LOG_DIR}/seo-prerender-check.log"
           set +e
           npm run check:seo-prerender 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -1094,16 +1171,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Check prerendered SEO HTML"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Build admin frontend
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-admin-frontend.log"
+          log_file="${FRONTEND_LOG_DIR}/build-admin-frontend.log"
           set +e
           npm run build:admin 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -1113,16 +1191,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build admin frontend"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Build fd-tour
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-fd-tour.log"
+          log_file="${FRONTEND_LOG_DIR}/build-fd-tour.log"
           set +e
           npm run build:tour 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -1132,16 +1211,17 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build fd-tour"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Build fd-webmcp
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-fd-webmcp.log"
+          log_file="${FRONTEND_LOG_DIR}/build-fd-webmcp.log"
           set +e
           npm run build:webmcp 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -1151,40 +1231,43 @@ jobs:
               echo "FAILED_AREA=frontend"
               echo "FAILED_TARGET=Build fd-webmcp"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            } > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit "$status"
           fi
 
       - name: Build Storybook
+        if: matrix.group == 'quality-build'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/build-storybook.log"
+          log_file="${FRONTEND_LOG_DIR}/build-storybook.log"
           if ! npm run build:storybook 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Build Storybook\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Build Storybook\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
       - name: Run client smoke E2E
+        if: matrix.group == 'smoke'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/client-e2e.log"
+          log_file="${FRONTEND_LOG_DIR}/client-e2e.log"
           if ! npm run test:e2e:client:smoke 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run client smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run client smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
       - name: Run admin smoke E2E
+        if: matrix.group == 'smoke'
         shell: bash
         working-directory: FoodDiary.Web.Client
         run: |
           set -o pipefail
-          log_file="${RUNNER_TEMP}/frontend-checks-logs/admin-e2e.log"
+          log_file="${FRONTEND_LOG_DIR}/admin-e2e.log"
           if ! npm run test:e2e:admin:smoke 2>&1 | tee "$log_file"; then
-            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run admin smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
+            printf 'FAILED_AREA=frontend\nFAILED_TARGET=Run admin smoke E2E\nFAILED_LOG_FILE_NAME=%s\n' "$(basename "$log_file")" > "${FRONTEND_LOG_DIR}/failure-meta.env"
             exit 1
           fi
 
@@ -1194,7 +1277,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          logs_dir="${RUNNER_TEMP}/frontend-checks-logs"
+          logs_dir="${FRONTEND_LOG_DIR}"
           failed_log_name=""
           if [ -f "${logs_dir}/failure-meta.env" ]; then
             failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
@@ -1238,7 +1321,7 @@ jobs:
           }
 
           {
-            echo "## Frontend checks"
+            echo "## Frontend checks: ${FRONTEND_GROUP}"
             echo
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
@@ -1271,19 +1354,61 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: ci-failure-logs-frontend
+          name: ci-failure-logs-frontend-${{ matrix.group }}
           path: ${{ runner.temp }}/frontend-checks-logs/
           if-no-files-found: ignore
 
-
       - name: Upload frontend coverage reports
-        if: always()
+        if: always() && (matrix.group == 'app-tests' || matrix.group == 'libraries')
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: frontend-checks-coverage
+          name: frontend-checks-coverage-${{ matrix.group }}
           path: FoodDiary.Web.Client/coverage/
           if-no-files-found: ignore
           retention-days: 14
+
+  # Preserve the required status and existing failure-notification artifact.
+  frontend-checks:
+    name: Frontend checks, tests, and builds
+    if: always()
+    needs: frontend-lanes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download frontend failure diagnostics
+        if: needs.frontend-lanes.result != 'success'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          pattern: ci-failure-logs-frontend-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/frontend-checks-logs
+        continue-on-error: true
+      - name: Require all frontend lanes
+        shell: pwsh
+        env:
+          FRONTEND_RESULT: ${{ needs.frontend-lanes.result }}
+        run: |
+          if ($env:FRONTEND_RESULT -eq 'success') { exit 0 }
+          $logs = Join-Path $env:RUNNER_TEMP 'frontend-checks-logs'
+          New-Item -ItemType Directory -Force $logs | Out-Null
+          $metadata = Get-ChildItem $logs -Recurse -Filter 'failure-meta.env' |
+            Where-Object Length -GT 0 | Sort-Object FullName | Select-Object -First 1
+          if ($metadata) {
+            $prefix = [IO.Path]::GetRelativePath($logs, $metadata.DirectoryName).Replace('\', '/')
+            (Get-Content $metadata.FullName) -replace '^FAILED_LOG_FILE_NAME=', "FAILED_LOG_FILE_NAME=$prefix/" |
+              Set-Content (Join-Path $logs 'failure-meta.env')
+          } else {
+            @('FAILED_AREA=frontend', "FAILED_TARGET=Frontend gate: $env:FRONTEND_RESULT", 'FAILED_LOG_FILE_NAME=frontend-gate.log') |
+              Set-Content (Join-Path $logs 'failure-meta.env')
+          }
+          $env:FRONTEND_RESULT | Set-Content (Join-Path $logs 'frontend-gate.log')
+          throw "Frontend lanes did not all pass: $env:FRONTEND_RESULT"
+      - name: Upload CI frontend failure logs
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ci-failure-logs-frontend
+          path: ${{ runner.temp }}/frontend-checks-logs/
+          retention-days: 7
 
   notify-ci-failure:
     if: always() && (needs.llm-wiki.result == 'failure' || needs.dotnet-tests.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')

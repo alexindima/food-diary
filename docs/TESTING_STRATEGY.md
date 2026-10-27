@@ -46,11 +46,11 @@ not be reported as successful. See
 
 ### Backend CI order and completeness
 
-`backend-fast` builds and runs the fast test projects first (domain,
-application, presentation, clients and other unit-only projects).
-After it succeeds, `backend-slow` runs a matrix with at most four concurrent
-jobs: `integration-1`, `integration-2`, `integration-3`, and `mcp`. Each job has
-its own runner, builds its selected projects and transitive dependencies once,
+`backend-fast` builds and runs domain, application, presentation, client and
+other unit-only projects. It starts independently of `backend-slow`, whose
+matrix has at most four concurrent jobs: `integration-1`, `integration-2`,
+`integration-3`, and `mcp`. Each job has its own runner, builds its selected
+projects and transitive dependencies once,
 and executes its projects sequentially. This bounds Docker resource pressure;
 existing xUnit collection isolation remains in effect. Mixed infrastructure
 projects run wholly in a slow group, including their unit tests.
@@ -74,7 +74,9 @@ final gate over formatting, fast tests, and the entire slow matrix. Failed,
 cancelled, or skipped required groups cannot pass it. Deployment still waits for
 the successful `CI Tests` workflow; the Wiki job is independent and unchanged by
 this test split. Matrix `fail-fast: false` preserves diagnostics from sibling
-groups; a failed fast job prevents all slow groups from starting.
+groups. Slow groups continue after a fast-test failure so all diagnostics remain
+available; successful runs no longer pay the fast-group duration before integration
+work starts.
 
 Reproduce a group from the repository root with PowerShell 7:
 
@@ -95,6 +97,50 @@ summaries for seven days, including successful runs. Compare these durations
 before rebalancing groups. Test binaries are not transferred between runners,
 so each group has some restore/build overhead in exchange for independent paths
 and dependencies. Do not run the same group concurrently in one checkout.
+
+## Parallel frontend and Wiki CI
+
+`frontend-lanes` starts four independent runners: `quality-build` retains every
+linter, formatting, source check and production/library/Storybook build;
+`app-tests` runs the complete app coverage suite; `libraries` runs all nine
+time zones and the admin, UI kit, tour and WebMCP coverage suites; `smoke` runs
+both browser smoke suites. Each runner installs its own locked dependencies.
+The stable `Frontend checks, tests, and builds` status requires the whole matrix
+to succeed. Failure, cancellation and skip cannot pass it. Lane-specific log
+directories and artifacts preserve simultaneous failures, and the gate assembles
+the existing notification artifact without overwriting another lane metadata.
+
+Client smoke uses `fullyParallel` with two workers. Each scenario owns its page,
+context and intercepted API data. Parallel execution keeps the same test cases,
+assertions, timeouts and zero retries; `@network-audit` retains its existing exclusion.
+
+Wiki CI runs common validation, four focused smoke shards and the three Full
+audit shards independently. `Invoke-WikiCiChecks.ps1` retains workspace policy,
+portability, session resolution, process cleanup, generated-index, failure-ledger,
+change-policy and source-impact checks. Each smoke shard has its own checkout,
+graph and temporary files, with at most two child processes. Groups that mutate
+the graph retain the existing serial rules within a checkout.
+
+`scripts/ci/wiki-smoke-shards.json` balances the complete `IncludeInAll` catalog
+using successful CI group timings. `Test-WikiSmokeShards.ps1` rejects omissions,
+duplicates, unknown groups and empty/missing shards, and verifies that the existing
+planner selects exactly the declared groups. Adding a focused group requires
+updating this partition. All required checks remain enabled on pull requests;
+the existing Full-audit skip applies only to pull requests.
+The Wiki aggregate requires common checks, the complete focused matrix and every
+applicable Full audit. A partial checkout never publishes a full-verification receipt.
+Local `wiki.ps1 verify-full` retains its exhaustive focused default.
+
+The initial partition uses group durations from successful CI run
+[40455516322](https://github.com/alexindima/food-diary/actions/runs/40455516322)
+at `35390c5` (27 October 2026). Each shard contains about 359 seconds of summed
+group time from that sample; its wall time also depends on concurrency and cold setup.
+
+Run `node --test scripts/ci/ci-parallelism.test.mjs`,
+`./scripts/ci/Test-WikiSmokeShards.ps1` and `./scripts/ci/Test-WikiCiResult.ps1`
+for orchestration and failure-gate checks. Successful Wiki shard runs upload group
+timings for seven days; compare complete workflow wall time and runner minutes
+before/after on GitHub. Local browser timings are not GitHub runner benchmarks.
 
 ## Docker readiness for local and AI-assisted tests
 
@@ -383,7 +429,7 @@ included in these TypeScript coverage figures.
 
 `vitest.config.mjs` keeps reports even when tests fail. HTML, JSON,
 JSON-summary, and lcov reports live in `FoodDiary.Web.Client/coverage/<project>/`.
-CI uploads this directory with `if: always()` as `frontend-checks-coverage`.
+CI uploads this directory with `if: always()` as `frontend-checks-coverage-app-tests` and `frontend-checks-coverage-libraries`.
 Open `index.html` for line/branch details; consult functions as well as branches:
 an uncalled error callback can coexist with 100% branch coverage.
 
