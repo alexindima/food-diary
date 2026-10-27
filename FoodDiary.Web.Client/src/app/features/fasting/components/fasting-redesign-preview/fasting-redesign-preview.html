@@ -35,14 +35,14 @@
                     {{ 'FASTING.REDESIGN.PAST_TARGET' | translate }}
                 </p>
                 <div class="fasting-redesign__actions">
-                    <fd-ui-button size="lg" (click)="manageRequested.emit()">
+                    <fd-ui-button (click)="manageRequested.emit()">
                         {{ managementLabelKey() | translate }}
                     </fd-ui-button>
-                    <fd-ui-button variant="secondary" fill="outline" size="lg" (click)="checkInRequested.emit()">
+                    <fd-ui-button variant="secondary" fill="outline" (click)="checkInRequested.emit()">
                         {{ 'FASTING.REDESIGN.CHECK_IN' | translate }}
                     </fd-ui-button>
                     <div [hidden]="!canManageSession()">
-                        <fd-ui-button variant="secondary" fill="outline" size="lg" (click)="sessionManagementRequested.emit()">
+                        <fd-ui-button variant="secondary" fill="outline" (click)="sessionManagementRequested.emit()">
                             {{ 'FASTING.REDESIGN.MANAGE' | translate }}
                         </fd-ui-button>
                     </div>
@@ -107,7 +107,7 @@
                     <span class="fasting-redesign__idle-icon"><fd-ui-icon name="schedule" /></span>
                     <h2>{{ 'FASTING.REDESIGN.IDLE_TITLE' | translate }}</h2>
                     <p>{{ 'FASTING.REDESIGN.IDLE_TEXT' | translate: { protocol: protocolLabel() } }}</p>
-                    <fd-ui-button size="lg" [loading]="isStarting()" (click)="startRequested.emit()">
+                    <fd-ui-button [loading]="isStarting()" (click)="startRequested.emit()">
                         {{ 'FASTING.START_FAST' | translate }}
                     </fd-ui-button>
                     <fd-ui-button variant="secondary" fill="text" size="sm" (click)="protocolSettingsRequested.emit()">

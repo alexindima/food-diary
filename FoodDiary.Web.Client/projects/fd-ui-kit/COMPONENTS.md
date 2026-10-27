@@ -29,6 +29,10 @@ the document. The class does not choose a palette or modify account preferences.
 
 Most inputs accept `size` (`'sm' | 'md' | 'lg'`). The default is `md`.
 
+`fd-ui-input` displays focus around its complete rounded field. The application
+focus foundation excludes the inner `.fd-ui-input__control` to avoid a second
+rectangular outline; forced-color mode retains an outline on the field wrapper.
+
 `fd-ui-input` forwards `name` to its native input, defaulting to the control's
 `id`. Provide stable IDs for account fields so native form serialization and
 password managers retain the field identity. Identifier, password and search
@@ -475,7 +479,9 @@ Primary button component.
 
 The native `hidden` attribute on the component host removes the button from layout and keyboard navigation. Bind `[hidden]` when the action should remain mounted while temporarily unavailable.
 
-On coarse-pointer devices, buttons retain a 48px minimum target by default. Dense secondary action rows can set `--fd-button-touch-min-size: var(--fd-size-control-sm)` to use a 32px minimum while preserving each button's requested size. Keep this override scoped to the compact row; it controls both minimum width and height.
+On coarse-pointer devices, standard buttons retain a 44px minimum target through `--fd-size-control-touch`. Requested `lg` actions remain 48px; reserve these for prominent authentication or public landing-page actions. Ordinary page, form and dialog actions use the default `md` size. Toolbar actions are square: 38px with a fine pointer and 44px with a coarse pointer. Do not add page-local width overrides to equivalent toolbar buttons.
+
+Dense secondary action rows can explicitly set `--fd-button-touch-min-size: var(--fd-size-control-sm)` to use a 32px minimum while preserving each button's requested size. Keep this exception scoped to the compact row with sufficient separation; it controls both minimum width and height. Standard 44px actions do not need a local override.
 
 Danger buttons retain red destructive semantics across themes. Solid fill pairs the darker danger palette with white text; outline and text fills mix the theme's danger and text tokens for readable labels, including hover and active states. Customize these through the existing `--fd-button-danger-*` tokens rather than changing the global danger color.
 
@@ -823,7 +829,7 @@ Pagination control.
 
 Text inputs, textareas and autocomplete accept `enterKeyHint` (`enter`, `done`, `go`, `next`, `previous`, `search`, `send`). This forwards the native keyboard hint without changing Enter behavior; search appearance defaults to `search`. Choose a hint according to the form action, preserving newlines in multiline fields.
 
-With a coarse pointer, common buttons, field surfaces, suffix controls, checkbox labels, tabs, segmented choices and menu options provide at least a 48px target height using `--fd-size-control-lg`. Compact desktop sizing remains available. Dense calendar/chart geometry is reviewed separately; this is not a claim that every control has a 48px target. Editable input typography stays at least the body size.
+With a coarse pointer, standard buttons provide a 44px minimum target using `--fd-size-control-touch`. Field surfaces, suffix controls, checkbox labels, tabs, segmented choices and menu options retain their 48px target height using `--fd-size-control-lg`. Compact desktop sizing remains available. Dense calendar/chart geometry and explicitly compact secondary rows are reviewed separately. Editable input typography stays at least the body size.
 
 Shared loaders, busy buttons, top loading bars and application skeletons honor `prefers-reduced-motion: reduce` with a static indicator. Loading state and accessible naming remain available.
 

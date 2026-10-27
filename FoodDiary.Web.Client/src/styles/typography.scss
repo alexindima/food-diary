@@ -1,4 +1,5 @@
 @use 'fonts';
+@use 'variables' as variables;
 
 .fd-page-title,
 .fd-ui-page-title {
@@ -16,6 +17,13 @@
     line-height: var(--fd-page-subtitle-line-height);
     font-weight: var(--fd-page-subtitle-weight);
     color: var(--fd-color-text-muted);
+}
+
+@media #{variables.$media-tablet} {
+    .fd-page-title,
+    .fd-ui-page-title {
+        font-size: var(--fd-text-page-title-mobile-size);
+    }
 }
 
 .fd-ui-section-title {

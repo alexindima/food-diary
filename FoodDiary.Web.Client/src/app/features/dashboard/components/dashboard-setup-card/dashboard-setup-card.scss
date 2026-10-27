@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
 }
@@ -15,16 +17,25 @@ p {
 }
 
 .dashboard-setup-card__title {
+    flex: 1;
+    min-width: 0;
+    order: -1;
     color: var(--fd-color-text);
-    padding-inline-end: calc(var(--fd-size-control-compact) + var(--fd-space-sm));
 }
 
 .dashboard-setup-card__dismiss {
-    position: absolute;
-    inset-block-start: calc(var(--fd-space-card-padding-y) - var(--fd-space-xxs));
-    inset-inline-end: var(--fd-space-card-padding-x);
+    flex-shrink: 0;
+    margin-block: calc(0px - var(--fd-space-sm));
+    margin-inline-end: calc(0px - var(--fd-space-xs));
 }
 
 .dashboard-setup-card__error {
     color: var(--fd-color-danger);
+}
+@media #{variables.$media-tablet} {
+    .dashboard-setup-card__actions {
+        --fd-button-padding-x: var(--fd-space-sm);
+        --fd-button-text-padding-x: var(--fd-space-xs);
+        --fd-button-font-weight: var(--fd-font-weight-medium);
+    }
 }

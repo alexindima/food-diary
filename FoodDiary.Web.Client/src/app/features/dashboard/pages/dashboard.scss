@@ -258,20 +258,20 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     @media #{variables.$media-desktop} {
         &__push-action {
-            min-width: var(--fd-size-control-touch);
+            min-width: var(--fd-size-control-toolbar);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: var(--fd-size-control-touch);
-            --fd-button-min-width: var(--fd-size-control-touch);
+            --fd-button-width: var(--fd-size-control-toolbar);
+            --fd-button-min-width: var(--fd-size-control-toolbar);
             --fd-button-padding-x: 0;
         }
 
         &__appearance-action {
-            min-width: var(--fd-size-control-touch);
+            min-width: var(--fd-size-control-toolbar);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: var(--fd-size-control-touch);
-            --fd-button-min-width: var(--fd-size-control-touch);
+            --fd-button-width: var(--fd-size-control-toolbar);
+            --fd-button-min-width: var(--fd-size-control-toolbar);
             --fd-button-padding-x: 0;
         }
 
@@ -302,11 +302,11 @@ $color-text-secondary: var(--fd-color-text-muted);
         --fd-layout-page-vertical-padding: 0;
 
         &__appearance-action {
-            min-width: var(--fd-size-control-touch);
+            min-width: var(--fd-size-control-toolbar);
             padding-inline: 0;
             --fd-button-label-display: none;
-            --fd-button-width: var(--fd-size-control-touch);
-            --fd-button-min-width: var(--fd-size-control-touch);
+            --fd-button-width: var(--fd-size-control-toolbar);
+            --fd-button-min-width: var(--fd-size-control-toolbar);
             --fd-button-padding-x: 0;
         }
 

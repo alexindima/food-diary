@@ -21,7 +21,8 @@ const meta: Meta<FdUiButtonComponent> = {
         size: {
             control: 'select',
             options: ['xs', 'sm', 'md', 'lg'],
-            description: 'Button size',
+            description:
+                'Requested size: sm 32px, md 40px, lg 48px. Coarse pointers retain at least 44px; toolbar actions use 38px on desktop.',
         },
         type: {
             control: 'select',
@@ -103,6 +104,17 @@ export const Outline: Story = {
         variant: 'outline',
         size: 'md',
     },
+};
+
+export const ResponsiveSizes: Story = {
+    render: () => ({
+        template: `<div class="fd-row fd-wrap fd-gap-xs">
+            <fd-ui-button size="sm" variant="secondary" fill="outline">Small</fd-ui-button>
+            <fd-ui-button>Standard action</fd-ui-button>
+            <fd-ui-button size="lg">Prominent action</fd-ui-button>
+            <fd-ui-button appearance="toolbar" variant="secondary" fill="outline" icon="add" ariaLabel="Add item" />
+        </div>`,
+    }),
 };
 
 export const WithIcon: Story = {

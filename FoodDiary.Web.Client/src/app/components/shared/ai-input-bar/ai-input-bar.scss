@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
     min-width: 0;
@@ -199,9 +201,27 @@
     display: block;
     margin-top: calc(0px - var(--fd-border-width));
 }
+
+@media #{variables.$media-tablet} {
+    .ai-input-bar {
+        gap: var(--fd-space-xs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+
+        &__action-btn,
+        &__submit {
+            --fd-button-icon-size: var(--fd-size-button-icon-lg);
+        }
+
+        &__action-btn:where(:not(.ai-input-bar__action-btn--mic-active)) {
+            --fd-button-secondary-background-default: color-mix(in srgb, var(--fd-color-ai) 6%, var(--fd-bg-surface-raised));
+            --fd-button-secondary-border-default: transparent;
+            --fd-button-secondary-border-disabled: transparent;
+        }
+    }
+}
 @media (any-pointer: coarse) {
     .ai-input-bar__input {
-        min-height: var(--fd-size-control-lg);
+        min-height: var(--fd-size-control-touch);
         font-size: var(--fd-text-body-size);
     }
 }

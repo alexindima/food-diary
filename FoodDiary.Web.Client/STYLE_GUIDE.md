@@ -133,3 +133,20 @@ Filter out `design-tokens.scss`, `variables.scss`, `dist`, and `node_modules` wh
 ## Page Card Spacing
 
 Use `--fd-space-page-card-gap` for both horizontal and vertical gaps between peer cards (dashboard and body metric pages). It follows the selected UI density: 16–24px in classic and 12–16px in modern. Dashboard gap tokens alias this shared value. Keep `--fd-space-card-content-gap` for content inside cards and `--fd-space-page-section-gap` for separate page sections.
+
+## Responsive Control And Header Sizes
+
+Use the same tokens and component contracts across palettes and both UI styles.
+
+| Role                                        | Fine pointer        | Coarse pointer      |
+| ------------------------------------------- | ------------------- | ------------------- |
+| Standard page, form or dialog action (`md`) | 40px minimum height | 44px minimum target |
+| Toolbar icon (`appearance="toolbar"`)       | 38px square         | 44px square         |
+| Small secondary action (`sm`)               | 32px minimum height | 44px minimum target |
+| Explicit prominent action (`lg`)            | 48px minimum height | 48px minimum target |
+
+Keep `lg` for prominent authentication and public landing actions. Fasting controls and unsaved-change dialog actions use the standard size. Equivalent toolbar buttons must not acquire page-local widths. Explicit dense secondary rows retain their documented compact exception; image surfaces and data-visualization geometry are separate contracts.
+
+At widths up to 768px, page-title utilities use `--fd-text-page-title-mobile-size` (1.375rem, 22px at the default root font size). `fd-page-header` uses 4px vertical padding and a 44px minimum height that can grow for wrapped titles/subtitles. Action targets stay 44px on touch screens; their layout overlap is confined to header padding. Desktop page-header typography and spacing retain their existing tokens. Custom page headings must use the same title utilities.
+
+Use `--fd-space-card-content-gap` between a widget header and its body: 12–16px in Classic and 12px in Modern. The dashboard widget frame and ordinary cards share this spacing contract on mobile and desktop. A title and its immediately related explanatory sentence may use `--fd-space-xxs` (4px), as in the diary setup hint; that is a different relationship from a header followed by data or controls.

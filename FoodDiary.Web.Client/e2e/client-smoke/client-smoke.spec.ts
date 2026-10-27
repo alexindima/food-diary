@@ -21,6 +21,12 @@ const HTTP_CREATED_STATUS = 201;
 const HTTP_NO_CONTENT_STATUS = 204;
 const NETWORK_AUDIT_DEFAULT_MAX_REQUESTS = 8;
 const NETWORK_AUDIT_QUIET_MS = 500;
+const MOBILE_PAGE_TITLE_MAX_SIZE = 22;
+const MOBILE_HEADER_MAX_PADDING = 4;
+const MOBILE_ACTION_SIZE = 44;
+const DESKTOP_TOOLBAR_ACTION_SIZE = 38;
+const MOBILE_CARD_CONTENT_MAX_GAP = 12;
+const DESKTOP_CARD_CONTENT_MAX_GAP = 16;
 const MOBILE_NAVIGATION_DIALOG_COUNT = 4;
 // These views compose independent sections in addition to the four shared shell requests.
 const NETWORK_AUDIT_REQUEST_BUDGETS: Readonly<Record<string, number>> = {
@@ -394,6 +400,78 @@ test.describe('authenticated accessibility', () => {
                     await page.screenshot({ path: testInfo.outputPath(`products-${viewport.name}.png`) });
                 }
                 runtimeErrors.length = 0;
+            }
+        });
+    }
+});
+
+test.describe('shared responsive density', () => {
+    for (const viewport of [
+        { name: 'mobile', width: 393, height: 852, touch: true },
+        { name: 'desktop', width: 1440, height: 1000, touch: false },
+        { name: 'compact desktop', width: 1000, height: 900, touch: false },
+    ] as const) {
+        test(`keeps shared headers and actions consistent on ${viewport.name}`, async ({ browser }, testInfo) => {
+            test.setTimeout(NETWORK_AUDIT_TEST_TIMEOUT_MS);
+            const context = await browser.newContext({ viewport, hasTouch: viewport.touch, isMobile: viewport.touch });
+            const observations = [];
+            try {
+                for (const routePath of NETWORK_AUDIT_ROUTES) {
+                    const page = await context.newPage();
+                    await authenticateUserAsync(page, routePath.startsWith('/dietologist') ? 'Dietologist' : 'User');
+                    await mockAuthenticatedClientApiAsync(page);
+                    await page.goto(routePath);
+                    await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', 'en');
+                    await expect(page.locator('main h1').first()).toBeVisible();
+                    await expect(page).toHaveURL(url => url.pathname === routePath);
+                    const observation = await page.evaluate(() => {
+                        const heading = document.querySelector('main h1');
+                        const header = document.querySelector('fd-page-header header');
+                        const controls = Array.from(document.querySelectorAll<HTMLButtonElement>('.fd-ui-button--appearance-toolbar'))
+                            .filter(node => node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden')
+                            .map(node => ({
+                                name: node.getAttribute('aria-label'),
+                                width: node.getBoundingClientRect().width,
+                                height: node.getBoundingClientRect().height,
+                            }));
+                        const frame = document.querySelector('.day-summary .dashboard-widget-frame');
+                        return {
+                            route: location.pathname,
+                            titleSize: heading === null ? 0 : Number.parseFloat(getComputedStyle(heading).fontSize),
+                            headerPadding: header === null ? 0 : Number.parseFloat(getComputedStyle(header).paddingTop),
+                            overflow: document.documentElement.scrollWidth > window.innerWidth,
+                            controls,
+                            summaryGap: frame === null ? null : Number.parseFloat(getComputedStyle(frame).rowGap),
+                        };
+                    });
+                    observations.push(observation);
+                    expect.soft(observation.overflow, `Horizontal overflow on ${routePath}`).toBe(false);
+                    if (viewport.touch) {
+                        expect(observation.titleSize, `Compact mobile title on ${routePath}`).toBeLessThanOrEqual(
+                            MOBILE_PAGE_TITLE_MAX_SIZE,
+                        );
+                        expect
+                            .soft(observation.headerPadding, `Compact mobile header on ${routePath}`)
+                            .toBeLessThanOrEqual(MOBILE_HEADER_MAX_PADDING);
+                    }
+                    for (const control of observation.controls) {
+                        const expectedSize = viewport.touch ? MOBILE_ACTION_SIZE : DESKTOP_TOOLBAR_ACTION_SIZE;
+                        expect.soft(control.width, `Toolbar width on ${routePath}: ${control.name}`).toBeCloseTo(expectedSize, 0);
+                        expect.soft(control.height, `Toolbar height on ${routePath}: ${control.name}`).toBeCloseTo(expectedSize, 0);
+                    }
+                    if (observation.summaryGap !== null) {
+                        expect
+                            .soft(observation.summaryGap, 'Summary header-to-content spacing')
+                            .toBeLessThanOrEqual(viewport.touch ? MOBILE_CARD_CONTENT_MAX_GAP : DESKTOP_CARD_CONTENT_MAX_GAP);
+                    }
+                    await page.close();
+                }
+            } finally {
+                await testInfo.attach('responsive-density.json', {
+                    body: Buffer.from(JSON.stringify(observations, null, 2)),
+                    contentType: 'application/json',
+                });
+                await context.close();
             }
         });
     }

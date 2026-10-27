@@ -39,3 +39,6 @@
 .dashboard-widget-header__description {
     color: var(--fd-color-text-muted);
 }
+.dashboard-widget-header__help {
+    margin-block: calc(0px - var(--fd-space-sm));
+}

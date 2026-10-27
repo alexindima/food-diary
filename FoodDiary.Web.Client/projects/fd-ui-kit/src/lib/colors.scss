@@ -375,7 +375,7 @@ html[data-theme='dark'],
     --fd-button-transform-disabled: none;
     --fd-button-label-display: inline;
     --fd-button-height: var(--fd-size-control-md);
-    --fd-button-touch-min-size: var(--fd-size-control-lg);
+    --fd-button-touch-min-size: var(--fd-size-control-touch);
     --fd-button-padding-x: var(--fd-space-sm);
     --fd-button-text-padding-x: calc(var(--fd-space-xxs) + var(--fd-space-micro));
     --fd-button-icon-size: var(--fd-size-icon-sm);

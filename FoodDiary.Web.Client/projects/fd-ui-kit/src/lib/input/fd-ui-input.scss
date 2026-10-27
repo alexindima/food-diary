@@ -104,6 +104,13 @@
     box-shadow: var(--fd-shadow-focus);
 }
 
+@media (forced-colors: active) {
+    .fd-ui-input__control-wrap:has(> .fd-ui-input__control:focus-visible) {
+        outline: var(--fd-outline-focus-strong);
+        outline-offset: var(--fd-outline-offset);
+    }
+}
+
 .fd-ui-input__control {
     flex: 1;
     width: 100%;
