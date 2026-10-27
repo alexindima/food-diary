@@ -3,7 +3,10 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { isolatedRuntimeProbes } from "./coding-probe-isolation.mjs";
+import {
+    checkCodingProbeEnvironment,
+    isolatedRuntimeProbes,
+} from "./coding-probe-isolation.mjs";
 import { repositoryRoot } from "./generate-feature.mjs";
 
 test("generated code can use Node APIs only inside the scoped read-only network-free container", () => {
@@ -47,6 +50,7 @@ export function networkDenied() {
 });
 
 test("the isolated reference retains all existing native-value and conversion expectations", () => {
+    assert.doesNotThrow(() => checkCodingProbeEnvironment());
     for (const id of [
         "meal-identity",
         "calendar-meaning",

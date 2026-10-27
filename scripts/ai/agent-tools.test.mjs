@@ -12,12 +12,16 @@ import {
     rmSync,
     utimesSync,
 } from "node:fs";
-import { join, resolve, sep } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { createServer } from "node:http";
 import { redactDiagnostic } from "./diagnostic-redaction.mjs";
 import { summarizeEvent, compareTrials } from "./agent-trials.mjs";
-import { isAllowedCandidatePath } from "./coding-evals.mjs";
+import {
+    candidateFileFingerprints,
+    isAllowedCandidatePath,
+} from "./coding-evals.mjs";
+import { evaluateRuntimeProbes } from "./coding-probe-isolation.mjs";
 import { sanitizeJourneyReport } from "./journey-evidence.mjs";
 import {
     evidenceFile,
@@ -34,17 +38,79 @@ import {
 import { processIdentity } from "./task-runtime.mjs";
 import { checkAgentRegressions, promoteRegression } from "./agent-feedback.mjs";
 
+test("an unavailable grader environment prevents candidate execution", () => {
+    let executed = false;
+    const result = evaluateRuntimeProbes("owned", "candidate", {
+        checkEnvironment: () => {
+            throw new Error("Docker unavailable");
+        },
+        probe: () => {
+            executed = true;
+        },
+    });
+    assert.equal(executed, false);
+    assert.equal(result.environmentError, "Docker unavailable");
+    assert.equal(result.runtimeError, null);
+});
+
+test("candidate assertions and timeouts stay candidate failures while the grader works", () => {
+    for (const message of ["Expected 333.33, got 333.34", "Probe timed out"]) {
+        const result = evaluateRuntimeProbes("owned", "candidate", {
+            checkEnvironment: () => {},
+            probe: () => {
+                throw new Error(message);
+            },
+        });
+        assert.equal(result.environmentError, null);
+        assert.equal(result.runtimeError, message);
+    }
+});
+
+test("a grader outage during execution is reported independently from candidate output", () => {
+    let checks = 0;
+    const result = evaluateRuntimeProbes("owned", "candidate", {
+        checkEnvironment: () => {
+            if (++checks === 2) throw new Error("Docker stopped");
+        },
+        probe: () => {
+            throw new Error("No valid probe result");
+        },
+    });
+    assert.equal(result.runtimeError, "No valid probe result");
+    assert.equal(result.environmentError, "Docker stopped");
+    assert.deepEqual(
+        evaluateRuntimeProbes("owned", "candidate", {
+            checkEnvironment: () => {},
+            probe: () => {},
+        }),
+        { runtimeError: null, environmentError: null },
+    );
+});
+
 test("quiet live checks remain running and expose actual command and wrapper exits separately", () => {
     const id = randomUUID();
     const directory = join(repositoryRoot, ".artifacts/agent-checks", id);
     const logRelative = `.artifacts/llm-wiki/tasks/diagnostics-${id}/logs/check.log`;
     const canonicalLog = join(repositoryRoot, logRelative);
     mkdirSync(directory, { recursive: true });
-    mkdirSync(join(repositoryRoot, `.artifacts/llm-wiki/tasks/diagnostics-${id}/logs`), { recursive: true });
+    mkdirSync(
+        join(
+            repositoryRoot,
+            `.artifacts/llm-wiki/tasks/diagnostics-${id}/logs`,
+        ),
+        { recursive: true },
+    );
     writeFileSync(canonicalLog, "Still executing a canonical test\n");
     const quietTime = new Date(Date.now() - 90000);
     utimesSync(canonicalLog, quietTime, quietTime);
-    const record = { id, checkout: repositoryRoot, status: "running", startedAtUtc: new Date(Date.now() - 120000).toISOString(), worker: { pid: process.pid, identity: processIdentity(process.pid) }, executionLogPath: logRelative };
+    const record = {
+        id,
+        checkout: repositoryRoot,
+        status: "running",
+        startedAtUtc: new Date(Date.now() - 120000).toISOString(),
+        worker: { pid: process.pid, identity: processIdentity(process.pid) },
+        executionLogPath: logRelative,
+    };
     writeFileSync(join(directory, "job.json"), JSON.stringify(record));
     const live = taskDiagnostics(undefined, id).job;
     assert.equal(live.status, "running");
@@ -52,8 +118,19 @@ test("quiet live checks remain running and expose actual command and wrapper exi
     assert.equal(live.progress.stage, "executing-check");
     assert.ok(live.progress.secondsSinceLastOutput >= 90);
     assert.equal(live.progress.silenceMeansHung, false);
-    writeFileSync(`${canonicalLog}.execution.json`, JSON.stringify({ exitCode: 1 }));
-    writeFileSync(join(directory, "job.json"), JSON.stringify({ ...record, status: "failed", exitCode: 0, finishedAtUtc: new Date().toISOString() }));
+    writeFileSync(
+        `${canonicalLog}.execution.json`,
+        JSON.stringify({ exitCode: 1 }),
+    );
+    writeFileSync(
+        join(directory, "job.json"),
+        JSON.stringify({
+            ...record,
+            status: "failed",
+            exitCode: 0,
+            finishedAtUtc: new Date().toISOString(),
+        }),
+    );
     const failed = taskDiagnostics(undefined, id).job;
     assert.equal(failed.status, "failed");
     assert.equal(failed.progress.stage, "finished");
@@ -105,6 +182,33 @@ test("a file-scoped coding task rejects similarly named siblings and preserves d
         ]),
         false,
     );
+});
+
+test("candidate scope ignores generated Vitest caches while retaining arbitrary added source files", () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-coding-cache-scope-"));
+    const files = [
+        "FoodDiary.Web.Client/src/owned.ts",
+        "FoodDiary.Web.Client/node_modules/.vite/vitest/results.json",
+        "FoodDiary.Web.Client/node_modules/.vitest-cache/result.js",
+        "FoodDiary.Web.Client/node_modules/.vitest-cache-sibling/source.ts",
+        "FoodDiary.Web.Client/node_modules/foreign/source.ts",
+        "FoodDiary.Web.Client/src/node_modules/.vite/production.ts",
+    ];
+    try {
+        for (const path of files) {
+            mkdirSync(dirname(join(root, path)), { recursive: true });
+            writeFileSync(join(root, path), path);
+        }
+        assert.deepEqual(
+            Object.keys(candidateFileFingerprints(root)).sort(),
+            [files[0], files[3], files[4], files[5]].sort(),
+            "Generated test caches must not become production scope violations",
+        );
+        assert.equal(existsSync(join(root, files[1])), true);
+        assert.equal(existsSync(join(root, files[2])), true);
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
 });
 
 test("live journey reports retain test counts and remove credential values from nested errors", () => {

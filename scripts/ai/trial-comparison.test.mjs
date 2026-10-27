@@ -32,6 +32,32 @@ test("a read-only environment is not a skill quality comparison", () => {
     assert.equal(result.comparisons[0].control.environmentFailures, 1);
 });
 
+test("a grader environment failure cannot become a skill quality comparison", () => {
+    const rows = Array.from({ length: 5 }, () => [
+        { ...base, variant: "control", settings: { actualModel: "observed" } },
+        {
+            ...base,
+            variant: "api-skill",
+            skillHash: "one",
+            settings: { actualModel: "observed" },
+        },
+    ]).flat();
+    rows[1] = {
+        ...rows[1],
+        passed: false,
+        failureCategory: "grading-environment-unverified",
+        grade: { passed: false, environmentError: "Docker unavailable" },
+    };
+    const result = compareTrialRecords(rows).comparisons[0];
+    assert.equal(
+        result.verdict,
+        "environment-unverified",
+        "A broken grader must not produce an instruction quality verdict",
+    );
+    assert.equal(result.skill.environmentFailures, 1);
+    assert.equal(result.skill.samples, 5);
+});
+
 test("different skill fingerprints never share an outcome profile", () => {
     const result = compareTrialRecords([
         { ...base, variant: "control" },

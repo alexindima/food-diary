@@ -10,11 +10,18 @@ import {
     realpathSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { pathToFileURL, fileURLToPath } from "node:url";
-import { codingCase, prepareCase, gradeCase } from "./coding-evals.mjs";
+import { pathToFileURL } from "node:url";
+import {
+    codingCase,
+    prepareCase,
+    gradeCase,
+    generatedCodingCacheDirectories,
+} from "./coding-evals.mjs";
 import { repositoryRoot, containedPath } from "./generate-feature.mjs";
 import { redactDiagnostic, errorLines } from "./diagnostic-redaction.mjs";
 import { compareTrialRecords } from "./trial-comparison.mjs";
+import { trialSourceFingerprints } from "./trial-fingerprints.mjs";
+import { checkCodingProbeEnvironment } from "./coding-probe-isolation.mjs";
 import {
     confirmedModelSettings,
     executionStartFailed,
@@ -73,6 +80,7 @@ export async function runTrial(
         timeoutMinutes = 20,
         model,
         reasoningEffort = "medium",
+        windowsSandbox,
     } = {},
 ) {
     trialOptions([
@@ -82,6 +90,7 @@ export async function runTrial(
         reasoningEffort,
         "--timeout-minutes",
         String(timeoutMinutes),
+        ...(windowsSandbox ? ["--windows-sandbox", windowsSandbox] : []),
     ]);
     if (!["control", "api-skill"].includes(variant))
         throw new Error("Unknown instruction variant");
@@ -92,12 +101,18 @@ export async function runTrial(
     )
         throw new Error("Trial timeout must be 1-30 minutes");
     const entry = codingCase(id);
+    checkCodingProbeEnvironment();
     const prepared = prepareCase(id);
     const directory = dirname(prepared.candidate);
     const trialPath = join(directory, "trial.json");
     const eventsPath = join(directory, "events.jsonl");
     const instructions = `${readFileSync(join(repositoryRoot, "AGENTS.md"), "utf8")}\n\n${readFileSync(join(repositoryRoot, "FoodDiary.Web.Client/AGENTS.md"), "utf8")}`;
     writeFileSync(join(prepared.candidate, "AGENTS.md"), instructions);
+    writeFileSync(
+        join(prepared.candidate, ".gitignore"),
+        generatedCodingCacheDirectories.map((path) => `/${path}/`).join("\n") +
+            "\n",
+    );
     const contract = readFileSync(
         join(
             repositoryRoot,
@@ -145,6 +160,7 @@ export async function runTrial(
     const probeValue = `${id}:${prepared.graderHash}`;
     writeFileSync(join(prepared.candidate, "agent-write-probe.txt"), "");
     const prompt = `${entry.task}\n\nThis is an isolated coding evaluation. The exact workspace is ${prepared.candidate}. Every command tool call must explicitly set workdir to that absolute directory. Patch only absolute native paths inside that directory; on Windows do not translate drive paths into /d/ paths. Before exploring sources, overwrite the existing empty agent-write-probe.txt at the snapshot root containing exactly ${probeValue} to prove the actual session can write. This probe is explicitly allowed. Edit production files only in: ${entry.allowedPrefixes.join(", ")}. Preserve native values. No production services, network providers, commits, or external messages are needed. Do not inspect the parent repository or historical answers. The snapshot intentionally omits unrelated build projects, Wiki and dependency installation. Its AGENTS.md includes applicable repository and frontend rules. Work directly against the included production sources; full application builds are not available in this extracted snapshot. Run node verify-contract.cjs to check the public acceptance contract with actual dependency types before concluding. Do not replace Angular/RxJS/SDK types with simplified stubs.\n\nPublic acceptance contract (implement these exported capabilities; it contains no reference implementation):\n${contract}\n\nNative-value contract: ${entry.runtimeContract ?? "Keep the existing wire values and behavior unchanged."}\n\n${skill ? "Use $fooddiary-api-change from .agents/skills/fooddiary-api-change/SKILL.md. Read its examples only if useful." : ""}`;
+    const finalPrompt = `${prompt}\n\nGenerated test caches under ${generatedCodingCacheDirectories.join(" and ")} are disposable evaluation artifacts and are excluded from production-source scope checks. Leave these caches in place. Do not delete node_modules or run recursive cleanup in the snapshot. Production imports from these cache directories are forbidden.`;
     const command = codexCommand();
     for (const args of [
         ["init", "--quiet"],
@@ -186,15 +202,12 @@ export async function runTrial(
         cliVersion: version.stdout.trim(),
         instructionsHash: sha(instructions),
         skillHash: skill ? sha(skill) : null,
-        promptHash: sha(prompt),
+        promptHash: sha(finalPrompt),
         graderHash: prepared.graderHash,
         corpusHash: prepared.corpusHash,
         dependencyLockHash: prepared.dependencyLockHash,
         timeoutMinutes,
-        harnessHash: sha(readFileSync(fileURLToPath(import.meta.url))),
-        graderEngineHash: sha(
-            readFileSync(join(repositoryRoot, "scripts/ai/coding-evals.mjs")),
-        ),
+        ...trialSourceFingerprints(),
         candidateGitRoot: true,
         startedAtUtc: new Date().toISOString(),
         status: "running",
@@ -210,6 +223,7 @@ export async function runTrial(
             ignoreUserRules: true,
             requestedModel: model,
             reasoningEffort,
+            windowsSandbox: windowsSandbox ?? null,
         },
     };
     save(trialPath, record);
@@ -224,7 +238,11 @@ export async function runTrial(
         command.file,
         [
             ...command.prefix,
-            ...trialArguments(prepared.candidate, { model, reasoningEffort }),
+            ...trialArguments(prepared.candidate, {
+                model,
+                reasoningEffort,
+                windowsSandbox,
+            }),
         ],
         {
             cwd: prepared.candidate,
@@ -321,7 +339,7 @@ export async function runTrial(
     };
     process.once("SIGINT", interrupted);
     process.once("SIGTERM", interrupted);
-    child.stdin.end(prompt);
+    child.stdin.end(finalPrompt);
     try {
         record.exitCode = await new Promise((resolveExit) => {
             child.once("error", (error) => {
@@ -367,7 +385,9 @@ export async function runTrial(
             record.status === "completed" &&
             grade.passed &&
             record.environmentWritable;
-        if (record.executionRejection)
+        if (grade.environmentError)
+            record.failureCategory = "grading-environment-unverified";
+        else if (record.executionRejection)
             record.failureCategory = "execution-policy-rejected";
         else if (!record.environmentWritable && !grade.passed)
             record.failureCategory = rows.some(
@@ -483,11 +503,12 @@ if (
                         );
                         if (
                             !trial.environmentWritable ||
+                            trial.grade?.environmentError ||
                             trial.executionRejection ||
                             trial.failureCategory === "execution-start-rejected"
                         )
                             throw new Error(
-                                "Trial environment cannot perform the required owned write; suite stopped before more model calls",
+                                "Trial execution or grading environment is unavailable; suite stopped before more model calls",
                             );
                     }
         } else
@@ -508,7 +529,7 @@ if (
                       : null;
         if (!result)
             throw new Error(
-                "Use run <case> [control|api-skill] --model <model>, suite --model <model> [--repetitions 5] [--case <case>], or compare",
+                "Use run <case> [control|api-skill] --model <model>, suite --model <model> [--repetitions 5] [--case <case>], or compare. Windows run/suite also require --windows-sandbox <mxc|elevated|unelevated>",
             );
         console.log(JSON.stringify(result, null, 2));
         if (action === "run" && !result.passed) process.exitCode = 1;

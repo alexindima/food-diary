@@ -3,7 +3,22 @@ import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 
-export function trialOptions(args) {
+function windowsSandboxArguments(implementation, platform) {
+    if (
+        implementation !== undefined &&
+        !["mxc", "elevated", "unelevated"].includes(implementation)
+    )
+        throw new Error("Unsupported Windows sandbox implementation");
+    if (platform === "win32" && !implementation)
+        throw new Error(
+            "Specify --windows-sandbox from the approved Windows configuration when user config is ignored",
+        );
+    return platform === "win32"
+        ? ["-c", `windows.sandbox="${implementation}"`]
+        : [];
+}
+
+export function trialOptions(args, { platform = process.platform } = {}) {
     const options = {
         repetitions: 1,
         timeoutMinutes: 20,
@@ -15,13 +30,14 @@ export function trialOptions(args) {
         "--repetitions": "repetitions",
         "--timeout-minutes": "timeoutMinutes",
         "--case": "caseId",
+        "--windows-sandbox": "windowsSandbox",
     };
     for (let index = 0; index < args.length; index += 2) {
         const key = keys[args[index]];
         const value = args[index + 1];
         if (!key || !value || value.startsWith("--"))
             throw new Error(
-                "Expected --model, --reasoning, --repetitions, --timeout-minutes or --case with a value",
+                "Expected --model, --reasoning, --repetitions, --timeout-minutes, --case or --windows-sandbox with a value",
             );
         options[key] = ["repetitions", "timeoutMinutes"].includes(key)
             ? Number(value)
@@ -47,6 +63,7 @@ export function trialOptions(args) {
         options.timeoutMinutes > 30
     )
         throw new Error("Trial timeout must be 1-30 minutes");
+    windowsSandboxArguments(options.windowsSandbox, platform);
     return options;
 }
 
@@ -87,7 +104,11 @@ export function trialEnvironment(environment = process.env) {
     return result;
 }
 
-export function trialArguments(candidate, { model, reasoningEffort }) {
+export function trialArguments(
+    candidate,
+    { model, reasoningEffort, windowsSandbox },
+    { platform = process.platform } = {},
+) {
     return [
         "-a",
         "never",
@@ -96,6 +117,7 @@ export function trialArguments(candidate, { model, reasoningEffort }) {
         'default_permissions=":workspace"',
         "-c",
         'web_search="disabled"',
+        ...windowsSandboxArguments(windowsSandbox, platform),
         "--ignore-user-config",
         "--ignore-rules",
         "--model",
@@ -118,6 +140,44 @@ export function executionStartFailed(item) {
 
 // Read only this runner's session, never arbitrary histories or authentication files.
 // Session metadata is a best-effort observation; an explicit request alone is not proof.
+function sessionDates(startedAtUtc) {
+    const dates = new Set();
+    for (const timestamp of [startedAtUtc, new Date().toISOString()]) {
+        if (typeof timestamp !== "string") continue;
+        const instant = new Date(timestamp).getTime();
+        if (!Number.isFinite(instant)) continue;
+        // CLI session directories can use the host's calendar date across UTC midnight.
+        for (const offset of [0, -1, 1])
+            dates.add(
+                new Date(instant + offset * 86_400_000)
+                    .toISOString()
+                    .slice(0, 10),
+            );
+    }
+    return [...dates];
+}
+
+function isPolicyRejection(output) {
+    const texts =
+        typeof output === "string"
+            ? [output]
+            : Array.isArray(output)
+              ? output
+                    .filter(
+                        (block) =>
+                            ["input_text", "output_text", "text"].includes(
+                                block?.type,
+                            ) && typeof block.text === "string",
+                    )
+                    .map((block) => block.text)
+              : [];
+    return texts.some((text) =>
+        /^\s*(?:Script error:\s*)?(exec_command failed: CreateProcess[\s\S]*blocked by policy|patch rejected:[\s\S]*rejected by user approval settings)/u.test(
+            text,
+        ),
+    );
+}
+
 async function inspectOwnedSession(
     threadId,
     candidate,
@@ -129,14 +189,7 @@ async function inspectOwnedSession(
     observation = "model",
 ) {
     if (!/^[a-f0-9-]{36}$/u.test(threadId ?? "")) return null;
-    const dates = [
-        ...new Set([
-            startedAtUtc?.slice(0, 10),
-            new Date().toISOString().slice(0, 10),
-        ]),
-    ];
-    for (const date of dates) {
-        if (!/^\d{4}-\d{2}-\d{2}$/u.test(date ?? "")) continue;
+    for (const date of sessionDates(startedAtUtc)) {
         const directory = join(sessionRoot, ...date.split("-"));
         if (!existsSync(directory) || lstatSync(directory).isSymbolicLink())
             continue;
@@ -175,10 +228,7 @@ async function inspectOwnedSession(
                             "function_call_output",
                             "custom_tool_call_output",
                         ].includes(event.payload?.type) &&
-                        typeof event.payload.output === "string" &&
-                        /^(exec_command failed: CreateProcess[\s\S]*blocked by policy|patch rejected:[\s\S]*rejected by user approval settings)/u.test(
-                            event.payload.output,
-                        )
+                        isPolicyRejection(event.payload.output)
                     ) {
                         return {
                             source: "owned-session-tool-rejection",

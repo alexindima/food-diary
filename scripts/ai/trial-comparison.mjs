@@ -54,7 +54,9 @@ function summary(rows, variant, skillHash = null) {
                 [
                     "execution-policy-rejected",
                     "execution-start-rejected",
-                ].includes(row.failureCategory),
+                    "grading-environment-unverified",
+                ].includes(row.failureCategory) ||
+                Boolean(row.grade?.environmentError),
         ).length,
         successInterval95: count
             ? [Math.max(0, center - margin), Math.min(1, center + margin)]

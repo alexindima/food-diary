@@ -427,6 +427,13 @@ files outside scope. The grader, corpus and dependency-lock fingerprints must
 match preparation; original source hashes are recovered from Git, not trusted
 from an editable candidate record.
 
+The snapshot ignores only the generated `.vite` and `.vitest-cache` directories
+under its own `FoodDiary.Web.Client/node_modules` when comparing source changes.
+They stay on disk and are listed in the snapshot's generated `.gitignore`; both
+variants are instructed to leave them in place rather than request recursive
+cleanup. Other added dependency files still count as scope changes, and production
+TypeScript imports from the ignored caches are explicitly rejected.
+
 `self-test` proves that each historical baseline fails and the current reference
 passes. It runs no models and is not a measurement of agent productivity. The
 initial corpus covers semantic contract refactoring and one pure nutrition calculation; it is not general behavioral
@@ -454,7 +461,22 @@ node scripts/ai/agent-trials.mjs suite --model <model> --reasoning medium --repe
 node scripts/ai/agent-trials.mjs compare
 ```
 
+On Windows, append `--windows-sandbox <mxc|elevated|unelevated>` to `run` or
+`suite`, using the implementation already selected and permitted on the machine.
+For example, a host configured with `windows.sandbox = "unelevated"` uses
+`--windows-sandbox unelevated`. The runner ignores user configuration for
+reproducibility, so it must pass this platform setting explicitly as well as
+the `:workspace` permissions profile. Omitting it fails before any model call;
+the chosen implementation is recorded in trial settings and comparison cohorts.
+This selects sandbox enforcement without widening workspace or network access.
+
 `suite` runs the selected historical tasks sequentially with both instruction variants.
+Before spending model calls, each trial checks the pinned probe image with a trusted
+command in the same restricted container configuration, without candidate mounts.
+Runtime grading checks this environment before executing candidate code and again
+after a probe failure. A confirmed grading outage is recorded separately from a
+candidate assertion or timeout and stops the suite. Comparisons with grading
+environment failures remain `environment-unverified`.
 Every trial starts from its own extracted Git baseline, initializes a separate Git
 root, supplies a public acceptance contract and uses Codex CLI's explicit
 `:workspace` permission profile through the npm-pinned Codex CLI. An actual file-write probe distinguishes a usable
@@ -483,6 +505,10 @@ CLI versions that omit tool results in JSONL are checked through bounded observa
 of their own session's structured tool output. Reasoning and transcript text are
 not exported. Missing command telemetry stays null, with its sample coverage
 reported separately; it is never represented as zero tool failures.
+Session lookup includes adjacent calendar dates because CLI folders can use local
+time across UTC midnight; exact thread and checkout metadata remain mandatory.
+Policy rejection detection accepts textual tool-result blocks and the CLI's
+`Script error:` wrapper as well as legacy string results.
 
 The model is explicit; the CLI default is never a reproducible trial setting.
 Trials persist their own CLI session so the runner can read a bounded model
@@ -498,6 +524,10 @@ intervals, median duration, tool failures and human interventions.
 Each owned `trial.json` records the CLI version, baseline, instruction, skill,
 grader engine, harness and dependency hashes, actual terminal outcome, external
 grade, elapsed time, usage when reported, interventions and tool failure counts.
+Harness and grader hashes cover their declared execution helpers, public contract
+checker and isolated runtime worker; the source file hashes are retained in the
+record. Changing a helper or runtime assertion therefore separates comparison
+cohorts even when the entrypoint itself is unchanged.
 Failed and timed-out attempts remain in the data. Events contain bounded sanitized
 tool actions, error excerpts and completion messages; reasoning content and full
 command output are omitted. The terminal grade inspects candidate production code,

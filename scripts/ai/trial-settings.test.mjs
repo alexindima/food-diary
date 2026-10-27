@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { trialSourceFingerprints } from "./trial-fingerprints.mjs";
 import {
     trialOptions,
     sessionModelReceipt,
@@ -12,6 +13,60 @@ import {
     trialArguments,
     trialEnvironment,
 } from "./trial-settings.mjs";
+
+test("trial fingerprints change when execution or grading helpers change", () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-trial-sources-"));
+    const sources = [
+        "agent-trials.mjs",
+        "trial-settings.mjs",
+        "trial-fingerprints.mjs",
+        "generate-feature.mjs",
+        "diagnostic-redaction.mjs",
+        "candidate-contract-check.cjs",
+        "coding-evals.mjs",
+        "coding-probe-isolation.mjs",
+        "coding-probe-worker.cjs",
+    ];
+    mkdirSync(join(root, "scripts/ai"), { recursive: true });
+    for (const source of sources)
+        writeFileSync(join(root, "scripts/ai", source), source);
+    try {
+        const baseline = trialSourceFingerprints(root);
+        writeFileSync(
+            join(root, "scripts/ai/trial-settings.mjs"),
+            "changed execution settings",
+        );
+        const changedHarness = trialSourceFingerprints(root);
+        assert.notEqual(
+            changedHarness.harnessHash,
+            baseline.harnessHash,
+            "Execution helper changes must invalidate the trial cohort",
+        );
+        assert.equal(
+            changedHarness.graderEngineHash,
+            baseline.graderEngineHash,
+        );
+        writeFileSync(
+            join(root, "scripts/ai/coding-probe-worker.cjs"),
+            "changed assertions",
+        );
+        assert.notEqual(
+            trialSourceFingerprints(root).graderEngineHash,
+            baseline.graderEngineHash,
+            "Runtime assertion changes must invalidate the grader cohort",
+        );
+        writeFileSync(
+            join(root, "scripts/ai/candidate-contract-check.cjs"),
+            "changed public check",
+        );
+        assert.notEqual(
+            trialSourceFingerprints(root).harnessHash,
+            changedHarness.harnessHash,
+        );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
 
 test("trial options require a pinned model and bounded explicit sample count", () => {
     assert.throws(() => trialOptions([]), /explicit --model/);
@@ -29,8 +84,49 @@ test("trial options require a pinned model and bounded explicit sample count", (
         /reasoning/,
     );
     assert.equal(
-        trialOptions(["--model", "model", "--repetitions", "5"]).repetitions,
+        trialOptions([
+            "--model",
+            "model",
+            "--repetitions",
+            "5",
+            "--windows-sandbox",
+            "unelevated",
+        ]).repetitions,
         5,
+    );
+});
+
+test("Windows trials require an explicit supported sandbox when user configuration is ignored", () => {
+    assert.throws(
+        () => trialOptions(["--model", "pinned"], { platform: "win32" }),
+        /--windows-sandbox/,
+        "Windows sandbox selection must not disappear with user config",
+    );
+    for (const implementation of ["mxc", "elevated", "unelevated"])
+        assert.equal(
+            trialOptions(
+                ["--model", "pinned", "--windows-sandbox", implementation],
+                { platform: "win32" },
+            ).windowsSandbox,
+            implementation,
+        );
+    for (const implementation of [
+        "disabled",
+        "danger-full-access",
+        "arbitrary",
+    ])
+        assert.throws(
+            () =>
+                trialOptions(
+                    ["--model", "pinned", "--windows-sandbox", implementation],
+                    { platform: "win32" },
+                ),
+            /Windows sandbox/,
+        );
+    assert.equal(
+        trialOptions(["--model", "pinned"], { platform: "linux" })
+            .windowsSandbox,
+        undefined,
     );
 });
 
@@ -80,16 +176,33 @@ test("standalone trials exclude parent chat permissions and tools while preservi
     assert.equal(child.CODEX_APP_TOOLS_PIPE_PATH, undefined);
     assert.equal(child.CODEX_HOME, "existing-store");
     assert.equal(parent.CODEX_PERMISSION_PROFILE, "parent-read-only");
-    const args = trialArguments("owned-candidate", {
-        model: "pinned",
-        reasoningEffort: "medium",
-    });
+    const args = trialArguments(
+        "owned-candidate",
+        {
+            model: "pinned",
+            reasoningEffort: "medium",
+            windowsSandbox: "unelevated",
+        },
+        { platform: "win32" },
+    );
     assert.ok(args.includes('default_permissions=":workspace"'));
+    assert.ok(
+        args.includes('windows.sandbox="unelevated"'),
+        "The selected Windows sandbox must reach the isolated CLI",
+    );
     assert.equal(args.includes("--sandbox"), false);
     assert.ok(args.includes("--ignore-rules"));
     assert.equal(args[args.indexOf("-C") + 1], "owned-candidate");
     assert.equal(
         args.some((value) => /bypass|danger-full/u.test(value)),
+        false,
+    );
+    assert.equal(
+        trialArguments(
+            "owned-candidate",
+            { model: "pinned", reasoningEffort: "medium" },
+            { platform: "linux" },
+        ).some((value) => value.startsWith("windows.sandbox=")),
         false,
     );
 });
@@ -174,6 +287,114 @@ test("model receipt requires a matching session and candidate, with no transcrip
             await sessionExecutionRejection(id, candidate, date, root),
             { source: "owned-session-tool-rejection", threadId: id },
         );
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test("owned session receipts survive local dates on either side of UTC midnight", async () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-trial-midnight-"));
+    const id = "12345678-1234-1234-1234-123456789abc";
+    const candidate = join(root, "candidate");
+    try {
+        for (const [timestamp, localDate] of [
+            ["2026-10-10T22:30:00Z", "2026/10/11"],
+            ["2026-10-10T01:30:00Z", "2026/10/09"],
+            ["2026-12-31T23:30:00Z", "2027/01/01"],
+        ]) {
+            const directory = join(root, localDate);
+            mkdirSync(directory, { recursive: true });
+            writeFileSync(
+                join(directory, `rollout-${id}.jsonl`),
+                [
+                    { type: "session_meta", payload: { id, cwd: candidate } },
+                    {
+                        type: "turn_context",
+                        payload: { model: "observed-model", effort: "xhigh" },
+                    },
+                ]
+                    .map((row) => JSON.stringify(row))
+                    .join("\n"),
+            );
+            assert.equal(
+                (await sessionModelReceipt(id, candidate, timestamp, root))
+                    ?.model,
+                "observed-model",
+                "A local-date session must retain its model receipt",
+            );
+            rmSync(join(directory, `rollout-${id}.jsonl`));
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true });
+    }
+});
+
+test("structured CLI tool outputs retain policy rejections without interpreting ordinary test failures", async () => {
+    const root = mkdtempSync(join(tmpdir(), "fd-trial-structured-output-"));
+    const id = "12345678-1234-1234-1234-123456789abc";
+    const candidate = join(root, "candidate");
+    const directory = join(root, "2026/10/10");
+    mkdirSync(directory, { recursive: true });
+    const command =
+        "Script error:\nexec_command failed: CreateProcess { Rejected: blocked by policy }";
+    const patch =
+        "Script error:\npatch rejected: writing outside of the project; rejected by user approval settings";
+    try {
+        for (const [type, output, rejected] of [
+            ["custom_tool_call_output", command, true],
+            [
+                "custom_tool_call_output",
+                [
+                    { type: "input_text", text: "Tool result" },
+                    { type: "input_text", text: command },
+                ],
+                true,
+            ],
+            [
+                "custom_tool_call_output",
+                [{ type: "input_text", text: patch }],
+                true,
+            ],
+            ["function_call_output", [{ type: "text", text: command }], true],
+            [
+                "function_call_output",
+                [{ type: "output_text", text: patch }],
+                true,
+            ],
+            [
+                "custom_tool_call_output",
+                [
+                    {
+                        type: "input_text",
+                        text: "Assertion failed: expected blocked by policy",
+                    },
+                ],
+                false,
+            ],
+            ["agent_message", [{ type: "input_text", text: command }], false],
+        ]) {
+            writeFileSync(
+                join(directory, `rollout-${id}.jsonl`),
+                [
+                    { type: "session_meta", payload: { id, cwd: candidate } },
+                    { type: "response_item", payload: { type, output } },
+                ]
+                    .map((row) => JSON.stringify(row))
+                    .join("\n"),
+            );
+            assert.equal(
+                Boolean(
+                    await sessionExecutionRejection(
+                        id,
+                        candidate,
+                        "2026-10-10",
+                        root,
+                    ),
+                ),
+                rejected,
+                "Structured tool policy rejection must be detected",
+            );
+        }
     } finally {
         rmSync(root, { recursive: true, force: true });
     }

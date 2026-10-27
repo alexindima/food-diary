@@ -11,7 +11,7 @@ import {
 import { createRequire } from "node:module";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { isolatedRuntimeProbes } from "./coding-probe-isolation.mjs";
+import { evaluateRuntimeProbes } from "./coding-probe-isolation.mjs";
 import { containedPath, repositoryRoot } from "./generate-feature.mjs";
 
 const requireClient = createRequire(
@@ -56,7 +56,20 @@ export function isAllowedCandidatePath(path, prefixes) {
     );
 }
 
-function fingerprints(root) {
+export const generatedCodingCacheDirectories = [
+    "FoodDiary.Web.Client/node_modules/.vite",
+    "FoodDiary.Web.Client/node_modules/.vitest-cache",
+];
+
+function isGeneratedCodingCachePath(path) {
+    const normalized = path.replaceAll("\\", "/");
+    return generatedCodingCacheDirectories.some(
+        (prefix) =>
+            normalized === prefix || normalized.startsWith(`${prefix}/`),
+    );
+}
+
+export function candidateFileFingerprints(root) {
     const files = {};
     const walk = (directory) => {
         for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -65,6 +78,11 @@ function fingerprints(root) {
                 throw new Error(
                     "Candidate snapshots must not contain symbolic links",
                 );
+            if (
+                entry.isDirectory() &&
+                isGeneratedCodingCachePath(relative(root, path))
+            )
+                continue;
             if (entry.isDirectory()) walk(path);
             else {
                 const content = readFileSync(path);
@@ -198,7 +216,7 @@ export function gradeCase(id, candidate, reference = false) {
             hash(JSON.stringify(baseline))
         )
             throw new Error("Prepared baseline was modified");
-        const current = fingerprints(candidate);
+        const current = candidateFileFingerprints(candidate);
         changedPaths = [
             ...new Set([...Object.keys(baseline), ...Object.keys(current)]),
         ].filter((path) => baseline[path] !== current[path]);
@@ -271,6 +289,13 @@ export function gradeCase(id, candidate, reference = false) {
             const path = resolve(source.fileName);
             const insideCandidate = contained(candidate, path);
             const insideDependencies = contained(dependencyRoot, path);
+            if (
+                insideCandidate &&
+                isGeneratedCodingCachePath(relative(candidate, path))
+            )
+                scopeViolations.push(
+                    `Production source imports a generated test cache: ${path}`,
+                );
             if (!insideCandidate && !insideDependencies && path !== grader) {
                 scopeViolations.push(
                     `Source import escapes candidate: ${path}`,
@@ -278,14 +303,10 @@ export function gradeCase(id, candidate, reference = false) {
             }
         }
     }
-    let runtimeError = null;
-    if (diagnostics.length === 0) {
-        try {
-            isolatedRuntimeProbes(id, candidate);
-        } catch (error) {
-            runtimeError = error.message;
-        }
-    }
+    const { runtimeError, environmentError } =
+        diagnostics.length === 0
+            ? evaluateRuntimeProbes(id, candidate)
+            : { runtimeError: null, environmentError: null };
     const result = {
         id,
         baseline: entry.baseline,
@@ -294,6 +315,7 @@ export function gradeCase(id, candidate, reference = false) {
         passed:
             diagnostics.length === 0 &&
             runtimeError === null &&
+            environmentError === null &&
             scopeViolations.length === 0,
         diagnosticCount: diagnostics.length,
         diagnostics: ts.formatDiagnostics(diagnostics, {
@@ -302,6 +324,7 @@ export function gradeCase(id, candidate, reference = false) {
             getNewLine: () => "\n",
         }),
         runtimeError,
+        environmentError,
         scopeViolations,
         changedPaths,
         durationMs: Math.round(performance.now() - started),
