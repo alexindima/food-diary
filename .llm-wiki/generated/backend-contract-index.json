@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1367,
     "ambiguousContracts": 29,
-    "consumerEdges": 10978,
+    "consumerEdges": 10979,
     "productionConsumerEdges": 6119,
-    "testConsumerEdges": 4859,
+    "testConsumerEdges": 4860,
     "consumedContracts": 1367,
     "unconsumedContracts": 0
   },
@@ -84834,6 +84834,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Presentation/Services/FoodRecognitionNotifier.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IFoodRecognitionJobReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application.Abstractions/Common/IFoodRecognitionJobReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserAuthenticationQueryBudgetApiTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
