@@ -24922,11 +24922,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
-      "nonBlankLines": 128,
-      "decisionPoints": 37,
+      "nonBlankLines": 148,
+      "decisionPoints": 49,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 58.06
+      "structuralRiskScore": 76.46
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
