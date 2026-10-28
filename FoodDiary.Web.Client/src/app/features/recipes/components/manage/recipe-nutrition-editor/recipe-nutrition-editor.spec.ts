@@ -1,6 +1,8 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, max, min } from '@angular/forms/signals';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
@@ -15,6 +17,42 @@ type RecipeNutritionEditorSetup = {
     formModel: ReturnType<typeof signal<RecipeFormValues>>;
     recipeForm: ReturnType<typeof form<RecipeFormValues>>;
 };
+
+describe('RecipeNutritionEditorComponent reactive state', () => {
+    it('derives the warning from current values and clears it in automatic mode', async () => {
+        const { component, formModel, fixture } = await setupComponentAsync('manual');
+        formModel.update(value => ({ ...value, manualCalories: 10, manualProteins: 20, manualFats: 10, manualCarbs: 30 }));
+
+        expect(component['nutritionWarning']()).toEqual({ kind: 'caloriesMismatch', expectedCalories: 290, actualCalories: 10 });
+
+        fixture.componentRef.setInput('nutritionMode', 'auto');
+        expect(component['nutritionWarning']()).toBeNull();
+    });
+
+    it('keeps both option lists translated after a language change', async () => {
+        const { component } = await setupComponentAsync();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            RECIPE_MANAGE: {
+                NUTRITION_MODE: { AUTO: 'Automatic', MANUAL: 'Manual' },
+                NUTRITION_SCALE_MODE: { RECIPE: 'Recipe', PORTION: 'Portion' },
+            },
+        });
+        translate.setTranslation('ru', {
+            RECIPE_MANAGE: {
+                NUTRITION_MODE: { AUTO: 'Автоматически', MANUAL: 'Вручную' },
+                NUTRITION_SCALE_MODE: { RECIPE: 'Рецепт', PORTION: 'Порция' },
+            },
+        });
+        await firstValueFrom(translate.use('en'));
+        expect(component['nutritionModeOptions']().map(option => option.label)).toEqual(['Automatic', 'Manual']);
+
+        await firstValueFrom(translate.use('ru'));
+
+        expect(component['nutritionModeOptions']().map(option => option.label)).toEqual(['Автоматически', 'Вручную']);
+        expect(component['nutritionScaleModeOptions']().map(option => option.label)).toEqual(['Рецепт', 'Порция']);
+    });
+});
 
 describe('RecipeNutritionEditorComponent', () => {
     it('should render automatic nutrition state without manual validation errors', async () => {

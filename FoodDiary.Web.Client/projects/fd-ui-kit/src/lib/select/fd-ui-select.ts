@@ -66,7 +66,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     public readonly touch = output();
     public readonly disabled = input(false);
 
-    protected readonly internalValue = signal<T | null>(null);
+    protected readonly internalValue = computed(() => this.value());
     protected readonly isFocused = signal(false);
     protected readonly isOpen = signal(false);
     protected readonly activeIndex = signal(NO_ACTIVE_OPTION_INDEX);
@@ -78,9 +78,6 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     }
 
     public constructor() {
-        effect(() => {
-            this.internalValue.set(this.value());
-        });
         effect(() => {
             const options = this.options();
             if (this.isOpen()) {
@@ -135,8 +132,7 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
             return;
         }
 
-        this.internalValue.set(option.value);
-        this.value.set(this.internalValue());
+        this.value.set(option.value);
         this.touched.set(true);
         this.touch.emit();
         this.closeMenu();

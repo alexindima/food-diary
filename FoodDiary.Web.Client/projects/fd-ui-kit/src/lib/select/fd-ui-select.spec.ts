@@ -244,6 +244,16 @@ describe('FdUiSelectComponent rendering', () => {
 });
 
 describe('FdUiSelectComponent signal form control', () => {
+    it('derives the current selection without waiting for an effect', async () => {
+        const { component, fixture } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        fixture.detectChanges();
+
+        component.value.set('banana');
+
+        expect(component['selectedLabel']()).toBe('Banana');
+    });
+
     it('should write value from model', async () => {
         const { component, fixture } = await setupSelectAsync();
         fixture.componentRef.setInput('options', TEST_OPTIONS);

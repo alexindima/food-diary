@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output, signal } from '@angular/core';
-import { disabled as disabledRule, form, FormField, type FormValueControl } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
+import type { FormValueControl } from '@angular/forms/signals';
 
 import { fdUiFormatDateInputValue, fdUiParseLocalDate } from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
@@ -14,7 +14,7 @@ export type FdUiDateRangeValue = {
 
 @Component({
     selector: 'fd-ui-date-range-input',
-    imports: [CommonModule, FormField, FdUiDateInputComponent],
+    imports: [CommonModule, FdUiDateInputComponent],
     templateUrl: './fd-ui-date-range-input.html',
     styleUrls: ['./fd-ui-date-range-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +22,6 @@ export type FdUiDateRangeValue = {
 export class FdUiDateRangeInputComponent implements FormValueControl<FdUiDateRangeValue | null> {
     // eslint-disable-next-line local/prefer-protected-template-members -- Public Signal Forms focus contract.
     public readonly focus = injectFdUiControlFocus();
-    private readonly cdr = inject(ChangeDetectorRef);
 
     public readonly startPlaceholder = input<string>();
     public readonly endPlaceholder = input<string>();
@@ -35,36 +34,18 @@ export class FdUiDateRangeInputComponent implements FormValueControl<FdUiDateRan
     public readonly touched = model(false);
     public readonly touch = output();
 
-    protected readonly rangeModel = signal<{ start: string | null; end: string | null }>({
-        start: null,
-        end: null,
-    });
-    protected readonly rangeForm = form(this.rangeModel, path => {
-        disabledRule(path.start, { when: () => this.disabled() || this.controlDisabled() });
-        disabledRule(path.end, { when: () => this.disabled() || this.controlDisabled() });
-    });
-    private skippedModelUpdate: string | null = null;
+    protected readonly rangeModel = computed(() => this.toRangeValue(this.value()));
+    protected readonly endpointsDisabled = computed(() => this.disabled() || this.controlDisabled());
 
-    public constructor() {
-        effect(() => {
-            const coerced = this.toRangeValue(this.value());
-            this.skippedModelUpdate = JSON.stringify(coerced);
-            this.rangeModel.set(coerced);
-            this.cdr.markForCheck();
-        });
+    protected onEndpointChange(endpoint: 'start' | 'end', value: string | Date | null): void {
+        if (this.endpointsDisabled()) {
+            return;
+        }
 
-        effect(() => {
-            const value = this.rangeModel();
-            const serialized = JSON.stringify(value);
-            if (serialized === this.skippedModelUpdate) {
-                this.skippedModelUpdate = null;
-                return;
-            }
-
-            this.value.set({
-                start: this.toDateValue(value.start),
-                end: this.toDateValue(value.end),
-            });
+        const range = this.rangeModel();
+        this.value.set({
+            start: this.toDateValue(endpoint === 'start' ? value : range.start),
+            end: this.toDateValue(endpoint === 'end' ? value : range.end),
         });
     }
 

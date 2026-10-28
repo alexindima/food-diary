@@ -1,17 +1,6 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    type ElementRef,
-    input,
-    model,
-    output,
-    signal,
-    viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, model, output, signal, viewChild } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
 import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
@@ -52,15 +41,11 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly touch = output();
     public readonly disabled = input(false);
 
-    protected readonly internalValue = signal('');
+    protected readonly internalValue = computed(() => {
+        const value = this.value();
+        return value === null ? '' : String(value);
+    });
     protected readonly isFocused = signal(false);
-
-    public constructor() {
-        effect(() => {
-            const value = this.value();
-            this.internalValue.set(value === null ? '' : String(value));
-        });
-    }
 
     protected readonly sizeClass = computed(() => `fd-ui-textarea--size-${this.size()}`);
     protected readonly shouldFloatLabel = computed(() => this.isFocused() || this.internalValue().trim().length > 0);
@@ -81,7 +66,6 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
             return;
         }
 
-        this.internalValue.set(value);
         this.value.set(value);
     }
 

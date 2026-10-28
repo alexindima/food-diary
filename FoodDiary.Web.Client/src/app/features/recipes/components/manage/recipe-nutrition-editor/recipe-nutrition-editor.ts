@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -37,7 +37,9 @@ import type { NutritionMode, NutritionScaleMode, RecipeFormValues } from '../rec
 })
 export class RecipeNutritionEditorComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly language = toSignal((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY, {
+        initialValue: null,
+    });
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
@@ -52,9 +54,15 @@ export class RecipeNutritionEditorComponent {
     );
     protected readonly maxCalories = MANUAL_NUTRITION_MAX_CALORIES;
     protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
-    protected readonly nutritionWarning = signal<NutritionEditorWarning | null>(null);
-    protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
-    protected readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    protected readonly nutritionWarning = computed(() => this.calculateCalorieWarning());
+    protected readonly nutritionModeOptions = computed(() => {
+        this.language();
+        return this.buildNutritionModeOptions();
+    });
+    protected readonly nutritionScaleModeOptions = computed(() => {
+        this.language();
+        return this.buildNutritionScaleModeOptions();
+    });
     protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     protected readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
     protected readonly macroBarState = computed<NutritionMacroState>(() => {
@@ -95,21 +103,6 @@ export class RecipeNutritionEditorComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly nutritionScaleModeChange = output<string>();
 
-    public constructor() {
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        languageChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.refreshTranslatedState();
-        });
-
-        effect(() => {
-            this.refreshTranslatedState();
-        });
-
-        effect(() => {
-            this.updateCalorieWarning();
-        });
-    }
-
     protected caloriesError(): string | null {
         if (this.nutritionMode() === 'auto') {
             return null;
@@ -140,8 +133,8 @@ export class RecipeNutritionEditorComponent {
             : null;
     }
 
-    private buildNutritionModeOptions(): void {
-        this.nutritionModeOptions.set([
+    private buildNutritionModeOptions(): FdUiSegmentedToggleOption[] {
+        return [
             {
                 value: 'auto',
                 label: this.translateService.instant('RECIPE_MANAGE.NUTRITION_MODE.AUTO'),
@@ -150,11 +143,11 @@ export class RecipeNutritionEditorComponent {
                 value: 'manual',
                 label: this.translateService.instant('RECIPE_MANAGE.NUTRITION_MODE.MANUAL'),
             },
-        ]);
+        ];
     }
 
-    private buildNutritionScaleModeOptions(): void {
-        this.nutritionScaleModeOptions.set([
+    private buildNutritionScaleModeOptions(): FdUiSegmentedToggleOption[] {
+        return [
             {
                 value: 'recipe',
                 label: this.translateService.instant('RECIPE_MANAGE.NUTRITION_SCALE_MODE.RECIPE'),
@@ -163,18 +156,12 @@ export class RecipeNutritionEditorComponent {
                 value: 'portion',
                 label: this.translateService.instant('RECIPE_MANAGE.NUTRITION_SCALE_MODE.PORTION'),
             },
-        ]);
+        ];
     }
 
-    private refreshTranslatedState(): void {
-        this.buildNutritionModeOptions();
-        this.buildNutritionScaleModeOptions();
-    }
-
-    private updateCalorieWarning(): void {
+    private calculateCalorieWarning(): NutritionEditorWarning | null {
         if (this.nutritionMode() === 'auto') {
-            this.nutritionWarning.set(null);
-            return;
+            return null;
         }
 
         const form = this.form();
@@ -191,7 +178,7 @@ export class RecipeNutritionEditorComponent {
             alcohol,
             threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
         });
-        this.nutritionWarning.set(warning === null ? null : { kind: 'caloriesMismatch', ...warning });
+        return warning === null ? null : { kind: 'caloriesMismatch', ...warning };
     }
 
     private getNumberValue(value: number | string | null): number {

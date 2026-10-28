@@ -1571,6 +1571,51 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "8b1ad69598f7e8425dbaf470388d63d3430f82cb19365bb9a77622d8e9559891",
       "eventHash": "75d558fbed4a74bb65a49d00eae295857402af9f9fe2b32bdcb07d2cf67b7b5b"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "4fb1f329644d4702bc9313a4c5244f0f",
+      "workspace": ".artifacts/llm-wiki/tasks/signal-effect-final",
+      "recordedAtUtc": "2026-10-28T06:57:38.5629826Z",
+      "completionFingerprint": "ac151259e6b530ce3d498647be784314ef6725c718f004ffd4b40a069fd8e74f",
+      "retrospectiveHash": "ea85441e88177cc42dd7bdfdd188765c6b48f94e0ce7476af9e6d085fd8bd183",
+      "instructionSetFingerprint": "d4ffeb62f2cc7c1ab7c95ebd8bcd13fa8a9bacae5febcc31ea3216cac6af6e9e",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667"
+        },
+        {
+          "path": "FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md",
+          "fingerprint": "0ea7f367af008446a9119fa7e2a9b10b2a62bcd4c61569bda347d34a5ef5fd2b"
+        },
+        {
+          "path": "FoodDiary.Web.Client/src/app/features/AGENTS.md",
+          "fingerprint": "a6d97182073a246c9dc9fa52882726d72824b550ffdcee3c3f587716611c33b7"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "high",
+        "complexityScore": 65,
+        "complexityBandUpperBound": 79,
+        "cohortKey": "high|complexity<=79",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 95.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 100.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "75d558fbed4a74bb65a49d00eae295857402af9f9fe2b32bdcb07d2cf67b7b5b",
+      "eventHash": "9ec48bef53f9bce51c2c1d5e074657b4f8ab80316d4e53aa55f847415a2b2d20"
     }
   ]
 }

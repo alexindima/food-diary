@@ -78,6 +78,15 @@ function requireTextarea(host: HTMLElement): HTMLTextAreaElement {
 }
 
 describe('FdUiTextareaComponent', () => {
+    it('derives normalized display text without waiting for an effect', async () => {
+        const { component } = await setupTextareaAsync();
+        component.value.set(NUMERIC_VALUE);
+        expect(component['internalValue']()).toBe('42');
+
+        component.value.set(null);
+        expect(component['internalValue']()).toBe('');
+    });
+
     it('should create', async () => {
         const { component } = await setupTextareaAsync();
 

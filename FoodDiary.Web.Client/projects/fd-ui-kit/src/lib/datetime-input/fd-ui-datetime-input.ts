@@ -1,21 +1,25 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
-    effect,
     ElementRef,
     inject,
     input,
+    linkedSignal,
     model,
     output,
     signal,
 } from '@angular/core';
-import type { ValidationError } from '@angular/forms/signals';
-import { disabled as disabledRule, form, FormField, type FormValueControl } from '@angular/forms/signals';
+import type { FormValueControl, ValidationError } from '@angular/forms/signals';
 
-import { fdUiFormatDateInputValue, fdUiFormatTimeInputValue, fdUiPadDatePart, fdUiParseLocalDateTime } from '../date/fd-ui-date.utils';
+import {
+    fdUiFormatDateInputValue,
+    fdUiFormatTimeInputValue,
+    fdUiPadDatePart,
+    fdUiParseLocalDate,
+    fdUiParseLocalDateTime,
+} from '../date/fd-ui-date.utils';
 import { FdUiDateInputComponent } from '../date-input/fd-ui-date-input';
 import { injectFdUiControlFocus } from '../form/fd-ui-control-focus';
 import { injectFdUiFieldError } from '../form-error/fd-ui-signal-field-error';
@@ -33,7 +37,7 @@ let uniqueId = 0;
 
 @Component({
     selector: 'fd-ui-datetime-input',
-    imports: [CommonModule, FormField, FdUiDateInputComponent, FdUiIconComponent],
+    imports: [CommonModule, FdUiDateInputComponent, FdUiIconComponent],
     templateUrl: './fd-ui-datetime-input.html',
     styleUrls: ['./fd-ui-datetime-input.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,11 +58,28 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
     public readonly touch = output();
     public readonly disabled = input(false);
 
-    protected readonly dateModel = signal<string | null>(null);
-    protected readonly dateForm = form(this.dateModel, path => {
-        disabledRule(path, { when: () => this.disabled() });
+    private readonly parsedValue = computed(() => fdUiParseLocalDateTime(this.value()));
+    protected readonly dateModel = computed(() => {
+        const parsed = this.parsedValue();
+        return parsed === null ? null : fdUiFormatDateInputValue(parsed);
     });
-    protected readonly timeValue = signal('');
+    protected readonly timeValue = linkedSignal({
+        source: this.value,
+        computation: value => {
+            const parsed = fdUiParseLocalDateTime(value);
+            return parsed === null ? '' : fdUiFormatTimeInputValue(parsed);
+        },
+    });
+    private readonly lastValidTime = linkedSignal<string | Date | null, string>({
+        source: this.value,
+        computation: (value, previous) => {
+            if (value === null || value === '') {
+                return DEFAULT_TIME_VALUE;
+            }
+            const parsed = fdUiParseLocalDateTime(value);
+            return parsed === null ? (previous?.value ?? DEFAULT_TIME_VALUE) : fdUiFormatTimeInputValue(parsed);
+        },
+    });
     protected readonly isFocused = signal(false);
     protected readonly sizeClass = computed(() => `fd-ui-datetime-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
@@ -74,52 +95,25 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
             `fd-ui-datetime-input ${this.sizeClass()}${this.hasError() ? ' fd-ui-datetime-input--has-error' : ''}${this.shouldFloatLabel() ? ' fd-ui-datetime-input--floating' : ''}`,
     );
 
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly document = inject(DOCUMENT);
 
-    private lastValidTime = DEFAULT_TIME_VALUE;
-    private skippedModelUpdate: { value: string | null } | null = null;
-
-    public constructor() {
-        effect(() => {
-            this.applyValue(this.value());
-        });
-
-        effect(() => {
-            const value = this.dateModel();
-            if (value === this.skippedModelUpdate?.value) {
-                this.skippedModelUpdate = null;
-                return;
-            }
-
-            this.emitValue();
-        });
+    public reset(): void {
+        const parsed = this.parsedValue();
+        const time = parsed === null ? '' : fdUiFormatTimeInputValue(parsed);
+        this.timeValue.set(time);
+        this.lastValidTime.set(time.length === 0 ? DEFAULT_TIME_VALUE : time);
+        this.isFocused.set(false);
+        this.touched.set(false);
     }
 
-    private applyValue(value: string | Date | null): void {
-        if (value === null || value === '') {
-            this.setDateValue(null);
-            this.timeValue.set('');
-            this.lastValidTime = DEFAULT_TIME_VALUE;
-            this.cdr.markForCheck();
+    protected onDateChange(value: string | Date | null): void {
+        if (this.disabled()) {
             return;
         }
 
-        const parsed = fdUiParseLocalDateTime(value);
-        if (parsed === null) {
-            this.setDateValue(null);
-            this.timeValue.set('');
-            this.cdr.markForCheck();
-            return;
-        }
-
-        const isoDate = fdUiFormatDateInputValue(parsed);
-
-        this.setDateValue(isoDate);
-        this.timeValue.set(fdUiFormatTimeInputValue(parsed));
-        this.lastValidTime = this.timeValue();
-        this.cdr.markForCheck();
+        const parsed = fdUiParseLocalDate(value);
+        this.emitValue(parsed === null ? null : fdUiFormatDateInputValue(parsed));
     }
 
     protected onTimeInput(value: string): void {
@@ -134,21 +128,21 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         }
 
         this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
-        this.lastValidTime = this.timeValue();
+        this.lastValidTime.set(this.timeValue());
         this.emitValue();
     }
 
     protected onTimeBlur(): void {
         const timeValue = this.timeValue();
         if (timeValue.length === 0) {
-            this.lastValidTime = DEFAULT_TIME_VALUE;
-            this.timeValue.set(this.lastValidTime);
+            this.lastValidTime.set(DEFAULT_TIME_VALUE);
+            this.timeValue.set(this.lastValidTime());
             this.emitValue();
         } else {
             const parsed = this.parseTime(timeValue);
             if (parsed !== null) {
                 this.timeValue.set(`${fdUiPadDatePart(parsed.hours)}:${fdUiPadDatePart(parsed.minutes)}`);
-                this.lastValidTime = this.timeValue();
+                this.lastValidTime.set(this.timeValue());
                 this.emitValue();
             }
         }
@@ -182,15 +176,14 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         this.touch.emit();
     }
 
-    private emitValue(): void {
-        const date = this.dateModel();
+    private emitValue(date: string | null = this.dateModel()): void {
         if (date === null || date.length === 0) {
             this.value.set(null);
             return;
         }
 
         const time = this.parseTime(this.timeValue()) ??
-            this.parseTime(this.lastValidTime) ?? { hours: MIN_TIME_VALUE, minutes: MIN_TIME_VALUE };
+            this.parseTime(this.lastValidTime()) ?? { hours: MIN_TIME_VALUE, minutes: MIN_TIME_VALUE };
         const value = `${date}T${fdUiPadDatePart(time.hours)}:${fdUiPadDatePart(time.minutes)}`;
         this.value.set(value);
     }
@@ -212,10 +205,5 @@ export class FdUiDatetimeInputComponent implements FormValueControl<string | Dat
         }
 
         return { hours, minutes };
-    }
-
-    private setDateValue(value: string | null): void {
-        this.skippedModelUpdate = { value };
-        this.dateModel.set(value);
     }
 }

@@ -5594,6 +5594,64 @@
       "targetId": "",
       "reason": "",
       "eventHash": "240ff01fbd400491ef4fdd00feaaa84efb63e3b48c2c5f160b40e9e19a930738"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 39,
+      "kind": "observed",
+      "id": "learning-15d5675ec59bafd6f70b",
+      "createdAtUtc": "2026-10-28T06:57:35.8489562Z",
+      "previousHash": "240ff01fbd400491ef4fdd00feaaa84efb63e3b48c2c5f160b40e9e19a930738",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signal-effect-final",
+        "retrospectiveHash": "ea85441e88177cc42dd7bdfdd188765c6b48f94e0ce7476af9e6d085fd8bd183",
+        "completionFingerprint": "ac151259e6b530ce3d498647be784314ef6725c718f004ffd4b40a069fd8e74f",
+        "packetFingerprint": "d9a20e13e2ab7609a298e54321bcabb37328582c931e9f0d71533c5d23e44ab9",
+        "sourceCandidateId": "cost-frontend-verify",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'frontend-verify'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1128s versus 728s, error 54.95%.",
+        "score": 70,
+        "evidence": [
+          "error=54.95%",
+          "frontend-verify"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "frontend-verify",
+          "recommendedSeconds": 728.0,
+          "expectedSeconds": 1128.0,
+          "errorPercent": 54.95
+        },
+        "changedPaths": [
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.spec.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.spec.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.spec.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.spec.ts",
+          "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+          "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.spec.ts",
+          "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.ts",
+          "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.spec.ts",
+          "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts"
+        ],
+        "subjectIds": [
+          "frontend-verify"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "0b95d84ad3d0969415e016daee2435f6dc5e13f560dad490e68b25cb0c79e0c9"
     }
   ],
   "hashSchemaVersion": 2

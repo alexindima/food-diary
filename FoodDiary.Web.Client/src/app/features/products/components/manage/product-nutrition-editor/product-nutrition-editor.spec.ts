@@ -64,6 +64,20 @@ beforeEach(() => {
 });
 
 describe('ProductNutritionEditorComponent options', () => {
+    it('refreshes translated options when the language changes', () => {
+        setRequiredInputs();
+        fixture.detectChanges();
+        component['nutritionModeOptions']();
+        vi.spyOn(TestBed.inject(TranslateService), 'instant').mockImplementation((key: string | string[]) => `translated:${String(key)}`);
+
+        languageChanges$.next({ lang: 'ru' });
+
+        expect(component['nutritionModeOptions']().map(option => option.label)).toEqual([
+            'translated:PRODUCT_MANAGE.NUTRITION_MODE.BASE',
+            'translated:PRODUCT_MANAGE.NUTRITION_MODE.PORTION',
+        ]);
+    });
+
     it('builds base and portion mode options from current base unit', () => {
         const productForm = createProductSignalForm();
         setRequiredInputs(productForm);
@@ -97,6 +111,24 @@ describe('ProductNutritionEditorComponent options', () => {
 });
 
 describe('ProductNutritionEditorComponent nutrition signals', () => {
+    it('derives current warnings and macro distribution before another render', () => {
+        const productForm = createProductSignalForm({
+            ...createProductForm(),
+            caloriesPerBase: 10,
+            proteinsPerBase: 20,
+            fatsPerBase: 10,
+            carbsPerBase: 30,
+        });
+        setRequiredInputs(productForm);
+        fixture.detectChanges();
+        expect(component['nutritionWarning']()).toMatchObject({ expectedCalories: 290 });
+
+        productForm.proteinsPerBase().value.set(0);
+
+        expect(component['nutritionWarning']()).toEqual({ kind: 'caloriesMismatch', expectedCalories: 210, actualCalories: 10 });
+        expect(component['macroBarState']().segments.map(segment => segment.key)).toEqual(['fats', 'carbs']);
+    });
+
     it('calculates macro distribution and calorie mismatch warning from form values', () => {
         const productForm = createProductSignalForm({
             ...createProductForm(),

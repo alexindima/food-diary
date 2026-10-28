@@ -1413,6 +1413,70 @@
       },
       "reason": "",
       "eventHash": "1f16fc666fed796d1ced50b6449f570d38f46e3965b101ad695e6b5f587333c7"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 8,
+      "kind": "observed",
+      "candidateId": "learned-199356f0288abf44",
+      "createdAtUtc": "2026-10-28T06:57:36.5711342Z",
+      "previousHash": "1f16fc666fed796d1ced50b6449f570d38f46e3965b101ad695e6b5f587333c7",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signal-effect-final",
+        "retrospectiveHash": "ea85441e88177cc42dd7bdfdd188765c6b48f94e0ce7476af9e6d085fd8bd183",
+        "packetFingerprint": "d9a20e13e2ab7609a298e54321bcabb37328582c931e9f0d71533c5d23e44ab9",
+        "signals": [
+          {
+            "id": "cost-frontend-verify",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-verify'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=54.95%",
+              "frontend-verify"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-199356f0288abf44",
+          "changedPaths": [
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.spec.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.spec.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.spec.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.spec.ts",
+            "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+            "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/products/components/manage/product-nutrition-editor/product-nutrition-editor.ts",
+            "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-nutrition-editor/recipe-nutrition-editor.ts"
+          ],
+          "expectedModules": [
+            "Products",
+            "Recipes"
+          ],
+          "expectedScopes": [
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "frontend-component-contract",
+            "frontend-workspace",
+            "shared-ui-consumer-contract"
+          ],
+          "expectedChecks": [
+            "frontend-verify"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "67d7f042a5d9c05c00fdd9c663d03a43f698ce45ead3b94d1e0100e106511997"
+      },
+      "reason": "",
+      "eventHash": "0b015a0ad8a13f341e970ec92aa5f45861b9b0b41d551a8dedbd8c4fbe20cc39"
     }
   ]
 }

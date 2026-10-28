@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 114,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 125,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -1099,7 +1099,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html",
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.spec.ts"
     },
     {
       "class": "FdUiEntityCardComponent",
@@ -3783,80 +3783,6 @@
         {
           "name": "selectedValuesChange",
           "type": "string[]"
-        }
-      ],
-      "specPath": null
-    },
-    {
-      "class": "FdUiDatetimeInputComponent",
-      "selector": "fd-ui-datetime-input",
-      "feature": "fd-ui-kit",
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html",
-      "inputs": [
-        {
-          "name": "id",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "placeholder",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "error",
-          "type": "string | null",
-          "required": false
-        },
-        {
-          "name": "errors",
-          "type": "readonly ValidationError.WithOptionalFieldTree[]",
-          "required": false
-        },
-        {
-          "name": "required",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "size",
-          "type": "FdUiFieldSize",
-          "required": false
-        },
-        {
-          "name": "value",
-          "type": "string | Date | null",
-          "required": false
-        },
-        {
-          "name": "touched",
-          "type": "",
-          "required": false
-        },
-        {
-          "name": "disabled",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [
-        {
-          "name": "touch",
-          "type": ""
-        },
-        {
-          "name": "valueChange",
-          "type": "string | Date | null"
-        },
-        {
-          "name": "touchedChange",
-          "type": ""
         }
       ],
       "specPath": null

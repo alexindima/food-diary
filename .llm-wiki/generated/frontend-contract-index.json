@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 505,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 125,
     "inputs": 1640,
     "outputs": 557,
     "apiCalls": 318,
@@ -5214,7 +5214,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.spec.ts"
     },
     {
       "class": "FdUiDialogComponent",
@@ -32756,13 +32756,18 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-range-input/fd-ui-date-range-input.html",
       "occurrences": 2,
       "inputsUsed": [
+        "disabled",
         "earliestDate",
         "label",
         "latestDate",
         "placeholder",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "touch",
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",
@@ -32772,11 +32777,15 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.html",
       "occurrences": 1,
       "inputsUsed": [
+        "disabled",
         "id",
         "placeholder",
-        "size"
+        "size",
+        "value"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "valueChange"
+      ]
     },
     {
       "component": "FdUiDateInputComponent",

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -42,7 +42,9 @@ import type { NutritionMode, ProductFormValues } from '../product-manage-lib/pro
 })
 export class ProductNutritionEditorComponent {
     private readonly translateService = inject(TranslateService);
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly language = toSignal((this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY, {
+        initialValue: null,
+    });
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly form = input.required<FieldTree<ProductFormValues>>();
@@ -53,9 +55,12 @@ export class ProductNutritionEditorComponent {
     protected readonly maxNutrient = computed(() =>
         this.getAllowedNutritionMax(getProductMaxNutrientPerBaseForUnit(this.form().baseUnit().value())),
     );
-    protected readonly macroBarState = signal<NutritionMacroState>({ isEmpty: true, segments: [] });
-    protected readonly nutritionWarning = signal<NutritionEditorWarning | null>(null);
-    protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
+    protected readonly macroBarState = computed(() => this.calculateMacroDistribution());
+    protected readonly nutritionWarning = computed(() => this.calculateCalorieWarning());
+    protected readonly nutritionModeOptions = computed(() => {
+        this.language();
+        return this.buildNutritionModeOptions();
+    });
     protected readonly nutritionForm = computed<NutritionEditorSignalForm>(() => {
         const form = this.form();
         return {
@@ -82,23 +87,6 @@ export class ProductNutritionEditorComponent {
     public readonly nutritionModeChange = output<string>();
     public readonly openAiRecognition = output();
 
-    public constructor() {
-        const languageChanges = (this.translateService as { onLangChange?: Observable<unknown> }).onLangChange ?? EMPTY;
-        languageChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.buildNutritionModeOptions();
-        });
-
-        effect(() => {
-            this.form().baseUnit().value();
-            this.buildNutritionModeOptions();
-        });
-
-        effect(() => {
-            this.updateCalorieWarning();
-            this.updateMacroDistribution();
-        });
-    }
-
     protected caloriesError(): string | null {
         const fieldError = this.nutritionFieldErrors().calories;
         if (fieldError !== null && fieldError !== undefined) {
@@ -111,12 +99,12 @@ export class ProductNutritionEditorComponent {
             : null;
     }
 
-    private buildNutritionModeOptions(): void {
+    private buildNutritionModeOptions(): FdUiSegmentedToggleOption[] {
         const baseUnit = this.form().baseUnit().value();
         const amount = this.getDefaultBaseAmount(baseUnit);
         const unitLabel = this.getUnitLabel(baseUnit);
 
-        this.nutritionModeOptions.set([
+        return [
             {
                 value: 'base',
                 label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.BASE', {
@@ -128,7 +116,7 @@ export class ProductNutritionEditorComponent {
                 value: 'portion',
                 label: this.translateService.instant('PRODUCT_MANAGE.NUTRITION_MODE.PORTION'),
             },
-        ]);
+        ];
     }
 
     private getUnitLabel(baseUnit: MeasurementUnit | null): string {
@@ -158,7 +146,7 @@ export class ProductNutritionEditorComponent {
         return portionAmount > 0 ? maxPerBase * (portionAmount / baseAmount) : maxPerBase;
     }
 
-    private updateCalorieWarning(): void {
+    private calculateCalorieWarning(): NutritionEditorWarning | null {
         const form = this.form();
         const calories = this.getNumberValue(form.caloriesPerBase().value());
         const proteins = this.getNumberValue(form.proteinsPerBase().value());
@@ -167,8 +155,7 @@ export class ProductNutritionEditorComponent {
         const fiber = this.getNumberValue(form.fiberPerBase().value());
         const alcohol = this.getNumberValue(form.alcoholPerBase().value());
         if (this.hasCurrentPortionNutritionWarning({ calories, proteins, fats, carbs, fiber, alcohol })) {
-            this.nutritionWarning.set({ kind: 'text', messageKey: 'PRODUCT_MANAGE.NUTRITION_WARNINGS.PORTION_LIMIT' });
-            return;
+            return { kind: 'text', messageKey: 'PRODUCT_MANAGE.NUTRITION_WARNINGS.PORTION_LIMIT' };
         }
 
         const warning = calculateCalorieMismatchWarning({
@@ -179,7 +166,7 @@ export class ProductNutritionEditorComponent {
             alcohol,
             threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
         });
-        this.nutritionWarning.set(warning === null ? null : { kind: 'caloriesMismatch', ...warning });
+        return warning === null ? null : { kind: 'caloriesMismatch', ...warning };
     }
 
     private hasCurrentPortionNutritionWarning(values: ProductNutritionValues): boolean {
@@ -200,12 +187,12 @@ export class ProductNutritionEditorComponent {
         );
     }
 
-    private updateMacroDistribution(): void {
+    private calculateMacroDistribution(): NutritionMacroState {
         const form = this.form();
         const proteins = this.getNumberValue(form.proteinsPerBase().value());
         const fats = this.getNumberValue(form.fatsPerBase().value());
         const carbs = this.getNumberValue(form.carbsPerBase().value());
-        this.macroBarState.set(calculateMacroBarState(proteins, fats, carbs));
+        return calculateMacroBarState(proteins, fats, carbs);
     }
 
     private getNumberValue(value: number | string | null): number {

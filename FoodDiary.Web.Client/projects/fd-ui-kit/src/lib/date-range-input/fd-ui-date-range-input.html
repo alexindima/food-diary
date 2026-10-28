@@ -1,19 +1,23 @@
 <div class="fd-ui-date-range-input">
     <fd-ui-date-input
-        [formField]="rangeForm.start"
+        [value]="rangeModel().start"
+        [disabled]="endpointsDisabled()"
         [label]="startLabel()"
         [size]="size()"
         [placeholder]="startPlaceholder()"
         [latestDate]="rangeModel().end ?? undefined"
-        (blur)="touchRange()"
+        (valueChange)="onEndpointChange('start', $event)"
+        (touch)="touchRange()"
     />
     <span class="fd-ui-date-range-input__divider" aria-hidden="true">&mdash;</span>
     <fd-ui-date-input
-        [formField]="rangeForm.end"
+        [value]="rangeModel().end"
+        [disabled]="endpointsDisabled()"
         [label]="endLabel()"
         [size]="size()"
         [placeholder]="endPlaceholder()"
         [earliestDate]="rangeModel().start ?? undefined"
-        (blur)="touchRange()"
+        (valueChange)="onEndpointChange('end', $event)"
+        (touch)="touchRange()"
     />
 </div>
