@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6785,
+    "productionFiles": 6786,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1024,
@@ -5745,6 +5745,14 @@
       "structuralRiskScore": 0.5
     },
     {
+      "path": "FoodDiary.Web.Client/playwright.trello.config.ts",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
       "nonBlankLines": 473,
       "decisionPoints": 72,
@@ -11194,11 +11202,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.ts",
-      "nonBlankLines": 204,
-      "decisionPoints": 37,
+      "nonBlankLines": 206,
+      "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 59.58
+      "structuralRiskScore": 61.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.ts",

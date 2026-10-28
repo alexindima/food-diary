@@ -3,12 +3,19 @@
 }
 
 .cycle-summary-card {
+    position: relative;
     border-radius: var(--fd-radius-card);
     padding: var(--fd-space-card-profile-gap);
     border: var(--fd-border-strong);
     background: var(--fd-bg-card-surface);
     box-shadow: var(--fd-shadow-lg);
     color: var(--fd-color-text);
+
+    &__link {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
 
     &--loading {
         opacity: 0.75;
