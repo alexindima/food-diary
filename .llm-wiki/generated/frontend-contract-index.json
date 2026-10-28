@@ -28578,8 +28578,6 @@
       "inputsUsed": [
         "ariaLabel",
         "fill",
-        "icon",
-        "iconSize",
         "size",
         "variant"
       ],
@@ -34794,9 +34792,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrient-badges/nutrient-badges.html",
-      "occurrences": 6,
+      "occurrences": 7,
       "inputsUsed": [
-        "name"
+        "name",
+        "size"
       ],
       "outputsHandled": []
     },

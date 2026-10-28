@@ -27,6 +27,10 @@ const MOBILE_ACTION_SIZE = 44;
 const DESKTOP_TOOLBAR_ACTION_SIZE = 38;
 const MOBILE_CARD_CONTENT_MAX_GAP = 12;
 const MINIMUM_MOBILE_WIDTH = 320;
+const COMPACT_MEAL_PHOTO_SIZE = 64;
+const COMPACT_MEAL_PADDING = 8;
+const COMPACT_MEAL_METADATA_GAP = 4;
+const COMPACT_MEAL_FOOTER_MAX_GAP = 12;
 const DESKTOP_CARD_CONTENT_MAX_GAP = 16;
 const MOBILE_NAVIGATION_DIALOG_COUNT = 4;
 // These views compose independent sections in addition to the four shared shell requests.
@@ -1007,6 +1011,121 @@ test.describe('dashboard regression eating phases', () => {
     }
 });
 
+test.describe('mobile compact meal cards', () => {
+    test.use({ timezoneId: 'Asia/Tbilisi', isMobile: true, hasTouch: true });
+    for (const uiStyle of ['classic', 'modern']) {
+        for (const width of [MINIMUM_MOBILE_WIDTH, DASHBOARD_MOBILE_WIDTH]) {
+            test(`${uiStyle} compact meal cards at ${width}px`, async ({ page }, testInfo) => {
+                const runtimeErrors: string[] = [];
+                page.on('pageerror', error => runtimeErrors.push(error.message));
+                await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+                await authenticateUserAsync(page);
+                await mockAuthenticatedClientApiAsync(page);
+                const user = { ...createUser(), language: 'ru', uiStyle };
+                await page.route('**/api/v1/users/info', async route => route.fulfill(jsonResponse(user)));
+                await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user })));
+                await page.route('**/api/v1/auth/session', async route =>
+                    route.fulfill(jsonResponse({ sessionId: '00000000-0000-4000-8000-000000000002', roles: ['User'], user })),
+                );
+                await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+                    route.fulfill(jsonResponse(createCompactMealCardSnapshot())),
+                );
+                await page.setViewportSize({ width, height: 1000 });
+                await page.goto('/dashboard');
+                const preview = page.locator('fd-dashboard-meals-block fd-meals-preview');
+                await expect(preview.locator('fd-meal-card')).toHaveCount(2);
+                await preview.evaluate(element => {
+                    element.scrollIntoView({ block: 'start' });
+                });
+                await testInfo.attach('webmcp-status', {
+                    body: (await page.locator('meta[name="fooddiary-webmcp"]').getAttribute('content')) ?? '{}',
+                    contentType: 'application/json',
+                });
+                await preview.screenshot({ path: testInfo.outputPath('meal-cards.png') });
+                const card = preview.locator('fd-meal-card').first();
+                await card.screenshot({ path: testInfo.outputPath('meal-card-photo.png') });
+                await preview
+                    .locator('fd-meal-card')
+                    .nth(1)
+                    .screenshot({ path: testInfo.outputPath('meal-card-placeholder.png') });
+                const frame = card.locator('.media-card');
+                const photo = await dashboardBoundsAsync(card.locator('.media-card__media'));
+                const frameStyle = await frame.evaluate(element => {
+                    const style = getComputedStyle(element);
+                    return {
+                        top: Number.parseFloat(style.paddingTop),
+                        bottom: Number.parseFloat(style.paddingBottom),
+                        height: element.clientHeight,
+                    };
+                });
+                await testInfo.attach('meal-card-geometry', {
+                    body: JSON.stringify({ photo, frameStyle }),
+                    contentType: 'application/json',
+                });
+                expect(Math.round(photo.width)).toBeLessThanOrEqual(COMPACT_MEAL_PHOTO_SIZE);
+                expect(frameStyle.top).toBeLessThanOrEqual(COMPACT_MEAL_PADDING);
+                expect(frameStyle.bottom).toBeLessThanOrEqual(COMPACT_MEAL_PADDING);
+                const metadataGap = await card.locator('.entity-card__title-block').evaluate(element => getComputedStyle(element).rowGap);
+                expect(Number.parseFloat(metadataGap)).toBeLessThanOrEqual(COMPACT_MEAL_METADATA_GAP);
+                const nutrients = await dashboardBoundsAsync(card.locator('.entity-card__summary-row'));
+                const metadata = await dashboardBoundsAsync(card.locator('.entity-card__title-block'));
+                const headerBottom = Math.max(photo.y + photo.height, metadata.y + metadata.height);
+                expect(Math.round(nutrients.y - headerBottom)).toBeLessThanOrEqual(COMPACT_MEAL_PADDING);
+                await expectCompactMealFooterAsync(card);
+                const help = card.getByRole('button', { name: 'Как считается полезность', exact: true });
+                const helpBox = await dashboardBoundsAsync(help);
+                expect(Math.round(helpBox.height)).toBeGreaterThanOrEqual(MOBILE_ACTION_SIZE);
+                await help.click();
+                await expect(help).toHaveAttribute('aria-describedby', /fd-ui-hint-/u);
+                await help.click();
+                await expect(page).toHaveURL('/dashboard');
+                await expectNoHorizontalOverflowAsync(page);
+                expect(runtimeErrors).toEqual([]);
+            });
+        }
+    }
+});
+
+function createCompactMealCardSnapshot(): Record<string, unknown> {
+    const soupId = 'e09f5f5f-a5d9-5af4-8045-2946ea17eb0d';
+    const toastId = '37cb02e4-3010-59a4-a1fd-0122bf12ada9';
+    return {
+        ...createDashboardSnapshot(),
+        meals: {
+            items: [
+                {
+                    ...createMeal(soupId, '2026-04-19T08:53:00.000Z', [
+                        createMealItem('59eb5058-fad0-5149-9704-7e7189d59a77', soupId, 'Куриный суп с овощами, хлеб, сметана', ''),
+                    ]),
+                    mealType: 'Lunch',
+                    imageUrl: '/assets/images/stubs/meals/lunch-soup-photo.webp',
+                    totalCalories: 551,
+                    totalProteins: 14,
+                    totalFats: 3,
+                    totalCarbs: 132,
+                    totalFiber: 15,
+                    qualityScore: 21,
+                    qualityGrade: 'red',
+                },
+                {
+                    ...createMeal(toastId, '2026-04-19T09:14:00.000Z', [
+                        createMealItem('8bd2d9c8-8e63-5be9-96a7-7d27fd4799e0', toastId, 'Тост', ''),
+                    ]),
+                    mealType: 'Lunch',
+                    totalCalories: 159,
+                    totalProteins: 5,
+                    totalFats: 2,
+                    totalCarbs: 29,
+                    totalFiber: 2,
+                    qualityScore: 46,
+                    qualityGrade: 'yellow',
+                },
+            ],
+            total: 2,
+        },
+    };
+}
+
 test.describe('dashboard compact meal header', () => {
     test.use({ timezoneId: 'Asia/Tbilisi', isMobile: true, hasTouch: true });
     test.beforeEach(async ({ page }) => {
@@ -1066,9 +1185,8 @@ test.describe('dashboard compact meal header', () => {
                     expect(Math.abs(titleBox.y + titleBox.height / 2 - actionBox.y - actionBox.height / 2)).toBeLessThanOrEqual(1);
                     expect(actionBox.x).toBeGreaterThanOrEqual(titleBox.x + titleBox.width);
                     expect(Math.round(actionBox.height)).toBeGreaterThanOrEqual(MOBILE_ACTION_SIZE);
-                    const headerBox = await dashboardBoundsAsync(preview.locator('.meals-preview__header'));
-                    const listBox = await dashboardBoundsAsync(preview.locator('.meals-preview__list'));
-                    expect(listBox.y - headerBox.y - headerBox.height).toBeLessThanOrEqual(
+                    const headerToListGap = await mealPreviewHeaderGapAsync(preview);
+                    expect(headerToListGap).toBeLessThanOrEqual(
                         width === DASHBOARD_DESKTOP_WIDTH ? DESKTOP_CARD_CONTENT_MAX_GAP : MOBILE_CARD_CONTENT_MAX_GAP,
                     );
                     await expectNoHorizontalOverflowAsync(page);
@@ -2079,6 +2197,32 @@ async function dashboardBoundsAsync(locator: Locator): Promise<{ x: number; y: n
         throw new Error(`Expected a visible dashboard element: ${locator.toString()}`);
     }
     return bounds;
+}
+
+async function mealPreviewHeaderGapAsync(preview: Locator): Promise<number> {
+    return preview.evaluate(element => {
+        const header = element.querySelector('.meals-preview__header')?.getBoundingClientRect();
+        const list = element.querySelector('.meals-preview__list')?.getBoundingClientRect();
+        if (header === undefined || list === undefined) {
+            throw new Error('Expected the meal preview header and list');
+        }
+        return list.top - header.bottom;
+    });
+}
+
+async function expectCompactMealFooterAsync(card: Locator): Promise<void> {
+    const geometry = await card.evaluate(element => {
+        const frame = element.querySelector('.media-card')?.getBoundingClientRect();
+        const label = element.querySelector('.nutrient-badges__quality-label')?.getBoundingClientRect();
+        const help = element.querySelector('.nutrient-badges__quality-help button')?.getBoundingClientRect();
+        if (frame === undefined || label === undefined || help === undefined) {
+            throw new Error('Expected the meal card and healthiness help');
+        }
+        return { gap: frame.bottom - label.bottom, helpTop: help.top - frame.top, helpBottom: frame.bottom - help.bottom };
+    });
+    expect(Math.round(geometry.gap)).toBeLessThanOrEqual(COMPACT_MEAL_FOOTER_MAX_GAP);
+    expect(Math.round(geometry.helpTop)).toBeGreaterThanOrEqual(0);
+    expect(Math.round(geometry.helpBottom)).toBeGreaterThanOrEqual(0);
 }
 
 test.describe('dashboard TDEE accessibility regression', () => {

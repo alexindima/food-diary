@@ -60,12 +60,12 @@
                 size="xs"
                 variant="secondary"
                 fill="text"
-                icon="info_outline"
-                iconSize="sm"
                 [ariaLabel]="'PRODUCT_CARD.QUALITY_HELP' | translate"
                 [fdUiHint]="'PRODUCT_CARD.QUALITY_EXPLANATION' | translate"
                 [fdUiHintToggleOnClick]="true"
-            />
+            >
+                <fd-ui-icon class="nutrient-badges__quality-help-icon" name="info_outline" size="sm" />
+            </fd-ui-button>
         </span>
     }
     @if (calories() !== null) {

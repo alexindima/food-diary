@@ -157,9 +157,9 @@
             'media content action'
             'nutrients nutrients nutrients';
         grid-template-columns: auto minmax(0, 1fr) minmax(clamp(var(--fd-size-control-chip), 10cqi, 72px), auto);
-        grid-template-rows: auto minmax(var(--fd-size-control-touch), auto);
+        grid-template-rows: auto minmax(var(--media-card-mobile-nutrients-min-size, var(--fd-size-control-touch)), auto);
         column-gap: var(--fd-space-sm);
-        row-gap: var(--fd-space-sm) var(--fd-space-md);
+        row-gap: var(--media-card-mobile-row-gap, var(--fd-space-sm));
         padding: 0;
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-card);
@@ -172,9 +172,9 @@
 
         .media-card__media {
             grid-area: media;
-            inline-size: clamp(68px, 20cqi, 80px);
-            min-inline-size: clamp(68px, 20cqi, 80px);
-            block-size: clamp(68px, 20cqi, 80px);
+            inline-size: var(--media-card-mobile-image-size, clamp(68px, 20cqi, 80px));
+            min-inline-size: var(--media-card-mobile-image-size, clamp(68px, 20cqi, 80px));
+            block-size: var(--media-card-mobile-image-size, clamp(68px, 20cqi, 80px));
             align-self: start;
             border-radius: var(--fd-radius-md);
         }
@@ -209,5 +209,5 @@
 
 .fd-media-card--raised:has(.media-card__actions:empty),
 .fd-media-card--density-compact.fd-media-card--raised {
-    padding: var(--fd-space-md);
+    padding: var(--media-card-padding, var(--fd-space-md));
 }

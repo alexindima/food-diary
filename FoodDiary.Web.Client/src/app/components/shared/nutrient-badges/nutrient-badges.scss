@@ -313,7 +313,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--fd-space-xs) var(--fd-space-md);
+    gap: var(--nutrient-badges-row-gap, var(--fd-space-xs)) var(--fd-space-md);
     width: 100%;
     height: auto;
     padding: 0;
@@ -364,7 +364,7 @@
 
 @container (max-width: 420px) {
     .nutrient-badges--quiet {
-        row-gap: 0;
+        row-gap: var(--nutrient-badges-row-gap, 0);
     }
 }
 
@@ -373,4 +373,9 @@
     position: relative;
     z-index: 2;
     flex-shrink: 0;
+    margin-block: var(--nutrient-badges-help-margin-block, 0);
+}
+
+.nutrient-badges__quality-help-icon {
+    translate: 0 calc(var(--nutrient-badges-help-icon-offset, 0px) - 0.0625em);
 }

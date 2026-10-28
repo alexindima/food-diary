@@ -1,3 +1,28 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
+}
+
+@media #{variables.$media-tablet} {
+    :host {
+        --media-card-padding: var(--fd-space-xs) var(--fd-space-sm);
+        --media-card-mobile-image-size: var(--fd-size-control-xxl);
+        --media-card-mobile-row-gap: var(--fd-space-xs);
+        --media-card-mobile-nutrients-min-size: 0;
+        --entity-card-title-row-gap: var(--fd-space-xxs);
+        --entity-card-favorite-top: var(--fd-space-xxs);
+        --entity-card-summary-padding-top: 0;
+        --nutrient-badges-row-gap: 0;
+
+        --nutrient-badges-help-margin-block: calc(0px - var(--fd-space-xxs));
+    }
+
+    @media (any-pointer: coarse) {
+        :host {
+            // Use the static nutrient row above the icon for the touch target.
+            --nutrient-badges-help-margin-block: calc(var(--fd-size-icon-sm) - var(--fd-size-control-touch)) 0;
+            --nutrient-badges-help-icon-offset: calc((var(--fd-size-control-touch) - var(--fd-size-icon-sm)) / 2);
+        }
+    }
 }
