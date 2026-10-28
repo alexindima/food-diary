@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1367,
     "ambiguousContracts": 29,
-    "consumerEdges": 10976,
+    "consumerEdges": 10978,
     "productionConsumerEdges": 6119,
-    "testConsumerEdges": 4857,
+    "testConsumerEdges": 4859,
     "consumedContracts": 1367,
     "unconsumedContracts": 0
   },
@@ -62409,7 +62409,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BrowserSessionServiceTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IAuthenticationTokenService",
@@ -121259,6 +121259,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/LogoutRevocationFailureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -153530,6 +153543,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "RestoreBrowserSessionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/RestoreBrowserSession/RestoreBrowserSessionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
+      "isTest": true,
       "referenceCount": 2
     },
     {

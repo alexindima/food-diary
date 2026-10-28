@@ -11,6 +11,7 @@ using FoodDiary.Results;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Services;
 
@@ -20,7 +21,8 @@ public sealed class BrowserSessionService(
     IJwtTokenGenerator tokens,
     TimeProvider timeProvider,
     IUserSessionPrincipalReader principals,
-    IAuthenticationSessionLifetimePolicy lifetimes) {
+    IAuthenticationSessionLifetimePolicy lifetimes,
+    ILogger<BrowserSessionService> logger) {
     public async Task<Result<BrowserSessionIdentityModel>> AuthenticateAsync(string? credential, CancellationToken cancellationToken) {
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid id)) {
             return Result.Failure<BrowserSessionIdentityModel>(AuthenticationErrors.InvalidToken);
@@ -56,7 +58,7 @@ public sealed class BrowserSessionService(
             SecurityTokenGenerator.HashForStorage(credential!), result.Value.Principal.SecurityVersion,
             timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
         if (!restored) {
-            return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+            return RejectRestoration("revalidation_conflict");
         }
         BrowserSessionModel session = result.Value;
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
@@ -75,30 +77,49 @@ public sealed class BrowserSessionService(
             SecurityTokenGenerator.VerifyFastStorageHash(credential!, current.CredentialHash)) {
             return Result.Success(session with { ExpiresAtUtc = currentExpires, Renewed = true });
         }
-        return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+        return RejectRestoration("renewal_conflict");
     }
 
     private async Task<Result<BrowserSessionModel>> AuthenticateCoreAsync(string? credential, bool allowStaleVersion, CancellationToken cancellationToken) {
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid sessionId)) {
-            return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+            return RejectRestoration(string.IsNullOrEmpty(credential) ? "missing_credential" : "malformed_credential");
         }
         UserRefreshTokenSession? session = await sessions.GetByIdAsync(new RefreshTokenSessionId(sessionId), cancellationToken).ConfigureAwait(false);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
-        if (session?.IsActive != true || !session.BrowserSecurityVersion.HasValue ||
-            session.ExpiresAtUtc is not { } expires || expires <= now ||
-            !SecurityTokenGenerator.VerifyFastStorageHash(credential!, session.RefreshTokenHash)) {
-            return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+        if (session is null) {
+            return RejectRestoration("session_missing");
+        }
+        if (!session.IsActive) {
+            return RejectRestoration("session_revoked");
+        }
+        if (!session.BrowserSecurityVersion.HasValue) {
+            return RejectRestoration("not_browser_session");
+        }
+        if (session.ExpiresAtUtc is not { } expires || expires <= now) {
+            return RejectRestoration("session_expired");
+        }
+        if (!SecurityTokenGenerator.VerifyFastStorageHash(credential!, session.RefreshTokenHash)) {
+            return RejectRestoration("credential_mismatch");
         }
         Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken).ConfigureAwait(false);
         expires = EffectiveExpiration(expires, session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled);
         if (expires <= now) {
-            return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+            return RejectRestoration("absolute_lifetime_expired");
         }
-        if (principal.IsFailure || (!allowStaleVersion && principal.Value.SecurityVersion != session.BrowserSecurityVersion.Value)) {
-            return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
+        if (principal.IsFailure) {
+            return RejectRestoration("principal_unavailable");
+        }
+        if (!allowStaleVersion && principal.Value.SecurityVersion != session.BrowserSecurityVersion.Value) {
+            return RejectRestoration("security_version_mismatch");
         }
         return Result.Success(new BrowserSessionModel(credential!, sessionId, expires, session.RememberMe, principal.Value,
             session.BrowserSlidingExpirationEnabled, session.CreatedAtUtc));
+    }
+
+    private Result<BrowserSessionModel> RejectRestoration(string reason) {
+        logger.LogInformation(new EventId(1001, "BrowserSessionRestoreRejected"),
+            "Browser session restoration rejected: {Reason}", reason);
+        return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
     }
 
     public Task<Result<BrowserSessionModel>> CreateAsync(string refreshToken, string? existingCredential, CancellationToken cancellationToken) =>

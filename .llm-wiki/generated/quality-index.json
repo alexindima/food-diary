@@ -36850,11 +36850,11 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "nonBlankLines": 144,
-      "decisionPoints": 49,
+      "nonBlankLines": 164,
+      "decisionPoints": 50,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.38
+      "structuralRiskScore": 78.28
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -37674,11 +37674,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 3,
+      "nonBlankLines": 57,
+      "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 9.14
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
@@ -58599,10 +58599,11 @@
       "name": "BrowserSessionController",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
-      "line": 19,
-      "testReferenceCount": 2,
+      "line": 21,
+      "testReferenceCount": 3,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/BrowserSessionRestorationDiagnosticsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

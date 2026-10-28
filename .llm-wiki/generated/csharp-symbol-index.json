@@ -16509,7 +16509,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "EmailSender",
@@ -17237,7 +17237,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
-      "line": 19
+      "line": 21
     },
     {
       "name": "TelegramOperationsController",

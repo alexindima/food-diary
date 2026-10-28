@@ -14,12 +14,96 @@ using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Authentication.Contracts.Authentication.Common;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Models;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NSubstitute.Core;
 
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class BrowserSessionServiceTests {
     private static readonly DateTime Now = new(2030, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+
+    [Theory]
+    [InlineData("missing", "missing_credential")]
+    [InlineData("empty", "missing_credential")]
+    [InlineData("malformed", "malformed_credential")]
+    [InlineData("missing-record", "session_missing")]
+    [InlineData("revoked", "session_revoked")]
+    [InlineData("not-browser", "not_browser_session")]
+    [InlineData("missing-expiry", "session_expired")]
+    [InlineData("expired", "session_expired")]
+    [InlineData("wrong-secret", "credential_mismatch")]
+    [InlineData("principal", "principal_unavailable")]
+    [InlineData("absolute-expiry", "absolute_lifetime_expired")]
+    [InlineData("revalidate", "revalidation_conflict")]
+    [InlineData("renew", "renewal_conflict")]
+    public async Task RestoreAsync_RejectionLogsOnlyOneStableReason(string fault, string reason) {
+        var scenario = new Scenario(noExpiry: string.Equals(fault, "missing-expiry", StringComparison.Ordinal));
+        string? credential = BrowserSessionCredential.Create(scenario.Session.Id.Value);
+        if (!string.Equals(fault, "not-browser", StringComparison.Ordinal)) {
+            scenario.Session.ConvertToBrowserSession(SecurityTokenGenerator.HashForStorage(credential), 7, Now, allowRenewal: true);
+        }
+        switch (fault) {
+            case "missing": credential = null; break;
+            case "empty": credential = string.Empty; break;
+            case "malformed": credential = "private-malformed-credential"; break;
+            case "missing-record": scenario.Sessions.GetByIdAsync(scenario.Session.Id, Arg.Any<CancellationToken>()).Returns((UserRefreshTokenSession?)null); break;
+            case "revoked": scenario.Session.Revoke(Now); break;
+            case "expired": scenario.Clock.UtcNow = scenario.Session.ExpiresAtUtc!.Value; break;
+            case "wrong-secret": credential = credential[..^1] + (credential[^1] == 'A' ? 'B' : 'A'); break;
+            case "principal": scenario.Users.GetAuthenticationPrincipalAsync(scenario.Session.UserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+                .Returns(Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidToken)); break;
+            case "absolute-expiry": scenario.Lifetimes.GetAbsoluteExpiration(scenario.Session.CreatedAtUtc).Returns(Now); break;
+            case "revalidate": scenario.Sessions.TryRevalidateBrowserSessionAsync(scenario.Session.Id, scenario.Session.UserId,
+                Arg.Any<string>(), Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false); break;
+            case "renew":
+                scenario.Lifetimes.GetRenewedExpiration(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<bool>(), Arg.Any<DateTime>()).Returns(Now.AddDays(90));
+                scenario.Sessions.ReadBrowserSessionProofAsync(scenario.Session.Id, Arg.Any<CancellationToken>()).Returns((BrowserSessionProof?)null);
+                break;
+        }
+
+        Result<BrowserSessionModel> result = await scenario.Service.RestoreAsync(credential, CancellationToken.None);
+
+        ResultAssert.Failure(result, AuthenticationErrors.InvalidToken.Code);
+        ICall log = Assert.Single(scenario.Logger.ReceivedCalls(), call => string.Equals(call.GetMethodInfo().Name, nameof(ILogger.Log), StringComparison.Ordinal));
+        var fields = Assert.IsAssignableFrom<IEnumerable<KeyValuePair<string, object?>>>(log.GetArguments()[2]).ToDictionary(StringComparer.Ordinal);
+        Assert.Equal(reason, fields["Reason"]);
+        Assert.Equal(new[] { "Reason", "{OriginalFormat}" }, fields.Keys.Order(StringComparer.Ordinal).ToArray());
+        Assert.Equal("BrowserSessionRestoreRejected", Assert.IsType<EventId>(log.GetArguments()[1]).Name);
+        Assert.Equal(LogLevel.Information, log.GetArguments()[0]);
+        Assert.Null(log.GetArguments()[3]);
+    }
+
+    [Fact]
+    public async Task RestoreAsync_FreshServicePreservesValidPersistedSessionWithoutRejectionLogs() {
+        var scenario = new Scenario();
+        Result<BrowserSessionModel> created = await scenario.Service.CreateAsync("refresh-proof", existingCredential: null, CancellationToken.None);
+        BrowserSessionService restarted = scenario.CreateService();
+
+        Result<BrowserSessionModel> restored = await restarted.RestoreAsync(created.Value.Credential, CancellationToken.None);
+
+        ResultAssert.Success(restored);
+        Assert.Equal(created.Value.SessionId, restored.Value.SessionId);
+        Assert.Equal(created.Value.Credential, restored.Value.Credential);
+        Assert.Equal(created.Value.ExpiresAtUtc, restored.Value.ExpiresAtUtc);
+        Assert.False(restored.Value.RememberMe);
+        Assert.Empty(scenario.Logger.ReceivedCalls());
+    }
+
+    [Fact]
+    public async Task RestoreAsync_CancellationPropagatesWithoutMisreportingARejection() {
+        var scenario = new Scenario();
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        scenario.Sessions.GetByIdAsync(scenario.Session.Id, cancellation.Token)
+            .Returns(Task.FromCanceled<UserRefreshTokenSession?>(cancellation.Token));
+        string credential = BrowserSessionCredential.Create(scenario.Session.Id.Value);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => scenario.Service.RestoreAsync(credential, cancellation.Token));
+
+        Assert.Empty(scenario.Logger.ReceivedCalls());
+    }
 
     [Theory]
     [InlineData("missing-proof")]
@@ -207,6 +291,12 @@ public sealed class BrowserSessionServiceTests {
         public IUserSessionPrincipalReader Principals { get; } = Substitute.For<IUserSessionPrincipalReader>();
         public IJwtTokenGenerator Tokens { get; } = Substitute.For<IJwtTokenGenerator>();
         public FixedTimeProvider Clock { get; } = new();
+        public ILogger<BrowserSessionService> Logger { get; } = Substitute.For<ILogger<BrowserSessionService>>();
+        public IAuthenticationSessionLifetimePolicy Lifetimes { get; } = Substitute.For<IAuthenticationSessionLifetimePolicy>();
+
+        public BrowserSessionService CreateService() {
+            return ActivatorUtilities.CreateInstance<BrowserSessionService>(new LoggerProvider(Logger), Sessions, Users, Tokens, Clock, Principals, Lifetimes);
+        }
 
         public Scenario(DateTime? expires = null, bool noExpiry = false) {
             var user = User.Create("browser@example.com", "test-hash");
@@ -232,8 +322,13 @@ public sealed class BrowserSessionServiceTests {
                 });
             Users.GetAuthenticationPrincipalAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(_ => Result.Success(Principal));
             Tokens.ValidateToken("refresh-proof").Returns((user.Id, user.Email, false, (RefreshTokenSessionId?)Session.Id));
-            Service = new BrowserSessionService(Sessions, Users, Tokens, Clock, Principals, Substitute.For<IAuthenticationSessionLifetimePolicy>());
+            Service = CreateService();
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class LoggerProvider(ILogger<BrowserSessionService> logger) : IServiceProvider {
+        public object? GetService(Type serviceType) => serviceType == typeof(ILogger<BrowserSessionService>) ? logger : null;
     }
 
     [ExcludeFromCodeCoverage]

@@ -1248,8 +1248,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3d5ccfa8a4f3ab4a81e7d24b1c4543fb536058dbc0be5921fca7138f3f3cded5",
-          "reviewReason": "Reviewed the runtime topology diff and runtime-impact guide. Only sourceFingerprint changed after adding the worker click operation to the existing WebPushNotificationSender payload; service, worker, route and HTTP client topology is byte-for-byte unchanged. The runtime-impact discovery and validation instructions remain accurate."
+          "sha256": "7718e07ca5f6f623454015d8f316ab2ebb09e138a78383f0ed4683587331da26",
+          "reviewReason": "Reviewed runtime-topology fingerprint against BrowserSessionService and BrowserSessionController diagnostic-only additions. Hosts, routes, providers, cookies, background jobs and deployment topology remain unchanged; the runtime-impact workflow still describes the same inspection procedure."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1262,10 +1262,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the runtime topology diff and runtime-impact guide. Only sourceFingerprint changed after adding the worker click operation to the existing WebPushNotificationSender payload; service, worker, route and HTTP client topology is byte-for-byte unchanged. The runtime-impact discovery and validation instructions remain accurate.",
+      "reason": "Reviewed runtime-topology fingerprint against BrowserSessionService and BrowserSessionController diagnostic-only additions. Hosts, routes, providers, cookies, background jobs and deployment topology remain unchanged; the runtime-impact workflow still describes the same inspection procedure.",
       "baseRef": "HEAD",
-      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
-      "reviewedAtUtc": "2026-10-27T21:08:28.4120979Z"
+      "gitHead": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "reviewedAtUtc": "2026-10-28T01:09:02.6876820Z"
     },
     {
       "pageId": "workflow-security-review",
