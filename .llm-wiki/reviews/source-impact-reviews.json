@@ -1263,8 +1263,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2048a5824975e9e0baf6ea7e2171cdef677e7aa68fdcd242830d6bf942619cac",
-          "reviewReason": "Reviewed runtime-topology diff: only the existing API env_file declaration now lists a generated exact-gateway proxy configuration. Service/worker/client ownership, provider calls, hosted processes and runtime analysis command semantics are unchanged; the runtime-impact guide remains accurate."
+          "sha256": "11bd9fd9a6edcc4d6a21a4c5656887f8bf41c267a6bae0bfd12e073fae262923",
+          "reviewReason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1277,10 +1277,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime-topology diff: only the existing API env_file declaration now lists a generated exact-gateway proxy configuration. Service/worker/client ownership, provider calls, hosted processes and runtime analysis command semantics are unchanged; the runtime-impact guide remains accurate.",
+      "reason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts.",
       "baseRef": "HEAD",
-      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
-      "reviewedAtUtc": "2026-10-28T03:22:15.7907459Z"
+      "gitHead": "caec3962e31f7f3726fc697750512ba276ade825",
+      "reviewedAtUtc": "2026-10-28T17:36:54.7986533Z"
     },
     {
       "pageId": "workflow-security-review",
