@@ -14,7 +14,7 @@ async function setupMealsPreviewEntryAsync(entry: MealPreviewEntry): Promise<Com
     const fixture = TestBed.createComponent(MealsPreviewEntryComponent);
     fixture.componentRef.setInput('entry', entry);
     fixture.componentRef.setInput('showAddButtons', true);
-    fixture.componentRef.setInput('showAiButtons', true);
+    fixture.componentRef.setInput('showAiButtons', false);
     return fixture;
 }
 

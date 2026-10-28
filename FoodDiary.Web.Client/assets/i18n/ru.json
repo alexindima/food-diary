@@ -1785,6 +1785,9 @@
         "FASTING_REDUCE_UNAVAILABLE": "Выберите меньше часов, чем осталось до конца голодания."
     },
     "MEALS_PREVIEW": {
+        "ADD_TO_MEAL": "Добавить еду: {{meal}}",
+        "COLLAPSE_MEAL": "Свернуть ввод еды: {{meal}}",
+        "SAVING_HINT": "Дождитесь сохранения приёма пищи.",
         "MANUAL_ACTION": "Вручную",
         "HISTORY_ACTION": "История",
         "EYEBROW": "Сегодня",

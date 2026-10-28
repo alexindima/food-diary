@@ -90,6 +90,7 @@ export class AiInputBarComponent {
     private readonly historyDialogRef = signal<FdUiDialogRef<FoodRecognitionHistoryDialogComponent, FoodRecognitionJob> | null>(null);
 
     public readonly isProcessing = input<boolean>(false);
+    public readonly active = input(true);
     public readonly clearToken = input(0);
     public readonly mode = input<AiInputBarMode>('emit');
     public readonly mealType = input<string | null>(null);
@@ -155,6 +156,11 @@ export class AiInputBarComponent {
             this.speechRecognition.stop(this.speechOwner);
             this.historyDialogRef()?.close();
             this.dismissPhotoResult();
+        });
+        effect(() => {
+            if (!this.active()) {
+                this.speechRecognition.stop(this.speechOwner);
+            }
         });
         effect(() => {
             const clearToken = this.clearToken();
@@ -237,7 +243,7 @@ export class AiInputBarComponent {
     }
 
     protected async toggleMicAsync(): Promise<void> {
-        if (this.isMicrophoneDisabled()) {
+        if (!this.active() || this.isMicrophoneDisabled()) {
             return;
         }
         this.speechErrorKey.set(null);
@@ -254,7 +260,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (this.destroyRef.destroyed || this.isMicrophoneDisabled()) {
+        if (this.destroyRef.destroyed || !this.active() || this.isMicrophoneDisabled()) {
             return;
         }
 
@@ -272,7 +278,7 @@ export class AiInputBarComponent {
     }
 
     private onSpeechTranscript(transcript: string): void {
-        if (transcript.length > 0 && !this.destroyRef.destroyed) {
+        if (transcript.length > 0 && !this.destroyRef.destroyed && this.active()) {
             this.voiceText.set(transcript);
             void this.submitTextAsync('Voice');
         }

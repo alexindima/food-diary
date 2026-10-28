@@ -303,6 +303,38 @@ describe('AiInputBarComponent speech recovery', () => {
 });
 
 describe('AiInputBarComponent speech ownership', () => {
+    it('stops recording when its composer is collapsed while preserving the text draft', async () => {
+        const { component, fixture, speechRecognition } = await setupAiInputBarAsync('create', { speechSupported: true });
+        fixture.detectChanges();
+        component['voiceText'].set('Dinner draft');
+        await component['toggleMicAsync']();
+        expect(speechRecognition.isListening()).toBe(true);
+
+        fixture.componentRef.setInput('active', false);
+        fixture.detectChanges();
+
+        expect(speechRecognition.isListening()).toBe(false);
+        expect(component['voiceText']()).toBe('Dinner draft');
+    });
+
+    it('does not start recording if a composer is collapsed while consent is pending', async () => {
+        const { component, fixture, speechRecognition, userFacade } = await setupAiInputBarAsync('create', {
+            speechSupported: true,
+            aiConsentAcceptedAt: null,
+        });
+        const user = new Subject<{ aiConsentAcceptedAt: string }>();
+        userFacade.getInfoSilently.mockReturnValueOnce(user);
+        fixture.detectChanges();
+        const recording = component['toggleMicAsync']();
+
+        fixture.componentRef.setInput('active', false);
+        fixture.detectChanges();
+        user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
+        await recording;
+
+        expect(speechRecognition.start).not.toHaveBeenCalled();
+    });
+
     it('restores typed text after the Premium action destroys and remounts the input', async () => {
         const { component, fixture, navigationService, aiFoodService } = await setupAiInputBarAsync('create', { isPremium: false });
         component['voiceText'].set('  Два яйца и чай  ');

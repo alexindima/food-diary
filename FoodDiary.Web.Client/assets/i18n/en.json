@@ -1785,6 +1785,9 @@
         "FASTING_REDUCE_UNAVAILABLE": "Choose fewer hours than the time remaining in this fast."
     },
     "MEALS_PREVIEW": {
+        "ADD_TO_MEAL": "Add food: {{meal}}",
+        "COLLAPSE_MEAL": "Collapse food input: {{meal}}",
+        "SAVING_HINT": "Wait until the meal is saved.",
         "MANUAL_ACTION": "Manually",
         "HISTORY_ACTION": "History",
         "EYEBROW": "See today",

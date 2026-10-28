@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
@@ -15,6 +15,8 @@ import type { MealPreviewEntry } from './meals-preview-lib/meals-preview.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealsPreviewComponent {
+    private submittedAiSlot: string | null = null;
+    private lastClearToken = 0;
     public readonly titleKey = input<string>('DASHBOARD.MEALS_TITLE');
     public readonly titleText = input<string | null>(null);
     public readonly viewAllKey = input<string>('DASHBOARD.MEALS_VIEW_ALL');
@@ -34,20 +36,39 @@ export class MealsPreviewComponent {
     public readonly aiMealCreateRequested = output<AiInputBarResult>();
     public readonly open = output<MealCardItem>();
     protected readonly expandedAiSlot = signal<string | null>(null);
+    protected readonly aiMealClearTokens = signal<ReadonlyMap<string, number>>(new Map());
 
     public constructor() {
         effect(() => {
-            if (this.aiMealClearToken() > 0) {
-                this.expandedAiSlot.set(null);
-            }
+            const clearToken = this.aiMealClearToken();
+            const saving = this.isAiMealSaving();
+            untracked(() => {
+                if (clearToken !== this.lastClearToken) {
+                    this.lastClearToken = clearToken;
+                    const slot = this.submittedAiSlot;
+                    if (slot !== null) {
+                        this.aiMealClearTokens.update(tokens => new Map(tokens).set(slot, clearToken));
+                        if (this.expandedAiSlot() === slot) {
+                            this.expandedAiSlot.set(null);
+                        }
+                    }
+                    this.submittedAiSlot = null;
+                } else if (!saving) {
+                    this.submittedAiSlot = null;
+                }
+            });
         });
     }
 
     protected toggleAi(slot: string | null = null): void {
+        if (this.isAiMealSaving()) {
+            return;
+        }
         this.expandedAiSlot.update(current => (current === slot ? null : slot));
     }
 
     protected createMealFromAiResult(result: AiInputBarResult): void {
+        this.submittedAiSlot = this.expandedAiSlot();
         this.aiMealCreateRequested.emit(result);
     }
 }

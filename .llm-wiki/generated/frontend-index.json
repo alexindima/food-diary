@@ -3399,7 +3399,7 @@
       "role": "Component",
       "selector": "fd-meals-preview-entry",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.ts",
-      "line": 17
+      "line": 19
     },
     {
       "name": "MealsPreviewComponent",
@@ -8206,8 +8206,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1261,
-      "russianProperties": 1261,
+      "englishProperties": 1264,
+      "russianProperties": 1264,
       "countsMatch": true
     },
     {

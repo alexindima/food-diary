@@ -3,11 +3,11 @@
   "summary": {
     "components": 505,
     "componentsWithoutDirectSpecs": 125,
-    "inputs": 1640,
+    "inputs": 1641,
     "outputs": 557,
     "apiCalls": 318,
     "templatesWithTranslations": 366,
-    "translationKeys": 2189,
+    "translationKeys": 2188,
     "consumerEdges": 1291,
     "consumedComponents": 322,
     "unconsumedComponents": 182
@@ -12086,6 +12086,11 @@
           "required": false
         },
         {
+          "name": "active",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "clearToken",
           "type": "",
           "required": false
@@ -23755,9 +23760,8 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
       "keys": [
-        "DASHBOARD.ADD_WITH_AI_BUTTON",
-        "MEALS_PREVIEW.ADD_MANUAL_HINT",
         "MEALS_PREVIEW.MANUAL_ACTION",
+        "MEALS_PREVIEW.SAVING_HINT",
         "MEAL_CARD.MEAL_TYPES.OTHER"
       ]
     },
@@ -25425,6 +25429,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
       "occurrences": 1,
       "inputsUsed": [
+        "active",
         "clearToken",
         "historyLabelKey",
         "isProcessing",
@@ -28503,9 +28508,11 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
-      "occurrences": 3,
+      "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "iconSize",
@@ -34737,9 +34744,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview-entry/meals-preview-entry.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
-        "name"
+        "name",
+        "size"
       ],
       "outputsHandled": []
     },

@@ -22,7 +22,7 @@
                     [showAiButtons]="showAiButtons()"
                     [expandedAiSlot]="expandedAiSlot()"
                     [isAiMealSaving]="isAiMealSaving()"
-                    [aiMealClearToken]="aiMealClearToken()"
+                    [aiMealClearToken]="aiMealClearTokens().get(entry.slot ?? '') ?? 0"
                     [favoriteLoadingIds]="favoriteLoadingIds()"
                     (favoriteToggle)="favoriteToggle.emit($event)"
                     (open)="open.emit($event)"
