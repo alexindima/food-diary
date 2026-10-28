@@ -49,14 +49,14 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c780c7dbeb69d75d24eebe0dd26781a008cc668a2c39be0d414090ef078195d1",
-          "reviewReason": "Reviewed Mini App automatic entry against Browser Sessions Telegram section, bootstrap routing, TelegramAuthComponent and BrowserSessionStateService. Existing module page already states the separate memory-only Telegram transport and links the owning browser-session contract. New launch marker and SHA-256 logout marker are public tab selectors, not bearer storage; no SDK surface, feature boundary or cookie-session policy changes require a page edit."
+          "sha256": "c3f8e149fc38659cea95e68062e066ab93ec976f1fe5d5db44b06572fd007c75",
+          "reviewReason": "Reviewed BROWSER_SESSIONS.md and frontend source: the same user/admin host-only session protocol and generated SDK remain. Deployment now trusts only the discovered Docker gateway; failed guards remove consumed codes. The frontend navigation page remains accurate."
         }
       ],
-      "reason": "Reviewed Mini App automatic entry against Browser Sessions Telegram section, bootstrap routing, TelegramAuthComponent and BrowserSessionStateService. Existing module page already states the separate memory-only Telegram transport and links the owning browser-session contract. New launch marker and SHA-256 logout marker are public tab selectors, not bearer storage; no SDK surface, feature boundary or cookie-session policy changes require a page edit.",
+      "reason": "Reviewed BROWSER_SESSIONS.md and frontend source: the same user/admin host-only session protocol and generated SDK remain. Deployment now trusts only the discovered Docker gateway; failed guards remove consumed codes. The frontend navigation page remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
-      "reviewedAtUtc": "2026-10-27T07:59:04.0700071Z"
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:19:42.2446536Z"
     },
     {
       "pageId": "module.mail-services",
@@ -97,8 +97,8 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c780c7dbeb69d75d24eebe0dd26781a008cc668a2c39be0d414090ef078195d1",
-          "reviewReason": "Reviewed the new automatic Mini App entry against BROWSER_SESSIONS.md and the existing Identity begin/complete validation boundary. It composes existing endpoints and leaves bot bearer, browser cookies, Identity proof checks, host inventory and module ownership unchanged. The architecture page remains accurate and delegates detailed Telegram client behavior to the owning browser-session document."
+          "sha256": "c3f8e149fc38659cea95e68062e066ab93ec976f1fe5d5db44b06572fd007c75",
+          "reviewReason": "Reviewed BROWSER_SESSIONS.md, Compose host-network Nginx and bridge-network API. Exact gateway trust uses the existing API options and preserves the existing composition roots and host-only cookies; architecture statements remain accurate."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -106,10 +106,10 @@
           "reviewReason": "The API composes the Identity-owned attempt port and Redis adapter through explicit direct references. The exact matrix records those two consumed references. No host, foreign aggregate write, module cycle or browser session protocol is added."
         }
       ],
-      "reason": "Reviewed the new automatic Mini App entry against BROWSER_SESSIONS.md and the existing Identity begin/complete validation boundary. It composes existing endpoints and leaves bot bearer, browser cookies, Identity proof checks, host inventory and module ownership unchanged. The architecture page remains accurate and delegates detailed Telegram client behavior to the owning browser-session document.",
+      "reason": "Reviewed BROWSER_SESSIONS.md, Compose host-network Nginx and bridge-network API. Exact gateway trust uses the existing API options and preserves the existing composition roots and host-only cookies; architecture statements remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "35390c51318aa42cdff7f829c2a6726c469bca81",
-      "reviewedAtUtc": "2026-10-27T07:59:04.8899964Z"
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:19:43.8087347Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -294,8 +294,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
-          "reviewReason": "The CI diff only uploads retained browser failure files from the existing smoke job. API contract generation, accepted-baseline selection, snapshot comparisons and compatibility gates are unchanged, so this workflow remains accurate."
+          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
+          "reviewReason": "The CI change adds a Python deployment-origin regression step only. OpenAPI comparison baselines, snapshots, SDK contracts and browser auth response shapes remain unchanged; API compatibility guidance still matches code."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -318,10 +318,10 @@
           "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
         }
       ],
-      "reason": "The CI diff only uploads retained browser failure files from the existing smoke job. API contract generation, accepted-baseline selection, snapshot comparisons and compatibility gates are unchanged, so this workflow remains accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
-      "reviewedAtUtc": "2026-10-27T18:54:50.5336626Z"
+      "reason": "The CI change adds a Python deployment-origin regression step only. OpenAPI comparison baselines, snapshots, SDK contracts and browser auth response shapes remain unchanged; API compatibility guidance still matches code.",
+      "baseRef": "HEAD",
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:19:46.9750611Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -911,14 +911,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
-          "reviewReason": "Reviewed the current index/CI workflow and the frontend evidence uploader. Wiki checkout isolation, stage ordering, complete shard coverage and aggregate gates are unchanged; failed frontend browser artifacts gain retention."
+          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
+          "reviewReason": "The CI change adds a Python deployment proxy regression step without altering the Wiki pipeline, focused regression catalog, generated artifacts or verification commands; the pipeline guidance remains current."
         }
       ],
-      "reason": "Reviewed the current index/CI workflow and the frontend evidence uploader. Wiki checkout isolation, stage ordering, complete shard coverage and aggregate gates are unchanged; failed frontend browser artifacts gain retention.",
-      "baseRef": "origin/master",
-      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
-      "reviewedAtUtc": "2026-10-27T18:54:50.8715564Z"
+      "reason": "The CI change adds a Python deployment proxy regression step without altering the Wiki pipeline, focused regression catalog, generated artifacts or verification commands; the pipeline guidance remains current.",
+      "baseRef": "HEAD",
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:19:48.2709645Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1216,8 +1216,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "27c4536cb3822d993fb9361e2b2967dd3a27665dcda4455cc450d3dd933d6644",
-          "reviewReason": "The frontend browser artifact upload does not change report generation, assessment provenance, optional governance handling, readiness semantics or publication of the Wiki review summary. Current guidance remains accurate."
+          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
+          "reviewReason": "The CI change adds an independent Python proxy regression before the existing Wiki steps; report generation, publication, API comparison and provenance are unchanged and the review-report guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1235,10 +1235,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed the readiness consumer used by the report. Incomplete optional privacy metadata renders as an unassessed dimension instead of a strict-mode exception. JSON/Markdown finding contracts, snapshot provenance and optional-governance behavior are unchanged; the real report regression passes.",
-      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
-      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
-      "reviewedAtUtc": "2026-10-28T01:53:01.9151667Z"
+      "reason": "The CI change adds an independent Python proxy regression before the existing Wiki steps; report generation, publication, API comparison and provenance are unchanged and the review-report guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:19:49.5576292Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1263,8 +1263,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7718e07ca5f6f623454015d8f316ab2ebb09e138a78383f0ed4683587331da26",
-          "reviewReason": "Reviewed runtime-topology fingerprint against BrowserSessionService and BrowserSessionController diagnostic-only additions. Hosts, routes, providers, cookies, background jobs and deployment topology remain unchanged; the runtime-impact workflow still describes the same inspection procedure."
+          "sha256": "2048a5824975e9e0baf6ea7e2171cdef677e7aa68fdcd242830d6bf942619cac",
+          "reviewReason": "Reviewed runtime-topology diff: only the existing API env_file declaration now lists a generated exact-gateway proxy configuration. Service/worker/client ownership, provider calls, hosted processes and runtime analysis command semantics are unchanged; the runtime-impact guide remains accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1277,10 +1277,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime-topology fingerprint against BrowserSessionService and BrowserSessionController diagnostic-only additions. Hosts, routes, providers, cookies, background jobs and deployment topology remain unchanged; the runtime-impact workflow still describes the same inspection procedure.",
+      "reason": "Reviewed runtime-topology diff: only the existing API env_file declaration now lists a generated exact-gateway proxy configuration. Service/worker/client ownership, provider calls, hosted processes and runtime analysis command semantics are unchanged; the runtime-impact guide remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
-      "reviewedAtUtc": "2026-10-28T01:09:02.6876820Z"
+      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
+      "reviewedAtUtc": "2026-10-28T03:22:15.7907459Z"
     },
     {
       "pageId": "workflow-security-review",

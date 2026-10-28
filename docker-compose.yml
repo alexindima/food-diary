@@ -231,7 +231,10 @@ services:
       MailInboxClient__StateApiKey: ${MAIL_INBOX_STATE_API_KEY:?Set MAIL_INBOX_STATE_API_KEY}
       DataProtection__KeyRingPath: /var/lib/fooddiary/data-protection-keys
     env_file:
-      - .env
+      - path: .env
+      # Host-network Nginx reaches this bridge-network API through its gateway.
+      - path: .forwarded-proxy.env
+        required: false
     volumes:
       - api-data-protection-keys:/var/lib/fooddiary/data-protection-keys
     tmpfs:

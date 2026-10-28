@@ -41,6 +41,22 @@ test.describe('admin guidance accessibility', () => {
     }
 });
 
+test.describe('admin SSO rejection', () => {
+    test('does not exchange a rejected one-use code again on the access denied page', async ({ page }) => {
+        let exchanges = 0;
+        await page.route('**/api/v1/auth/admin-sso/exchange', async route => {
+            exchanges++;
+            await route.fulfill({ status: 403, json: { code: 'Authentication.InvalidBrowserRequest' } });
+        });
+
+        await page.goto('/users?page=2#code=rejected-code');
+
+        await expect(page.getByRole('heading', { name: 'Access denied' })).toBeVisible();
+        await expect(page).toHaveURL(/\/unauthorized\?reason=unauthenticated&returnUrl=%2Fusers%3Fpage%3D2$/);
+        expect(exchanges).toBe(1);
+    });
+});
+
 test.describe('admin smoke', () => {
     for (const session of ['empty', 'expired'] as const) {
         test(`opens from dashboard SSO on the first attempt with an ${session} session`, async ({ page }) => {

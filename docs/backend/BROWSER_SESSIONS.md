@@ -3,6 +3,31 @@
 The user website and admin UI authenticate through opaque HttpOnly cookies in
 the existing API (ADR 0058). Telegram's server bot retains bearer authentication.
 
+Production Nginx uses host networking and reaches the bridge-network API through
+the Compose gateway. Before recreating API, deployment runs
+`python3 scripts/deploy/configure_forwarded_proxy.py` from `/opt/fooddiary`.
+It discovers the existing default bridge through the running Compose PostgreSQL
+container and atomically writes `.forwarded-proxy.env`, loaded only by API.
+Only the exact gateway addresses are trusted, with a one-hop forwarding limit;
+the whole Docker subnet is not trusted. Regenerate this file after recreating the
+network, including during manual deployment. Missing or ambiguous topology stops
+deployment before database writers are stopped.
+
+Correcting a deployment that previously saw HTTP changes cookie names to the
+HTTPS `__Host-` prefix. Previously issued unprefixed cookies require a fresh
+sign-in after this rollout; do not accept weaker legacy cookie names on HTTPS
+as a workaround.
+
+Without this trust, API sees HTTP behind TLS termination and rejects the HTTPS
+admin origin with `403 Authentication.InvalidBrowserRequest` before consuming
+the SSO code. The ordinary site's CORS allowlist can hide this topology mistake.
+Keep production admin same-origin validation enabled. A rejected SSO attempt
+removes its code from the recovery return URL, so the access-denied page cannot
+automatically exchange the same code again.
+After Nginx readiness, deployment probes this endpoint through the local TLS
+proxy with the real admin origin and an intentionally invalid code. It requires
+the invalid-code `401`; an origin-validation `403` fails deployment.
+
 Password failure cooldowns and the independent request budgets for each sign-in
 method are documented in [Authentication throttling](AUTHENTICATION_THROTTLING.md).
 

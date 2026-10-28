@@ -586,6 +586,7 @@ jobs:
           $SCP_CMD nginx/sites-enabled/techradar.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/techradar.fooddiary.club
           $SCP_CMD scripts/bootstrap-tech-radar-tls.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
           $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
+          $SCP_CMD scripts/deploy/configure_forwarded_proxy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/configure_forwarded_proxy.py
           $SCP_CMD scripts/deploy/install_nginx_logrotate.py scripts/deploy/nginx-logrotate.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
 
@@ -628,6 +629,9 @@ jobs:
 
           export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export COMPOSE_PARALLEL_LIMIT="${COMPOSE_PARALLEL_LIMIT:-2}"
+
+          # Resolve the current bridge before stopping writers; fail closed on an unknown topology.
+          python3 scripts/deploy/configure_forwarded_proxy.py
 
           docker compose --profile backend --profile full --profile mail-inbox pull
 
@@ -768,6 +772,20 @@ jobs:
           if [ "$nginx_ready" != "true" ]; then
             docker compose ps nginx
             docker compose logs --tail=100 --timestamps nginx
+            exit 1
+          fi
+
+          # An invalid code must reach SSO validation (401), not fail origin validation (403).
+          admin_sso_status=$(curl -sS --output /dev/null --write-out '%{http_code}' \
+            --resolve admin.fooddiary.club:443:127.0.0.1 \
+            --header 'Origin: https://admin.fooddiary.club' \
+            --header 'X-FoodDiary-Client: admin' \
+            --header 'X-Requested-With: XMLHttpRequest' \
+            --header 'Content-Type: application/json' \
+            --data '{"code":"deployment-origin-probe"}' \
+            https://admin.fooddiary.club/api/v1/auth/admin-sso/exchange)
+          if [ "$admin_sso_status" != "401" ]; then
+            echo "Admin HTTPS SSO origin check failed (HTTP $admin_sso_status; expected invalid-code HTTP 401)."
             exit 1
           fi
 

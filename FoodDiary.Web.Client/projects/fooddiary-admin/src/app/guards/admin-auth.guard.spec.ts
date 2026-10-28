@@ -48,6 +48,23 @@ beforeEach(() => {
     state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url: '/users?page=2' }) as RouterStateSnapshot;
 });
 
+describe('admin rejected SSO recovery', () => {
+    it.each([
+        ['/users?page=2#code=rejected-code', '/users?page=2'],
+        ['/users?page=2&code=rejected-code#details', '/users?page=2#details'],
+    ])('does not offer an already attempted SSO code for recovery: %s', async (url, returnUrl) => {
+        authService.isAuthenticated.mockReturnValue(false);
+        state = Object.assign(Object.create(RouterStateSnapshot.prototype), { url }) as RouterStateSnapshot;
+
+        await TestBed.runInInjectionContext(async () => adminAuthGuard(route, state));
+
+        expect(router.createUrlTree, 'Rejected SSO codes must not be exchanged again by the recovery page').toHaveBeenCalledWith(
+            ['/unauthorized'],
+            { queryParams: { reason: 'unauthenticated', returnUrl } },
+        );
+    });
+});
+
 describe('adminAuthGuard', () => {
     it.each([false, true])('routes unavailable restoration to recovery even with known metadata %s', async known => {
         authService.isAuthenticated.mockReturnValue(known);

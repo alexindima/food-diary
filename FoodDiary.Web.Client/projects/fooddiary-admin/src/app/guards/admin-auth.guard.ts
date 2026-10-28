@@ -8,16 +8,18 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
     const router = inject(Router);
 
     await authService.applySsoFromQueryAsync();
+    const destination = sanitizedAdminDestination(router, state.url);
+    const returnUrl = destination === true ? state.url : destination.toString();
 
     if (authService.sessionUnavailable()) {
         return router.createUrlTree(['/unauthorized'], {
-            queryParams: { reason: 'unavailable', returnUrl: state.url },
+            queryParams: { reason: 'unavailable', returnUrl },
         });
     }
 
     if (!authService.isAuthenticated()) {
         return router.createUrlTree(['/unauthorized'], {
-            queryParams: { reason: 'unauthenticated', returnUrl: state.url },
+            queryParams: { reason: 'unauthenticated', returnUrl },
         });
     }
 
@@ -26,20 +28,20 @@ export const adminAuthGuard: CanActivateFn = async (_route, state) => {
 
         if (authService.sessionUnavailable()) {
             return router.createUrlTree(['/unauthorized'], {
-                queryParams: { reason: 'unavailable', returnUrl: state.url },
+                queryParams: { reason: 'unavailable', returnUrl },
             });
         }
 
         if (upgraded && authService.isAdmin()) {
-            return sanitizedAdminDestination(router, state.url);
+            return destination;
         }
 
         return router.createUrlTree(['/unauthorized'], {
-            queryParams: { reason: 'forbidden', returnUrl: state.url },
+            queryParams: { reason: 'forbidden', returnUrl },
         });
     }
 
-    return sanitizedAdminDestination(router, state.url);
+    return destination;
 };
 
 function sanitizedAdminDestination(router: Router, url: string): true | UrlTree {

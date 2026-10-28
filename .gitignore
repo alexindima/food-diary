@@ -55,6 +55,7 @@ appsettings.*.json
 !appsettings.json
 !appsettings.Development.json
 .env*
+.forwarded-proxy.env
 !*.env.example
 
 # OS junk

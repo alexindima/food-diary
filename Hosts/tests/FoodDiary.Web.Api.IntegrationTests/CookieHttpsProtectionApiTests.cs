@@ -11,6 +11,42 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class CookieHttpsProtectionApiTests(CookieHttpsProxyFixture fixture) : IClassFixture<CookieHttpsProxyFixture> {
     [RequiresDockerFact]
+    public async Task TlsProxy_AdminSsoPreservesPublicOriginAndCreatesIndependentRestorableCookie() {
+        using HttpClient website = fixture.CreateBrowser();
+        CookieIdentity identity = await CookieAuthenticationScenario.CreateAdministratorAsync(fixture.Api, website);
+        using HttpResponseMessage start = await website.PostAsync("/api/v1/auth/admin-sso/start", content: null);
+        Assert.Equal(HttpStatusCode.OK, start.StatusCode);
+        JsonElement handoff = await start.Content.ReadFromJsonAsync<JsonElement>();
+        var jar = new CookieContainer();
+        using HttpClient admin = fixture.CreateBrowser(jar);
+        admin.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "admin");
+        admin.DefaultRequestHeaders.Add("Origin", "https://trusted-other.example");
+        var request = new { code = handoff.GetProperty("code").GetString() };
+        using HttpResponseMessage foreign = await admin.PostAsJsonAsync("/api/v1/auth/admin-sso/exchange", request);
+        Assert.Equal(HttpStatusCode.Forbidden, foreign.StatusCode);
+        admin.DefaultRequestHeaders.Remove("Origin");
+        admin.DefaultRequestHeaders.Add("Origin", fixture.Origin.GetLeftPart(UriPartial.Authority));
+
+        using HttpResponseMessage exchange = await admin.PostAsJsonAsync("/api/v1/auth/admin-sso/exchange", request);
+
+        Assert.Equal(HttpStatusCode.OK, exchange.StatusCode);
+        var cookie = SetCookieHeaderValue.Parse(Assert.Single(exchange.Headers.GetValues("Set-Cookie")));
+        Assert.Multiple(
+            () => Assert.Equal("__Host-fooddiary.admin", cookie.Name.ToString()),
+            () => Assert.True(cookie.Secure),
+            () => Assert.True(cookie.HttpOnly),
+            () => Assert.False(cookie.Domain.HasValue));
+        using HttpResponseMessage users = await admin.GetAsync("/api/v1/admin/users");
+        Assert.Equal(HttpStatusCode.OK, users.StatusCode);
+        using HttpClient reloaded = fixture.CreateBrowser(jar);
+        reloaded.DefaultRequestHeaders.Add(BrowserSessionCookieService.ClientHeader, "admin");
+        reloaded.DefaultRequestHeaders.Add("Origin", fixture.Origin.GetLeftPart(UriPartial.Authority));
+        using HttpResponseMessage restored = await reloaded.PostAsync("/api/v1/auth/session", content: null);
+        Assert.Equal(HttpStatusCode.OK, restored.StatusCode);
+        await CookieAuthenticationScenario.AssertIdentityAsync(website, identity.Id);
+    }
+
+    [RequiresDockerFact]
     public async Task TlsProxy_ImpersonationCookieRestoresOnlyTheTargetAndLogoutPreservesTheAdministrator() {
         using HttpClient administrator = fixture.CreateBrowser();
         using HttpClient target = fixture.CreateBrowser();
