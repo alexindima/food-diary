@@ -38,7 +38,7 @@ report.results[0] = {
 };
 const reportHtml = renderReport(report, policy);
 const fixture = (bad) =>
-    `<!doctype html><html lang="${bad ? "fr" : "en"}"><head><meta charset="utf-8"><title>${bad ? "" : "Quality fixture"}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui;${bad ? "min-width:2400px" : ""}}dialog{padding:2rem}label{display:block}</style></head><body><main><h1>Browser verification fixture</h1><p>This controlled document checks real browser assertions and modal keyboard behavior.</p><button id="open" type="button">Sign in</button></main><dialog aria-label="Account access"><form method="dialog"><label>Email<input type="email" autocomplete="username"></label><label>Password<input type="password" autocomplete="current-password"></label><button type="submit">Close</button></form></dialog><script>document.getElementById('open').onclick=()=>document.querySelector('dialog').showModal()</script></body></html>`;
+    `<!doctype html><html lang="${bad ? "fr" : "en"}"><head><meta charset="utf-8"><title>${bad ? "" : "Quality fixture"}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>button{min-width:44px;min-height:44px}body{font-family:system-ui;${bad ? "min-width:2400px" : ""}}dialog{padding:2rem}label{display:block}</style></head><body><main><h1>Browser verification fixture</h1><p>This controlled document checks real browser assertions and modal keyboard behavior.</p><button id="open" type="button">Sign in</button></main><dialog aria-label="Account access"><form method="dialog"><label>Email<input type="email" autocomplete="username"></label><label>Password<input type="password" autocomplete="current-password"></label><button type="submit">Close</button></form></dialog><script>document.getElementById('open').onclick=()=>document.querySelector('dialog').showModal()</script></body></html>`;
 const stylesheetServer = createServer((request, response) => {
     if (request.url === "/frame-error") {
         response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
@@ -57,6 +57,72 @@ await new Promise((resolve) =>
 const stylesheetOrigin = `http://127.0.0.1:${stylesheetServer.address().port}`;
 const server = createServer((request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    if (request.url === "/deferred-frame-good") {
+        response.end(
+            fixture(false).replace(
+                "</main>",
+                '<iframe title="Deferred child" src="/deferred-good"></iframe></main>',
+            ),
+        );
+        return;
+    }
+    if (request.url.startsWith("/deferred-")) {
+        const mode = request.url.slice("/deferred-".length);
+        response.end(
+            fixture(false)
+                .replace(
+                    "</main>",
+                    `${mode === "added-bad" ? "" : mode === "shadow-good" ? '<div id="shadow-host"></div>' : '<button id="deferred" type="button" style="width:44px;height:44px"></button>'}</main>`,
+                )
+                .replace(
+                    "</body>",
+                    `<script>
+                    let assignedAxe;
+                    let renderStep = 0;
+                    const shadowHost = document.getElementById('shadow-host');
+                    if (shadowHost) shadowHost.attachShadow({mode: 'open'}).innerHTML = '<button id="deferred" type="button" style="width:44px;height:44px"></button>';
+                    // axe publishes window.axe before assigning its API methods.
+                    // Intercept runPartial's assignment to keep the real scan and
+                    // deterministically finish rendering immediately after it.
+                    Object.defineProperty(window, 'axe', {
+                        configurable: true,
+                        get: () => assignedAxe,
+                        set(value) {
+                            assignedAxe = value;
+                            let wrappedRunPartial;
+                            Object.defineProperty(value, 'runPartial', {
+                                configurable: true,
+                                get: () => wrappedRunPartial,
+                                set(runPartial) {
+                                    wrappedRunPartial = async function(...args) {
+                                        const mode = ${JSON.stringify(mode)};
+                                        if (mode === 'error') throw new Error('Controlled axe failure');
+                                        const result = await runPartial.apply(this, args);
+                                        let button = (shadowHost?.shadowRoot ?? document).getElementById('deferred');
+                                        if (mode === 'added-bad' && !button) {
+                                            button = document.createElement('button');
+                                            button.id = 'deferred';
+                                            button.type = 'button';
+                                            button.style.cssText = 'width:44px;height:44px';
+                                            document.querySelector('main').append(button);
+                                        } else if (mode === 'changing') {
+                                            button.setAttribute('aria-label', 'Loaded action');
+                                            button.dataset.renderStep = String(++renderStep);
+                                        } else if (button && !button.dataset.rendered) {
+                                            button.dataset.rendered = 'true';
+                                            if (mode === 'good' || mode === 'shadow-good') button.setAttribute('aria-label', 'Loaded action');
+                                        }
+                                        return result;
+                                    };
+                                }
+                            });
+                        }
+                    });
+                    </script></body>`,
+                ),
+        );
+        return;
+    }
     const runtimeScripts = {
         "/stylesheet-probe": "",
         "/handled-rejection":
@@ -164,6 +230,64 @@ try {
         ),
     };
     for (const browserName of ["chromium", "firefox", "webkit"]) {
+        const deferred = await runBrowser({
+            policy: runtimePolicy,
+            baseURL: origin,
+            browserName,
+            scenarios: [
+                "good",
+                "bad",
+                "added-bad",
+                "changing",
+                "error",
+                "shadow-good",
+                "frame-good",
+            ].map((mode) => ({
+                ...scenario,
+                id: `deferred-${mode}`,
+                path: `/deferred-${mode}`,
+                kind: "public",
+                openDialog: undefined,
+            })),
+            artifactDirectory: path.join(output, `deferred-${browserName}`),
+        });
+        const axe = deferred.results.find((item) => item.requirement === "axe");
+        for (const id of [
+            "deferred-good",
+            "deferred-shadow-good",
+            "deferred-frame-good",
+        ]) {
+            const goodCase = axe.cases.find((item) => item.id === id);
+            assert.ok(
+                goodCase &&
+                    !goodCase.error &&
+                    goodCase.observations > 0 &&
+                    !axe.findings.some((item) => item.case === id),
+                `${browserName}: axe must inspect the completed deferred render (${id}): ${JSON.stringify(axe)}`,
+            );
+            assert.match(goodCase.detail, /stable DOM after 2 attempts/u);
+        }
+        for (const mode of ["bad", "added-bad"]) {
+            assert.ok(
+                axe.findings.some(
+                    (item) =>
+                        item.case === `deferred-${mode}` &&
+                        item.message.startsWith("button-name:"),
+                ),
+                `${browserName}: stable ${mode} controls must still fail button-name`,
+            );
+        }
+        assert.match(
+            axe.cases.find((item) => item.id === "deferred-changing")?.error ??
+                "",
+            /DOM kept changing during axe audit \(3 attempts\)/u,
+            `${browserName}: continuously changing DOM must fail within the attempt limit`,
+        );
+        assert.match(
+            axe.cases.find((item) => item.id === "deferred-error")?.error ?? "",
+            /Controlled axe failure/u,
+            `${browserName}: axe execution errors must not be retried or suppressed`,
+        );
         const runtime = await runBrowser({
             policy: runtimePolicy,
             baseURL: origin,

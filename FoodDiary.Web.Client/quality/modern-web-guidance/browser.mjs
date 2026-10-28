@@ -18,25 +18,57 @@ export const browserChecks = new Set([
     'browser:dialog-focus',
 ]);
 
+async function snapshotDom(page) {
+    return JSON.stringify(
+        await Promise.all(
+            page.frames().map(async frame => ({
+                url: frame.url(),
+                roots: await frame.evaluate(() => {
+                    const roots = [document.documentElement?.outerHTML ?? ''];
+                    const captureShadowRoots = root => {
+                        for (const element of root.querySelectorAll('*')) {
+                            if (!element.shadowRoot) continue;
+                            roots.push(element.shadowRoot.innerHTML);
+                            captureShadowRoots(element.shadowRoot);
+                        }
+                    };
+                    captureShadowRoots(document);
+                    return roots;
+                }),
+            })),
+        ),
+    );
+}
+
 export async function inspectPage(page, check, scenario) {
     if (platformBrowserChecks.has(check)) return inspectPlatformPage(page, check, scenario);
     if (check === 'browser:axe') {
         const module = await dependency('@axe-core/playwright');
         const AxeBuilder = module.default;
         const forcedColors = await page.evaluate(() => matchMedia('(forced-colors: active)').matches);
-        const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']);
-        // axe mixes unforced -webkit-text-fill-color with the forced background:
-        // https://github.com/dequelabs/axe-core/issues/3978. Keep semantic checks
-        // in the requested mode and measure author contrast in normal colors.
-        const result = await (forcedColors ? builder.disableRules(['color-contrast']) : builder).analyze();
-        if (forcedColors) {
-            await page.emulateMedia({ forcedColors: 'none' });
-            try {
-                const contrast = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
-                for (const key of ['passes', 'violations', 'incomplete']) result[key].push(...contrast[key]);
-            } finally {
-                await page.emulateMedia({ forcedColors: 'active' });
+        let result;
+        let attempts = 0;
+        // A route can be ready while a viewport-deferred component is still
+        // rendering. Accept only a complete scan of an unchanged DOM, whether
+        // it passes or fails. Never retry an axe error or discard stable findings.
+        for (attempts = 1; attempts <= 3; attempts++) {
+            const before = await snapshotDom(page);
+            const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']);
+            // axe mixes unforced -webkit-text-fill-color with the forced background:
+            // https://github.com/dequelabs/axe-core/issues/3978. Keep semantic checks
+            // in the requested mode and measure author contrast in normal colors.
+            result = await (forcedColors ? builder.disableRules(['color-contrast']) : builder).analyze();
+            if (forcedColors) {
+                await page.emulateMedia({ forcedColors: 'none' });
+                try {
+                    const contrast = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+                    for (const key of ['passes', 'violations', 'incomplete']) result[key].push(...contrast[key]);
+                } finally {
+                    await page.emulateMedia({ forcedColors: 'active' });
+                }
             }
+            if (before === (await snapshotDom(page))) break;
+            if (attempts === 3) throw new Error('DOM kept changing during axe audit (3 attempts).');
         }
         return {
             observations: result.passes.length + result.violations.length + result.incomplete.length,
@@ -45,7 +77,7 @@ export async function inspectPage(page, check, scenario) {
                 targets: violation.nodes.map(node => node.target.join(' ')),
                 url: violation.helpUrl,
             })),
-            detail: `axe ${result.testEngine.version}: ${result.incomplete.length} checks also need manual review.${forcedColors ? ' Author contrast measured in normal colors (axe #3978); system-palette contrast remains manual.' : ''}`,
+            detail: `axe ${result.testEngine.version}: stable DOM after ${attempts} attempts; ${result.incomplete.length} checks also need manual review.${forcedColors ? ' Author contrast measured in normal colors (axe #3978); system-palette contrast remains manual.' : ''}`,
             manual: result.incomplete.map(item => ({ id: item.id, reason: item.help })),
         };
     }

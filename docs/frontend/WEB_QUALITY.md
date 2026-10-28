@@ -82,6 +82,16 @@ node Tooling/WebQuality/cli.mjs audit --profile browser --browser firefox --stat
 node Tooling/WebQuality/cli.mjs audit --profile browser --browser webkit --static-root FoodDiary.Web.Client/dist/browser
 ```
 
+The axe adapter compares document snapshots (including child frames and open
+shadow roots) before and after each complete analysis. Viewport-deferred content
+can render after the route readiness marker. If the DOM changed during a scan,
+its result is discarded and the current document is analyzed again, up to three
+attempts. This applies to passing and failing scans alike so newly added invalid
+controls are also checked. Stable violations remain failures; continuous changes
+and axe execution errors fail the audit. No accessibility rules are suppressed
+for deferred rendering. Per-scenario details record the accepted attempt count.
+Controlled fixtures verify these boundaries in all three browser engines.
+
 The build uses `npm run build:prod` and records input/output fingerprints in
 `.artifacts/web-quality/build.json`. Local browser and performance runs validate
 the receipt before and after execution. Changed sources or assets require a
