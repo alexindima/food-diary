@@ -922,14 +922,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "37fbe30570d8b9b30e70564e80805586e58cff7b8ccd73fdd60a3e2cafd3e141",
-          "reviewReason": "The master registry appends one sealed Telegram OIDC diagnostics task outcome with the existing instruction fingerprints, risk/cohort attribution and previous-event hash. The append-only chain validates. No schema, learning threshold, instruction experiment or adoption behavior changed; this workflow still correctly treats observations as evidence rather than authority to edit AGENTS.md."
+          "sha256": "09bb116e8ddd08f7aff662e763c8958acaf0396f0f34d998a2ca7ec22991d525",
+          "reviewReason": "Reviewed the appended auth-restoration-diagnostics completion observation against the instruction-effectiveness guide and registry verifier. The new record has unchanged schema, source fingerprints and hash-chain semantics. Its observed verificationScore=0 reflects manual local execution attestations; it is not presented as paired evidence or a confirmed instruction improvement. The guide still describes the same observed/shadow distinction and promotion rules."
         }
       ],
-      "reason": "The master registry appends one sealed Telegram OIDC diagnostics task outcome with the existing instruction fingerprints, risk/cohort attribution and previous-event hash. The append-only chain validates. No schema, learning threshold, instruction experiment or adoption behavior changed; this workflow still correctly treats observations as evidence rather than authority to edit AGENTS.md.",
-      "baseRef": "origin/master",
-      "gitHead": "90d91d78106f6e668ddd0cf7fbfb5be0a1acc5a6",
-      "reviewedAtUtc": "2026-10-25T14:28:34.8683352Z"
+      "reason": "Reviewed the appended auth-restoration-diagnostics completion observation against the instruction-effectiveness guide and registry verifier. The new record has unchanged schema, source fingerprints and hash-chain semantics. Its observed verificationScore=0 reflects manual local execution attestations; it is not presented as paired evidence or a confirmed instruction improvement. The guide still describes the same observed/shadow distinction and promotion rules.",
+      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "gitHead": "c32c56f46df8d9488b429473de51904984b139e2",
+      "reviewedAtUtc": "2026-10-28T01:29:58.7758568Z"
     },
     {
       "pageId": "workflow-integration-scan",
