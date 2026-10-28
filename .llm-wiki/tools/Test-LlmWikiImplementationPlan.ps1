@@ -182,4 +182,32 @@ if ($scalarApiDimension.status -ne 'warning' -or @($scalarApiDimension.issues).C
     throw 'Release readiness did not normalize a scalar behavioral restriction.'
 }
 
+$scalarPrivacyDimension = @($scalarReadiness.dimensions | Where-Object id -eq 'privacy')[0]
+if ($scalarPrivacyDimension.status -ne 'not-assessed' -or $scalarPrivacyDimension.summary -notmatch '3 privacy-sensitive') {
+    throw 'Release readiness discarded supplied privacy impact without review evidence.'
+}
+$emptyPrivacyDimension = @($acceptedReadiness.dimensions | Where-Object id -eq 'privacy')[0]
+if ($emptyPrivacyDimension.status -ne 'not-applicable') { throw 'A complete empty privacy summary was not recognized.' }
+foreach ($missingSection in @('potentialLogging', 'privacyImpact')) {
+    $incompletePacket = $scalarPacket | ConvertTo-Json -Depth 12 | ConvertFrom-Json
+    if ($missingSection -eq 'privacyImpact') {
+        $incompletePacket.brief.PSObject.Properties.Remove('privacyImpact')
+    } else {
+        $incompletePacket.brief.privacyImpact.PSObject.Properties.Remove($missingSection)
+    }
+    $incompleteReadiness = & {
+        param($FixturePacket, $ApiResult)
+        Set-StrictMode -Version Latest
+        & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
+            -PacketInput $FixturePacket -ApiCompatibilityInput $ApiResult `
+            -ManifestPath '.artifacts/llm-wiki/nonexistent-incomplete-manifest.json' `
+            -AcceptancePath '.artifacts/llm-wiki/nonexistent-incomplete-acceptance.json' `
+            -EvidencePath '.artifacts/llm-wiki/nonexistent-incomplete-evidence.json' -Format Json
+    } $incompletePacket $scalarApiResult | ConvertFrom-Json
+    $privacyDimension = @($incompleteReadiness.dimensions | Where-Object id -eq 'privacy')[0]
+    if ($privacyDimension.status -ne 'not-assessed' -or $privacyDimension.summary -notmatch 'incomplete') {
+        throw 'Incomplete privacy information must render as unassessed, never as no sensitive impact.'
+    }
+}
+
 Write-Host 'LLM Wiki implementation-plan tests passed.'

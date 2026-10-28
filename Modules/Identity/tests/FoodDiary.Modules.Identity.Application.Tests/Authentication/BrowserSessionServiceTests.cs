@@ -52,10 +52,12 @@ public sealed class BrowserSessionServiceTests {
             case "revoked": scenario.Session.Revoke(Now); break;
             case "expired": scenario.Clock.UtcNow = scenario.Session.ExpiresAtUtc!.Value; break;
             case "wrong-secret": credential = credential[..^1] + (credential[^1] == 'A' ? 'B' : 'A'); break;
-            case "principal": scenario.Users.GetAuthenticationPrincipalAsync(scenario.Session.UserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            case "principal":
+                scenario.Users.GetAuthenticationPrincipalAsync(scenario.Session.UserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
                 .Returns(Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidToken)); break;
             case "absolute-expiry": scenario.Lifetimes.GetAbsoluteExpiration(scenario.Session.CreatedAtUtc).Returns(Now); break;
-            case "revalidate": scenario.Sessions.TryRevalidateBrowserSessionAsync(scenario.Session.Id, scenario.Session.UserId,
+            case "revalidate":
+                scenario.Sessions.TryRevalidateBrowserSessionAsync(scenario.Session.Id, scenario.Session.UserId,
                 Arg.Any<string>(), Arg.Any<long>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(returnThis: false); break;
             case "renew":
                 scenario.Lifetimes.GetRenewedExpiration(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<bool>(), Arg.Any<DateTime>()).Returns(Now.AddDays(90));

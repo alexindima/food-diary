@@ -861,12 +861,17 @@
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
           "sha256": "f264a51241762bd48747286085f1937f345bb0cf8024133532e21c141e4f25b2",
           "reviewReason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "d21c8857f633f25ee158491740d7fdac6b9a953df0c3446d2824c5ef8aee1a49",
+          "reviewReason": "Reviewed the strict-mode readiness regression appended to the implementation-plan suite. Planner normalization and phase generation remain unchanged; supplied scalar privacy impact, complete empty impact, and abbreviated summaries now have explicit consumer assertions."
         }
       ],
-      "reason": "Reviewed the final brief and test-plan optimization: all risk, policy, ownership, required-check and scenario fields remain compatible. The exact scoped SQL impact is shared only within one request; standalone planner queries and cache invalidation remain intact. Test discovery uses the existing pruned source inventory with explicit legacy system/hidden exclusions, bounded escaped regex alternatives and request-local source text reuse. Full paired response parity passed across backend, frontend, Users and intent-only cases; source inventory and semantic planner checks passed. Updated brief and test-plan workflow documentation and source declarations; downstream workflow descriptions continue to apply.",
-      "baseRef": "HEAD",
-      "gitHead": "41c23e0cf3b2b37ae68acc3e65140056ed277563",
-      "reviewedAtUtc": "2026-10-14T12:26:33.8883444Z"
+      "reason": "Reviewed the strict-mode readiness regression appended to the implementation-plan suite. Planner normalization and phase generation remain unchanged; supplied scalar privacy impact, complete empty impact, and abbreviated summaries now have explicit consumer assertions.",
+      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
+      "reviewedAtUtc": "2026-10-28T01:52:59.2052474Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -1158,6 +1163,11 @@
       "pageSha256": "1684cbe2c98211ca7fd946264d33e15af96696e64ee7ab094b94fc1086af0b85",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "899aba4d79f418b168aa9c65a7f51704e287e6d7b6bb2e35e61f7eb9905bec35",
+          "reviewReason": "Reviewed the privacy dimension guard: missing or null sections are explicitly not-assessed with a regenerate-packet diagnostic. Complete empty summaries remain not-applicable and populated summaries retain review requirements. Readiness weights, blocking gates and FailOnNotReady behavior are preserved."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
           "sha256": "d3aee9f6a0ab8d7696a6c1f9a45fa743374980cd80990133d3e0b484ea00e36f",
           "reviewReason": "Reviewed existing design, phase, acceptance and evidence contracts: compact specifications preserve adaptive short routes; phase proof uses current criterion fingerprints and executed-check logs; substantive review records requirement conclusions and source-bound findings separately from automatic policy assessment. Updated the canonical workflow and affected Wiki pages, and verified execution, source/log drift, staged changes and review-closure regressions."
@@ -1168,10 +1178,10 @@
           "reviewReason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged."
         }
       ],
-      "reason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:27:03.8621591Z"
+      "reason": "Reviewed the privacy dimension guard: missing or null sections are explicitly not-assessed with a regenerate-packet diagnostic. Complete empty summaries remain not-applicable and populated summaries retain review requirements. Readiness weights, blocking gates and FailOnNotReady behavior are preserved.",
+      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
+      "reviewedAtUtc": "2026-10-28T01:53:00.6411896Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -1210,6 +1220,11 @@
           "reviewReason": "The frontend browser artifact upload does not change report generation, assessment provenance, optional governance handling, readiness semantics or publication of the Wiki review summary. Current guidance remains accurate."
         },
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "899aba4d79f418b168aa9c65a7f51704e287e6d7b6bb2e35e61f7eb9905bec35",
+          "reviewReason": "Reviewed the readiness consumer used by the report. Incomplete optional privacy metadata renders as an unassessed dimension instead of a strict-mode exception. JSON/Markdown finding contracts, snapshot provenance and optional-governance behavior are unchanged; the real report regression passes."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
           "sha256": "14efea7f02c0e51ef21c05fa5c36b861e47128fac8b262192c65e4478c16fe47",
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
@@ -1220,10 +1235,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "The frontend browser artifact upload does not change report generation, assessment provenance, optional governance handling, readiness semantics or publication of the Wiki review summary. Current guidance remains accurate.",
-      "baseRef": "origin/master",
-      "gitHead": "22700d47dea10177b9e80b9c04d14078b8776607",
-      "reviewedAtUtc": "2026-10-27T18:54:51.2276454Z"
+      "reason": "Reviewed the readiness consumer used by the report. Incomplete optional privacy metadata renders as an unassessed dimension instead of a strict-mode exception. JSON/Markdown finding contracts, snapshot provenance and optional-governance behavior are unchanged; the real report regression passes.",
+      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
+      "reviewedAtUtc": "2026-10-28T01:53:01.9151667Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1388,6 +1403,11 @@
       "pageSha256": "617ec5d81374f609d0742badfc5065ef186a86f4c7119c1bffb2cca1ae3f46a4",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "899aba4d79f418b168aa9c65a7f51704e287e6d7b6bb2e35e61f7eb9905bec35",
+          "reviewReason": "Reviewed the task-workspace dependency on readiness. Incomplete privacy summaries remain unassessed and cannot certify ready status. Task scope, acceptance, evidence lineage, completion seals and all non-compensating requirements are unchanged."
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
           "sha256": "309922374e252f3c1780c9b988377c406a2ca87aea293f5c8cafb465eab7fc75",
           "reviewReason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged."
@@ -1403,10 +1423,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:27:04.285131Z"
+      "reason": "Reviewed the task-workspace dependency on readiness. Incomplete privacy summaries remain unassessed and cannot certify ready status. Task scope, acceptance, evidence lineage, completion seals and all non-compensating requirements are unchanged.",
+      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
+      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
+      "reviewedAtUtc": "2026-10-28T01:53:03.3654956Z"
     },
     {
       "pageId": "workflow-test-plan",

@@ -218,12 +218,16 @@ if ($null -eq $evidence) {
     }
 }
 
-$privacyImpactCount = Get-ItemCount @(
-    @($packet.brief.privacyImpact.fields) +
-    @($packet.brief.privacyImpact.boundaries) +
-    @($packet.brief.privacyImpact.potentialLogging)
-)
-if ($privacyImpactCount -eq 0) {
+$privacyImpact = if ($packet.brief.PSObject.Properties['privacyImpact']) { $packet.brief.privacyImpact } else { $null }
+$missingPrivacySections = @('fields', 'boundaries', 'potentialLogging' | Where-Object {
+    $null -eq $privacyImpact -or -not $privacyImpact.PSObject.Properties[$_] -or $null -eq $privacyImpact.$_
+})
+$privacyImpactCount = if ($missingPrivacySections.Count -eq 0) {
+    Get-ItemCount @(@($privacyImpact.fields) + @($privacyImpact.boundaries) + @($privacyImpact.potentialLogging))
+} else { 0 }
+if ($missingPrivacySections.Count -gt 0) {
+    Add-Dimension 'privacy' 5 'not-assessed' "Privacy impact summary is incomplete; regenerate the packet. Missing sections: $($missingPrivacySections -join ', ')."
+} elseif ($privacyImpactCount -eq 0) {
     Add-Dimension 'privacy' 5 'not-applicable' 'No indexed sensitive-data impact was found.'
 } elseif ($null -eq $evidence) {
     Add-Dimension 'privacy' 5 'not-assessed' "$privacyImpactCount privacy-sensitive impact item(s) lack evidence."
