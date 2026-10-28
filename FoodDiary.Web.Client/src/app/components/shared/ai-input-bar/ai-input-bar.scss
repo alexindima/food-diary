@@ -6,6 +6,8 @@
 }
 
 .ai-input-bar {
+    --ai-input-control-size: var(--fd-size-control-md);
+    --ai-input-transition: 180ms ease;
     gap: var(--fd-space-actions-gap);
     padding: var(--fd-space-surface-padding);
     min-width: 0;
@@ -14,11 +16,6 @@
         border: var(--fd-border-default);
         border-radius: var(--fd-radius-input);
         background: var(--fd-bg-surface-raised);
-
-        &:where(:has(.ai-input-bar__input:focus-visible)) {
-            outline: var(--fd-border-width-strong) solid var(--fd-color-ai);
-            outline-offset: var(--fd-space-micro);
-        }
 
         &--attached {
             border-bottom-left-radius: 0;
@@ -89,10 +86,14 @@
     }
 
     &__input {
+        box-sizing: border-box;
         flex: 1;
         width: 0;
         min-width: 0;
+        height: var(--ai-input-control-size);
+        padding: 0 var(--fd-space-xs);
         border: none;
+        border-radius: var(--fd-radius-input);
         outline: none;
         font-family: inherit;
         font-size: inherit;
@@ -102,6 +103,11 @@
         background: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        &:focus-visible {
+            outline: var(--fd-border-width-strong) solid var(--fd-color-ai);
+            outline-offset: calc(-1 * var(--fd-border-width-strong));
+        }
 
         &::placeholder {
             color: var(--fd-color-text-muted);
@@ -113,12 +119,59 @@
         }
     }
 
-    &__action-btn {
+    &__controls {
+        position: relative;
         flex-shrink: 0;
-        --fd-button-width: var(--fd-size-control-md);
-        --fd-button-min-width: var(--fd-size-control-md);
-        --fd-button-height: var(--fd-size-control-md);
-        --fd-button-height-explicit: var(--fd-size-control-md);
+        width: calc(2 * var(--ai-input-control-size) + var(--fd-space-actions-gap));
+        height: var(--ai-input-control-size);
+        transition: width var(--ai-input-transition);
+
+        &--single,
+        &--text {
+            width: var(--ai-input-control-size);
+        }
+    }
+
+    &__capture,
+    &__send {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        display: flex;
+        gap: var(--fd-space-actions-gap);
+        transition:
+            opacity var(--ai-input-transition),
+            transform var(--ai-input-transition),
+            visibility var(--ai-input-transition);
+    }
+
+    &__send,
+    &__controls--text &__capture {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateX(var(--fd-space-xs)) scale(0.9);
+        pointer-events: none;
+    }
+
+    &__controls--text &__send {
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+
+    &__action-btn,
+    &__submit {
+        flex-shrink: 0;
+        --fd-button-host-width: var(--ai-input-control-size);
+        --fd-button-host-min-width: var(--ai-input-control-size);
+        --fd-button-width: var(--ai-input-control-size);
+        --fd-button-min-width: var(--ai-input-control-size);
+        --fd-button-height: var(--ai-input-control-size);
+        --fd-button-height-explicit: var(--ai-input-control-size);
+    }
+
+    &__action-btn {
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-button);
         --fd-button-disabled-opacity: 0.4;
@@ -158,27 +211,12 @@
     }
 
     &__submit {
-        flex-shrink: 0;
-        --fd-button-host-width: var(--fd-size-control-compact);
-        --fd-button-host-min-width: var(--fd-size-control-compact);
-        --fd-button-width: var(--fd-size-control-compact);
-        --fd-button-min-width: var(--fd-size-control-compact);
-        --fd-button-height: var(--fd-size-control-compact);
-        --fd-button-height-explicit: var(--fd-size-control-compact);
         --fd-button-padding-x: 0;
         --fd-button-border-radius: var(--fd-radius-button);
-        --fd-button-background-default: var(--fd-color-ai-strong);
-        --fd-button-background-hover: var(--fd-gradient-ai-end);
-        --fd-button-background-active: var(--fd-gradient-ai-end);
-        --fd-button-background-disabled: var(--fd-color-ai-strong);
         --fd-button-border-default: transparent;
         --fd-button-border-hover: transparent;
         --fd-button-border-active: transparent;
         --fd-button-border-disabled: transparent;
-        --fd-button-text-default: var(--fd-color-on-ai);
-        --fd-button-text-hover: var(--fd-color-on-ai);
-        --fd-button-text-active: var(--fd-color-on-ai);
-        --fd-button-text-disabled: var(--fd-color-on-ai);
         --fd-button-disabled-opacity: 0.4;
         --fd-button-shadow-default: var(--fd-shadow-none);
         --fd-button-shadow-hover: var(--fd-shadow-none);
@@ -220,8 +258,19 @@
     }
 }
 @media (any-pointer: coarse) {
+    .ai-input-bar {
+        --ai-input-control-size: var(--fd-size-control-touch);
+    }
+
     .ai-input-bar__input {
-        min-height: var(--fd-size-control-touch);
         font-size: var(--fd-text-body-size);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ai-input-bar__controls,
+    .ai-input-bar__capture,
+    .ai-input-bar__send {
+        transition: none;
     }
 }

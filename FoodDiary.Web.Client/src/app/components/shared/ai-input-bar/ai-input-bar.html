@@ -22,49 +22,58 @@
             (input)="onTextInput($event)"
             (fdUiTextEnter)="submitTextAsync()"
         />
-        @if (!voiceText().trim()) {
-            <fd-ui-button
-                class="ai-input-bar__action-btn"
-                variant="secondary"
-                fill="solid"
-                icon="photo_camera"
-                iconSize="lg"
-                fdUiHintPosition="bottom"
-                [disabled]="isDisabled()"
-                [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-                [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
-                (click)="onPhotoClickAsync()"
-            />
-            @if (isSpeechSupported) {
+        @let hasText = !!voiceText().trim();
+        <div
+            class="ai-input-bar__controls"
+            [class.ai-input-bar__controls--text]="hasText"
+            [class.ai-input-bar__controls--single]="!isSpeechSupported"
+        >
+            <div class="ai-input-bar__capture" [inert]="hasText">
                 <fd-ui-button
                     class="ai-input-bar__action-btn"
                     variant="secondary"
                     fill="solid"
+                    icon="photo_camera"
                     iconSize="lg"
                     fdUiHintPosition="bottom"
-                    [icon]="microphoneIcon()"
-                    [ariaPressed]="isListening()"
-                    [class.ai-input-bar__action-btn--mic-active]="isListening()"
-                    [disabled]="isMicrophoneDisabled()"
-                    [disabledReason]="isMicrophoneDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                    [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
-                    [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
-                    (click)="toggleMicAsync()"
+                    [disabled]="isDisabled()"
+                    [fdUiHint]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+                    [ariaLabel]="'AI_INPUT_BAR.PHOTO_TITLE' | translate"
+                    (click)="onPhotoClickAsync()"
                 />
-            }
-        } @else {
-            <fd-ui-button
-                class="ai-input-bar__submit"
-                variant="primary"
-                fill="solid"
-                iconSize="lg"
-                [icon]="textSubmitIcon()"
-                [disabled]="isDisabled()"
-                [disabledReason]="isDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
-                (click)="submitTextAsync()"
-            />
-        }
+                @if (isSpeechSupported) {
+                    <fd-ui-button
+                        class="ai-input-bar__action-btn"
+                        variant="secondary"
+                        fill="solid"
+                        iconSize="lg"
+                        fdUiHintPosition="bottom"
+                        [icon]="microphoneIcon()"
+                        [ariaPressed]="isListening()"
+                        [class.ai-input-bar__action-btn--mic-active]="isListening()"
+                        [disabled]="isMicrophoneDisabled()"
+                        [disabledReason]="isMicrophoneDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                        [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
+                        [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
+                        (click)="toggleMicAsync()"
+                    />
+                }
+            </div>
+            <div class="ai-input-bar__send" [inert]="!hasText">
+                <fd-ui-button
+                    class="ai-input-bar__submit"
+                    variant="primary"
+                    fill="solid"
+                    appearance="ai-action"
+                    iconSize="lg"
+                    [icon]="textSubmitIcon()"
+                    [disabled]="isDisabled()"
+                    [disabledReason]="isDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                    [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
+                    (click)="submitTextAsync()"
+                />
+            </div>
+        </div>
     </div>
 
     @if (speechErrorKey(); as errorKey) {
