@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
@@ -44,7 +45,7 @@ const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
 
 @Component({
     selector: 'fd-cycle-summary-card',
-    imports: [CommonModule, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
+    imports: [CommonModule, RouterLink, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
     templateUrl: './cycle-summary-card.html',
     styleUrl: './cycle-summary-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -158,6 +159,7 @@ export class CycleSummaryCardComponent {
     });
     protected readonly hasMeta = computed(() => this.metaPills().length > 0);
     protected readonly hasCycle = computed(() => this.normalizedStart() !== null);
+    protected readonly journalLink = computed(() => (this.hasCycle() && !this.isLoading() ? '/cycle-tracking' : null));
 
     protected onSetup(): void {
         this.setupAction.emit();

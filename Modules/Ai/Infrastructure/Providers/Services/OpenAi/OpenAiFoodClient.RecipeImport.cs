@@ -1,7 +1,9 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
+using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Modules.Ai.Infrastructure.Providers.Services.OpenAi;
 
@@ -32,6 +34,17 @@ public sealed partial class OpenAiFoodClient {
             return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(response.Error);
         }
         using JsonDocument json = response.Json!;
+        if (json.RootElement.ValueKind != JsonValueKind.Object ||
+            !json.RootElement.TryGetProperty("status", out JsonElement status) || status.ValueKind != JsonValueKind.String ||
+            !string.Equals(status.GetString(), "completed", StringComparison.Ordinal)) {
+            bool outputTokenLimitReached = json.RootElement.ValueKind == JsonValueKind.Object &&
+                json.RootElement.TryGetProperty("incomplete_details", out JsonElement details) && details.ValueKind == JsonValueKind.Object &&
+                details.TryGetProperty("reason", out JsonElement reason) && reason.ValueKind == JsonValueKind.String &&
+                string.Equals(reason.GetString(), "max_output_tokens", StringComparison.Ordinal);
+            logger.LogWarning("Recipe import provider response did not complete. Output token limit reached: {OutputTokenLimitReached}.", outputTokenLimitReached);
+            return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(
+                AiErrors.InvalidResponse("Recipe response was not completed by the provider."));
+        }
         try {
             string? output = ExtractOutputText(json);
             RecipeImportDraftModel? draft = output is null ? null : JsonSerializer.Deserialize<RecipeImportDraftModel>(
@@ -119,7 +132,7 @@ public sealed partial class OpenAiFoodClient {
               "required":["name","description","ingredients","steps","servings","prepMinutes","cookMinutes","authorNutrition","nutrition"]
             }
             """);
-        return new {
+        JsonObject request = JsonSerializer.SerializeToNode(new {
             model = _options.TextModel,
             max_output_tokens = _options.MaxOutputTokens,
             store = false,
@@ -129,6 +142,13 @@ public sealed partial class OpenAiFoodClient {
                     text = JsonSerializer.Serialize(new { language = language ?? "en", source }), }, }, },
             },
             text = new { format = new { type = "json_schema", name = "recipe_import", strict = true, schema } },
-        };
+        })!.AsObject();
+        // The default mini model otherwise spends most of the 4096-token budget on reasoning,
+        // leaving too little space for the structured recipe. Keep other configured models unchanged.
+        if (string.Equals(_options.TextModel, "gpt-5-mini", StringComparison.Ordinal) ||
+            _options.TextModel.StartsWith("gpt-5-mini-", StringComparison.Ordinal)) {
+            request["reasoning"] = JsonSerializer.SerializeToNode(new { effort = "low" });
+        }
+        return request;
     }
 }

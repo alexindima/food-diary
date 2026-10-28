@@ -292,6 +292,72 @@ test.describe('client auth smoke', () => {
     });
 });
 
+test.describe('dashboard cycle navigation', () => {
+    for (const viewport of [
+        { width: 1440, height: 900 },
+        { width: 390, height: 844 },
+    ]) {
+        test(`opens the configured cycle card by pointer and keyboard at ${viewport.width}px`, async ({ page }, testInfo) => {
+            await page.setViewportSize(viewport);
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            const cycle = {
+                id: '00000000-0000-4000-8000-000000000010',
+                userId: '00000000-0000-4000-8000-000000000001',
+                mode: 0,
+                goal: 0,
+                reproductiveState: 0,
+                confidence: 1,
+                hideFromDashboard: false,
+                trackingStartDate: '2026-04-01T00:00:00.000Z',
+                averageCycleLength: 28,
+                averagePeriodLength: 5,
+                lutealLength: 14,
+                isRegular: true,
+                isOnboardingComplete: true,
+                showFertilityEstimates: false,
+                discreetNotifications: true,
+                bleedingEntries: [],
+                symptoms: [],
+                factors: [],
+                fertilitySignals: [],
+                menstrualEpisodes: [],
+                predictions: null,
+            };
+            await page.route('**/api/v1/dashboard?**', async route =>
+                route.fulfill(
+                    jsonFixture(fixtureContract, 'GET', '/api/v1/dashboard', {
+                        ...createDashboardSnapshot(),
+                        currentCycle: cycle,
+                    }),
+                ),
+            );
+            await page.goto('/dashboard');
+            const card = page.locator('fd-cycle-summary-card');
+            await page.locator('fd-dashboard-cycle-block').scrollIntoViewIfNeeded();
+            await expect(card.getByRole('link', { name: 'Cycle', exact: true })).toBeVisible();
+            await card.getByRole('link', { name: 'Cycle', exact: true }).click({ position: { x: 20, y: 20 } });
+            await expect(page).toHaveURL(/\/cycle-tracking$/u);
+            await expect(page.locator('main h1')).toBeVisible();
+            await page.goto('/dashboard');
+            const link = card.getByRole('link', { name: 'Cycle', exact: true });
+            await page.locator('fd-dashboard-cycle-block').scrollIntoViewIfNeeded();
+            await expect(link).toBeVisible();
+            await link.focus();
+            await expect(link).toBeFocused();
+            await page.screenshot({ path: testInfo.outputPath(`cycle-focus-${viewport.width}.png`), fullPage: true });
+            await link.press('Enter');
+            await expect(page).toHaveURL(/\/cycle-tracking$/u);
+            await page.goto('/dashboard');
+            await page.locator('fd-dashboard-cycle-block').scrollIntoViewIfNeeded();
+            await expect(link).toBeVisible();
+            await toggleDashboardSettingsAsync(page);
+            await page.getByRole('button', { name: 'Cycle', exact: true }).click();
+            await expect(page).toHaveURL(/\/dashboard$/u);
+        });
+    }
+});
+
 test.describe('authenticated client smoke', () => {
     for (const viewport of [
         { width: 1440, height: 900 },
@@ -357,6 +423,39 @@ test.describe('authenticated client smoke', () => {
         await expect(page.locator('fd-dashboard')).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Meal for today' })).toBeVisible();
     });
+});
+
+test.describe('dashboard nutrient colors', () => {
+    for (const theme of ['ocean', 'leaf', 'dark']) {
+        test(`keeps protein turquoise and carbohydrate blue across dashboard visuals in ${theme}`, async ({ page }, testInfo) => {
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.route('**/api/v1/dashboard?**', async route =>
+                route.fulfill(
+                    jsonFixture(fixtureContract, 'GET', '/api/v1/dashboard', {
+                        ...createDashboardSnapshot(),
+                        weeklyCalories: [{ date: '2026-04-19T00:00:00.000Z', calories: 820, proteins: 60, fats: 28, carbs: 82, fiber: 14 }],
+                    }),
+                ),
+            );
+            await page.goto('/dashboard');
+            await expect(page.locator('fd-nutrition-weekly-trend-card')).toBeVisible();
+            await page.locator('html').evaluate((root, value) => {
+                root.setAttribute('data-theme', value);
+            }, theme);
+            for (const nutrient of [
+                { summary: 'protein', swatch: 'protein', segment: 0, color: theme === 'dark' ? 'rgb(20, 184, 166)' : 'rgb(15, 118, 110)' },
+                { summary: 'carbs', swatch: 'carbs', segment: 2, color: theme === 'dark' ? 'rgb(59, 130, 246)' : 'rgb(3, 105, 161)' },
+            ]) {
+                await expect(page.locator(`.day-summary__nutrient--${nutrient.summary} fd-ui-icon`)).toHaveCSS('color', nutrient.color);
+                await expect(page.locator(`.nutrition-trend__swatch--${nutrient.swatch}`)).toHaveCSS('background-color', nutrient.color);
+                await expect(
+                    page.locator('fd-nutrition-weekly-trend-card .fd-ui-bar-chart__categorical-segment').nth(nutrient.segment),
+                ).toHaveCSS('background-color', nutrient.color);
+            }
+            await page.screenshot({ path: testInfo.outputPath(`nutrients-${theme}.png`), fullPage: true });
+        });
+    }
 });
 
 test.describe('authenticated accessibility', () => {

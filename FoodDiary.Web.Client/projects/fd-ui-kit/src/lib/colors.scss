@@ -309,9 +309,9 @@ html[data-theme='dark'],
     --fd-color-bg-muted: var(--fd-color-surface-muted);
 
     --fd-color-chart-calories: var(--fd-color-orange-500);
-    --fd-color-chart-proteins: var(--fd-color-blue-500);
+    --fd-color-chart-proteins: var(--fd-color-teal-700);
     --fd-color-chart-fats: var(--fd-color-yellow-300);
-    --fd-color-chart-carbs: var(--fd-color-emerald-500);
+    --fd-color-chart-carbs: var(--fd-color-sky-700);
     --fd-color-chart-fiber: var(--fd-color-purple-500);
     --fd-color-chart-radar-background: color-mix(in srgb, var(--fd-color-chart-proteins) 20%, transparent);
     --fd-color-chart-radar-border: var(--fd-color-chart-proteins);
@@ -320,7 +320,7 @@ html[data-theme='dark'],
     --fd-color-nutrition-calories: var(--fd-color-rose-500);
     --fd-color-nutrition-proteins: var(--fd-color-chart-proteins);
     --fd-color-nutrition-fats: var(--fd-color-orange-700);
-    --fd-color-nutrition-carbs: var(--fd-color-teal-700);
+    --fd-color-nutrition-carbs: var(--fd-color-chart-carbs);
     --fd-color-nutrition-fiber: var(--fd-color-purple-700);
     --fd-color-nutrition-alcohol: var(--fd-color-slate-500);
 
@@ -532,6 +532,11 @@ html[data-theme='dark'],
     --fd-button-info-text-border-disabled: transparent;
     --fd-button-info-text-text-default: var(--fd-color-info);
     --fd-button-info-text-text-disabled: color-mix(in srgb, var(--fd-color-info) 45%, var(--fd-color-surface));
+}
+
+html[data-theme='dark'] {
+    --fd-color-chart-proteins: var(--fd-color-teal-500);
+    --fd-color-chart-carbs: var(--fd-color-blue-500);
 }
 
 /* SCSS maps for programmatic usage */

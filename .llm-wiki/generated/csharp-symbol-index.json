@@ -6212,7 +6212,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "OpenAiFoodClient",

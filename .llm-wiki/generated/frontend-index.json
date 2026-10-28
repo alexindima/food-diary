@@ -3945,7 +3945,7 @@
       "role": "Component",
       "selector": "fd-cycle-summary-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.ts",
-      "line": 52
+      "line": 53
     },
     {
       "name": "DailyAdviceCardComponent",

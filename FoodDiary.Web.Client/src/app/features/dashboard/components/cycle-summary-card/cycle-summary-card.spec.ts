@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
@@ -59,6 +60,27 @@ const CYCLE: CycleResponse = {
     menstrualEpisodes: [EPISODE],
     predictions: null,
 };
+
+describe('CycleSummaryCard navigation', () => {
+    it('exposes the configured card as a keyboard-accessible link to the cycle journal', async () => {
+        const { fixture } = await setupComponentAsync();
+        fixture.detectChanges();
+
+        const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('a[href="/cycle-tracking"]');
+        expect(link, 'Configured cycle card must link to its journal').not.toBeNull();
+        expect(link?.getAttribute('aria-label')).toBe('CYCLE_CARD.TITLE');
+        expect(link?.tabIndex).toBe(0);
+    });
+
+    it.each([{ cycle: null, startDate: null }, { isLoading: true }])(
+        'does not cover setup or loading with a journal link: %j',
+        async overrides => {
+            const { fixture } = await setupComponentAsync(overrides);
+            fixture.detectChanges();
+            expect((fixture.nativeElement as HTMLElement).querySelector('a[href="/cycle-tracking"]')).toBeNull();
+        },
+    );
+});
 
 describe('CycleSummaryCardComponent', () => {
     it('calculates cycle day and next period status from inputs', async () => {
@@ -165,7 +187,7 @@ async function setupComponentAsync(
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [CycleSummaryCardComponent],
-            providers: [provideTranslateTesting()],
+            providers: [provideTranslateTesting(), provideRouter([])],
         })
         .compileComponents();
 
