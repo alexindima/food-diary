@@ -143270,7 +143270,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
       "isTest": false,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "OpenAiFoodClientResponse",
@@ -143387,7 +143387,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/RecipeImportProviderTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "OpenAiFoodClientResponse",

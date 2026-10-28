@@ -45,6 +45,45 @@ public sealed class RecipeImportProviderTests {
     }
 
     [Theory]
+    [InlineData("gpt-5-mini", true)]
+    [InlineData("gpt-5-mini-2025-08-07", true)]
+    [InlineData("gpt-4.1", false)]
+    public async Task RecipeImport_ConstrainsMiniReasoningWithinTheExistingOutputBudget(string model, bool useLowReasoning) {
+        using var handler = new ProviderHandler("not recipe JSON");
+        using var http = new HttpClient(handler);
+        var client = new OpenAiFoodClient(http, Options.Create(new OpenAiOptions { ApiKey = "unit-test-key", TextModel = model }),
+            NullLogger<OpenAiFoodClient>.Instance);
+
+        await client.GetRecipeImportTokenBudgetAsync("Recipe source", "ru", CancellationToken.None);
+        await client.ImportRecipeAsync("Recipe source", "ru", CancellationToken.None);
+
+        using var request = JsonDocument.Parse(handler.Body!);
+        using var count = JsonDocument.Parse(handler.CountBody!);
+        Assert.Equal(new OpenAiOptions().MaxOutputTokens, request.RootElement.GetProperty("max_output_tokens").GetInt32());
+        Assert.Equal(useLowReasoning, request.RootElement.TryGetProperty("reasoning", out JsonElement reasoning));
+        if (useLowReasoning) {
+            Assert.Equal("low", reasoning.GetProperty("effort").GetString());
+            Assert.Equal(reasoning.GetRawText(), count.RootElement.GetProperty("reasoning").GetRawText());
+        }
+    }
+
+    [Theory]
+    [InlineData("incomplete")]
+    [InlineData("failed")]
+    public async Task RecipeImport_RejectsUnfinishedResponsesEvenWhenTheirTextIsValidJson(string status) {
+        const string draft = """
+            {"name":"Salad","description":null,"ingredients":[{"name":"Yoghurt","amount":"180 g"}],"steps":["Mix"],"servings":1,"prepMinutes":5,"cookMinutes":null,"authorNutrition":null,"sourceUrl":null}
+            """;
+        using var handler = new ProviderHandler(draft) { ResponseStatus = status };
+        using var http = new HttpClient(handler);
+
+        Result<OpenAiFoodClientResponse<RecipeImportDraftModel>> result = await CreateClient(http).ImportRecipeAsync("Recipe source", "ru", CancellationToken.None);
+
+        ResultAssert.Failure(result, "Ai.InvalidResponse");
+        Assert.Equal("Recipe response was not completed by the provider.", result.Error.Message);
+    }
+
+    [Theory]
     [InlineData("ru")]
     [InlineData("en")]
     public async Task RecipeTokenBudget_PreservesInputAndSchemaWithoutResponseOnlyFields(string language) {
@@ -242,6 +281,7 @@ public sealed class RecipeImportProviderTests {
     [ExcludeFromCodeCoverage]
     private sealed class ProviderHandler(string draft) : HttpMessageHandler {
         public HttpStatusCode Status { get; init; } = HttpStatusCode.OK;
+        public string ResponseStatus { get; init; } = "completed";
         public string? Body { get; private set; }
         public string? CountBody { get; private set; }
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
@@ -260,6 +300,7 @@ public sealed class RecipeImportProviderTests {
                 };
             }
             string response = JsonSerializer.Serialize(new {
+                status = ResponseStatus,
                 output = new[] { new { type = "message", content = new[] { new { type = "output_text", text = draft }, } }, },
                 usage = new { input_tokens = 20, output_tokens = 10, total_tokens = 30 },
             });
