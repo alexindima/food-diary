@@ -261,10 +261,10 @@
     &__pulse {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: minmax(var(--fd-size-control-sm), auto) auto;
+        grid-template-rows: auto auto;
         column-gap: var(--fd-space-xs);
         row-gap: 0;
-        padding: var(--fd-space-xs) var(--fd-space-md) var(--fd-space-sm);
+        padding: var(--fd-space-xxs) var(--fd-space-md) var(--fd-space-sm);
         border: var(--fd-border-strong);
         border-radius: var(--fd-radius-card);
         background: color-mix(in srgb, var(--fd-color-text-muted) 5%, var(--fd-bg-surface));
@@ -319,6 +319,10 @@
     }
 
     &__pulse-controls {
+        --fd-button-width: var(--fd-size-control-sm);
+        --fd-button-min-width: var(--fd-size-control-sm);
+        --fd-button-touch-min-size: var(--fd-size-control-sm);
+        --fd-button-transform-hover: none;
         font-variant-numeric: tabular-nums;
         display: flex;
         grid-column: 2;
@@ -326,6 +330,10 @@
         align-items: center;
         justify-content: center;
         gap: var(--fd-space-sm);
+
+        @media (hover: none) {
+            --fd-button-ghost-background-hover: var(--fd-button-ghost-background-default);
+        }
     }
 
     &__pulse-controls[hidden] {
@@ -345,7 +353,7 @@
         }
 
         &__pulse {
-            padding: var(--fd-space-xxs) var(--fd-space-sm);
+            padding: var(--fd-space-micro) var(--fd-space-sm) var(--fd-space-xxs);
         }
     }
 
