@@ -2,13 +2,11 @@ import { computed, type Signal } from '@angular/core';
 
 import type { MealPreviewEntry } from '../../../components/shared/meals-preview/meals-preview-lib/meals-preview.types';
 import type { NutrientBar } from '../../../components/shared/nutrition-summary/nutrition-summary.types';
-import { normalizeMealType } from '../../../shared/lib/meal-type.util';
+import { type MealTypeOption, normalizeMealType } from '../../../shared/lib/meal-type.util';
 import type { DashboardSnapshot } from '../../../shared/models/dashboard.data';
 import type { Meal } from '../../../shared/models/meal.data';
 
-type MealSlot = 'BREAKFAST' | 'LUNCH' | 'DINNER';
-
-const MEAL_SLOTS: MealSlot[] = ['BREAKFAST', 'LUNCH', 'DINNER'];
+const MEAL_SLOTS: ReadonlySet<MealTypeOption> = new Set(['BREAKFAST', 'LUNCH', 'DINNER']);
 
 export function placeholderIcon(slot?: string | null): string {
     switch (slot) {
@@ -140,17 +138,21 @@ export function createMealPreviewSignal(meals: Signal<Meal[]>, isTodaySelected: 
         const result: Array<{ meal: Meal | null; slot?: string }> = [];
 
         for (const slot of MEAL_SLOTS) {
-            const index = mealList.findIndex(m => (m.mealType ?? '').toUpperCase() === slot);
-            if (index !== -1) {
-                result.push({ meal: mealList[index], slot });
-                mealList.splice(index, 1);
+            const slotMeals = mealList
+                .filter(meal => normalizeMealType(meal.mealType) === slot)
+                .sort((first, second) => new Date(first.date).getTime() - new Date(second.date).getTime());
+            if (slotMeals.length > 0) {
+                result.push(...slotMeals.map(meal => ({ meal, slot })));
             } else {
                 result.push({ meal: null, slot });
             }
         }
 
         for (const meal of mealList) {
-            result.push({ meal, slot: normalizeMealType(meal.mealType) ?? undefined });
+            const slot = normalizeMealType(meal.mealType);
+            if (slot === null || !MEAL_SLOTS.has(slot)) {
+                result.push({ meal, slot: slot ?? undefined });
+            }
         }
 
         return result.map(entry => ({

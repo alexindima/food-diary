@@ -2,6 +2,9 @@ import { signal } from '@angular/core';
 import { describe, expect, it } from 'vitest';
 
 import type { DashboardSnapshot, DashboardStatistics } from '../../../shared/models/dashboard.data';
+import type { Meal } from '../../../shared/models/meal.data';
+import { utcInstant } from '../../../shared/models/semantics/date-value';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import {
     createMealPreviewSignal,
     createMealRingSignal,
@@ -177,6 +180,46 @@ function registerMealRingTests(): void {
 
 function registerMealPreviewTests(): void {
     describe('createMealPreviewSignal', () => {
+        it.each([
+            ['BREAKFAST', ['early', 'late', 'LUNCH', 'DINNER']],
+            ['LUNCH', ['BREAKFAST', 'early', 'late', 'DINNER']],
+            ['DINNER', ['BREAKFAST', 'LUNCH', 'early', 'late']],
+        ])('keeps all %s meals together in ascending time order before the next slot', (mealType, expected) => {
+            const laterMeal = createPreviewMeal('late', mealType, '2026-10-28T06:14:00+04:00');
+            const earlierMeal = createPreviewMeal('early', mealType, '2026-10-28T05:53:00+04:00');
+            const source = [laterMeal, earlierMeal];
+            const meals = signal(source);
+            const preview = createMealPreviewSignal(meals, signal(true));
+
+            expect(preview().map(entry => entry.meal?.id ?? entry.slot)).toEqual(expected);
+            expect(meals()).toEqual([laterMeal, earlierMeal]);
+            expect(meals()).toBe(source);
+        });
+
+        it('compares meal instants across offsets and recomputes when another breakfast arrives', () => {
+            const laterMeal = createPreviewMeal('late', 'BREAKFAST', '2026-10-28T06:14:00+04:00');
+            const earlierMeal = createPreviewMeal('early', 'BREAKFAST', '2026-10-28T01:53:00Z');
+            const meals = signal([laterMeal]);
+            const preview = createMealPreviewSignal(meals, signal(true));
+
+            expect(preview().map(entry => entry.meal?.id ?? entry.slot)).toEqual(['late', 'LUNCH', 'DINNER']);
+            meals.set([laterMeal, earlierMeal]);
+            expect(preview().map(entry => entry.meal?.id ?? entry.slot)).toEqual(['early', 'late', 'LUNCH', 'DINNER']);
+        });
+
+        it('keeps snacks and untyped meals once after the main slots and normalizes meal types', () => {
+            const meals = signal([
+                createPreviewMeal('snack', 'SNACK', '2026-10-28T10:00:00Z'),
+                createPreviewMeal('late', 'breakfast', '2026-10-28T02:14:00Z'),
+                createPreviewMeal('early', ' BREAKFAST ', '2026-10-28T01:53:00Z'),
+                createPreviewMeal('other', null, '2026-10-28T12:00:00Z'),
+            ]);
+            const preview = createMealPreviewSignal(meals, signal(true));
+
+            expect(preview().map(entry => entry.meal?.id ?? entry.slot)).toEqual(['early', 'late', 'LUNCH', 'DINNER', 'snack', 'other']);
+            expect(preview().map(entry => entry.slot)).toEqual(['BREAKFAST', 'BREAKFAST', 'LUNCH', 'DINNER', 'SNACK', undefined]);
+        });
+
         it('should return meals without slots when not today', () => {
             const meals = signal([
                 { id: '1', mealType: 'LUNCH' },
@@ -217,4 +260,20 @@ function registerMealPreviewTests(): void {
             expect(result.every(e => e.meal === null)).toBe(true);
         });
     });
+}
+
+function createPreviewMeal(id: string, mealType: string | null, date: string): Meal {
+    return {
+        id: entityId<'meal'>(id),
+        date: utcInstant(date),
+        mealType,
+        totalCalories: 100,
+        totalProteins: 0,
+        totalFats: 0,
+        totalCarbs: 0,
+        totalFiber: 0,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        items: [],
+    };
 }
