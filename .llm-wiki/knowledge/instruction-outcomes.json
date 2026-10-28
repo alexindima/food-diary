@@ -1522,6 +1522,55 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "0293fc432957d4afc202bac3c179f50b34c774b77e1bdbd09ed9cbff2a79cb05",
       "eventHash": "8b1ad69598f7e8425dbaf470388d63d3430f82cb19365bb9a77622d8e9559891"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "d1bfc5e07af74663bec1809369f9b49d",
+      "workspace": ".artifacts/llm-wiki/tasks/auth-restoration-diagnostics",
+      "recordedAtUtc": "2026-10-28T01:21:32.8060893Z",
+      "completionFingerprint": "8932976b07e55410247b542a629bb722572522971fbc4ebfa47c97a3c9d6ba2c",
+      "retrospectiveHash": "eac5181a531f2175cbd725aac4a20374bc83817a8d97c2982bf3849107652e08",
+      "instructionSetFingerprint": "bf7957d672b39d13c9b9c84a0a822ba01a3e711c199692d92eec270fbf702270",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667"
+        },
+        {
+          "path": "Modules/Identity/AGENTS.md",
+          "fingerprint": "dfbff4a8692db53d818d017dec535ac8ab87289a0c8e2584bc922c0e4f498b12"
+        },
+        {
+          "path": "Modules/Identity/Application/AGENTS.md",
+          "fingerprint": "e112b200b8bbaccc89d4ff7c02431fa87a71d02a23f4b6babf204adfc7627322"
+        },
+        {
+          "path": "Modules/Identity/tests/AGENTS.md",
+          "fingerprint": "d7bfd8129f93e790bc2f03e07fe234fe62487024d37b83564477b4562d49cd12"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "critical",
+        "complexityScore": 86,
+        "complexityBandUpperBound": 100,
+        "cohortKey": "critical|complexity<=100",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 68.75,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 85.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "8b1ad69598f7e8425dbaf470388d63d3430f82cb19365bb9a77622d8e9559891",
+      "eventHash": "75d558fbed4a74bb65a49d00eae295857402af9f9fe2b32bdcb07d2cf67b7b5b"
     }
   ]
 }
