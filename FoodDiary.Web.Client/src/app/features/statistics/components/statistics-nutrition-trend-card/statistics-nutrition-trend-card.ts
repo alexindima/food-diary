@@ -160,9 +160,10 @@ export class StatisticsNutritionTrendCardComponent {
             fiber: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.FIBER'),
         };
         const colors = {
-            protein: 'var(--fd-color-primary-500)',
+            calories: 'var(--fd-color-primary-500)',
+            protein: 'var(--fd-color-nutrition-proteins)',
             fat: 'var(--fd-color-orange-500)',
-            carbs: 'var(--fd-color-sky-500)',
+            carbs: 'var(--fd-color-nutrition-carbs)',
             fiber: 'var(--fd-color-rose-500)',
         };
 
@@ -175,7 +176,7 @@ export class StatisticsNutritionTrendCardComponent {
                         {
                             label: this.translateService.instant('GENERAL.NUTRIENTS.CALORIES'),
                             value: day.calories,
-                            color: colors.protein,
+                            color: colors.calories,
                         },
                     ],
                 };

@@ -56,11 +56,11 @@
 }
 
 .nutrient-badges__chip--protein {
-    --chip-color: var(--fd-color-sky-600);
+    --chip-color: var(--fd-color-nutrition-proteins);
 }
 
 .nutrient-badges__chip--carb {
-    --chip-color: var(--fd-color-teal-700);
+    --chip-color: var(--fd-color-nutrition-carbs);
 }
 
 .nutrient-badges__chip--fat {
@@ -349,10 +349,10 @@
     }
 
     .nutrient-badges__chip--protein {
-        --chip-color: var(--fd-color-primary-600);
+        --chip-color: var(--fd-color-nutrition-proteins);
     }
     .nutrient-badges__chip--carb {
-        --chip-color: var(--fd-color-sky-500);
+        --chip-color: var(--fd-color-nutrition-carbs);
     }
     .nutrient-badges__chip--fat {
         --chip-color: var(--fd-color-orange-500);
