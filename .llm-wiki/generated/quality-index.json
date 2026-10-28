@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6786,
+    "productionFiles": 6785,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1024,
@@ -5743,14 +5743,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Web.Client/playwright.trello.config.ts",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts",
