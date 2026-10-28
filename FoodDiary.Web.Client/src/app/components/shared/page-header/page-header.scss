@@ -20,7 +20,7 @@
 
 .fd-page-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--fd-space-page-header-actions-gap) var(--fd-space-page-header-gap);
@@ -34,7 +34,7 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 220px;
-    gap: var(--fd-space-xxs);
+    gap: var(--fd-space-micro);
     min-width: 220px;
 }
 
@@ -61,7 +61,6 @@
     .fd-page-header__actions {
         width: auto;
         margin-left: auto;
-        align-self: flex-start;
     }
 
     .fd-page-header__actions fd-header-actions-overflow {
@@ -69,17 +68,11 @@
     }
 }
 
-:host(:where(.fd-page-header--with-back)) .fd-page-header {
-    align-items: flex-start;
-}
-
 @media #{variables.$media-tablet} {
     .fd-page-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-areas:
-            'title actions'
-            'subtitle subtitle';
+        grid-template-areas: 'title actions';
         align-items: center;
         column-gap: var(--fd-space-page-header-mobile-column-gap);
         row-gap: var(--fd-space-page-header-mobile-row-gap);
@@ -91,23 +84,21 @@
     }
 
     .fd-page-header__title-block {
-        display: contents;
+        grid-area: title;
+        min-width: 0;
     }
 
     .fd-page-header__back {
         grid-area: back;
-        margin-block: calc(0px - var(--fd-space-xxs));
     }
 
     .fd-page-title {
-        grid-area: title;
         margin: 0;
         min-width: 0;
         overflow-wrap: anywhere;
     }
 
     .fd-page-subtitle {
-        grid-area: subtitle;
         margin: 0;
     }
 
@@ -116,7 +107,6 @@
         width: auto;
         min-width: 0;
         align-self: center;
-        margin-block: calc(0px - var(--fd-space-xxs));
     }
 
     .fd-page-header__actions fd-header-actions-overflow {
@@ -125,8 +115,6 @@
 
     :host(:where(.fd-page-header--with-back)) .fd-page-header {
         grid-template-columns: auto minmax(0, 1fr) auto;
-        grid-template-areas:
-            'back title actions'
-            'subtitle subtitle subtitle';
+        grid-template-areas: 'back title actions';
     }
 }

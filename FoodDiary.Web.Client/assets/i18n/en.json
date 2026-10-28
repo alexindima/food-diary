@@ -561,7 +561,7 @@
     },
     "RECIPE_LIST": {
         "TITLE": "Recipes",
-        "SUBTITLE": "Collection of your dishes and ideas",
+        "SUBTITLE": "Your dishes and ideas",
         "SEARCH_LABEL": "Search",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name",
@@ -4610,7 +4610,7 @@
     "PRODUCT_LIST": {
         "RECENT_ADD": "Add {{name}} to diary",
         "TITLE": "Products",
-        "SUBTITLE": "Browse and manage your products",
+        "SUBTITLE": "Your foods",
         "SEARCH_TITLE": "Searching:",
         "SEARCH_PLACEHOLDER": "Search by name or barcode",
         "SEARCH_BUTTON": "Search",
@@ -4851,7 +4851,7 @@
     "RECIPE_MANAGE": {
         "ADD_TITLE": "Add Recipe",
         "EDIT_TITLE": "Edit Recipe",
-        "SUBTITLE": "Compose ingredients, steps, and nutrition",
+        "SUBTITLE": "Ingredients and steps",
         "GENERAL_GROUP_TITLE": "General information",
         "TRACKING_PREFERENCES": "Tracking preferences",
         "ADVANCED_TITLE": "Additional",
@@ -4997,7 +4997,7 @@
         "PHOTO_IMPORT_LIMIT": "Values were applied, but photos were not added: a product can have up to 5 photos. Remove unwanted photos and apply again from recognition history.",
         "ADD_TITLE": "Create product",
         "EDIT_TITLE": "Edit Product",
-        "SUBTITLE": "Fill nutrition and details to save",
+        "SUBTITLE": "Product details",
         "START_TOUR": "Show product form tour",
         "TOUR": {
             "LABELS": {
@@ -5112,8 +5112,8 @@
         "DELETE_CONFIRM": "Are you sure you want to delete this product?",
         "DELETE_ERROR": "Unable to delete the product. Please try again.",
         "USDA_SYNC_ERROR": "Product saved, but the USDA link could not be updated. Please try again.",
-        "CREATE_SUBTITLE": "Enter the details and create a product",
-        "EDIT_SUBTITLE": "Update the details and save your changes"
+        "CREATE_SUBTITLE": "New product details",
+        "EDIT_SUBTITLE": "Product details"
     },
     "NUTRITION_EDITOR": {
         "CALORIES": "Calories",
@@ -5217,7 +5217,7 @@
         "REMOVE_FILTER": "Remove filter",
         "DAY_TOTAL": "Day total",
         "TITLE": "Meals",
-        "SUBTITLE": "Manage your logged meals and snacks",
+        "SUBTITLE": "Meal history",
         "ADD_MEAL_BUTTON": "Add Meal",
         "ADD_MANUALLY_BUTTON": "Add manually",
         "MANUAL_ADD_OR": "or",
@@ -5853,7 +5853,7 @@
     "RECOMMENDATIONS": {
         "EYEBROW": "Dietologist",
         "TITLE": "Recommendations",
-        "SUBTITLE": "Review recommendations sent by your dietologist and keep track of what you have already read.",
+        "SUBTITLE": "Advice from your dietologist",
         "LOADING": "Loading recommendations...",
         "LOAD_ERROR": "Could not load recommendations.",
         "MARK_READ_ERROR": "Could not mark the recommendation as read.",
@@ -6264,7 +6264,7 @@
         "EXPORT_RANGE_TOO_LONG": "Choose a period of up to 366 days between the start and end dates.",
         "TITLE": "Cycle tracking",
         "SUBTITLE": "Log menstrual days and daily symptoms in one place",
-        "SUBTITLE_V2": "Your private journal for patterns, wellbeing, and cycle estimates",
+        "SUBTITLE_V2": "Cycle and wellbeing",
         "TODAY": "Today",
         "CYCLE_DAY": "Cycle day {{value}}",
         "CYCLE_DAY_UNKNOWN": "Cycle day is still being learned",
@@ -6577,7 +6577,7 @@
         "REQUEST_ERROR": "Could not complete this action. Check your connection and try again.",
         "TITLE": "Fasting",
         "WIDGET_LABEL": "Fasting",
-        "SUBTITLE": "Stay in your rhythm without unnecessary pressure",
+        "SUBTITLE": "Your eating rhythm",
         "REDESIGN": {
             "STAGE_DESCRIPTION": {
                 "EARLY": "Energy from the last meal is usually still being absorbed.",
@@ -6930,7 +6930,7 @@
     },
     "GAMIFICATION": {
         "TITLE": "Achievements",
-        "SUBTITLE": "Build healthy habits — one step at a time",
+        "SUBTITLE": "Habits and achievements",
         "LOADING": "Loading achievements...",
         "LOAD_ERROR": "Could not load achievements. Please try again.",
         "CURRENT_STREAK": "Current streak",
@@ -6996,7 +6996,7 @@
     },
     "WEEKLY_CHECK_IN": {
         "TITLE": "Weekly insights",
-        "SUBTITLE": "Your progress and one simple step for next week",
+        "SUBTITLE": "Weekly progress and next step",
         "LOADING": "Loading weekly review...",
         "WEEK_PICKER": {
             "TITLE": "Choose a week",
@@ -7129,7 +7129,7 @@
     },
     "GOALS_PAGE": {
         "TITLE": "Goals editor",
-        "SUBTITLE": "Set daily targets for calories, nutrients, water, and body measurements.",
+        "SUBTITLE": "Nutrition, water and body targets",
         "STATUS_LOADING": "Loading goals…",
         "STATUS_PENDING": "Saving soon…",
         "STATUS_SAVING": "Saving…",
@@ -7374,7 +7374,7 @@
     },
     "PREMIUM_PAGE": {
         "TITLE": "Premium",
-        "SUBTITLE": "Unlock adaptive insights, AI tools, and advanced nutrition support.",
+        "SUBTITLE": "AI and personalized insights",
         "STATUS_LOADING": "Loading subscription details...",
         "ERROR_TITLE": "Billing is temporarily unavailable",
         "ERROR_GENERIC": "We couldn't load billing details right now. Please try again.",
@@ -7470,7 +7470,7 @@
     },
     "LESSONS": {
         "TITLE": "Nutrition Academy",
-        "SUBTITLE": "Learn about nutrition science, one lesson at a time",
+        "SUBTITLE": "Nutrition lessons",
         "LOADING": "Loading lessons...",
         "LOAD_ERROR": "Could not load lessons. Please try again.",
         "DETAIL_LOAD_ERROR": "Could not load this lesson. Please try again.",
@@ -7540,7 +7540,7 @@
     },
     "MEAL_PLANS": {
         "TITLE": "Meal Plans",
-        "SUBTITLE": "Browse curated plans and return to your saved plans",
+        "SUBTITLE": "Curated and saved plans",
         "SOURCE": {
             "LABEL": "Plans to show",
             "ALL": "All",
@@ -8167,7 +8167,7 @@
         "NO_NUTRITION": "No nutrition data",
         "REMOVED": "Recipe removed from favorites",
         "CATALOG": "Recipe catalog",
-        "SUBTITLE": "Ideas for your table — recipes with step-by-step instructions and nutrition",
+        "SUBTITLE": "Step-by-step recipes and nutrition",
         "NAVIGATION": "Navigation",
         "ABOUT": "About FoodDiary",
         "LOGIN": "Sign in",

@@ -230,6 +230,7 @@
 :host .ai-input-bar__speech-error {
     --fd-inline-alert-padding: var(--fd-space-sm);
     --fd-inline-alert-icon-size: var(--fd-size-icon-md);
+    width: auto;
     margin-block-start: var(--fd-space-xs);
     margin-inline: var(--fd-space-xs);
     margin-block-end: var(--fd-space-xs);
