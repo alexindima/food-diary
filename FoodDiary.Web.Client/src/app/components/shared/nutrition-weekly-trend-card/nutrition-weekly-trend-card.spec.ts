@@ -80,6 +80,21 @@ describe('NutritionWeeklyTrendCardComponent', () => {
     });
 });
 
+it('gives coexisting trend widgets distinct range control IDs', async () => {
+    const first = await setupAsync();
+    const second = TestBed.createComponent(NutritionWeeklyTrendCardComponent);
+    second.componentRef.setInput('points', []);
+    second.componentRef.setInput('dailyGoal', DAILY_GOAL);
+    second.componentRef.setInput('insight', DEFAULT_INSIGHT);
+    second.detectChanges();
+
+    const firstId = (first.nativeElement as HTMLElement).querySelector('.fd-ui-select__control')?.id;
+    const secondId = (second.nativeElement as HTMLElement).querySelector('.fd-ui-select__control')?.id;
+    expect(firstId).toBeTruthy();
+    expect(secondId).toBeTruthy();
+    expect(secondId, 'Trend controls must remain unique when landing previews coexist').not.toBe(firstId);
+});
+
 it('selects a day without navigating and scales the stack to recorded calories', async () => {
     const fixture = await setupAsync();
     fixture.componentRef.setInput('interactive', true);

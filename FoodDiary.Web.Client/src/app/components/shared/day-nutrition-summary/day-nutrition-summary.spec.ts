@@ -69,6 +69,16 @@ describe('Day summary empty state', () => {
     });
 });
 
+describe('Day summary keyboard access', () => {
+    it('makes the horizontally scrollable pulse reachable and named for keyboard users', async () => {
+        const fixture = await createSummaryAsync();
+        const viewport = getElement(fixture, '.day-summary__pulse-content');
+
+        expect(viewport.tabIndex, 'The scrollable pulse needs a keyboard focus target').toBe(0);
+        expect(viewport.getAttribute('aria-label')).toBe('DASHBOARD.DAY_SUMMARY.PULSE_TITLE');
+    });
+});
+
 describe('Day summary pulse navigation', () => {
     it('synchronizes the counter and announcement with native scrolling in both directions', async () => {
         const fixture = await createSummaryAsync();

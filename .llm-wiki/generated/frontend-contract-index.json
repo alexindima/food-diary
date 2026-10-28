@@ -38794,7 +38794,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
-        "id",
         "options",
         "size",
         "value"

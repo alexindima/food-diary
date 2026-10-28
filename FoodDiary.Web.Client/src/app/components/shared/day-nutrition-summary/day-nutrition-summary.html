@@ -109,7 +109,14 @@
                         <span class="day-summary__pulse-icon" aria-hidden="true">✦</span>
                         {{ 'DASHBOARD.DAY_SUMMARY.PULSE_TITLE' | translate }}
                     </span>
-                    <div #pulseViewport class="day-summary__pulse-content" (scroll)="onPulseScroll()">
+                    <div
+                        #pulseViewport
+                        class="day-summary__pulse-content"
+                        role="group"
+                        tabindex="0"
+                        [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.PULSE_TITLE' | translate"
+                        (scroll)="onPulseScroll()"
+                    >
                         @for (insight of insights(); track $index) {
                             <span class="fd-ui-body-sm" aria-hidden="true"
                                 ><strong>{{ insight.title }}</strong> · {{ insight.text }}</span

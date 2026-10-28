@@ -330,8 +330,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "91f6b731f2680a6331a9a88e8903c730b218731004e038d5cd1d640f8aee0b15",
-          "reviewReason": "The refreshed index includes the new Identity technical port/adapters and explicit host/integration-test references. These are intentional consumed owner dependencies; production module direction and aggregate ownership remain unchanged. No removal candidates are acted upon."
+          "sha256": "01b8cfe03fe80ef017f306d833ab242cc47b0afbee0acde42a4b3c5aa5b90f92",
+          "reviewReason": "Reviewed the architecture-health delta in the published batch: FdUiDatetimeInputComponent now has a direct specification, reducing components without specs from126 to125 and removing the duplicate no-spec lead. Dependency matrix, project edges and removal policy are unchanged, so the guide remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -344,10 +344,10 @@
           "reviewReason": "The refreshed index includes the new Identity technical port/adapters and explicit host/integration-test references. These are intentional consumed owner dependencies; production module direction and aggregate ownership remain unchanged. No removal candidates are acted upon."
         }
       ],
-      "reason": "The refreshed index includes the new Identity technical port/adapters and explicit host/integration-test references. These are intentional consumed owner dependencies; production module direction and aggregate ownership remain unchanged. No removal candidates are acted upon.",
-      "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.6453743Z"
+      "reason": "Reviewed the architecture-health delta in the published batch: FdUiDatetimeInputComponent now has a direct specification, reducing components without specs from126 to125 and removing the duplicate no-spec lead. Dependency matrix, project edges and removal policy are unchanged, so the guide remains accurate.",
+      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
+      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
+      "reviewedAtUtc": "2026-10-28T07:49:00.0217780Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -561,8 +561,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "84dde84b78bbca1a947fc92b1ad782ba1f128290fb0d9f49e0435691016be06d",
-          "reviewReason": "Reviewed the session-lifecycle task-finish additions: six hash-chained retrospective cost observations were appended. They are hypotheses only; no approval, experiment, application, policy or durable guidance changed. The page accurately describes this observation boundary and automatic task-finish recording."
+          "sha256": "3343af804a569761a51b0485e5b4f53b300e6c6f7996bf9657b2e838175adade",
+          "reviewReason": "Reviewed the new signal-effect-final completion observation: it appends a frontend-verify cost-calibration hypothesis only; decision is null and no approval, application, canary or policy edit occurs. The guide already documents automatic task-finish observation and the explicit promotion boundary."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -585,10 +585,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed command additions and the corresponding health, design, context and evaluation usage. Existing graph, dispatch and frontend query commands are compatible.",
-      "baseRef": "HEAD",
-      "gitHead": "9e9e804393318517a35197634d763635090f1147",
-      "reviewedAtUtc": "2026-10-24T16:19:02.1684431Z"
+      "reason": "Reviewed the new signal-effect-final completion observation: it appends a frontend-verify cost-calibration hypothesis only; decision is null and no approval, application, canary or policy edit occurs. The guide already documents automatic task-finish observation and the explicit promotion boundary.",
+      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
+      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
+      "reviewedAtUtc": "2026-10-28T07:49:00.7418083Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -927,14 +927,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "09bb116e8ddd08f7aff662e763c8958acaf0396f0f34d998a2ca7ec22991d525",
-          "reviewReason": "Reviewed the appended auth-restoration-diagnostics completion observation against the instruction-effectiveness guide and registry verifier. The new record has unchanged schema, source fingerprints and hash-chain semantics. Its observed verificationScore=0 reflects manual local execution attestations; it is not presented as paired evidence or a confirmed instruction improvement. The guide still describes the same observed/shadow distinction and promotion rules."
+          "sha256": "3a3fb1f1a554655ca65c527437152866c546c44f50a6e2f0b0935b9fb468c190",
+          "reviewReason": "Reviewed the appended signal-effect-final instruction outcome: it records source instruction hashes, task risk/complexity, completion and retrospective fingerprints and scores in the existing hash chain. It changes no AGENTS.md, policy, cohort logic or experiment procedure; the guide remains current."
         }
       ],
-      "reason": "Reviewed the appended auth-restoration-diagnostics completion observation against the instruction-effectiveness guide and registry verifier. The new record has unchanged schema, source fingerprints and hash-chain semantics. Its observed verificationScore=0 reflects manual local execution attestations; it is not presented as paired evidence or a confirmed instruction improvement. The guide still describes the same observed/shadow distinction and promotion rules.",
-      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
-      "gitHead": "c32c56f46df8d9488b429473de51904984b139e2",
-      "reviewedAtUtc": "2026-10-28T01:29:58.7758568Z"
+      "reason": "Reviewed the appended signal-effect-final instruction outcome: it records source instruction hashes, task risk/complexity, completion and retrospective fingerprints and scores in the existing hash chain. It changes no AGENTS.md, policy, cohort logic or experiment procedure; the guide remains current.",
+      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
+      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
+      "reviewedAtUtc": "2026-10-28T07:49:01.4507724Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -959,8 +959,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "2bd21d90234594ac380adb0a929f8de83450f8232bc2ddf3e564a474baf0d7fb",
-          "reviewReason": "Reviewed the appended session-lifecycle observed eval candidate with its retrospective, changed paths and cost signals. No candidate was approved or applied, and no active eval case changed. The page accurately preserves separate observation, review and activation steps."
+          "sha256": "0f012c22f3737cdc178437dd5871d7e360bc1eeaced3c029185581475c4a79b5",
+          "reviewReason": "Reviewed the appended learned-199356f0288abf44 observed case for signal-effect-final. It records the existing frontend path/rule/check expectations and a cost forecast observation; it does not promote or activate an evaluation or alter the execution/approval workflow documented here."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -973,10 +973,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed.",
-      "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:32.3346009Z"
+      "reason": "Reviewed the appended learned-199356f0288abf44 observed case for signal-effect-final. It records the existing frontend path/rule/check expectations and a cost forecast observation; it does not promote or activate an evaluation or alter the execution/approval workflow documented here.",
+      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
+      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
+      "reviewedAtUtc": "2026-10-28T07:49:02.1481848Z"
     },
     {
       "pageId": "workflow-model-routing",
