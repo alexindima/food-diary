@@ -1,5 +1,5 @@
 <div class="ai-input-bar__composer" [class.ai-input-bar__composer--attached]="hasAttachedResult()">
-    <div class="ai-input-bar fd-row fd-gap-control">
+    <div class="ai-input-bar fd-row fd-gap-control" [class.ai-input-bar--speech-error]="speechErrorKey() !== null">
         <fd-image-upload-field
             class="ai-input-bar__hidden-upload"
             appearance="hidden"
@@ -77,13 +77,17 @@
     </div>
 
     @if (speechErrorKey(); as errorKey) {
-        <fd-ui-inline-alert
-            class="ai-input-bar__speech-error"
-            appearance="notice"
-            severity="danger"
-            role="alert"
-            [message]="errorKey | translate"
-        />
+        <div class="ai-input-bar__speech-feedback" animate.enter="ai-input-bar__speech-feedback--enter">
+            <div class="ai-input-bar__speech-feedback-content">
+                <fd-ui-inline-alert
+                    class="ai-input-bar__speech-error"
+                    appearance="notice"
+                    severity="danger"
+                    role="alert"
+                    [message]="errorKey | translate"
+                />
+            </div>
+        </div>
     }
 
     <div #actionsElement class="ai-input-bar__actions fd-row fd-justify-between fd-gap-xs">

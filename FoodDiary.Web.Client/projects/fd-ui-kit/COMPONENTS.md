@@ -857,6 +857,8 @@ Hunger/satiety scale widget.
 
 Inline alert/banner for actionable warnings, info states, or success notices.
 
+Set `--fd-inline-alert-icon-background: transparent` for a bare severity icon on an existing status surface. The default keeps the tinted icon tile.
+
 Messages and native text actions use the semantic text color for readable contrast in every theme. Action styles inherit the alert surface and spacing without resetting its host variables. Primary and secondary actions remain named native buttons with visible keyboard focus; severity accents belong to the alert icon and surface.
 
 **Inputs**

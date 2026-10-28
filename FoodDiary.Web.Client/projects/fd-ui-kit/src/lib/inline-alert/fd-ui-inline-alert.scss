@@ -9,6 +9,7 @@
     --fd-inline-alert-radius: var(--fd-radius-panel);
     --fd-inline-alert-padding: var(--fd-space-inline-alert-padding);
     --fd-inline-alert-icon-size: var(--fd-size-control-md);
+    --fd-inline-alert-icon-background: color-mix(in srgb, var(--fd-inline-alert-accent) 14%, var(--fd-bg-surface-raised));
     --fd-inline-alert-grid-columns: auto minmax(0, 1fr) auto;
     display: grid;
     grid-template-columns: var(--fd-inline-alert-grid-columns);
@@ -39,7 +40,7 @@
     display: grid;
     place-items: center;
     border-radius: var(--fd-radius-button);
-    background: color-mix(in srgb, var(--fd-inline-alert-accent) 14%, var(--fd-bg-surface-raised));
+    background: var(--fd-inline-alert-icon-background);
     color: var(--fd-inline-alert-accent);
     flex: 0 0 auto;
 }
