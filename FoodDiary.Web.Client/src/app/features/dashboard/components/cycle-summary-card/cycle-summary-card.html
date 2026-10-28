@@ -34,4 +34,11 @@
             }
         </div>
     </fd-dashboard-widget-frame>
+    <!-- The UI kit has no stretched card link; a native anchor preserves standard link and keyboard behavior. -->
+    <a
+        class="cycle-summary-card__link"
+        [routerLink]="journalLink()"
+        [hidden]="!journalLink()"
+        [attr.aria-label]="'CYCLE_CARD.TITLE' | translate"
+    ></a>
 </div>

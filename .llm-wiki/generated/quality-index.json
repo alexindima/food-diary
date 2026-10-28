@@ -11194,11 +11194,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.ts",
-      "nonBlankLines": 204,
-      "decisionPoints": 37,
+      "nonBlankLines": 206,
+      "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 59.58
+      "structuralRiskScore": 61.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/daily-advice-card/daily-advice-card.ts",
