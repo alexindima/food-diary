@@ -1,8 +1,13 @@
 @use 'variables' as variables;
 
 .meals-preview__title {
+    min-width: 0;
     margin: 0;
     color: var(--fd-color-text);
+}
+
+.meals-preview__view-all {
+    flex-shrink: 0;
 }
 
 .meals-preview__empty {

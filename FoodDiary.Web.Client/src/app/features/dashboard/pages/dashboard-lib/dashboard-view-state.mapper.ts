@@ -17,9 +17,8 @@ export function buildDashboardHeaderState(isToday: boolean, selectedDateLabel: s
     };
 }
 
-export function buildDashboardMealsPreviewState(isToday: boolean, titleForDate: string | null): DashboardMealsPreviewState {
+export function buildDashboardMealsPreviewState(isToday: boolean): DashboardMealsPreviewState {
     return {
-        titleText: isToday ? null : titleForDate,
         emptyKey: isToday ? 'DASHBOARD.MEALS_EMPTY' : 'DASHBOARD.MEALS_EMPTY_FOR_DATE',
         showDateActions: isToday,
         showEmptyState: !isToday,

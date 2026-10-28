@@ -30,6 +30,38 @@ function createNavigationContext(): {
     return { service: TestBed.inject(NavigationService), routerSpy, currentLanguage };
 }
 
+describe('NavigationService meal diary', () => {
+    let service: NavigationService;
+    let routerSpy: RouterMock;
+
+    beforeEach(() => {
+        ({ service, routerSpy } = createNavigationContext());
+    });
+
+    it('opens the unfiltered meal diary when no day is supplied', async () => {
+        await service.navigateToMealListAsync();
+
+        expect(routerSpy.navigate).toHaveBeenCalledExactlyOnceWith(['/meals']);
+    });
+
+    it.each([
+        ['2024-02-29T00:01:00', '2024-02-29'],
+        ['2026-01-01T00:00:00', '2026-01-01'],
+        ['2026-03-08T00:00:00', '2026-03-08'],
+        ['2026-03-29T23:59:00', '2026-03-29'],
+        ['2026-10-04T00:00:00', '2026-10-04'],
+        ['2026-10-25T23:59:00', '2026-10-25'],
+        ['2026-11-01T00:00:00', '2026-11-01'],
+        ['2026-12-31T23:59:00', '2026-12-31'],
+    ])('opens every meal on local %s without carrying unrelated filters', async (localTime, day) => {
+        await service.navigateToMealListAsync(new Date(localTime));
+
+        expect(routerSpy.navigate).toHaveBeenCalledExactlyOnceWith(['/meals'], {
+            queryParams: { dateFrom: day, dateTo: day },
+        });
+    });
+});
+
 describe('NavigationService', () => {
     let service: NavigationService;
     let routerSpy: RouterMock;

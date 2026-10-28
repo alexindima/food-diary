@@ -220,14 +220,9 @@ export class DashboardComponent {
 
         return this.translateService.instant(titleKey, headerState.titleParams ?? undefined);
     });
-    protected readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
-        this.languageVersion();
-        const isToday = this.isTodaySelected();
-        const selectedDateLabel = this.formatSelectedDate();
-        const titleForDate = this.translateService.instant('DASHBOARD.MEALS_TITLE_FOR_DATE', { date: selectedDateLabel });
-
-        return buildDashboardMealsPreviewState(isToday, titleForDate);
-    });
+    protected readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() =>
+        buildDashboardMealsPreviewState(this.isTodaySelected()),
+    );
     protected readonly hydrationCardState = computed(() => {
         const hydration = this.hydration();
 
@@ -425,7 +420,7 @@ export class DashboardComponent {
     }
 
     protected async manageMealsAsync(): Promise<void> {
-        await this.navigationService.navigateToMealListAsync();
+        await this.navigationService.navigateToMealListAsync(this.selectedDate());
     }
 
     protected onMealCreated(): void {

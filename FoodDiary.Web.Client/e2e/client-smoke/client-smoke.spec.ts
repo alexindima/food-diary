@@ -26,6 +26,7 @@ const MOBILE_HEADER_MAX_PADDING = 4;
 const MOBILE_ACTION_SIZE = 44;
 const DESKTOP_TOOLBAR_ACTION_SIZE = 38;
 const MOBILE_CARD_CONTENT_MAX_GAP = 12;
+const MINIMUM_MOBILE_WIDTH = 320;
 const DESKTOP_CARD_CONTENT_MAX_GAP = 16;
 const MOBILE_NAVIGATION_DIALOG_COUNT = 4;
 // These views compose independent sections in addition to the four shared shell requests.
@@ -1005,6 +1006,166 @@ test.describe('dashboard regression eating phases', () => {
         });
     }
 });
+
+test.describe('dashboard compact meal header', () => {
+    test.use({ timezoneId: 'Asia/Tbilisi', isMobile: true, hasTouch: true });
+    test.beforeEach(async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+        await authenticateUserAsync(page);
+        await mockAuthenticatedClientApiAsync(page);
+    });
+
+    for (const language of ['en', 'ru'] as const) {
+        for (const width of [MINIMUM_MOBILE_WIDTH, DASHBOARD_MOBILE_WIDTH, DASHBOARD_DESKTOP_WIDTH]) {
+            test(`${language} title and all action share a row at ${width}px for today and history`, async ({ page }, testInfo) => {
+                const runtimeErrors: string[] = [];
+                page.on('pageerror', error => runtimeErrors.push(error.message));
+                page.on('console', message => {
+                    if (message.type() === 'error' && message.text().startsWith('ERROR')) {
+                        runtimeErrors.push(message.text());
+                    }
+                });
+                await page.setViewportSize({ width, height: 900 });
+                await page.route('**/api/v1/auth/session', async route =>
+                    route.fulfill(
+                        jsonResponse({
+                            sessionId: '00000000-0000-4000-8000-000000000002',
+                            roles: ['User'],
+                            user: { ...createUser(), language },
+                        }),
+                    ),
+                );
+                await page.route('**/api/v1/users/info', async route => route.fulfill(jsonResponse({ ...createUser(), language })));
+                await page.route('**/api/v1/users/overview', async route =>
+                    route.fulfill(jsonResponse({ ...createUserOverview(), user: { ...createUser(), language } })),
+                );
+                await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
+                    route.fulfill(
+                        jsonResponse({
+                            ...createDashboardSnapshot(),
+                            meals: {
+                                items: [createMeal('e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', '2026-04-18T08:00:00.000Z', [])],
+                                total: 1,
+                            },
+                        }),
+                    ),
+                );
+                await page.addInitScript(locale => {
+                    localStorage.setItem('fd_language', locale);
+                }, language);
+                for (const path of ['/dashboard', '/dashboard?date=2026-04-18']) {
+                    await page.goto(path);
+                    const preview = page.locator('fd-dashboard-meals-block fd-meals-preview');
+                    await preview.scrollIntoViewIfNeeded();
+                    const title = preview.getByRole('heading', { name: language === 'ru' ? 'Приёмы пищи' : 'Meals', exact: true });
+                    const all = preview.getByRole('button', { name: language === 'ru' ? 'Все' : 'All', exact: true });
+                    await expect(title).toBeVisible();
+                    await expect(all).toBeVisible();
+                    const titleBox = await dashboardBoundsAsync(title);
+                    const actionBox = await dashboardBoundsAsync(all);
+                    expect(Math.abs(titleBox.y + titleBox.height / 2 - actionBox.y - actionBox.height / 2)).toBeLessThanOrEqual(1);
+                    expect(actionBox.x).toBeGreaterThanOrEqual(titleBox.x + titleBox.width);
+                    expect(Math.round(actionBox.height)).toBeGreaterThanOrEqual(MOBILE_ACTION_SIZE);
+                    const headerBox = await dashboardBoundsAsync(preview.locator('.meals-preview__header'));
+                    const listBox = await dashboardBoundsAsync(preview.locator('.meals-preview__list'));
+                    expect(listBox.y - headerBox.y - headerBox.height).toBeLessThanOrEqual(
+                        width === DASHBOARD_DESKTOP_WIDTH ? DESKTOP_CARD_CONTENT_MAX_GAP : MOBILE_CARD_CONTENT_MAX_GAP,
+                    );
+                    await expectNoHorizontalOverflowAsync(page);
+                    await testInfo.attach('webmcp-status', {
+                        body: (await page.locator('meta[name="fooddiary-webmcp"]').getAttribute('content')) ?? '{}',
+                        contentType: 'application/json',
+                    });
+                    await preview.screenshot({ path: testInfo.outputPath(`${path.includes('?') ? 'history' : 'today'}.png`) });
+                }
+                expect(runtimeErrors).toEqual([]);
+            });
+        }
+    }
+});
+
+for (const scenario of [
+    {
+        zone: 'UTC',
+        now: '2026-04-19T12:00:00Z',
+        today: '2026-04-19',
+        todayStart: '2026-04-19T00:00:00.000Z',
+        todayEnd: '2026-04-19T23:59:59.999Z',
+        historicalStart: '2026-03-08T00:00:00.000Z',
+        historicalEnd: '2026-03-08T23:59:59.999Z',
+    },
+    {
+        zone: 'Asia/Tbilisi',
+        now: '2026-04-19T20:30:00Z',
+        today: '2026-04-20',
+        todayStart: '2026-04-19T20:00:00.000Z',
+        todayEnd: '2026-04-20T19:59:59.999Z',
+        historicalStart: '2026-03-07T20:00:00.000Z',
+        historicalEnd: '2026-03-08T19:59:59.999Z',
+    },
+    {
+        zone: 'America/Los_Angeles',
+        now: '2026-04-20T06:30:00Z',
+        today: '2026-04-19',
+        todayStart: '2026-04-19T07:00:00.000Z',
+        todayEnd: '2026-04-20T06:59:59.999Z',
+        historicalStart: '2026-03-08T08:00:00.000Z',
+        historicalEnd: '2026-03-09T06:59:59.999Z',
+    },
+]) {
+    test.describe(`dashboard selected-day meal navigation in ${scenario.zone}`, () => {
+        test.use({ timezoneId: scenario.zone, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+        for (const historical of [false, true]) {
+            test(`opens ${historical ? 'historical' : 'today'} meals with a persistent day filter`, async ({ page }) => {
+                await page.clock.install({ time: new Date(scenario.now) });
+                await authenticateUserAsync(page);
+                await mockAuthenticatedClientApiAsync(page);
+                const day = historical ? '2026-03-08' : scenario.today;
+                const start = historical ? scenario.historicalStart : scenario.todayStart;
+                const end = historical ? scenario.historicalEnd : scenario.todayEnd;
+                const meals = [
+                    createMeal('e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', start, []),
+                    createMeal('37cb02e4-3010-59a4-a1fd-0122bf12ada9', end, []),
+                    createMeal('00000000-0000-4000-8000-000000000099', new Date(Date.parse(end) + 1).toISOString(), []),
+                ];
+                await page.route('**/api/v1/meals/overview?**', async route => {
+                    const params = new URL(route.request().url()).searchParams;
+                    const included = meals.filter(
+                        meal =>
+                            String(meal['date']) >= (params.get('dateFrom') ?? '') &&
+                            String(meal['date']) <= (params.get('dateTo') ?? '9999'),
+                    );
+                    await route.fulfill(
+                        jsonResponse({
+                            allMeals: { data: included, page: 1, limit: 20, totalPages: 1, totalItems: included.length },
+                            favoriteItems: [],
+                            favoriteTotalCount: 0,
+                        }),
+                    );
+                });
+                const dashboardPath = historical ? `/dashboard?date=${day}` : '/dashboard';
+                await page.goto(dashboardPath);
+                const all = page.locator('fd-dashboard-meals-block').getByRole('button', { name: 'All', exact: true });
+                await all.scrollIntoViewIfNeeded();
+                const requestPromise = page.waitForRequest(request => new URL(request.url()).pathname.endsWith('/meals/overview'));
+                await all.focus();
+                await page.keyboard.press('Enter');
+                const request = await requestPromise;
+                expect(new URL(request.url()).searchParams.get('dateFrom')).toBe(start);
+                expect(new URL(request.url()).searchParams.get('dateTo')).toBe(end);
+                await expect(page).toHaveURL(`/meals?dateFrom=${day}&dateTo=${day}`);
+                await expect(page.locator('.meal-list__active-filter-chip')).toHaveCount(2);
+                await expect(page.locator('fd-meal-list-content fd-meal-card')).toHaveCount(2);
+                await page.reload();
+                await expect(page.locator('.meal-list__active-filter-chip')).toHaveCount(2);
+                await expect(page.locator('fd-meal-list-content fd-meal-card')).toHaveCount(2);
+                await page.goBack();
+                await expect(page).toHaveURL(dashboardPath);
+                await expect(page.locator('fd-dashboard-meals-block').getByRole('heading', { name: 'Meals', exact: true })).toBeVisible();
+            });
+        }
+    });
+}
 
 test.describe('dashboard regression interactions', () => {
     test.use({ timezoneId: 'UTC' });

@@ -34,7 +34,6 @@ export type DashboardBlockStateOptions = {
 };
 
 export type DashboardMealsPreviewState = {
-    titleText: string | null;
     emptyKey: string;
     showDateActions: boolean;
     showEmptyState: boolean;

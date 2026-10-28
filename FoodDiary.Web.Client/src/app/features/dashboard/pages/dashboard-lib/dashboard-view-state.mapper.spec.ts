@@ -25,15 +25,13 @@ describe('dashboard view state mapper', () => {
     });
 
     it('builds meal preview state for today and selected dates', () => {
-        expect(buildDashboardMealsPreviewState(true, 'Meals on date')).toEqual({
-            titleText: null,
+        expect(buildDashboardMealsPreviewState(true)).toEqual({
             emptyKey: 'DASHBOARD.MEALS_EMPTY',
             showDateActions: true,
             showEmptyState: false,
         });
 
-        expect(buildDashboardMealsPreviewState(false, 'Meals on date')).toEqual({
-            titleText: 'Meals on date',
+        expect(buildDashboardMealsPreviewState(false)).toEqual({
             emptyKey: 'DASHBOARD.MEALS_EMPTY_FOR_DATE',
             showDateActions: false,
             showEmptyState: true,

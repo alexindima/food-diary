@@ -35,6 +35,18 @@ const ONE_HOUR_MS = 3600000;
 // Keep the production page template and its bindings. Child components have their own
 // DOM tests; this suite isolates page orchestration from HTTP, overlays and defer timing.
 describe('Dashboard page composition', () => {
+    it.each([true, false])('opens all meals for the selected day (today=%s)', async isToday => {
+        const { child, facade, fixture, navigation } = await setupAsync();
+        const selectedDate = new Date(isToday ? '2026-10-28T00:00:00' : '2026-09-30T00:00:00');
+        facade.selectedDate.set(selectedDate);
+        facade.isTodaySelected.set(isToday);
+        fixture.detectChanges();
+
+        child('fd-dashboard-meals-block').triggerEventHandler('viewAll');
+
+        expect(navigation.navigateToMealListAsync).toHaveBeenCalledExactlyOnceWith(selectedDate);
+    });
+
     it('shows a retryable load error instead of empty cards when the initial snapshot fails', async () => {
         const { facade, fixture, host } = await setupAsync();
         facade.hasSnapshot.set(false);

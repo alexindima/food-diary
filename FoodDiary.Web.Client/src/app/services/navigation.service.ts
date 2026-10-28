@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { localizedPublicPath } from '../config/public-site-paths';
 import type { AuthMode } from '../shared/auth/auth.data';
 import { LocalizationService } from '../shared/i18n/localization.service';
+import { formatDateInputValue } from '../shared/lib/local-date.utils';
 
 @Service()
 export class NavigationService {
@@ -48,8 +49,14 @@ export class NavigationService {
         await this.router.navigate([`/products/${id}/edit`]);
     }
 
-    public async navigateToMealListAsync(): Promise<void> {
-        await this.router.navigate(['/meals']);
+    public async navigateToMealListAsync(day?: Date): Promise<void> {
+        if (day === undefined) {
+            await this.router.navigate(['/meals']);
+            return;
+        }
+
+        const date = formatDateInputValue(day);
+        await this.router.navigate(['/meals'], { queryParams: { dateFrom: date, dateTo: date } });
     }
 
     public async navigateToMealAddAsync(

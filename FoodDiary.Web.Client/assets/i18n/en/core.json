@@ -686,9 +686,9 @@
         "ALT": "Preview of {{name}}"
     },
     "DASHBOARD": {
-        "MEALS_TITLE": "Today's meals",
+        "MEALS_TITLE": "Meals",
         "MEALS_EMPTY": "No meals logged for this date yet.",
-        "MEALS_VIEW_ALL": "Open meals",
+        "MEALS_VIEW_ALL": "All",
         "ADD_WITH_AI_BUTTON": "Add with AI",
         "DAY_SUMMARY": {
             "PULSE_PREVIOUS": "Previous insight",

@@ -16,6 +16,28 @@ async function setupMealsPreviewAsync(): Promise<ComponentFixture<MealsPreviewCo
     return fixture;
 }
 
+describe('MealsPreviewComponent header', () => {
+    it('opens the list from the visible all action', async () => {
+        const fixture = await setupMealsPreviewAsync();
+        const viewAll = vi.fn();
+        fixture.componentInstance.viewAll.subscribe(viewAll);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+
+        host.querySelector<HTMLButtonElement>('.meals-preview__header button')?.click();
+
+        expect(viewAll).toHaveBeenCalledExactlyOnceWith(undefined);
+    });
+
+    it('supports previews without a list action', async () => {
+        const fixture = await setupMealsPreviewAsync();
+        fixture.componentRef.setInput('showViewAll', false);
+        fixture.detectChanges();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('.meals-preview__header button')).toBeNull();
+    });
+});
+
 describe('MealsPreviewComponent AI panel', () => {
     it('toggles expanded AI slot', async () => {
         const fixture = await setupMealsPreviewAsync();

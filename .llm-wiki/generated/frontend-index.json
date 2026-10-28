@@ -6745,7 +6745,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/navigation.service.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RouteLoadingService",
@@ -8198,8 +8198,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4174,
-      "russianProperties": 4174,
+      "englishProperties": 4173,
+      "russianProperties": 4173,
       "countsMatch": true
     },
     {

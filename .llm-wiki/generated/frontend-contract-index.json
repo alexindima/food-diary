@@ -8,7 +8,7 @@
     "apiCalls": 318,
     "templatesWithTranslations": 366,
     "translationKeys": 2189,
-    "consumerEdges": 1290,
+    "consumerEdges": 1291,
     "consumedComponents": 322,
     "unconsumedComponents": 182
   },
@@ -28524,7 +28524,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "fill",
-        "icon",
         "size",
         "variant"
       ],
@@ -34749,6 +34748,19 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meals-preview/meals-preview.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/notifications-dialog/notifications-dialog-item/notifications-dialog-item.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -40884,7 +40896,6 @@
         "showAiButtons",
         "showEmptyState",
         "titleKey",
-        "titleText",
         "viewAllKey"
       ],
       "outputsHandled": [

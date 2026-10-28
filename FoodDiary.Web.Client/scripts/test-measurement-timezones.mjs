@@ -23,6 +23,7 @@ for (const zone of zones) {
             '--include=**/measurement-calendar-timezone.spec.ts',
             '--include=**/measurement-history-pager.spec.ts',
             '--include=**/dashboard-calendar-timezone.spec.ts',
+            '--include=**/navigation.service.spec.ts',
             '--include=**/meal-calendar-timezone.spec.ts',
             '--include=**/user-manage-form.mapper.spec.ts',
         ],
