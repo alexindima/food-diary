@@ -109,10 +109,15 @@
                         <span class="day-summary__pulse-icon" aria-hidden="true">✦</span>
                         {{ 'DASHBOARD.DAY_SUMMARY.PULSE_TITLE' | translate }}
                     </span>
-                    <div class="day-summary__pulse-content" aria-live="polite" aria-atomic="true">
-                        <span class="fd-ui-body-sm"
-                            ><strong>{{ activeInsight().title }}</strong> · {{ activeInsight().text }}</span
-                        >
+                    <div #pulseViewport class="day-summary__pulse-content" (scroll)="onPulseScroll()">
+                        @for (insight of insights(); track $index) {
+                            <span class="fd-ui-body-sm" aria-hidden="true"
+                                ><strong>{{ insight.title }}</strong> · {{ insight.text }}</span
+                            >
+                        }
+                    </div>
+                    <div class="fd-visually-hidden-focusable" aria-live="polite" aria-atomic="true">
+                        {{ activeInsight().title }} · {{ activeInsight().text }}
                     </div>
                     <div class="day-summary__pulse-controls" [hidden]="insights().length < 2">
                         <fd-ui-button

@@ -10010,11 +10010,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.ts",
-      "nonBlankLines": 173,
-      "decisionPoints": 21,
+      "nonBlankLines": 194,
+      "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.96
+      "structuralRiskScore": 42.88
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.utils.ts",

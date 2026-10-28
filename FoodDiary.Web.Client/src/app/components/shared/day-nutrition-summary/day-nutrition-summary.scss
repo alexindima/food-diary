@@ -292,12 +292,23 @@
     }
 
     &__pulse-content {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 100%;
         grid-column: 1 / -1;
         grid-row: 2;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
         line-height: 1.35;
     }
 
     &__pulse-content > span {
+        min-width: 0;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
         line-height: inherit;
         font-weight: var(--fd-font-weight-regular);
     }
@@ -319,6 +330,23 @@
 
     &__pulse-controls[hidden] {
         display: none;
+    }
+
+    @container (max-width: 759px) {
+        &__nutrient {
+            padding-block: var(--fd-space-xxs);
+            gap: var(--fd-space-micro);
+        }
+
+        &__nutrient-label,
+        &__nutrient-value,
+        &__nutrient-percent {
+            line-height: 1.25;
+        }
+
+        &__pulse {
+            padding: var(--fd-space-xxs) var(--fd-space-sm);
+        }
     }
 
     @container (min-width: 760px) {
@@ -354,6 +382,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
+        &__pulse-content {
+            scroll-behavior: auto;
+        }
+
         &__contour-path,
         &__calorie-ring {
             transition: none;

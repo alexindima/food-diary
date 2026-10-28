@@ -45,6 +45,7 @@ type DayNutritionSummaryData = {
 })
 export class DayNutritionSummaryComponent {
     private readonly visual = viewChild<ElementRef<HTMLElement>>('visual');
+    private readonly pulseViewport = viewChild<ElementRef<HTMLElement>>('pulseViewport');
     private readonly nutrientLabels = viewChildren<ElementRef<HTMLElement>>('nutrientLabel');
     protected readonly connectorEnds = signal<Record<string, { x: number; y: number }>>({});
     private readonly translateService = inject(TranslateService);
@@ -76,7 +77,21 @@ export class DayNutritionSummaryComponent {
     protected readonly activeInsight = computed(() => this.insights()[this.insightIndex() % this.insights().length]);
 
     protected moveInsight(direction: number): void {
-        this.insightIndex.update(index => (index + direction + this.insights().length) % this.insights().length);
+        const viewport = this.pulseViewport()?.nativeElement;
+        if (viewport === undefined) {
+            return;
+        }
+        const index = (this.insightIndex() + direction + this.insights().length) % this.insights().length;
+        viewport.scrollTo({ left: index * viewport.clientWidth });
+    }
+
+    protected onPulseScroll(): void {
+        const viewport = this.pulseViewport()?.nativeElement;
+        if (viewport === undefined || viewport.clientWidth === 0) {
+            return;
+        }
+        const index = Math.round(viewport.scrollLeft / viewport.clientWidth);
+        this.insightIndex.set(Math.max(0, Math.min(index, this.insights().length - 1)));
     }
     protected readonly chartId = `day-nutrition-${uniqueId++}`;
     protected readonly language = computed(() => {
@@ -123,6 +138,13 @@ export class DayNutritionSummaryComponent {
     });
 
     public constructor() {
+        afterRenderEffect(() => {
+            this.data();
+            const viewport = this.pulseViewport()?.nativeElement;
+            if (viewport !== undefined && viewport.scrollLeft !== 0) {
+                viewport.scrollTo({ left: 0, behavior: 'instant' });
+            }
+        });
         afterRenderEffect(onCleanup => {
             const visual = this.visual()?.nativeElement;
             const labels = this.nutrientLabels().map(label => label.nativeElement);
