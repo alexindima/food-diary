@@ -61,6 +61,8 @@ Back these classes with CSS variables from `src/styles/design-tokens.scss`. Comp
 
 ## Components
 
+Nutrient colors use the shared `--fd-color-nutrition-*` tokens: protein is turquoise and carbohydrate is blue in every palette. Charts use the corresponding `--fd-color-chart-*` aliases; dark mode raises their contrast. Keep summaries, icons and legends on these semantic tokens rather than brand colors.
+
 ### Forms and validation
 
 Use `FdUiFormDirective` in component imports for `<form [formRoot]="fields">`.

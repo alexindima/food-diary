@@ -52,9 +52,9 @@ const COLOR_BACKGROUND = {
 
 const COLOR_CHART = {
     calories: '#F2994A',
-    proteins: '#2D9CDB',
+    proteins: '#0F766E',
     fats: '#F2C94C',
-    carbs: '#27AE60',
+    carbs: '#0369A1',
     fiber: '#9B51E0',
 } as const;
 

@@ -354,6 +354,39 @@ test.describe('authenticated client smoke', () => {
     });
 });
 
+test.describe('dashboard nutrient colors', () => {
+    for (const theme of ['ocean', 'leaf', 'dark']) {
+        test(`keeps protein turquoise and carbohydrate blue across dashboard visuals in ${theme}`, async ({ page }, testInfo) => {
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+            await page.route('**/api/v1/dashboard?**', async route =>
+                route.fulfill(
+                    jsonFixture(fixtureContract, 'GET', '/api/v1/dashboard', {
+                        ...createDashboardSnapshot(),
+                        weeklyCalories: [{ date: '2026-04-19T00:00:00.000Z', calories: 820, proteins: 60, fats: 28, carbs: 82, fiber: 14 }],
+                    }),
+                ),
+            );
+            await page.goto('/dashboard');
+            await expect(page.locator('fd-nutrition-weekly-trend-card')).toBeVisible();
+            await page.locator('html').evaluate((root, value) => {
+                root.setAttribute('data-theme', value);
+            }, theme);
+            for (const nutrient of [
+                { summary: 'protein', swatch: 'protein', segment: 0, color: theme === 'dark' ? 'rgb(20, 184, 166)' : 'rgb(15, 118, 110)' },
+                { summary: 'carbs', swatch: 'carbs', segment: 2, color: theme === 'dark' ? 'rgb(59, 130, 246)' : 'rgb(3, 105, 161)' },
+            ]) {
+                await expect(page.locator(`.day-summary__nutrient--${nutrient.summary} fd-ui-icon`)).toHaveCSS('color', nutrient.color);
+                await expect(page.locator(`.nutrition-trend__swatch--${nutrient.swatch}`)).toHaveCSS('background-color', nutrient.color);
+                await expect(
+                    page.locator('fd-nutrition-weekly-trend-card .fd-ui-bar-chart__categorical-segment').nth(nutrient.segment),
+                ).toHaveCSS('background-color', nutrient.color);
+            }
+            await page.screenshot({ path: testInfo.outputPath(`nutrients-${theme}.png`), fullPage: true });
+        });
+    }
+});
+
 test.describe('authenticated accessibility', () => {
     for (const viewport of [
         { name: 'desktop', width: 1440, height: 900 },

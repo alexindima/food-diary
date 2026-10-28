@@ -58,8 +58,8 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.proteinGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: 'var(--fd-gradient-brand-start)',
-                colorEnd: 'var(--fd-color-primary-600)',
+                colorStart: 'var(--fd-color-nutrition-proteins)',
+                colorEnd: 'var(--fd-color-nutrition-proteins)',
             },
             {
                 id: 'fats',
@@ -80,8 +80,8 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
                 target: s.statistics.carbGoal ?? 0,
                 unit: 'g',
                 unitKey: 'GENERAL.UNITS.G',
-                colorStart: 'var(--fd-color-teal-500)',
-                colorEnd: 'var(--fd-color-sky-500)',
+                colorStart: 'var(--fd-color-nutrition-carbs)',
+                colorEnd: 'var(--fd-color-nutrition-carbs)',
             },
             {
                 id: 'fiber',

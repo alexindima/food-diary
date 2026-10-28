@@ -76,9 +76,9 @@ export class GoalsPageComponent {
         this.facade.macroStates().map(macro => {
             const calorieFactors: Record<MacroKey, number> = { protein: 4, fats: 9, carbs: 4, fiber: 2 };
             const accents: Record<MacroKey, string> = {
-                protein: 'var(--fd-color-primary-500)',
+                protein: 'var(--fd-color-nutrition-proteins)',
                 fats: 'var(--fd-color-orange-500)',
-                carbs: 'var(--fd-color-sky-500)',
+                carbs: 'var(--fd-color-nutrition-carbs)',
                 fiber: 'var(--fd-color-rose-500)',
             };
             const icons: Record<MacroKey, string> = {
