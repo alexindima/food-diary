@@ -11426,11 +11426,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-nutrition.utils.ts",
-      "nonBlankLines": 148,
-      "decisionPoints": 26,
+      "nonBlankLines": 151,
+      "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.96
+      "structuralRiskScore": 43.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-setup.facade.ts",
