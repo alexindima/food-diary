@@ -186,30 +186,56 @@
     }
 }
 
-.nutrition-trend__content--empty {
+.nutrition-trend__content--empty,
+.nutrition-trend__content--interactive {
     grid-template-columns: minmax(0, 1fr);
 }
 
 .nutrition-trend__day {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-md);
+    gap: var(--fd-space-xs);
+    min-width: 0;
+    padding: var(--fd-space-xs) var(--fd-space-md);
+    border: var(--fd-border-subtle);
+    border-radius: var(--fd-radius-panel);
+    background: var(--fd-bg-surface-raised);
     font-variant-numeric: tabular-nums;
 }
 .nutrition-trend__day p {
     margin: 0;
 }
 .nutrition-trend__day-header {
-    min-height: var(--fd-size-control-sm);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--fd-space-md);
 }
-.nutrition-trend__open-day {
+.nutrition-trend__day-date {
+    display: flex;
+    align-items: center;
+    gap: var(--fd-space-sm);
+    min-width: 0;
+}
+.nutrition-trend__day-label {
+    font-size: var(--fd-text-body-size);
+    font-weight: var(--fd-font-weight-semibold);
+    line-height: var(--fd-text-body-line-height);
+}
+.nutrition-trend__day-icon {
+    flex: 0 0 auto;
     width: var(--fd-size-control-sm);
     height: var(--fd-size-control-sm);
+    border-radius: var(--fd-radius-md);
+    background: var(--fd-bg-brand-tint);
     color: var(--fd-color-primary-600);
-    border-radius: var(--fd-radius-sm);
+    --fd-icon-size: var(--fd-size-icon-sm);
 }
-.nutrition-trend__open-day[hidden] {
+.nutrition-trend__day-icon[hidden] {
     display: none;
+}
+.nutrition-trend__open-day:hover {
+    background: var(--fd-bg-brand-tint-strong);
 }
 .nutrition-trend__open-day,
 .nutrition-trend__open-day:hover,
@@ -221,23 +247,66 @@
     outline-offset: var(--fd-outline-offset);
 }
 .nutrition-trend__day-calories {
-    font-size: var(--fd-text-title-md-size);
+    font-size: var(--fd-text-metric-lg-size);
     font-weight: var(--fd-font-weight-bold);
+    line-height: var(--fd-text-metric-lg-line-height);
+    white-space: nowrap;
 }
 .nutrition-trend__day-calories .fd-ui-caption {
     font-size: var(--fd-text-caption-size);
     font-weight: var(--fd-font-weight-regular);
     color: var(--fd-color-text-muted);
 }
+.nutrition-trend__day-goal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--fd-space-md);
+}
+.nutrition-trend__day-goal[hidden] {
+    display: none;
+}
+.nutrition-trend__day-progress {
+    appearance: none;
+    width: 100%;
+    height: var(--fd-size-progress-height-md);
+    overflow: hidden;
+    border: none;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-progress-track-strong);
+    color: var(--fd-color-primary-600);
+}
+.nutrition-trend__day-progress::-webkit-progress-bar {
+    background: var(--fd-bg-progress-track-strong);
+    border-radius: var(--fd-radius-pill);
+}
+.nutrition-trend__day-progress::-webkit-progress-value {
+    background: var(--fd-color-primary-600);
+    border-radius: var(--fd-radius-pill);
+}
+.nutrition-trend__day-progress::-moz-progress-bar {
+    background: var(--fd-color-primary-600);
+    border-radius: var(--fd-radius-pill);
+}
 .nutrition-trend__day-metrics {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--fd-space-md);
+    padding-top: var(--fd-space-xs);
+    border-top: var(--fd-border-subtle);
 }
 .nutrition-trend__metric {
     display: grid;
     min-width: 0;
-    gap: var(--fd-space-xxs);
+    gap: var(--fd-space-micro);
+}
+.nutrition-trend__metric .fd-ui-caption {
+    color: var(--fd-color-text-muted);
+}
+.nutrition-trend__metric strong {
+    font-size: var(--fd-text-metric-md-size);
+    font-weight: var(--fd-font-weight-semibold);
+    line-height: var(--fd-text-metric-md-line-height);
 }
 .nutrition-trend__metric--proteins strong {
     color: var(--fd-color-nutrition-proteins-text);
@@ -253,45 +322,18 @@
 }
 
 @container (max-width: 760px) {
-    .nutrition-trend__day {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        align-items: center;
-        gap: var(--fd-space-sm);
-        padding-top: var(--fd-space-sm);
-        border-top: var(--fd-border-subtle);
-    }
-
-    .nutrition-trend__day-header {
-        min-height: 0;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: var(--fd-space-xxs);
-    }
-
-    .nutrition-trend__day-summary {
-        align-items: flex-end;
-        gap: var(--fd-space-xxs);
-        text-align: end;
-    }
-
-    .nutrition-trend__day-summary p {
-        font-size: var(--fd-text-caption-size);
-    }
-
     .nutrition-trend__day-metrics {
-        grid-column: 1 / -1;
         gap: var(--fd-space-sm);
     }
 
     .nutrition-trend__metric strong {
-        font-size: var(--fd-text-body-sm-size);
+        font-size: var(--fd-text-title-md-size);
     }
 }
 
-@container (min-width: 320px) and (max-width: 760px) {
+@container (max-width: 300px) {
     .nutrition-trend__day-metrics {
-        grid-template-columns: repeat(4, auto);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 

@@ -16,7 +16,11 @@
             (selectedValueChange)="changeVisibleDays($event)"
         />
 
-        <div class="nutrition-trend__content" [class.nutrition-trend__content--empty]="!hasChartData() && !interactive()">
+        <div
+            class="nutrition-trend__content"
+            [class.nutrition-trend__content--interactive]="interactive()"
+            [class.nutrition-trend__content--empty]="!hasChartData() && !interactive()"
+        >
             <div class="nutrition-trend__chart" [hidden]="!hasChartData() && !interactive()">
                 <fd-ui-bar-chart
                     class="nutrition-trend__bar-chart"
@@ -54,35 +58,41 @@
             @if (interactive()) {
                 @if (selectedPoint(); as day) {
                     <aside class="nutrition-trend__day" aria-live="polite">
-                        <div class="nutrition-trend__day-header fd-row fd-align-center fd-justify-between fd-gap-sm">
-                            <div class="fd-ui-meta-text">{{ day.fullDateLabel }}</div>
-                            <a
-                                class="nutrition-trend__open-day fd-inline-center"
-                                routerLink="/dashboard"
-                                [hidden]="day.dateKey === currentDateKey()"
-                                [queryParams]="{ date: day.dateKey }"
-                                [attr.aria-label]="`${('NUTRITION_TREND.OPEN_DAY' | translate)}: ${day.fullDateLabel}`"
-                                ><fd-ui-icon name="open_in_new"
-                            /></a>
-                        </div>
-                        <div class="nutrition-trend__day-summary fd-stack fd-gap-xs">
+                        <div class="nutrition-trend__day-header">
+                            <div class="nutrition-trend__day-date">
+                                <span class="nutrition-trend__day-icon fd-place-center" [hidden]="day.dateKey !== currentDateKey()"
+                                    ><fd-ui-icon name="calendar_today"
+                                /></span>
+                                <a
+                                    class="nutrition-trend__open-day nutrition-trend__day-icon fd-place-center"
+                                    routerLink="/dashboard"
+                                    [hidden]="day.dateKey === currentDateKey()"
+                                    [queryParams]="{ date: day.dateKey }"
+                                    [attr.aria-label]="`${('NUTRITION_TREND.OPEN_DAY' | translate)}: ${day.fullDateLabel}`"
+                                    ><fd-ui-icon name="calendar_today"
+                                /></a>
+                                <span class="nutrition-trend__day-label">{{ day.fullDateLabel }}</span>
+                            </div>
                             <div class="nutrition-trend__day-calories">
                                 {{ formatChartCalories(day.calories) }}
                                 <span class="fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
                             </div>
-                            <div [hidden]="day.calories !== 0">
-                                <p class="fd-ui-body-sm">{{ 'NUTRITION_TREND.DAY_EMPTY' | translate }}</p>
-                            </div>
-                            <div [hidden]="day.calories === 0">
-                                <p class="fd-ui-body-sm fd-ui-text-muted">
-                                    {{
-                                        'NUTRITION_TREND.DAY_GOAL'
-                                            | translate
-                                                : { value: formatChartCalories(dailyGoal() > 0 ? (day.calories / dailyGoal()) * 100 : 0) }
-                                    }}
-                                </p>
-                            </div>
                         </div>
+
+                        <div class="nutrition-trend__day-goal" [hidden]="dailyGoal() <= 0">
+                            <progress
+                                class="nutrition-trend__day-progress"
+                                [value]="day.calories"
+                                [max]="dailyGoal()"
+                                [attr.aria-label]="'NUTRITION_TREND.GOAL' | translate"
+                            ></progress>
+                            <span class="fd-ui-body-sm fd-ui-text-muted">
+                                {{ 'NUTRITION_TREND.DAY_GOAL' | translate: { value: formatChartCalories(selectedGoalPercent()) } }}
+                            </span>
+                        </div>
+                        <p class="fd-ui-body-sm fd-ui-text-muted" [hidden]="day.calories !== 0">
+                            {{ 'NUTRITION_TREND.DAY_EMPTY' | translate }}
+                        </p>
                         <div class="nutrition-trend__day-metrics">
                             @for (metric of selectedMetrics(); track metric.key) {
                                 <div [class]="`nutrition-trend__metric nutrition-trend__metric--${metric.key}`">

@@ -24,6 +24,7 @@ const TREND_TICK_COUNT = 5;
 const SHORT_TREND_DAYS = 3;
 const DEFAULT_TREND_DAYS = 7;
 const CALORIE_SCALE_STEP = 500;
+const PERCENT_SCALE = 100;
 
 export type NutritionInsightKind =
     'empty' | 'calorie-excess' | 'carb-excess' | 'fat-excess' | 'protein-deficit' | 'fiber-deficit' | 'in-progress' | 'balanced';
@@ -122,6 +123,10 @@ export class NutritionWeeklyTrendCardComponent {
     protected readonly selectedPoint = computed(
         () => this.trendPoints().find(point => point.date === this.selectedDate()) ?? this.trendPoints().at(-1),
     );
+    protected readonly selectedGoalPercent = computed(() => {
+        const goal = this.dailyGoal();
+        return goal > 0 ? ((this.selectedPoint()?.calories ?? 0) / goal) * PERCENT_SCALE : 0;
+    });
     protected selectDay(index: number): void {
         this.selectedDate.set(this.trendPoints()[index]?.date ?? null);
     }
@@ -188,11 +193,12 @@ export class NutritionWeeklyTrendCardComponent {
             const fats = point.fats ?? 0;
             const carbs = point.carbs ?? 0;
             const fiber = point.fiber ?? 0;
+            const fullDateLabel = formatDate(point.date, 'EEE, d MMMM', locale);
             return {
                 date: point.date,
                 dateKey: formatDate(point.date, 'yyyy-MM-dd', locale),
                 label: formatDate(point.date, 'd MMM', locale),
-                fullDateLabel: formatDate(point.date, 'd MMMM', locale),
+                fullDateLabel: fullDateLabel.charAt(0).toLocaleUpperCase(locale) + fullDateLabel.slice(1),
                 dayLabel: formatDate(point.date, 'd', locale),
                 monthLabel: formatDate(point.date, this.interactive() ? 'EEE' : 'MMM', locale),
                 calories: point.calories,
