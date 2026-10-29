@@ -36,7 +36,6 @@
         --fd-bar-chart-height: 270px;
         --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
         --fd-bar-chart-label-height: var(--nutrition-trend-date-space);
-        --fd-bar-chart-bar-width: min(40px, 70%);
         margin-top: var(--fd-space-lg);
     }
 
@@ -173,7 +172,6 @@
 
         &__bar-chart {
             --fd-bar-chart-height: 230px;
-            --fd-bar-chart-bar-width: min(32px, 76%);
         }
 
         &__legend {

@@ -22,6 +22,15 @@ const RESIZE_CATEGORY_COUNT = 7;
 const FIRST_RESIZE_DAY = 11;
 const DENSE_VISIBLE_LABELS = 4;
 
+function measureCategoricalLabel(element: HTMLElement, spacing: number): DOMRect {
+    const axis = element.closest('.fd-ui-bar-chart__categorical-labels');
+    if (axis !== null && element.tagName === 'SPAN') {
+        const index = Array.from(axis.querySelectorAll('span')).indexOf(element);
+        return new DOMRect(index * spacing, 0, MEASURED_LABEL_WIDTH, DENSE_LABEL_SPACING);
+    }
+    return new DOMRect();
+}
+
 describe('FdUiBarChartComponent', () => {
     let component: FdUiBarChartComponent;
     let fixture: ComponentFixture<FdUiBarChartComponent>;
@@ -121,11 +130,7 @@ describe('FdUiBarChartComponent accessibility', () => {
         let spacing = DENSE_LABEL_SPACING;
         const observers: Array<() => void> = [];
         vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement): DOMRect {
-            if (this.parentElement?.classList.contains('fd-ui-bar-chart__categorical-labels') === true) {
-                const index = Array.from(this.parentElement.children).indexOf(this);
-                return new DOMRect(index * spacing, 0, MEASURED_LABEL_WIDTH, DENSE_LABEL_SPACING);
-            }
-            return new DOMRect();
+            return measureCategoricalLabel(this, spacing);
         });
         vi.stubGlobal(
             'ResizeObserver',

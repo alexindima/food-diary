@@ -88,11 +88,13 @@
                 [style.grid-template-columns]="`repeat(${categoryViews().length}, minmax(0, 1fr))`"
             >
                 @for (category of categoryViews(); track $index) {
-                    <span
-                        [class.fd-ui-bar-chart__categorical-label--highlighted]="category.highlighted"
-                        [style.visibility]="hiddenLabelIndexes().has($index) ? 'hidden' : null"
-                        >{{ category.label }}</span
-                    >
+                    <div class="fd-ui-bar-chart__categorical-label-cell">
+                        <span
+                            [class.fd-ui-bar-chart__categorical-label--highlighted]="category.highlighted"
+                            [style.visibility]="hiddenLabelIndexes().has($index) ? 'hidden' : null"
+                            >{{ category.label }}</span
+                        >
+                    </div>
                 }
             </div>
         }

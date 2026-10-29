@@ -149,7 +149,7 @@ Compact four-step level indicator for difficulty, proficiency, signal strength, 
 
 #### `fd-ui-bar-chart`
 
-Categorical labels use their text width independently of bar width. Labels that would overlap are hidden and restored as the chart resizes; all bars keep their complete accessible names and keyboard focus targets.
+Categorical columns fill equal-width cells across the plot with a fixed token-based gap. Labels stay centered under their corresponding columns, including the first and last columns and custom bar widths. Labels use their text width independently of bar width; those that would overlap are hidden and restored as the chart resizes. All bars keep their complete accessible names and keyboard focus targets.
 
 Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.
 
@@ -164,6 +164,7 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `categories?: FdUiBarChartCategory[]`
 - `selectable?: boolean` â€” makes category columns keyboard-accessible toggle buttons; `categorySelected` emits the clicked category index. Set `highlighted` on the selected category.
 - `layout?: 'single' | 'grouped' | 'stacked'`
+- `horizontalEdgeInset?: 'none' | 'default'` (defaults to `none`; with custom column widths, aligns the first and last columns with the plot edges; `default` centers them in their cells)
 - `axisUnit?: string`
 - `axisTicks?: number[]`
 - `axisValueFormatter?: (value: number) => string`
@@ -176,9 +177,9 @@ Categorical bars are keyboard-focusable and expose their category and values thr
 - `--fd-bar-chart-axis-width`
 - `--fd-bar-chart-label-height`
 - `--fd-bar-chart-reference-label-space`
-- `--fd-bar-chart-bar-width`
+- `--fd-bar-chart-bar-width` (defaults to `100%` of the category cell)
 - `--fd-bar-chart-unit-style`, `--fd-bar-chart-unit-weight`, `--fd-bar-chart-unit-opacity` â€” categorical axis unit typography. Unit style defaults to `italic`; consumers do not need to repeat it.
-- `--fd-bar-chart-group-width`
+- `--fd-bar-chart-group-width` (defaults to `100%` of the category cell)
 
 #### `fd-ui-line-chart`
 

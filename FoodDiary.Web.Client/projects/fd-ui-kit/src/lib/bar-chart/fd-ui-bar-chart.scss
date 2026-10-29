@@ -3,8 +3,8 @@
     --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
     --fd-bar-chart-label-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
     --fd-bar-chart-reference-label-space: 0;
-    --fd-bar-chart-bar-width: min(48px, 72%);
-    --fd-bar-chart-group-width: min(76px, 92%);
+    --fd-bar-chart-bar-width: 100%;
+    --fd-bar-chart-group-width: 100%;
     --fd-bar-chart-edge-category-width: var(--fd-bar-chart-bar-width);
     --fd-bar-chart-unit-style: italic;
     --fd-bar-chart-unit-weight: var(--fd-text-caption-weight);
@@ -226,6 +226,15 @@
     min-width: 0;
 }
 
+.fd-ui-bar-chart__categorical-label-cell {
+    display: grid;
+    justify-self: center;
+    justify-items: center;
+    align-items: start;
+    width: var(--fd-bar-chart-edge-category-width);
+    min-width: 0;
+}
+
 .fd-ui-bar-chart__categorical-labels span {
     min-width: 0;
     width: max-content;
@@ -297,11 +306,11 @@
     justify-items: end;
 }
 
-.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:first-child) {
+.fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__categorical-label-cell:first-child {
     justify-self: start;
 }
 
-.fd-ui-bar-chart--edge-inset-none :where(.fd-ui-bar-chart__categorical-labels span:last-child) {
+.fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__categorical-label-cell:last-child {
     justify-self: end;
 }
 

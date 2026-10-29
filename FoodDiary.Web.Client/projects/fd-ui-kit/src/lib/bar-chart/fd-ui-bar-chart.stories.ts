@@ -6,6 +6,11 @@ const CHART_MAXIMUM = 2500;
 const THREE_QUARTER_TICK = 1875;
 const HALF_TICK = 1250;
 const QUARTER_TICK = 625;
+const SHORT_NUTRITION_PERIOD = 3;
+const SAMPLE_PROTEIN_CALORIES = 40;
+const SAMPLE_FAT_CALORIES = 60;
+const SAMPLE_CARB_CALORIES = 600;
+const SAMPLE_FIBER_CALORIES = 10;
 
 const meta: Meta<FdUiBarChartComponent> = {
     title: 'Components/Charts/Bar Chart',
@@ -81,4 +86,35 @@ export const StackedTimeSeries: Story = {
             },
         ],
     },
+};
+
+const nutritionWeek = ['чт\n22', 'пт\n23', 'сб\n24', 'вс\n25', 'пн\n26', 'вт\n27', 'ср\n28'].map((label, index, days) => {
+    const isLatest = index === days.length - 1;
+    return {
+        label,
+        highlighted: isLatest,
+        values: [
+            { label: 'Protein', value: isLatest ? SAMPLE_PROTEIN_CALORIES : 0, color: 'var(--fd-color-nutrition-proteins)' },
+            { label: 'Fat', value: isLatest ? SAMPLE_FAT_CALORIES : 0, color: 'var(--fd-color-nutrition-fats)' },
+            { label: 'Carbs', value: isLatest ? SAMPLE_CARB_CALORIES : 0, color: 'var(--fd-color-nutrition-carbs)' },
+            { label: 'Fiber', value: isLatest ? SAMPLE_FIBER_CALORIES : 0, color: 'var(--fd-color-nutrition-fiber)' },
+        ],
+    };
+});
+
+export const NutritionWeek: Story = {
+    args: {
+        title: 'Nutrition dynamics',
+        layout: 'stacked',
+        selectable: true,
+        axisUnit: 'ккал',
+        axisTicks: [CHART_MAXIMUM, THREE_QUARTER_TICK, HALF_TICK, QUARTER_TICK, 0],
+        scaleMaximum: CHART_MAXIMUM,
+        referenceLines: [{ value: CHART_MAXIMUM, label: 'Цель 2 500' }],
+        categories: nutritionWeek,
+    },
+};
+
+export const NutritionThreeDays: Story = {
+    args: { ...NutritionWeek.args, categories: nutritionWeek.slice(-SHORT_NUTRITION_PERIOD) },
 };
