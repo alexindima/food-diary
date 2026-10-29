@@ -32,6 +32,15 @@ try {
         `<style>html,body{margin:0;background:transparent}svg{display:block;width:100%;height:100%}</style><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">${paddedMark.replaceAll('#2563eb', '#ffffff')}</svg>`,
     );
     await page.screenshot({ path: fileURLToPath(new URL('../assets/pwa/icon-96x96.png', import.meta.url)), omitBackground: true });
+    // New URLs bypass old browser/CDN entries previously served as immutable for a year.
+    copyFileSync(
+        new URL('../assets/pwa/app-icon-192x192.png', import.meta.url),
+        new URL('../assets/pwa/notification-icon-v20261029-192x192.png', import.meta.url),
+    );
+    copyFileSync(
+        new URL('../assets/pwa/icon-96x96.png', import.meta.url),
+        new URL('../assets/pwa/notification-badge-v20261029-96x96.png', import.meta.url),
+    );
 } finally {
     await browser.close();
 }

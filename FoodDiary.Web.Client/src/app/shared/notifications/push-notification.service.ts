@@ -15,6 +15,7 @@ import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { BrowserNotificationCapabilityService } from './browser-notification-capability.service';
 import { NotificationService, type WebPushSubscriptionRequest } from './notification.service';
+import { PushNotificationInteractionService } from './push-notification-interaction.service';
 
 export type PushNotificationEnableResult = 'subscribed' | 'already-subscribed' | 'unsupported' | 'blocked' | 'unavailable';
 
@@ -33,6 +34,7 @@ type OwnedPushSubscription = {
 const PUSH_REQUEST_TIMEOUT_MS = 5000;
 const PUSH_BROWSER_LOCK = 'fooddiary.push.subscription';
 const PUSH_OWNER_STORAGE_KEY = 'webPushSubscriptionOwner';
+const PUSH_DEVICE_OPT_IN_KEY = 'webPushDeviceOptIn:';
 
 @Service()
 export class PushNotificationService {
@@ -73,18 +75,8 @@ export class PushNotificationService {
         if (!this.swPush.isEnabled) {
             return;
         }
-
-        const resume = (): void => {
-            if (this.document.visibilityState === 'visible') {
-                void this.syncExistingSubscriptionAsync();
-            }
-        };
-        this.document.addEventListener('visibilitychange', resume);
-        this.document.defaultView?.addEventListener('focus', resume);
-        this.destroyRef.onDestroy(() => {
-            this.document.removeEventListener('visibilitychange', resume);
-            this.document.defaultView?.removeEventListener('focus', resume);
-        });
+        const interactions = inject(PushNotificationInteractionService);
+        this.observeBrowserResume();
 
         const unregisterCleanup = this.sessionEvents.registerSessionEndCleanup(async () => this.endSessionAsync());
         this.destroyRef.onDestroy(unregisterCleanup);
@@ -102,6 +94,7 @@ export class PushNotificationService {
             }
             this.isBusy.set(false);
             this.setSubscriptionState(null);
+            void this.syncExistingSubscriptionAsync();
         });
         this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.sessionEvents.isLocalSessionInvalidated) {
@@ -134,8 +127,10 @@ export class PushNotificationService {
                 void this.router.navigateByUrl(this.browserNotifications.toAppUrl(targetUrl));
             }
 
-            this.notificationService.fetchUnreadCount({ force: true });
-            this.notificationService.notifyNotificationsChanged();
+            if (!interactions.recordClick(event.notification)) {
+                this.notificationService.fetchUnreadCount({ force: true });
+                this.notificationService.notifyNotificationsChanged();
+            }
         });
 
         effect(() => {
@@ -153,6 +148,22 @@ export class PushNotificationService {
             untracked(() => {
                 void this.syncExistingSubscriptionAsync();
             });
+        });
+    }
+
+    private observeBrowserResume(): void {
+        const resume = (): void => {
+            if (this.document.visibilityState === 'visible') {
+                void this.syncExistingSubscriptionAsync();
+            }
+        };
+        this.document.addEventListener('visibilitychange', resume);
+        this.document.defaultView?.addEventListener('focus', resume);
+        this.document.defaultView?.addEventListener('online', resume);
+        this.destroyRef.onDestroy(() => {
+            this.document.removeEventListener('visibilitychange', resume);
+            this.document.defaultView?.removeEventListener('focus', resume);
+            this.document.defaultView?.removeEventListener('online', resume);
         });
     }
 
@@ -231,7 +242,9 @@ export class PushNotificationService {
         this.isBusy.set(true);
 
         try {
-            return await this.ensureSubscriptionForSessionAsync(session);
+            const result = await this.ensureSubscriptionForSessionAsync(session);
+            this.rememberEnabledDevice(result, session);
+            return result;
         } catch {
             if (this.isNotificationPermissionDenied()) {
                 return 'blocked';
@@ -245,13 +258,22 @@ export class PushNotificationService {
         }
     }
 
-    private async ensureSubscriptionForSessionAsync(session: PushSession): Promise<PushNotificationEnableResult> {
+    private rememberEnabledDevice(result: PushNotificationEnableResult, session: PushSession): void {
+        if (this.isCurrentSession(session) && (result === 'subscribed' || result === 'already-subscribed')) {
+            this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'true');
+        }
+    }
+
+    private async ensureSubscriptionForSessionAsync(
+        session: PushSession,
+        allowPermissionPrompt = true,
+    ): Promise<PushNotificationEnableResult> {
         const { subscription: current } = await this.readOwnedSubscriptionAsync(session);
         if (!this.isCurrentSession(session)) {
             return 'unavailable';
         }
         if (current !== null) {
-            const replaced = await this.synchronizeExistingSubscriptionAsync(current, session);
+            const replaced = await this.synchronizeExistingSubscriptionAsync(current, session, allowPermissionPrompt);
             if (!this.isCurrentSession(session)) {
                 return 'unavailable';
             }
@@ -270,7 +292,7 @@ export class PushNotificationService {
             return 'blocked';
         }
 
-        const subscription = await this.requestSubscriptionForSessionAsync(publicKey, session);
+        const subscription = await this.requestSubscriptionForSessionAsync(publicKey, session, allowPermissionPrompt);
         await this.upsertSubscriptionAsync(subscription, session);
         return this.isCurrentSession(session) ? 'subscribed' : 'unavailable';
     }
@@ -284,7 +306,7 @@ export class PushNotificationService {
             return;
         }
         try {
-            const { subscription, revoked } = await this.readOwnedSubscriptionAsync(session);
+            const { subscription } = await this.readOwnedSubscriptionAsync(session);
             if (!this.isCurrentSession(session)) {
                 return;
             }
@@ -292,16 +314,41 @@ export class PushNotificationService {
 
             if (subscription === null) {
                 this.setSubscriptionState(null);
-                if (revoked) {
-                    await this.ensureSubscriptionForSessionAsync(session);
-                }
+                await this.restoreDeviceSubscriptionAsync(session);
                 return;
             }
 
-            await this.synchronizeExistingSubscriptionAsync(subscription, session);
+            await this.synchronizeExistingSubscriptionAsync(subscription, session, false);
         } catch {
             if (this.isCurrentSession(session)) {
                 this.setSubscriptionState(null);
+            }
+        }
+    }
+
+    private async restoreDeviceSubscriptionAsync(session: PushSession): Promise<void> {
+        if (
+            this.isBusy() ||
+            this.browserNotifications.getPermission() !== 'granted' ||
+            this.browserContext?.storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) !== 'true'
+        ) {
+            return;
+        }
+        this.isBusy.set(true);
+        try {
+            const preferences = await firstValueFrom(
+                this.notificationService.getNotificationPreferences().pipe(timeout(PUSH_REQUEST_TIMEOUT_MS)),
+            );
+            if (
+                preferences.pushNotificationsEnabled &&
+                this.isCurrentSession(session) &&
+                this.browserContext.storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner) === 'true'
+            ) {
+                await this.ensureSubscriptionForSessionAsync(session, false);
+            }
+        } finally {
+            if (this.isCurrentSession(session)) {
+                this.isBusy.set(false);
             }
         }
     }
@@ -322,7 +369,7 @@ export class PushNotificationService {
             }
 
             if (revoked) {
-                await this.ensureSubscriptionForSessionAsync(session);
+                await this.restoreDeviceSubscriptionAsync(session);
                 return;
             }
 
@@ -394,8 +441,11 @@ export class PushNotificationService {
     }
 
     private async removeEndpointAsync(endpoint: string, current: PushSubscription | null, session: PushSession): Promise<boolean> {
-        if (current?.endpoint === endpoint && !(await this.revokeBrowserSubscriptionAsync(current, session))) {
-            return false;
+        if (current?.endpoint === endpoint) {
+            this.browserContext?.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + session.owner, 'false');
+            if (!(await this.revokeBrowserSubscriptionAsync(current, session))) {
+                return false;
+            }
         }
         if (!this.isCurrentSession(session)) {
             return false;
@@ -429,14 +479,18 @@ export class PushNotificationService {
         return configuration.publicKey;
     }
 
-    private async synchronizeExistingSubscriptionAsync(subscription: PushSubscription, session: PushSession): Promise<boolean> {
+    private async synchronizeExistingSubscriptionAsync(
+        subscription: PushSubscription,
+        session: PushSession,
+        allowPermissionPrompt = true,
+    ): Promise<boolean> {
         this.knownSubscriptions.set(subscription.endpoint, subscription);
         let publicKey: string | null;
         try {
             const configuration = await firstValueFrom(this.notificationService.getWebPushConfiguration());
             publicKey = this.getSubscriptionPublicKey(configuration);
         } catch {
-            return this.upsertOrReplaceForeignSubscriptionAsync(subscription, session, null);
+            return this.upsertOrReplaceForeignSubscriptionAsync(subscription, session, null, allowPermissionPrompt);
         }
 
         if (!this.isCurrentSession(session)) {
@@ -444,7 +498,7 @@ export class PushNotificationService {
         }
 
         if (publicKey === null || this.subscriptionUsesPublicKey(subscription, publicKey)) {
-            return this.upsertOrReplaceForeignSubscriptionAsync(subscription, session, publicKey);
+            return this.upsertOrReplaceForeignSubscriptionAsync(subscription, session, publicKey, allowPermissionPrompt);
         }
 
         if (!(await this.revokeBrowserSubscriptionAsync(subscription, session))) {
@@ -455,7 +509,7 @@ export class PushNotificationService {
             return false;
         }
         this.setSubscriptionState(null);
-        const replacement = await this.requestSubscriptionForSessionAsync(publicKey, session);
+        const replacement = await this.requestSubscriptionForSessionAsync(publicKey, session, allowPermissionPrompt);
         await this.upsertSubscriptionAsync(replacement, session);
         return true;
     }
@@ -464,6 +518,7 @@ export class PushNotificationService {
         subscription: PushSubscription,
         session: PushSession,
         publicKey: string | null,
+        allowPermissionPrompt = true,
     ): Promise<boolean> {
         let failure: unknown;
         try {
@@ -490,7 +545,7 @@ export class PushNotificationService {
         if (publicKey === null) {
             throw new Error('A replacement push subscription requires the server public key.');
         }
-        const replacement = await this.requestSubscriptionForSessionAsync(publicKey, session);
+        const replacement = await this.requestSubscriptionForSessionAsync(publicKey, session, allowPermissionPrompt);
         await this.upsertSubscriptionAsync(replacement, session);
         return true;
     }
@@ -571,12 +626,19 @@ export class PushNotificationService {
     private forgetSubscription(subscription: PushSubscription): void {
         const marker = this.browserContext?.storage.getJson('local', PUSH_OWNER_STORAGE_KEY);
         if (getStringProperty(marker, 'endpoint') === subscription.endpoint) {
+            this.rememberDeviceOptIn(getStringProperty(marker, 'userId'));
             this.browserContext?.storage.removeItem('local', PUSH_OWNER_STORAGE_KEY);
         }
         this.knownSubscriptions.delete(subscription.endpoint);
         if (this.currentSubscription?.endpoint === subscription.endpoint) {
             this.currentSubscription = null;
             this.setSubscriptionState(null);
+        }
+    }
+
+    private rememberDeviceOptIn(owner: string | undefined): void {
+        if (owner !== undefined && this.browserContext?.storage.getItem('local', PUSH_DEVICE_OPT_IN_KEY + owner) === null) {
+            this.browserContext.storage.setItem('local', PUSH_DEVICE_OPT_IN_KEY + owner, 'true');
         }
     }
 
@@ -591,6 +653,7 @@ export class PushNotificationService {
             }
             const confirmedOwner = this.isConfirmedOwner(subscription, session.owner);
             if (confirmedOwner && !this.browserNotifications.isPermissionDenied()) {
+                this.rememberDeviceOptIn(session.owner);
                 return { subscription, revoked: false };
             }
             // Stop a foreign or revoked endpoint before reconciling its server registration.
@@ -634,7 +697,11 @@ export class PushNotificationService {
         this.knownSubscriptions.delete(endpoint);
     }
 
-    private async requestSubscriptionForSessionAsync(publicKey: string, session: PushSession): Promise<PushSubscription> {
+    private async requestSubscriptionForSessionAsync(
+        publicKey: string,
+        session: PushSession,
+        allowPermissionPrompt = true,
+    ): Promise<PushSubscription> {
         const request = await this.runBrowserMutationAsync<{ subscription: PushSubscription } | { pending: Promise<PushSubscription> }>(
             async () => {
                 this.requireCurrentSession(session);
@@ -652,6 +719,9 @@ export class PushNotificationService {
                 }
                 // Release the browser lock while permission is pending. A later
                 // result must still pass the session and endpoint checks below.
+                if (!allowPermissionPrompt && this.browserNotifications.getPermission() !== 'granted') {
+                    throw new Error('Automatic push restoration requires existing notification permission.');
+                }
                 return { pending: this.requestSubscriptionAsync(publicKey) };
             },
         );

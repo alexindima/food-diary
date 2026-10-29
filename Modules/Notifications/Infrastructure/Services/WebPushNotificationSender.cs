@@ -154,15 +154,17 @@ public sealed class WebPushNotificationSender(
     }
 
     private string BuildPayload(Notification notification, NotificationText text) {
-        string targetUrl = ResolveUrl(notification);
+        string targetUrl = ResolveClickUrl(notification);
         var payload = new {
             notification = new {
                 title = text.Title,
                 body = text.Body,
                 tag = notification.Id.Value.ToString("N"),
-                icon = "/assets/pwa/icon-192x192.png",
-                badge = "/assets/pwa/icon-96x96.png",
+                icon = "/assets/pwa/notification-icon-v20261029-192x192.png",
+                badge = "/assets/pwa/notification-badge-v20261029-96x96.png",
                 data = new {
+                    notificationId = notification.Id.Value.ToString("D"),
+                    userId = notification.UserId.Value.ToString("D"),
                     targetUrl,
                     url = targetUrl,
                     onActionClick = new {
@@ -178,6 +180,15 @@ public sealed class WebPushNotificationSender(
         };
 
         return JsonSerializer.Serialize(payload);
+    }
+
+    private string ResolveClickUrl(Notification notification) {
+        string targetUrl = ResolveUrl(notification);
+        int fragmentIndex = targetUrl.IndexOf('#', StringComparison.Ordinal);
+        string fragment = fragmentIndex < 0 ? string.Empty : targetUrl[fragmentIndex..];
+        string path = fragmentIndex < 0 ? targetUrl : targetUrl[..fragmentIndex];
+        string separator = path.Contains('?', StringComparison.Ordinal) ? "&" : "?";
+        return $"{path}{separator}notificationId={notification.Id.Value:D}&notificationUserId={notification.UserId.Value:D}{fragment}";
     }
 
     private string ResolveUrl(Notification notification) {

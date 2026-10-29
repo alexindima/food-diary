@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2757,
-    "symbols": 869,
+    "typescriptFiles": 2760,
+    "symbols": 870,
     "routes": 108,
     "features": 46,
-    "specs": 840,
+    "specs": 841,
     "localeFiles": 5,
     "roles": {
       "Component": 502,
@@ -20,7 +20,7 @@
       "Facade": 90,
       "Other": 41,
       "Pipe": 5,
-      "Service": 211
+      "Service": 212
     }
   },
   "features": [
@@ -7498,14 +7498,21 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 51
+      "line": 52
+    },
+    {
+      "name": "PushNotificationInteractionService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification-interaction.service.ts",
+      "line": 24
     },
     {
       "name": "PushNotificationService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "line": 38
+      "line": 40
     },
     {
       "name": "ClientTelemetrySessionService",

@@ -8,7 +8,14 @@ export async function assertPwaCachePolicy(origin) {
     assert.ok(manifestHref, 'The application document must link its install metadata.');
     const manifest = await (await fetch(`${origin}${manifestHref}`)).json();
     assert.equal(manifest.id, '/', 'Refreshing cached metadata must preserve the installed app identity.');
-    const paths = new Set([manifestPath, manifestHref, '/assets/pwa/app-icon-180x180.png', ...manifest.icons.map(icon => icon.src)]);
+    const paths = new Set([
+        manifestPath,
+        manifestHref,
+        '/assets/pwa/app-icon-180x180.png',
+        '/assets/pwa/notification-icon-v20261029-192x192.png',
+        '/assets/pwa/notification-badge-v20261029-96x96.png',
+        ...manifest.icons.map(icon => icon.src),
+    ]);
     const observations = [];
     for (const pathname of paths) {
         const response = await fetch(`${origin}${pathname}`);

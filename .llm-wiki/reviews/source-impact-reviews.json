@@ -1278,8 +1278,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7f81496626d7c07861463e1cffcf50d0334ef2d5c12cd736bb7aa7e5479eb3d7",
-          "reviewReason": "Reviewed regenerated topology with the Identity cookie service consuming the already composed Data Protection provider and TimeProvider. There is no new host, worker, provider client, recurring job or external destination. Existing runtime-signal scoping and transaction/retry review instructions continue to match the source."
+          "sha256": "953998c98b0a469dbbad64080a7841879733b8cba0a76329f04eb869fe41977a",
+          "reviewReason": "Reviewed the combined master runtime topology after merging notifications: runtime deployment, providers, registrations and background jobs are preserved. The regenerated topology reconciles the existing master sources and notification sender changes; notification recipient identity, foreground retry and permission safeguards are covered by integration checks."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1292,10 +1292,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed regenerated topology with the Identity cookie service consuming the already composed Data Protection provider and TimeProvider. There is no new host, worker, provider client, recurring job or external destination. Existing runtime-signal scoping and transaction/retry review instructions continue to match the source.",
+      "reason": "Reviewed the combined master runtime topology after merging notifications: runtime deployment, providers, registrations and background jobs are preserved. The regenerated topology reconciles the existing master sources and notification sender changes; notification recipient identity, foreground retry and permission safeguards are covered by integration checks.",
       "baseRef": "HEAD",
-      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
-      "reviewedAtUtc": "2026-10-29T14:36:22.1609713Z"
+      "gitHead": "fe927c653b7ec55f60d54076b42a6d8b60f756ba",
+      "reviewedAtUtc": "2026-10-29T16:00:32.3506080Z"
     },
     {
       "pageId": "workflow-security-review",

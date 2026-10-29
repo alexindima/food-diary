@@ -160,6 +160,43 @@ describe('NotificationService loading', () => {
     });
 });
 
+describe('NotificationService acknowledgement refresh', () => {
+    it('replaces pre-click count reads and ignores their late responses', () => {
+        service.fetchUnreadCount();
+        const stale = httpMock.expectOne(`${baseUrl}/unread-count`);
+        service.fetchUnreadCount({ force: true, supersedePending: true });
+        const fresh = httpMock.match(`${baseUrl}/unread-count`);
+        expect(fresh, 'acknowledgement must replace pending count reads').toHaveLength(1);
+        fresh[0].flush({ count: 0 });
+        stale.flush({ count: UNREAD_COUNT_INITIAL });
+        expect(service.unreadCount()).toBe(0);
+    });
+
+    it('retains the latest pending count request when a superseded read finishes', () => {
+        service.fetchUnreadCount();
+        const stale = httpMock.expectOne(`${baseUrl}/unread-count`);
+        service.fetchUnreadCount({ force: true, supersedePending: true });
+        const fresh = httpMock.match(`${baseUrl}/unread-count`);
+        expect(fresh, 'acknowledgement must replace pending count reads').toHaveLength(1);
+        stale.flush({ count: UNREAD_COUNT_INITIAL });
+        service.fetchUnreadCount();
+        httpMock.expectNone(`${baseUrl}/unread-count`);
+        fresh[0].flush({ count: 0 });
+        expect(service.unreadCount()).toBe(0);
+    });
+
+    it('discards a pre-click feed and reloads it after the pending read finishes', () => {
+        service.ensureNotificationsLoaded();
+        const stale = httpMock.expectOne(baseUrl);
+        service.notifyNotificationsChanged({ supersedePending: true });
+        stale.flush([notificationForSession('Clicked notification')]);
+        expect(service.notifications(), 'a pre-click feed must not restore an unread notification').toEqual([]);
+        const fresh = httpMock.expectOne(baseUrl);
+        fresh.flush([{ ...notificationForSession('Clicked notification'), isRead: true }]);
+        expect(service.notifications()[0].isRead).toBe(true);
+    });
+});
+
 describe('NotificationService session ownership', () => {
     it('reads cached state without HTTP and clears the previous owner synchronously', () => {
         service.notifications.set([notificationForSession('Private title')]);
