@@ -26,4 +26,5 @@ export class DashboardSummaryBlockComponent {
     public readonly data = input.required<DashboardSummaryData>();
 
     public readonly blockToggle = output();
+    public readonly details = output<string>();
 }

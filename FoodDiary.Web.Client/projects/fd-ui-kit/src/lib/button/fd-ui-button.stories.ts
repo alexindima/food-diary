@@ -38,6 +38,7 @@ const meta: Meta<FdUiButtonComponent> = {
         },
         disabled: { control: 'boolean' },
         fullWidth: { control: 'boolean' },
+        stretchContent: { control: 'boolean', description: 'Stretch a rich projected label across the button content area' },
         ariaLabel: { control: 'text' },
         ariaExpanded: { control: 'boolean', description: 'Expanded state for disclosure controls' },
     },
@@ -51,6 +52,7 @@ const meta: Meta<FdUiButtonComponent> = {
             [iconSize]="iconSize"
             [disabled]="disabled"
             [fullWidth]="fullWidth"
+            [stretchContent]="stretchContent"
             [ariaLabel]="ariaLabel"
             [ariaExpanded]="ariaExpanded"
             [type]="type">Button</fd-ui-button>`,
@@ -59,6 +61,17 @@ const meta: Meta<FdUiButtonComponent> = {
 
 export default meta;
 type Story = StoryObj<FdUiButtonComponent>;
+
+export const RichActionRow: Story = {
+    render: () => ({
+        template: `<fd-ui-button variant="secondary" fill="outline" [fullWidth]="true" [stretchContent]="true">
+            <span style="display:grid;gap:var(--fd-space-xxs);padding-block:var(--fd-space-sm);text-align:start;">
+                <span style="display:flex;justify-content:space-between;gap:var(--fd-space-sm);"><strong>Cottage cheese</strong><strong>18 g</strong></span>
+                <span class="fd-ui-caption">Breakfast · 08:30</span>
+            </span>
+        </fd-ui-button>`,
+    }),
+};
 
 export const Primary: Story = {
     args: {

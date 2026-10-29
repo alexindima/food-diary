@@ -66,8 +66,8 @@ export class DashboardFacade {
     private tdeeGoalRequest: Promise<boolean> | null = null;
     public readonly isApplyingTdeeGoal = signal(false);
     public readonly layout = inject(DashboardLayoutService);
-    public async openMealDetailsAsync(mealId: string): Promise<void> {
-        const meal = this.meals().find(item => item.id === mealId);
+    public async openMealDetailsAsync(mealId: string, sourceMeal?: Meal): Promise<void> {
+        const meal = sourceMeal ?? this.meals().find(item => item.id === mealId);
         if (meal === undefined) {
             return;
         }

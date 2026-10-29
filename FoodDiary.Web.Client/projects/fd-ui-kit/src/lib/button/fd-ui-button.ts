@@ -25,6 +25,7 @@ export class FdUiButtonComponent {
     public readonly disabled = input(false, { transform: booleanAttribute });
     public readonly loading = input(false, { transform: booleanAttribute });
     public readonly fullWidth = input(false, { transform: booleanAttribute });
+    public readonly stretchContent = input(false, { transform: booleanAttribute });
     public readonly ariaLabel = input<string | undefined>();
     public readonly ariaPressed = input<boolean | null>(null);
     public readonly ariaExpanded = input<boolean | null>(null);

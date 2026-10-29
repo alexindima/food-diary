@@ -13,11 +13,11 @@
     [attr.aria-busy]="loading() ? true : ariaBusy()"
     [attr.title]="effectiveDisabledReason()"
 >
-    <span class="fd-ui-button__content">
+    <span class="fd-ui-button__content" [style.width]="stretchContent() ? '100%' : null">
         @if (icon(); as iconName) {
             <fd-ui-icon class="fd-ui-button__icon" [name]="iconName" />
         }
-        <span class="fd-ui-button__label">
+        <span class="fd-ui-button__label" [style.width]="stretchContent() ? '100%' : null">
             <ng-content />
         </span>
     </span>

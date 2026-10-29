@@ -12,7 +12,7 @@
             </div>
         }
         <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()" [hoverable]="false">
-            <fd-day-nutrition-summary [data]="data()" />
+            <fd-day-nutrition-summary [data]="data()" [interactive]="!isEditingLayout()" (details)="details.emit($event)" />
         </fd-dashboard-card-shell>
     </div>
 }

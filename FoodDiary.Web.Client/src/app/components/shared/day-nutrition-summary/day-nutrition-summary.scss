@@ -123,6 +123,10 @@
     }
 
     &__calories {
+        padding: 0;
+        border: 0;
+        background: none;
+        border-radius: var(--fd-radius-pill);
         position: absolute;
         inset: 29%;
         display: flex;
@@ -201,6 +205,30 @@
         gap: var(--fd-space-xxs);
         min-width: 0;
         grid-row: 1;
+    }
+
+    &__metric-action {
+        appearance: none;
+        font-family: inherit;
+        color: inherit;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: var(--fd-outline-focus-strong);
+            outline-offset: var(--fd-outline-offset);
+        }
+
+        &:hover {
+            box-shadow: var(--fd-shadow-sm);
+        }
+
+        &:active {
+            opacity: 0.85;
+        }
+    }
+
+    &__interaction-hint {
+        margin: 0 0 var(--fd-space-sm);
     }
 
     &__nutrient--carbs,

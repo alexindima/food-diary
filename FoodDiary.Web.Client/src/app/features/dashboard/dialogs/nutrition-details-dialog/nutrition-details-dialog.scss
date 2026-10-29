@@ -1,0 +1,71 @@
+:host {
+    display: block;
+    min-width: 0;
+}
+
+:host p,
+:host h3 {
+    margin: 0;
+}
+
+.nutrition-details {
+    &__summary {
+        padding: var(--fd-space-md);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-card-surface);
+    }
+
+    fd-ui-progress-ring {
+        flex: 0 0 var(--fd-size-control-xl);
+        width: var(--fd-size-control-xl);
+        --fd-progress-ring-color: var(--nutrition-color);
+    }
+
+    &__value {
+        overflow-wrap: anywhere;
+    }
+
+    &__sources fd-ui-button {
+        --fd-button-white-space: normal;
+        width: 100%;
+        min-width: 0;
+    }
+
+    &__source {
+        display: grid;
+        width: 100%;
+        gap: var(--fd-space-xxs);
+        text-align: start;
+        padding-block: var(--fd-space-sm);
+    }
+
+    &__source-heading {
+        flex-wrap: wrap;
+    }
+
+    &__name {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    &__amount {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    &__bar {
+        height: var(--fd-space-xxs);
+        overflow: hidden;
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-color-border);
+
+        > span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--nutrition-color);
+        }
+    }
+}

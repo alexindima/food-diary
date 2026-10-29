@@ -7,6 +7,7 @@ import {
     inject,
     input,
     linkedSignal,
+    output,
     signal,
     viewChild,
     viewChildren,
@@ -23,6 +24,7 @@ import { DashboardWidgetFrameComponent } from '../dashboard-widget-frame/dashboa
 import type { NutrientBar } from '../nutrition-summary/nutrition-summary.types';
 import { buildDayNutrientContour, EXTREME_NUTRIENT_PERCENT, getDayNutrientAnchor } from './day-nutrition-contour.utils';
 import { buildDayNutrientBarViewModels, calculateDaySummaryPercent } from './day-nutrition-summary.utils';
+import { DaySummaryMetricDirective } from './day-summary-metric.directive';
 
 const PERCENT = 100;
 let uniqueId = 0;
@@ -38,7 +40,14 @@ type DayNutritionSummaryData = {
 
 @Component({
     selector: 'fd-day-nutrition-summary',
-    imports: [LocalizedNumberPipe, TranslatePipe, DashboardWidgetFrameComponent, FdUiIconComponent, FdUiButtonComponent],
+    imports: [
+        DaySummaryMetricDirective,
+        LocalizedNumberPipe,
+        TranslatePipe,
+        DashboardWidgetFrameComponent,
+        FdUiIconComponent,
+        FdUiButtonComponent,
+    ],
     templateUrl: './day-nutrition-summary.html',
     styleUrl: './day-nutrition-summary.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,6 +64,8 @@ export class DayNutritionSummaryComponent {
     );
 
     public readonly data = input.required<DayNutritionSummaryData>();
+    public readonly interactive = input(false);
+    public readonly details = output<string>();
     protected readonly insightIndex = linkedSignal({ source: this.data, computation: () => 0 });
     protected readonly insights = computed(() => {
         this.translationChange();

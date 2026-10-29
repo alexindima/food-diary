@@ -3,6 +3,9 @@
         [title]="'DASHBOARD.DAY_SUMMARY.TITLE' | translate"
         [helpText]="'DASHBOARD.DAY_SUMMARY.PETAL_LEGEND' | translate"
     >
+        <p class="day-summary__interaction-hint fd-ui-caption fd-ui-text-muted" [hidden]="!interactive()">
+            {{ 'DASHBOARD.NUTRITION_DETAILS.INTERACTION_HINT' | translate }}
+        </p>
         <div class="day-summary__layout">
             <div #visual class="day-summary__visual">
                 <!-- A data-shaped SVG is local to this summary; UI-kit rings encode a single metric. -->
@@ -54,7 +57,12 @@
                         }
                     }
                 </svg>
-                <div class="day-summary__calories" role="group" [attr.aria-label]="'DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS' | translate">
+                <div
+                    class="day-summary__calories"
+                    [fdDaySummaryMetric]="interactive()"
+                    [attr.aria-label]="'DASHBOARD.NUTRITION_DETAILS.OPEN_CALORIES' | translate"
+                    (metricActivated)="details.emit('calories')"
+                >
                     <strong class="day-summary__calorie-value fd-ui-metric-hero">{{
                         data().dailyConsumed | localizedNumber: language()
                     }}</strong>
@@ -78,9 +86,20 @@
                     @for (bar of bars(); track bar.id) {
                         <div
                             #nutrientLabel
+                            [fdDaySummaryMetric]="interactive()"
                             [class]="`day-summary__nutrient day-summary__nutrient--${bar.id}`"
                             [style.--nutrient-color]="bar.colorEnd"
-                            [attr.aria-label]="`${bar.labelText}: ${bar.comparisonText}`"
+                            [attr.aria-label]="
+                                'DASHBOARD.NUTRITION_DETAILS.OPEN_NUTRIENT'
+                                    | translate
+                                        : {
+                                              nutrient: bar.labelText,
+                                              current: (bar.current | localizedNumber: language()),
+                                              target: (bar.target | localizedNumber: language()),
+                                              unit: bar.unitText,
+                                          }
+                            "
+                            (metricActivated)="details.emit(bar.id)"
                         >
                             <span class="day-summary__nutrient-label fd-ui-body-sm">
                                 <fd-ui-icon [name]="getNutrientIcon(bar.id)" [style.color]="bar.colorEnd" />

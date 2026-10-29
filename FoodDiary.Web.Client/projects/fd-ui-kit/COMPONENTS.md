@@ -504,6 +504,7 @@ Primary solid fill pairs the theme's primary 700–900 gradient shades with its 
 - `disabled?: boolean`
 - `loading?: boolean`
 - `fullWidth?: boolean`
+- `stretchContent?: boolean` (stretch the projected label to the available content width, useful for rich action rows)
 - `ariaLabel?: string`
 - `ariaPressed?: boolean | null` (pressed state for toggle-style buttons)
 - `ariaExpanded?: boolean | null` (expanded state on the native button for disclosure controls; omitted by default)

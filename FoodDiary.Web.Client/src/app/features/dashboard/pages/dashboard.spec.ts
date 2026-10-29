@@ -8,9 +8,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiPreventUnloadDirective } from 'fd-ui-kit';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
 import { describe, expect, it, type MockInstance, vi } from 'vitest';
 
+import { nutritionMealFixture } from '../../../../testing/nutrition-details.fixtures';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
@@ -25,6 +26,8 @@ import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-
 import { AiMealCreateFacade } from '../../meals/contracts/ai-meal-create';
 import { DashboardFacade } from '../lib/dashboard.facade';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
+import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
+import type { NutritionDetailsAction } from '../models/nutrition-details.types';
 import { DashboardComponent } from './dashboard';
 
 registerLocaleData(ru);
@@ -399,6 +402,7 @@ class DashboardTestState {
 
 async function setupAsync(fasting = false, initiallyLoading = false): Promise<DashboardTestContext> {
     const { facade, layout, viewport, params, navigation, unsaved, user } = new DashboardTestState();
+    const dialog = { open: vi.fn() };
     facade.isLoading.set(initiallyLoading);
     facade.hasSnapshot.set(!initiallyLoading);
     facade.fastingIsActive.set(fasting);
@@ -414,7 +418,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
             { provide: UnsavedChangesService, useValue: unsaved },
             { provide: ViewportService, useValue: viewport },
             { provide: ThemeService, useValue: {} },
-            { provide: FdUiDialogService, useValue: {} },
+            { provide: FdUiDialogService, useValue: dialog },
             { provide: FdTourService, useValue: { start: vi.fn() } },
             { provide: LocalizedTourDefinitionService, useValue: {} },
         ],
@@ -426,6 +430,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
                 providers: [
                     { provide: UserFacade, useValue: { user, getInfoSilently: vi.fn().mockReturnValue(of(null)) } },
                     { provide: DashboardFacade, useValue: facade },
+                    DashboardNutritionDialogFacade,
                     { provide: DashboardLayoutService, useValue: layout },
                     {
                         provide: AiMealCreateFacade,
@@ -444,7 +449,7 @@ async function setupAsync(fasting = false, initiallyLoading = false): Promise<Da
         expect(element, `Missing rendered child ${selector}`).not.toBeNull();
         return element;
     };
-    return { fixture, facade, layout, viewport, params, navigation, unsaved, host, child, router, user };
+    return { fixture, facade, layout, viewport, params, navigation, unsaved, host, child, router, user, dialog };
 }
 
 function activeFast(): FastingSession {
@@ -478,6 +483,7 @@ function activeFast(): FastingSession {
 }
 
 type DashboardTestContext = {
+    dialog: { open: ReturnType<typeof vi.fn> };
     user: DashboardTestState['user'];
     fixture: ComponentFixture<DashboardComponent>;
     facade: DashboardTestState['facade'];
@@ -490,3 +496,48 @@ type DashboardTestContext = {
     child: (selector: string) => DebugElement;
     router: { navigate: MockInstance<Router['navigate']> };
 };
+
+describe('Dashboard nutrition details orchestration', () => {
+    it('opens one selected-day dialog and then the chosen meal even outside the dashboard preview', async () => {
+        const { dialog, child, facade } = await setupAsync();
+        const closed = new Subject<NutritionDetailsAction | undefined>();
+        dialog.open.mockReturnValue({ afterClosed: () => closed });
+        const date = new Date('2026-10-28T00:00:00');
+        facade.selectedDate.set(date);
+        child('fd-dashboard-summary-block').triggerEventHandler('details', 'protein');
+        child('fd-dashboard-summary-block').triggerEventHandler('details', 'protein');
+        await vi.waitFor(() => {
+            expect(dialog.open).toHaveBeenCalledOnce();
+        });
+        expect(dialog.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ data: { date, metric: 'protein' } }));
+        const meal = nutritionMealFixture({ id: 'outside-preview' });
+        closed.next({ kind: 'meal', meal });
+        closed.complete();
+        await vi.waitFor(() => {
+            expect(facade.openMealDetailsAsync).toHaveBeenCalledExactlyOnceWith(meal.id, meal);
+        });
+    });
+
+    it.each(['diary', 'goals'] as const)('continues to the existing %s flow after closing', async kind => {
+        const { dialog, child, navigation, facade } = await setupAsync();
+        dialog.open.mockReturnValue({ afterClosed: () => of({ kind }) });
+        child('fd-dashboard-summary-block').triggerEventHandler('details', 'calories');
+        if (kind === 'diary') {
+            await vi.waitFor(() => {
+                expect(navigation.navigateToMealListAsync).toHaveBeenCalledExactlyOnceWith(facade.selectedDate());
+            });
+        } else {
+            await vi.waitFor(() => {
+                expect(navigation.navigateToGoalsAsync).toHaveBeenCalledOnce();
+            });
+        }
+    });
+
+    it('does not open metric details while rearranging the dashboard', async () => {
+        const { dialog, child, layout, fixture } = await setupAsync();
+        layout.isEditingLayout.set(true);
+        child('fd-dashboard-summary-block').triggerEventHandler('details', 'protein');
+        await fixture.whenStable();
+        expect(dialog.open).not.toHaveBeenCalled();
+    });
+});

@@ -1,0 +1,60 @@
+<section class="fd-stack fd-gap-sm" aria-labelledby="nutrition-sources-title">
+    <h3 id="nutrition-sources-title" class="fd-ui-card-title">
+        {{ (metric() === 'calories' ? 'DASHBOARD.NUTRITION_DETAILS.MEALS' : 'DASHBOARD.NUTRITION_DETAILS.SOURCES') | translate }}
+    </h3>
+    <p class="fd-ui-caption fd-ui-text-muted">{{ hintKey() | translate }}</p>
+    <fd-ui-section-state
+        appearance="compact"
+        emptyIcon="restaurant"
+        [state]="sources().length === 0 ? 'empty' : 'content'"
+        [emptyMessage]="'DASHBOARD.NUTRITION_DETAILS.EMPTY' | translate"
+    >
+        <div class="nutrition-details__sources fd-stack fd-gap-xs">
+            @for (source of visibleSources(); track source.id) {
+                <fd-ui-button
+                    variant="secondary"
+                    fill="outline"
+                    [fullWidth]="true"
+                    [stretchContent]="true"
+                    (click)="mealSelected.emit(source.meal)"
+                >
+                    <span class="nutrition-details__source">
+                        <span class="nutrition-details__source-heading fd-row fd-justify-between fd-gap-sm">
+                            <span class="nutrition-details__name">{{ source.title }}</span>
+                            <strong class="nutrition-details__amount"
+                                >{{ source.value | localizedNumber: language() : 0 : 1 }} {{ unitKey() | translate }}</strong
+                            >
+                        </span>
+                        <span class="fd-ui-caption fd-ui-text-muted">{{ source.subtitle }}</span>
+                        @if (source.kind === 'manual') {
+                            <span class="fd-ui-caption fd-ui-text-muted">{{ 'DASHBOARD.NUTRITION_DETAILS.MANUAL' | translate }}</span>
+                        } @else if (source.kind === 'unavailable') {
+                            <span class="fd-ui-caption fd-ui-text-muted">{{ 'DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED' | translate }}</span>
+                        }
+                        <!-- A local data bar, not an independent interactive control. -->
+                        <span class="nutrition-details__bar" aria-hidden="true"><span [style.width.%]="source.share"></span></span>
+                    </span>
+                </fd-ui-button>
+            }
+        </div>
+    </fd-ui-section-state>
+    @if (hiddenCount() > 0) {
+        <p class="fd-ui-caption fd-ui-text-muted">
+            {{
+                'DASHBOARD.NUTRITION_DETAILS.OTHER_SOURCES'
+                    | translate
+                        : {
+                              count: hiddenCount(),
+                              value: (hiddenValue() | localizedNumber: language() : 0 : 1),
+                              unit: (unitKey() | translate),
+                          }
+            }}
+        </p>
+        <fd-ui-button variant="secondary" fill="outline" [fullWidth]="true" (click)="expanded.set(true)">{{
+            'DASHBOARD.NUTRITION_DETAILS.SHOW_ALL' | translate
+        }}</fd-ui-button>
+    }
+    @if (hasUnattributed()) {
+        <p class="fd-ui-caption fd-ui-text-muted">{{ 'DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED_HINT' | translate }}</p>
+    }
+</section>

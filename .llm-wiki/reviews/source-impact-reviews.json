@@ -335,8 +335,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "01b8cfe03fe80ef017f306d833ab242cc47b0afbee0acde42a4b3c5aa5b90f92",
-          "reviewReason": "Reviewed the architecture-health delta in the published batch: FdUiDatetimeInputComponent now has a direct specification, reducing components without specs from126 to125 and removing the duplicate no-spec lead. Dependency matrix, project edges and removal policy are unchanged, so the guide remains accurate."
+          "sha256": "d8a27f1df1594e84c44582838f1dacee279bce48ba29d17b87e0a931a38568d2",
+          "reviewReason": "Reviewed the current architecture-health-index diff and workflow page. The index adds dashboard component/contract/test-reference records and refreshes candidate counts. The page asserts dependency enforcement, investigation-only candidate semantics, routed-component treatment and query freshness; it contains no numeric baseline or guided-tour ownership claim. Those instructions remain accurate, so no page text change is required."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -349,10 +349,10 @@
           "reviewReason": "The refreshed index includes the new Identity technical port/adapters and explicit host/integration-test references. These are intentional consumed owner dependencies; production module direction and aggregate ownership remain unchanged. No removal candidates are acted upon."
         }
       ],
-      "reason": "Reviewed the architecture-health delta in the published batch: FdUiDatetimeInputComponent now has a direct specification, reducing components without specs from126 to125 and removing the duplicate no-spec lead. Dependency matrix, project edges and removal policy are unchanged, so the guide remains accurate.",
-      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
-      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
-      "reviewedAtUtc": "2026-10-28T07:49:00.0217780Z"
+      "reason": "Reviewed the current architecture-health-index diff and workflow page. The index adds dashboard component/contract/test-reference records and refreshes candidate counts. The page asserts dependency enforcement, investigation-only candidate semantics, routed-component treatment and query freshness; it contains no numeric baseline or guided-tour ownership claim. Those instructions remain accurate, so no page text change is required.",
+      "baseRef": "HEAD",
+      "gitHead": "51e43021ea013309d08b80a52a99a28c63878115",
+      "reviewedAtUtc": "2026-10-29T09:21:34.1270476Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

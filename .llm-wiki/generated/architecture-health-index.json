@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 115,
+    "selectorUnreferencedComponents": 116,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -916,6 +916,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.spec.ts"
+    },
+    {
+      "class": "NutritionDetailsDialogComponent",
+      "selector": "fd-nutrition-details-dialog",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.spec.ts"
     },
     {
       "class": "TdeeInsightDialogComponent",
@@ -2741,6 +2749,10 @@
         {
           "name": "blockToggle",
           "type": ""
+        },
+        {
+          "name": "details",
+          "type": "string"
         }
       ],
       "specPath": null
@@ -2836,6 +2848,42 @@
         {
           "name": "undoClick",
           "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "NutritionDetailsSourcesComponent",
+      "selector": "fd-nutrition-details-sources",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "inputs": [
+        {
+          "name": "sources",
+          "type": "readonly NutritionSourceView[]",
+          "required": true
+        },
+        {
+          "name": "metric",
+          "type": "NutritionMetric",
+          "required": true
+        },
+        {
+          "name": "unitKey",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mealSelected",
+          "type": "Meal"
         }
       ],
       "specPath": null

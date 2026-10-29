@@ -1,0 +1,61 @@
+<fd-ui-dialog size="md" [title]="metric.labelKey | translate" [subtitle]="dateLabel()">
+    <div class="nutrition-details fd-stack fd-gap-md" [style.--nutrition-color]="metric.color">
+        <fd-ui-section-state
+            [state]="state()"
+            [loadingLabel]="'DASHBOARD.NUTRITION_DETAILS.LOADING' | translate"
+            [errorTitle]="'DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE' | translate"
+            [errorMessage]="'DASHBOARD.NUTRITION_DETAILS.ERROR_BODY' | translate"
+            [retryLabel]="'DASHBOARD.NUTRITION_DETAILS.RETRY' | translate"
+            (retry)="facade.reload()"
+        >
+            @if (progress(); as progress) {
+                <div class="nutrition-details__summary fd-row fd-align-center fd-gap-md">
+                    @if (progress.hasGoal) {
+                        <fd-ui-progress-ring [value]="progress.current" [max]="progress.goal" [ariaLabel]="metric.labelKey | translate">
+                            <strong class="fd-ui-body-sm">{{ progress.percent | localizedNumber: language() }}%</strong>
+                        </fd-ui-progress-ring>
+                    }
+                    <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                        <p class="fd-ui-metric-lg nutrition-details__value">
+                            {{ progress.current | localizedNumber: language() : 0 : 1 }}
+                            <span class="fd-ui-body-sm">{{ metric.unitKey | translate }}</span>
+                        </p>
+                        @if (progress.hasGoal) {
+                            <p class="fd-ui-body-sm fd-ui-text-muted">
+                                {{ 'DASHBOARD.NUTRITION_DETAILS.GOAL' | translate }}:
+                                {{ progress.goal | localizedNumber: language() : 0 : 1 }} {{ metric.unitKey | translate }}
+                            </p>
+                            <p class="fd-ui-body-sm">
+                                {{
+                                    progress.balanceKey
+                                        | translate
+                                            : {
+                                                  value: (progress.difference | localizedNumber: language() : 0 : 1),
+                                                  unit: (metric.unitKey | translate),
+                                              }
+                                }}
+                            </p>
+                        } @else {
+                            <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'DASHBOARD.NUTRITION_DETAILS.NO_GOAL' | translate }}</p>
+                        }
+                    </div>
+                </div>
+                <fd-nutrition-details-sources
+                    [sources]="sources()"
+                    [metric]="data.metric"
+                    [unitKey]="metric.unitKey"
+                    [language]="language()"
+                    (mealSelected)="openMeal($event)"
+                />
+            }
+        </fd-ui-section-state>
+    </div>
+    <div fdUiDialogFooter class="fd-row fd-wrap fd-justify-end fd-gap-sm">
+        <fd-ui-button variant="secondary" fill="text" (click)="openGoals()">{{
+            'DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS' | translate
+        }}</fd-ui-button>
+        <fd-ui-button variant="secondary" fill="outline" (click)="openDiary()">{{
+            'DASHBOARD.NUTRITION_DETAILS.OPEN_DIARY' | translate
+        }}</fd-ui-button>
+    </div>
+</fd-ui-dialog>

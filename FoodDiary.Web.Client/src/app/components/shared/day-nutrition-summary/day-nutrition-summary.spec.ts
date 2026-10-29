@@ -70,6 +70,27 @@ describe('Day summary empty state', () => {
 });
 
 describe('Day summary keyboard access', () => {
+    it('keeps public previews static and exposes keyboard metric actions only when interaction is enabled', async () => {
+        const fixture = await createSummaryAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const details = vi.fn();
+        fixture.componentInstance.details.subscribe(details);
+        expect(host.querySelector('.day-summary__metric-action')).toBeNull();
+        fixture.componentRef.setInput('interactive', true);
+        fixture.detectChanges();
+        const nutrient = getElement(fixture, '.day-summary__nutrient[role=button]');
+        const calories = getElement(fixture, '.day-summary__calories[role=button]');
+        expect(nutrient.getAttribute('aria-haspopup')).toBe('dialog');
+        nutrient.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+        calories.dispatchEvent(space);
+        expect(space.defaultPrevented).toBe(true);
+        expect(details.mock.calls).toEqual([['protein'], ['calories']]);
+        fixture.componentRef.setInput('interactive', false);
+        fixture.detectChanges();
+        expect(host.querySelector('.day-summary__metric-action')).toBeNull();
+    });
+
     it('makes the horizontally scrollable pulse reachable and named for keyboard users', async () => {
         const fixture = await createSummaryAsync();
         const viewport = getElement(fixture, '.day-summary__pulse-content');

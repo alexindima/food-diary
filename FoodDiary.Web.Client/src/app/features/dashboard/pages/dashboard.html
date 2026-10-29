@@ -164,6 +164,7 @@
                             [state]="blockStates.summary"
                             [isEditingLayout]="layout.isEditingLayout()"
                             [data]="dashboardSummaryData()"
+                            (details)="openNutritionDetailsAsync($event)"
                             (blockToggle)="layout.toggleBlock('summary')"
                         />
 

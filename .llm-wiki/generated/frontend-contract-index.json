@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 507,
-    "componentsWithoutDirectSpecs": 126,
-    "inputs": 1652,
-    "outputs": 559,
+    "components": 509,
+    "componentsWithoutDirectSpecs": 127,
+    "inputs": 1658,
+    "outputs": 562,
     "apiCalls": 318,
-    "templatesWithTranslations": 368,
-    "translationKeys": 2195,
-    "consumerEdges": 1292,
-    "consumedComponents": 323,
-    "unconsumedComponents": 183
+    "templatesWithTranslations": 370,
+    "translationKeys": 2211,
+    "consumerEdges": 1299,
+    "consumedComponents": 324,
+    "unconsumedComponents": 184
   },
   "components": [
     {
@@ -2256,6 +2256,10 @@
         {
           "name": "blockToggle",
           "type": ""
+        },
+        {
+          "name": "details",
+          "type": "string"
         }
       ],
       "specPath": null
@@ -2534,6 +2538,52 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.spec.ts"
+    },
+    {
+      "class": "NutritionDetailsDialogComponent",
+      "selector": "fd-nutrition-details-dialog",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.spec.ts"
+    },
+    {
+      "class": "NutritionDetailsSourcesComponent",
+      "selector": "fd-nutrition-details-sources",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "inputs": [
+        {
+          "name": "sources",
+          "type": "readonly NutritionSourceView[]",
+          "required": true
+        },
+        {
+          "name": "metric",
+          "type": "NutritionMetric",
+          "required": true
+        },
+        {
+          "name": "unitKey",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "mealSelected",
+          "type": "Meal"
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "TdeeInsightCardComponent",
@@ -4676,6 +4726,11 @@
         },
         {
           "name": "fullWidth",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "stretchContent",
           "type": "",
           "required": false
         },
@@ -12840,9 +12895,19 @@
           "name": "data",
           "type": "DayNutritionSummaryData",
           "required": true
+        },
+        {
+          "name": "interactive",
+          "type": "",
+          "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "details",
+          "type": "string"
+        }
+      ],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.spec.ts"
     },
     {
@@ -21196,6 +21261,32 @@
     },
     {
       "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "keys": [
+        "DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS",
+        "DASHBOARD.NUTRITION_DETAILS.ERROR_BODY",
+        "DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE",
+        "DASHBOARD.NUTRITION_DETAILS.GOAL",
+        "DASHBOARD.NUTRITION_DETAILS.LOADING",
+        "DASHBOARD.NUTRITION_DETAILS.NO_GOAL",
+        "DASHBOARD.NUTRITION_DETAILS.OPEN_DIARY",
+        "DASHBOARD.NUTRITION_DETAILS.RETRY"
+      ]
+    },
+    {
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "keys": [
+        "DASHBOARD.NUTRITION_DETAILS.EMPTY",
+        "DASHBOARD.NUTRITION_DETAILS.MANUAL",
+        "DASHBOARD.NUTRITION_DETAILS.OTHER_SOURCES",
+        "DASHBOARD.NUTRITION_DETAILS.SHOW_ALL",
+        "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED",
+        "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED_HINT"
+      ]
+    },
+    {
+      "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
@@ -23780,13 +23871,15 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
       "keys": [
-        "DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS",
         "DASHBOARD.DAY_SUMMARY.OF_GOAL",
         "DASHBOARD.DAY_SUMMARY.PETAL_LEGEND",
         "DASHBOARD.DAY_SUMMARY.PULSE_NEXT",
         "DASHBOARD.DAY_SUMMARY.PULSE_PREVIOUS",
         "DASHBOARD.DAY_SUMMARY.PULSE_TITLE",
         "DASHBOARD.DAY_SUMMARY.TITLE",
+        "DASHBOARD.NUTRITION_DETAILS.INTERACTION_HINT",
+        "DASHBOARD.NUTRITION_DETAILS.OPEN_CALORIES",
+        "DASHBOARD.NUTRITION_DETAILS.OPEN_NUTRIENT",
         "MEAL_RING.UNIT"
       ]
     },
@@ -26482,7 +26575,8 @@
         "state"
       ],
       "outputsHandled": [
-        "blockToggle"
+        "blockToggle",
+        "details"
       ]
     },
     {
@@ -26684,9 +26778,12 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
       "occurrences": 1,
       "inputsUsed": [
-        "data"
+        "data",
+        "interactive"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "details"
+      ]
     },
     {
       "component": "DayNutritionSummaryComponent",
@@ -29215,6 +29312,34 @@
       "occurrences": 2,
       "inputsUsed": [
         "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "fullWidth",
+        "stretchContent",
         "variant"
       ],
       "outputsHandled": []
@@ -33481,6 +33606,20 @@
       "occurrences": 1,
       "inputsUsed": [
         "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "subtitle",
         "title"
       ],
       "outputsHandled": []
@@ -38270,6 +38409,20 @@
       "component": "FdUiProgressRingComponent",
       "selector": "fd-ui-progress-ring",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "max",
+        "value"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiProgressRingComponent",
+      "selector": "fd-ui-progress-ring",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
       "consumerFeature": "fasting",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.html",
       "occurrences": 1,
@@ -38365,6 +38518,39 @@
       "occurrences": 1,
       "inputsUsed": [
         "loadingLabel"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSectionStateComponent",
+      "selector": "fd-ui-section-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "errorMessage",
+        "errorTitle",
+        "loadingLabel",
+        "retryLabel",
+        "state"
+      ],
+      "outputsHandled": [
+        "retry"
+      ]
+    },
+    {
+      "component": "FdUiSectionStateComponent",
+      "selector": "fd-ui-section-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "emptyIcon",
+        "emptyMessage",
+        "state"
       ],
       "outputsHandled": []
     },
@@ -41310,6 +41496,23 @@
         "showPieChart"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "NutritionDetailsSourcesComponent",
+      "selector": "fd-nutrition-details-sources",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "language",
+        "metric",
+        "sources",
+        "unitKey"
+      ],
+      "outputsHandled": [
+        "mealSelected"
+      ]
     },
     {
       "component": "NutritionEditorComponent",

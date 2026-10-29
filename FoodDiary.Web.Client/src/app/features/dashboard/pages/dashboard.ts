@@ -43,6 +43,7 @@ import { parseDashboardDate } from '../lib/dashboard-date.utils';
 import { shouldPrioritizeDashboardFasting } from '../lib/dashboard-fasting-priority';
 import { DashboardLayoutService } from '../lib/dashboard-layout.service';
 import { DashboardLocalDayFacade } from '../lib/dashboard-local-day.facade';
+import { DashboardNutritionDialogFacade } from '../lib/dashboard-nutrition-dialog.facade';
 import { DASHBOARD_FIRST_RESIZE_ENTRY_INDEX, DASHBOARD_LANGUAGE_VERSION_INCREMENT } from './dashboard-lib/dashboard-page.config';
 import type {
     DashboardBlockId,
@@ -100,7 +101,7 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
         DashboardTdeeBlockComponent,
         DashboardAdviceBlockComponent,
     ],
-    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardLocalDayFacade, DashboardFacade],
+    providers: [AiMealCreateFacade, DashboardLayoutService, DashboardLocalDayFacade, DashboardFacade, DashboardNutritionDialogFacade],
     templateUrl: './dashboard.html',
     styleUrl: './dashboard.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,6 +112,7 @@ export class DashboardComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly dialogService = inject(FdUiDialogService);
+    private readonly nutritionDialogs = inject(DashboardNutritionDialogFacade);
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
@@ -422,6 +424,10 @@ export class DashboardComponent {
 
     protected async manageMealsAsync(): Promise<void> {
         await this.navigationService.navigateToMealListAsync(this.selectedDate());
+    }
+
+    protected async openNutritionDetailsAsync(metric: string): Promise<void> {
+        await this.nutritionDialogs.openAsync(metric);
     }
 
     protected onMealCreated(): void {
