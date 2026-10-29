@@ -102,7 +102,11 @@ it('keeps calorie feedback useful without a configured goal', () => {
     dashboardService.getSnapshotSilently.mockReturnValueOnce(of({ statistics: { totalCalories: CONSUMED_KCAL }, dailyGoal: 0 }));
     invalidation.reportMealMutation();
     TestBed.tick();
-    expect(toastService.success).toHaveBeenCalledWith('MEAL_PROGRESS.TODAY_TOTAL', { key: MEAL_FEEDBACK_TOAST_KEY, duration: 5000, progress: undefined });
+    expect(toastService.success).toHaveBeenCalledWith('MEAL_PROGRESS.TODAY_TOTAL', {
+        key: MEAL_FEEDBACK_TOAST_KEY,
+        duration: 5000,
+        progress: undefined,
+    });
 });
 
 it('cancels stale requests after another mutation or a session change', () => {
