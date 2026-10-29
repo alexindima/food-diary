@@ -15,28 +15,10 @@ const OVER_GOAL_TOTAL_ML = 3000;
 const FULL_LEVEL = '100%';
 const VALID_ADD_AMOUNT_ML = 250;
 
-describe('HydrationCardComponent', () => {
-    it('offers undo for the recorded entry even after switching to a past day and locks it while updating', async () => {
-        const { component, fixture } = await setupComponentAsync({ canAdd: false });
-        fixture.componentRef.setInput('undoAmount', VALID_ADD_AMOUNT_ML);
-        fixture.detectChanges();
-        const undo = vi.fn();
-        component.undoClick.subscribe(undo);
-        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.hydration-card__undo button');
-        button?.click();
-        expect(undo).toHaveBeenCalledOnce();
-        fixture.componentRef.setInput('isLoading', true);
-        fixture.detectChanges();
-        expect(button?.disabled).toBe(true);
-        button?.click();
-        expect(undo).toHaveBeenCalledOnce();
-    });
-});
-
 describe('HydrationCardComponent saved feedback', () => {
     afterEach(() => vi.useRealTimers());
 
-    it('confirms a saved entry, clears only the animation after a short delay and keeps undo available', async () => {
+    it('confirms a saved entry and clears the animation after a short delay', async () => {
         const { fixture } = await setupComponentAsync();
         fixture.detectChanges();
         vi.useFakeTimers();
@@ -49,13 +31,12 @@ describe('HydrationCardComponent saved feedback', () => {
         confirmEntry(fixture, 'first');
         expect(host.querySelector('.hydration-card__added-volume')?.textContent).toContain('+250');
         expect(host.querySelector('.hydration-card__quick-action--confirmed')).not.toBeNull();
-        expect(host.querySelector('[role="status"]')?.textContent).toContain('HYDRATION_CARD.ADDED_AMOUNT');
+        expect(host.querySelector('.hydration-card__undo-row')).toBeNull();
 
         vi.advanceTimersByTime(HYDRATION_CARD_FEEDBACK_MS);
         fixture.detectChanges();
         expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
         expect(host.querySelector('.hydration-card__quick-action--confirmed')).toBeNull();
-        expect(host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.disabled).toBe(false);
     });
 
     it('animates consecutive equal portions independently and never treats undo as another addition', async () => {
@@ -70,13 +51,12 @@ describe('HydrationCardComponent saved feedback', () => {
             confirmEntry(fixture, id);
             expect(host.querySelector('.hydration-card__added-volume')).not.toBeNull();
         }
-        host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.click();
         fixture.componentRef.setInput('undoEntryId', 'first');
         fixture.detectChanges();
         expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
     });
 
-    it('keeps the preceding undo on failure without showing a successful animation', async () => {
+    it('does not show a successful animation after a failed addition', async () => {
         const { component, fixture } = await setupComponentAsync();
         confirmEntry(fixture, 'previous');
         component['onAdd'](VALID_ADD_AMOUNT_ML);
@@ -86,7 +66,6 @@ describe('HydrationCardComponent saved feedback', () => {
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
-        expect(host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.disabled).toBe(false);
     });
 });
 
@@ -99,15 +78,6 @@ describe('HydrationCardComponent context changes and details', () => {
         fixture.detectChanges();
         fixture.componentRef.setInput('canAdd', false);
         confirmEntry(fixture, 'historical-entry');
-        expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__added-volume')).toBeNull();
-    });
-
-    it('does not mistake undo for a successful addition after an immediate failure', async () => {
-        const { component, fixture } = await setupComponentAsync();
-        confirmEntry(fixture, 'previous');
-        component['onAdd'](VALID_ADD_AMOUNT_ML);
-        component['onUndo']();
-        confirmEntry(fixture, 'older');
         expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__added-volume')).toBeNull();
     });
 
@@ -134,15 +104,19 @@ describe('HydrationCardComponent context changes and details', () => {
 
 function confirmEntry(fixture: ComponentFixture<HydrationCardComponent>, id: string): void {
     fixture.componentRef.setInput('undoEntryId', id);
-    fixture.componentRef.setInput('undoAmount', VALID_ADD_AMOUNT_ML);
     fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 }
 
 describe('HydrationCardComponent compact layout', () => {
+    it('keeps saved feedback out of the card layout', async () => {
+        const { fixture } = await setupComponentAsync();
+        confirmEntry(fixture, 'saved-water');
+        expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__undo-row')).toBeNull();
+    });
+
     it('does not reserve an empty confirmation row before adding water', async () => {
         const { fixture } = await setupComponentAsync();
-        fixture.componentRef.setInput('undoAmount', null);
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__undo-row')).toBeNull();
     });

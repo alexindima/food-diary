@@ -22,6 +22,7 @@ import { MealService } from '../../meals/api/meal.service';
 import { FAVORITE_MEAL_ACTIONS, MEAL_ACTIONS } from '../../meals/contracts/meal-actions';
 import { DashboardService } from '../api/dashboard.service';
 import { DashboardFacade } from './dashboard.facade';
+import { HYDRATION_UNDO_TOAST_DURATION_MS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import { DashboardLocalDayFacade } from './dashboard-local-day.facade';
 
@@ -53,6 +54,7 @@ const TDEE_TARGET = 2300;
 const DEFAULT_SNAPSHOT_CALORIES = 1200;
 const UPDATED_SNAPSHOT_CALORIES = 1800;
 const MIDNIGHT_DELAY_MS = 1000;
+const TOAST_ANIMATION_BUFFER_MS = 500;
 
 describe('Dashboard midnight rollover', () => {
     afterEach(() => {
@@ -827,6 +829,112 @@ describe('Dashboard asynchronous TDEE persistence', () => {
     });
 });
 
+describe('Dashboard water snackbar', () => {
+    afterEach(() => {
+        TestBed.resetTestingModule();
+        vi.useRealTimers();
+    });
+
+    it('waits for refreshed totals, then offers a temporary undo for the saved entry', () => {
+        vi.useFakeTimers();
+        const { facade, dashboardService } = setupFacade();
+        facade.initialize();
+        const refresh = new Subject<DashboardSnapshot>();
+        dashboardService.getSnapshotSilentlyStrict.mockReturnValueOnce(refresh);
+        const toast = TestBed.inject(FdUiToastService);
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        expect(toast.toasts()).toHaveLength(0);
+        refresh.complete();
+        expect(toast.toasts()[0]).toMatchObject({
+            message: 'HYDRATION_CARD.ADDED_AMOUNT',
+            action: 'HYDRATION_CARD.UNDO',
+            duration: HYDRATION_UNDO_TOAST_DURATION_MS,
+            verticalPosition: 'bottom',
+        });
+        vi.advanceTimersByTime(HYDRATION_UNDO_TOAST_DURATION_MS + TOAST_ANIMATION_BUFFER_MS);
+        expect(toast.toasts()).toHaveLength(0);
+    });
+
+    it('replaces equal-portion actions and deletes only the most recent entry once', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const toast = TestBed.inject(FdUiToastService);
+        const first = toast.toasts()[0];
+        const second = { ...CREATED_WATER_ENTRY, id: entityId<'hydration-entry'>('second-equal-portion') };
+        hydrationService.addEntry.mockReturnValueOnce(of(second));
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const active = toast.toasts().filter(item => !item.leaving);
+        expect(active).toHaveLength(1);
+        toast.triggerAction(first.id);
+        expect(hydrationService.deleteEntry).not.toHaveBeenCalled();
+        toast.triggerAction(active[0].id);
+        toast.triggerAction(active[0].id);
+        expect(hydrationService.deleteEntry).toHaveBeenCalledExactlyOnceWith(second.id);
+    });
+
+    it('keeps a failed undo retryable through the error action', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const toast = TestBed.inject(FdUiToastService);
+        hydrationService.deleteEntry.mockReturnValueOnce(throwError(() => new Error('offline')));
+        toast.triggerAction(toast.toasts()[0].id);
+        const retry = toast.toasts().find(item => !item.leaving);
+        expect(retry).toMatchObject({ message: 'HYDRATION_CARD.UNDO_ERROR', action: 'HYDRATION_CARD.UNDO' });
+        expect(facade.lastHydrationUndo()).toEqual(CREATED_WATER_ENTRY);
+        expect(retry).toBeDefined();
+        if (retry === undefined) {
+            return;
+        }
+        toast.triggerAction(retry.id);
+        expect(hydrationService.deleteEntry).toHaveBeenCalledTimes(2);
+        expect(facade.lastHydrationUndo()).toBeNull();
+    });
+});
+
+describe('Dashboard water snackbar lifetime', () => {
+    it('dismisses on date change and rejects its stale action', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const toast = TestBed.inject(FdUiToastService);
+        const id = toast.toasts()[0].id;
+        const previousDay = new Date(facade.selectedDate());
+        previousDay.setDate(previousDay.getDate() - 1);
+        facade.setSelectedDate(previousDay);
+        expect(toast.toasts()[0].leaving).toBe(true);
+        toast.triggerAction(id);
+        expect(hydrationService.deleteEntry).not.toHaveBeenCalled();
+    });
+
+    it('does not show a late saved response after navigating to another day', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        const pending = new Subject<HydrationEntry>();
+        hydrationService.addEntry.mockReturnValueOnce(pending);
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const previousDay = new Date(facade.selectedDate());
+        previousDay.setDate(previousDay.getDate() - 1);
+        facade.setSelectedDate(previousDay);
+        pending.next(CREATED_WATER_ENTRY);
+        pending.complete();
+        expect(TestBed.inject(FdUiToastService).toasts()).toHaveLength(0);
+    });
+
+    it('dismisses the owned toast and unsubscribes its action when the dashboard is destroyed', () => {
+        const { facade, hydrationService } = setupFacade();
+        facade.initialize();
+        facade.addHydration(HYDRATION_AMOUNT_ML);
+        const toast = TestBed.inject(FdUiToastService);
+        const id = toast.toasts()[0].id;
+        TestBed.resetTestingModule();
+        expect(toast.toasts()[0].leaving).toBe(true);
+        toast.triggerAction(id);
+        expect(hydrationService.deleteEntry).not.toHaveBeenCalled();
+    });
+});
+
 describe('Dashboard water undo', () => {
     it('removes only the last created entry and offers the previous one next', () => {
         const { facade, hydrationService } = setupFacade();
@@ -919,7 +1027,7 @@ function setupFacade(): {
             NutritionDataInvalidationService,
             { provide: MealService, useValue: { repeat: vi.fn(), deleteById: vi.fn() } },
             { provide: FavoriteMealService, useValue: { add: vi.fn(), remove: vi.fn(), getLookupPage: vi.fn() } },
-            { provide: FdUiToastService, useValue: { error: vi.fn() } },
+            FdUiToastService,
             { provide: DashboardService, useValue: dashboardService },
             { provide: GoalsService, useValue: goalsService },
             { provide: HydrationService, useValue: hydrationService },
@@ -929,6 +1037,7 @@ function setupFacade(): {
         ],
     });
 
+    vi.spyOn(TestBed.inject(FdUiToastService), 'error');
     vi.spyOn(TestBed.inject(NutritionDataInvalidationService), 'reportMealMutation');
     return {
         facade: TestBed.inject(DashboardFacade),

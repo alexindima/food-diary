@@ -147,6 +147,16 @@ describe('FdUiToastService dismissal', () => {
         expect(service.toasts()).toHaveLength(1);
         expect(secondRef).toBe(firstRef);
     });
+
+    it('ignores actions on a dismissed toast during its exit animation', () => {
+        const ref = service.open('Added 250 ml', { action: 'Undo', duration: 0 });
+        const action = vi.fn();
+        ref.onAction().subscribe(action);
+        const id = service.toasts()[0].id;
+        ref.dismiss();
+        service.triggerAction(id);
+        expect(action).not.toHaveBeenCalled();
+    });
 });
 
 describe('FdUiToastService semantic helpers', () => {

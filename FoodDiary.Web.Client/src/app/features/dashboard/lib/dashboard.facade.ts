@@ -2,7 +2,7 @@ import { computed, DestroyRef, effect, inject, Injectable, signal, untracked } f
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
+import { type FdUiToastRef, FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import type { Observable, PartialObserver } from 'rxjs';
 import { finalize, firstValueFrom, map, of, switchMap } from 'rxjs';
 
@@ -32,7 +32,7 @@ import type {
     TdeeInsightDialogData,
 } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog-lib/tdee-insight-dialog.types';
 import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashboard-date.utils';
-import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
+import { DASHBOARD_TREND_DAYS, HYDRATION_UNDO_TOAST_DURATION_MS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import { DashboardLocalDayFacade } from './dashboard-local-day.facade';
 import {
@@ -146,6 +146,7 @@ export class DashboardFacade {
     private readonly isHydrationUpdating = signal(false);
     private readonly isHydrationRefreshing = signal(false);
     private readonly hydrationUndoEntries = signal<Array<{ day: string; entry: HydrationEntry }>>([]);
+    private hydrationUndoToast: FdUiToastRef | null = null;
     public readonly lastHydrationUndo = computed<HydrationEntry | null>(() => {
         const entries = this.hydrationUndoEntries();
         const day = formatDateInputValue(this.selectedDate());
@@ -216,6 +217,9 @@ export class DashboardFacade {
     public readonly placeholderLabel = placeholderLabel;
 
     public constructor() {
+        this.destroyRef.onDestroy(() => {
+            this.dismissHydrationUndoToast();
+        });
         effect(() => {
             const version = this.invalidation.dashboardVersion();
             if (version === this.observedDashboardVersion) {
@@ -258,6 +262,7 @@ export class DashboardFacade {
             return;
         }
 
+        this.dismissHydrationUndoToast();
         this.selectedDate.set(normalized);
         this.loadDashboardSnapshot();
     }
@@ -266,15 +271,24 @@ export class DashboardFacade {
         if (this.isHydrationLoading()) {
             return;
         }
+        this.dismissHydrationUndoToast();
         this.localDay.refresh();
         const targetDate = getHydrationDateUtc(this.selectedDate());
         const day = formatDateInputValue(this.selectedDate());
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.addEntry(amount, targetDate), {
             next: entry => {
                 this.hydrationUndoEntries.update(entries => [...entries, { day, entry }]);
-                this.loadDashboardSnapshot(false, true);
+                this.loadDashboardSnapshot(false, true, () => {
+                    this.showHydrationUndoToast(entry, day);
+                });
             },
-            error: () => this.toastService.error(this.translateService.instant('HYDRATION_CARD.ADD_ERROR')),
+            error: () => {
+                this.toastService.error(this.translateService.instant('HYDRATION_CARD.ADD_ERROR'));
+                const previous = this.lastHydrationUndo();
+                if (previous !== null) {
+                    this.showHydrationUndoToast(previous, day);
+                }
+            },
         });
     }
 
@@ -283,13 +297,55 @@ export class DashboardFacade {
         if (entry === null || this.isHydrationLoading()) {
             return;
         }
+        const day = formatDateInputValue(this.selectedDate());
+        this.dismissHydrationUndoToast();
         runTrackedRequest(this.destroyRef, this.isHydrationUpdating, this.hydrationService.deleteEntry(entry.id), {
             next: () => {
                 this.hydrationUndoEntries.update(entries => entries.filter(item => item.entry.id !== entry.id));
-                this.loadDashboardSnapshot(false, true);
+                this.loadDashboardSnapshot(false, true, () => {
+                    const previous = this.lastHydrationUndo();
+                    if (previous !== null) {
+                        this.showHydrationUndoToast(previous, day);
+                    }
+                });
             },
-            error: () => this.toastService.error(this.translateService.instant('HYDRATION_CARD.UNDO_ERROR')),
+            error: () => {
+                this.showHydrationUndoToast(entry, day, 'HYDRATION_CARD.UNDO_ERROR');
+            },
         });
+    }
+
+    private showHydrationUndoToast(entry: HydrationEntry, day: string, errorKey?: string): void {
+        if (this.destroyRef.destroyed || formatDateInputValue(this.selectedDate()) !== day || this.lastHydrationUndo()?.id !== entry.id) {
+            return;
+        }
+        this.dismissHydrationUndoToast();
+        const options = {
+            key: `hydration-undo:${entry.id}`,
+            action: this.translateService.instant('HYDRATION_CARD.UNDO'),
+            duration: HYDRATION_UNDO_TOAST_DURATION_MS,
+        };
+        const message = this.translateService.instant(errorKey ?? 'HYDRATION_CARD.ADDED_AMOUNT', {
+            value: new Intl.NumberFormat(this.getCurrentLocale()).format(entry.amountMl),
+        });
+        const ref = errorKey === undefined ? this.toastService.success(message, options) : this.toastService.error(message, options);
+        this.hydrationUndoToast = ref;
+        ref.onAction()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                if (
+                    this.hydrationUndoToast === ref &&
+                    formatDateInputValue(this.selectedDate()) === day &&
+                    this.lastHydrationUndo()?.id === entry.id
+                ) {
+                    this.undoHydration();
+                }
+            });
+    }
+
+    private dismissHydrationUndoToast(): void {
+        this.hydrationUndoToast?.dismiss();
+        this.hydrationUndoToast = null;
     }
 
     public applyTdeeGoal(target: number): void {
@@ -350,7 +406,7 @@ export class DashboardFacade {
         this.loadDashboardSnapshot(showLoader);
     }
 
-    private loadDashboardSnapshot(showLoader = true, refreshHydration = false): void {
+    private loadDashboardSnapshot(showLoader = true, refreshHydration = false, onHydrationRefreshed?: () => void): void {
         if (refreshHydration) {
             this.isHydrationRefreshing.set(true);
         }
@@ -402,6 +458,7 @@ export class DashboardFacade {
                 finalize(() => {
                     if (refreshHydration) {
                         this.isHydrationRefreshing.set(false);
+                        onHydrationRefreshed?.();
                     }
                 }),
             )

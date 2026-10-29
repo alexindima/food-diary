@@ -1,1 +1,2 @@
 export const DASHBOARD_TREND_DAYS = 30;
+export const HYDRATION_UNDO_TOAST_DURATION_MS = 8_000;

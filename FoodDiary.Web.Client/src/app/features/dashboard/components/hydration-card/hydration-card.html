@@ -82,14 +82,6 @@
             />
         }
 
-        <fd-hydration-card-actions
-            [canAdd]="canAdd()"
-            [isLoading]="isLoading()"
-            [undoAmount]="undoAmount()"
-            [addedAmount]="addedAmount()"
-            [language]="language()"
-            (addClick)="onAdd($event)"
-            (undoClick)="onUndo()"
-        />
+        <fd-hydration-card-actions [canAdd]="canAdd()" [isLoading]="isLoading()" [addedAmount]="addedAmount()" (addClick)="onAdd($event)" />
     </fd-dashboard-widget-frame>
 </div>

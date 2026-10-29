@@ -89,6 +89,11 @@
     font-size: var(--fd-text-body-sm-size);
     line-height: var(--fd-text-body-sm-line-height);
     font-weight: var(--fd-text-action-weight);
+
+    .fd-ui-toast-host__content--actionable & {
+        flex: 1;
+        text-align: start;
+    }
 }
 
 .fd-ui-toast-host__progress {
@@ -129,7 +134,18 @@
     font-size: inherit;
     line-height: inherit;
     font-weight: var(--fd-font-weight-bold);
-    padding: 0;
+    min-height: var(--fd-size-control-touch);
+    padding: 0 var(--fd-space-xs);
+    border-radius: var(--fd-radius-sm);
+
+    &:hover {
+        background: var(--fd-bg-surface-glass-subtle);
+    }
+
+    &:focus-visible {
+        outline: var(--fd-focus-ring-width) solid currentColor;
+        outline-offset: var(--fd-space-xxs);
+    }
 }
 
 .fd-ui-toast-host__close {

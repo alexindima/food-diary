@@ -454,10 +454,6 @@ export class DashboardComponent {
         this.facade.addHydration(amount);
     }
 
-    protected undoHydration(): void {
-        this.facade.undoHydration();
-    }
-
     protected applyTdeeGoal(target: number): void {
         this.facade.applyTdeeGoal(target);
     }

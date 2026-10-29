@@ -19,22 +19,8 @@
         animation: hydration-confirmed 400ms ease-out;
     }
 
-    &__undo-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-xxs);
-        min-height: var(--fd-size-control-touch);
-        margin-top: var(--fd-space-sm);
-    }
-
     &__selected-day-hint {
         margin: var(--fd-space-sm) 0 0;
-    }
-
-    &__confirmation {
-        align-items: center;
-        color: var(--fd-color-text-muted);
     }
 
     @media (prefers-reduced-motion: reduce) {

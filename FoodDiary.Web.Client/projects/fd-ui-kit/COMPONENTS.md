@@ -965,6 +965,13 @@ Pass a translated `closeLabel` for the dismiss button's accessible name.
 
 Toast notifications service.
 
+For a temporary undo snackbar, pass a translated `action` and `duration` (for
+example, 8000 ms), then subscribe to the returned reference's `onAction()`.
+Bind the action to the completed operation's identity. Dismiss the old reference
+before replacing an actionable notification, and dismiss it when its owning
+screen or context changes. Action buttons support keyboard focus and touch;
+dismissed notifications cannot trigger actions during their exit animation.
+
 Pass `progress: { value, max, label }` to add an accessible progress bar below
 the message. Keep the actual values in the message too, including values above
 the goal. Use a positive `max` and a translated accessible `label`.

@@ -14,10 +14,8 @@
                 [history]="cardState().history ?? null"
                 [isLoading]="isLoading()"
                 [canAdd]="canAdd()"
-                [undoAmount]="undoAmount()"
                 [undoEntryId]="undoEntryId()"
                 (addClick)="addClick.emit($event)"
-                (undoClick)="undoClick.emit()"
                 (goalAction)="goalAction.emit()"
             />
         </fd-dashboard-card-shell>

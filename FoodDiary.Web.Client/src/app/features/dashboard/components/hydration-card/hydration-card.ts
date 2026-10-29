@@ -45,10 +45,7 @@ export class HydrationCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
     public readonly addClick = output<number>();
-    public readonly undoAmount = input<number | null>(null);
     public readonly undoEntryId = input<string | null>(null);
-    public readonly undoClick = output();
-    protected readonly undoDisabled = computed(() => this.isLoading() || this.undoAmount() === null);
     public readonly goalAction = output();
 
     protected readonly hasGoal = computed(() => {
@@ -102,14 +99,6 @@ export class HydrationCardComponent {
         this.addedAmount.set(null);
         this.pendingAdd = { amount, previousId: this.undoEntryId() };
         this.addClick.emit(amount);
-    }
-
-    protected onUndo(): void {
-        if (!this.undoDisabled()) {
-            this.pendingAdd = null;
-            this.addedAmount.set(null);
-            this.undoClick.emit();
-        }
     }
 
     protected openDetails(): void {

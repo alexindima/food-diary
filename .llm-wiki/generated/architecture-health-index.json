@@ -2547,11 +2547,6 @@
           "required": true
         },
         {
-          "name": "undoAmount",
-          "type": "number | null",
-          "required": false
-        },
-        {
           "name": "undoEntryId",
           "type": "string | null",
           "required": false
@@ -2565,10 +2560,6 @@
         {
           "name": "addClick",
           "type": "number"
-        },
-        {
-          "name": "undoClick",
-          "type": ""
         },
         {
           "name": "goalAction",
@@ -2841,18 +2832,8 @@
           "required": true
         },
         {
-          "name": "undoAmount",
-          "type": "number | null",
-          "required": true
-        },
-        {
           "name": "addedAmount",
           "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "language",
-          "type": "string",
           "required": true
         }
       ],
@@ -2860,10 +2841,6 @@
         {
           "name": "addClick",
           "type": "number"
-        },
-        {
-          "name": "undoClick",
-          "type": ""
         }
       ],
       "specPath": null
@@ -4436,7 +4413,13 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.stories.ts",
       "templatePath": null,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "undo",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },

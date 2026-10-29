@@ -335,8 +335,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1587bdcb8e4581dffef54094fa7d9e71c7333cda9af2004afbe63a6212452b57",
-          "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
+          "sha256": "aa847f3fe6c1efd9bb2dfde0abae2945793c6b8205b8672a64af01bda9980026",
+          "reviewReason": "Reviewed regenerated architecture-health index after removing hydration undo inputs and outputs and adding toast/facade checks. The workflow still correctly distinguishes enforced dependency failures from unreferenced-selector/test-gap investigation leads; no project dependencies or backend ownership changed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -349,10 +349,10 @@
           "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
         }
       ],
-      "reason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies.",
+      "reason": "Reviewed regenerated architecture-health index after removing hydration undo inputs and outputs and adding toast/facade checks. The workflow still correctly distinguishes enforced dependency failures from unreferenced-selector/test-gap investigation leads; no project dependencies or backend ownership changed.",
       "baseRef": "HEAD",
-      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
-      "reviewedAtUtc": "2026-10-29T14:23:05.5350131Z"
+      "gitHead": "e34223ff323edbb725b9e08cc5b79149be15afbb",
+      "reviewedAtUtc": "2026-10-29T20:09:59.8072412Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

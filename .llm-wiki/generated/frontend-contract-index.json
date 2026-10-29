@@ -3,12 +3,12 @@
   "summary": {
     "components": 511,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1655,
-    "outputs": 562,
+    "inputs": 1652,
+    "outputs": 559,
     "apiCalls": 318,
     "templatesWithTranslations": 370,
-    "translationKeys": 2213,
-    "consumerEdges": 1300,
+    "translationKeys": 2210,
+    "consumerEdges": 1299,
     "consumedComponents": 324,
     "unconsumedComponents": 186
   },
@@ -2003,11 +2003,6 @@
           "required": true
         },
         {
-          "name": "undoAmount",
-          "type": "number | null",
-          "required": false
-        },
-        {
           "name": "undoEntryId",
           "type": "string | null",
           "required": false
@@ -2021,10 +2016,6 @@
         {
           "name": "addClick",
           "type": "number"
-        },
-        {
-          "name": "undoClick",
-          "type": ""
         },
         {
           "name": "goalAction",
@@ -2448,18 +2439,8 @@
           "required": true
         },
         {
-          "name": "undoAmount",
-          "type": "number | null",
-          "required": true
-        },
-        {
           "name": "addedAmount",
           "type": "number | null",
-          "required": true
-        },
-        {
-          "name": "language",
-          "type": "string",
           "required": true
         }
       ],
@@ -2467,10 +2448,6 @@
         {
           "name": "addClick",
           "type": "number"
-        },
-        {
-          "name": "undoClick",
-          "type": ""
         }
       ],
       "specPath": null
@@ -2508,11 +2485,6 @@
           "required": true
         },
         {
-          "name": "undoAmount",
-          "type": "number | null",
-          "required": false
-        },
-        {
           "name": "undoEntryId",
           "type": "string | null",
           "required": false
@@ -2522,10 +2494,6 @@
         {
           "name": "addClick",
           "type": "number"
-        },
-        {
-          "name": "undoClick",
-          "type": ""
         },
         {
           "name": "goalAction",
@@ -7696,7 +7664,13 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.stories.ts",
       "templatePath": null,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "undo",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": null
     },
@@ -21159,12 +21133,9 @@
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
         "GENERAL.UNITS.ML",
-        "HYDRATION_CARD.ADDED_AMOUNT",
         "HYDRATION_CARD.ADD_AMOUNT",
         "HYDRATION_CARD.QUICK_ADD_LABEL",
-        "HYDRATION_CARD.SELECTED_DAY_HINT",
-        "HYDRATION_CARD.UNDO",
-        "HYDRATION_CARD.UNDO_AMOUNT"
+        "HYDRATION_CARD.SELECTED_DAY_HINT"
       ]
     },
     {
@@ -26478,14 +26449,12 @@
         "isLoading",
         "shouldRender",
         "state",
-        "undoAmount",
         "undoEntryId"
       ],
       "outputsHandled": [
         "addClick",
         "blockToggle",
-        "goalAction",
-        "undoClick"
+        "goalAction"
       ]
     },
     {
@@ -29233,14 +29202,13 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
-      "occurrences": 2,
+      "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
         "disabled",
         "disabledReason",
         "fill",
         "fullWidth",
-        "icon",
         "size",
         "variant"
       ],
@@ -35197,19 +35165,6 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "name",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -40417,13 +40372,10 @@
       "inputsUsed": [
         "addedAmount",
         "canAdd",
-        "isLoading",
-        "language",
-        "undoAmount"
+        "isLoading"
       ],
       "outputsHandled": [
-        "addClick",
-        "undoClick"
+        "addClick"
       ]
     },
     {
@@ -40439,13 +40391,11 @@
         "history",
         "isLoading",
         "total",
-        "undoAmount",
         "undoEntryId"
       ],
       "outputsHandled": [
         "addClick",
-        "goalAction",
-        "undoClick"
+        "goalAction"
       ]
     },
     {

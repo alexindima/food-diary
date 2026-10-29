@@ -20,10 +20,12 @@
                 [attr.aria-live]="toast.politeness"
                 [attr.role]="actionRole(toast)"
             >
-                <div class="fd-ui-toast-host__content">
+                <div class="fd-ui-toast-host__content" [class.fd-ui-toast-host__content--actionable]="toast.action">
                     <p class="fd-ui-toast-host__message">{{ toast.message }}</p>
                     @if (toast.action) {
-                        <button type="button" class="fd-ui-toast-host__action" (click)="triggerAction(toast.id)">{{ toast.action }}</button>
+                        <button type="button" class="fd-ui-toast-host__action" [disabled]="toast.leaving" (click)="triggerAction(toast.id)">
+                            {{ toast.action }}
+                        </button>
                     }
                     <button type="button" class="fd-ui-toast-host__close" [attr.aria-label]="closeLabel()" (click)="dismiss(toast.id)">
                         ×

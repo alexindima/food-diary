@@ -178,8 +178,12 @@ export class FdUiToastService {
     }
 
     public triggerAction(id: string): void {
-        this.refs.get(id)?.notifyAction();
+        const toast = this.toastState().find(item => item.id === id);
+        if (toast === undefined || toast.leaving || toast.action === undefined) {
+            return;
+        }
         this.dismiss(id, true);
+        this.refs.get(id)?.notifyAction();
     }
 
     private findDuplicate(message: string, options: FdUiToastOptions): FdUiToastInstance | undefined {
