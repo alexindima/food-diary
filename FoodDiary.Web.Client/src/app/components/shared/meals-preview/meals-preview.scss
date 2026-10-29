@@ -5,6 +5,7 @@
 }
 
 .meals-preview__view-all {
+    --fd-button-touch-min-size: var(--fd-size-control-sm);
     flex-shrink: 0;
 }
 
@@ -25,13 +26,17 @@
 
     &--expanded {
         border-color: var(--fd-color-primary-600);
+
+        .meals-preview__placeholder-icon {
+            border-end-start-radius: 0;
+        }
     }
 }
 
 .meals-preview__placeholder-main {
     width: 100%;
     min-height: var(--fd-size-control-touch);
-    padding: var(--fd-space-xs) var(--fd-space-surface-padding);
+    padding: 0 var(--fd-space-card-content-gap) 0 0;
     background: transparent;
     border: 0;
     border-radius: var(--fd-radius-card);
@@ -55,10 +60,10 @@
 }
 
 .meals-preview__placeholder-icon {
+    align-self: stretch;
     flex-shrink: 0;
-    width: var(--fd-size-control-sm);
-    height: var(--fd-size-control-sm);
-    border-radius: var(--fd-radius-button);
+    width: var(--fd-size-control-touch);
+    border-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
     background: color-mix(in srgb, var(--fd-color-primary-500) 12%, transparent);
     color: var(--fd-color-primary-600);
 }
@@ -75,7 +80,7 @@
 }
 
 .meals-preview__ai-panel {
-    padding: 0 var(--fd-space-xs) var(--fd-space-xs);
+    padding: var(--fd-space-xs);
 }
 
 .meals-preview__meal-card {

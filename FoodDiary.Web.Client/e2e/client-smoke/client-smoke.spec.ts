@@ -26,6 +26,8 @@ const MOBILE_HEADER_MAX_PADDING = 4;
 const MOBILE_ACTION_SIZE = 44;
 const DESKTOP_TOOLBAR_ACTION_SIZE = 38;
 const MOBILE_CARD_CONTENT_MAX_GAP = 12;
+const MEAL_PREVIEW_HEADER_ACTION_SIZE = 32;
+const MEAL_PREVIEW_HEADER_MAX_GAP = 4;
 const MINIMUM_MOBILE_WIDTH = 320;
 const COMPACT_MEAL_PHOTO_SIZE = 64;
 const COMPACT_MEAL_PADDING = 8;
@@ -1283,11 +1285,9 @@ test.describe('dashboard compact meal header', () => {
                     const actionBox = await dashboardBoundsAsync(all);
                     expect(Math.abs(titleBox.y + titleBox.height / 2 - actionBox.y - actionBox.height / 2)).toBeLessThanOrEqual(1);
                     expect(actionBox.x).toBeGreaterThanOrEqual(titleBox.x + titleBox.width);
-                    expect(Math.round(actionBox.height)).toBeGreaterThanOrEqual(MOBILE_ACTION_SIZE);
+                    expect(Math.round(actionBox.height)).toBe(MEAL_PREVIEW_HEADER_ACTION_SIZE);
                     const headerToListGap = await mealPreviewHeaderGapAsync(preview);
-                    expect(headerToListGap).toBeLessThanOrEqual(
-                        width === DASHBOARD_DESKTOP_WIDTH ? DESKTOP_CARD_CONTENT_MAX_GAP : MOBILE_CARD_CONTENT_MAX_GAP,
-                    );
+                    expect(headerToListGap).toBeLessThanOrEqual(MEAL_PREVIEW_HEADER_MAX_GAP);
                     await expectNoHorizontalOverflowAsync(page);
                     await testInfo.attach('webmcp-status', {
                         body: (await page.locator('meta[name="fooddiary-webmcp"]').getAttribute('content')) ?? '{}',
