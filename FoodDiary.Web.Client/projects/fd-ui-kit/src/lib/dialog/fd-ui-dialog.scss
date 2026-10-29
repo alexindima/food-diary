@@ -65,6 +65,26 @@
     --fd-dialog-footer-block: var(--fd-dialog-footer-block-default);
 }
 
+.fd-ui-dialog__drag-handle {
+    display: none;
+
+    span {
+        width: var(--fd-size-control-md);
+        height: var(--fd-size-progress-height-sm);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-color-dialog-scrollbar-thumb);
+    }
+}
+
+.fd-ui-dialog--dragging {
+    user-select: none;
+    will-change: translate;
+}
+
+.fd-ui-dialog--swipe-settling {
+    transition: translate 180ms ease-out;
+}
+
 .fd-ui-dialog__header {
     order: 0;
     display: flex;
@@ -324,6 +344,10 @@
         transform: none;
         opacity: 1;
     }
+
+    .fd-ui-dialog--swipe-settling {
+        transition: none;
+    }
 }
 
 @media #{variables.$media-tablet} {
@@ -341,6 +365,26 @@
         border-radius: var(--fd-radius-dialog) var(--fd-radius-dialog) 0 0 !important;
     }
     /* stylelint-enable declaration-no-important */
+
+    :host-context(.fd-ui-dialog-panel--edge-mobile) .fd-ui-dialog {
+        border-radius: var(--fd-radius-dialog) var(--fd-radius-dialog) 0 0;
+        overscroll-behavior-y: contain;
+    }
+
+    :host-context(.fd-ui-dialog-panel--edge-mobile) .fd-ui-dialog__body {
+        overscroll-behavior-y: contain;
+    }
+
+    :host-context(.fd-ui-dialog-panel--edge-mobile) .fd-ui-dialog__drag-handle {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        min-height: var(--fd-size-control-xs);
+        margin-top: calc(-1 * var(--fd-space-xs));
+        margin-bottom: var(--fd-space-xxs);
+        touch-action: pan-x pinch-zoom;
+    }
 }
 
 @media #{variables.$media-tablet} {

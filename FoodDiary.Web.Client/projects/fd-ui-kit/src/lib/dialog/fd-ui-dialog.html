@@ -1,9 +1,12 @@
 <section
     #dialogRoot
+    fdUiDialogSwipe
+    [fdUiDialogSwipeDisabled]="disableClose()"
     [attr.role]="usesOverlayContainer ? null : 'dialog'"
     [attr.aria-modal]="usesOverlayContainer ? null : 'true'"
     [class]="hostClass()"
 >
+    <div class="fd-ui-dialog__drag-handle" aria-hidden="true"><span></span></div>
     @if (hasCustomHeader()) {
         <header #customHeader class="fd-ui-dialog__header fd-ui-dialog__header--custom">
             <ng-content select="[fdUiDialogHeader]" />

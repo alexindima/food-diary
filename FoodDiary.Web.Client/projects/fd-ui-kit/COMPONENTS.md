@@ -573,6 +573,8 @@ Service-opened dialogs expose one dialog role on the CDK container. The wrapper 
 
 Use `[disableClose]="busy()"` to prevent Escape, backdrop clicks, and the built-in close button from dismissing a pending operation. The guard releases when the input becomes false or the wrapper is destroyed, preserving any `disableClose` policy set through the dialog service or ref. Explicit `dialogRef.close(result)` remains available for successful operations. `dismissible` controls visibility of the built-in close button.
 
+On compact viewports, standard service-opened dialogs also show a decorative drag handle and support touch swipe-down dismissal. The handle/header can be dragged independently of content scroll. A gesture starting in content can dismiss only when all of its enclosing vertical scrollers are already at the top; an existing scroll gesture never becomes a dismissal mid-scroll. The sheet follows the finger, closes after a quarter-height drag or a deliberate fast flick, and returns to rest after a shorter drag. Interactive controls and `[data-fd-dialog-swipe-ignore]` regions keep their own touch interactions. Pending-operation locks, ref/service `disableClose`, and `closePredicate` apply to swipe dismissal. Desktop, fullscreen, custom `surface` layouts, and standalone wrappers do not enable swiping. Reduced motion skips the settling animation. Background pull-to-refresh is suppressed only while at least one dialog is open, then its previous policy is restored. See Behavior/Dialog swipe in Storybook.
+
 **Inputs**
 
 - `dismissible?: boolean`

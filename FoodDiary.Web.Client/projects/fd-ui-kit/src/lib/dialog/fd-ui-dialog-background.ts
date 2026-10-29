@@ -7,6 +7,7 @@ class DialogBackground {
     private count = 0;
     private readonly previous = new Map<Element, string | null>();
     private observer: MutationObserver | undefined;
+    private previousOverscroll: { value: string; priority: string } | undefined;
 
     public constructor(
         private readonly body: HTMLElement | null,
@@ -16,6 +17,12 @@ class DialogBackground {
     public acquire(): () => void {
         this.count++;
         if (this.count === 1 && this.body !== null) {
+            const style = this.body.ownerDocument.documentElement.style;
+            this.previousOverscroll = {
+                value: style.getPropertyValue('overscroll-behavior-y'),
+                priority: style.getPropertyPriority('overscroll-behavior-y'),
+            };
+            style.setProperty('overscroll-behavior-y', 'none');
             this.isolate();
             const Observer = this.body.ownerDocument.defaultView?.MutationObserver;
             if (Observer !== undefined) {
@@ -38,6 +45,16 @@ class DialogBackground {
 
     public restore(): void {
         this.observer?.disconnect();
+        if (this.previousOverscroll !== undefined && this.body !== null) {
+            const style = this.body.ownerDocument.documentElement.style;
+            const { value, priority } = this.previousOverscroll;
+            if (value.length > 0) {
+                style.setProperty('overscroll-behavior-y', value, priority);
+            } else {
+                style.removeProperty('overscroll-behavior-y');
+            }
+            this.previousOverscroll = undefined;
+        }
         for (const [element, value] of this.previous) {
             if (value === null) {
                 element.removeAttribute('inert');

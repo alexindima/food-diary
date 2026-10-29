@@ -24,6 +24,7 @@ import { FD_UI_DIALOG_DATA } from './fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from './fd-ui-dialog-footer.directive';
 import { FdUiDialogHeaderDirective } from './fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from './fd-ui-dialog-ref';
+import { FdUiDialogSwipeDirective } from './fd-ui-dialog-swipe.directive';
 
 let nextDialogId = 0;
 
@@ -42,7 +43,7 @@ export type FdUiDialogData = {
 
 @Component({
     selector: 'fd-ui-dialog',
-    imports: [CommonModule, TranslatePipe, FdUiIconComponent],
+    imports: [CommonModule, TranslatePipe, FdUiIconComponent, FdUiDialogSwipeDirective],
     templateUrl: './fd-ui-dialog.html',
     styleUrls: ['./fd-ui-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

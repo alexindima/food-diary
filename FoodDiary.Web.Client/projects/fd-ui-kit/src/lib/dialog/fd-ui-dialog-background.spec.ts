@@ -28,6 +28,32 @@ afterEach(() => {
 });
 
 describe('modal background isolation', () => {
+    it('suppresses pull-to-refresh until the last dialog closes and restores the previous policy', () => {
+        const style = document.documentElement.style;
+        style.setProperty('overscroll-behavior-y', 'contain', 'important');
+        try {
+            const service = TestBed.inject(FdUiDialogService);
+            const first = service.open(BackgroundDialogComponent);
+            const second = service.open(BackgroundDialogComponent);
+            expect(style.getPropertyValue('overscroll-behavior-y')).toBe('none');
+            second.close();
+            expect(style.getPropertyValue('overscroll-behavior-y')).toBe('none');
+            first.close();
+            expect(style.getPropertyValue('overscroll-behavior-y')).toBe('contain');
+            expect(style.getPropertyPriority('overscroll-behavior-y')).toBe('important');
+        } finally {
+            style.removeProperty('overscroll-behavior-y');
+        }
+    });
+
+    it('removes its temporary pull-to-refresh policy during lifecycle cleanup', () => {
+        const style = document.documentElement.style;
+        const service = TestBed.inject(FdUiDialogService);
+        service.open(BackgroundDialogComponent);
+        service.closeAll();
+        expect(style.getPropertyValue('overscroll-behavior-y')).toBe('');
+    });
+
     it('makes page content inert until the last nested dialog closes', () => {
         const fixture = TestBed.createComponent(BackgroundHostComponent);
         fixture.detectChanges();
