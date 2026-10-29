@@ -188,10 +188,9 @@
 }
 
 .nutrition-trend__day {
-    padding: var(--fd-space-lg);
-    border: var(--fd-border-subtle);
-    border-radius: var(--fd-radius-panel);
-    background: var(--fd-bg-surface);
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-md);
     font-variant-numeric: tabular-nums;
 }
 .nutrition-trend__day p {
@@ -234,6 +233,7 @@
 }
 .nutrition-trend__metric {
     display: grid;
+    min-width: 0;
     gap: var(--fd-space-xxs);
 }
 .nutrition-trend__metric--proteins strong {
@@ -247,4 +247,54 @@
 }
 .nutrition-trend__metric--fiber strong {
     color: var(--fd-color-nutrition-fiber-text);
+}
+
+@container (max-width: 760px) {
+    .nutrition-trend__day {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: center;
+        gap: var(--fd-space-sm);
+        padding-top: var(--fd-space-sm);
+        border-top: var(--fd-border-subtle);
+    }
+
+    .nutrition-trend__day-header {
+        min-height: 0;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: var(--fd-space-xxs);
+    }
+
+    .nutrition-trend__day-summary {
+        align-items: flex-end;
+        gap: var(--fd-space-xxs);
+        text-align: end;
+    }
+
+    .nutrition-trend__day-summary p {
+        font-size: var(--fd-text-caption-size);
+    }
+
+    .nutrition-trend__day-metrics {
+        grid-column: 1 / -1;
+        gap: var(--fd-space-sm);
+    }
+
+    .nutrition-trend__metric strong {
+        font-size: var(--fd-text-body-sm-size);
+    }
+}
+
+@container (min-width: 320px) and (max-width: 760px) {
+    .nutrition-trend__day-metrics {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+@media (pointer: coarse) {
+    .nutrition-trend__open-day {
+        min-width: var(--fd-size-control-touch);
+        min-height: var(--fd-size-control-touch);
+    }
 }

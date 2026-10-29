@@ -50,7 +50,7 @@
 
             @if (interactive()) {
                 @if (selectedPoint(); as day) {
-                    <aside class="nutrition-trend__day fd-stack fd-gap-md" aria-live="polite">
+                    <aside class="nutrition-trend__day" aria-live="polite">
                         <div class="nutrition-trend__day-header fd-row fd-align-center fd-justify-between fd-gap-sm">
                             <div class="fd-ui-meta-text">{{ day.fullDateLabel }}</div>
                             <a
@@ -62,7 +62,7 @@
                                 ><fd-ui-icon name="open_in_new"
                             /></a>
                         </div>
-                        <div class="fd-stack fd-gap-xs">
+                        <div class="nutrition-trend__day-summary fd-stack fd-gap-xs">
                             <div class="nutrition-trend__day-calories">
                                 {{ formatChartCalories(day.calories) }}
                                 <span class="fd-ui-caption">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
