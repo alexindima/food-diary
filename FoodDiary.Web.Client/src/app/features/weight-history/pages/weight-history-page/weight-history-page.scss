@@ -4,10 +4,6 @@
     --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
     margin: 0 auto;
 
-    &__header {
-        margin-bottom: var(--fd-page-header-gap);
-    }
-
     &__sections {
         gap: var(--fd-space-page-card-gap);
 

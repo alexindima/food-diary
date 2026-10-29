@@ -3,13 +3,17 @@
 .client-dashboard {
     display: flex;
     flex-direction: column;
-    gap: var(--fd-space-page-card-gap);
+    gap: var(--fd-page-header-gap);
     padding: var(--fd-space-lg);
     max-width: 800px;
     margin: 0 auto;
 
     &__header {
         overflow-wrap: anywhere;
+    }
+
+    &__content {
+        gap: var(--fd-space-page-card-gap);
     }
 
     &__date-filter {

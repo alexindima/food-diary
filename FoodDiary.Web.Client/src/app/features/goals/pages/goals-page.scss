@@ -10,10 +10,6 @@
     gap: var(--fd-space-lg);
     margin: 0 auto;
 
-    &__header {
-        margin-bottom: var(--fd-space-xxs);
-    }
-
     &__status {
         --fd-pill-min-height: var(--fd-size-control-md);
         --fd-pill-padding-inline: var(--fd-space-md);

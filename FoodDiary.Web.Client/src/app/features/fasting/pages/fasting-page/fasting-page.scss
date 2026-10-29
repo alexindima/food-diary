@@ -1,10 +1,6 @@
 @use 'variables' as variables;
 
 .fasting {
-    &__header {
-        margin-bottom: var(--fd-page-header-gap);
-    }
-
     &__skeleton {
         width: 100%;
 

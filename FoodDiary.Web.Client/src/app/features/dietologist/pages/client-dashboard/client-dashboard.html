@@ -24,261 +24,283 @@
         />
     </div>
 
-    @if (loading()) {
-        <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.LOADING' | translate }}</p>
-    } @else if (error(); as errorKey) {
-        <p class="client-dashboard__error fd-ui-body-sm">{{ errorKey | translate }}</p>
-    } @else if (!client()) {
-        <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NOT_FOUND' | translate }}</p>
-    } @else {
-        <div class="client-dashboard__actions fd-row fd-wrap fd-gap-sm">
-            <fd-ui-button variant="danger" fill="outline" (click)="disconnectClient()">
-                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT' | translate }}
-            </fd-ui-button>
-        </div>
+    <div class="client-dashboard__content fd-stack">
+        @if (loading()) {
+            <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.LOADING' | translate }}</p>
+        } @else if (error(); as errorKey) {
+            <p class="client-dashboard__error fd-ui-body-sm">{{ errorKey | translate }}</p>
+        } @else if (!client()) {
+            <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NOT_FOUND' | translate }}</p>
+        } @else {
+            <div class="client-dashboard__actions fd-row fd-wrap fd-gap-sm">
+                <fd-ui-button variant="danger" fill="outline" (click)="disconnectClient()">
+                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DISCONNECT' | translate }}
+                </fd-ui-button>
+            </div>
 
-        @if (hasPeriodFilterPermission()) {
-            <fd-ui-card data-tour-id="client-dashboard-period">
-                <form method="post" class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
-                    <div class="client-dashboard__date-field">
-                        <fd-ui-date-input
-                            [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL' | translate"
-                            [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_PLACEHOLDER' | translate"
-                            [formField]="dateFilterForm.dateFrom"
-                        />
-                    </div>
-                    <div class="client-dashboard__date-field">
-                        <fd-ui-date-input
-                            [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_LABEL' | translate"
-                            [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_PLACEHOLDER' | translate"
-                            [formField]="dateFilterForm.dateTo"
-                            [error]="
-                                dateFilterRangeInvalid() ? ('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.INVALID_RANGE' | translate) : null
-                            "
-                        />
-                    </div>
-                    <fd-ui-button class="client-dashboard__date-apply" type="submit" [loading]="detailsLoading()">
-                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY' | translate }}
-                    </fd-ui-button>
-                    <div class="client-dashboard__date-actions fd-row fd-wrap fd-gap-xs">
-                        <div class="client-dashboard__date-presets fd-row fd-wrap fd-gap-xs">
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showRecentDays(periodPresetDays.week)">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_7' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="outline"
-                                (click)="showRecentDays(periodPresetDays.twoWeeks)"
-                            >
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_14' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showRecentDays(periodPresetDays.month)">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_30' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showToday()">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TODAY' | translate }}
-                            </fd-ui-button>
-                        </div>
-                        <div class="client-dashboard__date-navigation fd-row fd-gap-xs">
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showPreviousPeriod()">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.PREVIOUS_PERIOD' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showNextPeriod()">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD' | translate }}
-                            </fd-ui-button>
-                        </div>
-                    </div>
-                </form>
-                <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TIME_ZONE_HINT' | translate }}</p>
-            </fd-ui-card>
-        }
-
-        <fd-client-dashboard-notices [detailsLoading]="detailsLoading()" [sectionLoadError]="sectionLoadError()" />
-
-        <div class="client-dashboard__sections fd-stack" data-tour-id="client-dashboard-metrics">
-            <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.STATISTICS_TITLE" [tiles]="nutritionTiles()" />
-            <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROGRESS_TITLE" [tiles]="bodyTiles()" />
-            <fd-client-dashboard-metric-list
-                titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROFILE_TITLE"
-                [tiles]="profileDetails()"
-                [wide]="true"
-            />
-            <fd-client-dashboard-meals-card
-                [meals]="mealItems()"
-                [total]="dashboard()?.meals?.total ?? 0"
-                [showEmptyState]="client()?.permissions?.shareMeals ?? false"
-                [loading]="detailsLoading() || loadingMoreMeals()"
-                [loadError]="moreMealsError()"
-                (loadMore)="loadMoreMeals()"
-            />
-            <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WEIGHT_TITLE" [summary]="weightSummary()" />
-            <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WAIST_TITLE" [summary]="waistSummary()" />
-            <fd-client-dashboard-hydration-card [hydration]="hydrationSummary()" />
-            <fd-client-dashboard-fasting-card [fasting]="fastingSummary()" [visible]="client()?.permissions?.shareFasting ?? false" />
-            <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.GOALS_TITLE" [tiles]="goalTiles()" />
-            @if (!hasAnyPermission()) {
-                <p class="client-dashboard__no-data fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NO_DATA' | translate }}</p>
-            }
-
-            <fd-ui-card>
-                <section class="client-dashboard__section fd-stack fd-gap-md" aria-labelledby="dietologist-client-tasks-title">
-                    <h2 id="dietologist-client-tasks-title" class="fd-ui-card-title">{{ 'CLIENT_TASKS.TITLE' | translate }}</h2>
-                    <form method="post" class="fd-stack fd-gap-sm" [formRoot]="taskForm">
-                        <fd-ui-input [label]="'CLIENT_TASKS.FORM.TITLE' | translate" [formField]="taskForm.title" />
-                        <fd-ui-textarea [label]="'CLIENT_TASKS.FORM.DETAILS' | translate" [rows]="3" [formField]="taskForm.details" />
-                        <fd-ui-date-input [label]="'CLIENT_TASKS.FORM.DUE_DATE' | translate" [formField]="taskForm.dueDate" />
-                        <fd-ui-button type="submit">
-                            {{ 'CLIENT_TASKS.FORM.CREATE' | translate }}
-                        </fd-ui-button>
-                    </form>
-
-                    <div class="fd-stack fd-gap-sm">
-                        @for (task of tasks(); track task.id) {
-                            <article class="client-dashboard__recommendation fd-stack fd-gap-sm">
-                                <div class="fd-row fd-justify-between fd-gap-sm">
-                                    <strong>{{ task.title }}</strong>
-                                    <span class="fd-ui-pill fd-ui-caption fd-nowrap">
-                                        {{ `CLIENT_TASKS.STATUS.${(task.status | uppercase)}` | translate }}
-                                    </span>
-                                </div>
-                                @if (task.details) {
-                                    <p class="fd-ui-body-sm">{{ task.details }}</p>
-                                }
-                                @if (task.dueAtUtc) {
-                                    <span class="fd-ui-caption">
-                                        {{ 'CLIENT_TASKS.DUE' | translate }} {{ task.dueAtUtc | localizedDate: 'mediumDate' }}
-                                        @if (task.isOverdue) {
-                                            · {{ 'CLIENT_TASKS.OVERDUE' | translate }}
-                                        }
-                                    </span>
-                                }
-                                @if (task.status !== 'Cancelled') {
-                                    <fd-ui-button
-                                        type="button"
-                                        variant="danger"
-                                        fill="outline"
-                                        [loading]="changingTaskIds().has(task.id)"
-                                        (click)="cancelTask(task)"
-                                    >
-                                        {{ 'CLIENT_TASKS.CANCEL' | translate }}
-                                    </fd-ui-button>
-                                }
-                            </article>
-                        } @empty {
-                            <p class="fd-ui-body-sm">{{ 'CLIENT_TASKS.EMPTY' | translate }}</p>
-                        }
-                    </div>
-                </section>
-            </fd-ui-card>
-
-            <fd-ui-card data-tour-id="client-dashboard-recommendations">
-                <div class="client-dashboard__section client-dashboard__recommendations">
-                    <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE' | translate }}</h2>
-                    <section class="fd-stack fd-gap-sm" aria-labelledby="recommendation-templates-title">
-                        <h3 id="recommendation-templates-title" class="fd-ui-body">
-                            {{ 'RECOMMENDATION_TEMPLATES.TITLE' | translate }}
-                        </h3>
-                        <div class="fd-row fd-wrap fd-gap-xs">
-                            @for (template of recommendationTemplates(); track template.id) {
-                                <div class="client-dashboard__template fd-gap-xs">
-                                    <fd-ui-button
-                                        type="button"
-                                        variant="secondary"
-                                        fill="outline"
-                                        [disabled]="savingRecommendation() || savingTemplate()"
-                                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                                        (click)="useRecommendationTemplate(template)"
-                                    >
-                                        <span class="client-dashboard__template-name">{{ template.name }}</span>
-                                    </fd-ui-button>
-                                    <fd-ui-button
-                                        type="button"
-                                        variant="danger"
-                                        fill="outline"
-                                        [ariaLabel]="'RECOMMENDATION_TEMPLATES.ARCHIVE' | translate: { name: template.name }"
-                                        (click)="archiveRecommendationTemplate(template)"
-                                    >
-                                        {{ 'RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT' | translate }}
-                                    </fd-ui-button>
-                                </div>
-                            } @empty {
-                                <span class="fd-ui-caption">{{ 'RECOMMENDATION_TEMPLATES.EMPTY' | translate }}</span>
-                            }
-                        </div>
-                    </section>
-                    <form method="post" class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">
-                        <p class="fd-ui-caption" [hidden]="canRecommend()">
-                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate }}
-                        </p>
-                        <fd-ui-textarea
-                            [label]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_LABEL' | translate"
-                            [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER' | translate"
-                            [rows]="5"
-                            [formField]="recommendationForm.text"
-                        />
-                        <div class="fd-row fd-wrap fd-gap-sm">
-                            <fd-ui-input
-                                #templateNameInput
-                                [label]="'RECOMMENDATION_TEMPLATES.NAME' | translate"
-                                [error]="templateNameError()"
-                                [formField]="recommendationForm.templateName"
+            @if (hasPeriodFilterPermission()) {
+                <fd-ui-card data-tour-id="client-dashboard-period">
+                    <form method="post" class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
+                        <div class="client-dashboard__date-field">
+                            <fd-ui-date-input
+                                [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL' | translate"
+                                [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_PLACEHOLDER' | translate"
+                                [formField]="dateFilterForm.dateFrom"
                             />
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="outline"
-                                [disabled]="!canRecommend()"
-                                [disabledReason]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate"
-                                [loading]="savingTemplate() || savingRecommendation()"
-                                (click)="createRecommendationTemplate()"
-                            >
-                                {{ 'RECOMMENDATION_TEMPLATES.SAVE' | translate }}
-                            </fd-ui-button>
                         </div>
-                        <div class="client-dashboard__recommendation-actions fd-row fd-justify-between fd-gap-sm">
-                            <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.LIMIT' | translate }} </span>
-                            <fd-ui-button
-                                type="submit"
-                                [disabled]="recommendationDisabled()"
-                                [disabledReason]="recommendationDisabledReason()"
-                            >
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
-                            </fd-ui-button>
+                        <div class="client-dashboard__date-field">
+                            <fd-ui-date-input
+                                [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_LABEL' | translate"
+                                [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TO_PLACEHOLDER' | translate"
+                                [formField]="dateFilterForm.dateTo"
+                                [error]="
+                                    dateFilterRangeInvalid() ? ('DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.INVALID_RANGE' | translate) : null
+                                "
+                            />
                         </div>
-                    </form>
-
-                    <div class="client-dashboard__recommendation-list fd-stack fd-gap-sm">
-                        @for (item of recommendationItems(); track item.id) {
-                            <article class="client-dashboard__recommendation">
-                                <div class="fd-row fd-justify-between fd-gap-sm">
-                                    <span class="fd-ui-caption">{{ item.createdAtUtc | localizedDate: 'mediumDate' }}</span>
-                                    <span class="client-dashboard__recommendation-status fd-ui-pill fd-ui-overline">
-                                        {{ item.statusKey | translate }}
-                                    </span>
-                                </div>
-                                <p class="fd-ui-body-sm">{{ item.text }}</p>
+                        <fd-ui-button class="client-dashboard__date-apply" type="submit" [loading]="detailsLoading()">
+                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY' | translate }}
+                        </fd-ui-button>
+                        <div class="client-dashboard__date-actions fd-row fd-wrap fd-gap-xs">
+                            <div class="client-dashboard__date-presets fd-row fd-wrap fd-gap-xs">
                                 <fd-ui-button
                                     type="button"
                                     variant="secondary"
                                     fill="outline"
-                                    [ariaExpanded]="openDiscussionId() === item.id"
-                                    (click)="toggleDiscussion(item.id)"
+                                    (click)="showRecentDays(periodPresetDays.week)"
                                 >
-                                    {{ 'RECOMMENDATIONS.DISCUSSION.TITLE' | translate }}
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_7' | translate }}
                                 </fd-ui-button>
-                                @if (openDiscussionId() === item.id) {
-                                    <fd-recommendation-thread [recommendationId]="item.id" />
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    fill="outline"
+                                    (click)="showRecentDays(periodPresetDays.twoWeeks)"
+                                >
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_14' | translate }}
+                                </fd-ui-button>
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    fill="outline"
+                                    (click)="showRecentDays(periodPresetDays.month)"
+                                >
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.LAST_30' | translate }}
+                                </fd-ui-button>
+                                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showToday()">
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TODAY' | translate }}
+                                </fd-ui-button>
+                            </div>
+                            <div class="client-dashboard__date-navigation fd-row fd-gap-xs">
+                                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showPreviousPeriod()">
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.PREVIOUS_PERIOD' | translate }}
+                                </fd-ui-button>
+                                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="showNextPeriod()">
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.NEXT_PERIOD' | translate }}
+                                </fd-ui-button>
+                            </div>
+                        </div>
+                    </form>
+                    <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.TIME_ZONE_HINT' | translate }}</p>
+                </fd-ui-card>
+            }
+
+            <fd-client-dashboard-notices [detailsLoading]="detailsLoading()" [sectionLoadError]="sectionLoadError()" />
+
+            <div class="client-dashboard__sections fd-stack" data-tour-id="client-dashboard-metrics">
+                <fd-client-dashboard-metric-list
+                    titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.STATISTICS_TITLE"
+                    [tiles]="nutritionTiles()"
+                />
+                <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROGRESS_TITLE" [tiles]="bodyTiles()" />
+                <fd-client-dashboard-metric-list
+                    titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROFILE_TITLE"
+                    [tiles]="profileDetails()"
+                    [wide]="true"
+                />
+                <fd-client-dashboard-meals-card
+                    [meals]="mealItems()"
+                    [total]="dashboard()?.meals?.total ?? 0"
+                    [showEmptyState]="client()?.permissions?.shareMeals ?? false"
+                    [loading]="detailsLoading() || loadingMoreMeals()"
+                    [loadError]="moreMealsError()"
+                    (loadMore)="loadMoreMeals()"
+                />
+                <fd-client-dashboard-summary-card
+                    titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WEIGHT_TITLE"
+                    [summary]="weightSummary()"
+                />
+                <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WAIST_TITLE" [summary]="waistSummary()" />
+                <fd-client-dashboard-hydration-card [hydration]="hydrationSummary()" />
+                <fd-client-dashboard-fasting-card [fasting]="fastingSummary()" [visible]="client()?.permissions?.shareFasting ?? false" />
+                <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.GOALS_TITLE" [tiles]="goalTiles()" />
+                @if (!hasAnyPermission()) {
+                    <p class="client-dashboard__no-data fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NO_DATA' | translate }}</p>
+                }
+
+                <fd-ui-card>
+                    <section class="client-dashboard__section fd-stack fd-gap-md" aria-labelledby="dietologist-client-tasks-title">
+                        <h2 id="dietologist-client-tasks-title" class="fd-ui-card-title">{{ 'CLIENT_TASKS.TITLE' | translate }}</h2>
+                        <form method="post" class="fd-stack fd-gap-sm" [formRoot]="taskForm">
+                            <fd-ui-input [label]="'CLIENT_TASKS.FORM.TITLE' | translate" [formField]="taskForm.title" />
+                            <fd-ui-textarea [label]="'CLIENT_TASKS.FORM.DETAILS' | translate" [rows]="3" [formField]="taskForm.details" />
+                            <fd-ui-date-input [label]="'CLIENT_TASKS.FORM.DUE_DATE' | translate" [formField]="taskForm.dueDate" />
+                            <fd-ui-button type="submit">
+                                {{ 'CLIENT_TASKS.FORM.CREATE' | translate }}
+                            </fd-ui-button>
+                        </form>
+
+                        <div class="fd-stack fd-gap-sm">
+                            @for (task of tasks(); track task.id) {
+                                <article class="client-dashboard__recommendation fd-stack fd-gap-sm">
+                                    <div class="fd-row fd-justify-between fd-gap-sm">
+                                        <strong>{{ task.title }}</strong>
+                                        <span class="fd-ui-pill fd-ui-caption fd-nowrap">
+                                            {{ `CLIENT_TASKS.STATUS.${(task.status | uppercase)}` | translate }}
+                                        </span>
+                                    </div>
+                                    @if (task.details) {
+                                        <p class="fd-ui-body-sm">{{ task.details }}</p>
+                                    }
+                                    @if (task.dueAtUtc) {
+                                        <span class="fd-ui-caption">
+                                            {{ 'CLIENT_TASKS.DUE' | translate }} {{ task.dueAtUtc | localizedDate: 'mediumDate' }}
+                                            @if (task.isOverdue) {
+                                                · {{ 'CLIENT_TASKS.OVERDUE' | translate }}
+                                            }
+                                        </span>
+                                    }
+                                    @if (task.status !== 'Cancelled') {
+                                        <fd-ui-button
+                                            type="button"
+                                            variant="danger"
+                                            fill="outline"
+                                            [loading]="changingTaskIds().has(task.id)"
+                                            (click)="cancelTask(task)"
+                                        >
+                                            {{ 'CLIENT_TASKS.CANCEL' | translate }}
+                                        </fd-ui-button>
+                                    }
+                                </article>
+                            } @empty {
+                                <p class="fd-ui-body-sm">{{ 'CLIENT_TASKS.EMPTY' | translate }}</p>
+                            }
+                        </div>
+                    </section>
+                </fd-ui-card>
+
+                <fd-ui-card data-tour-id="client-dashboard-recommendations">
+                    <div class="client-dashboard__section client-dashboard__recommendations">
+                        <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE' | translate }}</h2>
+                        <section class="fd-stack fd-gap-sm" aria-labelledby="recommendation-templates-title">
+                            <h3 id="recommendation-templates-title" class="fd-ui-body">
+                                {{ 'RECOMMENDATION_TEMPLATES.TITLE' | translate }}
+                            </h3>
+                            <div class="fd-row fd-wrap fd-gap-xs">
+                                @for (template of recommendationTemplates(); track template.id) {
+                                    <div class="client-dashboard__template fd-gap-xs">
+                                        <fd-ui-button
+                                            type="button"
+                                            variant="secondary"
+                                            fill="outline"
+                                            [disabled]="savingRecommendation() || savingTemplate()"
+                                            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                                            (click)="useRecommendationTemplate(template)"
+                                        >
+                                            <span class="client-dashboard__template-name">{{ template.name }}</span>
+                                        </fd-ui-button>
+                                        <fd-ui-button
+                                            type="button"
+                                            variant="danger"
+                                            fill="outline"
+                                            [ariaLabel]="'RECOMMENDATION_TEMPLATES.ARCHIVE' | translate: { name: template.name }"
+                                            (click)="archiveRecommendationTemplate(template)"
+                                        >
+                                            {{ 'RECOMMENDATION_TEMPLATES.ARCHIVE_SHORT' | translate }}
+                                        </fd-ui-button>
+                                    </div>
+                                } @empty {
+                                    <span class="fd-ui-caption">{{ 'RECOMMENDATION_TEMPLATES.EMPTY' | translate }}</span>
                                 }
-                            </article>
-                        } @empty {
-                            <p class="client-dashboard__placeholder fd-ui-body-sm">
-                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.EMPTY' | translate }}
+                            </div>
+                        </section>
+                        <form
+                            method="post"
+                            class="client-dashboard__recommendation-form fd-stack fd-gap-sm"
+                            [formRoot]="recommendationForm"
+                        >
+                            <p class="fd-ui-caption" [hidden]="canRecommend()">
+                                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate }}
                             </p>
-                        }
+                            <fd-ui-textarea
+                                [label]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_LABEL' | translate"
+                                [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER' | translate"
+                                [rows]="5"
+                                [formField]="recommendationForm.text"
+                            />
+                            <div class="fd-row fd-wrap fd-gap-sm">
+                                <fd-ui-input
+                                    #templateNameInput
+                                    [label]="'RECOMMENDATION_TEMPLATES.NAME' | translate"
+                                    [error]="templateNameError()"
+                                    [formField]="recommendationForm.templateName"
+                                />
+                                <fd-ui-button
+                                    type="button"
+                                    variant="secondary"
+                                    fill="outline"
+                                    [disabled]="!canRecommend()"
+                                    [disabledReason]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.PERMISSIONS_REQUIRED' | translate"
+                                    [loading]="savingTemplate() || savingRecommendation()"
+                                    (click)="createRecommendationTemplate()"
+                                >
+                                    {{ 'RECOMMENDATION_TEMPLATES.SAVE' | translate }}
+                                </fd-ui-button>
+                            </div>
+                            <div class="client-dashboard__recommendation-actions fd-row fd-justify-between fd-gap-sm">
+                                <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.LIMIT' | translate }} </span>
+                                <fd-ui-button
+                                    type="submit"
+                                    [disabled]="recommendationDisabled()"
+                                    [disabledReason]="recommendationDisabledReason()"
+                                >
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
+                                </fd-ui-button>
+                            </div>
+                        </form>
+
+                        <div class="client-dashboard__recommendation-list fd-stack fd-gap-sm">
+                            @for (item of recommendationItems(); track item.id) {
+                                <article class="client-dashboard__recommendation">
+                                    <div class="fd-row fd-justify-between fd-gap-sm">
+                                        <span class="fd-ui-caption">{{ item.createdAtUtc | localizedDate: 'mediumDate' }}</span>
+                                        <span class="client-dashboard__recommendation-status fd-ui-pill fd-ui-overline">
+                                            {{ item.statusKey | translate }}
+                                        </span>
+                                    </div>
+                                    <p class="fd-ui-body-sm">{{ item.text }}</p>
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="outline"
+                                        [ariaExpanded]="openDiscussionId() === item.id"
+                                        (click)="toggleDiscussion(item.id)"
+                                    >
+                                        {{ 'RECOMMENDATIONS.DISCUSSION.TITLE' | translate }}
+                                    </fd-ui-button>
+                                    @if (openDiscussionId() === item.id) {
+                                        <fd-recommendation-thread [recommendationId]="item.id" />
+                                    }
+                                </article>
+                            } @empty {
+                                <p class="client-dashboard__placeholder fd-ui-body-sm">
+                                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.EMPTY' | translate }}
+                                </p>
+                            }
+                        </div>
                     </div>
-                </div>
-            </fd-ui-card>
-        </div>
-    }
+                </fd-ui-card>
+            </div>
+        }
+    </div>
 </div>

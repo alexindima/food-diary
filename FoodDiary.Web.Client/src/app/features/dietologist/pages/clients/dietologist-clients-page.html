@@ -13,185 +13,189 @@
         />
     </div>
 
-    <fd-ui-card>
-        <section class="fd-stack fd-gap-md" aria-labelledby="attention-title">
-            <div class="fd-stack fd-gap-md">
-                <div>
-                    <h2 id="attention-title" class="fd-ui-card-title">{{ 'ATTENTION.TITLE' | translate }}</h2>
-                    <p class="fd-ui-body-sm">{{ 'ATTENTION.DESCRIPTION' | translate }}</p>
+    <div class="dietologist-clients__content fd-stack">
+        <fd-ui-card>
+            <section class="fd-stack fd-gap-md" aria-labelledby="attention-title">
+                <div class="fd-stack fd-gap-md">
+                    <div>
+                        <h2 id="attention-title" class="fd-ui-card-title">{{ 'ATTENTION.TITLE' | translate }}</h2>
+                        <p class="fd-ui-body-sm">{{ 'ATTENTION.DESCRIPTION' | translate }}</p>
+                    </div>
+                    <details>
+                        <summary>{{ 'ATTENTION.SETTINGS' | translate }}</summary>
+                        <div class="fd-stack fd-gap-sm">
+                            <label for="attention-inactivity">{{ 'ATTENTION.INACTIVITY_DAYS' | translate }}</label>
+                            <input
+                                #inactivityInput
+                                #attentionField
+                                required
+                                id="attention-inactivity"
+                                type="number"
+                                min="1"
+                                max="30"
+                                [attr.aria-invalid]="invalidAttentionSettings().has('inactivityDays') ? 'true' : null"
+                                [attr.aria-describedby]="
+                                    invalidAttentionSettings().has('inactivityDays') ? 'attention-settings-error' : null
+                                "
+                                [value]="attentionSettings().inactivityDays"
+                                (change)="updateAttentionSetting('inactivityDays', inactivityInput.value)"
+                            />
+                            <label for="attention-calories">{{ 'ATTENTION.CALORIE_DEVIATION' | translate }}</label>
+                            <input
+                                #calorieInput
+                                #attentionField
+                                required
+                                id="attention-calories"
+                                type="number"
+                                min="5"
+                                max="100"
+                                [attr.aria-invalid]="invalidAttentionSettings().has('calorieDeviationPercent') ? 'true' : null"
+                                [attr.aria-describedby]="
+                                    invalidAttentionSettings().has('calorieDeviationPercent') ? 'attention-settings-error' : null
+                                "
+                                [value]="attentionSettings().calorieDeviationPercent"
+                                (change)="updateAttentionSetting('calorieDeviationPercent', calorieInput.value)"
+                            />
+                            <label for="attention-weight">{{ 'ATTENTION.WEIGHT_CHANGE' | translate }}</label>
+                            <input
+                                #weightInput
+                                #attentionField
+                                required
+                                id="attention-weight"
+                                type="number"
+                                min="0.5"
+                                max="20"
+                                step="0.5"
+                                [attr.aria-invalid]="invalidAttentionSettings().has('weightChangePercent') ? 'true' : null"
+                                [attr.aria-describedby]="
+                                    invalidAttentionSettings().has('weightChangePercent') ? 'attention-settings-error' : null
+                                "
+                                [value]="attentionSettings().weightChangePercent"
+                                (change)="updateAttentionSetting('weightChangePercent', weightInput.value)"
+                            />
+                            <p
+                                id="attention-settings-error"
+                                role="alert"
+                                class="fd-ui-body-sm"
+                                [hidden]="invalidAttentionSettings().size === 0"
+                            >
+                                {{ 'ATTENTION.INVALID_SETTINGS' | translate }}
+                            </p>
+                            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
+                                {{ 'ATTENTION.APPLY' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </details>
                 </div>
-                <details>
-                    <summary>{{ 'ATTENTION.SETTINGS' | translate }}</summary>
-                    <div class="fd-stack fd-gap-sm">
-                        <label for="attention-inactivity">{{ 'ATTENTION.INACTIVITY_DAYS' | translate }}</label>
-                        <input
-                            #inactivityInput
-                            #attentionField
-                            required
-                            id="attention-inactivity"
-                            type="number"
-                            min="1"
-                            max="30"
-                            [attr.aria-invalid]="invalidAttentionSettings().has('inactivityDays') ? 'true' : null"
-                            [attr.aria-describedby]="invalidAttentionSettings().has('inactivityDays') ? 'attention-settings-error' : null"
-                            [value]="attentionSettings().inactivityDays"
-                            (change)="updateAttentionSetting('inactivityDays', inactivityInput.value)"
-                        />
-                        <label for="attention-calories">{{ 'ATTENTION.CALORIE_DEVIATION' | translate }}</label>
-                        <input
-                            #calorieInput
-                            #attentionField
-                            required
-                            id="attention-calories"
-                            type="number"
-                            min="5"
-                            max="100"
-                            [attr.aria-invalid]="invalidAttentionSettings().has('calorieDeviationPercent') ? 'true' : null"
-                            [attr.aria-describedby]="
-                                invalidAttentionSettings().has('calorieDeviationPercent') ? 'attention-settings-error' : null
-                            "
-                            [value]="attentionSettings().calorieDeviationPercent"
-                            (change)="updateAttentionSetting('calorieDeviationPercent', calorieInput.value)"
-                        />
-                        <label for="attention-weight">{{ 'ATTENTION.WEIGHT_CHANGE' | translate }}</label>
-                        <input
-                            #weightInput
-                            #attentionField
-                            required
-                            id="attention-weight"
-                            type="number"
-                            min="0.5"
-                            max="20"
-                            step="0.5"
-                            [attr.aria-invalid]="invalidAttentionSettings().has('weightChangePercent') ? 'true' : null"
-                            [attr.aria-describedby]="
-                                invalidAttentionSettings().has('weightChangePercent') ? 'attention-settings-error' : null
-                            "
-                            [value]="attentionSettings().weightChangePercent"
-                            (change)="updateAttentionSetting('weightChangePercent', weightInput.value)"
-                        />
-                        <p
-                            id="attention-settings-error"
-                            role="alert"
-                            class="fd-ui-body-sm"
-                            [hidden]="invalidAttentionSettings().size === 0"
-                        >
-                            {{ 'ATTENTION.INVALID_SETTINGS' | translate }}
-                        </p>
+
+                @if (attentionLoading()) {
+                    <p class="fd-ui-body-sm" aria-live="polite">{{ 'COMMON.LOADING' | translate }}</p>
+                } @else if (attentionError()) {
+                    <div role="alert" class="fd-stack fd-gap-sm">
+                        <p class="fd-ui-body-sm">{{ 'ATTENTION.LOAD_ERROR' | translate }}</p>
                         <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
-                            {{ 'ATTENTION.APPLY' | translate }}
+                            {{ 'DIETOLOGIST.CLIENTS.RETRY' | translate }}
                         </fd-ui-button>
                     </div>
-                </details>
-            </div>
-
-            @if (attentionLoading()) {
-                <p class="fd-ui-body-sm" aria-live="polite">{{ 'COMMON.LOADING' | translate }}</p>
-            } @else if (attentionError()) {
-                <div role="alert" class="fd-stack fd-gap-sm">
-                    <p class="fd-ui-body-sm">{{ 'ATTENTION.LOAD_ERROR' | translate }}</p>
-                    <fd-ui-button type="button" variant="secondary" fill="outline" (click)="applyAttentionSettings()">
-                        {{ 'DIETOLOGIST.CLIENTS.RETRY' | translate }}
-                    </fd-ui-button>
-                </div>
-            } @else if (attentionSignals().length === 0) {
-                <p class="fd-ui-body-sm">{{ 'ATTENTION.EMPTY' | translate }}</p>
-            } @else {
-                <div class="fd-stack fd-gap-sm">
-                    @for (signal of attentionItems(); track signal.id) {
-                        <article class="fd-stack fd-gap-xs">
-                            <div class="fd-row fd-justify-between fd-gap-sm">
-                                <strong>{{ signal.clientDisplayName ?? ('ATTENTION.UNNAMED_CLIENT' | translate) }}</strong>
-                                <span>{{ `ATTENTION.SEVERITY.${signal.severity}` | translate }}</span>
-                            </div>
-                            <p class="fd-ui-body-sm">{{ `ATTENTION.REASON.${signal.reason}` | translate }}</p>
-                            <time [attr.datetime]="signal.detectedAtUtc">{{ signal.detectedDateLabel }}</time>
-                            <div class="fd-row fd-gap-sm">
-                                <fd-ui-button
-                                    type="button"
-                                    variant="secondary"
-                                    fill="outline"
-                                    [loading]="pendingAttentionIds().has(signal.id)"
-                                    (click)="acknowledgeSignal(signal)"
-                                >
-                                    {{ 'ATTENTION.ACKNOWLEDGE' | translate }}
-                                </fd-ui-button>
-                                <fd-ui-button
-                                    type="button"
-                                    variant="secondary"
-                                    fill="outline"
-                                    [loading]="pendingAttentionIds().has(signal.id)"
-                                    (click)="snoozeSignal(signal)"
-                                >
-                                    {{ 'ATTENTION.SNOOZE' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        </article>
-                    }
-                </div>
-            }
-        </section>
-    </fd-ui-card>
-
-    @if (loadError()) {
-        <div class="dietologist-clients__load-error fd-stack fd-gap-sm" role="alert">
-            <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENTS.LOAD_ERROR' | translate }}</p>
-            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="retryLoad()">
-                {{ 'DIETOLOGIST.CLIENTS.RETRY' | translate }}
-            </fd-ui-button>
-        </div>
-    } @else {
-        @if (!loading() && clients().length > 0) {
-            <fd-ui-card>
-                <section class="fd-stack fd-gap-md" aria-labelledby="bulk-recommendations-title">
-                    <h2 id="bulk-recommendations-title" class="fd-ui-card-title">
-                        {{ 'BULK_RECOMMENDATIONS.TITLE' | translate }}
-                    </h2>
-                    <p class="fd-ui-body-sm">{{ 'BULK_RECOMMENDATIONS.DESCRIPTION' | translate }}</p>
-                    <div class="fd-stack fd-gap-xs">
-                        @for (client of clients(); track client.userId) {
-                            <div class="fd-row fd-gap-sm">
-                                <input
-                                    #clientCheckbox
-                                    type="checkbox"
-                                    [id]="`bulk-client-${client.userId}`"
-                                    [checked]="selectedClientIds().has(client.userId)"
-                                    [disabled]="bulkSending()"
-                                    (change)="toggleClientSelection(client.userId, clientCheckbox.checked)"
-                                />
-                                <label class="dietologist-clients__recipient" [for]="`bulk-client-${client.userId}`">
-                                    @let hasName = client.firstName || client.lastName;
-                                    @let firstName = client.firstName ?? '';
-                                    @let lastName = client.lastName ?? '';
-                                    <span>{{ hasName ? `${firstName} ${lastName}` : client.email }}</span>
-                                </label>
-                            </div>
+                } @else if (attentionSignals().length === 0) {
+                    <p class="fd-ui-body-sm">{{ 'ATTENTION.EMPTY' | translate }}</p>
+                } @else {
+                    <div class="fd-stack fd-gap-sm">
+                        @for (signal of attentionItems(); track signal.id) {
+                            <article class="fd-stack fd-gap-xs">
+                                <div class="fd-row fd-justify-between fd-gap-sm">
+                                    <strong>{{ signal.clientDisplayName ?? ('ATTENTION.UNNAMED_CLIENT' | translate) }}</strong>
+                                    <span>{{ `ATTENTION.SEVERITY.${signal.severity}` | translate }}</span>
+                                </div>
+                                <p class="fd-ui-body-sm">{{ `ATTENTION.REASON.${signal.reason}` | translate }}</p>
+                                <time [attr.datetime]="signal.detectedAtUtc">{{ signal.detectedDateLabel }}</time>
+                                <div class="fd-row fd-gap-sm">
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="outline"
+                                        [loading]="pendingAttentionIds().has(signal.id)"
+                                        (click)="acknowledgeSignal(signal)"
+                                    >
+                                        {{ 'ATTENTION.ACKNOWLEDGE' | translate }}
+                                    </fd-ui-button>
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="outline"
+                                        [loading]="pendingAttentionIds().has(signal.id)"
+                                        (click)="snoozeSignal(signal)"
+                                    >
+                                        {{ 'ATTENTION.SNOOZE' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </article>
                         }
                     </div>
-                    <form method="post" class="fd-stack fd-gap-sm" [formRoot]="bulkForm" (submit)="sendBulkRecommendation()">
-                        <fd-ui-textarea
-                            [label]="'BULK_RECOMMENDATIONS.TEXT' | translate"
-                            [rows]="4"
-                            [formField]="bulkForm.text"
-                            [error]="bulkTextError()"
-                        />
-                        <fd-ui-button
-                            type="submit"
-                            [disabled]="selectedClientIds().size === 0"
-                            [disabledReason]="'BULK_RECOMMENDATIONS.DESCRIPTION' | translate"
-                            [loading]="bulkSending()"
-                        >
-                            {{ 'BULK_RECOMMENDATIONS.SEND' | translate: { count: selectedClientIds().size } }}
-                        </fd-ui-button>
-                    </form>
-                </section>
-            </fd-ui-card>
+                }
+            </section>
+        </fd-ui-card>
+
+        @if (loadError()) {
+            <div class="dietologist-clients__load-error fd-stack fd-gap-sm" role="alert">
+                <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENTS.LOAD_ERROR' | translate }}</p>
+                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="retryLoad()">
+                    {{ 'DIETOLOGIST.CLIENTS.RETRY' | translate }}
+                </fd-ui-button>
+            </div>
+        } @else {
+            @if (!loading() && clients().length > 0) {
+                <fd-ui-card>
+                    <section class="fd-stack fd-gap-md" aria-labelledby="bulk-recommendations-title">
+                        <h2 id="bulk-recommendations-title" class="fd-ui-card-title">
+                            {{ 'BULK_RECOMMENDATIONS.TITLE' | translate }}
+                        </h2>
+                        <p class="fd-ui-body-sm">{{ 'BULK_RECOMMENDATIONS.DESCRIPTION' | translate }}</p>
+                        <div class="fd-stack fd-gap-xs">
+                            @for (client of clients(); track client.userId) {
+                                <div class="fd-row fd-gap-sm">
+                                    <input
+                                        #clientCheckbox
+                                        type="checkbox"
+                                        [id]="`bulk-client-${client.userId}`"
+                                        [checked]="selectedClientIds().has(client.userId)"
+                                        [disabled]="bulkSending()"
+                                        (change)="toggleClientSelection(client.userId, clientCheckbox.checked)"
+                                    />
+                                    <label class="dietologist-clients__recipient" [for]="`bulk-client-${client.userId}`">
+                                        @let hasName = client.firstName || client.lastName;
+                                        @let firstName = client.firstName ?? '';
+                                        @let lastName = client.lastName ?? '';
+                                        <span>{{ hasName ? `${firstName} ${lastName}` : client.email }}</span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <form method="post" class="fd-stack fd-gap-sm" [formRoot]="bulkForm" (submit)="sendBulkRecommendation()">
+                            <fd-ui-textarea
+                                [label]="'BULK_RECOMMENDATIONS.TEXT' | translate"
+                                [rows]="4"
+                                [formField]="bulkForm.text"
+                                [error]="bulkTextError()"
+                            />
+                            <fd-ui-button
+                                type="submit"
+                                [disabled]="selectedClientIds().size === 0"
+                                [disabledReason]="'BULK_RECOMMENDATIONS.DESCRIPTION' | translate"
+                                [loading]="bulkSending()"
+                            >
+                                {{ 'BULK_RECOMMENDATIONS.SEND' | translate: { count: selectedClientIds().size } }}
+                            </fd-ui-button>
+                        </form>
+                    </section>
+                </fd-ui-card>
+            }
+            <fd-dietologist-clients-list
+                data-tour-id="dietologist-clients-list"
+                [loading]="loading()"
+                [items]="clientItems()"
+                (clientOpen)="openClient($event)"
+            />
         }
-        <fd-dietologist-clients-list
-            data-tour-id="dietologist-clients-list"
-            [loading]="loading()"
-            [items]="clientItems()"
-            (clientOpen)="openClient($event)"
-        />
-    }
+    </div>
 </div>

@@ -583,6 +583,79 @@ test.describe('shared responsive density', () => {
     }
 });
 
+test.describe('shared page content spacing', () => {
+    for (const uiStyle of ['classic', 'modern'] as const) {
+        for (const viewport of [
+            { width: 393, height: 852 },
+            { width: 768, height: 1024 },
+            { width: 1440, height: 1000 },
+        ]) {
+            test(`${uiStyle}-header-spacing-${viewport.width}px`, async ({ page }, testInfo) => {
+                test.setTimeout(NETWORK_AUDIT_TEST_TIMEOUT_MS);
+                const runtimeErrors: string[] = [];
+                page.on('pageerror', error => runtimeErrors.push(error.message));
+                await page.setViewportSize(viewport);
+                await authenticateUserAsync(page, 'Dietologist');
+                await mockAuthenticatedClientApiAsync(page);
+                const user = { ...createUser(), uiStyle };
+                await page.route('**/api/v1/users/info', async route => route.fulfill(jsonResponse(user)));
+                await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user })));
+                await page.route('**/api/v1/auth/session', async route =>
+                    route.fulfill(jsonResponse({ sessionId: '00000000-0000-4000-8000-000000000002', roles: ['Dietologist'], user })),
+                );
+                const observations = [];
+                for (const routePath of NETWORK_AUDIT_ROUTES) {
+                    await page.goto(routePath);
+                    await expect(page.locator('main h1').first()).toBeVisible();
+                    await expect(page.locator('html')).toHaveAttribute('data-ui-style', uiStyle);
+                    await expect(page).toHaveURL(url => url.pathname === routePath);
+                    // The invitation is a standalone card with its heading inside the content.
+                    if (routePath.startsWith('/dietologist-invitations/')) {
+                        continue;
+                    }
+                    const header = page.locator('fd-page-header, .dietologist-clients__header, .client-dashboard__header');
+                    await expect(header).toBeVisible();
+                    const observation = await header.evaluate(element => {
+                        const body = (element.parentElement as HTMLElement).querySelector(
+                            'fd-page-body > .fd-page-body, .dietologist-clients__content, .client-dashboard__content',
+                        );
+                        if (body === null) {
+                            throw new Error('Page header must be followed by a content container');
+                        }
+                        const firstContent = Array.from(body.children).find(child => child.getBoundingClientRect().height > 0);
+                        const probe = document.createElement('div');
+                        probe.style.height = 'var(--fd-page-header-gap)';
+                        probe.style.position = 'absolute';
+                        document.body.append(probe);
+                        const expectedGap = probe.getBoundingClientRect().height;
+                        probe.remove();
+                        return {
+                            route: location.pathname,
+                            expectedGap,
+                            bodyGap: body.getBoundingClientRect().top - element.getBoundingClientRect().bottom,
+                            contentGap: (firstContent?.getBoundingClientRect().top ?? 0) - element.getBoundingClientRect().bottom,
+                        };
+                    });
+                    observations.push(observation);
+                    expect.soft(observation.expectedGap, 'The shared page header gap must resolve').toBeGreaterThan(0);
+                    expect.soft(observation.bodyGap, `Header-to-content gap on ${routePath}`).toBeCloseTo(observation.expectedGap, 0);
+                    expect
+                        .soft(observation.contentGap, `First visible content gap on ${routePath}`)
+                        .toBeCloseTo(observation.expectedGap, 0);
+                    if (['/dashboard', '/weight-history', '/waist-history', '/fasting'].includes(routePath)) {
+                        await page.screenshot({ path: testInfo.outputPath(`${routePath.slice(1)}.png`) });
+                    }
+                }
+                await testInfo.attach('page-content-spacing.json', {
+                    body: Buffer.from(JSON.stringify(observations, null, 2)),
+                    contentType: 'application/json',
+                });
+                expect(runtimeErrors).toEqual([]);
+            });
+        }
+    }
+});
+
 test.describe('authenticated network audit', () => {
     test('@network-audit has no duplicate GET requests or failed API responses on initial route load', async ({ browser }, testInfo) => {
         test.setTimeout(NETWORK_AUDIT_TEST_TIMEOUT_MS);

@@ -27,7 +27,7 @@ describe('FdPageContainerDirective', () => {
         fixture.detectChanges();
         expect(element.style.minHeight).toBe('auto');
         expect(element.style.flexDirection).toBe('column');
-        expect(element.style.gap).toBe('var(--fd-page-body-gap)');
+        expect(element.style.gap).toBe('var(--fd-page-header-gap)');
         expect(element.style.maxWidth).toBe('var(--fd-layout-page-content-max-width)');
         expect(element.style.padding).toBe('var(--fd-page-container-padding)');
     });
