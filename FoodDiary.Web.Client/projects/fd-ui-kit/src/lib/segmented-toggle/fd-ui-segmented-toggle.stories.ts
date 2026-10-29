@@ -8,7 +8,7 @@ const meta: Meta<FdUiSegmentedToggleComponent> = {
     component: FdUiSegmentedToggleComponent,
     tags: ['autodocs'],
     argTypes: {
-        size: { control: 'select', options: ['sm', 'md'] },
+        size: { control: 'select', options: ['compact', 'sm', 'md'] },
     },
 };
 
@@ -85,6 +85,33 @@ export const Small: Story = {
             },
             template:
                 '<fd-ui-segmented-toggle size="sm" [options]="options" [(selectedValue)]="selected" ariaLabel="Small period"></fd-ui-segmented-toggle>',
+        };
+    },
+};
+
+export const CompactChartRange: Story = {
+    render: () => {
+        const selected = signal('3');
+        return {
+            props: {
+                options: [
+                    { label: '3 days', value: '3' },
+                    { label: '7 days', value: '7' },
+                ],
+                selected,
+            },
+            template: `
+                <fd-ui-segmented-toggle
+                    size="compact"
+                    appearance="soft"
+                    [fitContent]="true"
+                    [stackOnNarrow]="false"
+                    [options]="options"
+                    [(selectedValue)]="selected"
+                    ariaLabel="Chart period"
+                    style="--fd-segmented-toggle-active-background: var(--fd-bg-surface-raised); --fd-segmented-toggle-active-color: var(--fd-color-text); --fd-segmented-toggle-active-shadow: var(--fd-shadow-sm)"
+                />
+            `,
         };
     },
 };

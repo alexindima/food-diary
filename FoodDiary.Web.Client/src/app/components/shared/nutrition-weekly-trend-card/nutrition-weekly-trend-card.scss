@@ -16,6 +16,9 @@
     color: var(--fd-color-text);
 
     &__range {
+        --fd-segmented-toggle-active-background: var(--fd-bg-surface-raised);
+        --fd-segmented-toggle-active-color: var(--fd-color-text);
+        --fd-segmented-toggle-active-shadow: var(--fd-shadow-sm);
         width: max-content;
     }
 

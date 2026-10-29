@@ -708,7 +708,7 @@ Segmented toggle control.
 - `selectedValue: string`
 - `ariaLabel?: string | null`
 - `appearance?: 'default' | 'soft'`
-- `size?: 'sm' | 'md'`
+- `size?: 'compact' | 'sm' | 'md'` (`compact` is an explicit 32px dense secondary control, including on touch screens; use for short chart-period choices)
 - `fullWidth?: boolean`
 - `fitContent?: boolean` (sizes the host to its segments for compact inline compositions)
 - `shrinkItems?: boolean`

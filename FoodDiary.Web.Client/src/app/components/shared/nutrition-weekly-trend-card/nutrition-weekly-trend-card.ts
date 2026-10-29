@@ -8,8 +8,8 @@ import {
     FdUiBarChartComponent,
     type FdUiBarChartReferenceLine,
     FdUiIconComponent,
-    FdUiSelectComponent,
-    type FdUiSelectOption,
+    FdUiSegmentedToggleComponent,
+    type FdUiSegmentedToggleOption,
 } from 'fd-ui-kit';
 import { merge, startWith } from 'rxjs';
 
@@ -88,7 +88,14 @@ const METRIC_LABEL_KEYS: Record<NutritionInsightMetric, string> = {
 
 @Component({
     selector: 'fd-nutrition-weekly-trend-card',
-    imports: [RouterLink, FdUiBarChartComponent, FdUiIconComponent, FdUiSelectComponent, TranslatePipe, DashboardWidgetFrameComponent],
+    imports: [
+        RouterLink,
+        FdUiBarChartComponent,
+        FdUiIconComponent,
+        FdUiSegmentedToggleComponent,
+        TranslatePipe,
+        DashboardWidgetFrameComponent,
+    ],
     templateUrl: './nutrition-weekly-trend-card.html',
     styleUrl: './nutrition-weekly-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -126,14 +133,10 @@ export class NutritionWeeklyTrendCardComponent {
     });
 
     protected readonly visibleDays = signal<TrendRange>(DEFAULT_TREND_DAYS);
-    protected readonly rangeOptions = computed<Array<FdUiSelectOption<TrendRange>>>(() => {
-        this.translationChange();
-
-        return [
-            { value: SHORT_TREND_DAYS, label: this.translateService.instant('NUTRITION_TREND.THREE_DAYS') },
-            { value: DEFAULT_TREND_DAYS, label: this.translateService.instant('NUTRITION_TREND.SEVEN_DAYS') },
-        ];
-    });
+    protected readonly rangeOptions: FdUiSegmentedToggleOption[] = [
+        { value: String(SHORT_TREND_DAYS), labelKey: 'NUTRITION_TREND.THREE_DAYS' },
+        { value: String(DEFAULT_TREND_DAYS), labelKey: 'NUTRITION_TREND.SEVEN_DAYS' },
+    ];
     protected readonly insightView = computed(() => {
         this.translationChange();
         const keyPrefix = 'NUTRITION_TREND.INSIGHT';
@@ -255,8 +258,8 @@ export class NutritionWeeklyTrendCardComponent {
     });
     protected readonly formatChartCalories = (value: number): string =>
         new Intl.NumberFormat(resolveTranslateLanguage(this.translateService), { maximumFractionDigits: 0 }).format(value);
-    protected changeVisibleDays(value: TrendRange | null | undefined): void {
-        this.visibleDays.set(value === SHORT_TREND_DAYS ? SHORT_TREND_DAYS : DEFAULT_TREND_DAYS);
+    protected changeVisibleDays(value: string): void {
+        this.visibleDays.set(value === String(SHORT_TREND_DAYS) ? SHORT_TREND_DAYS : DEFAULT_TREND_DAYS);
     }
 
     private segmentCalories(point: NutritionTrendPoint, contribution: number): number {

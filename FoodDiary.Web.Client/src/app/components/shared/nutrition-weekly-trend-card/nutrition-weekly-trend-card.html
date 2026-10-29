@@ -3,14 +3,17 @@
         [title]="'NUTRITION_TREND.TITLE' | translate"
         [helpText]="interactive() ? ('NUTRITION_TREND.STACK_NOTE' | translate) : null"
     >
-        <fd-ui-select
+        <fd-ui-segmented-toggle
             fdDashboardWidgetHeaderEnd
             class="nutrition-trend__range"
-            size="sm"
+            size="compact"
+            appearance="soft"
+            [fitContent]="true"
+            [stackOnNarrow]="false"
             [ariaLabel]="'NUTRITION_TREND.RANGE_LABEL' | translate"
-            [options]="rangeOptions()"
-            [value]="visibleDays()"
-            (valueChange)="changeVisibleDays($event)"
+            [options]="rangeOptions"
+            [selectedValue]="visibleDays().toString()"
+            (selectedValueChange)="changeVisibleDays($event)"
         />
 
         <div class="nutrition-trend__content" [class.nutrition-trend__content--empty]="!hasChartData() && !interactive()">

@@ -67,20 +67,31 @@ describe('NutritionWeeklyTrendCardComponent', () => {
     it('switches between seven and three visible days', async () => {
         const fixture = await setupAsync();
         const element = fixture.nativeElement as HTMLElement;
-        const range = element.querySelector<HTMLButtonElement>('.nutrition-trend__range .fd-ui-select__control');
+        const range = element.querySelector('.nutrition-trend__range [role="radiogroup"]');
+        const options = range?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
 
-        expect(range?.textContent).toContain('NUTRITION_TREND.SEVEN_DAYS');
+        expect(options).toHaveLength(2);
+        expect(options?.[0].textContent).toContain('NUTRITION_TREND.THREE_DAYS');
+        expect(options?.[1].textContent).toContain('NUTRITION_TREND.SEVEN_DAYS');
+        expect(options?.[1].getAttribute('aria-checked')).toBe('true');
         expect(range?.getAttribute('aria-label')).toBe('NUTRITION_TREND.RANGE_LABEL');
         expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(TREND_DAYS);
 
-        fixture.componentInstance['changeVisibleDays'](SHORT_TREND_DAYS);
+        options?.[0].click();
         fixture.detectChanges();
 
         expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(SHORT_TREND_DAYS);
+        expect(options?.[0].getAttribute('aria-checked')).toBe('true');
+        expect(options?.[1].getAttribute('aria-checked')).toBe('false');
+
+        options?.[1].click();
+        fixture.detectChanges();
+
+        expect(element.querySelectorAll('.fd-ui-bar-chart__categorical-bar')).toHaveLength(TREND_DAYS);
     });
 });
 
-it('gives coexisting trend widgets distinct range control IDs', async () => {
+it('keeps coexisting trend range selections independent', async () => {
     const first = await setupAsync();
     const second = TestBed.createComponent(NutritionWeeklyTrendCardComponent);
     second.componentRef.setInput('points', []);
@@ -88,11 +99,15 @@ it('gives coexisting trend widgets distinct range control IDs', async () => {
     second.componentRef.setInput('insight', DEFAULT_INSIGHT);
     second.detectChanges();
 
-    const firstId = (first.nativeElement as HTMLElement).querySelector('.fd-ui-select__control')?.id;
-    const secondId = (second.nativeElement as HTMLElement).querySelector('.fd-ui-select__control')?.id;
-    expect(firstId).toBeTruthy();
-    expect(secondId).toBeTruthy();
-    expect(secondId, 'Trend controls must remain unique when landing previews coexist').not.toBe(firstId);
+    (first.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('[role="radio"]')?.click();
+    first.detectChanges();
+    second.detectChanges();
+
+    expect(first.componentInstance['visibleDays']()).toBe(SHORT_TREND_DAYS);
+    expect(second.componentInstance['visibleDays']()).toBe(TREND_DAYS);
+    expect((second.nativeElement as HTMLElement).querySelector('[role="radio"][aria-checked="true"]')?.textContent).toContain(
+        'NUTRITION_TREND.SEVEN_DAYS',
+    );
 });
 
 it('selects a day without navigating and scales the stack to recorded calories', async () => {

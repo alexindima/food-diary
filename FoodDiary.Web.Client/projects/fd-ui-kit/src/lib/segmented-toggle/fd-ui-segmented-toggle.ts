@@ -10,7 +10,7 @@ export type FdUiSegmentedToggleOption = {
 };
 
 export type FdUiSegmentedToggleAppearance = 'default' | 'soft';
-export type FdUiSegmentedToggleSize = 'sm' | 'md';
+export type FdUiSegmentedToggleSize = 'compact' | 'sm' | 'md';
 
 @Component({
     selector: 'fd-ui-segmented-toggle',
