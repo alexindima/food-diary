@@ -261,7 +261,7 @@
     &__pulse {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto auto;
+        grid-template-rows: minmax(var(--fd-size-control-sm), auto) auto;
         column-gap: var(--fd-space-xs);
         row-gap: 0;
         padding: var(--fd-space-xxs) var(--fd-space-md) var(--fd-space-sm);
