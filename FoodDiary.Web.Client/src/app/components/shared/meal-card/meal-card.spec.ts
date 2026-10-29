@@ -365,6 +365,15 @@ function createItemCollageMeal(): MealCardItem {
 }
 
 describe('MealCardComponent item description', () => {
+    it('capitalizes recognized names without changing their remaining spelling or stored values', async () => {
+        const { component, fixture } = await setupMealCardAsync();
+        const recognizedItems = [{ nameLocal: '  груша  ' }, { nameEn: 'iPhone-shaped cake' }, { nameEn: 'BBQ chicken' }];
+        fixture.componentRef.setInput('meal', { ...MOCK_MEAL, items: [], aiSessions: [{ items: recognizedItems }] });
+
+        expect(component['description']()).toBe('Груша, IPhone-shaped cake, BBQ chicken');
+        expect(recognizedItems[0].nameLocal).toBe('  груша  ');
+    });
+
     it('summarizes manual and recognized food names', async () => {
         const { component, fixture } = await setupMealCardAsync();
         fixture.componentRef.setInput('meal', {

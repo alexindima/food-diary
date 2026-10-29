@@ -1,4 +1,9 @@
-<fd-media-card class="entity-card" [class.entity-card--compact-action]="compactAction()" (click)="openCard()">
+<fd-media-card
+    class="entity-card"
+    [class.entity-card--compact-action]="compactAction()"
+    [class.media-card--meal]="mobileMealLayout()"
+    (click)="openCard()"
+>
     <span fdMediaCardContent class="entity-card__background" aria-hidden="true" [style.mask-image]="backgroundImage()"></span>
     <button fdMediaCardContent type="button" class="entity-card__open-button" [attr.aria-label]="title()"></button>
     @let previewInteraction = previewInteractionState();
@@ -43,6 +48,9 @@
 
     <fd-entity-card-body
         fdMediaCardContent
+        [mobileMealLayout]="mobileMealLayout()"
+        [class.entity-card-body--meal]="mobileMealLayout()"
+        [class.entity-card-body--favorite]="showFavorite()"
         [title]="title()"
         [titleMuted]="titleMuted()"
         [description]="description()"

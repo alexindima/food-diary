@@ -3,7 +3,7 @@
   "summary": {
     "components": 511,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1652,
+    "inputs": 1654,
     "outputs": 559,
     "apiCalls": 318,
     "templatesWithTranslations": 370,
@@ -12984,6 +12984,11 @@
           "required": false
         },
         {
+          "name": "mobileMealLayout",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "comment",
           "type": "string | null",
           "required": false
@@ -13097,6 +13102,11 @@
         {
           "name": "description",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "mobileMealLayout",
+          "type": "",
           "required": false
         },
         {
@@ -26862,6 +26872,7 @@
         "caloriesUnitKey",
         "comment",
         "description",
+        "mobileMealLayout",
         "nutrition",
         "nutritionNote",
         "quality",
@@ -26891,6 +26902,7 @@
         "imageCount",
         "imageUrl",
         "isFavorite",
+        "mobileMealLayout",
         "nutrition",
         "ownershipIcon",
         "previewable",

@@ -494,7 +494,7 @@ fd-entity-card-actions {
         }
     }
 
-    .entity-card__title-block:has(.entity-card__title-muted) {
+    .entity-card__title-block:has(:where(.entity-card__title-muted)) {
         .entity-card__name-row {
             display: contents;
         }
@@ -604,5 +604,48 @@ fd-entity-card-actions {
 
     &:focus-visible {
         outline: var(--fd-outline-focus);
+    }
+}
+
+@media #{variables.$media-tablet} {
+    :host(.entity-card-body--meal) {
+        .entity-card__title-block {
+            grid-template-columns: auto minmax(0, 1fr);
+            padding: 0;
+        }
+
+        .entity-card__name-row,
+        .entity-card__summary-row,
+        .entity-card__nutrients,
+        .entity-card__nutrients-container {
+            display: contents;
+        }
+
+        .entity-card__title-muted {
+            grid-area: 1 / 1 / auto / -1;
+            align-self: center;
+            justify-self: start;
+        }
+
+        .entity-card__calories {
+            grid-area: 1 / 2;
+            justify-self: end;
+        }
+
+        .entity-card__name {
+            grid-area: 2 / 1;
+            display: block;
+            white-space: nowrap;
+        }
+
+        .entity-card__description {
+            grid-area: 2 / 2;
+            min-width: 0;
+            align-self: center;
+        }
+    }
+
+    :host(.entity-card-body--meal):where(.entity-card-body--favorite) .entity-card__calories {
+        margin-inline-end: var(--fd-size-control-sm);
     }
 }

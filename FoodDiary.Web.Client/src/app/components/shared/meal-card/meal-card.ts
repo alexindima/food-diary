@@ -133,7 +133,7 @@ export class MealCardComponent {
                 session =>
                     session?.items?.flatMap(item => {
                         const name = item.nameLocal?.trim() ?? item.nameEn?.trim();
-                        return name !== undefined && name.length > 0 ? [name] : [];
+                        return name !== undefined && name.length > 0 ? [name.charAt(0).toLocaleUpperCase() + name.slice(1)] : [];
                     }) ?? [],
             ) ?? [];
         names.push(...recognizedNames);

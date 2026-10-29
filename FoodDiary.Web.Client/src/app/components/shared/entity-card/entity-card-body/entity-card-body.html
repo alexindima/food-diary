@@ -41,6 +41,7 @@
                     [class.entity-card__nutrients-container--red]="quality()?.grade === 'red'"
                 >
                     <fd-nutrient-badges
+                        [class.nutrient-badges--meal]="mobileMealLayout()"
                         [proteins]="nutrition().proteins"
                         [fats]="nutrition().fats"
                         [carbs]="nutrition().carbs"

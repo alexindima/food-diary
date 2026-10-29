@@ -1,3 +1,5 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
     container-type: inline-size;
@@ -30,7 +32,7 @@
         box-shadow 0.2s ease;
 
     &:hover {
-        transform: translateY(-2px);
+        transform: var(--media-card-hover-transform, translateY(-2px));
     }
 }
 
@@ -210,4 +212,26 @@
 .fd-media-card--raised:has(.media-card__actions:empty),
 .fd-media-card--density-compact.fd-media-card--raised {
     padding: var(--media-card-padding, var(--fd-space-md));
+}
+
+// Meal quality shares the photo row; macros keep their own full-width row.
+@media #{variables.$media-tablet} {
+    :host(:where(.media-card--meal)) .fd-media-card--raised {
+        grid-template-rows: auto auto;
+
+        &:has(.nutrient-badges__chip--quality) {
+            grid-template-areas:
+                'media content action'
+                'media quality action'
+                'nutrients nutrients nutrients';
+            grid-template-rows: auto auto auto;
+        }
+
+        &:has(:where(.media-card__actions:empty)):has(.nutrient-badges__chip--quality) {
+            grid-template-areas:
+                'media content'
+                'media quality'
+                'nutrients nutrients';
+        }
+    }
 }

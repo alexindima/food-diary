@@ -20,6 +20,7 @@ export class EntityCardBodyComponent {
     public readonly title = input.required<string>();
     public readonly titleMuted = input<string | null>(null);
     public readonly description = input<string | null>(null);
+    public readonly mobileMealLayout = input(false);
     public readonly comment = input<string | null>(null);
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly calories = input.required<number | null>();

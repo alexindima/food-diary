@@ -2,6 +2,7 @@
 
 :host {
     display: block;
+    --media-card-hover-transform: none;
 }
 
 @media #{variables.$media-tablet} {
