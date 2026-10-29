@@ -3477,6 +3477,14 @@
         "CALORIES_BODY": "Set your daily calorie target to see progress rings and weekly status."
     },
     "HYDRATION_CARD": {
+        "ADDED_AMOUNT": "Added {{value}} ml",
+        "UNDO": "Undo",
+        "OPEN_DETAILS": "View water details for the selected day",
+        "DETAILS_TITLE": "Water for the selected day",
+        "DETAILS_BODY": "This summary shows the water recorded for the day selected on your dashboard.",
+        "RECORDED": "Recorded",
+        "DAILY_GOAL": "Daily goal",
+        "EDIT_GOAL": "Set water goal",
         "ADD_ERROR": "Could not record water. Check your connection and try again.",
         "UNDO_AMOUNT": "Undo last {{ value }} ml",
         "UNDO_ERROR": "Could not undo the water entry. Try again; the entry is still recorded.",

@@ -1,0 +1,45 @@
+@if (canAdd()) {
+    <div class="hydration-card__quick-add" role="group" [attr.aria-label]="'HYDRATION_CARD.QUICK_ADD_LABEL' | translate">
+        @for (amount of addAmounts; track amount) {
+            <fd-ui-button
+                class="hydration-card__quick-action"
+                size="sm"
+                variant="secondary"
+                fill="outline"
+                [class.hydration-card__quick-action--confirmed]="addedAmount() === amount"
+                [fullWidth]="true"
+                [ariaLabel]="'HYDRATION_CARD.ADD_AMOUNT' | translate: { value: amount }"
+                [disabled]="isLoading()"
+                [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (click)="addClick.emit(amount)"
+            >
+                +{{ amount }} {{ 'GENERAL.UNITS.ML' | translate }}
+            </fd-ui-button>
+        }
+    </div>
+} @else {
+    <p class="fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
+}
+<div class="hydration-card__undo-row" [hidden]="!canAdd() && undoAmount() === null">
+    <span class="hydration-card__confirmation fd-row fd-gap-xxs fd-ui-caption" role="status">
+        @if (undoAmount(); as amount) {
+            <fd-ui-icon name="check_circle" size="sm" aria-hidden="true" />
+            {{ 'HYDRATION_CARD.ADDED_AMOUNT' | translate: { value: (amount | localizedNumber: language()) } }}
+        }
+    </span>
+    @if (undoAmount() !== null) {
+        <fd-ui-button
+            class="hydration-card__undo"
+            variant="secondary"
+            fill="text"
+            icon="undo"
+            size="sm"
+            [ariaLabel]="'HYDRATION_CARD.UNDO_AMOUNT' | translate: { value: undoAmount() }"
+            [disabled]="isLoading()"
+            [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+            (click)="undoClick.emit()"
+        >
+            {{ 'HYDRATION_CARD.UNDO' | translate }}
+        </fd-ui-button>
+    }
+</div>

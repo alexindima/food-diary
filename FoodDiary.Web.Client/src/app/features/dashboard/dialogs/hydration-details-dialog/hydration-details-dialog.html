@@ -1,0 +1,32 @@
+<fd-ui-dialog size="sm" [title]="'HYDRATION_CARD.DETAILS_TITLE' | translate">
+    <div class="fd-stack fd-gap-md">
+        <p class="fd-ui-body-sm">{{ 'HYDRATION_CARD.DETAILS_BODY' | translate }}</p>
+        <dl class="fd-stack fd-gap-sm">
+            <div class="fd-row fd-justify-between fd-gap-sm">
+                <dt>{{ 'HYDRATION_CARD.RECORDED' | translate }}</dt>
+                <dd>{{ data.total | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</dd>
+            </div>
+            @if (hasGoal) {
+                <div class="fd-row fd-justify-between fd-gap-sm">
+                    <dt>{{ 'HYDRATION_CARD.DAILY_GOAL' | translate }}</dt>
+                    <dd>{{ data.goal | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</dd>
+                </div>
+            }
+        </dl>
+        <p class="fd-ui-body-sm">
+            @if (!hasGoal) {
+                {{ 'HYDRATION_CARD.GOAL_BODY' | translate }}
+            } @else if (remaining === 0) {
+                {{ 'HYDRATION_CARD.GOAL_REACHED' | translate }}
+            } @else {
+                {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining | localizedNumber: language()) } }}
+            }
+        </p>
+    </div>
+    <div fdUiDialogFooter class="fd-row fd-gap-sm fd-justify-end">
+        <fd-ui-button variant="secondary" fill="text" (click)="dialogRef.close(true)">
+            {{ 'HYDRATION_CARD.EDIT_GOAL' | translate }}
+        </fd-ui-button>
+        <fd-ui-button (click)="dialogRef.close()">{{ 'COMMON.CLOSE' | translate }}</fd-ui-button>
+    </div>
+</fd-ui-dialog>

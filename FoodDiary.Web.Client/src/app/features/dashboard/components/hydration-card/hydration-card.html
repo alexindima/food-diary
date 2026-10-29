@@ -13,21 +13,42 @@
 
         @if (hasGoal()) {
             <div class="hydration-card__overview">
-                <div
-                    class="hydration-card__vessel"
-                    role="progressbar"
-                    [attr.aria-label]="'HYDRATION_CARD.PROGRESS_LABEL' | translate"
-                    [attr.aria-valuemin]="0"
-                    [attr.aria-valuemax]="goal()"
-                    [attr.aria-valuenow]="progressValue()"
-                >
-                    <div class="hydration-card__vessel-inner">
-                        <div class="hydration-card__water" [class.hydration-card__water--empty]="total() <= 0" [style.height]="fillLevel()">
-                            <span class="hydration-card__bubble hydration-card__bubble--one"></span>
-                            <span class="hydration-card__bubble hydration-card__bubble--two"></span>
-                            <span class="hydration-card__bubble hydration-card__bubble--three"></span>
+                <div class="hydration-card__vessel-wrap">
+                    <div
+                        class="hydration-card__vessel"
+                        role="progressbar"
+                        [attr.aria-label]="'HYDRATION_CARD.PROGRESS_LABEL' | translate"
+                        [attr.aria-valuemin]="0"
+                        [attr.aria-valuemax]="goal()"
+                        [attr.aria-valuenow]="progressValue()"
+                    >
+                        <div class="hydration-card__vessel-inner">
+                            <div
+                                class="hydration-card__water"
+                                [class.hydration-card__water--empty]="total() <= 0"
+                                [style.height]="fillLevel()"
+                            >
+                                <span class="hydration-card__bubble hydration-card__bubble--one"></span>
+                                <span class="hydration-card__bubble hydration-card__bubble--two"></span>
+                                <span class="hydration-card__bubble hydration-card__bubble--three"></span>
+                            </div>
                         </div>
                     </div>
+                    <fd-ui-button
+                        class="hydration-card__details"
+                        variant="secondary"
+                        fill="text"
+                        ariaHasPopup="dialog"
+                        [ariaLabel]="'HYDRATION_CARD.OPEN_DETAILS' | translate"
+                        [disabled]="isLoading()"
+                        [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
+                        (click)="openDetails()"
+                    />
+                    @if (addedAmount(); as amount) {
+                        <span class="hydration-card__added-volume fd-ui-body-sm" aria-hidden="true">
+                            +{{ amount | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}
+                        </span>
+                    }
                 </div>
 
                 <div class="hydration-card__metrics fd-stack fd-gap-xxs">
@@ -61,39 +82,14 @@
             />
         }
 
-        @if (canAdd()) {
-            <div class="hydration-card__quick-add" role="group" [attr.aria-label]="'HYDRATION_CARD.QUICK_ADD_LABEL' | translate">
-                @for (amount of addAmounts; track amount) {
-                    <fd-ui-button
-                        class="hydration-card__quick-action"
-                        size="sm"
-                        variant="secondary"
-                        fill="outline"
-                        [fullWidth]="true"
-                        [ariaLabel]="'HYDRATION_CARD.ADD_AMOUNT' | translate: { value: amount }"
-                        [disabled]="isLoading()"
-                        [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
-                        (click)="onAdd(amount)"
-                    >
-                        +{{ amount }} {{ 'GENERAL.UNITS.ML' | translate }}
-                    </fd-ui-button>
-                }
-            </div>
-        } @else {
-            <p class="fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
-        }
-        <div class="hydration-card__undo-row" [hidden]="undoAmount() === null">
-            <fd-ui-button
-                class="hydration-card__undo"
-                variant="secondary"
-                fill="text"
-                icon="undo"
-                [disabled]="undoDisabled()"
-                [disabledReason]="'DISABLED_HINTS.OPERATION_BUSY' | translate"
-                (click)="undoClick.emit()"
-            >
-                {{ 'HYDRATION_CARD.UNDO_AMOUNT' | translate: { value: undoAmount() } }}
-            </fd-ui-button>
-        </div>
+        <fd-hydration-card-actions
+            [canAdd]="canAdd()"
+            [isLoading]="isLoading()"
+            [undoAmount]="undoAmount()"
+            [addedAmount]="addedAmount()"
+            [language]="language()"
+            (addClick)="onAdd($event)"
+            (undoClick)="onUndo()"
+        />
     </fd-dashboard-widget-frame>
 </div>

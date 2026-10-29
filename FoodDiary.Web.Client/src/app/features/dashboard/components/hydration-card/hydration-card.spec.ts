@@ -1,9 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { type Observable, of, Subject } from 'rxjs';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { HydrationDetailsDialogComponent } from '../../dialogs/hydration-details-dialog/hydration-details-dialog';
 import { HydrationCardComponent } from './hydration-card';
-import { HYDRATION_CARD_ADD_AMOUNTS_ML } from './hydration-card.config';
+import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_FEEDBACK_MS } from './hydration-card.config';
 
 const TOTAL_ML = 1500;
 const GOAL_ML = 2000;
@@ -29,6 +32,112 @@ describe('HydrationCardComponent', () => {
         expect(undo).toHaveBeenCalledOnce();
     });
 });
+
+describe('HydrationCardComponent saved feedback', () => {
+    afterEach(() => vi.useRealTimers());
+
+    it('confirms a saved entry, clears only the animation after a short delay and keeps undo available', async () => {
+        const { fixture } = await setupComponentAsync();
+        fixture.detectChanges();
+        vi.useFakeTimers();
+        const host = fixture.nativeElement as HTMLElement;
+        host.querySelectorAll<HTMLButtonElement>('.hydration-card__quick-action button')[1].click();
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
+
+        confirmEntry(fixture, 'first');
+        expect(host.querySelector('.hydration-card__added-volume')?.textContent).toContain('+250');
+        expect(host.querySelector('.hydration-card__quick-action--confirmed')).not.toBeNull();
+        expect(host.querySelector('[role="status"]')?.textContent).toContain('HYDRATION_CARD.ADDED_AMOUNT');
+
+        vi.advanceTimersByTime(HYDRATION_CARD_FEEDBACK_MS);
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
+        expect(host.querySelector('.hydration-card__quick-action--confirmed')).toBeNull();
+        expect(host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.disabled).toBe(false);
+    });
+
+    it('animates consecutive equal portions independently and never treats undo as another addition', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        for (const id of ['first', 'second']) {
+            component['onAdd'](VALID_ADD_AMOUNT_ML);
+            fixture.componentRef.setInput('isLoading', true);
+            fixture.detectChanges();
+            expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
+            confirmEntry(fixture, id);
+            expect(host.querySelector('.hydration-card__added-volume')).not.toBeNull();
+        }
+        host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.click();
+        fixture.componentRef.setInput('undoEntryId', 'first');
+        fixture.detectChanges();
+        expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
+    });
+
+    it('keeps the preceding undo on failure without showing a successful animation', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        confirmEntry(fixture, 'previous');
+        component['onAdd'](VALID_ADD_AMOUNT_ML);
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.hydration-card__added-volume')).toBeNull();
+        expect(host.querySelector<HTMLButtonElement>('.hydration-card__undo button')?.disabled).toBe(false);
+    });
+});
+
+describe('HydrationCardComponent context changes and details', () => {
+    it('does not flash an addition on a historical day selected while the request was saving', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        fixture.detectChanges();
+        component['onAdd'](VALID_ADD_AMOUNT_ML);
+        fixture.componentRef.setInput('isLoading', true);
+        fixture.detectChanges();
+        fixture.componentRef.setInput('canAdd', false);
+        confirmEntry(fixture, 'historical-entry');
+        expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__added-volume')).toBeNull();
+    });
+
+    it('does not mistake undo for a successful addition after an immediate failure', async () => {
+        const { component, fixture } = await setupComponentAsync();
+        confirmEntry(fixture, 'previous');
+        component['onAdd'](VALID_ADD_AMOUNT_ML);
+        component['onUndo']();
+        confirmEntry(fixture, 'older');
+        expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__added-volume')).toBeNull();
+    });
+
+    it('opens details through the glass button and forwards the goal action only when requested', async () => {
+        const closed = new Subject<boolean | undefined>();
+        const { component, fixture, dialogOpen } = await setupComponentAsync({}, closed);
+        const goal = vi.fn();
+        component.goalAction.subscribe(goal);
+        fixture.detectChanges();
+        const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.hydration-card__details button');
+        expect(button?.getAttribute('aria-haspopup')).toBe('dialog');
+        expect(button?.getAttribute('aria-label')).toBe('HYDRATION_CARD.OPEN_DETAILS');
+        button?.click();
+        expect(dialogOpen).toHaveBeenCalledWith(HydrationDetailsDialogComponent, {
+            size: 'sm',
+            data: { total: TOTAL_ML, goal: GOAL_ML },
+        });
+        closed.next(undefined);
+        expect(goal).not.toHaveBeenCalled();
+        closed.next(true);
+        expect(goal).toHaveBeenCalledOnce();
+    });
+});
+
+function confirmEntry(fixture: ComponentFixture<HydrationCardComponent>, id: string): void {
+    fixture.componentRef.setInput('undoEntryId', id);
+    fixture.componentRef.setInput('undoAmount', VALID_ADD_AMOUNT_ML);
+    fixture.componentRef.setInput('isLoading', false);
+    fixture.detectChanges();
+}
 
 describe('HydrationCardComponent amount and progress', () => {
     it('disables all additions while saving', async () => {
@@ -127,14 +236,23 @@ async function setupComponentAsync(
         isLoading: boolean;
         canAdd: boolean;
     }> = {},
+    closed: Observable<boolean | undefined> = of(undefined),
 ): Promise<{
     component: HydrationCardComponent;
     fixture: ComponentFixture<HydrationCardComponent>;
+    dialogOpen: ReturnType<typeof vi.fn>;
 }> {
+    const dialogOpen = vi.fn(() => ({ afterClosed: (): Observable<boolean | undefined> => closed }));
     await TestBed.resetTestingModule()
         .configureTestingModule({
             imports: [HydrationCardComponent],
-            providers: [provideTranslateTesting()],
+            providers: [
+                provideTranslateTesting(),
+                {
+                    provide: FdUiDialogService,
+                    useValue: { open: dialogOpen },
+                },
+            ],
         })
         .compileComponents();
 
@@ -147,5 +265,6 @@ async function setupComponentAsync(
     return {
         component: fixture.componentInstance,
         fixture,
+        dialogOpen,
     };
 }

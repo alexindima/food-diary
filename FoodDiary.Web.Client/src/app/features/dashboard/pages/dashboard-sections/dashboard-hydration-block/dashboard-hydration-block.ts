@@ -26,6 +26,7 @@ export class DashboardHydrationBlockComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
     public readonly undoAmount = input<number | null>(null);
+    public readonly undoEntryId = input<string | null>(null);
 
     public readonly blockToggle = output();
     public readonly addClick = output<number>();

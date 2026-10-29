@@ -1,0 +1,50 @@
+:host {
+    display: block;
+}
+.hydration-card {
+    &__quick-add {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--fd-space-xs);
+        margin-top: var(--fd-space-lg);
+        padding-top: var(--fd-space-md);
+        border-top: var(--fd-border-subtle);
+    }
+
+    &__quick-action {
+        min-width: 0;
+    }
+
+    &__quick-action--confirmed {
+        animation: hydration-confirmed 400ms ease-out;
+    }
+
+    &__undo-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-xxs);
+        min-height: var(--fd-size-control-touch);
+        margin-top: var(--fd-space-sm);
+    }
+
+    &__undo-row[hidden] {
+        display: none;
+    }
+
+    &__confirmation {
+        align-items: center;
+        color: var(--fd-color-text-muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &__quick-action--confirmed {
+            animation: none;
+        }
+    }
+}
+@keyframes hydration-confirmed {
+    50% {
+        transform: translateY(calc(var(--fd-space-micro) * -1));
+    }
+}
