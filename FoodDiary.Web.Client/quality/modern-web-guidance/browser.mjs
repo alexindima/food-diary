@@ -18,12 +18,14 @@ export const browserChecks = new Set([
     'browser:dialog-focus',
 ]);
 
-async function snapshotDom(page) {
-    return JSON.stringify(
-        await Promise.all(
-            page.frames().map(async frame => ({
-                url: frame.url(),
-                roots: await frame.evaluate(() => {
+export async function snapshotDom(page) {
+    const frames = page.frames();
+    const snapshots = await Promise.all(
+        frames.map(async frame => {
+            try {
+                await frame.waitForLoadState('domcontentloaded');
+                const url = frame.url();
+                const roots = await frame.evaluate(() => {
                     const roots = [document.documentElement?.outerHTML ?? ''];
                     const captureShadowRoots = root => {
                         for (const element of root.querySelectorAll('*')) {
@@ -34,10 +36,24 @@ async function snapshotDom(page) {
                     };
                     captureShadowRoots(document);
                     return roots;
-                }),
-            })),
-        ),
+                });
+                return frame.url() === url ? { url, roots } : null;
+            } catch (error) {
+                // Provider frames may navigate or detach while we capture them.
+                // Invalidate the complete snapshot; never omit a frame from a scan.
+                if (
+                    frame !== page.mainFrame() &&
+                    (frame.isDetached() || /^frame\.evaluate: Execution context was destroyed/u.test(error.message))
+                )
+                    return null;
+                throw error;
+            }
+        }),
     );
+    const currentFrames = page.frames();
+    if (snapshots.includes(null) || frames.length !== currentFrames.length || frames.some((frame, i) => frame !== currentFrames[i]))
+        return null;
+    return JSON.stringify(snapshots);
 }
 
 export async function inspectPage(page, check, scenario) {
@@ -53,6 +69,10 @@ export async function inspectPage(page, check, scenario) {
         // it passes or fails. Never retry an axe error or discard stable findings.
         for (attempts = 1; attempts <= 3; attempts++) {
             const before = await snapshotDom(page);
+            if (before === null) {
+                if (attempts === 3) throw new Error('DOM kept changing during axe audit (3 attempts).');
+                continue;
+            }
             const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']);
             // axe mixes unforced -webkit-text-fill-color with the forced background:
             // https://github.com/dequelabs/axe-core/issues/3978. Keep semantic checks
