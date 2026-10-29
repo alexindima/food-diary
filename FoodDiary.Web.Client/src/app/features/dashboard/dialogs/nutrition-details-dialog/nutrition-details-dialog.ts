@@ -5,6 +5,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
+import { FdUiDialogHeaderDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-header.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiProgressRingComponent } from 'fd-ui-kit/progress-ring/fd-ui-progress-ring';
 import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state';
@@ -30,6 +31,7 @@ const PERCENT = 100;
         FdUiButtonComponent,
         FdUiDialogComponent,
         FdUiDialogFooterDirective,
+        FdUiDialogHeaderDirective,
         FdUiProgressRingComponent,
         FdUiSectionStateComponent,
         NutritionDetailsSourcesComponent,
@@ -93,6 +95,9 @@ export class NutritionDetailsDialogComponent {
     });
     protected openMeal(meal: Meal): void {
         this.dialogRef.close({ kind: 'meal', meal });
+    }
+    protected close(): void {
+        this.dialogRef.close();
     }
     protected openGoals(): void {
         this.dialogRef.close({ kind: 'goals' });

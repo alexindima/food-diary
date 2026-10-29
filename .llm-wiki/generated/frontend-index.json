@@ -4068,14 +4068,14 @@
       "role": "Component",
       "selector": "fd-nutrition-details-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.ts",
-      "line": 42
+      "line": 44
     },
     {
       "name": "NutritionDetailsSourcesComponent",
       "role": "Component",
       "selector": "fd-nutrition-details-sources",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
-      "line": 19
+      "line": 27
     },
     {
       "name": "TdeeInsightDialogFooterComponent",
@@ -8273,8 +8273,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1286,
-      "russianProperties": 1286,
+      "englishProperties": 1294,
+      "russianProperties": 1294,
       "countsMatch": true
     },
     {

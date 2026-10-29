@@ -7,8 +7,8 @@
     "outputs": 562,
     "apiCalls": 318,
     "templatesWithTranslations": 370,
-    "translationKeys": 2211,
-    "consumerEdges": 1299,
+    "translationKeys": 2213,
+    "consumerEdges": 1300,
     "consumedComponents": 324,
     "unconsumedComponents": 184
   },
@@ -21263,6 +21263,8 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
       "keys": [
+        "COMMON.CLOSE",
+        "DASHBOARD.NUTRITION_DETAILS.EDIT",
         "DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_BODY",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE",
@@ -21281,6 +21283,7 @@
         "DASHBOARD.NUTRITION_DETAILS.MANUAL",
         "DASHBOARD.NUTRITION_DETAILS.OTHER_SOURCES",
         "DASHBOARD.NUTRITION_DETAILS.SHOW_ALL",
+        "DASHBOARD.NUTRITION_DETAILS.SOURCE_COUNT",
         "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED",
         "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED_HINT"
       ]
@@ -29322,9 +29325,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "appearance",
+        "ariaLabel",
         "fill",
+        "fullWidth",
+        "icon",
+        "size",
         "variant"
       ],
       "outputsHandled": []
@@ -33619,7 +33627,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "size",
-        "subtitle",
         "title"
       ],
       "outputsHandled": []
@@ -35203,6 +35210,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
       "occurrences": 1,
       "inputsUsed": [
         "name"
