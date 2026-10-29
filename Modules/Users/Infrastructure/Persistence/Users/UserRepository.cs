@@ -82,7 +82,7 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        TrackForUpdate(user);
+        await TrackForUpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
     }
 
@@ -93,7 +93,7 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        TrackForUpdate(user);
+        await TrackForUpdateAsync(user, cancellationToken).ConfigureAwait(false);
         if (roleAuditEvents.Count > 0) {
             await auditEvents.AddRangeAsync(roleAuditEvents, cancellationToken).ConfigureAwait(false);
         }
@@ -101,9 +101,20 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
-    private void TrackForUpdate(User user) {
-        if (users.Entry(user).State == EntityState.Detached) {
-            users.Update(user);
+    private async Task TrackForUpdateAsync(User user, CancellationToken cancellationToken) {
+        if (users.Entry(user).State != EntityState.Detached) {
+            return;
+        }
+        long? persistedRevision = user.NutritionProfile.GoalHistory.Count == 0 ? null : await users.AsNoTracking()
+            .Where(account => account.Id == user.Id).Select(account => (long?)account.NutritionProfile.GoalRevision)
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        users.Update(user);
+        foreach (UserGoalRevision revision in user.NutritionProfile.GoalHistory) {
+            // Update attaches a detached graph as Modified even for newly appended, client-keyed snapshots.
+            // Existing snapshots are immutable; only revisions added after the persisted profile are inserted.
+            users.Entry(user).Reference(account => account.NutritionProfile).TargetEntry!
+                .Collection(profile => profile.GoalHistory).FindEntry(revision)!.State = persistedRevision is null || revision.Revision > persistedRevision
+                ? EntityState.Added : EntityState.Unchanged;
         }
     }
 

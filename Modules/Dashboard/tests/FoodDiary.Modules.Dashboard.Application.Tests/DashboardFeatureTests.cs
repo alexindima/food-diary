@@ -557,7 +557,7 @@ public class DashboardFeatureTests {
     private static IDashboardUserContextService CreateUserRepository(User? user) {
         IDashboardUserContextService repository = Substitute.For<IDashboardUserContextService>();
         repository
-            .GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 return Task.FromResult(user is not null && user.Id == id

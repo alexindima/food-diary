@@ -60,3 +60,35 @@ The web dashboard sends the selected calendar date (encoded at UTC midnight) and
 `DashboardCalendarRange` carries calendar bounds separately from UTC event bounds. Weight/waist latest and trend reads, exercise totals, daily advice and cycle and TDEE calculations use calendar dates. TDEE daily calorie keys use the same local calendar as its weight/exercise samples. Meals and hydration use the actual event interval. Nutrition bucketing preserves local days and calendar-day divisors across DST with one weekly read. Hydration fallback reads opt into exact bounds instead of expanding to UTC dates. Today's quick water entry uses the current instant; historical quick entries use local noon.
 
 Regression checks: `DashboardCalendarTests`, `LocalCalendarTests`, `DashboardTimeZoneIntegrationTests` (HTTP and PostgreSQL), and the frontend `test:ci:measurement-timezones` matrix now covering dashboard helpers as well as measurement histories. The user-scoped output cache varies by all query parameters, including `timeZoneId`.
+
+## Nutrition and hydration goal history
+
+Users owns `UserGoalRevision` and `UserGoalHistory`. A changed calorie, nutrient, water,
+hydration, step or calorie-cycling setting takes effect for the entire current calendar
+day in the saved user time zone (`UTC` when unset). `RecordedAtUtc` records the instant;
+`EffectiveFrom` is a calendar date and is never shifted when reporting in another zone.
+Multiple changes on one day resolve by the monotonically increasing profile revision.
+Changing the profile time zone does not rewrite existing effective dates.
+
+Current values remain on `UserNutritionProfile`. Its concurrency version and goal
+revision counter coordinate the profile and append-only history in one transaction.
+Snapshot identities are independent of the counter so competing saves reach the
+existing profile concurrency check; a failed save rolls back its history too. Tracked
+profile reads do not load historical revisions. Dated projections read one baseline
+plus the last revision of each day in a bounded range, without tracking entities.
+
+Dashboards resolve daily goals by calendar date. The seven-day calorie target sums
+the seven days ending on the selected day; a multi-day report sums its own period.
+Nutrient targets use the period's daily average, matching consumption averages, and
+water targets sum the daily values. A period containing an unset nutrient/water goal
+keeps that target null. Dated hydration totals and diary calorie summaries also use
+the historical values. Gamification compares each recent day's calories to that day's
+target; weekly check-in suggestions use the selected week's average target, including
+calorie cycling. Weight and waist goals keep their existing separate histories.
+
+`AddUserGoalHistory` seeds existing profiles with their actual current values, including
+nulls, as a baseline from `DateOnly.MinValue` (PostgreSQL `-infinity`). Previously
+overwritten values cannot be recovered. New accounts retain existing registration
+defaults. Apply the migration with stopped writers and the matching application;
+old writers cannot record history. Down removes history and its counter but leaves
+the latest profile values intact. Prefer roll-forward once history has been collected.

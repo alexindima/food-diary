@@ -119,7 +119,7 @@ public class HydrationFeatureTests {
     [Fact]
     public async Task GetHydrationDailyTotalQueryHandler_WhenUserIsMissing_ReturnsInvalidToken() {
         IUserHydrationProfileReadService userProfileReadService = Substitute.For<IUserHydrationProfileReadService>();
-        userProfileReadService.GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+        userProfileReadService.GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>())
             .Returns(Result.Failure<UserHydrationProfileModel>(AuthenticationErrors.InvalidToken));
         var user = User.Create("goal-missing@example.com", "hash");
         var service = new GetHydrationDailyTotalQueryHandler(CreateHydrationSender(new RecordingHydrationEntryRepository()), userProfileReadService, CreateCurrentUserAccessService(user));
@@ -147,6 +147,7 @@ public class HydrationFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), repository.LastDailyTotalDateUtc);
         Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), result.Value.DateUtc);
+        await hydrationGoalService.Received(1).GetHydrationProfileAsync(user.Id, CancellationToken.None, new DateOnly(2026, 3, 26));
     }
 
     [Fact]
@@ -194,7 +195,7 @@ public class HydrationFeatureTests {
         ResultAssert.Failure(result, "Authentication.InvalidToken");
         await hydrationGoalService
             .DidNotReceive()
-            .GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
+            .GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>());
     }
 
     [Fact]
@@ -202,7 +203,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-goal-failure@example.com", "hash");
         IUserHydrationProfileReadService hydrationGoalService = Substitute.For<IUserHydrationProfileReadService>();
         hydrationGoalService
-            .GetHydrationProfileAsync(user.Id, Arg.Any<CancellationToken>())
+            .GetHydrationProfileAsync(user.Id, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>())
             .Returns(Task.FromResult(Result.Failure<UserHydrationProfileModel>(AuthenticationErrors.InvalidToken)));
         var handler = new GetHydrationDailyTotalQueryHandler(CreateHydrationSender(new RecordingHydrationEntryRepository()),
             hydrationGoalService,
@@ -662,7 +663,7 @@ public class HydrationFeatureTests {
         IUserHydrationProfileReadService service = Substitute.For<IUserHydrationProfileReadService>();
         Error? error = user.DeletedAt is null ? null : UserAuthenticationErrors.AccountDeleted;
         service
-            .GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetHydrationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 return Task.FromResult(user.Id == id
@@ -672,7 +673,7 @@ public class HydrationFeatureTests {
 
         if (error is not null) {
             service
-                .GetHydrationProfileAsync(user.Id, Arg.Any<CancellationToken>())
+                .GetHydrationProfileAsync(user.Id, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>())
                 .Returns(Task.FromResult(Result.Failure<UserHydrationProfileModel>(error)));
         }
 

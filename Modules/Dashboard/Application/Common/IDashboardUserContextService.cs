@@ -8,5 +8,7 @@ namespace FoodDiary.Modules.Dashboard.Application.Common;
 public interface IDashboardUserContextService : ICurrentUserAccessService {
     Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(
         UserId userId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        DateOnly? goalsFrom = null,
+        DateOnly? goalsTo = null);
 }

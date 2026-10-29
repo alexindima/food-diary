@@ -4,6 +4,11 @@ Own UserCalorieSchedule and UserPreferenceUpdate as reusable value contracts.
 Preserve schedule validation, fallback and weekly-total behavior verbatim; profile
 mutation rules remain on the User aggregate.
 
+`UserDailyGoals`, `UserGoalVersion` and `UserGoalTimeline` are pure, immutable
+nutrition/hydration goal value contracts shared with dated read consumers. They
+resolve by calendar effective date and profile revision, without exposing the
+User aggregate or persistence entities. Snapshot identity stays in Users Domain.
+
 Own RoleNames, UserId, ActivityLevel, LanguageCode, DesiredWeightKg and DesiredWaistCm with their existing CLR namespaces. Reference only shared Domain.Primitives. LanguageCode owns the user's en/ru preference contract: TryParse accepts only exact normalized codes; FromPreferred maps the ru prefix to ru and otherwise defaults to en. Preserve this behavior and all existing ID/enum semantics. Do not add aggregate, application or persistence dependencies.
 
 All module projects and tests use `FoodDiary.Modules.Users.<Project>` identities and namespaces matching physical folders. Projects are siblings, including Application.Abstractions and PersistenceModel. Namespace changes preserve database schema, historical migration metadata, HTTP payloads and runtime behavior.

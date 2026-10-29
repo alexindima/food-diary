@@ -7,5 +7,7 @@ namespace FoodDiary.Modules.Users.Contracts.Common;
 public interface IUserWeeklyCheckInProfileReadService {
     Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(
         UserId userId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        DateOnly? goalsFrom = null,
+        DateOnly? goalsTo = null);
 }

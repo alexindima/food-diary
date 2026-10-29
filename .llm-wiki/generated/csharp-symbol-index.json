@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4659,
-    "symbols": 4594,
+    "sourceFiles": 4666,
+    "symbols": 4601,
     "interfaceImplementationLinks": 206,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2376,
+      "class": 2379,
       "enum": 73,
       "interface": 421,
-      "record": 1583,
-      "record struct": 141
+      "record": 1586,
+      "record struct": 142
     },
     "roles": {
       "Command": 237,
       "CommandHandler": 231,
-      "Configuration": 101,
+      "Configuration": 102,
       "Controller": 113,
-      "Entity": 102,
+      "Entity": 103,
       "Event": 19,
       "Factory": 15,
       "Handler": 10,
@@ -40,9 +40,9 @@
       "Repository": 99,
       "Request": 178,
       "Response": 268,
-      "Service": 176,
+      "Service": 177,
       "Validator": 236,
-      "ValueObject": 178,
+      "ValueObject": 182,
       "WriteRepository": 47
     }
   },
@@ -9929,7 +9929,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "DashboardSnapshotRequest",
@@ -26827,7 +26827,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Users/Contracts/Models/UserWeeklyCheckInProfileModel.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "WaistGoalHistoryModel",
@@ -26998,6 +26998,27 @@
       "line": 2
     },
     {
+      "name": "UserDailyGoals",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserDailyGoals.cs",
+      "line": 2
+    },
+    {
+      "name": "UserGoalTimeline",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserGoalTimeline.cs",
+      "line": 2
+    },
+    {
+      "name": "UserGoalVersion",
+      "kind": "record",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/UserGoalVersion.cs",
+      "line": 2
+    },
+    {
       "name": "UserPreferenceUpdate",
       "kind": "record struct",
       "role": "ValueObject",
@@ -27058,7 +27079,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "User",
@@ -27082,11 +27103,18 @@
       "line": 6
     },
     {
+      "name": "UserGoalRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/UserGoalRevision.cs",
+      "line": 7
+    },
+    {
       "name": "UserNutritionProfile",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UserPreferences",
@@ -27163,6 +27191,13 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Users/Domain/ValueObjects/Ids/RoleId.cs",
+      "line": 4
+    },
+    {
+      "name": "UserGoalRevisionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/Ids/UserGoalRevisionId.cs",
       "line": 4
     },
     {
@@ -27418,6 +27453,13 @@
       "line": 15
     },
     {
+      "name": "UserProfileProjectionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.GoalHistory.cs",
+      "line": 7
+    },
+    {
       "name": "UserProfileWriteGuardInterceptor",
       "kind": "class",
       "role": "Other",
@@ -27499,6 +27541,13 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "UserGoalRevisionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserGoalRevisionConfiguration.cs",
       "line": 8
     },
     {

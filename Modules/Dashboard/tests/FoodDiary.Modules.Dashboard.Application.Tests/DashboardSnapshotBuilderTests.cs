@@ -69,7 +69,7 @@ public sealed class DashboardSnapshotBuilderTests {
         ISender sender = Substitute.For<ISender>();
         IDashboardReadService read = Substitute.For<IDashboardReadService>();
         IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
-        users.GetAccessibleDashboardUserAsync(userId, cancellation.Token).Returns(Result.Failure<DashboardUserContextModel>(error));
+        users.GetAccessibleDashboardUserAsync(userId, cancellation.Token, Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(Result.Failure<DashboardUserContextModel>(error));
         var loader = new DashboardSectionDataLoader(sender, users, read);
         DashboardSnapshotRequest request = CreateRequest(userId.Value, Sections()) with { UseUserTimeZone = true };
 
@@ -77,7 +77,7 @@ public sealed class DashboardSnapshotBuilderTests {
 
         ResultAssert.Failure(result);
         Assert.Same(error, result.Error);
-        await users.Received(1).GetAccessibleDashboardUserAsync(userId, cancellation.Token);
+        await users.Received(1).GetAccessibleDashboardUserAsync(userId, cancellation.Token, Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>());
         Assert.Single(users.ReceivedCalls());
         Assert.Empty(read.ReceivedCalls());
         Assert.Empty(sender.ReceivedCalls());
@@ -132,7 +132,7 @@ public sealed class DashboardSnapshotBuilderTests {
 
         DashboardBuildContext context = ResultAssert.Success(result);
         Assert.Same(userContext, context.CurrentUser);
-        await userContextService.DidNotReceive().GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
+        await userContextService.DidNotReceive().GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>());
     }
 
     [Fact]
@@ -817,7 +817,7 @@ public sealed class DashboardSnapshotBuilderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class AccessibleUserContextService(User user) : IDashboardUserContextService {
-        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken, DateOnly? goalsFrom = null, DateOnly? goalsTo = null) =>
             Task.FromResult(user.Id == userId
                 ? Result.Success(ToDashboardUserContext(user))
                 : Result.Failure<DashboardUserContextModel>(AuthenticationErrors.InvalidToken));
@@ -969,7 +969,7 @@ public sealed class DashboardSnapshotBuilderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class MissingUserContextService : IDashboardUserContextService {
-        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken, DateOnly? goalsFrom = null, DateOnly? goalsTo = null) =>
             Task.FromResult(Result.Failure<DashboardUserContextModel>(AuthenticationErrors.InvalidToken));
 
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>

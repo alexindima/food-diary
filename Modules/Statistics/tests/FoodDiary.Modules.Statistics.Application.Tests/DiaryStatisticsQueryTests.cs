@@ -19,7 +19,7 @@ public sealed class DiaryStatisticsQueryTests {
     public async Task CorruptSystemTimeZone_DoesNotQueryNutritionOrHydration() {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
-        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(Result.Success(Profile(owner)));
         ISender statistics = Substitute.For<ISender>();
         ISender hydration = Substitute.For<ISender>();
         var handler = new GetDiaryStatisticsQueryHandler(Substitute.For<ICurrentUserAccessService>(), profiles, RequestTestSender.Route((statistics, [typeof(ReadMealNutritionStatisticsQuery)]), (hydration, [typeof(ReadHydrationIntervalQuery)])), new Clock());
@@ -49,7 +49,7 @@ public sealed class DiaryStatisticsQueryTests {
             Id = string.Equals(scenario, "owner", StringComparison.Ordinal) ? Guid.NewGuid() : owner.Value,
             TimeZoneId = string.Equals(scenario, "zone", StringComparison.Ordinal) ? "Unknown/Zone" : "UTC",
         };
-        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(string.Equals(scenario, "profile", StringComparison.Ordinal)
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(string.Equals(scenario, "profile", StringComparison.Ordinal)
             ? Result.Failure<UserDashboardProfileModel>(new Error("Profile.Unavailable", "Unavailable")) : Result.Success(profile));
         ISender statistics = Substitute.For<ISender>();
         ISender hydration = Substitute.For<ISender>();
@@ -66,7 +66,7 @@ public sealed class DiaryStatisticsQueryTests {
     public async Task SevenDays_UsesLocalBoundariesAndIncludesEmptyDaysInAverage() {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
-        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(Result.Success(Profile(owner)));
         ISender statistics = Substitute.For<ISender>();
         statistics.Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == owner && query.QuantizationDays == 2), Arg.Any<CancellationToken>()).Returns(call => {
             ReadMealNutritionStatisticsQuery request = call.Arg<ReadMealNutritionStatisticsQuery>();
@@ -98,7 +98,7 @@ public sealed class DiaryStatisticsQueryTests {
     public async Task ReadFailure_IsNotReportedAsAnEmptyDiary() {
         var owner = new UserId(Guid.NewGuid());
         IUserDashboardProfileReadService profiles = Substitute.For<IUserDashboardProfileReadService>();
-        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>()).Returns(Result.Success(Profile(owner)));
+        profiles.GetDashboardProfileAsync(owner, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(Result.Success(Profile(owner)));
         ISender statistics = Substitute.For<ISender>();
         statistics.Send(Arg.Is<ReadMealNutritionStatisticsQuery>(query => query.UserId == owner && query.QuantizationDays == 2), Arg.Any<CancellationToken>())
             .Returns(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(new Error("Statistics.Unavailable", "Unavailable.", ErrorKind.Internal)));

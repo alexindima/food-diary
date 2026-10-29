@@ -78,7 +78,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
         var userId = UserId.New();
         IUserWeeklyCheckInProfileReadService profileService = Substitute.For<IUserWeeklyCheckInProfileReadService>();
         profileService
-            .GetWeeklyCheckInProfileAsync(userId, Arg.Any<CancellationToken>())
+            .GetWeeklyCheckInProfileAsync(userId, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>())
             .Returns(Task.FromResult(Result.Failure<UserWeeklyCheckInProfileModel>(AuthenticationErrors.InvalidToken)));
         GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: profileService);
 
@@ -381,7 +381,7 @@ public sealed partial class WeeklyCheckInFeatureTests {
     private static IUserWeeklyCheckInProfileReadService CreateProfileService(User? user) {
         IUserWeeklyCheckInProfileReadService service = Substitute.For<IUserWeeklyCheckInProfileReadService>();
         service
-            .GetWeeklyCheckInProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetWeeklyCheckInProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 if (user is null || user.Id != id) {

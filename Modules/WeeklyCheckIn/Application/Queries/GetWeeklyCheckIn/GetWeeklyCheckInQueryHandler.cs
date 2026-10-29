@@ -45,7 +45,6 @@ public sealed class GetWeeklyCheckInQueryHandler(
             return Result.Failure<WeeklyCheckInModel>(profileResult.Error);
         }
 
-        UserWeeklyCheckInProfileModel profile = profileResult.Value;
         if (!LocalCalendar.TryResolve(query.TimeZoneId, offsetMinutes: null, out TimeZoneInfo timeZone)) {
             return Result.Failure<WeeklyCheckInModel>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Provide a valid calendar time zone."));
         }
@@ -83,6 +82,12 @@ public sealed class GetWeeklyCheckInQueryHandler(
                 "The previous week is outside the supported date range."));
         }
 
+        profileResult = await userProfileReadService.GetWeeklyCheckInProfileAsync(userId, cancellationToken,
+            DateOnly.FromDateTime(thisWeekStart), DateOnly.FromDateTime(thisWeekEnd)).ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<WeeklyCheckInModel>(profileResult.Error);
+        }
+        UserWeeklyCheckInProfileModel profile = profileResult.Value;
         Result<WeekSummaryModel> thisWeekSummaryResult = await LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, timeZone, query.TimeZoneId, cancellationToken).ConfigureAwait(false);
         if (thisWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(thisWeekSummaryResult.Error);
@@ -96,7 +101,8 @@ public sealed class GetWeeklyCheckInQueryHandler(
         WeekSummaryModel thisWeekSummary = thisWeekSummaryResult.Value;
         WeekSummaryModel lastWeekSummary = lastWeekSummaryResult.Value;
         WeekTrendModel trends = WeeklyCheckInCalculator.BuildTrends(thisWeekSummary, lastWeekSummary);
-        IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(thisWeekSummary, trends, profile.DailyCalorieTarget);
+        IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(thisWeekSummary, trends,
+            profile.GetAverageCalorieTarget(DateOnly.FromDateTime(thisWeekStart), DateOnly.FromDateTime(thisWeekEnd)));
 
         return Result.Success(new WeeklyCheckInModel(thisWeekSummary, lastWeekSummary, trends, suggestions));
     }

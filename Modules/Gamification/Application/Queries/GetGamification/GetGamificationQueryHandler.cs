@@ -60,6 +60,11 @@ public sealed class GetGamificationQueryHandler(
             .ConfigureAwait(false);
 
         DateTime weekStart = today.AddDays(-6);
+        userProfileResult = await userProfileReadService.GetGamificationProfileAsync(userId, cancellationToken,
+            DateOnly.FromDateTime(weekStart), DateOnly.FromDateTime(today)).ConfigureAwait(false);
+        if (userProfileResult.IsFailure) {
+            return Result.Failure<GamificationModel>(userProfileResult.Error);
+        }
         Result<IReadOnlyList<MealNutritionStatisticsBucket>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
             userId,
             LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(weekStart), timeZone),
@@ -72,7 +77,7 @@ public sealed class GetGamificationQueryHandler(
 
         UserGamificationProfileModel userProfile = userProfileResult.Value;
         double weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
-            ToDailyCalories(weeklyCaloriesResult.Value, timeZone), userProfile.CalorieSchedule.GetTargetForDate, today);
+            ToDailyCalories(weeklyCaloriesResult.Value, timeZone), userProfile.GetCalorieTargetForDate, today);
 
         IReadOnlyList<BadgeModel> badges = await achievementAwardService
             .EvaluateAndGrantAsync(

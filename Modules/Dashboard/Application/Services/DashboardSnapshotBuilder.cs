@@ -10,6 +10,7 @@ using FoodDiary.Modules.Fasting.Contracts.Read.Models;
 using FoodDiary.Modules.Hydration.Contracts.Models;
 using FoodDiary.Modules.Tdee.Contracts.Models;
 using FoodDiary.Modules.Users.Contracts.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Models;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Models;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
@@ -71,18 +72,19 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         double caloriesBurned = await _dataLoader.LoadCaloriesBurnedAsync(context, cancellationToken).ConfigureAwait(false);
         Result<TdeeInsightModel>? tdeeInsightResult = await _dataLoader.LoadTdeeAsync(request, context, cancellationToken).ConfigureAwait(false);
         Result<CycleModel?>? currentCycleResult = await _dataLoader.LoadCycleAsync(request, context, cancellationToken).ConfigureAwait(false);
+        UserDailyGoals[] dailyGoals = GetDailyGoals(context);
 
         return Result.Success(new DashboardSnapshotModel(
             context.DayStart,
             context.DayEndStart,
-            context.CurrentUser.GetCalorieTargetForDate(request.Date) ?? 0,
-            context.CurrentUser.GetWeeklyCalorieTarget(),
-            BuildStatistics(readModel.Statistics, context),
+            context.CurrentUser.GetCalorieTargetForDate(context.Calendar.Date) ?? 0,
+            GetPeriodCalorieGoal(context),
+            BuildStatistics(readModel.Statistics, context, dailyGoals),
             DashboardMapping.ToWeeklyCalories(readModel.WeeklyStatistics),
             BuildWeight(readModel.Body, context),
             BuildWaist(readModel.Body, context),
             DashboardMapping.ToMealsModel(readModel.Meals),
-            BuildHydration(readModel.Body, context),
+            BuildHydration(readModel.Body, context, dailyGoals),
             adviceResult?.IsSuccess == true ? adviceResult.Value : null,
             fastingSession,
             BuildWeightTrend(readModel.Body, context),
@@ -97,13 +99,20 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
 
     private static DashboardStatisticsModel BuildStatistics(
         IReadOnlyList<DashboardStatisticsBucketReadModel> statistics,
-        DashboardBuildContext context) {
+        DashboardBuildContext context,
+        IReadOnlyList<UserDailyGoals> dailyGoals) {
         if (!context.Sections.IncludeStatistics) {
             return new DashboardStatisticsModel(0, 0, 0, 0, 0, ProteinGoal: null, FatGoal: null, CarbGoal: null, FiberGoal: null);
         }
 
         DashboardStatisticsBucketReadModel? first = statistics.Count > 0 ? statistics[0] : null;
-        return DashboardMapping.ToStatisticsModel(first, context.CurrentUser);
+        DashboardStatisticsModel statisticsModel = DashboardMapping.ToStatisticsModel(first, context.CurrentUser);
+        return statisticsModel with {
+            ProteinGoal = AverageGoal(dailyGoals.Select(goals => goals.ProteinTarget)),
+            FatGoal = AverageGoal(dailyGoals.Select(goals => goals.FatTarget)),
+            CarbGoal = AverageGoal(dailyGoals.Select(goals => goals.CarbTarget)),
+            FiberGoal = AverageGoal(dailyGoals.Select(goals => goals.FiberTarget)),
+        };
     }
 
     private static DashboardWeightModel BuildWeight(DashboardBodyReadModel body, DashboardBuildContext context) =>
@@ -122,16 +131,36 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     private static IReadOnlyList<WaistEntrySummaryModel> BuildWaistTrend(DashboardBodyReadModel body, DashboardBuildContext context) =>
         context.Sections.IncludeWaist ? DashboardMapping.ToWaistTrend(body.WaistTrend) : [];
 
-    private static HydrationDailyModel? BuildHydration(DashboardBodyReadModel body, DashboardBuildContext context) {
+    private static HydrationDailyModel? BuildHydration(DashboardBodyReadModel body, DashboardBuildContext context,
+        IReadOnlyList<UserDailyGoals> dailyGoals) {
         if (!context.Sections.IncludeHydration) {
             return null;
         }
 
-        double? dailyGoal = context.CurrentUser.HydrationGoal ?? context.CurrentUser.WaterGoal;
+        double?[] waterGoals = [.. dailyGoals.Select(goals => goals.EffectiveWaterGoal)];
         return new HydrationDailyModel(
             context.DayStart,
             body.HydrationTotalMl,
-            dailyGoal is null ? null : dailyGoal * context.PeriodDays);
+            waterGoals.Any(goal => goal is null) ? null : waterGoals.Sum());
+    }
+
+    private static UserDailyGoals[] GetDailyGoals(DashboardBuildContext context) {
+        var start = DateOnly.FromDateTime(context.Calendar.Date);
+        return [.. Enumerable.Range(0, context.PeriodDays).Select(offset => context.CurrentUser.GetGoalsForDate(start.AddDays(offset)))];
+    }
+
+    private static double? AverageGoal(IEnumerable<double?> goals) {
+        double?[] values = [.. goals];
+        return values.Any(value => value is null) ? null : values.Average();
+    }
+
+    private static double GetPeriodCalorieGoal(DashboardBuildContext context) {
+        var end = DateOnly.FromDateTime(context.Calendar.DateTo);
+        DateOnly start = context.PeriodDays == 1 ? end.AddDays(-6) : DateOnly.FromDateTime(context.Calendar.Date);
+        return Enumerable.Range(0, end.DayNumber - start.DayNumber + 1).Sum(offset => {
+            DateOnly day = start.AddDays(offset);
+            return context.CurrentUser.GetGoalsForDate(day).CalorieSchedule.GetTargetForDate(day.ToDateTime(TimeOnly.MinValue)) ?? 0;
+        });
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {

@@ -12,5 +12,8 @@ internal sealed class UserNutritionProfileConfiguration : IEntityTypeConfigurati
         builder.Property(state => state.Id).HasConversion(id => id.Value, value => new UserId(value)).ValueGeneratedNever();
         builder.Property<uint>("xmin").IsRowVersion();
         builder.Property(state => state.ActivityLevel).HasConversion<string>();
+        builder.HasMany(state => state.GoalHistory).WithOne().HasForeignKey(revision => revision.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Navigation(state => state.GoalHistory).UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

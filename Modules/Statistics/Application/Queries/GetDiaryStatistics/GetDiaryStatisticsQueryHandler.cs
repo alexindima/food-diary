@@ -44,6 +44,12 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
         } catch (InvalidTimeZoneException) {
             return InvalidTimeZone();
         }
+        Result<UserDashboardProfileModel> datedProfile = await profiles.GetDashboardProfileAsync(owner.Value, cancellationToken,
+            days.Min(day => day.Date), days.Max(day => day.Date)).ConfigureAwait(false);
+        if (datedProfile.IsFailure) {
+            return Result.Failure<DiaryStatisticsSummaryModel>(datedProfile.Error);
+        }
+        profile = datedProfile.Value;
         var summaries = new List<DiaryStatisticsDayModel>(days.Count);
         foreach (LocalStatisticsDay day in days) {
             IReadOnlyList<MealNutritionStatisticsBucket> buckets = [];

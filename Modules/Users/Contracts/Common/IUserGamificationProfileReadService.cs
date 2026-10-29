@@ -7,5 +7,7 @@ namespace FoodDiary.Modules.Users.Contracts.Common;
 public interface IUserGamificationProfileReadService {
     Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(
         UserId userId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        DateOnly? goalsFrom = null,
+        DateOnly? goalsTo = null);
 }

@@ -16,7 +16,7 @@ public sealed class UserStatePersistenceIntegrationTests(PostgresDatabaseFixture
          "TimeZoneId":"Asia/Tbilisi","BirthDate":"1996-01-02T00:00:00+00:00","Gender":"Male",
          "WeightKg":82.5,"DesiredWeightKg":75,"DesiredWaistCm":80,"HeightCm":180,"ActivityLevel":"High",
          "DailyCalorieTarget":2100,"ProteinTarget":120,"FatTarget":70,"CarbTarget":220,"FiberTarget":30,
-         "StepGoal":10000,"WaterGoal":2.5,"HydrationGoal":2.8,"CalorieCyclingEnabled":true,"MondayCalories":2001,
+         "GoalRevision":0,"StepGoal":10000,"WaterGoal":2.5,"HydrationGoal":2.8,"CalorieCyclingEnabled":true,"MondayCalories":2001,
          "TuesdayCalories":2002,"WednesdayCalories":2003,"ThursdayCalories":2004,"FridayCalories":2005,
          "SaturdayCalories":2006,"SundayCalories":2007}
         """;

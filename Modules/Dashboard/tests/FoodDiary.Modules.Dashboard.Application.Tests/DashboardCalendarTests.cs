@@ -77,7 +77,7 @@ public sealed class DashboardCalendarTests {
             DesiredWeightKg: null, DesiredWaistCm: null, HydrationGoal: null, WaterGoal: null, ProteinTarget: null,
             FatTarget: null, CarbTarget: null, FiberTarget: null, CalorieSchedule: default, TimeZoneId: zoneId);
         IDashboardUserContextService users = Substitute.For<IDashboardUserContextService>();
-        users.GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Result.Success(profile));
+        users.GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>()).Returns(Result.Success(profile));
         var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), users, Substitute.For<IDashboardReadService>());
         var date = DateTime.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var request = new DashboardSnapshotRequest(user.Id.Value, date, DateTo: null, Locale: "en", TrendDays: 7,
@@ -90,7 +90,7 @@ public sealed class DashboardCalendarTests {
             () => Assert.Equal(DateTime.Parse(endUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal).AddTicks(-1), result.DayEnd),
             () => Assert.Equal(date, result.Calendar.Date),
             () => Assert.Equal(zoneId, result.Calendar.TimeZone.Id));
-        await users.Received(1).GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>());
+        await users.Received(1).GetAccessibleDashboardUserAsync(user.Id, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>());
     }
 
     [Theory]

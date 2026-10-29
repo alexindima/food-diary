@@ -15,9 +15,11 @@ internal sealed class DashboardUserContextService(
 
     public async Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(
         UserId userId,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        DateOnly? goalsFrom = null,
+        DateOnly? goalsTo = null) {
         Result<UserDashboardProfileModel> profileResult = await userProfileReadService
-            .GetDashboardProfileAsync(userId, cancellationToken)
+            .GetDashboardProfileAsync(userId, cancellationToken, goalsFrom, goalsTo)
             .ConfigureAwait(false);
         return profileResult.IsFailure
             ? Result.Failure<DashboardUserContextModel>(profileResult.Error)
@@ -39,5 +41,6 @@ internal sealed class DashboardUserContextService(
             profile.CarbTarget,
             profile.FiberTarget,
             profile.CalorieSchedule,
-            profile.TimeZoneId);
+            profile.TimeZoneId,
+            profile.GoalHistory);
 }

@@ -7,5 +7,6 @@ namespace FoodDiary.Modules.Users.Contracts.Common;
 public interface IUserHydrationProfileReadService {
     Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(
         UserId userId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        DateOnly? date = null);
 }

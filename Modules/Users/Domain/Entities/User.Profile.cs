@@ -195,7 +195,9 @@ public sealed partial class User {
 
     public void UpdateActivity(UserActivityUpdate update) {
         EnsureNotDeleted();
+        UserDailyGoals previousGoals = NutritionProfile.GetDailyGoals();
         if (ApplyActivityChanges(update.ActivityLevel, update.StepGoal, update.HydrationGoal)) {
+            RecordGoalChanges(previousGoals);
             NutritionProfile.Touch();
         }
     }

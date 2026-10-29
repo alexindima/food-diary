@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 288,
-    "entities": 91,
-    "valueObjects": 142,
+    "domainTypes": 290,
+    "entities": 92,
+    "valueObjects": 143,
     "invariants": 646,
-    "persistenceMappings": 97,
-    "indexes": 177,
-    "relationships": 39
+    "persistenceMappings": 98,
+    "indexes": 179,
+    "relationships": 40
   },
   "domainTypes": [
     {
@@ -663,6 +663,13 @@
     },
     {
       "area": "FoodDiary",
+      "name": "UserGoalRevision",
+      "role": "entity",
+      "path": "Modules/Users/Domain/Entities/UserGoalRevision.cs",
+      "line": 7
+    },
+    {
+      "area": "FoodDiary",
       "name": "UserLessonProgress",
       "role": "entity",
       "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
@@ -680,7 +687,7 @@
       "name": "UserNutritionProfile",
       "role": "entity",
       "path": "Modules/Users/Domain/Entities/UserNutritionProfile.cs",
-      "line": 6
+      "line": 7
     },
     {
       "area": "FoodDiary",
@@ -1752,6 +1759,13 @@
       "role": "value-object",
       "path": "Modules/Users/Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
       "line": 6
+    },
+    {
+      "area": "FoodDiary",
+      "name": "UserGoalRevisionId",
+      "role": "value-object",
+      "path": "Modules/Users/Domain/ValueObjects/Ids/UserGoalRevisionId.cs",
+      "line": 4
     },
     {
       "area": "FoodDiary",
@@ -5876,42 +5890,42 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(targetWeight)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 103
+      "line": 106
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(startWeight)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 104
+      "line": 107
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(endWeight)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 128
+      "line": 131
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(targetWaist)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 149
+      "line": 152
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(startWaist)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 150
+      "line": 153
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(endWaist)",
       "path": "Modules/Users/Domain/Entities/User.Goals.cs",
-      "line": 174
+      "line": 177
     },
     {
       "area": "FoodDiary",
@@ -5988,7 +6002,7 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(surfaceStyle), \"Surface style must be one of the supported codes.\")",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 374
+      "line": 376
     },
     {
       "area": "FoodDiary",
@@ -7623,6 +7637,17 @@
     },
     {
       "area": "FoodDiary",
+      "entity": "UserGoalRevision",
+      "table": "UserGoalHistory",
+      "indexes": [
+        "revision => new { revision.UserId, revision.EffectiveFrom, revision.Revision })",
+        "revision => new { revision.UserId, revision.Revision })"
+      ],
+      "relationships": [],
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserGoalRevisionConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
       "entity": "UserLessonProgress",
       "table": null,
       "indexes": [
@@ -7657,7 +7682,13 @@
       "entity": "UserNutritionProfile",
       "table": "UserNutritionProfiles",
       "indexes": [],
-      "relationships": [],
+      "relationships": [
+        {
+          "kind": "HasMany",
+          "target": "",
+          "expression": "state => state.GoalHistory).WithOne().HasForeignKey(revision => revision.UserId)"
+        }
+      ],
       "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserNutritionProfileConfiguration.cs"
     },
     {

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Users.Infrastructure.Persistence.Users;
 
-public sealed class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
+public sealed partial class UserProfileProjectionService(DbSet<User> users, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) :
     ICurrentUserAccessService, IUserAiProfileReadService, IUserDashboardProfileReadService,
     IUserDietologistProfileReadService, IUserGamificationProfileReadService,
     IUserHydrationProfileReadService, IUserTdeeProfileReadService, IUserWeeklyCheckInProfileReadService,
@@ -49,26 +49,38 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default,
+        DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
+        Result<UserDashboardProfileModel> result = await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
             user.Preferences.DashboardLayoutJson, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DesiredWaistCm, user.NutritionProfile.HydrationGoal, user.NutritionProfile.WaterGoal,
             user.NutritionProfile.ProteinTarget, user.NutritionProfile.FatTarget, user.NutritionProfile.CarbTarget, user.NutritionProfile.FiberTarget,
             new UserCalorieSchedule(user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled,
                 user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories, user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories,
-                user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId), cancellationToken).ConfigureAwait(false);
+                user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId, GoalHistory: null), cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure || goalsFrom is null) {
+            return result;
+        }
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
+        return Result.Success(result.Value with { GoalHistory = history });
     }
 
-    public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default,
+        DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
+        Result<UserGamificationProfileModel> result = await ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
             user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled, user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories,
             user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories, user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories,
-            user.NutritionProfile.SundayCalories)), cancellationToken).ConfigureAwait(false);
+            user.NutritionProfile.SundayCalories), GoalHistory: null), cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure || goalsFrom is null) {
+            return result;
+        }
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
+        return Result.Success(result.Value with { GoalHistory = history });
     }
 
     public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
@@ -97,11 +109,17 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
         users.AsNoTracking().Select(user => new UserDietologistProfileModel(user.Id.Value, user.Email, user.FirstName,
             user.LastName, user.Preferences.Language, user.UserRoles.Any(role => role.Role.Name == RoleNames.Dietologist), user.IsEmailConfirmed));
 
-    public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default,
+        DateOnly? date = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserHydrationProfileModel(user.NutritionProfile.HydrationGoal ?? user.NutritionProfile.WaterGoal), cancellationToken).ConfigureAwait(false);
+        Result<UserHydrationProfileModel> result = await ReadAsync(userId, user => new UserHydrationProfileModel(user.NutritionProfile.HydrationGoal ?? user.NutritionProfile.WaterGoal), cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure || date is null) {
+            return result;
+        }
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, date.Value, date.Value, cancellationToken).ConfigureAwait(false);
+        return Result.Success(new UserHydrationProfileModel(history.GetGoalsForDate(date.Value)?.EffectiveWaterGoal));
     }
 
     public Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(UserId userId, CancellationToken cancellationToken = default) =>
@@ -118,11 +136,17 @@ public sealed class UserProfileProjectionService(DbSet<User> users, Func<Cancell
             currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
+    public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default,
+        DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        return await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+        Result<UserWeeklyCheckInProfileModel> result = await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.NutritionProfile.DailyCalorieTarget, GoalHistory: null), cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure || goalsFrom is null) {
+            return result;
+        }
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
+        return Result.Success(result.Value with { GoalHistory = history });
     }
 
     private async Task<Result<T>> ReadAsync<T>(UserId userId, Expression<Func<User, T>> projection, CancellationToken cancellationToken) where T : class {

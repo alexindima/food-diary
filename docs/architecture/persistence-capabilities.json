@@ -1327,6 +1327,16 @@
       ],
       "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves. Reviewed BMR input grouping: same accessible no-tracking profile projection and owner calculation/rounding; the stored-profile adapter adds no entity writes or broader persistence capability."
     },
+    "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.GoalHistory.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:UserGoalRevision.ToDailyGoals",
+        "entity:User",
+        "entity:UserGoalRevision",
+        "entity:UserNutritionProfile"
+      ],
+      "reason": "Bounded explicitly no-tracking goal history read: persisted active/deleted user predicate, one baseline plus latest revision per requested day, pure immutable value mapping. No aggregate hydration, tracked entities, writes, context escape, saves or commit."
+    },
     "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs": {
       "module": "Users",
       "capabilities": [
@@ -1340,14 +1350,15 @@
       "capabilities": [
         "entity:Role",
         "entity:User",
+        "entity:UserNutritionProfile",
         "entity:UserRoleAuditEvent",
         "tracked:User",
         "tracked:UserRoleAuditEvent",
         "write:User",
         "write:UserRoleAuditEvent"
       ],
-      "reason": "Users owns user/security/role-audit writes and tracked attachment; request unit of work owns commit.",
-      "technicalSourceSha256": "139e54a450873b07bf1f509f79aefd33e56566ad209497172c33fadcb9746b2b"
+      "reason": "Users owns tracked account/profile/role-audit attachment. Detached goal updates read the persisted profile revision, insert only new history and retain immutable snapshots via owner navigation entries. No context escape, SaveChanges or commit; original profile xmin checks and caller unit of work remain authoritative.",
+      "technicalSourceSha256": "bbc9103855684970d70bb2eaa17956020e55d086b0041be7ce3cf7d8e9577e36"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
       "module": "Users",

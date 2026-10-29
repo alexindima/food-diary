@@ -27,21 +27,21 @@ public sealed class GetHydrationDailyTotalQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<double?> goalResult = await GetCurrentGoalAsync(userId, cancellationToken).ConfigureAwait(false);
+        DateTime dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
+        Result<double?> goalResult = await GetGoalAsync(userId, DateOnly.FromDateTime(dateUtc), cancellationToken).ConfigureAwait(false);
         if (goalResult.IsFailure) {
             return Result.Failure<HydrationDailyModel>(goalResult.Error);
         }
 
-        DateTime dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
         int total = await sender.Send(new ReadHydrationDailyTotalQuery(userId, dateUtc), cancellationToken).ConfigureAwait(false);
 
         var response = new HydrationDailyModel(dateUtc, total, goalResult.Value);
         return Result.Success(response);
     }
 
-    private async Task<Result<double?>> GetCurrentGoalAsync(UserId userId, CancellationToken cancellationToken = default) {
+    private async Task<Result<double?>> GetGoalAsync(UserId userId, DateOnly date, CancellationToken cancellationToken = default) {
         Result<UserHydrationProfileModel> profileResult = await userProfileReadService
-            .GetHydrationProfileAsync(userId, cancellationToken)
+            .GetHydrationProfileAsync(userId, cancellationToken, date)
             .ConfigureAwait(false);
         if (profileResult.IsFailure) {
             return Result.Failure<double?>(profileResult.Error);

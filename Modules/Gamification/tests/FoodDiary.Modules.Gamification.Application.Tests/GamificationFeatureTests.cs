@@ -109,7 +109,7 @@ public class GamificationFeatureTests {
         var userId = UserId.New();
         IUserGamificationProfileReadService userProfileService = Substitute.For<IUserGamificationProfileReadService>();
         userProfileService
-            .GetGamificationProfileAsync(userId, Arg.Any<CancellationToken>())
+            .GetGamificationProfileAsync(userId, Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>())
             .Returns(Task.FromResult(Result.Failure<UserGamificationProfileModel>(AuthenticationErrors.InvalidToken)));
         GetGamificationQueryHandler service = CreateGamificationHandler(
             CreateMealRepository(),
@@ -239,7 +239,7 @@ public class GamificationFeatureTests {
     private static IUserGamificationProfileReadService CreateGamificationProfileReadService(User? user) {
         IUserGamificationProfileReadService service = Substitute.For<IUserGamificationProfileReadService>();
         service
-            .GetGamificationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetGamificationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>(), Arg.Any<DateOnly?>(), Arg.Any<DateOnly?>())
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 return Task.FromResult(user is not null && user.Id == userId

@@ -16,6 +16,10 @@ public sealed record UserDashboardProfileModel(
     double? CarbTarget,
     double? FiberTarget,
     UserCalorieSchedule CalorieSchedule,
-    string? TimeZoneId = null) {
-    public double? GetCalorieTargetForDate(DateOnly date) => CalorieSchedule.GetTargetForDate(date.ToDateTime(TimeOnly.MinValue));
+    string? TimeZoneId = null,
+    UserGoalTimeline? GoalHistory = null) {
+    public UserDailyGoals GetGoalsForDate(DateOnly date) => GoalHistory?.GetGoalsForDate(date)
+        ?? new UserDailyGoals(CalorieSchedule, ProteinTarget, FatTarget, CarbTarget, FiberTarget, WaterGoal, HydrationGoal, StepGoal: null);
+
+    public double? GetCalorieTargetForDate(DateOnly date) => GetGoalsForDate(date).CalorieSchedule.GetTargetForDate(date.ToDateTime(TimeOnly.MinValue));
 }

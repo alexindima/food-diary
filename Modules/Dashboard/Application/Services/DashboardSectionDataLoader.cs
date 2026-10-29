@@ -51,8 +51,12 @@ internal sealed class DashboardSectionDataLoader(
         }
 
         if (request.UseUserTimeZone) {
+            (DateOnly goalsFrom, DateOnly goalsTo) = GetGoalRange(request);
+            if (goalsTo < goalsFrom || goalsTo.DayNumber - goalsFrom.DayNumber > MaxPeriodDays) {
+                return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.DateTo), "Calendar dates are outside the supported range."));
+            }
             Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-                .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+                .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken, goalsFrom, goalsTo).ConfigureAwait(false);
             if (userResult.IsFailure) {
                 return Result.Failure<DashboardBuildContext>(userResult.Error);
             }
@@ -107,8 +111,9 @@ internal sealed class DashboardSectionDataLoader(
 
             currentUser = request.UserContext;
         } else {
+            (DateOnly goalsFrom, DateOnly goalsTo) = GetGoalRange(request);
             Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-                .GetAccessibleDashboardUserAsync(userId, cancellationToken)
+                .GetAccessibleDashboardUserAsync(userId, cancellationToken, goalsFrom, goalsTo)
                 .ConfigureAwait(false);
             if (userResult.IsFailure) {
                 return Result.Failure<DashboardBuildContext>(userResult.Error);
@@ -131,6 +136,15 @@ internal sealed class DashboardSectionDataLoader(
             request.Sections ?? DashboardSnapshotSections.All,
             currentUser,
             calendar));
+    }
+
+    private static (DateOnly From, DateOnly To) GetGoalRange(DashboardSnapshotRequest request) {
+        var from = DateOnly.FromDateTime(UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.Date));
+        var to = DateOnly.FromDateTime(UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(request.DateTo ?? request.Date));
+        if (from == to) {
+            from = DateOnly.FromDayNumber(Math.Max(0, from.DayNumber - 6));
+        }
+        return (from, to);
     }
 
     public Task<Result<DashboardReadModel>> LoadDashboardDataAsync(

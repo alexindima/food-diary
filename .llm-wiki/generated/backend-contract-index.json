@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1369,
     "ambiguousContracts": 29,
-    "consumerEdges": 10992,
-    "productionConsumerEdges": 6128,
-    "testConsumerEdges": 4864,
+    "consumerEdges": 10998,
+    "productionConsumerEdges": 6129,
+    "testConsumerEdges": 4869,
     "consumedContracts": 1369,
     "unconsumedContracts": 0
   },
@@ -38060,7 +38060,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -38126,6 +38126,19 @@
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "DashboardSnapshotRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "DashboardSnapshotRequest",
@@ -75209,6 +75222,19 @@
         "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDashboardReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application.Abstractions/Common/IDashboardReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -75576,6 +75602,19 @@
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IDashboardUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IDashboardUserContextService",
@@ -80839,6 +80878,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Domain/ValueObjects/Ids/RoleId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/ValueObjects/Ids/UserGoalRevisionId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -120905,6 +120957,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardGoalHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 23
@@ -151415,6 +151480,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardGoalHistoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

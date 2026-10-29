@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Users.Domain.ValueObjects;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Entities.Tracking;
 using FoodDiary.Modules.Users.Domain.Enums;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
@@ -73,7 +74,9 @@ public sealed partial class User {
             SaturdayCalories: update.SaturdayCalories ?? SaturdayCalories,
             SundayCalories: update.SundayCalories ?? SundayCalories);
 
+        UserDailyGoals previousGoals = NutritionProfile.GetDailyGoals();
         ApplyGoalState(state);
+        RecordGoalChanges(previousGoals);
 
         NutritionProfile.Touch();
     }
@@ -186,5 +189,14 @@ public sealed partial class User {
 
         ApplyAiQuotaState(nextState);
         return true;
+    }
+
+    private void RecordGoalChanges(UserDailyGoals previousGoals) {
+        if (previousGoals == NutritionProfile.GetDailyGoals()) {
+            return;
+        }
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId ?? "UTC");
+        var effectiveFrom = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DomainTime.UtcNow, zone));
+        NutritionProfile.RecordGoals(effectiveFrom);
     }
 }
