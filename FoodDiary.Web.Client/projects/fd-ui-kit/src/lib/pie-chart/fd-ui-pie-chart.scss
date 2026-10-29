@@ -37,9 +37,11 @@
 
 .fd-ui-pie-chart__segment {
     cursor: help;
-    transition:
-        stroke-dasharray 180ms ease,
-        stroke-dashoffset 180ms ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            stroke-dasharray 180ms ease,
+            stroke-dashoffset 180ms ease;
+    }
 }
 
 .fd-ui-pie-chart--pie .fd-ui-pie-chart__track {

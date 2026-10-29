@@ -418,9 +418,11 @@
     border-radius: var(--fd-radius-pill);
     background: var(--goals-editor-toggle-knob);
     transform: translateX(var(--goals-editor-toggle-offset));
-    transition:
-        transform 160ms ease,
-        background 160ms ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            transform 160ms ease,
+            background 160ms ease;
+    }
 }
 .goals-editor-toggle__input:checked + .goals-editor-toggle__control {
     --goals-editor-toggle-background: var(--fd-bg-brand-tint);

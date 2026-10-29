@@ -74,10 +74,12 @@
         cursor: pointer;
         text-align: left;
         box-shadow: var(--fd-shadow-md);
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease,
-            border 0.25s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border 0.25s ease;
+        }
         border: var(--fd-border-subtle);
 
         &:where(:hover:not(:disabled)) {

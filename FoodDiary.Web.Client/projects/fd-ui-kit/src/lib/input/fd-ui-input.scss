@@ -39,10 +39,12 @@
     top: 50%;
     left: var(--fd-space-control-label-inset-inline);
     transform: translateY(-50%);
-    transition:
-        transform 0.15s ease,
-        top 0.15s ease,
-        font-size 0.15s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            transform 0.15s ease,
+            top 0.15s ease,
+            font-size 0.15s ease;
+    }
     background: var(--fd-bg-surface-raised);
     padding: 0 var(--fd-space-field-label-padding-x);
     border-radius: var(--fd-radius-field-label);
@@ -130,8 +132,10 @@
 .fd-ui-input__control:where(:where(:-webkit-autofill):hover),
 .fd-ui-input__control:where(:where(:-webkit-autofill):focus),
 .fd-ui-input__control:where(:where(:-webkit-autofill):active) {
+    /* stylelint-disable food-diary/reduced-motion -- Nonvisual animationstart synchronizes browser autofill with the form control. */
     animation-name: fd-ui-input-autofill-start;
     animation-duration: 0.01s;
+    /* stylelint-enable food-diary/reduced-motion */
     -webkit-text-fill-color: var(--fd-color-text);
     caret-color: var(--fd-color-text);
     font-family: inherit;

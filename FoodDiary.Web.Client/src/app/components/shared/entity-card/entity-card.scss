@@ -232,11 +232,13 @@ fd-entity-card-actions {
     color: var(--fd-color-favorite-muted);
     cursor: pointer;
     box-shadow: var(--fd-shadow-none);
-    transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease,
-        transform 0.15s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            transform 0.15s ease;
+    }
 
     &:hover {
         border-color: color-mix(in srgb, var(--fd-color-slate-500) 72%, transparent);

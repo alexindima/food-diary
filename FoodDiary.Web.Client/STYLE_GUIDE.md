@@ -107,6 +107,32 @@ Do not add a token when a value is:
 - a data visualization stroke, radius, or coordinate;
 - a browser reset value such as `0`, `100%`, `auto`, `1fr`, or `1em`.
 
+## Reduced Motion
+
+Keep a usable, visible static state outside media queries. Enable animations,
+geometry transitions (including SVG paths and stroke lengths), and smooth
+scrolling inside `@media (prefers-reduced-motion: no-preference)`. Do not leave
+the static state at `opacity: 0` or at an animation's initial transform.
+Color, opacity and shadow transitions may remain outside the query.
+
+`food-diary/reduced-motion` enforces this opt-in policy through Stylelint. It
+checks each declaration and its enclosing media conditions, including nested
+SCSS, rather than looking for a query elsewhere in the file. A reviewed
+nonvisual exception must have a narrowly scoped disable comment with a reason;
+the input autofill `animationstart` signal is such an exception. Do not globally
+disable animation events or shorten every animation to a tiny duration.
+
+For TypeScript scrolling, reuse `scrollElementIntoView` or select `instant` when
+the reduced-motion query matches. `local/no-unconditional-smooth-scroll` checks
+literal scrolling options, aliases and spreads; a boolean named `reducedMotion`
+alone is not a guard. This is a static check, not whole-program data-flow proof.
+
+Run `npm run test:motion` for lint-rule fixtures and Chrome browser regressions.
+The browser suite compiles actual SCSS with Angular style encapsulation and
+checks both preferences, live preference changes, SVG updates, status messages,
+static dialog visibility and the nonvisual autofill event. It tests CSS contracts
+without a backend; it does not replace full application journey tests.
+
 ## Review Checklist
 
 Before merging frontend style changes:

@@ -32,11 +32,13 @@
     box-shadow:
         0 0 0 9999px var(--fd-bg-overlay-strong),
         var(--fd-shadow-focus);
-    transition:
-        top 0.16s ease,
-        left 0.16s ease,
-        width 0.16s ease,
-        height 0.16s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            top 0.16s ease,
+            left 0.16s ease,
+            width 0.16s ease,
+            height 0.16s ease;
+    }
 }
 
 .fd-tour__popover {
@@ -54,10 +56,12 @@
     visibility: hidden;
     pointer-events: none;
     transform-origin: top center;
-    transition:
-        top 0.16s ease,
-        left 0.16s ease,
-        opacity 0.12s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            top 0.16s ease,
+            left 0.16s ease,
+            opacity 0.12s ease;
+    }
     will-change: top, left, opacity;
 }
 
@@ -65,7 +69,9 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    animation: fd-tour-popover-enter 0.18s ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-tour-popover-enter 0.18s ease-out;
+    }
 }
 
 .fd-tour__header,

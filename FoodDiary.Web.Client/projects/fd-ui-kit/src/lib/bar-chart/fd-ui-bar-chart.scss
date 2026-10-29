@@ -44,10 +44,12 @@
 
 .fd-ui-bar-chart__bar {
     cursor: help;
-    transition:
-        height 180ms ease,
-        y 180ms ease,
-        opacity 120ms ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            height 180ms ease,
+            y 180ms ease,
+            opacity 120ms ease;
+    }
 }
 
 .fd-ui-bar-chart__bar:hover {

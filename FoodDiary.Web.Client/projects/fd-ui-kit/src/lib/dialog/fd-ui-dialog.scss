@@ -82,7 +82,9 @@
 }
 
 .fd-ui-dialog--swipe-settling {
-    transition: translate 180ms ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: translate 180ms ease-out;
+    }
 }
 
 .fd-ui-dialog__header {
@@ -281,9 +283,11 @@
     border: var(--fd-border-strong);
     background: var(--fd-bg-dialog);
     max-height: var(--fd-dialog-max-height);
-    transform: scale(0.97);
-    opacity: 0;
-    animation: detail-dialog-in 180ms ease-out forwards;
+    transform: none;
+    opacity: 1;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: detail-dialog-in 180ms ease-out forwards;
+    }
 }
 
 .fd-ui-dialog-panel--detail .fd-ui-dialog__header {
@@ -303,8 +307,10 @@
 
 .fd-ui-dialog-backdrop--detail {
     background: var(--fd-bg-scrim-subtle);
-    opacity: 0;
-    animation: detail-backdrop 180ms ease forwards;
+    opacity: 1;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: detail-backdrop 180ms ease forwards;
+    }
     backdrop-filter: blur(2px);
 }
 

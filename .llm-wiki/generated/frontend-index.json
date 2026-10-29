@@ -3515,7 +3515,7 @@
       "role": "Component",
       "selector": "fd-nutrition-weekly-trend-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.ts",
-      "line": 96
+      "line": 104
     },
     {
       "name": "PageBodyComponent",
@@ -8279,8 +8279,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4189,
-      "russianProperties": 4189,
+      "englishProperties": 4188,
+      "russianProperties": 4188,
       "countsMatch": true
     },
     {

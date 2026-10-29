@@ -21,7 +21,9 @@
     line-height: var(--fd-text-caption-line-height);
     font-weight: var(--fd-text-caption-weight);
     backdrop-filter: blur(10px);
-    animation: fd-ui-hint-in 120ms ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-ui-hint-in 120ms ease-out;
+    }
 }
 
 .fd-ui-hint__content {

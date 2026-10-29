@@ -39,7 +39,9 @@
         padding: var(--fd-landing-surface-padding-lg);
         border: var(--fd-border-width) solid var(--fd-color-border-inverse-faint);
         box-shadow: var(--fd-landing-shadow-strong);
-        animation: landingFadeUp 780ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 780ms ease-out both;
+        }
 
         &::before,
         &::after {

@@ -114,6 +114,7 @@ jobs:
         run: |
           node Tooling/WebQuality/verify-browser.mjs
           node Tooling/WebQuality/verify-platform-browser.mjs
+          npm --prefix FoodDiary.Web.Client run test:motion:browser
       - name: Audit rendered public and login states
         if: matrix.profile == 'browser'
         env:

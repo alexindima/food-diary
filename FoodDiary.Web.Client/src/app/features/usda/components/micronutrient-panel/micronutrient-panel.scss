@@ -45,7 +45,9 @@
 .dv-bar {
     height: 100%;
     border-radius: var(--fd-radius-sm);
-    transition: width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: width 0.3s ease;
+    }
 }
 
 .dv-low {

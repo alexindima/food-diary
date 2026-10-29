@@ -3,7 +3,9 @@
         max-height: 60vh;
         overflow-y: auto;
         padding: 0 var(--fd-space-xxs) 0 0;
-        scroll-behavior: smooth;
+        @media (prefers-reduced-motion: no-preference) {
+            scroll-behavior: smooth;
+        }
     }
 
     &__text {

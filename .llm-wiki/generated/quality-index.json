@@ -5786,11 +5786,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.service.ts",
-      "nonBlankLines": 239,
-      "decisionPoints": 38,
+      "nonBlankLines": 236,
+      "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 61.78
+      "structuralRiskScore": 60.22
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour.types.ts",
@@ -20778,11 +20778,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/ui/scroll/scroll-element-into-view.ts",
-      "nonBlankLines": 9,
+      "nonBlankLines": 8,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.68
+      "structuralRiskScore": 4.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shell/app-lib/app-reload.utils.ts",

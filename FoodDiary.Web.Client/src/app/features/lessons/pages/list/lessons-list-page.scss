@@ -240,7 +240,9 @@
     height: 100%;
     border-radius: var(--fd-radius-xs);
     background: var(--fd-color-primary-500);
-    transition: width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: width 0.3s ease;
+    }
 
     @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -255,9 +257,11 @@
     border: var(--fd-border-default);
     box-shadow: var(--fd-shadow-lg);
     cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
 
     &:hover {
         transform: translateY(-2px);

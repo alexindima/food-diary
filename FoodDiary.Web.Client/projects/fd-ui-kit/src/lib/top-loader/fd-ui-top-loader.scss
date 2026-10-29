@@ -27,7 +27,9 @@
         var(--fd-color-primary-300) 100%
     );
     box-shadow: var(--fd-shadow-accent-glow);
-    animation: fd-ui-top-loader-slide 1.05s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-ui-top-loader-slide 1.05s ease-in-out infinite;
+    }
     transform-origin: left center;
     will-change: transform;
 }

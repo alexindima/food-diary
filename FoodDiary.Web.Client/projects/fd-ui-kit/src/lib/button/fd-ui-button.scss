@@ -36,14 +36,6 @@
     white-space: var(--fd-button-white-space);
     box-shadow: var(--fd-button-shadow-default);
     transform: var(--fd-button-transform-default);
-    transition: var(
-        --fd-button-transition,
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.15s ease
-    );
 
     &:where(:enabled:hover) {
         background: var(--fd-button-background-hover);
@@ -117,7 +109,6 @@
         border-radius: var(--fd-radius-pill);
         border: var(--fd-border-width-strong) solid var(--fd-color-border-button-spinner);
         border-top-color: currentColor;
-        animation: fd-ui-button-spin 0.7s linear infinite;
     }
 
     &--loading {
@@ -440,9 +431,20 @@
         color: var(--fd-color-danger);
     }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
+    .fd-ui-button {
+        transition: var(
+            --fd-button-transition,
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            box-shadow 0.15s ease,
+            transform 0.15s ease
+        );
+    }
+
     .fd-ui-button__spinner {
-        animation: none;
+        animation: fd-ui-button-spin 0.7s linear infinite;
     }
 }
 @media (any-pointer: coarse) {

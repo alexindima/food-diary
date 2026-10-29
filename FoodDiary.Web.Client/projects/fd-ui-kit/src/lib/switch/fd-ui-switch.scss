@@ -48,7 +48,9 @@
         border-radius: var(--fd-radius-switch);
         background: var(--fd-bg-surface);
         box-shadow: var(--fd-shadow-sm);
-        transition: transform 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: transform 0.2s ease;
+        }
     }
 
     &__label {

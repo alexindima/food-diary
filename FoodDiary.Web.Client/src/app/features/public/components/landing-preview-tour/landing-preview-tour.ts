@@ -106,7 +106,7 @@ export class LandingPreviewTourComponent {
         const prefersReducedMotion = reducedMotionQuery.matches;
         const scroll = (): void => {
             draftBlock.scrollIntoView({
-                behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                behavior: prefersReducedMotion ? 'instant' : 'smooth',
                 block: 'center',
                 inline: 'nearest',
             });

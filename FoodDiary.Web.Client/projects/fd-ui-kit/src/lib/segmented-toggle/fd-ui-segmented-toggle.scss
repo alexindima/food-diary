@@ -59,11 +59,13 @@
     letter-spacing: var(--fd-letter-spacing-overline);
     text-transform: uppercase;
     cursor: pointer;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
 
     &:hover {
         color: var(--fd-color-primary-800);

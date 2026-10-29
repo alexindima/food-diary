@@ -91,15 +91,23 @@
     inset: 0;
     opacity: 0;
 }
-.catalog-cover img.catalog-image--loaded { opacity: 1; }
+.catalog-cover img.catalog-image--loaded {
+    opacity: 1;
+}
 .catalog-cover--loading {
     background: var(--fd-bg-skeleton-shimmer);
     background-size: 200% 100%;
-    animation: cover-loading 1.5s linear infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: cover-loading 1.5s linear infinite;
+    }
 }
 @keyframes cover-loading {
-    to { background-position: -200% 0; }
+    to {
+        background-position: -200% 0;
+    }
 }
 @media (prefers-reduced-motion: reduce) {
-    .catalog-cover--loading { animation: none; }
+    .catalog-cover--loading {
+        animation: none;
+    }
 }

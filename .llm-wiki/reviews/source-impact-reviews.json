@@ -821,14 +821,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "b17e0d1bba2095fbbab4f75b200d6b9a9f4fccf7877e7ce09240c6f1c084405f",
-          "reviewReason": "Reviewed package.json and the visual-evidence guide: the existing test:performance-build command now executes installed-worker push/click contract tests. This changes automated checks only; browser selection, screenshot evidence and rendered UI requirements remain accurate."
+          "sha256": "7cc5610e2bf504cbe8e9474859cb7c697e31acbc4d997e8cafa0bd72d9fbe751",
+          "reviewReason": "Reviewed package.json after adding reduced-motion checks: existing build, lint, test and frontend visual-evidence entrypoints remain available with their prior behavior. The additive test:motion scripts compile source SCSS with Angular encapsulation and run browser contracts; they complement the documented real application visual evidence workflow and do not replace its runtime ownership or screenshot requirements."
         }
       ],
-      "reason": "Reviewed package.json and the visual-evidence guide: the existing test:performance-build command now executes installed-worker push/click contract tests. This changes automated checks only; browser selection, screenshot evidence and rendered UI requirements remain accurate.",
+      "reason": "Reviewed package.json after adding reduced-motion checks: existing build, lint, test and frontend visual-evidence entrypoints remain available with their prior behavior. The additive test:motion scripts compile source SCSS with Angular encapsulation and run browser contracts; they complement the documented real application visual evidence workflow and do not replace its runtime ownership or screenshot requirements.",
       "baseRef": "HEAD",
-      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
-      "reviewedAtUtc": "2026-10-27T21:06:48.7720069Z"
+      "gitHead": "51c7b388d837173a7508af3609c3684c14b8dffc",
+      "reviewedAtUtc": "2026-10-29T22:34:46.7195355Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

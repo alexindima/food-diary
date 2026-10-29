@@ -113,9 +113,11 @@ $color-text-secondary: var(--fd-color-text-muted);
             cursor: pointer;
 
             > .fd-ui-card {
-                transition:
-                    box-shadow 0.2s ease,
-                    transform 0.2s ease;
+                @media (prefers-reduced-motion: no-preference) {
+                    transition:
+                        box-shadow 0.2s ease,
+                        transform 0.2s ease;
+                }
 
                 &:where(:hover) {
                     box-shadow: var(--fd-shadow-lg);

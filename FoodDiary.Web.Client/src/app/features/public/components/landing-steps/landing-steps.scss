@@ -49,7 +49,9 @@
         padding: var(--fd-landing-surface-padding);
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
-        animation: landingFadeUp 820ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 820ms ease-out both;
+        }
 
         &::before {
             content: '';
@@ -85,7 +87,9 @@
         background: var(--fd-bg-landing-dark-panel);
         border: var(--fd-border-width) solid var(--fd-landing-dark-border);
         box-shadow: var(--fd-landing-shadow-strong);
-        animation: landingFadeUp 880ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 880ms ease-out both;
+        }
     }
 
     &__cta-copy {

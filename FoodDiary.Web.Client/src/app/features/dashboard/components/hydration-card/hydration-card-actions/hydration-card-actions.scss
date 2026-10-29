@@ -16,7 +16,9 @@
     }
 
     &__quick-action--confirmed {
-        animation: hydration-confirmed 400ms ease-out;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: hydration-confirmed 400ms ease-out;
+        }
     }
 
     &__selected-day-hint {

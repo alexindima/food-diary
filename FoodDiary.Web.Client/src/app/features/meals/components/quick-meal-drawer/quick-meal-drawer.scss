@@ -88,7 +88,9 @@
     border: var(--fd-border-subtle);
 
     &--flash {
-        animation: quick-meal-item-flash 900ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: quick-meal-item-flash 900ms ease-out both;
+        }
     }
 }
 

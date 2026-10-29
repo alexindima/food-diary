@@ -1,7 +1,9 @@
 .fd-skeleton {
     background: var(--fd-bg-skeleton-shimmer);
     background-size: 200% 100%;
-    animation: fd-skeleton-shimmer 1.6s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-skeleton-shimmer 1.6s ease-in-out infinite;
+    }
 }
 
 @keyframes fd-skeleton-shimmer {

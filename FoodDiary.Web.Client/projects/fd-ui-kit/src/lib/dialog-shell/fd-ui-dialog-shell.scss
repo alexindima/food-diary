@@ -14,9 +14,11 @@
     max-width: min(100%, var(--fd-dialog-panel-max-width));
     max-height: var(--fd-size-dialog-max-height-detail);
     overflow: hidden;
-    transform: scale(0.97);
-    opacity: 0;
-    animation: fd-dialog-shell-in 180ms ease-out forwards;
+    transform: none;
+    opacity: 1;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-dialog-shell-in 180ms ease-out forwards;
+    }
 }
 
 :where(.cdk-overlay-pane.fd-ui-dialog-panel--chart) :where(.fd-ui-dialog-shell) .fd-ui-dialog {

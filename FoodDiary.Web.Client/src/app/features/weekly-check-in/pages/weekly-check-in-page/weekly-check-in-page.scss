@@ -19,7 +19,9 @@
             background-size:
                 200% 100%,
                 100% 100%;
-            animation: check-in-refresh 1.15s ease-in-out infinite;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: check-in-refresh 1.15s ease-in-out infinite;
+            }
         }
     }
 

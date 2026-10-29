@@ -15,7 +15,9 @@
     background: var(--fd-landing-surface);
     border: var(--fd-border-width) solid var(--fd-landing-border-soft);
     box-shadow: var(--fd-landing-shadow-medium);
-    animation: landingFadeUp 700ms ease-out both;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: landingFadeUp 700ms ease-out both;
+    }
 }
 
 @mixin marketing-eyebrow($size: var(--fd-text-stat-value-size), $letter-spacing: 0, $weight: var(--fd-text-section-title-weight)) {

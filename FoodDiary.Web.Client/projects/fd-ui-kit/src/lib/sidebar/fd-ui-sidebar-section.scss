@@ -30,7 +30,9 @@ button.fd-ui-sidebar__section-header {
 }
 
 .fd-ui-sidebar__section-header fd-ui-icon {
-    transition: transform 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.2s ease;
+    }
 }
 
 .fd-ui-sidebar__section-header fd-ui-icon.is-open {

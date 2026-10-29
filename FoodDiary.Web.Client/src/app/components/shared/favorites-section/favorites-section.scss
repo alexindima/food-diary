@@ -32,7 +32,9 @@
 
 .fd-favorites-section__chevron {
     color: var(--fd-color-text-muted);
-    transition: transform 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.2s ease;
+    }
 }
 
 .fd-favorites-section__chevron.is-open {

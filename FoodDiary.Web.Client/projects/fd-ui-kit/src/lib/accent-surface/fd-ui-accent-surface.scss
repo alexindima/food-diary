@@ -32,10 +32,12 @@
 
 :host::after {
     background: var(--fd-accent-color);
-    transition:
-        width 0.25s ease,
-        height 0.25s ease,
-        opacity 0.25s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            width 0.25s ease,
+            height 0.25s ease,
+            opacity 0.25s ease;
+    }
     opacity: 0.92;
     z-index: 1;
 }

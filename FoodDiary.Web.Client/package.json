@@ -16,7 +16,7 @@
         "quality:validate": "node ../Tooling/WebQuality/cli.mjs validate",
         "quality:audit": "node ../Tooling/WebQuality/cli.mjs audit",
         "test:web-quality": "npm run test:web-quality:unit && npm run test:web-quality:browser",
-        "test:web-quality:browser": "node ../Tooling/WebQuality/verify-browser.mjs && node ../Tooling/WebQuality/verify-platform-browser.mjs && npm run test:script-csp:browser",
+        "test:web-quality:browser": "node ../Tooling/WebQuality/verify-browser.mjs && node ../Tooling/WebQuality/verify-platform-browser.mjs && npm run test:motion:browser && npm run test:script-csp:browser",
         "postinstall": "node scripts/apply-dependency-patches.mjs",
         "prebuild": "node scripts/apply-dependency-patches.mjs --check",
         "prelint": "node scripts/apply-dependency-patches.mjs --check",
@@ -46,7 +46,7 @@
         "start:staging": "ng serve --configuration=staging",
         "start:admin": "ng serve fooddiary-admin",
         "watch": "ng build --watch --configuration development",
-        "lint": "npm run check:api-client-usage && node scripts/verify-template-lint.mjs && eslint .",
+        "lint": "npm run check:api-client-usage && npm run test:motion:lint && node scripts/verify-template-lint.mjs && eslint .",
         "lint:fix": "eslint . --fix",
         "lint:deps": "depcruise --config .dependency-cruiser.cjs --ignore-known .dependency-cruiser-known-violations.json src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib projects/fd-webmcp/src/lib",
         "lint:deps:strict": "depcruise --config .dependency-cruiser.cjs src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib projects/fd-webmcp/src/lib",
@@ -56,7 +56,7 @@
         "check:api-client-usage": "node --test scripts/check-api-client-usage.test.mjs && node scripts/check-api-client-usage.mjs",
         "check:import-boundaries": "node --test scripts/check-import-boundaries.test.mjs",
         "check:format:ci": "prettier --check \"src/**/*.{ts,html}\" \"projects/**/*.{ts,html}\"",
-        "verify": "npm run test:dependency-patches && npm run test:sdk && npm run test:ai-development && npm run test:performance-build && npm run quality:validate && npm run test:web-quality:unit && npm run test:guidance:documents && npm run test:guidance:source && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run build:webmcp && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:webmcp && npm run test:ci:admin && npm run check:i18n",
+        "verify": "npm run test:dependency-patches && npm run test:sdk && npm run test:ai-development && npm run test:performance-build && npm run quality:validate && npm run test:web-quality:unit && npm run test:guidance:documents && npm run test:guidance:source && npm run sdk:check && npm run sdk:admin:check && npm run sdk:bot:check && npm run check:import-boundaries && npm run lint && npm run lint:deps:strict && npm run check:depcruise-baseline && npm run check:component-logic && npm run check:state-ownership && npm run stylelint && npm run test:motion:browser && npm run audit:design-tokens && npm run build && npm run build:admin && npm run build:tour && npm run build:webmcp && npm run check:seo-prerender && npm run test:mcp && npm run test:ci:app && npm run test:ci:ui-kit && npm run test:ci:tour && npm run test:ci:webmcp && npm run test:ci:admin && npm run check:i18n",
         "stylelint": "stylelint '**/*.{css,scss}'",
         "stylelint:fix": "stylelint '**/*.{css,scss}' --fix",
         "prettier": "prettier --check '**/*.{js,ts,css,scss,html,json,md}'",
@@ -123,7 +123,10 @@
         "test:guidance:rum": "ng test food-diary-web-client --watch=false --include=**/logging-api.service.spec.ts --include=**/browser-performance.service.spec.ts --include=**/frontend-observability.service.spec.ts",
         "test:guidance:loading": "playwright test --config quality/modern-web-guidance/platform.config.mjs --grep=offscreen",
         "test:guidance:reflow": "playwright test --config quality/modern-web-guidance/platform.config.mjs --grep=enlargement",
-        "test:guidance:control-focus": "playwright test --config quality/modern-web-guidance/journeys.config.mjs --grep=focus"
+        "test:guidance:control-focus": "playwright test --config quality/modern-web-guidance/journeys.config.mjs --grep=focus",
+        "test:motion:lint": "node --test scripts/reduced-motion-lint.test.mjs",
+        "test:motion:browser": "node --test scripts/reduced-motion.browser.test.mjs",
+        "test:motion": "npm run test:motion:lint && npm run test:motion:browser"
     },
     "private": true,
     "dependencies": {

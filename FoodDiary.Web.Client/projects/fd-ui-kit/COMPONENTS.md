@@ -11,6 +11,12 @@ Page bodies and `fd-ui-dialog` use a short entrance animation. Use the app's
 `fd-motion-enter` utility for newly revealed inline panels. These entrances respect
 `prefers-reduced-motion`; avoid applying them to content that updates continuously.
 
+Toast/hint entrances, card/button effects, switches, floating labels and chart
+geometry transitions also opt in through `prefers-reduced-motion: no-preference`.
+State changes still render immediately with reduced motion. The input's
+nonvisual autofill animation remains enabled because its `animationstart` event
+synchronizes the control value. Run `npm run test:motion` for these CSS contracts.
+
 Prefer importing from the barrel:
 
 ```ts

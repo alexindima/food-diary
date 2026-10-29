@@ -16,6 +16,7 @@ import storybook from 'eslint-plugin-storybook';
 import unicornPlugin from 'eslint-plugin-unicorn';
 
 import templateComplexityBaseline from './eslint.template-complexity-baseline.json' with { type: 'json' };
+import noUnconditionalSmoothScroll from './eslint-rules/no-unconditional-smooth-scroll.js';
 import { restrictImports, scopedImportRestrictions } from './scripts/scoped-import-restrictions.mjs';
 
 const securityRecommendedRules = Object.fromEntries(
@@ -1371,6 +1372,7 @@ const noRootStatefulFeatureFacadeRule = {
 
 const localTsPlugin = {
     rules: {
+        'no-unconditional-smooth-scroll': noUnconditionalSmoothScroll,
         'no-mojibake': noMojibakeRule,
         'no-component-file-suffix': noComponentFileSuffixRule,
         'no-legacy-type-bucket-file': noLegacyTypeBucketFileRule,
@@ -1602,6 +1604,7 @@ export default [
             'local/no-legacy-angular-forms-imports': 'error',
             'local/no-locally-caught-throw': 'error',
             'local/no-root-stateful-feature-facade': 'error',
+            'local/no-unconditional-smooth-scroll': 'error',
             'no-else-return': 'error',
             'no-implicit-coercion': 'error',
             'no-lonely-if': 'error',

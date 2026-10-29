@@ -44,12 +44,16 @@
     border-radius: var(--fd-radius-panel);
     overflow: hidden;
     box-shadow: var(--fd-shadow-lg);
-    animation: fd-ui-toast-enter 250ms ease-out forwards;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fd-ui-toast-enter 250ms ease-out forwards;
+    }
     background: var(--fd-color-slate-800);
     color: var(--fd-color-white);
 
     &.is-leaving {
-        animation: fd-ui-toast-exit 200ms ease-out forwards;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: fd-ui-toast-exit 200ms ease-out forwards;
+        }
     }
 
     &--default {

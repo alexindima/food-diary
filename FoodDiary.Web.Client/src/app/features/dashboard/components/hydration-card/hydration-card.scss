@@ -71,7 +71,9 @@
         text-align: center;
         white-space: nowrap;
         pointer-events: none;
-        animation: hydration-added 1.6s ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: hydration-added 1.6s ease-out both;
+        }
     }
 
     &__vessel-inner {
@@ -94,7 +96,9 @@
             color-mix(in srgb, var(--fd-color-sky-500) 82%, var(--fd-color-white)),
             var(--fd-color-blue-500)
         );
-        transition: height 680ms cubic-bezier(0.22, 1, 0.36, 1);
+        @media (prefers-reduced-motion: no-preference) {
+            transition: height 680ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
         will-change: height;
     }
 
@@ -110,7 +114,9 @@
         mask-position: left top;
         mask-repeat: repeat-x;
         mask-size: 50% 100%;
-        animation: hydration-wave 5s linear infinite;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: hydration-wave 5s linear infinite;
+        }
     }
 
     &__water--empty {
@@ -133,7 +139,9 @@
         border: 1px solid color-mix(in srgb, var(--fd-color-white) 75%, transparent);
         border-radius: 50%;
         opacity: 0;
-        animation: hydration-bubble 4.8s ease-in infinite;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: hydration-bubble 4.8s ease-in infinite;
+        }
     }
 
     &__bubble--one {

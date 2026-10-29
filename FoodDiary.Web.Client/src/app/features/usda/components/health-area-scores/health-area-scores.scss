@@ -51,7 +51,9 @@
     fill: none;
     stroke-width: 3;
     stroke-linecap: round;
-    transition: stroke-dasharray 0.5s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: stroke-dasharray 0.5s ease;
+    }
 }
 
 .area-card--excellent .ring-fill {

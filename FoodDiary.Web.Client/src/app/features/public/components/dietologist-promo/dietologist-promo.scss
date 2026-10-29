@@ -21,7 +21,9 @@
     &__copy,
     &__card {
         min-width: 0;
-        animation: landingFadeUp 760ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 760ms ease-out both;
+        }
     }
 
     &__eyebrow {
@@ -57,7 +59,9 @@
         background: var(--fd-landing-surface-strong);
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
-        animation: landingFadeUp 820ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 820ms ease-out both;
+        }
     }
 
     &__step-index {

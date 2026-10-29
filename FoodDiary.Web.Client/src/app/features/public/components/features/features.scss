@@ -17,7 +17,9 @@
     &__header {
         grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
         margin-bottom: calc(var(--fd-landing-grid-gap) - var(--fd-space-md));
-        animation: landingFadeUp 640ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 640ms ease-out both;
+        }
     }
 
     &__eyebrow,
@@ -58,7 +60,9 @@
         padding: var(--fd-space-xs) var(--fd-space-xxs) var(--fd-space-sm);
         scroll-snap-type: x proximity;
         scrollbar-width: thin;
-        animation: landingFadeUp 760ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 760ms ease-out both;
+        }
         -webkit-overflow-scrolling: touch;
     }
 
@@ -82,10 +86,12 @@
         white-space: nowrap;
         scroll-snap-align: start;
         cursor: pointer;
-        transition:
-            transform 0.2s ease,
-            border-color 0.2s ease,
-            background 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
 
         &:hover {
             transform: translateY(-1px);
@@ -116,7 +122,9 @@
 
     &__panel {
         grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
-        animation: landingFadeUp 860ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 860ms ease-out both;
+        }
     }
 
     &__panel-copy {
@@ -148,7 +156,9 @@
         border: var(--fd-border-width) solid var(--fd-landing-border-soft);
         box-shadow: var(--fd-landing-shadow-soft);
         scroll-snap-align: start;
-        animation: landingFadeUp 620ms ease-out both;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: landingFadeUp 620ms ease-out both;
+        }
     }
 
     &__card-accent {

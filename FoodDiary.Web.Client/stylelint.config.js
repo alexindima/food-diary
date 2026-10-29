@@ -3,6 +3,7 @@ import designTokenValues from './stylelint-rules/design-token-values.js';
 import disableCommentReason from './stylelint-rules/disable-comment-reason.js';
 import noComponentFileSuffix from './stylelint-rules/no-component-file-suffix.js';
 import noSassUseAsWildcard from './stylelint-rules/no-sass-use-as-wildcard.js';
+import reducedMotion from './stylelint-rules/reduced-motion.js';
 
 const componentRawColorProperties =
     '/^(?:color|background|background-color|border|border-color|border-top|border-right|border-bottom|border-left|box-shadow|text-shadow|outline|outline-color|fill|stroke)$/';
@@ -21,7 +22,7 @@ const restrictedValueRules = {
 export default {
     extends: ['stylelint-config-standard-scss'],
     ignoreFiles: ['coverage/**', 'dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
-    plugins: [designTokenValues, disableCommentReason, noComponentFileSuffix, noSassUseAsWildcard],
+    plugins: [designTokenValues, disableCommentReason, noComponentFileSuffix, noSassUseAsWildcard, reducedMotion],
     rules: {
         'alpha-value-notation': null,
         'at-rule-no-unknown': null,
@@ -116,6 +117,7 @@ export default {
         'food-diary/disable-comment-reason': true,
         'food-diary/no-component-file-suffix': true,
         'food-diary/no-sass-use-as-wildcard': true,
+        'food-diary/reduced-motion': true,
         'shorthand-property-no-redundant-values': true,
         'value-keyword-case': null,
         'declaration-empty-line-before': ['never'],

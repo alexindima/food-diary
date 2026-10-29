@@ -22446,7 +22446,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-content/meal-list-content.html",
       "keys": [
         "MEAL_LIST.ADD_FIRST_MEAL_BUTTON",
-        "MEAL_LIST.DAY_TOTAL",
         "MEAL_LIST.EMPTY_COPY",
         "MEAL_LIST.EMPTY_TITLE",
         "MEAL_LIST.KCAL",
@@ -24021,6 +24020,7 @@
         "NUTRITION_TREND.DAY_EMPTY",
         "NUTRITION_TREND.DAY_GOAL",
         "NUTRITION_TREND.DETAILS",
+        "NUTRITION_TREND.GOAL",
         "NUTRITION_TREND.OPEN_DAY",
         "NUTRITION_TREND.RANGE_LABEL",
         "NUTRITION_TREND.STACK_NOTE",
@@ -35117,7 +35117,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "name"
       ],
@@ -38582,6 +38582,26 @@
       "selector": "fd-ui-segmented-toggle",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fitContent",
+        "options",
+        "selectedValue",
+        "size",
+        "stackOnNarrow"
+      ],
+      "outputsHandled": [
+        "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/period-filter/period-filter.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -39119,23 +39139,6 @@
       "inputsUsed": [
         "label",
         "options",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
-    },
-    {
-      "component": "FdUiSelectComponent",
-      "selector": "fd-ui-select",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "consumerFeature": "shared",
-      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card/nutrition-weekly-trend-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "options",
-        "size",
         "value"
       ],
       "outputsHandled": [

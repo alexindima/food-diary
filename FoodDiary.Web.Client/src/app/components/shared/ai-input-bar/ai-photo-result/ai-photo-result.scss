@@ -284,7 +284,9 @@
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-ai-scan-line);
     box-shadow: var(--fd-shadow-ai-scan-line);
-    animation: ai-photo-scan 4s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: ai-photo-scan 4s ease-in-out infinite;
+    }
 }
 
 .ai-photo-result__scan-line--nutrition {
@@ -549,10 +551,12 @@
     display: grid;
     grid-template-rows: 0fr;
     opacity: 0;
-    transition:
-        grid-template-rows 0.25s ease,
-        opacity 0.2s ease,
-        margin-top 0.25s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            grid-template-rows 0.25s ease,
+            opacity 0.2s ease,
+            margin-top 0.25s ease;
+    }
 
     // The collapsed panel remains a grid item, so cancel the stack gap that would otherwise add extra space below the action row.
     margin-top: calc(0px - var(--fd-space-sm));

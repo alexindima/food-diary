@@ -57,11 +57,13 @@
     justify-content: center;
     gap: var(--fd-space-emoji-picker-option-gap);
     cursor: pointer;
-    transition:
-        background 0.18s ease,
-        border-color 0.18s ease,
-        box-shadow 0.18s ease,
-        transform 0.18s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            background 0.18s ease,
+            border-color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
+    }
 
     &:where(:hover:not(:disabled)) {
         background: var(--fd-emoji-picker-option-bg-hover);

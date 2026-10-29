@@ -231,10 +231,37 @@ export async function inspectPlatformPage(page, check, scenario) {
                     if (animation.playState !== 'running' || !animation.effect?.getKeyframes) continue;
                     const moving = animation.effect
                         .getKeyframes()
-                        .some(frame => ['transform', 'translate', 'rotate', 'scale', 'left', 'top'].some(key => key in frame));
+                        .some(frame =>
+                            [
+                                'transform',
+                                'translate',
+                                'rotate',
+                                'scale',
+                                'left',
+                                'top',
+                                'right',
+                                'bottom',
+                                'width',
+                                'height',
+                                'x',
+                                'y',
+                                'd',
+                                'strokeDasharray',
+                                'strokeDashoffset',
+                                'backgroundPosition',
+                                'backgroundPositionX',
+                                'backgroundPositionY',
+                                'gridTemplateRows',
+                                'gridTemplateColumns',
+                                'fontSize',
+                                'marginTop',
+                            ].some(key => key in frame),
+                        );
                     const target = animation.effect.target;
-                    if (moving && target?.checkVisibility() && !target.closest('[role="progressbar"], [role="status"]'))
-                        fail(`Nonessential motion remains active under reduced motion: ${target.tagName}.${target.className}`);
+                    if (moving && target?.checkVisibility())
+                        fail(
+                            `Nonessential motion remains active under reduced motion: ${target.tagName}.${target.getAttribute('class') ?? ''}`,
+                        );
                 }
             }
             if (check === 'browser:form-attributes') {

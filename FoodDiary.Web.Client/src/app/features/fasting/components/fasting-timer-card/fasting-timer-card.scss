@@ -55,9 +55,11 @@
         width: 220px;
         height: 220px;
         border-radius: var(--fd-radius-pill);
-        transition:
-            box-shadow 0.35s ease,
-            transform 0.35s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                box-shadow 0.35s ease,
+                transform 0.35s ease;
+        }
 
         &--summary {
             width: min(220px, 100%);
@@ -78,9 +80,11 @@
 
     &__ring-progress {
         stroke: var(--fd-color-purple-500);
-        transition:
-            stroke-dashoffset 0.5s ease,
-            stroke 0.35s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                stroke-dashoffset 0.5s ease,
+                stroke 0.35s ease;
+        }
 
         &--overtime {
             stroke: var(--fd-color-green-500);

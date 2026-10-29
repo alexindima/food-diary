@@ -22,18 +22,22 @@
 .dynamic-progress-bar-line {
     height: 100%;
     color: var(--fd-color-white);
-    transition:
-        background-color 0.3s ease,
-        width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            background-color 0.3s ease,
+            width 0.3s ease;
+    }
 }
 
 .dynamic-progress-bar-title {
     position: absolute;
     transform: translateX(-50%);
     top: var(--dynamic-progress-title-offset);
-    transition:
-        left 0.3s ease,
-        width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            left 0.3s ease,
+            width 0.3s ease;
+    }
 
     &.text-black {
         color: var(--fd-color-slate-900);
@@ -51,9 +55,11 @@
     width: 2px;
     background-color: var(--fd-bg-overlay-medium);
     transform: translateX(-50%);
-    transition:
-        left 0.3s ease,
-        width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            left 0.3s ease,
+            width 0.3s ease;
+    }
 }
 
 .dynamic-progress-bar-overflow-text {
@@ -63,9 +69,11 @@
     transform: translateX(-100%);
     width: max-content;
     color: var(--fd-color-slate-900);
-    transition:
-        left 0.3s ease,
-        width 0.3s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            left 0.3s ease,
+            width 0.3s ease;
+    }
 }
 
 .dynamic-progress-bar-threshold {

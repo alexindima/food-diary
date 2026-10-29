@@ -41,10 +41,12 @@
     top: 50%;
     left: var(--fd-space-control-label-inset-inline);
     transform: translateY(-50%);
-    transition:
-        transform 0.15s ease,
-        top 0.15s ease,
-        font-size 0.15s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            transform 0.15s ease,
+            top 0.15s ease,
+            font-size 0.15s ease;
+    }
     background: var(--fd-date-label-bg);
     padding: 0 var(--fd-space-field-label-padding-x);
     border-radius: var(--fd-radius-field-label);

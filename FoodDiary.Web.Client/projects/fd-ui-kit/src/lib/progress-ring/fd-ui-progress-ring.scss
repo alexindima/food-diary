@@ -37,10 +37,14 @@
         stroke: var(--fd-progress-ring-color);
         stroke-linecap: round;
         stroke-dashoffset: 0;
-        animation: fd-ui-progress-ring-reveal var(--fd-progress-ring-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
-        transition:
-            stroke-dasharray 0.4s ease,
-            stroke 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            animation: fd-ui-progress-ring-reveal var(--fd-progress-ring-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                stroke-dasharray 0.4s ease,
+                stroke 0.2s ease;
+        }
     }
 
     &:where(:hover, :focus-visible) &__value {

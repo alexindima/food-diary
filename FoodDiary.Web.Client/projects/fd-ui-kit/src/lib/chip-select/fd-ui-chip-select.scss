@@ -37,12 +37,14 @@
     font-weight: var(--fd-chip-select-font-weight);
     line-height: 1;
     cursor: pointer;
-    transition:
-        background 0.18s ease,
-        border-color 0.18s ease,
-        color 0.18s ease,
-        box-shadow 0.18s ease,
-        transform 0.18s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            background 0.18s ease,
+            border-color 0.18s ease,
+            color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
+    }
 
     &:where(:hover:not(:disabled)) {
         border-color: var(--fd-chip-select-border-hover);

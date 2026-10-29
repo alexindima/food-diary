@@ -159,7 +159,9 @@
         }
 
         fd-ui-icon {
-            transition: transform 0.2s ease;
+            @media (prefers-reduced-motion: no-preference) {
+                transition: transform 0.2s ease;
+            }
 
             &.is-open {
                 transform: rotate(180deg);
@@ -196,9 +198,11 @@
         box-shadow: var(--fd-shadow-none);
         cursor: pointer;
         text-align: left;
-        transition:
-            box-shadow 0.2s ease,
-            transform 0.15s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                box-shadow 0.2s ease,
+                transform 0.15s ease;
+        }
 
         &:hover {
             background: var(--fd-bg-brand-tint);
@@ -212,7 +216,9 @@
 
     &__user-arrow {
         color: var(--fd-color-slate-500);
-        transition: transform 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: transform 0.2s ease;
+        }
 
         &.is-open {
             transform: rotate(180deg);
@@ -285,12 +291,14 @@
         text-align: left;
         cursor: pointer;
         font-family: inherit;
-        transition:
-            background 0.15s ease,
-            border-color 0.15s ease,
-            color 0.15s ease,
-            transform 0.15s ease,
-            box-shadow 0.15s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                background 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+        }
 
         fd-ui-icon {
             font-size: var(--fd-text-section-title-size);
@@ -443,10 +451,12 @@
         padding: var(--fd-space-xxs);
         border-radius: var(--fd-radius-button);
         text-decoration: none;
-        transition:
-            background 0.2s ease,
-            color 0.2s ease,
-            transform 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
 
         fd-ui-icon {
             font-size: var(--fd-text-card-title-size);

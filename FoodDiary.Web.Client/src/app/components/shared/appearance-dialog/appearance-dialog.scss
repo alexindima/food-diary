@@ -43,10 +43,12 @@
     padding: var(--fd-space-stat-tile-padding);
     text-align: left;
     cursor: pointer;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+    }
 
     &:hover {
         transform: translateY(-1px);

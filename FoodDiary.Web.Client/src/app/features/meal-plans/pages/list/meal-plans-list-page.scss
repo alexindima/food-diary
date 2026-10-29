@@ -32,9 +32,11 @@
     background: var(--fd-bg-surface-brand);
     box-shadow: var(--fd-shadow-lg);
     cursor: pointer;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
 
     &:hover {
         transform: translateY(-2px);

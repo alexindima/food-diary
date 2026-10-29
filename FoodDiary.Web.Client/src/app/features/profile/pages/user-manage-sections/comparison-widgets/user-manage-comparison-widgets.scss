@@ -257,7 +257,9 @@
 
     &__accordion-chevron {
         color: var(--fd-color-text-muted);
-        transition: transform 160ms ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: transform 160ms ease;
+        }
     }
 
     &__appearance-fields {

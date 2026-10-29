@@ -61,7 +61,9 @@
     }
 
     &__contour-path {
-        transition: d 420ms ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: d 420ms ease;
+        }
     }
 
     &__contour-color {
@@ -95,7 +97,9 @@
         stroke-width: 3;
         opacity: 0.75;
         pointer-events: none;
-        transition: stroke-dashoffset 420ms ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: stroke-dashoffset 420ms ease;
+        }
     }
 
     &__connector {
@@ -328,7 +332,9 @@
         overflow-x: auto;
         overscroll-behavior-x: contain;
         scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
+        @media (prefers-reduced-motion: no-preference) {
+            scroll-behavior: smooth;
+        }
         scrollbar-width: none;
         line-height: 1.35;
     }

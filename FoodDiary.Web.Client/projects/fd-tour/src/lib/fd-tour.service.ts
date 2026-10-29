@@ -152,11 +152,8 @@ export class FdTourService {
     private scrollCurrentTargetIntoView(block: ScrollLogicalPosition = 'center'): void {
         const target = this.target();
         if (target instanceof HTMLElement && typeof target.scrollIntoView === 'function') {
-            const viewport = this.document.defaultView;
-            const reducedMotion =
-                viewport !== null &&
-                typeof viewport.matchMedia === 'function' &&
-                viewport.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const viewport: Partial<Window> | null = this.document.defaultView;
+            const reducedMotion = viewport?.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
             target.scrollIntoView({ block, inline: 'center', behavior: reducedMotion ? 'instant' : 'smooth' });
         }
     }

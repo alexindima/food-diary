@@ -26,7 +26,9 @@
     background: var(--fd-bg-ai-scan-line);
     box-shadow: var(--fd-shadow-ai-scan-line);
     pointer-events: none;
-    animation: product-photo-scan 4s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: product-photo-scan 4s ease-in-out infinite;
+    }
 
     @media (prefers-reduced-motion: reduce) {
         animation: none;

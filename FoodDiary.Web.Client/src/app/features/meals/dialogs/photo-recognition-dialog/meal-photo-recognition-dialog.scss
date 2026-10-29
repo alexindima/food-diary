@@ -157,7 +157,9 @@
     background: var(--fd-bg-ai-dialog-scan-line);
     box-shadow: var(--fd-shadow-ai-dialog-scan-line);
     filter: var(--fd-shadow-filter-ai-dialog-scan-line);
-    animation: photo-ai-scan 4s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: photo-ai-scan 4s ease-in-out infinite;
+    }
 }
 
 .photo-ai-dialog__scan-line--nutrition {
@@ -386,7 +388,9 @@
     height: 100%;
     border-radius: var(--fd-radius-pill);
     background: var(--fd-bg-nutrition-loading-bar);
-    animation: nutrition-progress 1.8s ease-in-out infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: nutrition-progress 1.8s ease-in-out infinite;
+    }
 }
 
 .photo-ai-dialog__nutrition-text {
