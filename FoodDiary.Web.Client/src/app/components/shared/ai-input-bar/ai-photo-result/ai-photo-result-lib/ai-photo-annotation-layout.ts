@@ -132,6 +132,21 @@ export function evaluateAiPhotoAnnotationLayout(annotations: readonly AiPhotoAnn
     return evaluateLayoutAgainstProducts(annotations, annotations);
 }
 
+export function resolveAiPhotoAnnotationConnectorPath(annotation: AiPhotoAnnotation, renderedCard: Rect): string {
+    const [, plannedAnchor] = annotation.connectorPoints;
+    const center = rectCenter(renderedCard);
+    let anchor: Point;
+    // Keep the edge selected by the layout search, but use the rendered card's dimensions.
+    if (plannedAnchor.x === annotation.cardX) {
+        anchor = { x: renderedCard.x, y: center.y };
+    } else if (plannedAnchor.x === annotation.cardX + annotation.cardWidth) {
+        anchor = { x: renderedCard.x + renderedCard.width, y: center.y };
+    } else {
+        anchor = { x: center.x, y: plannedAnchor.y === annotation.cardY ? renderedCard.y : renderedCard.y + renderedCard.height };
+    }
+    return `${annotation.centerX},${annotation.centerY} ${anchor.x},${anchor.y}`;
+}
+
 export function fitAiPhotoAnnotationLayout(
     annotations: readonly AiPhotoAnnotation[],
     activeAnnotationId: string | null,

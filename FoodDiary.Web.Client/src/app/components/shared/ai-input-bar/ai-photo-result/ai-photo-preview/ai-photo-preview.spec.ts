@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
@@ -65,6 +65,72 @@ async function setupAiPhotoPreviewAsync(): Promise<ComponentFixture<AiPhotoPrevi
 }
 
 describe('AiPhotoPreviewComponent image geometry', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    /* eslint-disable @typescript-eslint/no-magic-numbers -- Independent pixel measurements reproduce the rendered card geometry. */
+    it.each(['desktop', 'mobile'])('connects to the rendered %s card edge after rendering and resizing', async variant => {
+        let frame = new DOMRect(200, 100, 600, 800);
+        let card = new DOMRect(8, 116, 180, 56);
+        const resizeCallbacks: Array<() => void> = [];
+        const disconnect = vi.fn();
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                public constructor(callback: () => void) {
+                    resizeCallbacks.push(callback);
+                }
+                public observe = vi.fn();
+                public disconnect = disconnect;
+            },
+        );
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+            return this.classList.contains('ai-photo-result__annotation-frame') ? frame : card;
+        });
+        const annotation: AiPhotoAnnotation = {
+            ...createAnnotations(1)[0],
+            centerX: 50,
+            centerY: 18,
+            cardX: -32,
+            cardY: 2,
+            cardWidth: 30,
+            connectorPoints: [
+                { x: 50, y: 18 },
+                { x: -2, y: 9.5 },
+            ],
+            connectorPath: '50,18 -2,9.5',
+        };
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'blob:local-preview');
+        fixture.componentRef.setInput('annotations', [annotation]);
+        fixture.componentRef.setInput('mobileAnnotations', [annotation]);
+        fixture.detectChanges();
+        TestBed.tick();
+        const host = fixture.nativeElement as HTMLElement;
+        const connector = host.querySelector(`.ai-photo-result__annotation-connector-core.ai-photo-result__annotation-${variant}`);
+
+        expect(connector?.getAttribute('points'), 'connector must meet the actual card midpoint').toBe('50,18 -2,5.5');
+
+        frame = new DOMRect(100, 50, 300, 400);
+        card = new DOMRect(4, 58, 90, 64);
+        resizeCallbacks.forEach(callback => {
+            callback();
+        });
+        TestBed.tick();
+        expect(connector?.getAttribute('points')).toBe('50,18 -2,10');
+
+        fixture.componentRef.setInput('annotationsVisible', false);
+        fixture.detectChanges();
+        TestBed.tick();
+        expect(disconnect).toHaveBeenCalled();
+        expect(host.querySelector('polyline')).toBeNull();
+    });
+    /* eslint-enable @typescript-eslint/no-magic-numbers -- End of pixel geometry regression. */
+});
+
+describe('AiPhotoPreviewComponent image aspect ratio', () => {
     it('updates the annotation aspect ratio when a different image loads', async () => {
         const fixture = await setupAiPhotoPreviewAsync();
         fixture.componentRef.setInput('imageUrl', 'https://example.com/meal.png');

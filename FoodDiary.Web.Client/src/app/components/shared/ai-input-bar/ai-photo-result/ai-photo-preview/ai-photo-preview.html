@@ -24,26 +24,26 @@
                         [style.--ai-photo-aspect-ratio]="imageAspectRatio()"
                         [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
                     >
-                        <div class="ai-photo-result__annotation-frame">
+                        <div #annotationFrame class="ai-photo-result__annotation-frame">
                             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                 @for (annotation of cardAnnotations(); track annotation.id) {
                                     <polyline
                                         class="ai-photo-result__annotation-connector-outline ai-photo-result__annotation-desktop"
-                                        [attr.points]="annotation.connectorPath"
+                                        [attr.points]="desktopConnectorPaths().get(annotation.id) ?? annotation.connectorPath"
                                     />
                                     <polyline
                                         class="ai-photo-result__annotation-connector-core ai-photo-result__annotation-desktop"
-                                        [attr.points]="annotation.connectorPath"
+                                        [attr.points]="desktopConnectorPaths().get(annotation.id) ?? annotation.connectorPath"
                                     />
                                 }
                                 @for (annotation of mobileCardAnnotations(); track annotation.id) {
                                     <polyline
                                         class="ai-photo-result__annotation-connector-outline ai-photo-result__annotation-mobile"
-                                        [attr.points]="annotation.connectorPath"
+                                        [attr.points]="mobileConnectorPaths().get(annotation.id) ?? annotation.connectorPath"
                                     />
                                     <polyline
                                         class="ai-photo-result__annotation-connector-core ai-photo-result__annotation-mobile"
-                                        [attr.points]="annotation.connectorPath"
+                                        [attr.points]="mobileConnectorPaths().get(annotation.id) ?? annotation.connectorPath"
                                     />
                                 }
                             </svg>
@@ -65,6 +65,7 @@
                             }
                             @for (annotation of cardAnnotations(); track annotation.id) {
                                 <button
+                                    #desktopCard
                                     class="ai-photo-result__annotation-card ai-photo-result__annotation-desktop"
                                     type="button"
                                     [class.ai-photo-result__annotation-card--active]="annotation.id === activeAnnotationId()"
@@ -88,6 +89,7 @@
                             }
                             @for (annotation of mobileCardAnnotations(); track annotation.id) {
                                 <button
+                                    #mobileCard
                                     class="ai-photo-result__annotation-card ai-photo-result__annotation-card--mobile ai-photo-result__annotation-mobile"
                                     type="button"
                                     [class.ai-photo-result__annotation-card--active]="annotation.id === activeAnnotationId()"
