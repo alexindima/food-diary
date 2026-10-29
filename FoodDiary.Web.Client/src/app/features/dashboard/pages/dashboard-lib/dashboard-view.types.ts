@@ -2,6 +2,7 @@ import type { MealPreviewEntry } from '../../../../components/shared/meals-previ
 import type { NutrientBar } from '../../../../components/shared/nutrition-summary/nutrition-summary.types';
 import type { CyclePredictions, CycleResponse } from '../../../../shared/models/cycle.data';
 import type { DailyAdvice } from '../../../../shared/models/daily-advice.data';
+import type { DashboardHydrationHistory } from '../../../../shared/models/dashboard.data';
 import type { FastingSession } from '../../../../shared/models/fasting.data';
 import type { TdeeInsight } from '../../../../shared/models/tdee-insight.data';
 import type { WeightTrendPoint } from '../../components/weight-trend-card/weight-trend-card';
@@ -42,6 +43,7 @@ export type DashboardMealsPreviewState = {
 export type DashboardHydrationCardState = {
     total: number;
     goal: number | null;
+    history?: DashboardHydrationHistory | null;
 };
 
 export type DashboardCycleCardState = {

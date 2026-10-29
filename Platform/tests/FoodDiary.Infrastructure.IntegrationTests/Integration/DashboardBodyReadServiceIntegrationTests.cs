@@ -10,6 +10,32 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class DashboardBodyReadServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerTheory]
+    [InlineData(10)]
+    [InlineData(12)]
+    public async Task GetBodyAsync_BoundsHydrationHistoryInPostgres(int count) {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"dashboard-water-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        DateTime start = UtcDate(2026, 8, 27, 20);
+        HydrationEntry[] entries = [.. Enumerable.Range(0, count)
+            .Select(index => HydrationEntry.Create(user.Id, start.AddMinutes(index), 150))];
+        context.HydrationEntries.AddRange(entries);
+        context.HydrationEntries.Add(HydrationEntry.Create(user.Id, start.AddDays(1), 1000));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        DashboardBodyReadModel result = await new DashboardBodyReadService(context).GetBodyAsync(
+            user.Id, start, start.AddDays(1).AddMilliseconds(-1), start.Date, trendQuantizationDays: 1, includeWeight: false, includeWaist: false, includeHydration: true, cancellationToken: CancellationToken.None);
+
+        Assert.NotNull(result.HydrationHistory);
+        Assert.Multiple(
+            () => Assert.Equal(count * 150, result.HydrationTotalMl),
+            () => Assert.Equal(count > 10, result.HydrationHistory.HasMore),
+            () => Assert.Equal(entries.Reverse().Take(10).Select(entry => entry.Id.Value), result.HydrationHistory.Entries.Select(entry => entry.Id)),
+            () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
+
     [RequiresDockerFact]
     public async Task GetBodyAsync_CombinesLatestAndTrendQueriesOnPostgres() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

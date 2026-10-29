@@ -54,7 +54,8 @@ async function installMiniAppAsync(
         calls.refresh++;
         expect(route.request().headers()['x-fooddiary-client']).toBe('telegram');
         if (!state.authenticated) {
-            await route.fulfill({ status: 401, json: {} });
+            // The token endpoint validates the absent refresh cookie before login.
+            await route.fulfill({ status: HTTP_BAD_REQUEST, json: { error: 'Validation.Required', message: 'RefreshToken is required' } });
             return;
         }
         await route.fulfill(

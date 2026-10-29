@@ -27,4 +27,5 @@ public sealed record DashboardSnapshotHttpResponse(
     double CaloriesBurned = 0,
     TdeeInsightHttpResponse? TdeeInsight = null,
     CycleHttpResponse? CurrentCycle = null,
-    bool CycleHidden = false);
+    bool CycleHidden = false,
+    DashboardHydrationHistoryHttpResponse? HydrationHistory = null);

@@ -265,6 +265,7 @@
       "date",
       "dateTo",
       "hydration",
+      "hydrationHistory",
       "meals",
       "statistics",
       "tdeeInsight",

@@ -91,7 +91,8 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
             Math.Round(caloriesBurned, 1, MidpointRounding.ToEven),
             tdeeInsightResult?.IsSuccess == true ? tdeeInsightResult.Value : null,
             currentCycleResult?.IsSuccess == true && currentCycleResult.Value?.HideFromDashboard != true ? currentCycleResult.Value : null,
-            CycleHidden: currentCycleResult?.IsSuccess == true && currentCycleResult.Value?.HideFromDashboard == true));
+            CycleHidden: currentCycleResult?.IsSuccess == true && currentCycleResult.Value?.HideFromDashboard == true,
+            HydrationHistory: context.Sections.IncludeHydration ? readModel.Body.HydrationHistory : null));
     }
 
     private static DashboardStatisticsModel BuildStatistics(

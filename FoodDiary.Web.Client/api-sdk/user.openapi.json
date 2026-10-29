@@ -2083,6 +2083,21 @@
                 },
                 "type": "object"
             },
+            "DashboardHydrationHistoryHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "entries": {
+                        "items": {
+                            "$ref": "#/components/schemas/HydrationEntryHttpResponse"
+                        },
+                        "type": "array"
+                    },
+                    "hasMore": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
             "DashboardLayoutHttpModel": {
                 "additionalProperties": false,
                 "properties": {
@@ -2181,6 +2196,14 @@
                         "allOf": [
                             {
                                 "$ref": "#/components/schemas/HydrationDailyHttpResponse"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "hydrationHistory": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DashboardHydrationHistoryHttpResponse"
                             }
                         ],
                         "nullable": true

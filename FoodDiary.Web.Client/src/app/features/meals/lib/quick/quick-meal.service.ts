@@ -10,6 +10,7 @@ import { normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.util
 import type { MealItemManageDto, MealManageDto } from '../../../../shared/models/meal.data';
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
+import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import { getDateInputValue, getTimeInputValue } from '../meal-date-input.utils';
@@ -193,7 +194,7 @@ export class QuickMealService {
                         this.createOperation = null;
                     }
                     this.isSavingSignal.set(false);
-                    this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'));
+                    this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'), { key: MEAL_FEEDBACK_TOAST_KEY });
                     this.invalidation.reportMealMutation();
                     this.removeSubmittedAmounts();
                     if (this.itemsSignal().length === 0) {

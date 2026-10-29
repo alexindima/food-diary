@@ -30,11 +30,9 @@ import type {
 import { BODY_TRACKING_ITEMS, DESKTOP_BOTTOM_ITEMS, FOOD_TRACKING_ITEMS } from './sidebar-lib/sidebar-navigation.config';
 import {
     buildPrimarySidebarNavItems,
-    calculateSidebarDailyProgressPercent,
     isSidebarActionItem,
     isSidebarRouteActive,
     isSidebarRouteItem,
-    normalizeSidebarPath,
 } from './sidebar-lib/sidebar-view.utils';
 import { SidebarMobileComponent } from './sidebar-mobile/sidebar-mobile';
 
@@ -94,38 +92,13 @@ export class SidebarComponent {
     protected readonly isBodyTrackingOpen = computed(() => this.openDesktopSection() === 'body');
     protected readonly isMobileSheetOpen = computed(() => this.mobileSheet() !== null);
     protected readonly isMobileViewport = signal(this.getIsMobileViewport());
-    protected readonly currentPath = signal(this.getCurrentPath());
-    protected readonly isMobileProgressVisible = computed(
-        () =>
-            this.isAuthenticated() &&
-            this.isMobileViewport() &&
-            ['/meals', '/products', '/recipes', '/explore'].includes(this.currentPath()),
-    );
     protected readonly pendingRoute = signal<string | null>(null);
-    protected readonly dailyConsumedKcal = this.sidebarFacade.dailyConsumedKcal;
-    protected readonly dailyGoalKcal = this.sidebarFacade.dailyGoalKcal;
-    protected readonly dailyConsumedKcalRounded = computed(() => Math.round(this.dailyConsumedKcal()));
-    protected readonly dailyGoalKcalRounded = computed(() => Math.round(this.dailyGoalKcal()));
-    protected readonly dailyProgressPercent = computed(() =>
-        calculateSidebarDailyProgressPercent(this.dailyConsumedKcal(), this.dailyGoalKcal()),
-    );
     private lastUserMenuTrigger: HTMLElement | null = null;
     private lastMobileSheetTrigger: HTMLElement | null = null;
 
     public constructor() {
         effect(() => {
             this.sidebarFacade.syncCurrentUser(this.isAuthenticated());
-        });
-
-        effect(() => {
-            this.sidebarFacade.dailyProgressInvalidationVersion();
-            if (!this.isMobileProgressVisible()) {
-                this.dailyConsumedKcal.set(0);
-                this.dailyGoalKcal.set(0);
-                return;
-            }
-
-            this.sidebarFacade.syncDailyProgress();
         });
 
         effect(() => {
@@ -149,7 +122,6 @@ export class SidebarComponent {
 
         this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             if (event instanceof NavigationEnd) {
-                this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
                 this.pendingRoute.set(null);
                 return;
             }
@@ -206,10 +178,6 @@ export class SidebarComponent {
 
     private getIsMobileViewport(): boolean {
         return this.browserWindow.matchMedia(this.mobileViewportQuery)?.matches ?? false;
-    }
-
-    private getCurrentPath(url = this.router.url): string {
-        return normalizeSidebarPath(url);
     }
 
     protected toggleFoodTracking(): void {

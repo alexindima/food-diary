@@ -67,6 +67,20 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
             .SumAsync(x => x.AmountMl, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(
+        UserId userId,
+        DateTime startUtc,
+        DateTime endUtc,
+        int limit,
+        CancellationToken cancellationToken = default) =>
+        await entries.AsNoTracking()
+            .Where(entry => entry.UserId == userId && entry.Timestamp >= startUtc && entry.Timestamp <= endUtc)
+            .OrderByDescending(entry => entry.Timestamp)
+            .ThenByDescending(entry => entry.Id)
+            .Take(limit)
+            .Select(entry => new HydrationEntryReadModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
     public async Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
         UserId userId,
         DateTime dateFrom,

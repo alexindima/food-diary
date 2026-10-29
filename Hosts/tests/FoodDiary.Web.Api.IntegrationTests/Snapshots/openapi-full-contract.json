@@ -27803,6 +27803,24 @@
       ]
     },
     {
+      "Name": "DashboardHydrationHistoryHttpResponse",
+      "Properties": [
+        {
+          "Name": "entries",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/HydrationEntryHttpResponse"
+        },
+        {
+          "Name": "hasMore",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "DashboardLayoutHttpModel",
       "Properties": [
         {
@@ -27911,6 +27929,12 @@
           "Name": "hydration",
           "Required": false,
           "Reference": "#/components/schemas/HydrationDailyHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "hydrationHistory",
+          "Required": false,
+          "Reference": "#/components/schemas/DashboardHydrationHistoryHttpResponse",
           "Nullable": false
         },
         {

@@ -66,6 +66,26 @@ current-session guard and list projection (previously five SELECTs).
 Ordinary browser sessions start with a 30-day lifetime, or 90 days with remember-me.
 Remember-me also makes the cookie persistent; otherwise it is a browser session
 cookie (browser session restoration settings can preserve such cookies).
+An independent persistent HttpOnly cookie, `fooddiary.browser.previous` (or
+`fooddiary.admin.previous`), remembers the last issued session for that browser
+profile for 365 days. HTTPS applies the same `__Host-` prefix and host-only scope.
+Its session ID is protected with a time-limited, realm-specific Data Protection
+purpose using the host's existing key ring. The marker cannot authenticate or
+restore a session. After a fresh successful sign-in, Identity revokes the marked
+session for the authenticated account within the login transaction, then issues
+a new marker. This still works when the ordinary authentication cookie was lost.
+Successful restoration backfills the marker for existing installations without
+renewing a nonrenewed authentication cookie. Logout leaves the marker available;
+its session has already been revoked.
+
+The marker is scoped to a browser profile, with separate purposes for the website
+and admin UI. User-Agent and IP address are display/audit metadata, not device
+identity. Clearing all site cookies or using a new private profile removes the
+association. Historic orphaned sessions without retained proof cannot safely be
+assigned to one of several identical browsers; use the explicit session-revocation
+controls to remove them. Revoked and expired records disappear from the active
+list immediately and retain the existing database retention policy.
+
 When at most seven days remain, successful `POST /auth/session` restoration can
 atomically extend expiry by another 30/90 days. There is no absolute maximum
 lifetime by default (`BrowserSessions.AbsoluteLifetimeDays` is null): continued

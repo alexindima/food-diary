@@ -28,4 +28,5 @@ public sealed record DashboardSnapshotModel(
     double CaloriesBurned = 0,
     TdeeInsightModel? TdeeInsight = null,
     CycleModel? CurrentCycle = null,
-    bool CycleHidden = false);
+    bool CycleHidden = false,
+    DashboardHydrationHistoryModel? HydrationHistory = null);

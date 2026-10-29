@@ -61,6 +61,7 @@ export * from './daily-advice-http-response';
 export * from './daily-calories-http-response';
 export * from './daily-micronutrient-http-response';
 export * from './daily-micronutrient-summary-http-response';
+export * from './dashboard-hydration-history-http-response';
 export * from './dashboard-layout-http-model';
 export * from './dashboard-meals-http-response';
 export * from './dashboard-snapshot-http-response';

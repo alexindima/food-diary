@@ -7,9 +7,6 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 import { MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
 import { SidebarMobileComponent } from './sidebar-mobile';
 
-const DAILY_CONSUMED = 850;
-const DAILY_GOAL = 2000;
-const DAILY_PROGRESS = 42.5;
 const UNREAD_NOTIFICATION_COUNT = 3;
 
 beforeEach(() => {
@@ -171,10 +168,6 @@ function createComponent(
     });
 
     const fixture = TestBed.createComponent(SidebarMobileComponent);
-    fixture.componentRef.setInput('isProgressVisible', true);
-    fixture.componentRef.setInput('dailyConsumedKcalRounded', DAILY_CONSUMED);
-    fixture.componentRef.setInput('dailyGoalKcalRounded', DAILY_GOAL);
-    fixture.componentRef.setInput('dailyProgressPercent', DAILY_PROGRESS);
     fixture.componentRef.setInput('pendingRoute', null);
     fixture.componentRef.setInput('unreadNotificationCount', unreadNotificationCount);
     fixture.componentRef.setInput('mobileSheet', mobileSheet);

@@ -18,16 +18,19 @@
         }
     </div>
 } @else {
-    <p class="fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
+    <p class="hydration-card__selected-day-hint fd-ui-caption">{{ 'HYDRATION_CARD.SELECTED_DAY_HINT' | translate }}</p>
 }
-<div class="hydration-card__undo-row" [hidden]="!canAdd() && undoAmount() === null">
-    <span class="hydration-card__confirmation fd-row fd-gap-xxs fd-ui-caption" role="status">
-        @if (undoAmount(); as amount) {
+<span class="fd-visually-hidden-focusable" role="status">
+    @if (undoAmount(); as amount) {
+        {{ 'HYDRATION_CARD.ADDED_AMOUNT' | translate: { value: (amount | localizedNumber: language()) } }}
+    }
+</span>
+@if (undoAmount() !== null) {
+    <div class="hydration-card__undo-row fd-motion-enter">
+        <span class="hydration-card__confirmation fd-row fd-gap-xxs fd-ui-caption" aria-hidden="true">
             <fd-ui-icon name="check_circle" size="sm" aria-hidden="true" />
-            {{ 'HYDRATION_CARD.ADDED_AMOUNT' | translate: { value: (amount | localizedNumber: language()) } }}
-        }
-    </span>
-    @if (undoAmount() !== null) {
+            {{ 'HYDRATION_CARD.ADDED_AMOUNT' | translate: { value: (undoAmount() | localizedNumber: language()) } }}
+        </span>
         <fd-ui-button
             class="hydration-card__undo"
             variant="secondary"
@@ -41,5 +44,5 @@
         >
             {{ 'HYDRATION_CARD.UNDO' | translate }}
         </fd-ui-button>
-    }
-</div>
+    </div>
+}

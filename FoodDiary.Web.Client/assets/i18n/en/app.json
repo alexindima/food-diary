@@ -1,4 +1,9 @@
 {
+    "MEAL_PROGRESS": {
+        "DAILY_GOAL": "Daily calorie goal",
+        "TODAY_WITH_GOAL": "Today: {{consumed}} / {{goal}} kcal",
+        "TODAY_TOTAL": "Today: {{consumed}} kcal"
+    },
     "PWA": {
         "INSTALL": {
             "TITLE": "FoodDiary at your fingertips",
@@ -3499,7 +3504,10 @@
         "REMAINING": "{{value}} ml remaining",
         "GOAL_REACHED": "Daily goal reached",
         "QUICK_ADD_LABEL": "Quick water amounts",
-        "ADD_AMOUNT": "Add {{value}} ml of water"
+        "ADD_AMOUNT": "Add {{value}} ml of water",
+        "HISTORY_TITLE": "Water entries",
+        "HISTORY_EMPTY": "No water entries for this day yet.",
+        "HISTORY_LIMIT": "Showing the latest {{count}} entries."
     },
     "CYCLE_CARD": {
         "CONFIDENCE_LEARNING": "Learning your pattern",

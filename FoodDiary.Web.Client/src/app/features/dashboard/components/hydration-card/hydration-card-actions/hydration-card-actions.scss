@@ -28,8 +28,8 @@
         margin-top: var(--fd-space-sm);
     }
 
-    &__undo-row[hidden] {
-        display: none;
+    &__selected-day-hint {
+        margin: var(--fd-space-sm) 0 0;
     }
 
     &__confirmation {

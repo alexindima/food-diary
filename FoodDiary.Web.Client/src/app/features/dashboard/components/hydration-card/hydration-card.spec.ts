@@ -123,7 +123,7 @@ describe('HydrationCardComponent context changes and details', () => {
         button?.click();
         expect(dialogOpen).toHaveBeenCalledWith(HydrationDetailsDialogComponent, {
             size: 'sm',
-            data: { total: TOTAL_ML, goal: GOAL_ML },
+            data: { total: TOTAL_ML, history: null },
         });
         closed.next(undefined);
         expect(goal).not.toHaveBeenCalled();
@@ -138,6 +138,15 @@ function confirmEntry(fixture: ComponentFixture<HydrationCardComponent>, id: str
     fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 }
+
+describe('HydrationCardComponent compact layout', () => {
+    it('does not reserve an empty confirmation row before adding water', async () => {
+        const { fixture } = await setupComponentAsync();
+        fixture.componentRef.setInput('undoAmount', null);
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).querySelector('.hydration-card__undo-row')).toBeNull();
+    });
+});
 
 describe('HydrationCardComponent amount and progress', () => {
     it('disables all additions while saving', async () => {

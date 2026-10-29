@@ -3641,35 +3641,35 @@
       "name": "LatestWeightEntries",
       "type": "IReadOnlyList<DashboardWeightPointReadModel>",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 4
+      "line": 6
     },
     {
       "category": "health",
       "name": "LatestWaistEntries",
       "type": "IReadOnlyList<DashboardWaistPointReadModel>",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 5
+      "line": 7
     },
     {
       "category": "health",
       "name": "WeightTrend",
       "type": "IReadOnlyList<DashboardWeightSummaryReadModel>",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 6
+      "line": 8
     },
     {
       "category": "health",
       "name": "WaistTrend",
       "type": "IReadOnlyList<DashboardWaistSummaryReadModel>",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 7
+      "line": 9
     },
     {
       "category": "health",
       "name": "HydrationTotalMl",
       "type": "int",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 8
+      "line": 10
     },
     {
       "category": "health",
@@ -8303,14 +8303,14 @@
       "name": "IpAddress",
       "type": "string?",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 7
+      "line": 8
     },
     {
       "category": "identity",
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 8
+      "line": 9
     },
     {
       "category": "identity",

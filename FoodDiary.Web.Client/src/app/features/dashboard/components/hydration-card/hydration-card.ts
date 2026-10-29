@@ -11,6 +11,7 @@ import { NoticeBannerComponent } from '../../../../components/shared/notice-bann
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { PERCENT_MULTIPLIER } from '../../../../shared/lib/nutrition.constants';
+import type { DashboardHydrationHistory } from '../../../../shared/models/dashboard.data';
 import { HydrationDetailsDialogComponent } from '../../dialogs/hydration-details-dialog/hydration-details-dialog';
 import { HYDRATION_CARD_ADD_AMOUNTS_ML, HYDRATION_CARD_FEEDBACK_MS, HYDRATION_CARD_MAX_PERCENT } from './hydration-card.config';
 import { HydrationCardActionsComponent } from './hydration-card-actions/hydration-card-actions';
@@ -40,6 +41,7 @@ export class HydrationCardComponent {
     });
     public readonly total = input.required<number>();
     public readonly goal = input.required<number | null>();
+    public readonly history = input<DashboardHydrationHistory | null>(null);
     public readonly isLoading = input.required<boolean>();
     public readonly canAdd = input.required<boolean>();
     public readonly addClick = output<number>();
@@ -112,10 +114,13 @@ export class HydrationCardComponent {
 
     protected openDetails(): void {
         this.dialogService
-            .open<HydrationDetailsDialogComponent, { total: number; goal: number | null }, boolean>(HydrationDetailsDialogComponent, {
-                size: 'sm',
-                data: { total: this.total(), goal: this.goal() },
-            })
+            .open<HydrationDetailsDialogComponent, { total: number; history: DashboardHydrationHistory | null }, boolean>(
+                HydrationDetailsDialogComponent,
+                {
+                    size: 'sm',
+                    data: { total: this.total(), history: this.history() },
+                },
+            )
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(editGoal => {

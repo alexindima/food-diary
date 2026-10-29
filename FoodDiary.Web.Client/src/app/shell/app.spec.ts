@@ -361,14 +361,14 @@ describe('AppComponent public navigation', () => {
         expect(viewportScroller.scrollToPosition).not.toHaveBeenCalled();
     });
 
-    it('preserves immediate document scrolling for workspace routes', async () => {
+    it('resets the workspace scroll container after navigation', async () => {
         const { fixture, rootElement, routerEvents, viewportScroll, viewportScroller } = await createComponentAsync();
         const navigation = new NavigationEnd(NAVIGATION_ID, '/products', '/products');
         routerEvents.next(navigation);
         fixture.detectChanges();
         routerEvents.next(new Scroll(navigation, null, null));
 
-        expect(viewportScroll).not.toHaveBeenCalled();
+        expect(viewportScroll).toHaveBeenCalledExactlyOnceWith({ top: 0, left: 0, behavior: 'instant' });
         expect(viewportScroller.scrollToPosition).toHaveBeenCalledExactlyOnceWith([0, 0], { behavior: 'instant' });
         expect(rootElement.querySelector('.fd-root')?.classList.contains('fd-root--public-site')).toBe(false);
     });

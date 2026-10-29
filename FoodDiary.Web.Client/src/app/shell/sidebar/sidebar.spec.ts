@@ -42,22 +42,6 @@ describe('SidebarComponent behavior', () => {
     beforeEach(setupSidebarTestEnvironment);
     afterEach(cleanupSidebarTestEnvironment);
 
-    it.each([
-        ['/meals', true],
-        ['/products', true],
-        ['/recipes', true],
-        ['/explore', true],
-        ['/dashboard', false],
-        ['/profile', false],
-        ['/lessons', false],
-        ['/products/add', false],
-    ])('shows mobile calorie progress only on food browsing pages: %s', (path, visible) => {
-        const { component, router, routerEvents } = createComponent({ isMobileViewport: true });
-        router.url = path;
-        routerEvents.next(new NavigationEnd(NAVIGATION_ID, path, path));
-        expect(component['isMobileProgressVisible']()).toBe(visible);
-    });
-
     it('sets pending route for inactive navigation and clears it after navigation end', () => {
         const { component, router, routerEvents } = createComponent();
         const harness = component as unknown as SidebarHarness;
@@ -335,11 +319,13 @@ function createAuthServiceMock(): {
     isAuthenticated: WritableSignal<boolean>;
     isDietologist: WritableSignal<boolean>;
     isPremium: WritableSignal<boolean>;
+    getUserId: () => string;
     onLogoutAsync: ReturnType<typeof vi.fn>;
     startAdminSso: ReturnType<typeof vi.fn>;
 } {
     return {
         isAuthenticated: signal(true),
+        getUserId: () => 'sidebar-test-user',
         isPremium: signal(false),
         isDietologist: signal(false),
         isAdmin: signal(false),

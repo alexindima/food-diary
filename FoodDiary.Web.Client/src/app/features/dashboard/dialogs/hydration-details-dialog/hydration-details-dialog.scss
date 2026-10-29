@@ -7,3 +7,36 @@ p {
 dd {
     text-align: end;
 }
+
+.hydration-history {
+    padding-top: var(--fd-space-md);
+    border-top: var(--fd-border-subtle);
+
+    h3 {
+        margin: 0;
+    }
+
+    &__entries {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    &__entry {
+        padding-block: var(--fd-space-sm);
+        font-variant-numeric: tabular-nums;
+
+        & + & {
+            border-top: var(--fd-border-subtle);
+        }
+    }
+
+    &__amount {
+        font-weight: var(--fd-font-weight-semibold);
+    }
+
+    &__hint,
+    time {
+        color: var(--fd-color-text-muted);
+    }
+}

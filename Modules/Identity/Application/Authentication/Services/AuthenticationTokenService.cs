@@ -69,6 +69,11 @@ public sealed class AuthenticationTokenService(
         }
         var id = RefreshTokenSessionId.New();
         string credential = BrowserSessionCredential.Create(id.Value);
+        if (client.PreviousBrowserSessionId is { } previousId) {
+            // The protected marker selects a previous browser slot only after fresh authentication.
+            // Revoke before loading the old proof so a staged entity cannot overwrite this atomic update.
+            await refreshTokenSessionRepository.RevokeByIdAsync(previousId, principal.UserId, now, cancellationToken).ConfigureAwait(false);
+        }
         await RevokeExistingBrowserSessionAsync(principal.UserId, client.ExistingRefreshToken, now, cancellationToken).ConfigureAwait(false);
         await RevokeExistingOpaqueSessionAsync(client.ExistingBrowserCredential, now, cancellationToken).ConfigureAwait(false);
         await PersistAuthenticationArtifactsAsync(principal.UserId, SecurityTokenGenerator.HashForStorage(credential),

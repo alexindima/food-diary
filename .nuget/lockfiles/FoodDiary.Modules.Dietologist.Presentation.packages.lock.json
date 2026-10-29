@@ -150,6 +150,7 @@
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Presentation.Mappings": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Presentation.Mappings": "[1.0.0, )",
           "FoodDiary.Modules.Tdee.Presentation.Mappings": "[1.0.0, )",

@@ -4,6 +4,13 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 namespace FoodDiary.Modules.Hydration.Application.Abstractions.Common;
 
 public interface IHydrationEntryReadModelRepository {
+    Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(
+        UserId userId,
+        DateTime startUtc,
+        DateTime endUtc,
+        int limit,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
         UserId userId,
         DateTime dateUtc,

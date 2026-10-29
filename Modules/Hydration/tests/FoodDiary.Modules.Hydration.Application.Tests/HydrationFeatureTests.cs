@@ -608,6 +608,9 @@ public class HydrationFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingHydrationEntryRepository
         : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(UserId userId, DateTime startUtc, DateTime endUtc, int limit, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntryReadModel>>([]);
+
         public DateTime? LastDailyTotalDateUtc { get; private set; }
 
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) =>
@@ -679,6 +682,9 @@ public class HydrationFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryHydrationEntryRepository(HydrationEntry? entry = null)
         : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(UserId userId, DateTime startUtc, DateTime endUtc, int limit, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntryReadModel>>([]);
+
         private HydrationEntry? _entry = entry;
         private readonly List<HydrationEntry> _entries = entry is null ? [] : [entry];
         public HydrationEntry? AddedEntry { get; private set; }

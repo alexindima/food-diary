@@ -29,6 +29,7 @@ public sealed class LogoutRevocationFailureTests {
             ? Task.FromException<Result>(new InvalidOperationException("revocation failed"))
             : Task.FromResult(Result.Failure(AuthenticationErrors.InvalidToken)));
         await using ServiceProvider provider = new ServiceCollection().AddSingleton(tokens)
+            .AddDataProtection().Services.AddSingleton(TimeProvider.System)
             .AddScoped<BrowserSessionCookieService>().AddScoped<RefreshTokenCookieService>().BuildServiceProvider();
         var controller = new AuthSessionLifecycleController(sender) {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { RequestServices = provider } },

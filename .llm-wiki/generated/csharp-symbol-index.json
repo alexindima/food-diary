@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4654,
-    "symbols": 4589,
+    "sourceFiles": 4659,
+    "symbols": 4594,
     "interfaceImplementationLinks": 206,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2375,
+      "class": 2376,
       "enum": 73,
       "interface": 421,
-      "record": 1579,
+      "record": 1583,
       "record struct": 141
     },
     "roles": {
@@ -32,14 +32,14 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 74,
-      "Other": 1898,
-      "Query": 303,
-      "QueryHandler": 217,
+      "Other": 1900,
+      "Query": 304,
+      "QueryHandler": 218,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 99,
       "Request": 178,
-      "Response": 267,
+      "Response": 268,
       "Service": 176,
       "Validator": 236,
       "ValueObject": 178,
@@ -1606,7 +1606,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardBodyReadService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "DashboardMealAiSessionProjection",
@@ -9719,7 +9719,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Dashboard/Application.Abstractions/Models/DashboardBodyReadModel.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "DashboardCalendarRange",
@@ -9992,13 +9992,27 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
-      "line": 14
+      "line": 17
     },
     {
       "name": "DailyCaloriesModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Dashboard/Contracts/Models/DailyCaloriesModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardHydrationEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardHydrationEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardHydrationHistoryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardHydrationHistoryModel.cs",
       "line": 2
     },
     {
@@ -10079,6 +10093,13 @@
       "line": 2
     },
     {
+      "name": "DashboardHydrationHistoryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardHydrationHistoryHttpResponse.cs",
+      "line": 4
+    },
+    {
       "name": "DashboardMealsHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -10132,7 +10153,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Presentation.Mappings/Mappings/DashboardHttpResponseMappings.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "DashboardController",
@@ -15098,6 +15119,13 @@
       "line": 6
     },
     {
+      "name": "ReadRecentHydrationEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Hydration/Application/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQueryHandler.cs",
+      "line": 9
+    },
+    {
       "name": "HydrationValidators",
       "kind": "class",
       "role": "Other",
@@ -15145,6 +15173,13 @@
       "role": "Query",
       "path": "Modules/Hydration/Contracts/Queries/ReadHydrationInterval/ReadHydrationIntervalQuery.cs",
       "line": 4
+    },
+    {
+      "name": "ReadRecentHydrationEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs",
+      "line": 6
     },
     {
       "name": "HydrationEntry",
@@ -15655,7 +15690,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "AuthenticationCredentialKind",
@@ -17251,7 +17286,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
-      "line": 33
+      "line": 34
     },
     {
       "name": "AuthHttpResponseMappings",
@@ -17545,7 +17580,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Identity/Presentation/Security/BrowserSessionCookieService.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "ImpersonationCookieService",

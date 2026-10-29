@@ -7,6 +7,7 @@
     <ProjectReference Include="../../Cycles/Presentation.Mappings/FoodDiary.Modules.Cycles.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../../Fasting/Presentation.Mappings/FoodDiary.Modules.Fasting.Presentation.Mappings.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation.Contracts/FoodDiary.Modules.Hydration.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Hydration/Presentation.Mappings/FoodDiary.Modules.Hydration.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Meals/Presentation.Mappings/FoodDiary.Modules.Meals.Presentation.Mappings.csproj" />
     <ProjectReference Include="../../Tdee/Presentation.Mappings/FoodDiary.Modules.Tdee.Presentation.Mappings.csproj" />

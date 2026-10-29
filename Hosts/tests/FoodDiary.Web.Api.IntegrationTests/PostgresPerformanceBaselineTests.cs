@@ -207,7 +207,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
-        Assert.False(response.Headers.Contains("Set-Cookie"));
+        Assert.False(response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? cookies) &&
+            cookies.Any(cookie => cookie.StartsWith("fooddiary.browser=", StringComparison.Ordinal)));
         return payload;
     }
 

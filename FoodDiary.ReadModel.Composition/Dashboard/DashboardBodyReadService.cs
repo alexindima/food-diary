@@ -1,6 +1,7 @@
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Common;
 using FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Application.Contracts.Common.Validation;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -40,13 +41,25 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
         int hydrationTotalMl = includeHydration
             ? await GetHydrationTotalAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false)
             : 0;
+        List<DashboardHydrationEntryModel> hydrationEntries = includeHydration
+            ? await context.HydrationEntries.AsNoTracking()
+                .Where(entry => entry.UserId == userId && entry.Timestamp >= dayStart && entry.Timestamp <= dayEndStart)
+                .OrderByDescending(entry => entry.Timestamp)
+                .ThenByDescending(entry => entry.Id)
+                .Take(DashboardHydrationHistoryModel.EntryLimit + 1)
+                .Select(entry => new DashboardHydrationEntryModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))
+                .ToListAsync(cancellationToken).ConfigureAwait(false)
+            : [];
 
         return new DashboardBodyReadModel(
             latestWeightEntries,
             latestWaistEntries,
             BuildWeightTrend(normalizedTrendStart, normalizedDayStart, normalizedTrendQuantizationDays, weightTrendEntries),
             BuildWaistTrend(normalizedTrendStart, normalizedDayStart, normalizedTrendQuantizationDays, waistTrendEntries),
-            hydrationTotalMl);
+            hydrationTotalMl,
+            includeHydration ? new DashboardHydrationHistoryModel(
+                hydrationEntries.Take(DashboardHydrationHistoryModel.EntryLimit).ToList(),
+                hydrationEntries.Count > DashboardHydrationHistoryModel.EntryLimit) : null);
     }
 
     private async Task<(IReadOnlyList<DashboardWeightPointReadModel> Latest, IReadOnlyList<DashboardWeightPointReadModel> Trend)> GetWeightDataAsync(

@@ -148,8 +148,8 @@ export class AppComponent {
 
         this.observeNavigationCompletion();
 
-        // Router Scroll arrives after the new view renders. Desktop scrolls inside
-        // the shell viewport; mobile uses the document viewport.
+        // Router Scroll arrives after the new view renders. Workspace routes
+        // scroll inside the shell on every viewport.
         this.router.events
             .pipe(
                 filter((event): event is Scroll => event instanceof Scroll),
@@ -160,6 +160,7 @@ export class AppComponent {
                     return;
                 }
                 if (!this.usesPublicSiteChrome()) {
+                    this.pageViewport()?.nativeElement.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                     this.viewportScroller.scrollToPosition([0, 0], { behavior: 'instant' });
                     return;
                 }

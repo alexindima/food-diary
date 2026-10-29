@@ -6,6 +6,18 @@ import { dashboardSnapshotFromSdk } from './dashboard-sdk.mapper';
 import type { DashboardSnapshotHttpResponse } from './generated/model/dashboard-snapshot-http-response';
 
 describe('Dashboard SDK snapshots', () => {
+    it('decodes water entry identities and instants without changing their order', () => {
+        const response = waterSnapshot();
+        const history = dashboardSnapshotFromSdk(response).hydrationHistory;
+        expect(history).toEqual({ entries: [{ id: 'water-entry', timestampUtc: '2026-10-28T20:15:00Z', amountMl: 250 }], hasMore: true });
+    });
+
+    it.each(['id', 'timestampUtc', 'amountMl'] as const)('rejects a water entry missing %s', field => {
+        const response = waterSnapshot();
+        delete response.hydrationHistory?.entries?.[0][field];
+        expect(() => dashboardSnapshotFromSdk(response)).toThrow();
+    });
+
     it('maps dashboard meals using saved snapshots while retaining their original instant and totals', () => {
         const instant = '2026-10-07T00:15:00+05:45';
         const mealCalories = 311.21;
@@ -61,3 +73,18 @@ describe('Dashboard SDK snapshots', () => {
         });
     });
 });
+
+function waterSnapshot(): DashboardSnapshotHttpResponse {
+    return {
+        date: '2026-10-28',
+        dateTo: '2026-10-28',
+        dailyGoal: 2000,
+        weeklyCalorieGoal: 14000,
+        statistics: { totalCalories: 0, averageProteins: 0, averageFats: 0, averageCarbs: 0, averageFiber: 0 },
+        weeklyCalories: [],
+        weight: {},
+        waist: {},
+        meals: { items: [], total: 0 },
+        hydrationHistory: { entries: [{ id: 'water-entry', timestampUtc: '2026-10-28T20:15:00Z', amountMl: 250 }], hasMore: true },
+    };
+}

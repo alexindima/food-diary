@@ -6,13 +6,21 @@ export type FdUiToastAppearance = 'default' | 'positive' | 'negative' | 'warning
 export type FdUiToastHorizontalPosition = 'start' | 'center' | 'end';
 export type FdUiToastVerticalPosition = 'top' | 'bottom';
 
+export type FdUiToastProgress = {
+    value: number;
+    max: number;
+    label: string;
+};
+
 export type FdUiToastOptions = {
+    key?: string;
     action?: string;
     appearance?: FdUiToastAppearance;
     duration?: number;
     horizontalPosition?: FdUiToastHorizontalPosition;
     verticalPosition?: FdUiToastVerticalPosition;
     politeness?: AriaLivePoliteness;
+    progress?: FdUiToastProgress;
 };
 
 type FdUiToastSemanticKind = 'success' | 'error' | 'info';
@@ -32,6 +40,7 @@ export type FdUiToastDismiss = {
 
 export type FdUiToastInstance = {
     id: string;
+    key?: string;
     message: string;
     action?: string;
     appearance: FdUiToastAppearance;
@@ -40,6 +49,7 @@ export type FdUiToastInstance = {
     verticalPosition: FdUiToastVerticalPosition;
     politeness: AriaLivePoliteness;
     leaving: boolean;
+    progress?: FdUiToastProgress;
 };
 
 export class FdUiToastRef {
@@ -95,16 +105,7 @@ export class FdUiToastService {
         if (existingToast !== undefined) {
             this.clearDismissTimer(existingToast.id);
             this.toastState.update(current =>
-                current.map(item =>
-                    item.id === existingToast.id
-                        ? {
-                              ...item,
-                              action: options.action ?? item.action,
-                              duration: options.duration ?? DEFAULT_DURATION_MS,
-                              politeness: options.politeness ?? item.politeness,
-                          }
-                        : item,
-                ),
+                current.map(item => (item.id === existingToast.id ? this.refreshToast(item, message, options) : item)),
             );
             this.scheduleDismiss(existingToast.id, options.duration ?? DEFAULT_DURATION_MS);
             const existingRef = this.refs.get(existingToast.id);
@@ -116,6 +117,7 @@ export class FdUiToastService {
         const id = this.generateId();
         const toast: FdUiToastInstance = {
             id,
+            key: options.key,
             message,
             action: options.action,
             appearance: options.appearance ?? 'default',
@@ -124,6 +126,7 @@ export class FdUiToastService {
             verticalPosition: options.verticalPosition ?? 'bottom',
             politeness: options.politeness ?? 'polite',
             leaving: false,
+            progress: options.progress,
         };
 
         const ref = new FdUiToastRef(() => {
@@ -180,6 +183,9 @@ export class FdUiToastService {
     }
 
     private findDuplicate(message: string, options: FdUiToastOptions): FdUiToastInstance | undefined {
+        if (options.key !== undefined) {
+            return this.toastState().find(toast => !toast.leaving && toast.key === options.key);
+        }
         const appearance = options.appearance ?? 'default';
         const horizontalPosition = options.horizontalPosition ?? 'center';
         const verticalPosition = options.verticalPosition ?? 'bottom';
@@ -187,12 +193,27 @@ export class FdUiToastService {
         return this.toastState().find(
             toast =>
                 !toast.leaving &&
+                toast.key === undefined &&
                 toast.message === message &&
                 toast.appearance === appearance &&
                 toast.action === options.action &&
                 toast.horizontalPosition === horizontalPosition &&
                 toast.verticalPosition === verticalPosition,
         );
+    }
+
+    private refreshToast(toast: FdUiToastInstance, message: string, options: FdUiToastOptions): FdUiToastInstance {
+        return {
+            ...toast,
+            message: toast.progress !== undefined && options.progress === undefined ? toast.message : message,
+            appearance: options.appearance ?? toast.appearance,
+            horizontalPosition: options.horizontalPosition ?? toast.horizontalPosition,
+            verticalPosition: options.verticalPosition ?? toast.verticalPosition,
+            action: options.action ?? toast.action,
+            duration: options.duration ?? DEFAULT_DURATION_MS,
+            politeness: options.politeness ?? toast.politeness,
+            progress: options.progress ?? toast.progress,
+        };
     }
 
     private scheduleDismiss(id: string, duration: number): void {

@@ -128,6 +128,7 @@ public sealed class GetDietologistClientDashboardQueryHandler(
                 ? dashboard.Hydration with { GoalMl = permissions.ShareGoals ? dashboard.Hydration.GoalMl : null }
                 : null,
             Advice = null,
+            HydrationHistory = permissions.ShareHydration ? dashboard.HydrationHistory : null,
             CurrentFastingSession = permissions.ShareFasting ? dashboard.CurrentFastingSession : null,
             WeightTrend = permissions.ShareWeight ? dashboard.WeightTrend : [],
             WaistTrend = permissions.ShareWaist ? dashboard.WaistTrend : [],

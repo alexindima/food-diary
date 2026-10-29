@@ -87,7 +87,7 @@ describe('Nutrition details dialog', () => {
         expect(host.querySelector('fd-ui-progress-ring')).toBeNull();
         expect(host.textContent).toContain('DASHBOARD.NUTRITION_DETAILS.NO_GOAL');
         const buttons = [...host.querySelectorAll<HTMLButtonElement>('button')];
-        buttons.find(button => button.textContent.includes('DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS'))?.click();
+        buttons.find(button => button.getAttribute('aria-label') === 'DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS')?.click();
         expect(close).toHaveBeenLastCalledWith({ kind: 'goals' });
         buttons.find(button => button.textContent.includes('DASHBOARD.NUTRITION_DETAILS.OPEN_DIARY'))?.click();
         expect(close).toHaveBeenLastCalledWith({ kind: 'diary' });

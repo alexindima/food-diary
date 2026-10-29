@@ -965,6 +965,13 @@ Pass a translated `closeLabel` for the dismiss button's accessible name.
 
 Toast notifications service.
 
+Pass `progress: { value, max, label }` to add an accessible progress bar below
+the message. Keep the actual values in the message too, including values above
+the goal. Use a positive `max` and a translated accessible `label`.
+Use `key` to update one notification across a completed action and its refreshed
+progress instead of stacking both messages. Later confirmations preserve already
+loaded progress so response order cannot hide it.
+
 **Methods**
 
 - `open(message, options?)`

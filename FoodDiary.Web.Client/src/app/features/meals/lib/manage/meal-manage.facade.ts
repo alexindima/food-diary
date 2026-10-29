@@ -29,6 +29,7 @@ import {
 import type { Product } from '../../../../shared/models/product.data';
 import type { Recipe } from '../../../../shared/models/recipe.data';
 import { type RecipeServings, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type {
@@ -93,7 +94,9 @@ export class MealManageFacade {
     }
 
     public async showSuccessToastAndRedirectAsync(isEdit: boolean): Promise<void> {
-        this.toastService.success(this.translateService.instant(isEdit ? 'MEAL_MANAGE.EDIT_SUCCESS' : 'MEAL_MANAGE.CREATE_SUCCESS'));
+        this.toastService.success(this.translateService.instant(isEdit ? 'MEAL_MANAGE.EDIT_SUCCESS' : 'MEAL_MANAGE.CREATE_SUCCESS'), {
+            key: MEAL_FEEDBACK_TOAST_KEY,
+        });
         await this.navigationService.navigateToMealListAsync();
     }
 

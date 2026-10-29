@@ -396,6 +396,9 @@
     display: none;
     gap: var(--fd-space-sidebar-mobile-nav-gap);
     padding: var(--fd-space-sidebar-mobile-nav-padding);
+    padding-bottom: calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
+    height: calc(var(--fd-layout-shell-mobile-nav-height) + env(safe-area-inset-bottom));
+    box-sizing: border-box;
     background: var(--fd-surface-navigation-background);
     backdrop-filter: var(--fd-surface-backdrop-filter);
     -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);
@@ -417,42 +420,6 @@
         inset: auto 0 0;
     }
 
-    &__progress {
-        display: grid;
-        gap: var(--fd-space-xxs);
-        padding: var(--fd-space-xs);
-        border-radius: var(--fd-radius-panel);
-        background: var(--fd-bg-brand-tint);
-        border: var(--fd-border-muted);
-    }
-
-    &__progress-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--fd-space-sidebar-mobile-nav-gap);
-    }
-
-    &__progress-title,
-    &__progress-value {
-        color: var(--fd-color-text-muted);
-        white-space: nowrap;
-    }
-
-    &__progress-value {
-        color: var(--fd-color-primary-700);
-    }
-
-    &__progress-track {
-        --fd-progress-height: calc(var(--fd-space-xxs) + 1px);
-        --fd-progress-radius: var(--fd-radius-pill);
-        --fd-progress-track-background: color-mix(in srgb, var(--fd-color-slate-400) 26%, transparent);
-    }
-
-    &__progress-fill {
-        background: var(--fd-bg-brand-horizontal);
-    }
-
     &__nav {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -470,6 +437,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        min-height: var(--fd-size-control-touch);
+        box-sizing: border-box;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-xxs);
         border-radius: var(--fd-radius-button);
@@ -547,6 +516,9 @@
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         bottom: calc(var(--sidebar-mobile-sheet-offset) + var(--fd-space-xs));
+        max-height: calc(100dvh - var(--sidebar-mobile-sheet-offset) - var(--fd-space-lg) - env(safe-area-inset-top));
+        box-sizing: border-box;
+        overflow-y: auto;
         background: var(--fd-surface-navigation-background);
         backdrop-filter: var(--fd-surface-backdrop-filter);
         -webkit-backdrop-filter: var(--fd-surface-backdrop-filter);

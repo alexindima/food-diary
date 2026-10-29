@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Dashboard.Contracts.Models;
+
 namespace FoodDiary.Modules.Dashboard.Application.Abstractions.Models;
 
 public sealed record DashboardBodyReadModel(
@@ -5,4 +7,5 @@ public sealed record DashboardBodyReadModel(
     IReadOnlyList<DashboardWaistPointReadModel> LatestWaistEntries,
     IReadOnlyList<DashboardWeightSummaryReadModel> WeightTrend,
     IReadOnlyList<DashboardWaistSummaryReadModel> WaistTrend,
-    int HydrationTotalMl);
+    int HydrationTotalMl,
+    DashboardHydrationHistoryModel? HydrationHistory = null);

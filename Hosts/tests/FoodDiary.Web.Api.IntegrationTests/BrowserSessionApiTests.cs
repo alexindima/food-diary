@@ -194,7 +194,8 @@ public sealed class BrowserSessionApiTests(ApiWebApplicationFactory factory) : I
         Assert.False(registration.RootElement.TryGetProperty("accessToken", out _));
         Assert.False(registration.RootElement.TryGetProperty("refreshToken", out _));
         Assert.False(string.IsNullOrWhiteSpace(registration.RootElement.GetProperty("sessionId").GetString()));
-        string cookie = Assert.Single(registered.Headers.GetValues("Set-Cookie"));
+        string cookie = Assert.Single(registered.Headers.GetValues("Set-Cookie"), value =>
+            value.StartsWith(BrowserSessionCookieService.BrowserCookieName + "=", StringComparison.Ordinal));
         Assert.Contains(BrowserSessionCookieService.BrowserCookieName + "=", cookie, StringComparison.Ordinal);
         Assert.Contains("httponly", cookie, StringComparison.OrdinalIgnoreCase);
 

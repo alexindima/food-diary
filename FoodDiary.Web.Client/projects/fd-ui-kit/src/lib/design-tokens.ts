@@ -366,6 +366,7 @@ export const DESIGN_TOKEN_CSS_VARIABLES = {
             sidebarWidth: '--fd-layout-shell-sidebar-width',
             impersonationBannerHeight: '--fd-layout-shell-impersonation-banner-height',
             mobileViewportBottomPadding: '--fd-layout-shell-mobile-viewport-bottom-padding',
+            mobileNavHeight: '--fd-layout-shell-mobile-nav-height',
             mobileSheetBottom: '--fd-layout-shell-mobile-sheet-bottom',
         },
     },

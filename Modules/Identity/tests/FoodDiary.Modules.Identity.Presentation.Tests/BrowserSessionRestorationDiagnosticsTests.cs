@@ -37,6 +37,7 @@ public sealed class BrowserSessionRestorationDiagnosticsTests {
     public async Task Restore_RejectedRequestLogsOnlyTransportBooleans(bool https, bool admin, bool selected, bool alternate) {
         ILogger<BrowserSessionController> logger = Substitute.For<ILogger<BrowserSessionController>>();
         await using ServiceProvider services = new ServiceCollection()
+            .AddDataProtection().Services.AddSingleton(TimeProvider.System)
             .AddSingleton(logger).AddSingleton<BrowserSessionCookieService>().BuildServiceProvider();
         RestoreBrowserSessionCommand? sent = null;
         ISender sender = SubstituteSender.Create(Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken),

@@ -119,6 +119,40 @@ public sealed class DashboardBodyReadServiceTests {
         Assert.All(result.WeightTrend, point => Assert.Equal(0, point.AverageWeightKg));
         Assert.All(result.WaistTrend, point => Assert.Equal(0, point.AverageCircumferenceCm));
         Assert.Equal(0, result.HydrationTotalMl);
+        Assert.Null(result.HydrationHistory);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(9)]
+    [InlineData(10)]
+    [InlineData(11)]
+    [InlineData(12)]
+    public async Task GetBodyAsync_HydrationHistory_IsBoundedOrderedAndScoped(int count) {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"hydration-history-{Guid.NewGuid():N}@example.com", "hash");
+        var otherUser = User.Create($"hydration-history-other-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.AddRange(user, otherUser);
+        DateTime start = UtcInstant(2026, 8, 4, 20);
+        DateTime end = start.AddDays(1).AddTicks(-1);
+        HydrationEntry[] entries = [.. Enumerable.Range(0, count)
+            .Select(index => HydrationEntry.Create(user.Id, start.AddMinutes(index), 100 + index))];
+        context.HydrationEntries.AddRange(entries);
+        context.HydrationEntries.AddRange(
+            HydrationEntry.Create(user.Id, start.AddTicks(-1), 500),
+            HydrationEntry.Create(user.Id, end.AddTicks(1), 700),
+            HydrationEntry.Create(otherUser.Id, end, 900));
+        await context.SaveChangesAsync();
+
+        DashboardBodyReadModel result = await new DashboardBodyReadService(context).GetBodyAsync(
+            user.Id, start, end, start.Date, trendQuantizationDays: 1, includeWeight: false, includeWaist: false, includeHydration: true, cancellationToken: CancellationToken.None);
+
+        Assert.NotNull(result.HydrationHistory);
+        Assert.Multiple(
+            () => Assert.Equal(entries.Sum(entry => entry.AmountMl), result.HydrationTotalMl),
+            () => Assert.Equal(count > 10, result.HydrationHistory.HasMore),
+            () => Assert.Equal(entries.Reverse().Take(10).Select(entry => entry.Id.Value), result.HydrationHistory.Entries.Select(entry => entry.Id)),
+            () => Assert.Equal(entries.Reverse().Take(10).Select(entry => entry.Timestamp), result.HydrationHistory.Entries.Select(entry => entry.TimestampUtc)));
     }
 
     [Fact]

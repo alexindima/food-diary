@@ -10,6 +10,7 @@
 import { CycleHttpResponse } from './cycle-http-response';
 import { DailyAdviceHttpResponse } from './daily-advice-http-response';
 import { DailyCaloriesHttpResponse } from './daily-calories-http-response';
+import { DashboardHydrationHistoryHttpResponse } from './dashboard-hydration-history-http-response';
 import { DashboardLayoutHttpModel } from './dashboard-layout-http-model';
 import { DashboardMealsHttpResponse } from './dashboard-meals-http-response';
 import { DashboardStatisticsHttpResponse } from './dashboard-statistics-http-response';
@@ -32,6 +33,7 @@ export interface DashboardSnapshotHttpResponse {
     date?: string;
     dateTo?: string;
     hydration?: HydrationDailyHttpResponse | null;
+    hydrationHistory?: DashboardHydrationHistoryHttpResponse | null;
     meals?: DashboardMealsHttpResponse;
     statistics?: DashboardStatisticsHttpResponse;
     tdeeInsight?: TdeeInsightHttpResponse | null;

@@ -1,4 +1,3 @@
-import { PERCENT_MULTIPLIER } from '../../../shared/lib/nutrition.constants';
 import type { MobileSheetId, SidebarActionItem, SidebarNavItem, SidebarRouteItem } from './sidebar.models';
 
 export function buildPrimarySidebarNavItems(isDietologist: boolean, isAdmin: boolean): SidebarNavItem[] {
@@ -37,14 +36,6 @@ export function isSidebarRouteActive(currentUrl: string, route: string, exact: b
     }
 
     return currentPath === route || currentPath.startsWith(`${route}/`);
-}
-
-export function calculateSidebarDailyProgressPercent(consumed: number, goal: number): number {
-    if (goal <= 0) {
-        return 0;
-    }
-
-    return Math.max(0, Math.min((consumed / goal) * PERCENT_MULTIPLIER, PERCENT_MULTIPLIER));
 }
 
 export function getSidebarMobileSheetLabelKey(sheet: MobileSheetId): string {

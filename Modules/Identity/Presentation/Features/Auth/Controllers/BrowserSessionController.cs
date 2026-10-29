@@ -44,6 +44,8 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
         IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(), value => {
             if (value.Renewed) {
                 cookies.Set(HttpContext, value, BrowserSessionCookieService.IsAdmin(HttpContext));
+            } else {
+                cookies.EnsurePreviousSession(HttpContext, value.SessionId, BrowserSessionCookieService.IsAdmin(HttpContext));
             }
             return value.ToHttpResponse();
         }).ConfigureAwait(false);

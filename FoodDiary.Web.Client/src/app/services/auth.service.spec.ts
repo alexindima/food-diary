@@ -128,6 +128,18 @@ describe('server-backed browser sessions', () => {
     });
 });
 
+describe('browser session validation', () => {
+    it('keeps ordinary browser validation failures retryable even when a required-field error is returned', async () => {
+        const initial = service.restoreSessionAsync();
+        requests
+            .expectOne(`${base}/session`)
+            .flush({ error: 'Validation.Required' }, { status: HttpStatusCode.BadRequest, statusText: 'Bad Request' });
+        await initial;
+        expect(service.isAuthReady()).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+    });
+});
+
 describe('browser session failures and logout', () => {
     it.each([HttpStatusCode.TooManyRequests, HttpStatusCode.ServiceUnavailable])(
         'allows initial restoration to be retried after a temporary %s response',

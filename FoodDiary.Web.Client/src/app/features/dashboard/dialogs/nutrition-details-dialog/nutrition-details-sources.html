@@ -1,8 +1,15 @@
-<section class="fd-stack fd-gap-sm" aria-labelledby="nutrition-sources-title">
-    <h3 id="nutrition-sources-title" class="fd-ui-card-title">
-        {{ (metric() === 'calories' ? 'DASHBOARD.NUTRITION_DETAILS.MEALS' : 'DASHBOARD.NUTRITION_DETAILS.SOURCES') | translate }}
-    </h3>
-    <p class="fd-ui-caption fd-ui-text-muted">{{ hintKey() | translate }}</p>
+<section class="fd-stack fd-gap-xs" aria-labelledby="nutrition-sources-title">
+    <div class="fd-stack fd-gap-xxs">
+        <div class="fd-row fd-wrap fd-justify-between fd-align-center fd-gap-xs">
+            <h3 id="nutrition-sources-title" class="fd-ui-card-title">{{ titleKey() | translate }}</h3>
+            <span class="fd-ui-caption fd-ui-text-muted">{{
+                'DASHBOARD.NUTRITION_DETAILS.SOURCE_COUNT' | translate: { count: (sources().length | localizedNumber: language()) }
+            }}</span>
+        </div>
+        @if (sources().length > 0) {
+            <p class="fd-ui-caption fd-ui-text-muted">{{ shareKey() | translate }}</p>
+        }
+    </div>
     <fd-ui-section-state
         appearance="compact"
         emptyIcon="restaurant"
@@ -19,13 +26,17 @@
                     (click)="mealSelected.emit(source.meal)"
                 >
                     <span class="nutrition-details__source">
-                        <span class="nutrition-details__source-heading fd-row fd-justify-between fd-gap-sm">
+                        <span class="nutrition-details__source-heading">
                             <span class="nutrition-details__name">{{ source.title }}</span>
                             <strong class="nutrition-details__amount"
                                 >{{ source.value | localizedNumber: language() : 0 : 1 }} {{ unitKey() | translate }}</strong
                             >
+                            <fd-ui-icon name="chevron_right" class="nutrition-details__chevron fd-ui-text-muted" />
                         </span>
-                        <span class="fd-ui-caption fd-ui-text-muted">{{ source.subtitle }}</span>
+                        <span class="fd-row fd-justify-between fd-gap-sm fd-ui-caption fd-ui-text-muted">
+                            <span>{{ source.subtitle }}</span>
+                            <span class="nutrition-details__amount">{{ source.share | localizedNumber: language() : 0 : 0 }}%</span>
+                        </span>
                         @if (source.kind === 'manual') {
                             <span class="fd-ui-caption fd-ui-text-muted">{{ 'DASHBOARD.NUTRITION_DETAILS.MANUAL' | translate }}</span>
                         } @else if (source.kind === 'unavailable') {

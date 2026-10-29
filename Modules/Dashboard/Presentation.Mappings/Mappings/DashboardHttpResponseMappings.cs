@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Tdee.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Meals.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Hydration.Presentation.Mappings.Mappings;
+using FoodDiary.Modules.Hydration.Presentation.Contracts.Responses;
 using FoodDiary.Modules.Fasting.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WeightEntries.Mappings;
 using FoodDiary.Modules.BodyMetrics.Presentation.Mappings.Features.WaistEntries.Mappings;
@@ -38,7 +39,11 @@ public static class DashboardHttpResponseMappings {
                 model.CaloriesBurned,
                 model.TdeeInsight?.ToHttpResponse(),
                 model.CurrentCycle?.ToHttpResponse(),
-                model.CycleHidden
+                model.CycleHidden,
+                model.HydrationHistory is null ? null : new DashboardHydrationHistoryHttpResponse(
+                    model.HydrationHistory.Entries.Select(static entry => new HydrationEntryHttpResponse(
+                        entry.Id, entry.TimestampUtc, entry.AmountMl)).ToList(),
+                    model.HydrationHistory.HasMore)
             );
         }
     }

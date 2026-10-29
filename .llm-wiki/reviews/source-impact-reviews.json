@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c3f8e149fc38659cea95e68062e066ab93ec976f1fe5d5db44b06572fd007c75",
-          "reviewReason": "Reviewed BROWSER_SESSIONS.md and frontend source: the same user/admin host-only session protocol and generated SDK remain. Deployment now trusts only the discovered Docker gateway; failed guards remove consumed codes. The frontend navigation page remains accurate."
+          "sha256": "352a6a89b40981929aecf0c038671cb09cb17e1b2a50bbc5e5a947a1bdf18516",
+          "reviewReason": "Reviewed the updated BROWSER_SESSIONS runbook against this navigation page. Its opaque cookie, public selector, shared queue/Web Lock, admin and Mini App descriptions remain accurate. The new persistent previous-session cookie is server-owned replacement metadata and introduces no JavaScript credential or SDK response field."
         },
         {
           "path": "docs/frontend/WEB_QUALITY.md",
@@ -58,10 +58,10 @@
           "reviewReason": "Reviewed docs/frontend/WEB_QUALITY.md and the axe adapter: the documented web-quality ownership and three-engine audit remain accurate. The additive snapshot guard reanalyzes changed DOM at most three times, retains stable violations, and fails execution errors; controlled Chromium/Firefox/WebKit fixtures and the original CI production assets verified these boundaries. No frontend module or API ownership changed."
         }
       ],
-      "reason": "Reviewed docs/frontend/WEB_QUALITY.md and the axe adapter: the documented web-quality ownership and three-engine audit remain accurate. The additive snapshot guard reanalyzes changed DOM at most three times, retains stable violations, and fails execution errors; controlled Chromium/Firefox/WebKit fixtures and the original CI production assets verified these boundaries. No frontend module or API ownership changed.",
+      "reason": "Reviewed the updated BROWSER_SESSIONS runbook against this navigation page. Its opaque cookie, public selector, shared queue/Web Lock, admin and Mini App descriptions remain accurate. The new persistent previous-session cookie is server-owned replacement metadata and introduces no JavaScript credential or SDK response field.",
       "baseRef": "HEAD",
-      "gitHead": "57135ff5f1cd2f18502b018488ab9415ec1b5282",
-      "reviewedAtUtc": "2026-10-28T20:12:58.0981634Z"
+      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
+      "reviewedAtUtc": "2026-10-29T14:36:08.9645630Z"
     },
     {
       "pageId": "module.mail-services",
@@ -102,19 +102,19 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "c3f8e149fc38659cea95e68062e066ab93ec976f1fe5d5db44b06572fd007c75",
-          "reviewReason": "Reviewed BROWSER_SESSIONS.md, Compose host-network Nginx and bridge-network API. Exact gateway trust uses the existing API options and preserves the existing composition roots and host-only cookies; architecture statements remain accurate."
+          "sha256": "352a6a89b40981929aecf0c038671cb09cb17e1b2a50bbc5e5a947a1bdf18516",
+          "reviewReason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2b96b27108858e04776dcc99236c4c354623de6800141092e05922215788566a",
-          "reviewReason": "The API composes the Identity-owned attempt port and Redis adapter through explicit direct references. The exact matrix records those two consumed references. No host, foreign aggregate write, module cycle or browser session protocol is added."
+          "sha256": "8aa1c7966d396e4e9efd1bb679113adc6b15cdb59ae689ae002af486ea135c3a",
+          "reviewReason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented."
         }
       ],
-      "reason": "Reviewed BROWSER_SESSIONS.md, Compose host-network Nginx and bridge-network API. Exact gateway trust uses the existing API options and preserves the existing composition roots and host-only cookies; architecture statements remain accurate.",
+      "reason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented.",
       "baseRef": "HEAD",
-      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
-      "reviewedAtUtc": "2026-10-28T03:19:43.8087347Z"
+      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
+      "reviewedAtUtc": "2026-10-29T14:23:01.5275332Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -319,14 +319,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19",
-          "reviewReason": "Reviewed the exact full-contract delta: auth/logout declares401; success204 and request/response schemas remain unchanged. Real OpenAPI export5 tests and user/admin SDK generation passed. This additive declaration does not broaden the prior ADR0058 nullable-token acceptance; no new breaking exception or deployment is approved."
+          "sha256": "263d30bd729fda54031df1773f1501f7410f7b6a38b1f1f893cc7eb3dd86395d",
+          "reviewReason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change."
         }
       ],
-      "reason": "The CI change adds a Python deployment-origin regression step only. OpenAPI comparison baselines, snapshots, SDK contracts and browser auth response shapes remain unchanged; API compatibility guidance still matches code.",
+      "reason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change.",
       "baseRef": "HEAD",
-      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
-      "reviewedAtUtc": "2026-10-28T03:19:46.9750611Z"
+      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
+      "reviewedAtUtc": "2026-10-29T14:23:09.3358652Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -335,8 +335,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "d8a27f1df1594e84c44582838f1dacee279bce48ba29d17b87e0a931a38568d2",
-          "reviewReason": "Reviewed the current architecture-health-index diff and workflow page. The index adds dashboard component/contract/test-reference records and refreshes candidate counts. The page asserts dependency enforcement, investigation-only candidate semantics, routed-component treatment and query freshness; it contains no numeric baseline or guided-tour ownership claim. Those instructions remain accurate, so no page text change is required."
+          "sha256": "1587bdcb8e4581dffef54094fa7d9e71c7333cda9af2004afbe63a6212452b57",
+          "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -345,14 +345,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2b96b27108858e04776dcc99236c4c354623de6800141092e05922215788566a",
-          "reviewReason": "The refreshed index includes the new Identity technical port/adapters and explicit host/integration-test references. These are intentional consumed owner dependencies; production module direction and aggregate ownership remain unchanged. No removal candidates are acted upon."
+          "sha256": "8aa1c7966d396e4e9efd1bb679113adc6b15cdb59ae689ae002af486ea135c3a",
+          "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the current architecture-health-index diff and workflow page. The index adds dashboard component/contract/test-reference records and refreshes candidate counts. The page asserts dependency enforcement, investigation-only candidate semantics, routed-component treatment and query freshness; it contains no numeric baseline or guided-tour ownership claim. Those instructions remain accurate, so no page text change is required.",
+      "reason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies.",
       "baseRef": "HEAD",
-      "gitHead": "51e43021ea013309d08b80a52a99a28c63878115",
-      "reviewedAtUtc": "2026-10-29T09:21:34.1270476Z"
+      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
+      "reviewedAtUtc": "2026-10-29T14:23:05.5350131Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1095,8 +1095,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "fa4c36bdab18c5370f7caa5e74b478f097164ee59ed4c91931f937b2c5692295",
-          "reviewReason": "Reviewed SHA256 normalized-email keys, counters, opaque ownership and TTL scripts. No raw email, password or provider token is stored or logged in attempt state. Redis history expires after 900 idle seconds and local bounded memory expires lazily; pseudonymization and existing Redis backup policy are explicitly documented."
+          "sha256": "5daca76c5fc45ca21c98e27568ecea10f1b5ef9d362fc21a1c6ed0ac6a78c536",
+          "reviewReason": "Reviewed the regenerated sensitive-data index and the new PreviousBrowserSessionId context. The workflow still treats index fields as candidates requiring semantic review. The marker is a protected non-authenticating session selector, JsonIgnore excludes the context field, it is never logged, and no provider transfer or raw device fingerprint was added. Generic lifecycle and SQL-reader guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1109,10 +1109,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed SHA256 normalized-email keys, counters, opaque ownership and TTL scripts. No raw email, password or provider token is stored or logged in attempt state. Redis history expires after 900 idle seconds and local bounded memory expires lazily; pseudonymization and existing Redis backup policy are explicitly documented.",
+      "reason": "Reviewed the regenerated sensitive-data index and the new PreviousBrowserSessionId context. The workflow still treats index fields as candidates requiring semantic review. The marker is a protected non-authenticating session selector, JsonIgnore excludes the context field, it is never logged, and no provider transfer or raw device fingerprint was added. Generic lifecycle and SQL-reader guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:14.9316905Z"
+      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
+      "reviewedAtUtc": "2026-10-29T14:36:14.7446516Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1278,8 +1278,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "11bd9fd9a6edcc4d6a21a4c5656887f8bf41c267a6bae0bfd12e073fae262923",
-          "reviewReason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts."
+          "sha256": "7f81496626d7c07861463e1cffcf50d0334ef2d5c12cd736bb7aa7e5479eb3d7",
+          "reviewReason": "Reviewed regenerated topology with the Identity cookie service consuming the already composed Data Protection provider and TimeProvider. There is no new host, worker, provider client, recurring job or external destination. Existing runtime-signal scoping and transaction/retry review instructions continue to match the source."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1292,10 +1292,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts.",
+      "reason": "Reviewed regenerated topology with the Identity cookie service consuming the already composed Data Protection provider and TimeProvider. There is no new host, worker, provider client, recurring job or external destination. Existing runtime-signal scoping and transaction/retry review instructions continue to match the source.",
       "baseRef": "HEAD",
-      "gitHead": "caec3962e31f7f3726fc697750512ba276ade825",
-      "reviewedAtUtc": "2026-10-28T17:36:54.7986533Z"
+      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
+      "reviewedAtUtc": "2026-10-29T14:36:22.1609713Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1612,6 +1612,11 @@
       "pageSha256": "7f59e6f68c048550fd92069410b395c49a4d3d7d3216cabed94b0905efd757a5",
       "sources": [
         {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "16f046c966c4164dc3e2ecd0ee01e96b57eb74c7cd00b6e2ccf4da29b11884b3",
+          "reviewReason": "Reviewed the current repository catalog regeneration and context-navigation guidance. This change adds Identity cookie/replacement sources and tests within existing owners; it changes no context CLI/MCP command, SQLite query contract, module layout or ranking policy. The page describes those existing interfaces and contains no changed catalog-count assertion."
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
           "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
@@ -1622,10 +1627,10 @@
           "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
         }
       ],
-      "reason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed.",
+      "reason": "Reviewed the current repository catalog regeneration and context-navigation guidance. This change adds Identity cookie/replacement sources and tests within existing owners; it changes no context CLI/MCP command, SQLite query contract, module layout or ranking policy. The page describes those existing interfaces and contains no changed catalog-count assertion.",
       "baseRef": "HEAD",
-      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
-      "reviewedAtUtc": "2026-10-29T10:36:32.6160333Z"
+      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
+      "reviewedAtUtc": "2026-10-29T14:36:17.9254054Z"
     },
     {
       "pageId": "workflow.review-diff",

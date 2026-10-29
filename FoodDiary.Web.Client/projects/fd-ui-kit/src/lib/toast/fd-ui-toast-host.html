@@ -29,6 +29,14 @@
                         ×
                     </button>
                 </div>
+                @if (toast.progress; as progress) {
+                    <progress
+                        class="fd-ui-toast-host__progress"
+                        [value]="progress.value"
+                        [max]="progress.max"
+                        [attr.aria-label]="progress.label"
+                    ></progress>
+                }
             </section>
         }
     </div>

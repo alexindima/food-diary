@@ -1,4 +1,7 @@
 using FoodDiary.Modules.Hydration.Contracts.Queries.ReadHydrationDailyTotals;
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadRecentHydrationEntries;
+using FoodDiary.Modules.Hydration.Contracts.Models;
+using FoodDiary.Modules.Dashboard.Contracts.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
@@ -41,12 +44,19 @@ internal sealed class RepositoryDashboardBodyReadService(
         IReadOnlyList<(DateTime Date, int TotalMl)> hydrationTotals = includeHydration
             ? await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dayStart, dayEndStart, UseExactBounds: true), cancellationToken).ConfigureAwait(false)
             : [];
+        IReadOnlyList<HydrationEntryModel> hydrationEntries = includeHydration
+            ? await sender.Send(new ReadRecentHydrationEntriesQuery(userId, dayStart, dayEndStart, DashboardHydrationHistoryModel.EntryLimit + 1), cancellationToken).ConfigureAwait(false)
+            : [];
 
         return new DashboardBodyReadModel(
             [.. latestWeightEntries.Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))],
             [.. latestWaistEntries.Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))],
             [.. weightTrend.Select(summary => new DashboardWeightSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageWeightKg))],
             [.. waistTrend.Select(summary => new DashboardWaistSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageCircumferenceCm))],
-            hydrationTotals.Sum(total => total.TotalMl));
+            hydrationTotals.Sum(total => total.TotalMl),
+            includeHydration ? new DashboardHydrationHistoryModel(
+                hydrationEntries.Take(DashboardHydrationHistoryModel.EntryLimit)
+                    .Select(entry => new DashboardHydrationEntryModel(entry.Id, entry.TimestampUtc, entry.AmountMl)).ToList(),
+                hydrationEntries.Count > DashboardHydrationHistoryModel.EntryLimit) : null);
     }
 }

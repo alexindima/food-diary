@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Hydration.Application.Queries.ReadRecentHydrationEntries;
+using FoodDiary.Modules.Hydration.Contracts.Queries.ReadRecentHydrationEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistEntries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WaistEntries.Queries.ReadWaistSummaries;
 using FoodDiary.Modules.BodyMetrics.Contracts.WeightEntries.Queries.ReadWeightEntries;
@@ -643,7 +645,7 @@ public sealed class DashboardSnapshotBuilderTests {
             dashboardUserContextService,
             new ComposedDashboardReadService(
                 new SenderStatisticsFixture(sender),
-                new RepositoryDashboardBodyReadService(RequestTestSender.Route((RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(ReadWeightEntriesQuery), typeof(ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(ReadWaistEntriesQuery), typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery), typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)]), (RequestTestSender.Create(new ReadHydrationEntriesQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalsQueryHandler(hydrationEntryRepository)), [typeof(ReadHydrationDailyTotalsQuery)]))),
+                new RepositoryDashboardBodyReadService(RequestTestSender.Route((RequestTestSender.Route((RequestTestSender.Create(new ReadWeightEntriesQueryHandler(weightEntryRepository), new ReadLatestWeightEntryQueryHandler(weightEntryRepository), new ReadWeightSummariesQueryHandler(weightEntryRepository)), [typeof(ReadWeightEntriesQuery), typeof(ReadWeightSummariesQuery)]), (RequestTestSender.Create(new ReadWaistEntriesQueryHandler(waistEntryRepository), new ReadLatestWaistEntryQueryHandler(waistEntryRepository), new ReadWaistSummariesQueryHandler(waistEntryRepository)), [typeof(ReadWaistEntriesQuery), typeof(ReadWaistSummariesQuery)])), [typeof(ReadWeightEntriesQuery), typeof(ReadWaistEntriesQuery), typeof(ReadWeightSummariesQuery), typeof(ReadWaistSummariesQuery)]), (RequestTestSender.Create(new ReadRecentHydrationEntriesQueryHandler(hydrationEntryRepository), new ReadHydrationEntriesQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalQueryHandler(hydrationEntryRepository), new ReadHydrationDailyTotalsQueryHandler(hydrationEntryRepository)), [typeof(ReadHydrationDailyTotalsQuery), typeof(ReadRecentHydrationEntriesQuery)]))),
                 new MediatorDashboardMealsReadService(sender)),
             logger);
 
@@ -1026,6 +1028,9 @@ public sealed class DashboardSnapshotBuilderTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubHydrationEntryRepository(IReadOnlyList<(DateTime Date, int TotalMl)>? totals = null)
         : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
+        public Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(UserId userId, DateTime startUtc, DateTime endUtc, int limit, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<HydrationEntryReadModel>>([]);
+
         public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -339,6 +339,7 @@ $fd-layout-shell-tokens: (
     sidebar-collapsed-width: 72px,
     impersonation-banner-height: 48px,
     mobile-viewport-bottom-padding: 72px,
+    mobile-nav-height: 64px,
     mobile-sheet-bottom: 126px,
 );
 $fd-page-header-base-tokens: (
@@ -1780,6 +1781,7 @@ $fd-theme-design-tokens: (
         --fd-layout-shell-sidebar-collapsed-width: #{fd-token(layout-shell, sidebar-collapsed-width)};
         --fd-layout-shell-impersonation-banner-height: #{fd-token(layout-shell, impersonation-banner-height)};
         --fd-layout-shell-mobile-viewport-bottom-padding: #{fd-token(layout-shell, mobile-viewport-bottom-padding)};
+        --fd-layout-shell-mobile-nav-height: #{fd-token(layout-shell, mobile-nav-height)};
         --fd-layout-shell-mobile-sheet-bottom: #{fd-token(layout-shell, mobile-sheet-bottom)};
         --fd-landing-container-max-width: 1180px;
         --fd-landing-inline-padding: clamp(var(--fd-space-sm), 4vw, var(--fd-space-lg));

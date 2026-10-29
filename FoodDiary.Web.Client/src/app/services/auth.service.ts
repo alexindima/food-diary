@@ -344,15 +344,15 @@ export class AuthService {
         const owner = this.getUserId();
         const sessionId = this.browserSession.sessionId();
         const contextId = this.browserSession.contextId();
-        const request =
-            this.browserSession.telegram && this.browserSession.contextId() === null
-                ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
-                : this.sdk.client.postAuthSession(
-                      { version: this.sdk.version },
-                      'body',
-                      false,
-                      sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
-                  );
+        const usesTelegramRefresh = this.browserSession.telegram && contextId === null;
+        const request = usesTelegramRefresh
+            ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
+            : this.sdk.client.postAuthSession(
+                  { version: this.sdk.version },
+                  'body',
+                  false,
+                  sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
+              );
         const pending = this.cookieSessions
             .run(() =>
                 defer(() => {
@@ -381,7 +381,7 @@ export class AuthService {
                         }),
                         catchError((error: unknown) => {
                             if (version === this.sessionVersion) {
-                                if (error instanceof HttpErrorResponse && REJECTED_SESSION_STATUSES.has(error.status)) {
+                                if (this.isRejectedSession(error, usesTelegramRefresh)) {
                                     this.recovery.restorationSucceeded();
                                     this.authReadySignal.set(true);
                                     if (owner === null) {
@@ -410,6 +410,20 @@ export class AuthService {
             );
         this.refreshInFlight$ = pending;
         return pending;
+    }
+
+    private isRejectedSession(error: unknown, usesTelegramRefresh: boolean): boolean {
+        if (!(error instanceof HttpErrorResponse)) {
+            return false;
+        }
+        // A fresh Mini App has no refresh cookie yet. The token endpoint reports
+        // that absence as a required-field error; signed Telegram login must still run.
+        return (
+            REJECTED_SESSION_STATUSES.has(error.status) ||
+            (usesTelegramRefresh &&
+                error.status === Number(HttpStatusCode.BadRequest) &&
+                getStringProperty(error.error, 'error') === 'Validation.Required')
+        );
     }
 
     public async onLogoutAsync(redirectToAuth = false): Promise<void> {

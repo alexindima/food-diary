@@ -4,19 +4,34 @@
 }
 
 :host p,
-:host h3 {
+:host h3,
+:host h2 {
     margin: 0;
 }
 
 .nutrition-details {
+    &__header,
+    &__footer {
+        width: 100%;
+    }
+
+    &__totals {
+        flex: 1;
+    }
+
+    &__footer fd-ui-button {
+        display: block;
+        width: 100%;
+    }
+
     &__summary {
-        padding: var(--fd-space-md);
+        padding: var(--fd-space-sm);
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-card-surface);
     }
 
-    fd-ui-progress-ring {
+    &__summary fd-ui-progress-ring {
         flex: 0 0 var(--fd-size-control-xl);
         width: var(--fd-size-control-xl);
         --fd-progress-ring-color: var(--nutrition-color);
@@ -37,11 +52,18 @@
         width: 100%;
         gap: var(--fd-space-xxs);
         text-align: start;
-        padding-block: var(--fd-space-sm);
+        padding-block: var(--fd-space-xs);
     }
 
     &__source-heading {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: var(--fd-space-xs);
+        align-items: start;
+    }
+
+    &__chevron {
+        font-size: var(--fd-size-icon-sm);
     }
 
     &__name {

@@ -1,7 +1,7 @@
 import type { CycleResponse } from './cycle.data';
 import type { DailyAdvice } from './daily-advice.data';
 import type { FastingSession } from './fasting.data';
-import type { HydrationDaily } from './hydration.data';
+import type { HydrationDaily, HydrationEntry } from './hydration.data';
 import type { Meal } from './meal.data';
 import type { TdeeInsight } from './tdee-insight.data';
 import type { DashboardLayoutSettings } from './user.data';
@@ -19,6 +19,7 @@ export type DashboardSnapshot<TMeal = Meal> = {
     waist: DashboardWaist;
     meals: DashboardMeals<TMeal>;
     hydration?: HydrationDaily | null;
+    hydrationHistory?: DashboardHydrationHistory | null;
     advice?: DailyAdvice | null;
     currentFastingSession?: FastingSession | null;
     weightTrend?: WeightEntrySummaryPoint[];
@@ -28,6 +29,11 @@ export type DashboardSnapshot<TMeal = Meal> = {
     tdeeInsight?: TdeeInsight | null;
     currentCycle?: CycleResponse | null;
     cycleHidden?: boolean;
+};
+
+export type DashboardHydrationHistory = {
+    entries: HydrationEntry[];
+    hasMore: boolean;
 };
 
 export type DashboardStatistics = {

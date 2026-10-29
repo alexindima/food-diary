@@ -11,6 +11,7 @@
                 class="dashboard__card dashboard__card--hydration"
                 [total]="cardState().total"
                 [goal]="cardState().goal"
+                [history]="cardState().history ?? null"
                 [isLoading]="isLoading()"
                 [canAdd]="canAdd()"
                 [undoAmount]="undoAmount()"

@@ -30,7 +30,8 @@ public sealed class CookieHttpsProtectionApiTests(CookieHttpsProxyFixture fixtur
         using HttpResponseMessage exchange = await admin.PostAsJsonAsync("/api/v1/auth/admin-sso/exchange", request);
 
         Assert.Equal(HttpStatusCode.OK, exchange.StatusCode);
-        var cookie = SetCookieHeaderValue.Parse(Assert.Single(exchange.Headers.GetValues("Set-Cookie")));
+        var cookie = SetCookieHeaderValue.Parse(Assert.Single(exchange.Headers.GetValues("Set-Cookie"), value =>
+            value.StartsWith("__Host-fooddiary.admin=", StringComparison.Ordinal)));
         Assert.Multiple(
             () => Assert.Equal("__Host-fooddiary.admin", cookie.Name.ToString()),
             () => Assert.True(cookie.Secure),
@@ -88,7 +89,8 @@ public sealed class CookieHttpsProtectionApiTests(CookieHttpsProxyFixture fixtur
         using HttpResponseMessage login = await browser.PostAsJsonAsync("/api/v1/auth/login",
             new LoginHttpRequest(identity.Email, CookieAuthenticationScenario.Password, rememberMe));
         Assert.Equal(HttpStatusCode.OK, login.StatusCode);
-        var cookie = SetCookieHeaderValue.Parse(Assert.Single(login.Headers.GetValues("Set-Cookie")));
+        var cookie = SetCookieHeaderValue.Parse(Assert.Single(login.Headers.GetValues("Set-Cookie"), value =>
+            value.StartsWith("__Host-fooddiary.browser=", StringComparison.Ordinal)));
         Assert.Equal("__Host-" + BrowserSessionCookieService.BrowserCookieName, cookie.Name.ToString());
         Assert.True(cookie.Secure);
         Assert.True(cookie.HttpOnly);

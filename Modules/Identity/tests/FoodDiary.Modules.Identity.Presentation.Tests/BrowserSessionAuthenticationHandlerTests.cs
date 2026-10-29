@@ -8,6 +8,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Tests;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -33,7 +34,7 @@ public sealed class BrowserSessionAuthenticationHandlerTests {
         services.AddLogging();
         services.AddSingleton<IOptions<JwtOptions>>(OptionsFactory.Create(new JwtOptions { ExpirationMinutes = 60 }));
         services.AddSingleton<TimeProvider>(new FixedClock(new DateTimeOffset(now)));
-        services.AddSingleton(new BrowserSessionCookieService());
+        services.AddSingleton(new BrowserSessionCookieService(new EphemeralDataProtectionProvider(), TimeProvider.System));
         services.AddSingleton<ISender>(SubstituteSender.Create(Result.Success(session)));
         services.AddAuthentication(BrowserSessionCookieService.Scheme)
             .AddScheme<AuthenticationSchemeOptions, BrowserSessionAuthenticationHandler>(BrowserSessionCookieService.Scheme, _ => { });

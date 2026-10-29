@@ -31,6 +31,7 @@ public sealed class AuthSessionLifecycleControllerTests {
         tokens.ValidateToken("replacement-refresh-token").Returns(
             (new UserId(Guid.NewGuid()), "user@example.com", false, new RefreshTokenSessionId(currentId)));
         await using ServiceProvider services = new ServiceCollection()
+            .AddDataProtection().Services.AddSingleton(TimeProvider.System)
             .AddSingleton(tokens).AddScoped<RefreshTokenCookieService>().AddScoped<BrowserSessionCookieService>()
             .BuildServiceProvider();
         int sent = 0;
@@ -121,6 +122,8 @@ public sealed class AuthSessionLifecycleControllerTests {
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
+        services.AddDataProtection();
+        services.AddSingleton(TimeProvider.System);
         services.AddScoped<BrowserSessionCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(
@@ -150,6 +153,8 @@ public sealed class AuthSessionLifecycleControllerTests {
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(Substitute.For<IJwtTokenGenerator>());
         services.AddScoped<RefreshTokenCookieService>();
+        services.AddDataProtection();
+        services.AddSingleton(TimeProvider.System);
         services.AddScoped<BrowserSessionCookieService>();
         IRequest<Result>? sentRequest = null;
         var controller = new AuthSessionLifecycleController(

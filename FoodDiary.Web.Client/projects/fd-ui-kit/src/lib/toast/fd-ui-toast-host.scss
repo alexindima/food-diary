@@ -91,6 +91,33 @@
     font-weight: var(--fd-text-action-weight);
 }
 
+.fd-ui-toast-host__progress {
+    appearance: none;
+    display: block;
+    width: calc(100% - var(--fd-space-toast-content-gap) * 2);
+    height: var(--fd-space-xxs);
+    margin: 0 var(--fd-space-toast-content-gap) var(--fd-space-toast-content-gap);
+    border: none;
+    border-radius: var(--fd-radius-pill);
+    overflow: hidden;
+    background: var(--fd-bg-surface-glass-medium);
+
+    &::-webkit-progress-bar {
+        background: var(--fd-bg-surface-glass-medium);
+        border-radius: var(--fd-radius-pill);
+    }
+
+    &::-webkit-progress-value {
+        background: var(--fd-color-green-400);
+        border-radius: var(--fd-radius-pill);
+    }
+
+    &::-moz-progress-bar {
+        background: var(--fd-color-green-400);
+        border-radius: var(--fd-radius-pill);
+    }
+}
+
 .fd-ui-toast-host__action {
     appearance: none;
     border: none;

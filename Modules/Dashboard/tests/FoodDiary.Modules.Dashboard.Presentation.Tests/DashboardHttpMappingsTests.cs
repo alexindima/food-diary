@@ -196,6 +196,8 @@ public sealed class DashboardHttpMappingsTests {
                     ["estimated_from_completed_cycles"],
                     "period-v2.0")));
 
+        var waterEntryId = Guid.NewGuid();
+        model = model with { HydrationHistory = new DashboardHydrationHistoryModel([new DashboardHydrationEntryModel(waterEntryId, date.AddHours(12), 250)], HasMore: true) };
         DashboardSnapshotHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Date, response.Date);
@@ -218,6 +220,13 @@ public sealed class DashboardHttpMappingsTests {
             () => Assert.Equal(640, mappedMeal.TotalCalories),
             () => Assert.Equal("Lunch", mappedMeal.MealType));
         Assert.Equal(1800, response.Hydration!.TotalMl);
+        Assert.NotNull(response.HydrationHistory);
+        Assert.Single(response.HydrationHistory.Entries);
+        Assert.Multiple(
+            () => Assert.Equal(waterEntryId, response.HydrationHistory.Entries[0].Id),
+            () => Assert.Equal(date.AddHours(12), response.HydrationHistory.Entries[0].TimestampUtc),
+            () => Assert.Equal(250, response.HydrationHistory.Entries[0].AmountMl),
+            () => Assert.True(response.HydrationHistory.HasMore));
         Assert.Equal("Совет", response.Advice!.Value);
         Assert.Single(response.WeightTrend!);
         Assert.Single(response.WaistTrend!);

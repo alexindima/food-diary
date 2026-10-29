@@ -1,5 +1,6 @@
 import type { DashboardSnapshot } from '../../models/dashboard.data';
-import { calendarDate } from '../../models/semantics/date-value';
+import { calendarDate, utcInstant } from '../../models/semantics/date-value';
+import { entityId } from '../../models/semantics/entity-id';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 import { cycleFromSdk } from './cycle-sdk.mapper';
 import { fastingSessionFromSdk } from './fasting-sdk.mapper';
@@ -62,6 +63,16 @@ export function dashboardSnapshotFromSdk(response: DashboardSnapshotHttpResponse
             return { ...daily, dateUtc: calendarDate(daily.dateUtc) };
         }),
         advice: sdkMaybe(value.advice, advice => requireSdkFields(advice, ['id', 'locale', 'value', 'weight'])),
+        hydrationHistory: sdkMaybe(value.hydrationHistory, history => {
+            const required = requireSdkFields(history, ['entries', 'hasMore']);
+            return {
+                hasMore: required.hasMore,
+                entries: required.entries.map(entry => {
+                    const item = requireSdkFields(entry, ['id', 'timestampUtc', 'amountMl']);
+                    return { ...item, id: entityId<'hydration-entry'>(item.id), timestampUtc: utcInstant(item.timestampUtc) };
+                }),
+            };
+        }),
         currentFastingSession: sdkMaybe(value.currentFastingSession, fastingSessionFromSdk),
         currentCycle: sdkMaybe(value.currentCycle, cycleFromSdk),
         cycleHidden: value.cycleHidden ?? false,

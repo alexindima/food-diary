@@ -28,6 +28,7 @@ using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetBrowserSe
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Mappings;
 
@@ -248,13 +249,19 @@ public static class AuthHttpMappings {
             if (bearer) {
                 kind = AuthenticationCredentialKind.Bearer;
             }
+            RefreshTokenSessionId? previousSessionId = null;
+            if (!bearer && httpContext.Request.Cookies.ContainsKey(BrowserSessionCookieService.PreviousCookieName(httpContext, admin))) {
+                previousSessionId = httpContext.RequestServices.GetRequiredService<BrowserSessionCookieService>()
+                    .ReadPreviousSessionId(httpContext, admin);
+            }
             return new AuthenticationClientContext(
                 authProvider,
                 httpContext.Connection.RemoteIpAddress?.ToString(),
                 httpContext.Request.Headers.UserAgent.ToString(),
                 replaceBrowserSession ? httpContext.Request.Cookies[RefreshTokenCookieService.CookieName] : null,
                 kind,
-                bearer ? null : httpContext.Request.Cookies[BrowserSessionCookieService.CookieName(httpContext, admin)]);
+                bearer ? null : httpContext.Request.Cookies[BrowserSessionCookieService.CookieName(httpContext, admin)],
+                previousSessionId);
         }
     }
 }

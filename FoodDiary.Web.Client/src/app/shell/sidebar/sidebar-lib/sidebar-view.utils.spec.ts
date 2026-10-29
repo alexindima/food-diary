@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
     buildPrimarySidebarNavItems,
-    calculateSidebarDailyProgressPercent,
     focusFirstSidebarInteractiveElement,
     getSidebarMobileSheetLabelKey,
     getSidebarMobileSheetRouteItems,
@@ -11,13 +10,6 @@ import {
     isSidebarRouteItem,
     normalizeSidebarPath,
 } from './sidebar-view.utils';
-
-const PERCENT_MAX = 100;
-const HALF_CONSUMED = 50;
-const GOAL = 100;
-const OVER_GOAL_CONSUMED = 150;
-const EMPTY_GOAL = 0;
-const NEGATIVE_CONSUMED = -50;
 
 describe('sidebar view utils', () => {
     it('builds primary navigation by role', () => {
@@ -35,13 +27,6 @@ describe('sidebar view utils', () => {
         expect(isSidebarRouteActive('/meals/123?tab=info', '/meals', false)).toBe(true);
         expect(isSidebarRouteActive('/meals/123', '/meals', true)).toBe(false);
         expect(isSidebarRouteActive('/dashboard?date=today', '/dashboard', true)).toBe(true);
-    });
-
-    it('calculates clamped daily progress', () => {
-        expect(calculateSidebarDailyProgressPercent(HALF_CONSUMED, GOAL)).toBe(HALF_CONSUMED);
-        expect(calculateSidebarDailyProgressPercent(OVER_GOAL_CONSUMED, GOAL)).toBe(PERCENT_MAX);
-        expect(calculateSidebarDailyProgressPercent(HALF_CONSUMED, EMPTY_GOAL)).toBe(EMPTY_GOAL);
-        expect(calculateSidebarDailyProgressPercent(NEGATIVE_CONSUMED, GOAL)).toBe(EMPTY_GOAL);
     });
 
     it('resolves mobile sheet labels and route item groups', () => {

@@ -1,27 +1,35 @@
 <fd-ui-dialog size="sm" [title]="'HYDRATION_CARD.DETAILS_TITLE' | translate">
     <div class="fd-stack fd-gap-md">
-        <p class="fd-ui-body-sm">{{ 'HYDRATION_CARD.DETAILS_BODY' | translate }}</p>
         <dl class="fd-stack fd-gap-sm">
             <div class="fd-row fd-justify-between fd-gap-sm">
                 <dt>{{ 'HYDRATION_CARD.RECORDED' | translate }}</dt>
                 <dd>{{ data.total | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</dd>
             </div>
-            @if (hasGoal) {
-                <div class="fd-row fd-justify-between fd-gap-sm">
-                    <dt>{{ 'HYDRATION_CARD.DAILY_GOAL' | translate }}</dt>
-                    <dd>{{ data.goal | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</dd>
-                </div>
-            }
         </dl>
-        <p class="fd-ui-body-sm">
-            @if (!hasGoal) {
-                {{ 'HYDRATION_CARD.GOAL_BODY' | translate }}
-            } @else if (remaining === 0) {
-                {{ 'HYDRATION_CARD.GOAL_REACHED' | translate }}
-            } @else {
-                {{ 'HYDRATION_CARD.REMAINING' | translate: { value: (remaining | localizedNumber: language()) } }}
-            }
-        </p>
+        @if (data.history; as history) {
+            <section class="hydration-history fd-stack fd-gap-xs" aria-labelledby="hydration-history-title">
+                <h3 id="hydration-history-title" class="fd-ui-section-title">{{ 'HYDRATION_CARD.HISTORY_TITLE' | translate }}</h3>
+                @if (history.entries.length > 0) {
+                    <ol class="hydration-history__entries">
+                        @for (entry of history.entries; track entry.id) {
+                            <li class="hydration-history__entry fd-row fd-justify-between fd-gap-sm">
+                                <time [attr.datetime]="entry.timestampUtc">{{ entry.timestampUtc | localizedDate: 'HH:mm' }}</time>
+                                <span class="hydration-history__amount"
+                                    >{{ entry.amountMl | localizedNumber: language() }} {{ 'GENERAL.UNITS.ML' | translate }}</span
+                                >
+                            </li>
+                        }
+                    </ol>
+                    @if (history.hasMore) {
+                        <p class="hydration-history__hint fd-ui-caption">
+                            {{ 'HYDRATION_CARD.HISTORY_LIMIT' | translate: { count: history.entries.length } }}
+                        </p>
+                    }
+                } @else {
+                    <p class="hydration-history__hint fd-ui-body-sm">{{ 'HYDRATION_CARD.HISTORY_EMPTY' | translate }}</p>
+                }
+            </section>
+        }
     </div>
     <div fdUiDialogFooter class="fd-row fd-gap-sm fd-justify-end">
         <fd-ui-button variant="secondary" fill="text" (click)="dialogRef.close(true)">

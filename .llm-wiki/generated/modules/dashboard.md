@@ -38,15 +38,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 27
+- Public contract files: 29
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 27
+- Public contract types: 29
 - Interfaces: 4
-- DTO/read-model/projection types: 20
+- DTO/read-model/projection types: 22
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
@@ -57,6 +57,8 @@ No literal attribute-routed controller was associated with this module.
 - `record DailyCaloriesModel`
 - `record DashboardBodyReadModel`
 - `record DashboardCalendarRange`
+- `record DashboardHydrationEntryModel`
+- `record DashboardHydrationHistoryModel`
 - `record DashboardMealAiItemReadModel`
 - `record DashboardMealAiSessionReadModel`
 - `record DashboardMealItemReadModel`

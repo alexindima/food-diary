@@ -233,6 +233,7 @@ export class DashboardComponent {
         return {
             total: hydration?.totalMl ?? 0,
             goal: hydration?.goalMl ?? null,
+            history: this.facade.snapshot()?.hydrationHistory ?? null,
         };
     });
     protected readonly cycleHidden = this.facade.cycleHidden;

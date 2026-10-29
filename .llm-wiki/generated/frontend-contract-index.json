@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 509,
-    "componentsWithoutDirectSpecs": 127,
-    "inputs": 1658,
+    "components": 511,
+    "componentsWithoutDirectSpecs": 128,
+    "inputs": 1655,
     "outputs": 562,
     "apiCalls": 318,
     "templatesWithTranslations": 370,
-    "translationKeys": 2211,
-    "consumerEdges": 1299,
+    "translationKeys": 2213,
+    "consumerEdges": 1300,
     "consumedComponents": 324,
-    "unconsumedComponents": 184
+    "unconsumedComponents": 186
   },
   "components": [
     {
@@ -2493,6 +2493,11 @@
           "required": true
         },
         {
+          "name": "history",
+          "type": "DashboardHydrationHistory | null",
+          "required": false
+        },
+        {
           "name": "isLoading",
           "type": "boolean",
           "required": true
@@ -4374,6 +4379,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "DialogSwipeExample",
+      "selector": "fd-dialog-swipe-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-swipe.stories.ts",
+      "templatePath": null,
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -7494,7 +7509,7 @@
         }
       ],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast-host.spec.ts"
     },
     {
       "class": "FdUiTopLoaderComponent",
@@ -7672,6 +7687,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "ToastProgressExample",
+      "selector": "fd-toast-progress-example",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.stories.ts",
+      "templatePath": null,
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },
@@ -15000,26 +15025,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.html",
       "inputs": [
         {
-          "name": "isProgressVisible",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "dailyConsumedKcalRounded",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "dailyGoalKcalRounded",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "dailyProgressPercent",
-          "type": "number",
-          "required": true
-        },
-        {
           "name": "pendingRoute",
           "type": "string | null",
           "required": true
@@ -18878,7 +18883,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/logout",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 456,
+      "line": 470,
       "publicMethod": "retryPendingLogoutAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -18890,7 +18895,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/auth/impersonation/exchange",
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 592,
+      "line": 606,
       "publicMethod": "restoreSessionInternalAsync",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth",
@@ -21249,20 +21254,20 @@
       "keys": [
         "COMMON.CLOSE",
         "GENERAL.UNITS.ML",
-        "HYDRATION_CARD.DAILY_GOAL",
-        "HYDRATION_CARD.DETAILS_BODY",
         "HYDRATION_CARD.DETAILS_TITLE",
         "HYDRATION_CARD.EDIT_GOAL",
-        "HYDRATION_CARD.GOAL_BODY",
-        "HYDRATION_CARD.GOAL_REACHED",
-        "HYDRATION_CARD.RECORDED",
-        "HYDRATION_CARD.REMAINING"
+        "HYDRATION_CARD.HISTORY_EMPTY",
+        "HYDRATION_CARD.HISTORY_LIMIT",
+        "HYDRATION_CARD.HISTORY_TITLE",
+        "HYDRATION_CARD.RECORDED"
       ]
     },
     {
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
       "keys": [
+        "COMMON.CLOSE",
+        "DASHBOARD.NUTRITION_DETAILS.EDIT",
         "DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_BODY",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE",
@@ -21281,6 +21286,7 @@
         "DASHBOARD.NUTRITION_DETAILS.MANUAL",
         "DASHBOARD.NUTRITION_DETAILS.OTHER_SOURCES",
         "DASHBOARD.NUTRITION_DETAILS.SHOW_ALL",
+        "DASHBOARD.NUTRITION_DETAILS.SOURCE_COUNT",
         "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED",
         "DASHBOARD.NUTRITION_DETAILS.UNATTRIBUTED_HINT"
       ]
@@ -24163,13 +24169,11 @@
       "feature": "shell",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-mobile/sidebar-mobile.html",
       "keys": [
-        "GENERAL.UNITS.KCAL",
         "HEADER.LOGOUT",
         "HEADER.PROFILE",
         "NOTIFICATIONS.TITLE",
         "SIDEBAR.ADMIN_PANEL",
         "SIDEBAR.BODY",
-        "SIDEBAR.DAILY_NORM",
         "SIDEBAR.DASHBOARD",
         "SIDEBAR.FOOD",
         "SIDEBAR.MOBILE_BODY",
@@ -29322,9 +29326,14 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
+        "appearance",
+        "ariaLabel",
         "fill",
+        "fullWidth",
+        "icon",
+        "size",
         "variant"
       ],
       "outputsHandled": []
@@ -33619,7 +33628,6 @@
       "occurrences": 1,
       "inputsUsed": [
         "size",
-        "subtitle",
         "title"
       ],
       "outputsHandled": []
@@ -35203,6 +35211,18 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
       "occurrences": 1,
       "inputsUsed": [
         "name"
@@ -40416,6 +40436,7 @@
       "inputsUsed": [
         "canAdd",
         "goal",
+        "history",
         "isLoading",
         "total",
         "undoAmount",
@@ -43473,11 +43494,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.html",
       "occurrences": 1,
       "inputsUsed": [
-        "dailyConsumedKcalRounded",
-        "dailyGoalKcalRounded",
-        "dailyProgressPercent",
         "isAdmin",
-        "isProgressVisible",
         "mobileSheet",
         "pendingRoute",
         "unreadNotificationCount"

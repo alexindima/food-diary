@@ -10,6 +10,7 @@ import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '.
 import { type Recipe, RecipeVisibility } from '../../../../shared/models/recipe.data';
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
+import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import { QuickMealService } from './quick-meal.service';
@@ -227,7 +228,7 @@ describe('QuickMealService saving', () => {
             }),
             expect.any(String),
         );
-        expect(toastService.success).toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS');
+        expect(toastService.success).toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS', { key: MEAL_FEEDBACK_TOAST_KEY });
         expect(toastService.error).not.toHaveBeenCalled();
         expect(service.items()).toEqual([]);
     });
@@ -293,7 +294,7 @@ describe('QuickMealService save failures', () => {
         service.saveDraft();
 
         expect(toastService.error).toHaveBeenCalledWith('QUICK_MEAL.SAVE_ERROR');
-        expect(toastService.success).not.toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS');
+        expect(toastService.success).not.toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS', { key: MEAL_FEEDBACK_TOAST_KEY });
         expect(service.items()).toHaveLength(1);
     });
 

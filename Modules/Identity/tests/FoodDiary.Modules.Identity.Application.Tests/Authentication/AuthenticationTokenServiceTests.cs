@@ -81,6 +81,41 @@ public class AuthenticationTokenServiceTests {
         Assert.Equal(2, sessions.Items.Count);
         Assert.True(sessions.Items.Single(session => session.Id != id).IsActive);
     }
+
+    [Theory]
+    [InlineData(AuthenticationCredentialKind.Browser, false, true)]
+    [InlineData(AuthenticationCredentialKind.AdminBrowser, false, true)]
+    [InlineData(AuthenticationCredentialKind.Browser, true, false)]
+    [InlineData(AuthenticationCredentialKind.Bearer, false, false)]
+    public async Task Issuance_UsesThePreviousBrowserMarkerOnlyForFreshSameAccountBrowserAuthentication(
+        AuthenticationCredentialKind kind, bool foreignOwner, bool shouldRevoke) {
+        var clock = new StubDateTimeProvider();
+        DateTime now = clock.GetUtcNow().UtcDateTime;
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var owner = UserId.New();
+        var previous = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), foreignOwner ? UserId.New() : owner,
+            "previous-proof", rememberMe: false, "password", "203.0.113.1", "SameBrowser/1.0", now.AddDays(-1), now.AddDays(1));
+        previous.ConvertToBrowserSession(previous.RefreshTokenHash, 7, now.AddDays(-1));
+        var otherDevice = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), owner,
+            "other-device-proof", rememberMe: false, "password", "203.0.113.1", "SameBrowser/1.0", now.AddDays(-1), now.AddDays(1));
+        otherDevice.ConvertToBrowserSession(otherDevice.RefreshTokenHash, 7, now.AddDays(-1));
+        sessions.Items.AddRange([previous, otherDevice]);
+        var principal = new UserAuthenticationPrincipalModel(owner, "browser-marker@example.com", ["User"], AccessTokenCapUtc: null, User: null!);
+        var service = new AuthenticationTokenService(new InMemoryUserLoginEventRepository(), sessions, new FakeJwtTokenGenerator(),
+            Substitute.For<IPasswordHasher>(), clock, Lifetimes);
+
+        IssuedAuthenticationTokens issued = await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
+            new AuthenticationClientContext("password", IpAddress: null, "SameBrowser/1.0", CredentialKind: kind, PreviousBrowserSessionId: previous.Id));
+
+        Assert.Multiple(
+            () => Assert.Equal(shouldRevoke, previous.RevokedAtUtc.HasValue),
+            () => Assert.True(otherDevice.IsActive),
+            () => Assert.Equal(3, sessions.Items.Count),
+            () => Assert.True(sessions.Items[^1].IsActive),
+            () => Assert.NotEqual(previous.Id, sessions.Items[^1].Id),
+            () => Assert.Equal(kind == AuthenticationCredentialKind.Bearer, issued.BrowserSession is null));
+    }
+
     [Fact]
     public async Task IssueFromPrincipalAsync_StoresSessionWithoutMutatingUserAggregate() {
         User user = CreateUser("principal@example.com");

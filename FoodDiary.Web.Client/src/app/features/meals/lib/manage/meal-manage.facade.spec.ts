@@ -23,6 +23,7 @@ import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import type { RecipeServings } from '../../../../shared/models/semantics/meal-quantity';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { MEAL_FEEDBACK_TOAST_KEY } from '../../../../shared/notifications/meal-feedback.config';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
 import type { MealFormValues, MealItemFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
@@ -230,7 +231,7 @@ function registerSubmitAndNavigationTests(): void {
         it('should toast and redirect to list after create', async () => {
             await facade.showSuccessToastAndRedirectAsync(false);
 
-            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.CREATE_SUCCESS');
+            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.CREATE_SUCCESS', { key: MEAL_FEEDBACK_TOAST_KEY });
             expect(navigationService.navigateToMealListAsync).toHaveBeenCalled();
             expect(dialogService.open).not.toHaveBeenCalled();
         });
@@ -238,7 +239,7 @@ function registerSubmitAndNavigationTests(): void {
         it('should toast and redirect to list after update', async () => {
             await facade.showSuccessToastAndRedirectAsync(true);
 
-            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.EDIT_SUCCESS');
+            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.EDIT_SUCCESS', { key: MEAL_FEEDBACK_TOAST_KEY });
             expect(navigationService.navigateToMealListAsync).toHaveBeenCalled();
             expect(dialogService.open).not.toHaveBeenCalled();
         });

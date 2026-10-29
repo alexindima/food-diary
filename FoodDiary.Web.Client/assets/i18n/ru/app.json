@@ -1,4 +1,9 @@
 {
+    "MEAL_PROGRESS": {
+        "DAILY_GOAL": "Дневная цель по калориям",
+        "TODAY_WITH_GOAL": "Сегодня: {{consumed}} / {{goal}} ккал",
+        "TODAY_TOTAL": "Сегодня: {{consumed}} ккал"
+    },
     "PWA": {
         "INSTALL": {
             "TITLE": "FoodDiary всегда под рукой",
@@ -3499,7 +3504,10 @@
         "REMAINING": "Осталось {{value}} мл",
         "GOAL_REACHED": "Цель на день достигнута",
         "QUICK_ADD_LABEL": "Быстро добавить воду",
-        "ADD_AMOUNT": "Добавить {{value}} мл воды"
+        "ADD_AMOUNT": "Добавить {{value}} мл воды",
+        "HISTORY_TITLE": "Приёмы воды",
+        "HISTORY_EMPTY": "За этот день пока нет записей о воде.",
+        "HISTORY_LIMIT": "Показаны последние {{count}} приёмов."
     },
     "CYCLE_CARD": {
         "CONFIDENCE_LEARNING": "Собираем данные",

@@ -35,10 +35,6 @@ import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarMobileComponent {
-    public readonly isProgressVisible = input.required<boolean>();
-    public readonly dailyConsumedKcalRounded = input.required<number>();
-    public readonly dailyGoalKcalRounded = input.required<number>();
-    public readonly dailyProgressPercent = input.required<number>();
     public readonly pendingRoute = input.required<string | null>();
     public readonly unreadNotificationCount = input.required<number>();
     public readonly mobileSheet = input.required<MobileSheetId>();

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1367,
+    "contracts": 1369,
     "ambiguousContracts": 29,
-    "consumerEdges": 10979,
-    "productionConsumerEdges": 6119,
-    "testConsumerEdges": 4860,
-    "consumedContracts": 1367,
+    "consumerEdges": 10992,
+    "productionConsumerEdges": 6128,
+    "testConsumerEdges": 4864,
+    "consumedContracts": 1369,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -3913,6 +3913,23 @@
       ],
       "definitionPaths": [
         "Modules/Usda/Presentation/Responses/DailyMicronutrientSummaryHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "DashboardHydrationHistoryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Responses/DashboardHydrationHistoryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -19124,6 +19141,23 @@
       ],
       "definitionPaths": [
         "Modules/Favorites/Contracts/FavoriteProducts/Queries/ReadProductFavoriteStatus/ReadProductFavoriteStatusQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ReadRecentHydrationEntriesQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -37857,6 +37891,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DashboardHydrationHistoryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Responses/DashboardHydrationHistoryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardSnapshotHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DashboardHydrationHistoryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Presentation.Contracts/Responses/DashboardHydrationHistoryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -58578,6 +58638,34 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "HydrationEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
+        "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Contracts/Responses/DashboardHydrationHistoryHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "HydrationEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/HydrationEntryHttpResponse.cs",
+        "Modules/Hydration/Presentation.Contracts/Responses/HydrationEntryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Presentation.Mappings/Mappings/DashboardHttpResponseMappings.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -85235,6 +85323,19 @@
         "Modules/Hydration/Application.Abstractions/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Application/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Application.Abstractions/Common/IHydrationEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -85263,7 +85364,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -101423,7 +101524,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 7
     },
     {
       "contract": "IPasswordHasher",
@@ -105243,6 +105344,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -107389,6 +107503,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Application/Queries/ReadHydrationInterval/ReadHydrationIntervalQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Application/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -139147,6 +139274,19 @@
         "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionReplacementApiTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "LoginHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/LoginHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CookieAccountRevocationApiTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -148035,6 +148175,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "ReadRecentHydrationEntriesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadRecentHydrationEntriesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Application/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ReadRecentHydrationEntriesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ReadRecentHydrationEntriesQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "ReadRecentProductsQuery",
       "roles": [
         "Query"
@@ -151184,6 +151376,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionRenewalBoundaryApiTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionReplacementApiTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

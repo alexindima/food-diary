@@ -61,9 +61,11 @@
         z-index: 1;
         inset-inline: 0;
         top: var(--fd-space-lg);
-        border-radius: var(--fd-radius-pill);
+        border: var(--fd-border-width) solid var(--fd-color-border-strong);
+        border-radius: var(--fd-radius-sm);
         padding: var(--fd-space-xxs);
         background: var(--fd-bg-surface-raised);
+        box-shadow: var(--fd-shadow-sm);
         color: var(--hydration-accent-text);
         font-weight: var(--fd-font-weight-semibold);
         text-align: center;

@@ -5,6 +5,7 @@ using FoodDiary.Modules.Identity.Presentation.Features.Auth.Responses;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 using FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Abstractions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,7 +31,7 @@ public sealed class AuthenticationCookieResultFilterTests {
         var response = new OkObjectResult(new AuthenticationHttpResponse("internal-access", "internal-refresh", null!));
         var context = new ResultExecutingContext(action, [], response, new object());
         var filter = new AuthenticationCookieResultFilter(new RefreshTokenCookieService(CreateTokenGenerator()),
-            new BrowserSessionCookieService(), SubstituteSender.Create(Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken)));
+            new BrowserSessionCookieService(new EphemeralDataProtectionProvider(), TimeProvider.System), SubstituteSender.Create(Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken)));
         bool continued = false;
         await filter.OnResultExecutionAsync(context, () => {
             continued = true;
@@ -68,7 +69,8 @@ public sealed class AuthenticationCookieResultFilterTests {
         });
 
         Assert.True(continued);
-        Assert.Contains("fooddiary.admin=", Assert.Single(httpContext.Response.Headers.SetCookie)!, StringComparison.Ordinal);
+        Assert.Contains("fooddiary.admin=", Assert.Single(httpContext.Response.Headers.SetCookie, value =>
+            value!.StartsWith("__Host-fooddiary.admin=", StringComparison.Ordinal))!, StringComparison.Ordinal);
         Assert.Equal("main-session", new RefreshTokenCookieService(CreateTokenGenerator()).Read(httpContext));
         Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         Assert.Null(Assert.IsType<AuthenticationHttpResponse>(result.Value).AccessToken);
@@ -136,6 +138,6 @@ public sealed class AuthenticationCookieResultFilterTests {
         var session = new BrowserSessionModel(BrowserSessionCredential.Create(id), id,
             new DateTime(2030, 6, 28, 12, 0, 0, DateTimeKind.Utc), RememberMe: true, principal);
         return new AuthenticationCookieResultFilter(new RefreshTokenCookieService(CreateTokenGenerator()),
-            new BrowserSessionCookieService(), SubstituteSender.Create(Result.Success(session)));
+            new BrowserSessionCookieService(new EphemeralDataProtectionProvider(), TimeProvider.System), SubstituteSender.Create(Result.Success(session)));
     }
 }

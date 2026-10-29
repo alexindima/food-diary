@@ -92,6 +92,11 @@ public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationF
         Assert.Equal(200, result.GetProperty("statistics").GetProperty("totalCalories").GetDouble());
         Assert.Equal(20, result.GetProperty("statistics").GetProperty("averageProteins").GetDouble());
         Assert.Equal(200, result.GetProperty("hydration").GetProperty("totalMl").GetInt32());
+        JsonElement history = result.GetProperty("hydrationHistory");
+        JsonElement[] waterEntries = [.. history.GetProperty("entries").EnumerateArray()];
+        Assert.False(history.GetProperty("hasMore").GetBoolean());
+        Assert.Equal(new[] { next.AddMilliseconds(-1), start }, waterEntries.Select(entry => entry.GetProperty("timestampUtc").GetDateTime()));
+        Assert.All(waterEntries, entry => Assert.Equal(100, entry.GetProperty("amountMl").GetInt32()));
         Assert.Equal(300, result.GetProperty("caloriesBurned").GetDouble());
         Assert.Equal(2, result.GetProperty("meals").GetProperty("total").GetInt32());
         Assert.Equal(75, result.GetProperty("weight").GetProperty("latest").GetProperty("weightKg").GetDouble());

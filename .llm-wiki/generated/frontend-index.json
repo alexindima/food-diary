@@ -8,15 +8,15 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2749,
-    "symbols": 868,
+    "typescriptFiles": 2757,
+    "symbols": 869,
     "routes": 108,
     "features": 46,
-    "specs": 837,
+    "specs": 840,
     "localeFiles": 5,
     "roles": {
       "Component": 502,
-      "Directive": 19,
+      "Directive": 20,
       "Facade": 90,
       "Other": 41,
       "Pipe": 5,
@@ -1817,6 +1817,13 @@
       "line": 12
     },
     {
+      "name": "FdUiDialogSwipeDirective",
+      "role": "Directive",
+      "selector": "[fdUiDialogSwipe]",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-swipe.directive.ts",
+      "line": 31
+    },
+    {
       "name": "FdUiDialogService",
       "role": "Service",
       "selector": null,
@@ -1828,7 +1835,7 @@
       "role": "Component",
       "selector": "fd-ui-dialog",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
-      "line": 50
+      "line": 51
     },
     {
       "name": "FdUiModalDirective",
@@ -2185,14 +2192,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.service.ts",
-      "line": 44
+      "line": 54
     },
     {
       "name": "FdUiToastService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.service.ts",
-      "line": 83
+      "line": 93
     },
     {
       "name": "FdUiTopLoaderComponent",
@@ -4012,7 +4019,7 @@
       "role": "Component",
       "selector": "fd-hydration-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
-      "line": 33
+      "line": 34
     },
     {
       "name": "TdeeInsightCardContentComponent",
@@ -4061,21 +4068,21 @@
       "role": "Component",
       "selector": "fd-hydration-details-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.ts",
-      "line": 21
+      "line": 23
     },
     {
       "name": "NutritionDetailsDialogComponent",
       "role": "Component",
       "selector": "fd-nutrition-details-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.ts",
-      "line": 42
+      "line": 44
     },
     {
       "name": "NutritionDetailsSourcesComponent",
       "role": "Component",
       "selector": "fd-nutrition-details-sources",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
-      "line": 19
+      "line": 27
     },
     {
       "name": "TdeeInsightDialogFooterComponent",
@@ -5125,14 +5132,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.ts",
-      "line": 48
+      "line": 49
     },
     {
       "name": "QuickMealService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/meals/lib/quick/quick-meal.service.ts",
-      "line": 39
+      "line": 40
     },
     {
       "name": "RecipeServingWeightService",
@@ -7708,14 +7715,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.facade.ts",
-      "line": 9
+      "line": 16
     },
     {
       "name": "SidebarComponent",
       "role": "Component",
       "selector": "fd-sidebar",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar.ts",
-      "line": 48
+      "line": 46
     }
   ],
   "routes": [
@@ -8265,16 +8272,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4182,
-      "russianProperties": 4182,
+      "englishProperties": 4189,
+      "russianProperties": 4189,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1286,
-      "russianProperties": 1286,
+      "englishProperties": 1294,
+      "russianProperties": 1294,
       "countsMatch": true
     },
     {

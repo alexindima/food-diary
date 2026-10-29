@@ -4,7 +4,6 @@
     class="fd-root"
     [class.fd-root--no-sidebar]="!usesAuthenticatedShell()"
     [class.fd-root--impersonating]="usesAuthenticatedShell() && isImpersonating()"
-    [class.fd-root--compact-mobile-nav]="usesCompactMobileNavigation()"
     [class.fd-root--sidebar-collapsed]="isSidebarCollapsed()"
     [class.fd-root--public-site]="usesPublicSiteChrome()"
     [class.fd-theme-scope]="usesPublicSiteChrome()"
@@ -54,8 +53,8 @@
             }
         </div>
     </main>
+    <fd-ui-toast-host [closeLabel]="'COMMON.CLOSE_NOTIFICATION' | translate" />
 </div>
 @defer (when usesAuthenticatedShell()) {
     <fd-tour-host />
 }
-<fd-ui-toast-host [closeLabel]="'COMMON.CLOSE_NOTIFICATION' | translate" />
