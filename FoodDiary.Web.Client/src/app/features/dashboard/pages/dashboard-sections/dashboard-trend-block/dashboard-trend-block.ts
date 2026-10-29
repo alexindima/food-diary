@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
@@ -21,11 +20,11 @@ import type { DashboardBlockState, DashboardWeightTrendPoint } from '../../dashb
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTrendBlockComponent {
-    private readonly router = inject(Router);
     public readonly shouldRender = input.required<boolean>();
     public readonly state = input.required<DashboardBlockState>();
     public readonly cardClass = input.required<string>();
     public readonly current = input.required<number | null>();
+    public readonly currentDate = input<string | null>(null);
     public readonly change = input.required<number | null>();
     public readonly points = input.required<DashboardWeightTrendPoint[]>();
     public readonly isLoading = input.required<boolean>();
@@ -47,8 +46,6 @@ export class DashboardTrendBlockComponent {
     protected activate(): void {
         if (this.state().inert !== null) {
             this.blockToggle.emit();
-            return;
         }
-        void this.router.navigateByUrl(this.actionRoute());
     }
 }

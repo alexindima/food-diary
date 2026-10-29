@@ -181,9 +181,11 @@ export class DashboardFacade {
         (this.snapshot()?.meals.items ?? []).map(meal => ({ ...meal, ...this.favoriteStates()[meal.id] })),
     );
     public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weightKg ?? null);
+    public readonly latestWeightDate = computed(() => this.snapshot()?.weight.latest?.date ?? null);
     public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weightKg ?? null);
     public readonly desiredWeightKg = computed(() => this.snapshot()?.weight.desiredWeightKg ?? null);
     public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumferenceCm ?? null);
+    public readonly latestWaistDate = computed(() => this.snapshot()?.waist.latest?.date ?? null);
     public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumferenceCm ?? null);
     public readonly desiredWaistCm = computed(() => this.snapshot()?.waist.desiredWaistCm ?? null);
     public readonly weeklyConsumed = computed(() =>

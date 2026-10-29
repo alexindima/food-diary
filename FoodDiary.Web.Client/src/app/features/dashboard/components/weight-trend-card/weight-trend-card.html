@@ -1,19 +1,24 @@
 <div class="weight-trend-card fd-min-w-0" [class.weight-trend-card--loading]="isLoading()">
     <fd-dashboard-widget-frame iconTone="neutral" [title]="title() | translate" [iconName]="iconName()">
-        <span fdDashboardWidgetHeaderEnd class="weight-trend-card__period fd-ui-caption fd-ui-text-muted">{{ timeframeLabel() }}</span>
+        <span fdDashboardWidgetHeaderEnd class="weight-trend-card__period fd-ui-caption fd-ui-text-muted" [hidden]="!showChart()">{{
+            timeframeLabel()
+        }}</span>
 
-        @if (hasMeasurements()) {
+        @if (hasValue()) {
             <div class="weight-trend-card__metrics fd-row fd-align-end fd-justify-between fd-gap-sm">
                 <div class="fd-min-w-0">
                     <div class="weight-trend-card__value-row fd-row fd-align-baseline fd-gap-xs fd-min-w-0">
                         <div class="weight-trend-card__value fd-ui-metric-hero">
-                            @if (hasValue()) {
-                                {{ displayCurrentValue() | localizedNumber: locale() : 0 : 1 }}
-                            }
+                            {{ displayCurrentValue() | localizedNumber: locale() : 0 : 1 }}
                         </div>
                         <div class="weight-trend-card__unit fd-ui-metric-unit fd-ui-text-muted">{{ displayUnitKey() | translate }}</div>
                     </div>
-                    <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_TREND_CARD.LATEST_MEASUREMENT' | translate }}</div>
+                    <div class="fd-ui-caption fd-ui-text-muted">
+                        {{ 'WEIGHT_TREND_CARD.LATEST_MEASUREMENT' | translate }}
+                        @if (measurementDateLabel(); as dateLabel) {
+                            · <time [attr.datetime]="currentDate()">{{ dateLabel }}</time>
+                        }
+                    </div>
                 </div>
 
                 @if (measurementCount() >= 2) {
@@ -50,21 +55,29 @@
                     {{ goalLabel() }}
                 </div>
             } @else {
-                <div class="weight-trend-card__sparse fd-ui-body-sm fd-ui-text-muted">
-                    @if (hasEnoughMeasurements()) {
-                        {{ stableTrendKey() | translate }}
-                    } @else {
-                        {{ (measurementCount() === 1 ? firstMeasurementKey() : twoMeasurementsKey()) | translate }}
-                    }
+                <div class="weight-trend-card__sparse fd-row fd-align-center fd-justify-between fd-gap-sm">
+                    <span class="fd-ui-body-sm fd-ui-text-muted">{{ sparseMessageKey() | translate }}</span>
+                    <ng-container [ngTemplateOutlet]="addAction" />
                 </div>
             }
         } @else {
-            <div class="weight-trend-card__empty fd-stack fd-gap-sm">
-                <div class="fd-stack fd-gap-xxs">
-                    <div class="weight-trend-card__empty-title fd-ui-stat-value">{{ 'WEIGHT_TREND_CARD.EMPTY_TITLE' | translate }}</div>
-                    <div class="fd-ui-body-sm fd-ui-text-muted">{{ emptyStateKey() | translate }}</div>
-                </div>
+            <div class="weight-trend-card__empty fd-row fd-align-center fd-justify-between fd-gap-sm">
+                <span class="fd-ui-body-sm fd-ui-text-muted">{{ emptyStateKey() | translate }}</span>
+                <ng-container [ngTemplateOutlet]="addAction" />
             </div>
         }
     </fd-dashboard-widget-frame>
+    <!-- The UI kit has no stretched card link; keep history and the add button as sibling controls. -->
+    <a
+        class="weight-trend-card__history-link"
+        [routerLink]="actionRoute()"
+        [attr.aria-label]="title() | translate"
+        [hidden]="isLoading()"
+    ></a>
 </div>
+
+<ng-template #addAction>
+    <fd-ui-button class="weight-trend-card__action" variant="outline" icon="add" [loading]="isLoading()" (click)="addMeasurement()">
+        {{ actionLabelKey() | translate }}
+    </fd-ui-button>
+</ng-template>

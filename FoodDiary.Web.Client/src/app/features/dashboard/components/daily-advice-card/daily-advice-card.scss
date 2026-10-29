@@ -19,13 +19,8 @@
         pointer-events: none;
     }
 
-    &__header {
-        margin-bottom: var(--fd-space-micro);
-    }
-
     &__content {
-        padding-top: var(--fd-space-xxs);
-        gap: var(--fd-space-sm);
+        gap: var(--fd-space-xs);
     }
 
     &__text {
@@ -36,11 +31,12 @@
     }
 
     &__chip {
-        align-self: flex-start;
+        display: inline-block;
         padding: var(--fd-space-xxs) var(--fd-space-xs);
         border-radius: var(--fd-radius-panel);
         background: color-mix(in srgb, var(--fd-color-text-muted) 8%, transparent);
         color: var(--fd-color-text-muted);
+        overflow-wrap: anywhere;
     }
 
     &__loading,

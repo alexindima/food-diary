@@ -337,6 +337,8 @@ class DashboardTestState {
         dailyAdvice: signal(null),
         isHydrationLoading: signal(false),
         isWeightTrendLoading: signal(false),
+        latestWeightDate: signal(null),
+        latestWaistDate: signal(null),
         isWaistTrendLoading: signal(false),
         isAdviceLoading: signal(false),
         cycle: signal(null),

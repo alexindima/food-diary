@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
+import { FdUiButtonComponent, FdUiLineChartComponent, type FdUiLineChartPoint, type FdUiLineChartReferenceLine } from 'fd-ui-kit';
 import { map } from 'rxjs';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
@@ -28,7 +29,15 @@ export type WeightTrendPoint = {
 
 @Component({
     selector: 'fd-weight-trend-card',
-    imports: [LocalizedNumberPipe, CommonModule, TranslatePipe, FdUiLineChartComponent, DashboardWidgetFrameComponent],
+    imports: [
+        LocalizedNumberPipe,
+        CommonModule,
+        TranslatePipe,
+        RouterLink,
+        FdUiButtonComponent,
+        FdUiLineChartComponent,
+        DashboardWidgetFrameComponent,
+    ],
     templateUrl: './weight-trend-card.html',
     styleUrl: './weight-trend-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,8 +48,10 @@ export class WeightTrendCardComponent {
         initialValue: resolveTranslateLanguage(this.translateService),
     });
     private readonly measurements = inject(MeasurementSystemService);
+    private readonly router = inject(Router);
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
     public readonly currentWeight = input.required<number | null>();
+    public readonly currentDate = input<string | null>(null);
     public readonly change = input.required<number | null>();
     public readonly timeframeLabel = input.required<string>();
     public readonly actionLabelKey = input<string>('WEIGHT_TREND_CARD.ADD_WEIGHT');
@@ -77,11 +88,16 @@ export class WeightTrendCardComponent {
     protected readonly measurementCount = computed(() => this.measurementPoints().length);
     protected readonly hasMeasurements = computed(() => this.measurementCount() > 0);
     protected readonly hasEnoughMeasurements = computed(() => this.measurementCount() >= WEIGHT_TREND_MINIMUM_CHART_POINTS);
-    protected readonly hasChartVariance = computed(() => {
-        const values = this.measurementPoints().map(point => point.value);
-        return values.length > 0 && Math.max(...values) - Math.min(...values) > WEIGHT_TREND_EPSILON;
+    protected readonly showChart = this.hasEnoughMeasurements;
+    protected readonly sparseMessageKey = computed(() => {
+        if (!this.hasMeasurements()) {
+            return 'WEIGHT_TREND_CARD.NO_RECENT_MEASUREMENTS';
+        }
+        return this.measurementCount() === 1 ? this.firstMeasurementKey() : this.twoMeasurementsKey();
     });
-    protected readonly showChart = computed(() => this.hasEnoughMeasurements() && this.hasChartVariance());
+    protected readonly measurementDateLabel = computed(() =>
+        formatDateValue(this.currentDate(), this.locale(), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }),
+    );
     protected readonly chartBounds = computed(() => {
         const values = this.measurementPoints().map(point => point.value);
         const minimum = Math.min(...values);
@@ -127,7 +143,7 @@ export class WeightTrendCardComponent {
     });
     protected readonly hasMeaningfulChange = computed(() => Math.abs(this.change() ?? 0) > WEIGHT_TREND_EPSILON);
 
-    protected readonly hasValue = computed(() => this.hasMeasurements() && this.currentWeight() !== null);
+    protected readonly hasValue = computed(() => this.currentWeight() !== null && Number.isFinite(this.currentWeight()));
     protected readonly displayCurrentValue = computed(() => {
         const value = this.currentWeight();
         return value === null ? null : this.displayValue(value);
@@ -135,6 +151,12 @@ export class WeightTrendCardComponent {
     protected readonly displayUnitKey = computed(() =>
         this.measurementKind() === 'weight' ? this.measurements.weightUnitKey() : this.measurements.lengthUnitKey(),
     );
+
+    protected addMeasurement(): void {
+        if (!this.isLoading()) {
+            void this.router.navigateByUrl(this.router.createUrlTree([this.actionRoute()], { queryParams: { addEntry: true } }));
+        }
+    }
 
     private formatPointLabel(date: string | Date): string {
         return (

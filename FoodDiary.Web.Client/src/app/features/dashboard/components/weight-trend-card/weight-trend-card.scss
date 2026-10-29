@@ -1,5 +1,3 @@
-@use 'variables' as variables;
-
 :host {
     display: block;
 }
@@ -60,17 +58,27 @@
         margin-top: var(--fd-space-sm);
         padding-top: var(--fd-space-sm);
         border-top: var(--fd-border-subtle);
+        flex-wrap: wrap;
     }
 
     &__empty {
-        padding-top: var(--fd-space-xs);
-    }
-
-    &__empty-title {
-        color: var(--fd-color-text);
+        flex-wrap: wrap;
     }
 
     &__action {
-        align-self: flex-start;
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+    }
+
+    &__history-link {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: var(--fd-shadow-focus);
+        }
     }
 }

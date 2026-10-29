@@ -74,7 +74,7 @@ describe('WeightTrendCardComponent', () => {
     });
 
     it('uses the configured empty-state translation key', async () => {
-        const { fixture } = await setupComponentAsync();
+        const { fixture } = await setupComponentAsync({ currentWeight: null });
         fixture.componentRef.setInput('emptyStateKey', 'WAIST_CARD.NO_DATA');
 
         fixture.detectChanges();
@@ -106,12 +106,12 @@ describe('WeightTrendCardComponent', () => {
 describe('Weight and waist rendered regression states', () => {
     for (const kind of ['weight', 'length'] as const) {
         it.each([
-            { count: 0, expected: 'WEIGHT_TREND_CARD.EMPTY_TITLE' },
+            { count: 0, expected: 'WEIGHT_TREND_CARD.NO_DATA' },
             { count: 1, expected: 'WEIGHT_TREND_CARD.FIRST_MEASUREMENT' },
             { count: 2, expected: 'WEIGHT_TREND_CARD.TWO_MEASUREMENTS' },
-            { count: 3, expected: 'WEIGHT_TREND_CARD.STABLE_TREND' },
         ])(`${kind}: renders useful text without a misleading graph for $count measurements`, async ({ count, expected }) => {
             const { fixture } = await setupComponentAsync({
+                currentWeight: count === 0 ? null : CURRENT_WEIGHT,
                 points: Array.from({ length: count }, (_, index) => ({ date: `2026-05-0${index + 1}`, value: CURRENT_WEIGHT })),
             });
             fixture.componentRef.setInput('measurementKind', kind);
@@ -121,6 +121,8 @@ describe('Weight and waist rendered regression states', () => {
             expect(host.textContent).toContain(expected);
             expect(host.textContent).not.toMatch(/NaN|Infinity/u);
         });
+
+        registerTrendContinuityTests(kind);
 
         it(`${kind}: keeps the goal outside the plot and removes it when no target exists`, async () => {
             const { fixture } = await setupComponentAsync({
@@ -185,6 +187,48 @@ describe('Weight and waist rendered regression states', () => {
     });
 });
 
+function registerTrendContinuityTests(kind: 'weight' | 'length'): void {
+    it(`${kind}: displays the measurement calendar date consistently in both locales`, async () => {
+        const { fixture } = await setupComponentAsync({ currentWeight: CURRENT_WEIGHT, points: [] });
+        fixture.componentRef.setInput('measurementKind', kind);
+        fixture.componentRef.setInput('currentDate', '2026-05-01T00:00:00.000Z');
+        const translate = TestBed.inject(TranslateService);
+        translate.use('en');
+        fixture.detectChanges();
+        const date = (fixture.nativeElement as HTMLElement).querySelector('time');
+        expect(date?.textContent).toContain('May 1, 2026');
+        translate.use('ru');
+        fixture.detectChanges();
+        expect(date?.textContent).toContain('1 мая 2026');
+        expect(date?.getAttribute('datetime')).toBe('2026-05-01T00:00:00.000Z');
+    });
+
+    it(`${kind}: shows a horizontal chart for stable measurements`, async () => {
+        const { fixture } = await setupComponentAsync({
+            points: Array.from({ length: MINIMUM_CHART_POINTS }, (_, index) => ({ date: `2026-05-0${index + 1}`, value: CURRENT_WEIGHT })),
+            change: 0,
+        });
+        fixture.componentRef.setInput('measurementKind', kind);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('fd-ui-line-chart'), 'Stable measurements must keep their chart').not.toBeNull();
+        expect(host.textContent).toContain('WEIGHT_TREND_CARD.NO_CHANGE');
+    });
+
+    it(`${kind}: retains the latest value when the recent period has no measurements`, async () => {
+        const { fixture } = await setupComponentAsync({ currentWeight: CURRENT_WEIGHT, points: [] });
+        fixture.componentRef.setInput('measurementKind', kind);
+        fixture.detectChanges();
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('.weight-trend-card__value')?.textContent.trim(), 'Existing history must retain its latest value').toBe(
+            '80',
+        );
+        expect(host.textContent).toContain('WEIGHT_TREND_CARD.NO_RECENT_MEASUREMENTS');
+        expect(host.textContent).not.toContain('WEIGHT_TREND_CARD.EMPTY_TITLE');
+        expect(host.querySelector('.weight-trend-card__delta')).toBeNull();
+    });
+}
+
 async function setupComponentAsync(
     overrides: Partial<{
         currentWeight: number | null;
@@ -206,7 +250,7 @@ async function setupComponentAsync(
         .compileComponents();
 
     const fixture = TestBed.createComponent(WeightTrendCardComponent);
-    fixture.componentRef.setInput('currentWeight', overrides.currentWeight ?? CURRENT_WEIGHT);
+    fixture.componentRef.setInput('currentWeight', 'currentWeight' in overrides ? overrides.currentWeight : CURRENT_WEIGHT);
     fixture.componentRef.setInput('change', overrides.change ?? null);
     fixture.componentRef.setInput('timeframeLabel', overrides.timeframeLabel ?? '30 days');
     fixture.componentRef.setInput('points', overrides.points ?? []);

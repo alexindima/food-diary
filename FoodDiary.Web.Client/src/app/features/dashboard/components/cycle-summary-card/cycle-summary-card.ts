@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiButtonComponent } from 'fd-ui-kit';
 
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
-import { NoticeBannerComponent } from '../../../../components/shared/notice-banner/notice-banner';
 import { calculateCycleDayNumber, resolveCycleStartDateKey } from '../../../../shared/lib/cycle-calendar.utils';
 import { normalizeStartOfUtcDay, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import { MS_PER_DAY } from '../../../../shared/lib/time.constants';
@@ -45,7 +45,7 @@ const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
 
 @Component({
     selector: 'fd-cycle-summary-card',
-    imports: [CommonModule, RouterLink, TranslatePipe, NoticeBannerComponent, DashboardWidgetFrameComponent],
+    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, DashboardWidgetFrameComponent],
     templateUrl: './cycle-summary-card.html',
     styleUrl: './cycle-summary-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

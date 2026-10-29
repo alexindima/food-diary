@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiCardComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -64,6 +75,8 @@ import { WAIST_HISTORY_TOUR } from './waist-history-tour';
     providers: [WaistHistoryFacade],
 })
 export class WaistHistoryPageComponent {
+    public readonly addEntry = input(false, { transform: booleanAttribute });
+
     protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
@@ -72,6 +85,8 @@ export class WaistHistoryPageComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly viewportService = inject(ViewportService);
 
     protected readonly selectedRange = this.facade.selectedRange;
@@ -149,6 +164,20 @@ export class WaistHistoryPageComponent {
             },
         });
         this.facade.initialize();
+        effect(() => {
+            if (this.addEntry()) {
+                untracked(() => {
+                    this.openEntryDialog();
+                    // Consume the one-time action so reload/back does not reopen the editor.
+                    void this.router.navigate([], {
+                        relativeTo: this.route,
+                        queryParams: { addEntry: null },
+                        queryParamsHandling: 'merge',
+                        replaceUrl: true,
+                    });
+                });
+            }
+        });
     }
 
     protected startEdit(entry: WaistEntry): void {

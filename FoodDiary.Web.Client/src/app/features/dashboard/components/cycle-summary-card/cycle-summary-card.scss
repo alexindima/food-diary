@@ -30,6 +30,10 @@
         flex-wrap: wrap;
     }
 
+    &__setup {
+        flex-wrap: wrap;
+    }
+
     &__pill {
         --fd-pill-bg: var(--fd-bg-category-teal);
         --fd-pill-border: transparent;

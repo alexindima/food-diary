@@ -24,13 +24,15 @@
                     </div>
                 }
             } @else {
-                <fd-notice-banner
-                    type="info"
-                    [title]="'CYCLE_CARD.NO_DATA_TITLE' | translate"
-                    [message]="'CYCLE_CARD.NO_DATA_BODY' | translate"
-                    [actionLabel]="'CYCLE_CARD.NO_DATA_ACTION' | translate"
-                    (action)="onSetup()"
-                />
+                <div class="cycle-summary-card__setup fd-row fd-align-center fd-justify-between fd-gap-sm">
+                    <div class="fd-stack fd-gap-xxs fd-min-w-0">
+                        <div class="fd-ui-body-sm">{{ 'CYCLE_CARD.NO_DATA_TITLE' | translate }}</div>
+                        <div class="fd-ui-caption fd-ui-text-muted">{{ 'CYCLE_CARD.NO_DATA_BODY' | translate }}</div>
+                    </div>
+                    <fd-ui-button variant="outline" [loading]="isLoading()" (click)="onSetup()">
+                        {{ 'CYCLE_CARD.NO_DATA_ACTION' | translate }}
+                    </fd-ui-button>
+                </div>
             }
         </div>
     </fd-dashboard-widget-frame>

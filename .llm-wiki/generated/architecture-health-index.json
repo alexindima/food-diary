@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 114,
+    "selectorUnreferencedComponents": 115,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 125,
+    "componentsWithoutDirectSpecs": 126,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -908,6 +908,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts"
+    },
+    {
+      "class": "HydrationDetailsDialogComponent",
+      "selector": "fd-hydration-details-dialog",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.spec.ts"
     },
     {
       "class": "TdeeInsightDialogComponent",
@@ -2518,6 +2526,11 @@
           "name": "undoAmount",
           "type": "number | null",
           "required": false
+        },
+        {
+          "name": "undoEntryId",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -2778,6 +2791,51 @@
         {
           "name": "applyGoal",
           "type": "number"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "HydrationCardActionsComponent",
+      "selector": "fd-hydration-card-actions",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
+      "inputs": [
+        {
+          "name": "canAdd",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "undoAmount",
+          "type": "number | null",
+          "required": true
+        },
+        {
+          "name": "addedAmount",
+          "type": "number | null",
+          "required": true
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "addClick",
+          "type": "number"
+        },
+        {
+          "name": "undoClick",
+          "type": ""
         }
       ],
       "specPath": null

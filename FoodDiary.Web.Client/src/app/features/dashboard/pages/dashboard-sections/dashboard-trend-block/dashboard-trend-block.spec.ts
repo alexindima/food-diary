@@ -8,24 +8,33 @@ import { DashboardTrendBlockComponent } from './dashboard-trend-block';
 
 describe('Dashboard trend navigation', () => {
     for (const route of ['/weight-history', '/waist-history']) {
-        it.each(['Enter', ' '])(`opens ${route} with the keyboard (%s)`, async key => {
-            const { fixture, navigate } = await setupAsync(false, route);
-            const host = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('[role="button"]');
-            expect(host?.getAttribute('tabindex')).toBe('0');
-            host?.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
-            expect(navigate).toHaveBeenCalledExactlyOnceWith(route);
+        it(`exposes ${route} as a native keyboard-accessible history link`, async () => {
+            const { fixture } = await setupAsync(false, route);
+            const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('a');
+            expect(link?.getAttribute('href')).toBe(route);
+            expect(link?.tabIndex).toBe(0);
+            expect(link?.getAttribute('aria-label')).toBe('WEIGHT_CARD.TITLE');
+            expect((fixture.nativeElement as HTMLElement).querySelector('[role="button"]')).toBeNull();
         });
     }
     it('removes a hidden block from the DOM', async () => {
         const { fixture } = await setupAsync(false, '/weight-history');
         fixture.componentRef.setInput('shouldRender', false);
         fixture.detectChanges();
-        expect((fixture.nativeElement as HTMLElement).querySelector('[role="button"]')).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('a')).toBeNull();
     });
     it.each(['/weight-history', '/waist-history'])('opens %s in normal mode', async route => {
         const { fixture, navigate } = await setupAsync(false, route);
-        (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('[role="button"]')?.click();
-        expect(navigate).toHaveBeenCalledWith(route);
+        (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('a')?.click();
+        expect(navigate).toHaveBeenCalledOnce();
+        expect(navigate.mock.calls[0][0].toString()).toBe(route);
+    });
+
+    it.each(['/weight-history', '/waist-history'])('opens the add editor for %s without also opening history', async route => {
+        const { fixture, navigate } = await setupAsync(false, route);
+        (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button')?.click();
+        expect(navigate).toHaveBeenCalledOnce();
+        expect(navigate.mock.calls[0][0].toString()).toBe(`${route}?addEntry=true`);
     });
 
     it('only toggles visibility while editing the dashboard', async () => {
@@ -70,7 +79,6 @@ async function setupAsync(
             isVisible: true,
             canToggle: true,
             ariaLabel: null,
-            stateOptions: { alwaysInteractive: true },
         }),
     );
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);

@@ -170,8 +170,10 @@ export class DashboardComponent {
     protected readonly isCycleLoading = this.facade.isCycleLoading;
     protected readonly tdeeInsight = this.facade.tdeeInsight;
     protected readonly weightTrend = this.facade.weightTrend;
+    protected readonly latestWeightDate = this.facade.latestWeightDate;
     protected readonly desiredWeightKg = this.facade.desiredWeightKg;
     protected readonly waistTrend = this.facade.waistTrend;
+    protected readonly latestWaistDate = this.facade.latestWaistDate;
     protected readonly nutrientBars = this.facade.nutrientBars;
     protected readonly mealRingData = this.facade.mealRingData;
     protected readonly mealPreviewEntries = this.facade.mealPreviewEntries;
@@ -272,11 +274,10 @@ export class DashboardComponent {
             hydration: stateFor('hydration', { editingLabelKey: 'HYDRATION_CARD.TITLE' }),
             cycle: stateFor('cycle', { editingLabelKey: 'CYCLE_CARD.TITLE' }),
             weight: stateFor('weight', {
-                alwaysInteractive: true,
                 defaultLabelKey: 'WEIGHT_CARD.TITLE',
                 editingLabelKey: 'WEIGHT_CARD.TITLE',
             }),
-            waist: stateFor('waist', { alwaysInteractive: true, defaultLabelKey: 'WAIST_CARD.TITLE', editingLabelKey: 'WAIST_CARD.TITLE' }),
+            waist: stateFor('waist', { defaultLabelKey: 'WAIST_CARD.TITLE', editingLabelKey: 'WAIST_CARD.TITLE' }),
             tdee: stateFor('tdee', { defaultLabelKey: 'TDEE_CARD.TITLE', editingLabelKey: 'TDEE_CARD.TITLE' }),
             advice: stateFor('advice', { editingLabelKey: 'DASHBOARD.ADVICE_TITLE' }),
         };

@@ -1546,6 +1546,53 @@ test.describe('dashboard regression measurement charts', () => {
         await authenticateUserAsync(page);
         await mockAuthenticatedClientApiAsync(page);
     });
+    test('compact cycle and advice render in Russian without overflow and retain setup navigation', async ({ page }) => {
+        await page.setViewportSize({ width: 320, height: 900 });
+        await page.addInitScript(() => localStorage.setItem('fd_language', 'ru'));
+        const user = { ...createUser(), language: 'ru' };
+        await page.route('**/api/v1/auth/session', async route =>
+            route.fulfill(
+                jsonResponse({
+                    sessionId: '00000000-0000-4000-8000-000000000002',
+                    roles: ['User'],
+                    user,
+                }),
+            ),
+        );
+        await page.route('**/api/v1/users/info', async route => route.fulfill(jsonResponse(user)));
+        await page.route('**/api/v1/users/overview', async route => route.fulfill(jsonResponse({ ...createUserOverview(), user })));
+        const snapshot = createDashboardRegressionSnapshot();
+        snapshot['weight'] = { latest: null, previous: null, desiredWeightKg: null };
+        snapshot['waist'] = { latest: null, previous: null, desiredWaistCm: null };
+        snapshot['weightTrend'] = [];
+        snapshot['waistTrend'] = [];
+        snapshot['advice'] = {
+            id: 'advice-1',
+            locale: 'ru',
+            value: 'Держите овощи под рукой для быстрых перекусов.',
+            tag: 'prep',
+            weight: 1,
+        };
+        const errors: string[] = [];
+        page.on('pageerror', error => errors.push(error.message));
+        await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+        await page.goto('/dashboard');
+        const cycle = page.locator('fd-cycle-summary-card');
+        await cycle.scrollIntoViewIfNeeded();
+        await expect(cycle.locator('fd-notice-banner')).toHaveCount(0);
+        await expect(cycle.getByRole('button', { name: 'Настроить цикл' })).toBeVisible();
+        await expect(page.locator('fd-weight-trend-card').first().getByRole('button', { name: 'Добавить вес' })).toBeVisible();
+        const advice = page.locator('fd-daily-advice-card');
+        await advice.scrollIntoViewIfNeeded();
+        await expect(advice.locator('[fdDashboardWidgetHeaderEnd]')).toContainText('Подготовка');
+        await expect(advice).toContainText('Держите овощи');
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await page.screenshot({ path: '../.artifacts/card-review-20261029/dashboard-empty-ru-mobile.png', fullPage: true });
+        await page.locator('.dashboard__column--aside').screenshot({ path: '../.artifacts/card-review-20261029/cards-ru-mobile.png' });
+        expect(errors).toEqual([]);
+        await cycle.getByRole('button', { name: 'Настроить цикл' }).click();
+        await expect(page).toHaveURL(/\/cycle-tracking$/u);
+    });
     for (const kind of ['weight', 'waist'] as const) {
         test(`${kind} chart aligns with metrics and opens its history with the keyboard`, async ({ page }) => {
             await page.setViewportSize({ width: 1440, height: 1000 });
@@ -1568,10 +1615,62 @@ test.describe('dashboard regression measurement charts', () => {
                 expect(goalBounds.y).toBeGreaterThanOrEqual(bounds.y + bounds.height);
                 await expect(block.locator('.fd-ui-line-chart__reference-label')).toHaveCount(0);
             }
-            const action = block.getByRole('button').first();
+            const action = block.getByRole('link');
             await action.focus();
             await action.press('Enter');
             await expect(page).toHaveURL(kind === 'weight' ? /\/weight-history$/ : /\/waist-history$/);
+        });
+
+        test(`${kind} empty card opens the editor directly on a narrow screen`, async ({ page }) => {
+            await page.setViewportSize({ width: 320, height: 900 });
+            const snapshot = createDashboardRegressionSnapshot();
+            snapshot[kind] =
+                kind === 'weight'
+                    ? { latest: null, previous: null, desiredWeightKg: null }
+                    : { latest: null, previous: null, desiredWaistCm: null };
+            snapshot[`${kind}Trend`] = [];
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+            await page.goto('/dashboard');
+            const block = page.locator('fd-dashboard-trend-block').nth(kind === 'weight' ? 0 : 1);
+            await block.scrollIntoViewIfNeeded();
+            await expect(block.locator('.weight-trend-card__period')).toBeHidden();
+            await expect(block.locator('fd-ui-line-chart')).toHaveCount(0);
+            await expect(block.getByRole('button')).toHaveCount(1);
+            expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            await page.screenshot({ path: `../.artifacts/card-review-20261029/${kind}-empty-mobile.png`, fullPage: true });
+            await block.getByRole('button').focus();
+            await block.getByRole('button').press('Enter');
+            await expect(page.locator(`fd-${kind}-history-entry-dialog`)).toBeVisible();
+            await expect(page).toHaveURL(new RegExp(`/${kind}-history$`, 'u'));
+        });
+
+        test(`${kind} stable trend and old measurement remain informative`, async ({ page }) => {
+            await page.setViewportSize({ width: 390, height: 900 });
+            const snapshot = createDashboardRegressionSnapshot();
+            const value = kind === 'weight' ? 78 : 81;
+            snapshot[`${kind}Trend`] = [15, 17, 19].map(day => ({
+                startDate: `2026-04-${day}`,
+                endDate: `2026-04-${day}`,
+                [kind === 'weight' ? 'averageWeightKg' : 'averageCircumferenceCm']: value,
+            }));
+            await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
+            await page.goto('/dashboard');
+            const block = page.locator('fd-dashboard-trend-block').nth(kind === 'weight' ? 0 : 1);
+            await block.scrollIntoViewIfNeeded();
+            await expect(block.locator('fd-ui-line-chart')).toBeVisible();
+            await expect(block.locator('.weight-trend-card__delta')).toHaveText('Stable');
+            await page.screenshot({ path: `../.artifacts/card-review-20261029/${kind}-stable-mobile.png`, fullPage: true });
+            snapshot[`${kind}Trend`] = [];
+            snapshot[kind] =
+                kind === 'weight'
+                    ? { latest: { date: '2026-02-01', weightKg: value }, previous: null, desiredWeightKg: null }
+                    : { latest: { date: '2026-02-01', circumferenceCm: value }, previous: null, desiredWaistCm: null };
+            await page.reload();
+            await block.scrollIntoViewIfNeeded();
+            await expect(block.locator('.weight-trend-card__value')).toHaveText(String(value));
+            await expect(block.locator('time')).toHaveAttribute('datetime', '2026-02-01');
+            await expect(block).toContainText('No measurements in the last 30 days.');
+            await expect(block.locator('.weight-trend-card__delta')).toHaveCount(0);
         });
     }
 });

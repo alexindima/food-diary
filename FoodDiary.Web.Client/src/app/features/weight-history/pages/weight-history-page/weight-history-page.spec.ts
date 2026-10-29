@@ -1,6 +1,6 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject, throwError } from 'rxjs';
@@ -103,6 +103,21 @@ async function setupAsync(renderEntries = true): Promise<{
 let context: Awaited<ReturnType<typeof setupAsync>>;
 beforeEach(async () => {
     context = await setupAsync();
+});
+
+describe('Weight entry navigation action', () => {
+    it('opens the owner editor once and consumes the query action', () => {
+        const navigation = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+        context.fixture.componentRef.setInput('addEntry', 'true');
+        context.fixture.detectChanges();
+        expect(context.open).toHaveBeenCalledExactlyOnceWith(WeightHistoryEntryDialogComponent, expect.any(Object));
+        expect(navigation).toHaveBeenCalledWith([], expect.objectContaining({ queryParams: { addEntry: null }, replaceUrl: true }));
+        context.fixture.detectChanges();
+        expect(context.open).toHaveBeenCalledOnce();
+        context.fixture.componentRef.setInput('addEntry', 'false');
+        context.fixture.detectChanges();
+        expect(context.open).toHaveBeenCalledOnce();
+    });
 });
 
 describe('Weight history WebMCP screen', () => {

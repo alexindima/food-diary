@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2728,
-    "symbols": 860,
+    "typescriptFiles": 2732,
+    "symbols": 862,
     "routes": 108,
     "features": 46,
-    "specs": 828,
+    "specs": 830,
     "localeFiles": 5,
     "roles": {
-      "Component": 498,
+      "Component": 500,
       "Directive": 18,
       "Facade": 88,
       "Other": 41,
@@ -579,7 +579,9 @@
         "DashboardSummaryBlockComponent",
         "DashboardTdeeBlockComponent",
         "DashboardTrendBlockComponent",
+        "HydrationCardActionsComponent",
         "HydrationCardComponent",
+        "HydrationDetailsDialogComponent",
         "TdeeInsightCardComponent",
         "TdeeInsightCardContentComponent",
         "TdeeInsightCardDetailsComponent",
@@ -606,6 +608,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-calendar-timezone.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/dashboard-date.utils.spec.ts",
@@ -619,6 +622,7 @@
         "FoodDiary.Web.Client/src/app/features/dashboard/lib/tdee-insight-view.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-block-host.directive.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-lib/dashboard-view-state.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-sections.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.spec.ts",
         "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.spec.ts"
       ]
@@ -3976,11 +3980,18 @@
       "line": 15
     },
     {
+      "name": "HydrationCardActionsComponent",
+      "role": "Component",
+      "selector": "fd-hydration-card-actions",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.ts",
+      "line": 16
+    },
+    {
       "name": "HydrationCardComponent",
       "role": "Component",
       "selector": "fd-hydration-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
-      "line": 22
+      "line": 33
     },
     {
       "name": "TdeeInsightCardContentComponent",
@@ -4008,7 +4019,7 @@
       "role": "Component",
       "selector": "fd-weight-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.ts",
-      "line": 36
+      "line": 45
     },
     {
       "name": "DashboardNotificationSettingsDialogComponent",
@@ -4023,6 +4034,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings.facade.ts",
       "line": 19
+    },
+    {
+      "name": "HydrationDetailsDialogComponent",
+      "role": "Component",
+      "selector": "fd-hydration-details-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.ts",
+      "line": 21
     },
     {
       "name": "TdeeInsightDialogFooterComponent",
@@ -4113,14 +4131,14 @@
       "role": "Component",
       "selector": "fd-dashboard-advice-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-advice-block/dashboard-advice-block.ts",
-      "line": 22
+      "line": 15
     },
     {
       "name": "DashboardCycleBlockComponent",
       "role": "Component",
       "selector": "fd-dashboard-cycle-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-cycle-block/dashboard-cycle-block.ts",
-      "line": 22
+      "line": 15
     },
     {
       "name": "DashboardEditHintComponent",
@@ -4141,7 +4159,7 @@
       "role": "Component",
       "selector": "fd-dashboard-hydration-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.ts",
-      "line": 22
+      "line": 15
     },
     {
       "name": "DashboardMealsBlockComponent",
@@ -4176,14 +4194,14 @@
       "role": "Component",
       "selector": "fd-dashboard-tdee-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.ts",
-      "line": 24
+      "line": 22
     },
     {
       "name": "DashboardTrendBlockComponent",
       "role": "Component",
       "selector": "fd-dashboard-trend-block",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.ts",
-      "line": 25
+      "line": 22
     },
     {
       "name": "DashboardComponent",
@@ -6479,7 +6497,7 @@
       "role": "Component",
       "selector": "fd-waist-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
-      "line": 66
+      "line": 77
     },
     {
       "name": "WearableService",
@@ -6654,7 +6672,7 @@
       "role": "Component",
       "selector": "fd-weight-history-page",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
-      "line": 69
+      "line": 80
     },
     {
       "name": "AuthInterceptor",
@@ -8198,8 +8216,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4173,
-      "russianProperties": 4173,
+      "englishProperties": 4182,
+      "russianProperties": 4182,
       "countsMatch": true
     },
     {

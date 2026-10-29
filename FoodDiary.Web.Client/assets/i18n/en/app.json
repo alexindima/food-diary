@@ -3400,16 +3400,17 @@
         "OVER_PERIOD": "over the period",
         "CHART_GOAL": "Goal {{value}} {{unit}}",
         "NO_CHANGE": "Stable",
-        "FIRST_MEASUREMENT": "First measurement recorded. Add two more to see the trend.",
-        "TWO_MEASUREMENTS": "One more measurement will unlock the trend chart.",
+        "FIRST_MEASUREMENT": "Two more measurements to see your trend.",
+        "TWO_MEASUREMENTS": "One more measurement to see your trend.",
         "STABLE_TREND": "Your weight was stable across the recorded measurements.",
-        "FIRST_WAIST_MEASUREMENT": "First measurement recorded. Add two more to see the trend.",
-        "TWO_WAIST_MEASUREMENTS": "One more measurement will unlock the trend chart.",
+        "FIRST_WAIST_MEASUREMENT": "Two more measurements to see your trend.",
+        "TWO_WAIST_MEASUREMENTS": "One more measurement to see your trend.",
         "STABLE_WAIST_TREND": "Your waist measurement was stable across the recorded measurements.",
         "EMPTY_TITLE": "No measurements yet",
-        "NO_DATA": "Add your first measurement to track weight changes over time.",
+        "NO_DATA": "Add your first measurement.",
         "ADD_WEIGHT": "Add weight",
-        "ADD_WAIST": "Add waist measurement"
+        "ADD_WAIST": "Add waist measurement",
+        "NO_RECENT_MEASUREMENTS": "No measurements in the last 30 days."
     },
     "WAIST_CARD": {
         "TITLE": "Waist trend",
@@ -3418,7 +3419,7 @@
         "META_EMPTY": "Set your waist goal",
         "NO_PREVIOUS": "Not enough data yet",
         "NO_CHANGE": "No change since last log",
-        "NO_DATA": "Add your waist to begin"
+        "NO_DATA": "Add your first measurement."
     },
     "ACTIVITY_CARD": {
         "TITLE": "Daily activity",
@@ -3512,9 +3513,9 @@
         "NEXT_PERIOD_IN": "Next period in {{days}} days",
         "NEXT_PERIOD_TODAY": "Period expected today",
         "CONFIDENCE": "{{value}} confidence",
-        "NO_DATA_TITLE": "Cycle not set",
-        "NO_DATA_BODY": "Add your cycle start date to see predictions here.",
-        "NO_DATA_ACTION": "Set cycle"
+        "NO_DATA_TITLE": "Cycle not set up",
+        "NO_DATA_BODY": "Set a start date to see predictions.",
+        "NO_DATA_ACTION": "Set up cycle"
     },
     "AI": {
         "PREMIUM_DIALOG": {

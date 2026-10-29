@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiCardComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -67,6 +78,8 @@ import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
     providers: [WeightHistoryFacade],
 })
 export class WeightHistoryPageComponent {
+    public readonly addEntry = input(false, { transform: booleanAttribute });
+
     protected readonly locale = injectCurrentLanguage();
     protected readonly measurements = inject(MeasurementSystemService);
     private readonly navigationService = inject(NavigationService);
@@ -77,6 +90,8 @@ export class WeightHistoryPageComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
 
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly currentRange = this.facade.currentRange;
@@ -146,6 +161,20 @@ export class WeightHistoryPageComponent {
             },
         });
         this.facade.initialize();
+        effect(() => {
+            if (this.addEntry()) {
+                untracked(() => {
+                    this.openEntryDialog();
+                    // Consume the one-time action so reload/back does not reopen the editor.
+                    void this.router.navigate([], {
+                        relativeTo: this.route,
+                        queryParams: { addEntry: null },
+                        queryParamsHandling: 'merge',
+                        replaceUrl: true,
+                    });
+                });
+            }
+        });
     }
 
     protected navigateBack(): void {

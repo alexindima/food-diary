@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 505,
-    "componentsWithoutDirectSpecs": 125,
-    "inputs": 1641,
-    "outputs": 557,
+    "components": 507,
+    "componentsWithoutDirectSpecs": 126,
+    "inputs": 1652,
+    "outputs": 559,
     "apiCalls": 318,
-    "templatesWithTranslations": 366,
-    "translationKeys": 2188,
-    "consumerEdges": 1291,
-    "consumedComponents": 322,
-    "unconsumedComponents": 182
+    "templatesWithTranslations": 368,
+    "translationKeys": 2195,
+    "consumerEdges": 1292,
+    "consumedComponents": 323,
+    "unconsumedComponents": 183
   },
   "components": [
     {
@@ -2006,6 +2006,11 @@
           "name": "undoAmount",
           "type": "number | null",
           "required": false
+        },
+        {
+          "name": "undoEntryId",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -2333,6 +2338,11 @@
           "required": true
         },
         {
+          "name": "currentDate",
+          "type": "string | null",
+          "required": false
+        },
+        {
           "name": "change",
           "type": "number | null",
           "required": true
@@ -2417,6 +2427,51 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.spec.ts"
     },
     {
+      "class": "HydrationCardActionsComponent",
+      "selector": "fd-hydration-card-actions",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
+      "inputs": [
+        {
+          "name": "canAdd",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "isLoading",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "undoAmount",
+          "type": "number | null",
+          "required": true
+        },
+        {
+          "name": "addedAmount",
+          "type": "number | null",
+          "required": true
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "addClick",
+          "type": "number"
+        },
+        {
+          "name": "undoClick",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
       "class": "HydrationCardComponent",
       "selector": "fd-hydration-card",
       "feature": "dashboard",
@@ -2447,6 +2502,11 @@
           "name": "undoAmount",
           "type": "number | null",
           "required": false
+        },
+        {
+          "name": "undoEntryId",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [
@@ -2464,6 +2524,16 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.spec.ts"
+    },
+    {
+      "class": "HydrationDetailsDialogComponent",
+      "selector": "fd-hydration-details-dialog",
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.spec.ts"
     },
     {
       "class": "TdeeInsightCardComponent",
@@ -2723,6 +2793,11 @@
           "name": "currentWeight",
           "type": "number | null",
           "required": true
+        },
+        {
+          "name": "currentDate",
+          "type": "string | null",
+          "required": false
         },
         {
           "name": "change",
@@ -15674,7 +15749,13 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "addEntry",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.spec.ts"
     },
@@ -16050,7 +16131,13 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "addEntry",
+          "type": "",
+          "required": false
+        }
+      ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.spec.ts"
     }
@@ -20998,22 +21085,33 @@
     },
     {
       "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
+      "keys": [
+        "DISABLED_HINTS.OPERATION_BUSY",
+        "GENERAL.UNITS.ML",
+        "HYDRATION_CARD.ADDED_AMOUNT",
+        "HYDRATION_CARD.ADD_AMOUNT",
+        "HYDRATION_CARD.QUICK_ADD_LABEL",
+        "HYDRATION_CARD.SELECTED_DAY_HINT",
+        "HYDRATION_CARD.UNDO",
+        "HYDRATION_CARD.UNDO_AMOUNT"
+      ]
+    },
+    {
+      "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
       "keys": [
         "DISABLED_HINTS.OPERATION_BUSY",
         "GENERAL.UNITS.ML",
-        "HYDRATION_CARD.ADD_AMOUNT",
         "HYDRATION_CARD.GOAL_ACTION",
         "HYDRATION_CARD.GOAL_BODY",
         "HYDRATION_CARD.GOAL_REACHED",
         "HYDRATION_CARD.GOAL_TITLE",
         "HYDRATION_CARD.OF_GOAL",
+        "HYDRATION_CARD.OPEN_DETAILS",
         "HYDRATION_CARD.PROGRESS_LABEL",
-        "HYDRATION_CARD.QUICK_ADD_LABEL",
         "HYDRATION_CARD.REMAINING",
-        "HYDRATION_CARD.SELECTED_DAY_HINT",
-        "HYDRATION_CARD.TITLE",
-        "HYDRATION_CARD.UNDO_AMOUNT"
+        "HYDRATION_CARD.TITLE"
       ]
     },
     {
@@ -21054,7 +21152,6 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
       "keys": [
-        "WEIGHT_TREND_CARD.EMPTY_TITLE",
         "WEIGHT_TREND_CARD.LATEST_MEASUREMENT",
         "WEIGHT_TREND_CARD.NO_CHANGE",
         "WEIGHT_TREND_CARD.OVER_PERIOD"
@@ -21079,6 +21176,22 @@
         "USER_MANAGE.PUSH_NOTIFICATIONS",
         "USER_MANAGE.PUSH_NOTIFICATIONS_LABEL",
         "USER_MANAGE.SOCIAL_NOTIFICATIONS"
+      ]
+    },
+    {
+      "feature": "dashboard",
+      "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
+      "keys": [
+        "COMMON.CLOSE",
+        "GENERAL.UNITS.ML",
+        "HYDRATION_CARD.DAILY_GOAL",
+        "HYDRATION_CARD.DETAILS_BODY",
+        "HYDRATION_CARD.DETAILS_TITLE",
+        "HYDRATION_CARD.EDIT_GOAL",
+        "HYDRATION_CARD.GOAL_BODY",
+        "HYDRATION_CARD.GOAL_REACHED",
+        "HYDRATION_CARD.RECORDED",
+        "HYDRATION_CARD.REMAINING"
       ]
     },
     {
@@ -26268,7 +26381,8 @@
         "isLoading",
         "shouldRender",
         "state",
-        "undoAmount"
+        "undoAmount",
+        "undoEntryId"
       ],
       "outputsHandled": [
         "addClick",
@@ -26405,6 +26519,7 @@
         "cardClass",
         "change",
         "current",
+        "currentDate",
         "emptyStateKey",
         "firstMeasurementKey",
         "iconName",
@@ -28985,6 +29100,19 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-setup-card/dashboard-setup-card.html",
       "occurrences": 3,
       "inputsUsed": [
@@ -29003,7 +29131,7 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
       "occurrences": 2,
       "inputsUsed": [
         "ariaLabel",
@@ -29013,6 +29141,23 @@
         "fullWidth",
         "icon",
         "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaHasPopup",
+        "ariaLabel",
+        "disabled",
+        "disabledReason",
+        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -29037,12 +29182,39 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/weight-trend-card/weight-trend-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "icon",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/dashboard-notification-settings-dialog/dashboard-notification-settings-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "fill",
         "loading",
         "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
         "variant"
       ],
       "outputsHandled": []
@@ -33305,6 +33477,19 @@
       "selector": "fd-ui-dialog",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/hydration-details-dialog/hydration-details-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -34854,6 +35039,19 @@
       "consumerFeature": "dashboard",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-fasting-card/dashboard-fasting-card.html",
       "occurrences": 4,
+      "inputsUsed": [
+        "name",
+        "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
+      "occurrences": 1,
       "inputsUsed": [
         "name",
         "size"
@@ -37246,56 +37444,6 @@
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/barcode-scanner/barcode-scanner.html",
       "occurrences": 1,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-advice-block/dashboard-advice-block.html",
-      "occurrences": 2,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-cycle-block/dashboard-cycle-block.html",
-      "occurrences": 2,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.html",
-      "occurrences": 2,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.html",
-      "occurrences": 2,
-      "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiLoaderComponent",
-      "selector": "fd-ui-loader",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/loader/fd-ui-loader.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-trend-block/dashboard-trend-block.html",
-      "occurrences": 2,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -40054,6 +40202,25 @@
       "outputsHandled": []
     },
     {
+      "component": "HydrationCardActionsComponent",
+      "selector": "fd-hydration-card-actions",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "addedAmount",
+        "canAdd",
+        "isLoading",
+        "language",
+        "undoAmount"
+      ],
+      "outputsHandled": [
+        "addClick",
+        "undoClick"
+      ]
+    },
+    {
       "component": "HydrationCardComponent",
       "selector": "fd-hydration-card",
       "componentPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card.ts",
@@ -40065,7 +40232,8 @@
         "goal",
         "isLoading",
         "total",
-        "undoAmount"
+        "undoAmount",
+        "undoEntryId"
       ],
       "outputsHandled": [
         "addClick",
@@ -40978,23 +41146,6 @@
         "titleKey"
       ],
       "outputsHandled": []
-    },
-    {
-      "component": "NoticeBannerComponent",
-      "selector": "fd-notice-banner",
-      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/notice-banner/notice-banner.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/components/cycle-summary-card/cycle-summary-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "actionLabel",
-        "message",
-        "title",
-        "type"
-      ],
-      "outputsHandled": [
-        "action"
-      ]
     },
     {
       "component": "NoticeBannerComponent",
@@ -43911,6 +44062,7 @@
         "actionLabelKey",
         "actionRoute",
         "change",
+        "currentDate",
         "currentWeight",
         "emptyStateKey",
         "firstMeasurementKey",
