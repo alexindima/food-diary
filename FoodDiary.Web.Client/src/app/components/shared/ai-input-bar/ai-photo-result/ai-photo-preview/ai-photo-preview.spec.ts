@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { optimizeAiPhotoAnnotationLayout } from '../ai-photo-result-lib/ai-photo-annotation-layout';
 import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
 import { AiPhotoPreviewComponent } from './ai-photo-preview';
 
@@ -245,5 +246,53 @@ describe('AiPhotoPreviewComponent', () => {
 
         const activeCard = (fixture.nativeElement as HTMLElement).querySelector('.ai-photo-result__annotation-card--active');
         expect(activeCard?.textContent).toContain('Food 5');
+    });
+});
+
+describe('AiPhotoPreviewComponent dense layout', () => {
+    it.each(['food-0', 'food-5'])('fits dense six-product labels and keeps the selected %s accessible', async selectedId => {
+        /* eslint-disable @typescript-eslint/no-magic-numbers -- Coordinates reproduce the browser audit's overlapping layout. */
+        const centers = [
+            [25, 25],
+            [65, 20],
+            [35, 45],
+            [70, 48],
+            [25, 70],
+            [70, 75],
+        ];
+        /* eslint-enable @typescript-eslint/no-magic-numbers -- End of browser fixture coordinates. */
+        const annotations = optimizeAiPhotoAnnotationLayout(
+            createAnnotations(SIX_PRODUCTS).map((annotation, index) => ({
+                ...annotation,
+                centerX: centers[index][0],
+                centerY: centers[index][1],
+            })),
+        );
+        const fixture = await setupAiPhotoPreviewAsync();
+        fixture.componentRef.setInput('imageUrl', 'blob:local-preview');
+        fixture.componentRef.setInput('annotations', annotations);
+        fixture.componentRef.setInput('activeAnnotationId', selectedId);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+        const cards = [
+            ...host.querySelectorAll<HTMLButtonElement>('.ai-photo-result__annotation-card.ai-photo-result__annotation-desktop'),
+        ];
+        const markers = host.querySelectorAll('.ai-photo-result__annotation-marker.ai-photo-result__annotation-desktop');
+        expect(cards.length, 'Dense AI preview must avoid overlapping labels').toBeLessThan(SIX_PRODUCTS);
+        expect(cards.length + markers.length).toBe(SIX_PRODUCTS);
+        expect(cards.some(card => card.classList.contains('ai-photo-result__annotation-card--active'))).toBe(true);
+        for (const [index, card] of cards.entries()) {
+            const x = Number.parseFloat(card.style.left);
+            const y = Number.parseFloat(card.style.top);
+            const width = Number.parseFloat(card.style.width);
+            const height = annotations[0].cardHeight;
+            for (const other of cards.slice(index + 1)) {
+                const otherX = Number.parseFloat(other.style.left);
+                const otherY = Number.parseFloat(other.style.top);
+                const otherWidth = Number.parseFloat(other.style.width);
+                expect(x < otherX + otherWidth && x + width > otherX && y < otherY + height && y + height > otherY).toBe(false);
+            }
+        }
     });
 });

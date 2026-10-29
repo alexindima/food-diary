@@ -12,7 +12,11 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { resolveAiPhotoAnnotationConnectorPath } from '../ai-photo-result-lib/ai-photo-annotation-layout';
+import {
+    evaluateAiPhotoAnnotationLayout,
+    fitAiPhotoAnnotationLayout,
+    resolveAiPhotoAnnotationConnectorPath,
+} from '../ai-photo-result-lib/ai-photo-annotation-layout';
 import type { AiPhotoAnnotation } from '../ai-photo-result-lib/ai-photo-result.types';
 
 const DEFAULT_IMAGE_ASPECT_RATIO = 1.5;
@@ -57,19 +61,21 @@ export class AiPhotoPreviewComponent {
     );
     protected readonly cardAnnotations = computed(() => {
         if (!this.usesCompactAnnotations()) {
-            return this.annotations();
+            const annotations = this.annotations();
+            return evaluateAiPhotoAnnotationLayout(annotations).cardOverlaps === 0
+                ? annotations
+                : fitAiPhotoAnnotationLayout(annotations, this.activeAnnotationId());
         }
 
         const active = this.activeAnnotation();
         return active === undefined ? [] : [active];
     });
-    protected readonly markerAnnotations = computed(() =>
-        this.usesCompactAnnotations()
-            ? this.annotations()
-                  .map((annotation, index) => ({ annotation, number: index + 1 }))
-                  .filter(item => item.annotation.id !== this.activeAnnotation()?.id)
-            : [],
-    );
+    protected readonly markerAnnotations = computed(() => {
+        const cardIds = new Set(this.cardAnnotations().map(annotation => annotation.id));
+        return this.annotations()
+            .map((annotation, index) => ({ annotation, number: index + 1 }))
+            .filter(item => !cardIds.has(item.annotation.id));
+    });
     protected readonly mobileCardAnnotations = computed(() => {
         return this.mobileAnnotations();
     });

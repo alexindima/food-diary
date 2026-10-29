@@ -3186,7 +3186,7 @@
       "role": "Component",
       "selector": "fd-ai-photo-preview",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.ts",
-      "line": 31
+      "line": 35
     },
     {
       "name": "AiPhotoResultActionsComponent",
