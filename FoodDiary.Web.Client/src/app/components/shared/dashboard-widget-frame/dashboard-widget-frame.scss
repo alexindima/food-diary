@@ -1,5 +1,13 @@
+@use 'variables' as variables;
+
 :host {
     display: block;
+}
+
+@media #{variables.$media-tablet} {
+    .dashboard-widget-frame {
+        gap: calc(var(--fd-space-card-content-gap) / 2);
+    }
 }
 
 .dashboard-widget-frame__header > fd-dashboard-widget-header {
