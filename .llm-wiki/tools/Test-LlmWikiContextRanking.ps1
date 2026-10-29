@@ -120,4 +120,21 @@ foreach ($case in $ssrCases) {
     }
 }
 
+$interfaceCases = @(
+    @{ query = 'client interface for cycle factor list'; path = 'FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-list/cycle-factor-list.ts' },
+    @{ query = 'client interface for cycle factor item'; path = 'FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-item/cycle-factor-item.ts' },
+    @{ query = 'cycle factor list html template'; path = 'FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-list/cycle-factor-list.html' }
+)
+foreach ($case in $interfaceCases) {
+    $nodeResult = & $manager search -Query $case.query -ChangeType Frontend -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+    $readerResult = [LlmWiki.SqliteReader.ContextSearchReader]::Search(
+        $repositoryRoot, $case.query, 10, 'Frontend', '', [string[]]@(), [string]$graphStatus.currentChangeSetFingerprint
+    ) | ConvertFrom-Json
+    if (-not $nodeResult.ready -or -not $readerResult.ready -or
+        (@($readerResult.records.path) -join "`0") -cne (@($nodeResult.records.path) -join "`0") -or
+        @($nodeResult.records)[0].path -cne $case.path) {
+        throw "Frontend interface source or explicit template ranking lost its owner or reader parity: $($case.query)"
+    }
+}
+
 Write-Host 'LLM Wiki SQLite context ranking passed: exact identity, scope, focused tests, contextual normalization, SSR composition and generated SDK roles with reader parity.'

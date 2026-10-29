@@ -2605,7 +2605,8 @@
     },
     {
       "id": "typescript-component-source-role",
-      "queryTerms": ["dialog", "component", "directive", "card"],
+      "queryTerms": ["dialog", "component", "directive", "card", "interface"],
+      "excludedQueryTerms": ["template", "html"],
       "minimumMatches": 1,
       "minimumQueryIdentityMatches": 1,
       "score": 150,

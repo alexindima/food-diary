@@ -1548,7 +1548,9 @@ test.describe('dashboard regression measurement charts', () => {
     });
     test('compact cycle and advice render in Russian without overflow and retain setup navigation', async ({ page }) => {
         await page.setViewportSize({ width: 320, height: 900 });
-        await page.addInitScript(() => localStorage.setItem('fd_language', 'ru'));
+        await page.addInitScript(() => {
+            localStorage.setItem('fd_language', 'ru');
+        });
         const user = { ...createUser(), language: 'ru' };
         await page.route('**/api/v1/auth/session', async route =>
             route.fulfill(
@@ -1593,7 +1595,16 @@ test.describe('dashboard regression measurement charts', () => {
         await cycle.getByRole('button', { name: 'Настроить цикл' }).click();
         await expect(page).toHaveURL(/\/cycle-tracking$/u);
     });
-    for (const kind of ['weight', 'waist'] as const) {
+});
+
+for (const kind of ['weight', 'waist'] as const) {
+    test.describe(`dashboard regression measurement charts ${kind}`, () => {
+        test.use({ timezoneId: 'UTC' });
+        test.beforeEach(async ({ page }) => {
+            await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+        });
         test(`${kind} chart aligns with metrics and opens its history with the keyboard`, async ({ page }) => {
             await page.setViewportSize({ width: 1440, height: 1000 });
             await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
@@ -1641,16 +1652,25 @@ test.describe('dashboard regression measurement charts', () => {
             await block.getByRole('button').focus();
             await block.getByRole('button').press('Enter');
             await expect(page.locator(`fd-${kind}-history-entry-dialog`)).toBeVisible();
-            await expect(page).toHaveURL(new RegExp(`/${kind}-history$`, 'u'));
+            await expect(page).toHaveURL(kind === 'weight' ? /\/weight-history$/u : /\/waist-history$/u);
         });
-
+    });
+    test.describe(`dashboard regression measurement history ${kind}`, () => {
+        test.use({ timezoneId: 'UTC' });
+        test.beforeEach(async ({ page }) => {
+            await page.clock.install({ time: new Date('2026-04-19T12:00:00Z') });
+            await authenticateUserAsync(page);
+            await mockAuthenticatedClientApiAsync(page);
+        });
         test(`${kind} stable trend and old measurement remain informative`, async ({ page }) => {
             await page.setViewportSize({ width: 390, height: 900 });
             const snapshot = createDashboardRegressionSnapshot();
-            const value = kind === 'weight' ? 78 : 81;
-            snapshot[`${kind}Trend`] = [15, 17, 19].map(day => ({
-                startDate: `2026-04-${day}`,
-                endDate: `2026-04-${day}`,
+            const stableWeightKg = 78;
+            const stableWaistCm = 81;
+            const value = kind === 'weight' ? stableWeightKg : stableWaistCm;
+            snapshot[`${kind}Trend`] = ['2026-04-15', '2026-04-17', '2026-04-19'].map(date => ({
+                startDate: date,
+                endDate: date,
                 [kind === 'weight' ? 'averageWeightKg' : 'averageCircumferenceCm']: value,
             }));
             await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route => route.fulfill(jsonResponse(snapshot)));
@@ -1672,8 +1692,8 @@ test.describe('dashboard regression measurement charts', () => {
             await expect(block).toContainText('No measurements in the last 30 days.');
             await expect(block.locator('.weight-trend-card__delta')).toHaveCount(0);
         });
-    }
-});
+    });
+}
 
 test.describe('dashboard regression writes', () => {
     test.use({ timezoneId: 'UTC' });

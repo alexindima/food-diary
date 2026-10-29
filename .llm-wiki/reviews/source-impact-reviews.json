@@ -412,15 +412,25 @@
       "pageSha256": "91c9a80596373b16aaaf88c43fa44023e82adae4457a2516a02b39c55bdb9b90",
       "sources": [
         {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
+          "reviewReason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
+          "sha256": "b5a92aa4d02523f809fafba41cecf8999e85877256b0ec07758a8e3436ced27b",
+          "reviewReason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed."
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
           "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:47.0675879Z"
+      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
+      "reviewedAtUtc": "2026-10-29T10:36:29.9931803Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1294,14 +1304,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
-          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
+          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
+          "reviewReason": "The ranking edit is restricted to the existing Frontend TypeScript component role and explicit template exclusions. Security-oriented control discovery, source filters, evidence warnings and validation requirements remain unchanged; the security retrieval corpus passed in the full context evaluation."
         }
       ],
-      "reason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity.",
+      "reason": "The ranking edit is restricted to the existing Frontend TypeScript component role and explicit template exclusions. Security-oriented control discovery, source filters, evidence warnings and validation requirements remain unchanged; the security retrieval corpus passed in the full context evaluation.",
       "baseRef": "HEAD",
-      "gitHead": "25abac0a30d6e7d5664e76faf6389332f7200c2d",
-      "reviewedAtUtc": "2026-10-26T09:48:57.6137179Z"
+      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
+      "reviewedAtUtc": "2026-10-29T10:36:35.4524471Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1599,23 +1609,23 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "97f4f2ccaea3a34424abb96692a719ec83c0b9e35d8aebb498405a9e73725f02",
+      "pageSha256": "7f59e6f68c048550fd92069410b395c49a4d3d7d3216cabed94b0905efd757a5",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "bd9dbd4c4466dd9b9ba2730cc3de315ac4163b316c956a14afcb2724cab06215",
-          "reviewReason": "Repository catalog changes add the Identity attempt port, models, adapters, options and focused tests. Paths are verified against current sources. SQLite retrieval commands, ranking and query contracts are unchanged."
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
+          "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
         },
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "74f97f55c60d940551f76c89b9c30a605809aa085f75712ab43a25e98833cd8e",
-          "reviewReason": "Task commit/resume query expansion previously injected the broader workflow subject and ranked workflow metric writing above the actual adaptive session resume tool. Removed only workflow from these two context expansions; wiki/session intent remains. The unchanged maintenance corpus reproduced12/13 before and13/13 after with no threshold/fixture edits. Other21 baseline corpora passed; pre-push will repeat all corpora and Node/.NET parity."
+          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
+          "sha256": "b5a92aa4d02523f809fafba41cecf8999e85877256b0ec07758a8e3436ced27b",
+          "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
         }
       ],
-      "reason": "Repository catalog changes add the Identity attempt port, models, adapters, options and focused tests. Paths are verified against current sources. SQLite retrieval commands, ranking and query contracts are unchanged.",
+      "reason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed.",
       "baseRef": "HEAD",
-      "gitHead": "3d9289cf8f95fd3cf2037e05be37a696d60b903f",
-      "reviewedAtUtc": "2026-10-26T20:02:15.1134299Z"
+      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
+      "reviewedAtUtc": "2026-10-29T10:36:32.6160333Z"
     },
     {
       "pageId": "workflow.review-diff",

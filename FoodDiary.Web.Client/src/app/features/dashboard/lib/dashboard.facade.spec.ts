@@ -123,6 +123,21 @@ describe('Dashboard live updates', () => {
 });
 
 describe('Dashboard meal details', () => {
+    it('opens a full-day source meal that is absent from the dashboard preview', async () => {
+        const { facade } = setupFacade();
+        const meal = createMeal();
+        facade.initialize();
+        expect(facade.meals()).toEqual([]);
+        mockMealDialog({ action: 'Edit', id: meal.id });
+
+        await facade.openMealDetailsAsync(meal.id, meal);
+
+        expect(vi.spyOn(TestBed.inject(FdUiDialogService), 'open')).toHaveBeenCalledWith(
+            expect.any(Function),
+            expect.objectContaining({ preset: 'detail', data: meal }),
+        );
+        expect(vi.spyOn(TestBed.inject(NavigationService), 'navigateToMealEditAsync')).toHaveBeenCalledWith(meal.id);
+    });
     it('opens the detail dialog and navigates only when Edit is selected', async () => {
         const { facade, snapshot } = setupFacade();
         const meal = {
@@ -153,6 +168,22 @@ describe('Dashboard meal details', () => {
         expect(navigate).toHaveBeenCalledWith(meal.id);
     });
 });
+describe('Dashboard measurement dates', () => {
+    it.each([true, false])('exposes the latest measurement dates or the empty state (present=%s)', present => {
+        const { facade, snapshot } = setupFacade();
+        const date = calendarDate('2026-03-15');
+        snapshot.weight.latest = present ? { date, weightKg: LATEST_WEIGHT } : null;
+        snapshot.waist.latest = present ? { date, circumferenceCm: LATEST_WAIST } : null;
+        expect(facade.latestWeightDate()).toBeNull();
+        expect(facade.latestWaistDate()).toBeNull();
+
+        facade.initialize();
+
+        expect(facade.latestWeightDate()).toBe(present ? date : null);
+        expect(facade.latestWaistDate()).toBe(present ? date : null);
+    });
+});
+
 describe('DashboardFacade favorites', () => {
     it('toggles a dashboard meal favorite and ignores duplicate clicks while saving', () => {
         const { facade, snapshot } = setupFacade();
