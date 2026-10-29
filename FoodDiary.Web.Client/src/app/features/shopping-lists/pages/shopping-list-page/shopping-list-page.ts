@@ -166,7 +166,7 @@ export class ShoppingListPageComponent {
             note: value.note?.trim() ?? null,
         });
 
-        this.itemFormModel.set({
+        this.itemForm().reset({
             name: '',
             amount: null,
             unit: null,

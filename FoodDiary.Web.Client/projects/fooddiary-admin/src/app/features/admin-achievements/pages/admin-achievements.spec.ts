@@ -176,6 +176,19 @@ describe('AdminAchievementsComponent editor validation', () => {
         fixture.detectChanges();
         expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
     });
+
+    it('clears touched validation when a successful save opens the next blank editor', () => {
+        const component = fixture.componentInstance;
+        component['edit'](DEFINITION);
+        component['form']().markAsTouched();
+
+        component['save']();
+        fixture.detectChanges();
+
+        expect(component['editingId']()).toBeNull();
+        expect(component['form']().touched(), 'New achievement editor must be untouched').toBe(false);
+        expect((fixture.nativeElement as HTMLElement).querySelector('[role="alert"]')).toBeNull();
+    });
 });
 
 describe('AdminAchievementsComponent pending mutation ownership', () => {

@@ -594,7 +594,8 @@ export class ClientDashboardComponent {
                     this.recommendationTemplates.update(templates =>
                         [...templates, template].sort((left, right) => left.name.localeCompare(right.name)),
                     );
-                    this.recommendationModel.update(value => ({ ...value, templateName: '' }));
+                    this.recommendationForm().reset({ ...this.recommendationModel(), templateName: '' });
+                    this.templateAttempted.set(false);
                     this.savingTemplate.set(false);
                     this.toastService.success(this.translateService.instant('RECOMMENDATION_TEMPLATES.CREATED'));
                 },
@@ -667,7 +668,7 @@ export class ClientDashboardComponent {
                 return;
             }
             this.recommendations.update(items => [recommendation, ...items]);
-            this.recommendationModel.update(model => ({ ...model, text: '' }));
+            this.recommendationForm().reset({ ...this.recommendationModel(), text: '' });
             this.savingRecommendation.set(false);
             this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
         } catch {
@@ -705,7 +706,7 @@ export class ClientDashboardComponent {
                 return;
             }
             this.tasks.update(tasks => [task, ...tasks]);
-            this.taskModel.set({ title: '', details: '', dueDate: '' });
+            this.taskForm().reset({ title: '', details: '', dueDate: '' });
             this.toastService.success(this.translateService.instant('CLIENT_TASKS.CREATED'));
         } catch {
             if (this.isCurrentClient(revision)) {

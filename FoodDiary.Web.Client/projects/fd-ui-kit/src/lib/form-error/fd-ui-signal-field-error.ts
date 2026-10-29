@@ -1,6 +1,6 @@
-import { computed, inject, type Signal } from '@angular/core';
+import { computed, inject, Injector, type Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import type { ValidationError } from '@angular/forms/signals';
+import { FormField, type ValidationError } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY } from 'rxjs';
 
@@ -12,6 +12,9 @@ export function injectFdUiFieldError(
     errors: Signal<readonly ValidationError.WithOptionalFieldTree[]>,
     touched: Signal<boolean>,
 ): Signal<string | null> {
+    const injector = inject(Injector);
+    const field = computed(() => injector.get(FormField, null, { self: true }));
+    const isTouched = computed(() => field()?.state().touched() ?? touched());
     const translate = inject(TranslateService, { optional: true });
     const messages = inject(FD_VALIDATION_ERRORS);
     const language = toSignal(translate?.onLangChange ?? EMPTY, { initialValue: null });
@@ -21,7 +24,7 @@ export function injectFdUiFieldError(
         if (provided !== undefined && provided !== null) {
             return provided;
         }
-        if (translate === null || !touched() || errors().length === 0) {
+        if (translate === null || !isTouched() || errors().length === 0) {
             return null;
         }
         const message = errors()[0].message;
@@ -30,7 +33,7 @@ export function injectFdUiFieldError(
             return typeof translated === 'string' ? translated : message;
         }
         return resolveSignalFormFieldError(
-            () => ({ errors: () => [...errors()], touched, dirty: () => false, invalid: () => errors().length > 0 }),
+            () => ({ errors: () => [...errors()], touched: isTouched, dirty: () => false, invalid: () => errors().length > 0 }),
             messages,
             translate,
         );

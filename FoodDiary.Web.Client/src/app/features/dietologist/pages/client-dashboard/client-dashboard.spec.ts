@@ -697,6 +697,48 @@ function registerActionTests(): void {
     });
 }
 
+describe('ClientDashboardComponent successful draft resets', () => {
+    it('clears template validation after saving while preserving recommendation text', () => {
+        createComponent('client-1', true);
+        dietologistService.createRecommendationTemplate.mockReturnValueOnce(of({ id: 'template-1', name: 'My template' }));
+        component['recommendationModel'].set({ text: 'Add protein', templateName: 'My template' });
+
+        component['createRecommendationTemplate']();
+        fixture.detectChanges();
+
+        expect(component['recommendationModel']()).toEqual({ text: 'Add protein', templateName: '' });
+        expect(component['templateNameError']()).toBeNull();
+        expect(component['recommendationForm']().touched()).toBe(false);
+        const host = fixture.nativeElement as HTMLElement;
+        expect(host.querySelector('[role="alert"]')).toBeNull();
+    });
+
+    it('resets touched validation after a successful recommendation while retaining the template name', async () => {
+        createComponent('client-1', true);
+        component['recommendationModel'].set({ text: 'Add protein', templateName: 'My template' });
+        component['recommendationForm']().markAsTouched();
+
+        await component['submitRecommendationAsync']();
+
+        expect(component['recommendations']()[0]?.id).toBe('rec-1');
+        expect(component['recommendationModel']()).toEqual({ text: '', templateName: 'My template' });
+        expect(component['recommendationForm']().touched()).toBe(false);
+    });
+
+    it('resets touched validation after a successful task creation', async () => {
+        createComponent('client-1');
+        dietologistService.createTask.mockReturnValueOnce(of({ id: 'task-1' }));
+        component['taskModel'].set({ title: 'Daily task', details: 'Test details', dueDate: '' });
+        component['taskForm']().markAsTouched();
+
+        await component['submitTaskAsync']();
+
+        expect(component['tasks']()[0]?.id).toBe('task-1');
+        expect(component['taskModel']()).toEqual({ title: '', details: '', dueDate: '' });
+        expect(component['taskForm']().touched()).toBe(false);
+    });
+});
+
 describe('ClientDashboardComponent template limits', () => {
     it.each([
         { nameLength: 120, textLength: 2000, invalid: false },

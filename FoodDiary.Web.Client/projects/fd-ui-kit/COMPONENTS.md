@@ -642,6 +642,11 @@ Standard confirm dialog (uses dialog service).
 
 Displays validation errors.
 
+Signal Forms controls resolve interaction state from their bound `FormField`.
+After a form reset, a local blur flag must not keep required-field errors visible,
+including when blur and reset occur before the next render. Standalone controls
+retain their own interaction state. Explicit `error` messages retain precedence.
+
 **Inputs**
 
 - `showOnDirty?: boolean`

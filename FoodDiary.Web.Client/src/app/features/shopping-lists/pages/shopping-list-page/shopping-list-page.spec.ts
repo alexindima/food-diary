@@ -223,6 +223,7 @@ describe('ShoppingListPageComponent form and item actions', () => {
         });
         expect(component['itemFormModel']().name).toBe('');
         expect(component['itemFormModel']().amount).toBeNull();
+        expect(component['itemForm']().touched(), 'New shopping item draft must be untouched').toBe(false);
     });
 
     it('adds an item from quick add input submit', async () => {

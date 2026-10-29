@@ -195,7 +195,7 @@ export class AdminAchievementsComponent {
         this.error.set(null);
         this.editingId.set(null);
         this.editingVersion.set(null);
-        this.formModel.set({ ...EMPTY_MODEL });
+        this.form().reset({ ...EMPTY_MODEL });
     }
 
     protected save(): void {
