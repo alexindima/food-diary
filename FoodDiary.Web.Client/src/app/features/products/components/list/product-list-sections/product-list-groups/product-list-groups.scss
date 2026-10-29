@@ -2,7 +2,7 @@
 
 .recent-products {
     display: flex;
-    gap: var(--fd-space-sm);
+    gap: var(--fd-space-page-card-gap);
     overflow-x: auto;
     padding: var(--fd-space-xxs);
     scroll-snap-type: x proximity;

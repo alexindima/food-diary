@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-page-card-gap);
-    margin-bottom: var(--fd-space-xxl);
 
     h2 {
         // Preserve the former browser h3 size with section-level headings.

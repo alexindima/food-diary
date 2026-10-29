@@ -744,8 +744,6 @@ $fd-theme-design-tokens: (
             page-card-gap: clamp(16px, 3vw, 24px),
             actions-gap: fd-token(spacing, sm),
             page-section-gap: clamp(24px, 4vw, 40px),
-            page-body-bottom-padding: clamp(12px, 2vw, 20px),
-            page-header-gap: clamp(10px, 2vw, 16px),
             page-header-actions-gap: fd-token(spacing, sm),
             page-header-mobile-column-gap: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
             page-header-mobile-row-gap: fd-token(spacing, xxs),
@@ -898,8 +896,6 @@ $fd-theme-design-tokens: (
             page-card-gap: clamp(12px, 1.8vw, 16px),
             actions-gap: fd-token(spacing, xs),
             page-section-gap: clamp(16px, 2.5vw, 24px),
-            page-body-bottom-padding: clamp(8px, 1.5vw, 16px),
-            page-header-gap: clamp(8px, 1.6vw, 12px),
             page-header-actions-gap: fd-token(spacing, xs),
             page-header-mobile-column-gap: fd-token(spacing, xs),
             page-header-mobile-row-gap: 3px,
@@ -2082,8 +2078,8 @@ $fd-theme-design-tokens: (
         --fd-space-dashboard-aside-gap: var(--fd-space-page-card-gap);
         --fd-space-actions-gap: #{fd-ui-style-spacing-token($style, actions-gap)};
         --fd-space-page-section-gap: #{fd-ui-style-spacing-token($style, page-section-gap)};
-        --fd-space-page-body-bottom-padding: #{fd-ui-style-spacing-token($style, page-body-bottom-padding)};
-        --fd-space-page-header-gap: #{fd-ui-style-spacing-token($style, page-header-gap)};
+        --fd-space-page-body-bottom-padding: var(--fd-space-page-card-gap);
+        --fd-space-page-header-gap: var(--fd-space-page-card-gap);
         --fd-space-page-header-actions-gap: #{fd-ui-style-spacing-token($style, page-header-actions-gap)};
         --fd-space-page-header-mobile-column-gap: #{fd-ui-style-spacing-token($style, page-header-mobile-column-gap)};
         --fd-space-page-header-mobile-row-gap: #{fd-ui-style-spacing-token($style, page-header-mobile-row-gap)};
@@ -2208,8 +2204,8 @@ $fd-theme-design-tokens: (
         --fd-space-entity-card-header-gap: #{fd-ui-style-spacing-token($style, entity-card-header-gap)};
         --fd-space-entity-card-title-gap: #{fd-ui-style-spacing-token($style, entity-card-title-gap)};
 
-        --fd-layout-page-section-spacing: var(--fd-space-page-section-gap);
-        --fd-page-body-gap: var(--fd-space-page-section-gap);
+        --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
+        --fd-page-body-gap: var(--fd-space-page-card-gap);
         --fd-page-header-gap: var(--fd-space-page-header-gap);
         --fd-page-actions-gap: var(--fd-space-actions-gap);
 

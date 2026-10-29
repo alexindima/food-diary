@@ -132,13 +132,14 @@ Filter out `design-tokens.scss`, `variables.scss`, `dist`, and `node_modules` wh
 
 ## Page Card Spacing
 
-The page container owns the gap between the page header and the first content:
-use `--fd-page-header-gap`, which follows the selected UI density. Do not add
-header margins or content top padding to repeat it. Keep section/card spacing
-inside the page body, and hide empty leading wrappers so they do not consume a
-flex/grid gap. Custom page headers follow the same token.
+The page container owns the gap between the page header and the first content,
+and the bottom padding after the last content. Both use `--fd-space-page-card-gap`;
+`--fd-page-header-gap` aliases this value. Do not repeat these spaces with header
+margins, content top/bottom padding, or navigation-height compensation. Hide empty
+wrappers so they do not consume a flex/grid gap. Custom page headers follow the
+same token. On short pages, unused viewport height is separate from content padding.
 
-Use `--fd-space-page-card-gap` for both horizontal and vertical gaps between peer cards (dashboard and body metric pages). It follows the selected UI density: 16–24px in classic and 12–16px in modern. Dashboard gap tokens alias this shared value. Keep `--fd-space-card-content-gap` for content inside cards and `--fd-space-page-section-gap` for separate page sections.
+Use `--fd-space-page-card-gap` or `fd-gap-page-card` for horizontal and vertical gaps between peer cards on every page, including catalog grids and profile sections. It follows the selected UI density: 16–24px in classic and 12–16px in modern. Dashboard gap tokens and the default page-body gap alias this shared value. Keep `--fd-space-card-content-gap` for content inside cards and `--fd-space-page-section-gap` for deliberately separate page sections.
 
 ## Responsive Control And Header Sizes
 

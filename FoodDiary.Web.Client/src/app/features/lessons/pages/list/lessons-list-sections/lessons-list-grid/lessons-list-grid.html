@@ -6,7 +6,7 @@
         <span>{{ 'LESSONS.EMPTY' | translate }}</span>
     </div>
 } @else {
-    <div class="lessons-list__grid fd-grid fd-gap-lg">
+    <div class="lessons-list__grid fd-grid fd-gap-page-card">
         @for (lesson of lessons(); track lesson.id) {
             <div
                 class="lesson-card fd-stack fd-gap-xs"

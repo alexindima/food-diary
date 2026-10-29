@@ -1,5 +1,5 @@
 @if (hasVisibleRecipes()) {
-    <div class="recipe-list__groups fd-stack fd-gap-card-profile">
+    <div class="recipe-list__groups fd-stack fd-gap-page-card">
         @if (showRecentSection()) {
             <div class="recipe-list__section fd-stack fd-gap-sm">
                 <div class="recipe-list__section-header fd-row fd-gap-sm">
@@ -19,7 +19,7 @@
                     <span class="recipe-list__section-label fd-ui-card-title"> {{ allRecipesSectionLabelKey() | translate }} </span>
                     <span class="recipe-list__section-line"></span>
                 </div>
-                <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
+                <div class="recipe-list__section-grid fd-grid fd-gap-page-card fd-align-start">
                     @for (item of allRecipeItems(); track item.recipe.id) {
                         <fd-recipe-card
                             [recipe]="item.recipe"

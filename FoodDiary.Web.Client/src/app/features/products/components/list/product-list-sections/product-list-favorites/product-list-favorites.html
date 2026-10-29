@@ -9,7 +9,7 @@
     (toggleRequested)="favoritesToggle.emit()"
     (loadMore)="loadMore.emit()"
 >
-    <div class="product-list__favorites-grid fd-grid fd-gap-card-profile">
+    <div class="product-list__favorites-grid fd-grid fd-gap-page-card">
         @for (favorite of favorites(); track favorite.id) {
             <div class="product-list__favorite-card fd-stack">
                 <fd-product-card

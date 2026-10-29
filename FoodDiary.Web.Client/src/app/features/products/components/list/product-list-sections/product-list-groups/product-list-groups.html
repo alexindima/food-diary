@@ -1,4 +1,4 @@
-<div class="product-list__groups fd-stack fd-gap-card-profile">
+<div class="product-list__groups fd-stack fd-gap-page-card">
     @if (showRecentSection()) {
         <div class="product-list__section fd-stack fd-gap-sm">
             <div class="product-list__section-header fd-row fd-gap-sm">
@@ -45,7 +45,7 @@
                 <span class="product-list__section-label fd-ui-card-title"> {{ allProductsSectionLabelKey() | translate }} </span>
                 <span class="product-list__section-line"></span>
             </div>
-            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
+            <div class="product-list__section-grid fd-grid fd-gap-page-card">
                 @for (item of allItems(); track item.product.id) {
                     <fd-product-card
                         [product]="item.product"

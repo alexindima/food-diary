@@ -5,7 +5,7 @@
     min-width: 0;
 }
 .shopping-list {
-    --fd-layout-page-section-spacing: var(--fd-space-sm);
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
     margin: 0 auto;
     &__content {
         border: 0;
@@ -192,7 +192,7 @@
     }
     &__loader {
         display: block;
-        margin: var(--fd-space-xl) auto;
+        margin: 0 auto;
     }
     @media #{variables.$media-tablet} {
         &__list-tab {

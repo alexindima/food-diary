@@ -42,8 +42,12 @@ body.fd-scroll-lock {
 }
 
 .fd-page-container {
-    --fd-page-container-padding: 0 var(--fd-layout-page-horizontal-padding)
-        min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
+    --fd-page-container-padding: 0 var(--fd-layout-page-horizontal-padding) var(--fd-space-page-card-gap);
+}
+
+// Projected optional hosts belong to their page's Angular style scope.
+.fd-page-body > :empty {
+    display: none;
 }
 
 @media #{variables.$media-tablet} {
@@ -59,6 +63,6 @@ body.fd-scroll-lock {
     }
 
     .fd-page-container {
-        --fd-page-container-padding: 0 0 min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
+        --fd-page-container-padding: 0 0 var(--fd-space-page-card-gap);
     }
 }

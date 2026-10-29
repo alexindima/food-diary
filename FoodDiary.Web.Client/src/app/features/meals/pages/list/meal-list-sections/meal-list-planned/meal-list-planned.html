@@ -14,7 +14,7 @@
                         <span class="meal-list__day-label"> {{ group.dateLabel }} </span>
                         <span class="meal-list__day-line"></span>
                     </div>
-                    <div class="meal-list__grid fd-grid fd-gap-card-profile">
+                    <div class="meal-list__grid fd-grid fd-gap-page-card">
                         @for (meal of group.items; track meal.id) {
                             <fd-meal-card
                                 class="meal-card meal-card--planned"

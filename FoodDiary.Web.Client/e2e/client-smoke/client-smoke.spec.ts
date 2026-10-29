@@ -615,33 +615,23 @@ test.describe('shared page content spacing', () => {
                     }
                     const header = page.locator('fd-page-header, .dietologist-clients__header, .client-dashboard__header');
                     await expect(header).toBeVisible();
-                    const observation = await header.evaluate(element => {
-                        const body = (element.parentElement as HTMLElement).querySelector(
-                            'fd-page-body > .fd-page-body, .dietologist-clients__content, .client-dashboard__content',
-                        );
-                        if (body === null) {
-                            throw new Error('Page header must be followed by a content container');
-                        }
-                        const firstContent = Array.from(body.children).find(child => child.getBoundingClientRect().height > 0);
-                        const probe = document.createElement('div');
-                        probe.style.height = 'var(--fd-page-header-gap)';
-                        probe.style.position = 'absolute';
-                        document.body.append(probe);
-                        const expectedGap = probe.getBoundingClientRect().height;
-                        probe.remove();
-                        return {
-                            route: location.pathname,
-                            expectedGap,
-                            bodyGap: body.getBoundingClientRect().top - element.getBoundingClientRect().bottom,
-                            contentGap: (firstContent?.getBoundingClientRect().top ?? 0) - element.getBoundingClientRect().bottom,
-                        };
-                    });
+                    const observation = await header.evaluate(readPageSpacing);
                     observations.push(observation);
                     expect.soft(observation.expectedGap, 'The shared page header gap must resolve').toBeGreaterThan(0);
                     expect.soft(observation.bodyGap, `Header-to-content gap on ${routePath}`).toBeCloseTo(observation.expectedGap, 0);
                     expect
                         .soft(observation.contentGap, `First visible content gap on ${routePath}`)
                         .toBeCloseTo(observation.expectedGap, 0);
+                    expect.soft(observation.bottomPadding, `Page bottom padding on ${routePath}`).toBeCloseTo(observation.expectedGap, 0);
+                    expect.soft(observation.bodyBottomPadding, `Content must not duplicate bottom padding on ${routePath}`).toBe(0);
+                    for (const peerGap of observation.peerGaps) {
+                        expect.soft(peerGap, `Peer-card gap on ${routePath}`).toBeCloseTo(observation.expectedGap, 0);
+                    }
+                    if (observation.finalCardGap !== null) {
+                        expect
+                            .soft(observation.finalCardGap, `Last card to page boundary on ${routePath}`)
+                            .toBeCloseTo(observation.expectedGap, 0);
+                    }
                     if (['/dashboard', '/weight-history', '/waist-history', '/fasting'].includes(routePath)) {
                         await page.screenshot({ path: testInfo.outputPath(`${routePath.slice(1)}.png`) });
                     }
@@ -1819,6 +1809,57 @@ function createDashboardRegressionFast(planType: 'Intermittent' | 'Extended' | '
         notes: null,
         checkIns: [],
         symptoms: [],
+    };
+}
+
+type PageSpacingObservation = {
+    route: string;
+    expectedGap: number;
+    bodyGap: number;
+    contentGap: number;
+    bottomPadding: number;
+    bodyBottomPadding: number;
+    peerGaps: number[];
+    finalCardGap: number | null;
+};
+
+function readPageSpacing(element: Element): PageSpacingObservation {
+    const body = (element.parentElement as HTMLElement).querySelector(
+        'fd-page-body > .fd-page-body, .dietologist-clients__content, .client-dashboard__content',
+    );
+    if (body === null) {
+        throw new Error('Page header must be followed by a content container');
+    }
+    const firstContent = Array.from(body.children).find(child => child.getBoundingClientRect().height > 0);
+    const probe = document.createElement('div');
+    probe.style.height = 'var(--fd-space-page-card-gap)';
+    probe.style.position = 'absolute';
+    document.body.append(probe);
+    const expectedGap = probe.getBoundingClientRect().height;
+    probe.remove();
+    const pageContainer = element.parentElement as HTMLElement;
+    const peerLayouts = Array.from(body.querySelectorAll('.fd-gap-page-card, .dashboard__column, .habit-path, .catalog-grid')).filter(
+        layout => layout.getBoundingClientRect().height > 0,
+    );
+    const finalCard = body.querySelector(
+        '.profile-comparison__section-links, .fasting-redesign > :last-child, .goals-editor > :last-child',
+    );
+    const dashboardCards = Array.from(body.querySelectorAll('.dashboard__column > :not(:empty)')).filter(
+        card => card.getBoundingClientRect().height > 0,
+    );
+    const finalContentBottom =
+        dashboardCards.length > 0
+            ? Math.max(...dashboardCards.map(card => card.getBoundingClientRect().bottom))
+            : finalCard?.getBoundingClientRect().bottom;
+    return {
+        route: location.pathname,
+        expectedGap,
+        bodyGap: body.getBoundingClientRect().top - element.getBoundingClientRect().bottom,
+        contentGap: (firstContent?.getBoundingClientRect().top ?? 0) - element.getBoundingClientRect().bottom,
+        bottomPadding: Number.parseFloat(getComputedStyle(pageContainer).paddingBottom),
+        bodyBottomPadding: Number.parseFloat(getComputedStyle(body).paddingBottom),
+        peerGaps: peerLayouts.map(layout => Number.parseFloat(getComputedStyle(layout).rowGap)),
+        finalCardGap: finalContentBottom === undefined ? null : pageContainer.getBoundingClientRect().bottom - finalContentBottom,
     };
 }
 

@@ -17,7 +17,7 @@
             <p role="alert">{{ 'LESSONS.LOAD_ERROR' | translate }}</p>
             <fd-ui-button (click)="facade.retryLessons()">{{ 'ERRORS.RETRY' | translate }}</fd-ui-button>
         } @else {
-            <div class="lessons-list__loading-shell" [hidden]="!facade.isLoading() && !progress()" [attr.aria-busy]="facade.isLoading()">
+            <div class="lessons-list__loading-shell" [hidden]="!progress()" [attr.aria-busy]="facade.isLoading()">
                 <fd-lessons-list-progress
                     data-tour-id="lessons-progress"
                     [progress]="progress()"

@@ -8,7 +8,7 @@
     container-type: inline-size;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--fd-space-card-gap);
+    gap: var(--fd-space-page-card-gap);
 
     &__hero {
         display: grid;

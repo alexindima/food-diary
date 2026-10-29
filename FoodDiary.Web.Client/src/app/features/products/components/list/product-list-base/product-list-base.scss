@@ -3,7 +3,7 @@
 .product-list {
     margin: 0 auto;
     box-sizing: border-box;
-    --fd-layout-page-section-spacing: var(--fd-space-md);
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
     background: transparent;
     padding: 0;
     border-radius: 0;
@@ -182,7 +182,6 @@
 
     &__favorites {
         display: block;
-        margin-bottom: var(--fd-space-card-profile-gap);
     }
 
     &__favorites-grid {
@@ -323,7 +322,7 @@
         }
 
         &__groups {
-            gap: var(--fd-space-sm);
+            gap: var(--fd-space-page-card-gap);
         }
 
         &__section {
@@ -335,7 +334,7 @@
         }
 
         &__section-grid {
-            gap: var(--fd-space-sm);
+            gap: var(--fd-space-page-card-gap);
             margin: 0;
             background: transparent;
             border-top: none;

@@ -13,7 +13,7 @@
         }
     </div>
 } @else {
-    <div class="meal-plans-list__grid fd-grid fd-gap-lg">
+    <div class="meal-plans-list__grid fd-grid fd-gap-page-card">
         @for (plan of plans(); track plan.id) {
             <div class="meal-plan-card fd-stack fd-gap-xs" fdCardHover fdUiActivate (fdUiActivated)="planOpen.emit(plan.id)">
                 <div class="meal-plan-card__badge fd-ui-pill fd-ui-pill--compact fd-ui-overline">{{ plan.dietTypeKey | translate }}</div>

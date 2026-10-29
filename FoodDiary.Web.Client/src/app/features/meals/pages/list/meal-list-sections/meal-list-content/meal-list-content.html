@@ -1,7 +1,7 @@
 @if (errorKey(); as currentErrorKey) {
     <fd-error-state [titleKey]="currentErrorKey" (retry)="retry.emit()" />
 } @else if (isLoading()) {
-    <div class="meal-list__grid fd-grid fd-gap-card-profile">
+    <div class="meal-list__grid fd-grid fd-gap-page-card">
         <fd-skeleton-card />
         <fd-skeleton-card />
         <fd-skeleton-card />
@@ -33,7 +33,7 @@
         (mealFavoriteToggle)="mealFavoriteToggle.emit($event)"
     />
 
-    <div class="meal-list__groups fd-stack fd-gap-card-profile">
+    <div class="meal-list__groups fd-stack fd-gap-page-card">
         @for (group of groups(); track group.date) {
             <div class="meal-list__day fd-stack fd-gap-sm">
                 <div class="meal-list__day-header fd-row fd-gap-sm">
@@ -43,7 +43,7 @@
                         >{{ group.totalCalories }} {{ 'MEAL_LIST.KCAL' | translate }}</span
                     >
                 </div>
-                <div class="meal-list__grid fd-grid fd-gap-card-profile">
+                <div class="meal-list__grid fd-grid fd-gap-page-card">
                     @for (meal of group.items; track meal.id) {
                         <fd-meal-card
                             class="meal-card"

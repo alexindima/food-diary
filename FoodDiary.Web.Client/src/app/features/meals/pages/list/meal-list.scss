@@ -4,7 +4,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     font-size: var(--fd-text-body-sm-size);
-    --fd-layout-page-section-spacing: var(--fd-space-md);
+    --fd-layout-page-section-spacing: var(--fd-space-page-card-gap);
     background: transparent;
     padding: 0;
     border-radius: 0;
@@ -161,7 +161,7 @@
 
     &__planned {
         display: block;
-        margin-bottom: var(--fd-space-card-profile-gap);
+        margin-bottom: var(--fd-space-page-card-gap);
     }
 
     &__planned-groups {
@@ -194,7 +194,7 @@
         }
 
         &__groups {
-            gap: var(--fd-space-sm);
+            gap: var(--fd-space-page-card-gap);
         }
 
         &__day {
@@ -233,7 +233,7 @@
         }
 
         &__grid {
-            gap: var(--fd-space-sm);
+            gap: var(--fd-space-page-card-gap);
             margin: 0;
             background: transparent;
             border-top: none;
@@ -259,7 +259,6 @@
 
     &__favorites {
         display: block;
-        margin-bottom: var(--fd-space-card-profile-gap);
     }
 }
 

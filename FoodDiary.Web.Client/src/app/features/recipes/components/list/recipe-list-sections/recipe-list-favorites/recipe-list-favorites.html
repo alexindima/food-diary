@@ -11,7 +11,7 @@
         (toggleRequested)="favoritesToggle.emit()"
         (loadMore)="favoritesLoadMore.emit()"
     >
-        <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
+        <div class="recipe-list__section-grid fd-grid fd-gap-page-card fd-align-start">
             @for (favorite of favorites(); track favorite.id) {
                 <fd-recipe-card
                     [recipe]="toRecipeCardItem(favorite)"

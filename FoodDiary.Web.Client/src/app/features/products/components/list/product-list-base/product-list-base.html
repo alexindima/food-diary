@@ -1,4 +1,4 @@
-﻿<div class="product-list" fdPageContainer>
+<div class="product-list" fdPageContainer>
     <fd-page-header
         class="product-list__header"
         [title]="'PRODUCT_LIST.TITLE' | translate"
@@ -150,7 +150,7 @@
         @if (errorKey()) {
             <fd-error-state (retry)="retryLoad()" />
         } @else if (productData.isLoading()) {
-            <div class="product-list__section-grid fd-grid fd-gap-card-profile">
+            <div class="product-list__section-grid fd-grid fd-gap-page-card">
                 <fd-skeleton-card />
                 <fd-skeleton-card />
                 <fd-skeleton-card />

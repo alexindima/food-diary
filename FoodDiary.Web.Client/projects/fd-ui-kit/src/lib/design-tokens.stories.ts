@@ -182,6 +182,8 @@ const layoutTokens: TokenTableRow[] = [
     { name: 'page.verticalPadding', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.verticalPadding})` },
     { name: 'page.contentMaxWidth', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.contentMaxWidth})` },
     { name: 'page.sectionSpacing', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.page.sectionSpacing})` },
+    { name: 'page.cardGap', value: 'var(--fd-space-page-card-gap)' },
+    { name: 'page.headerGap', value: 'var(--fd-page-header-gap)' },
     { name: 'header.height', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.height})` },
     { name: 'header.background', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.background})` },
     { name: 'header.textColor', value: `var(${DESIGN_TOKEN_CSS_VARIABLES.layout.header.textColor})` },

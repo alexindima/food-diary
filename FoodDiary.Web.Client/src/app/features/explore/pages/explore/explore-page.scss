@@ -1,7 +1,6 @@
 .explore-controls {
     align-items: end;
     gap: var(--fd-space-sm);
-    margin-bottom: var(--fd-space-lg);
 }
 
 .explore-search {
@@ -11,7 +10,6 @@
 
 .explore-grid {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    margin-bottom: var(--fd-space-lg);
 }
 
 .explore-loader {

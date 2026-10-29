@@ -1,9 +1,9 @@
 :host {
     display: flex;
     flex-direction: column;
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     align-self: stretch;
-    min-height: 100dvh;
+    min-height: 100%;
     background: var(--fd-bg-page);
 }
 
