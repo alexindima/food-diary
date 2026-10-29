@@ -1,5 +1,5 @@
 @if (tour.snapshot(); as snapshot) {
-    <div class="fd-tour" role="presentation">
+    <div #overlay class="fd-tour" role="presentation" [attr.popover]="useTopLayer ? 'manual' : null">
         <button class="fd-tour__backdrop" type="button" [attr.aria-label]="labels().close" (click)="close()"></button>
 
         @if (highlightRect(); as rect) {
@@ -21,9 +21,12 @@
             aria-live="polite"
             [class.fd-tour__popover--visible]="popoverVisible()"
             [attr.aria-label]="snapshot.step.title"
+            [attr.data-tour-step]="snapshot.step.id"
+            [attr.data-tour-target]="snapshot.step.target"
             [style.top.px]="popoverLayout().top"
             [style.left.px]="popoverLayout().left"
             [style.width.px]="popoverLayout().width"
+            [style.max-height.px]="popoverLayout().maxHeight"
         >
             <div class="fd-tour__header">
                 <span class="fd-tour__progress">{{ progressLabel() }}</span>

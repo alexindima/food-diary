@@ -20,7 +20,7 @@ export const WAIST_HISTORY_TOUR: LocalizedTourConfig = {
         },
         {
             id: 'entry-form',
-            target: 'waist-history-entry-form',
+            target: 'waist-history-entry-action',
             titleKey: 'ENTRY_FORM_TITLE',
             descriptionKey: 'ENTRY_FORM_DESCRIPTION',
             placement: 'right',

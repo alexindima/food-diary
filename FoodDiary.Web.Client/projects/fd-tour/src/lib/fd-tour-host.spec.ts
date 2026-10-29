@@ -94,3 +94,42 @@ describe('FdTourHostComponent responsive highlight', () => {
         }
     });
 });
+
+describe('Tour space around a mobile menu item', () => {
+    it('limits the popover to the available space below the highlighted row', () => {
+        const widthDescriptor = Object.getOwnPropertyDescriptor(window, 'innerWidth');
+        const heightDescriptor = Object.getOwnPropertyDescriptor(window, 'innerHeight');
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 320 });
+        Object.defineProperty(window, 'innerHeight', { configurable: true, value: 640 });
+        const target = document.createElement('button');
+        target.id = 'long-menu-item';
+        document.body.append(target);
+        const targetLeft = 20;
+        const targetTop = 254;
+        const targetWidth = 240;
+        const targetHeight = 66;
+        const targetRect = new DOMRect(targetLeft, targetTop, targetWidth, targetHeight);
+        vi.spyOn(target, 'getBoundingClientRect').mockReturnValue(targetRect);
+        const fixture = TestBed.createComponent(FdTourHostComponent);
+        const service = TestBed.inject(FdTourService);
+        try {
+            service.start({ id: 'mobile-space', version: 1, steps: [{ id: 'row', target: '#long-menu-item', title: 'Row' }] });
+            fixture.detectChanges();
+            fixture.componentInstance['popoverSize'].set({ width: 288, height: 305 });
+            fixture.detectChanges();
+            const popover = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.fd-tour__popover');
+            expect(popover?.style.maxHeight).toBe('282px');
+            expect(Number.parseFloat(popover?.style.top ?? '0')).toBeGreaterThan(targetRect.bottom);
+        } finally {
+            service.close();
+            fixture.destroy();
+            target.remove();
+            if (widthDescriptor !== undefined) {
+                Object.defineProperty(window, 'innerWidth', widthDescriptor);
+            }
+            if (heightDescriptor !== undefined) {
+                Object.defineProperty(window, 'innerHeight', heightDescriptor);
+            }
+        }
+    });
+});

@@ -1,6 +1,17 @@
 import { type ConnectedPosition, Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { DestroyRef, Directive, effect, ElementRef, inject, input, ViewContainerRef } from '@angular/core';
+import {
+    afterNextRender,
+    computed,
+    DestroyRef,
+    Directive,
+    effect,
+    ElementRef,
+    inject,
+    Injector,
+    input,
+    ViewContainerRef,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
@@ -21,31 +32,33 @@ const MENU_VIEWPORT_MARGIN = 8;
 export class FdUiMenuTriggerDirective {
     private readonly overlay = inject(Overlay);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly button = inject(FdUiButtonComponent, { optional: true, self: true });
     private activeSubscriptions = new Subscription();
 
     public readonly menu = input<FdUiMenuComponent | null>(null, { alias: 'fdUiMenuTrigger' });
+    public readonly fdUiMenuAlign = input<'start' | 'end'>('start');
 
     protected overlayRef: OverlayRef | null = null;
 
-    private readonly positions: ConnectedPosition[] = [
+    private readonly positions = computed<ConnectedPosition[]>(() => [
         {
-            originX: 'start',
+            originX: this.fdUiMenuAlign(),
             originY: 'bottom',
-            overlayX: 'start',
+            overlayX: this.fdUiMenuAlign(),
             overlayY: 'top',
             offsetY: MENU_OFFSET_Y,
         },
         {
-            originX: 'start',
+            originX: this.fdUiMenuAlign(),
             originY: 'top',
-            overlayX: 'start',
+            overlayX: this.fdUiMenuAlign(),
             overlayY: 'bottom',
             offsetY: -MENU_OFFSET_Y,
         },
-    ];
+    ]);
 
     public constructor() {
         effect(() => {
@@ -100,7 +113,13 @@ export class FdUiMenuTriggerDirective {
         this.open();
     }
 
-    protected open(focusTarget: 'first' | 'last' = 'first'): void {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public container orchestration API.
+    public isOpen(): boolean {
+        return this.overlayRef?.hasAttached() === true;
+    }
+
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public container orchestration API.
+    public open(focusTarget: 'first' | 'last' | 'none' = 'first'): void {
         const menu = this.menu();
         if (menu === null) {
             return;
@@ -140,16 +159,27 @@ export class FdUiMenuTriggerDirective {
 
         overlayRef.updateSize({ minWidth: this.elementRef.nativeElement.getBoundingClientRect().width });
         overlayRef.attach(new TemplatePortal(menu.templateRef, this.viewContainerRef));
+        afterNextRender(
+            () => {
+                if (overlayRef.hasAttached()) {
+                    overlayRef.updatePosition();
+                }
+            },
+            { injector: this.injector },
+        );
         this.button?.setMenuState(true);
         if (focusTarget === 'last') {
             menu.focusLastItem();
             return;
         }
 
-        menu.focusFirstItem();
+        if (focusTarget !== 'none') {
+            menu.focusFirstItem();
+        }
     }
 
-    protected close(restoreFocus = true): void {
+    // eslint-disable-next-line local/prefer-protected-template-members -- Public container orchestration API.
+    public close(restoreFocus = true): void {
         if (this.overlayRef?.hasAttached() !== true) {
             return;
         }
@@ -180,7 +210,7 @@ export class FdUiMenuTriggerDirective {
                 .withFlexibleDimensions(false)
                 .withPush(true)
                 .withViewportMargin(MENU_VIEWPORT_MARGIN)
-                .withPositions(this.positions),
+                .withPositions(this.positions()),
             scrollStrategy: this.overlay.scrollStrategies.reposition(),
             panelClass: 'fd-ui-menu-panel',
         });

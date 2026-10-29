@@ -16,7 +16,6 @@ import {
 
 import { FdTourService } from './fd-tour.service';
 import type { FdTourLabels, FdTourPlacement, FdTourStep } from './fd-tour.types';
-import { findTourTarget } from './fd-tour-target';
 
 type TourRect = {
     top: number;
@@ -32,6 +31,7 @@ type PopoverPosition = {
 
 type PopoverLayout = PopoverPosition & {
     width: number;
+    maxHeight?: number;
 };
 
 type PopoverSize = {
@@ -69,9 +69,13 @@ export class FdTourHostComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
     private readonly popover = viewChild<ElementRef<HTMLElement>>('popover');
+    private readonly overlay = viewChild<ElementRef<HTMLElement>>('overlay');
     private presentedStepKey: string | null = null;
+    private presentedTarget: Element | null = null;
     private cleanupPopoverReveal: (() => void) | null = null;
     private focusBeforeTour: HTMLElement | null = null;
+    protected readonly useTopLayer =
+        isPlatformBrowser(this.platformId) && typeof this.document.createElement('div').showPopover === 'function';
     protected readonly tour = inject(FdTourService);
     protected readonly targetRect = signal<TourRect | null>(null);
     protected readonly popoverSize = signal<PopoverSize>({
@@ -108,11 +112,7 @@ export class FdTourHostComponent {
         }
 
         if (viewport.innerWidth <= MOBILE_BREAKPOINT_PX) {
-            return {
-                top: Math.max(viewport.innerHeight - this.popoverSize().height - VIEWPORT_GUTTER_PX, VIEWPORT_GUTTER_PX),
-                left: VIEWPORT_GUTTER_PX,
-                width: viewport.innerWidth - VIEWPORT_GUTTER_PX * 2,
-            };
+            return this.placeMobilePopover(rect, viewport);
         }
 
         return this.placePopover(rect, this.tour.activeStep()?.placement ?? 'auto', viewport);
@@ -129,10 +129,18 @@ export class FdTourHostComponent {
     public constructor() {
         effect(() => {
             const snapshot = this.tour.snapshot();
+            const target = this.tour.target();
+            if (this.tour.preparing()) {
+                this.cleanupPopoverReveal?.();
+                this.popoverVisible.set(false);
+                this.targetRect.set(null);
+                return;
+            }
             const stepKey = snapshot === null ? null : `${snapshot.tour.id}:${snapshot.stepIndex}:${snapshot.step.id}`;
-            if (stepKey !== this.presentedStepKey) {
+            if (stepKey !== this.presentedStepKey || target !== this.presentedTarget) {
                 this.updateFocusOrigin(stepKey);
                 this.presentedStepKey = stepKey;
+                this.presentedTarget = target;
                 this.beginStepPresentation(stepKey, snapshot?.step ?? null);
                 return;
             }
@@ -152,11 +160,25 @@ export class FdTourHostComponent {
             }
         });
 
+        effect(onCleanup => {
+            if (!isPlatformBrowser(this.platformId) || this.tour.activeTour() === null) {
+                return;
+            }
+            const observer = new MutationObserver(() => {
+                this.tour.refreshTarget();
+            });
+            observer.observe(this.document.body, { childList: true, subtree: true });
+            onCleanup(() => {
+                observer.disconnect();
+            });
+        });
+
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }
 
         const handleReposition = (): void => {
+            this.tour.refreshTarget();
             this.measureTarget(this.tour.activeStep());
             this.schedulePopoverMeasurement();
         };
@@ -166,13 +188,13 @@ export class FdTourHostComponent {
 
         this.getViewport()?.addEventListener('resize', handleReposition, { passive: true });
         this.document.addEventListener('scroll', handleReposition, { capture: true, passive: true });
-        this.document.addEventListener('keydown', handleKeydown);
+        this.document.addEventListener('keydown', handleKeydown, { capture: true });
         this.destroyRef.onDestroy(() => {
             this.cleanupPopoverReveal?.();
             this.restoreFocus();
             this.getViewport()?.removeEventListener('resize', handleReposition);
             this.document.removeEventListener('scroll', handleReposition, { capture: true });
-            this.document.removeEventListener('keydown', handleKeydown);
+            this.document.removeEventListener('keydown', handleKeydown, { capture: true });
         });
     }
 
@@ -195,6 +217,10 @@ export class FdTourHostComponent {
     private handleKeydown(event: KeyboardEvent): void {
         if (this.tour.snapshot() === null) {
             return;
+        }
+
+        if (['Tab', 'Escape', 'ArrowRight', 'ArrowLeft'].includes(event.key)) {
+            event.stopPropagation();
         }
 
         switch (event.key) {
@@ -273,16 +299,10 @@ export class FdTourHostComponent {
             return;
         }
 
-        const element = findTourTarget(this.document, step.target);
+        const element = this.tour.target();
         const rect = element?.getBoundingClientRect();
         if (rect === undefined) {
             this.targetRect.set(null);
-            afterNextRender(
-                () => {
-                    this.tour.next();
-                },
-                { injector: this.injector },
-            );
             return;
         }
 
@@ -304,6 +324,19 @@ export class FdTourHostComponent {
             return;
         }
 
+        afterNextRender(
+            () => {
+                const overlay = this.overlay()?.nativeElement;
+                if (overlay?.isConnected === true && typeof overlay.showPopover === 'function') {
+                    // Menus may themselves occupy the browser top layer. Re-enter it
+                    // after revealing a target so the tour keeps its controls above them.
+                    overlay.hidePopover();
+                    overlay.showPopover();
+                }
+                this.measurePopover();
+            },
+            { injector: this.injector },
+        );
         this.schedulePopoverReveal(stepKey);
     }
 
@@ -374,6 +407,24 @@ export class FdTourHostComponent {
         this.cleanupPopoverReveal = cleanup;
         scheduleIdleReveal();
         fallbackTimeoutId = viewport.setTimeout(reveal, STEP_REVEAL_FALLBACK_MS);
+    }
+
+    private placeMobilePopover(rect: TourRect, viewport: Window): PopoverLayout {
+        const below = viewport.innerHeight - rect.top - rect.height - POPOVER_GAP_PX - VIEWPORT_GUTTER_PX;
+        const above = rect.top - POPOVER_GAP_PX - VIEWPORT_GUTTER_PX;
+        const available = Math.max(below, above);
+        const canAvoidTarget = available >= POPOVER_ESTIMATED_HEIGHT_PX;
+        const maxHeight = canAvoidTarget ? available : viewport.innerHeight - VIEWPORT_GUTTER_PX * 2;
+        const height = Math.min(this.popoverSize().height, maxHeight);
+        const top =
+            canAvoidTarget && above > below ? rect.top - POPOVER_GAP_PX - height : viewport.innerHeight - height - VIEWPORT_GUTTER_PX;
+
+        return {
+            top: Math.max(top, VIEWPORT_GUTTER_PX),
+            left: VIEWPORT_GUTTER_PX,
+            width: viewport.innerWidth - VIEWPORT_GUTTER_PX * 2,
+            maxHeight,
+        };
     }
 
     private placePopover(rect: TourRect, preferredPlacement: FdTourPlacement, viewport: Window): PopoverLayout {

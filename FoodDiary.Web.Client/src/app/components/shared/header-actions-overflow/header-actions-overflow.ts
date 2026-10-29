@@ -11,6 +11,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourTargetRegistry } from 'fd-tour';
 import {
     FdUiButtonComponent,
     FdUiHintDirective,
@@ -28,6 +29,7 @@ type HeaderOverflowAction = {
     readonly disabledReason: string | null;
     readonly target: HTMLElement;
     readonly primary: boolean;
+    readonly tourId: string | null;
 };
 
 const ACTION_SELECTOR = 'button, a[href], [role="button"]';
@@ -54,7 +56,11 @@ const ACTION_SELECTOR = 'button, a[href], [role="button"]';
 export class HeaderActionsOverflowComponent {
     private readonly actionsContainer = viewChild.required<ElementRef<HTMLElement>>('actionsContainer');
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourTargets = inject(FdTourTargetRegistry);
     private readonly overflowTrigger = viewChild<ElementRef<HTMLElement>, ElementRef<HTMLElement>>('overflowTrigger', { read: ElementRef });
+    private readonly menuTrigger = viewChild<FdUiMenuTriggerDirective, FdUiMenuTriggerDirective>('overflowTrigger', {
+        read: FdUiMenuTriggerDirective,
+    });
 
     public readonly gap = input<'page-header' | 'sm'>('page-header');
 
@@ -64,6 +70,25 @@ export class HeaderActionsOverflowComponent {
     protected readonly menuActions = computed(() => this.actions().filter(action => action !== this.primaryAction()));
 
     public constructor() {
+        this.destroyRef.onDestroy(
+            this.tourTargets.register({
+                canReveal: selector => this.canRevealTourTarget(selector),
+                reveal: () => {
+                    const origin = this.overflowTrigger()?.nativeElement;
+                    if (typeof origin?.scrollIntoView === 'function') {
+                        origin.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+                    }
+                    const trigger = this.menuTrigger();
+                    const wasOpen = trigger?.isOpen() === true;
+                    trigger?.open('none');
+                    return (): void => {
+                        if (!wasOpen) {
+                            trigger?.close(false);
+                        }
+                    };
+                },
+            }),
+        );
         afterNextRender(() => {
             const container = this.actionsContainer().nativeElement;
             const observer = new MutationObserver(() => {
@@ -77,6 +102,7 @@ export class HeaderActionsOverflowComponent {
                     'data-fd-overflow-primary',
                     'data-fd-overflow-label',
                     'data-fd-overflow-icon',
+                    'data-tour-id',
                     'aria-disabled',
                     'aria-label',
                     'class',
@@ -95,13 +121,17 @@ export class HeaderActionsOverflowComponent {
         });
     }
 
-    protected activateAction(action: HeaderOverflowAction, fromMenu = false): void {
+    protected activateAction(action: HeaderOverflowAction, menuEvent?: Event): void {
         if (action.disabled) {
             return;
         }
 
-        if (fromMenu) {
+        if (menuEvent !== undefined) {
+            // This container closes the menu before dispatching the original action.
+            // Prevent the old item from closing a new menu opened by that action.
+            menuEvent.preventDefault();
             this.overflowTrigger()?.nativeElement.querySelector<HTMLButtonElement>('button')?.focus();
+            this.menuTrigger()?.close(false);
         }
         action.target.click();
     }
@@ -126,7 +156,24 @@ export class HeaderActionsOverflowComponent {
             disabledReason: this.getDisabledReason(target),
             target,
             primary: target.closest('[data-fd-overflow-primary]') !== null,
+            tourId: target.closest('[data-tour-id]')?.getAttribute('data-tour-id') ?? null,
         };
+    }
+
+    private canRevealTourTarget(selector: string): boolean {
+        const trigger = this.overflowTrigger()?.nativeElement;
+        const style = trigger?.ownerDocument.defaultView?.getComputedStyle(trigger);
+        if (trigger === undefined || style?.display === 'none' || style?.visibility === 'hidden') {
+            return false;
+        }
+        try {
+            return this.menuActions().some(action => {
+                const target = action.target.closest('[data-tour-id]');
+                return target?.matches(selector) === true;
+            });
+        } catch {
+            return false;
+        }
     }
 
     private isVisibleAction(target: HTMLElement): boolean {

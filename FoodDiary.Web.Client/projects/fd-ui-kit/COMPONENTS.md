@@ -932,6 +932,10 @@ Context menu components.
 
 Triggers support native buttons and `fd-ui-button`. Escape and item selection restore focus to the trigger's native button. Tab closes the menu without restoring focus. Arrow keys, Home, and End focus enabled menu items and skip disabled items.
 
+`FdUiMenuTriggerDirective` exposes `isOpen()`, `open('first' | 'last' | 'none')` and `close(restoreFocus = true)` for container orchestration. `open('none')` reveals a menu without moving focus, allowing a guided tour to retain its own focus navigation. Use `close(false)` when the caller owns focus restoration.
+
+`fdUiMenuAlign="end"` anchors the menu's trailing edge to its trigger, keeping right-aligned header menus inside narrow viewports as their translated content renders. The default is `start`.
+
 #### `fd-ui-loader`
 
 Loading indicator.

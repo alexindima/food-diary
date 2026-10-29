@@ -207,18 +207,19 @@
                     (configureGoal)="openGoalDialog()"
                     (viewGoalHistory)="openGoalHistoryDialog()"
                 />
-                @defer (on viewport) {
-                    <fd-waist-history-entries-card
-                        data-tour-id="waist-history-entries"
-                        [isLoading]="isLoading()"
-                        [entries]="entriesDescending()"
-                        (editEntry)="startEdit($event)"
-                        (removeEntry)="deleteEntry($event)"
-                        (showAllEntries)="openEntriesDialog()"
-                    />
-                } @placeholder {
-                    <div class="waist-history-page__placeholder" aria-hidden="true"></div>
-                }
+                <div data-tour-id="waist-history-entries">
+                    @defer (on viewport) {
+                        <fd-waist-history-entries-card
+                            [isLoading]="isLoading()"
+                            [entries]="entriesDescending()"
+                            (editEntry)="startEdit($event)"
+                            (removeEntry)="deleteEntry($event)"
+                            (showAllEntries)="openEntriesDialog()"
+                        />
+                    } @placeholder {
+                        <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+                    }
+                </div>
             </div>
         </div>
     </fd-page-body>

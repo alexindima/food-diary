@@ -6,6 +6,13 @@
     position: fixed;
     inset: 0;
     z-index: var(--fd-z-index-floating-panel);
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
 }
 
 .fd-tour__backdrop {
@@ -35,6 +42,8 @@
 .fd-tour__popover {
     position: fixed;
     width: min(360px, calc(100vw - var(--fd-space-lg) * 2));
+    max-height: calc(100dvh - var(--fd-space-lg) * 2);
+    overflow-y: auto;
     padding: var(--fd-space-lg);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-panel);

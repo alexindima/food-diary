@@ -23,6 +23,7 @@ import { WaistHistoryEntryDialogComponent } from '../../dialogs/waist-history-en
 import { WaistHistoryGoalDialogComponent } from '../../dialogs/waist-history-goal-dialog/waist-history-goal-dialog';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WaistHistoryPageComponent } from './waist-history-page';
+import { WAIST_HISTORY_TOUR } from './waist-history-tour';
 
 const FIXTURE_YEAR = 2026;
 const FIXTURE_JUNE_INDEX = 5;
@@ -38,7 +39,7 @@ const ENTRY = {
     date: calendarDate('2026-06-20'),
     circumferenceCm: 80,
 };
-async function setupAsync(): Promise<{
+async function setupAsync(renderEntries = true): Promise<{
     fixture: ComponentFixture<WaistHistoryPageComponent>;
     component: WaistHistoryPageComponent;
     facade: WaistHistoryFacade;
@@ -89,8 +90,10 @@ async function setupAsync(): Promise<{
     await TestBed.compileComponents();
     const fixture = TestBed.createComponent(WaistHistoryPageComponent);
     fixture.detectChanges();
-    for (const block of await fixture.getDeferBlocks()) {
-        await block.render(DeferBlockState.Complete);
+    if (renderEntries) {
+        for (const block of await fixture.getDeferBlocks()) {
+            await block.render(DeferBlockState.Complete);
+        }
     }
     fixture.detectChanges();
     return {
@@ -172,6 +175,13 @@ describe('Waist history page retry actions', () => {
 });
 
 describe('Waist history page composition', () => {
+    it('keeps the entry tour target on the page before opening the dialog', () => {
+        const step = WAIST_HISTORY_TOUR.steps.find(candidate => candidate.id === 'entry-form');
+        const root = context.fixture.nativeElement as HTMLElement;
+        expect(step).toBeDefined();
+        expect(root.querySelector(`[data-tour-id="${step?.target}"]`)).not.toBeNull();
+    });
+
     it('renders metric data with both lower cards', () => {
         const { fixture, component } = context;
         const root = fixture.nativeElement as HTMLElement;
@@ -325,4 +335,20 @@ describe('History page periods and KPI states', () => {
             expect(component['waistToGoal']()).toBe(FIXTURE_GOAL_DISTANCE);
         },
     );
+});
+
+describe('Waist history deferred tour', () => {
+    it('keeps the history tour target present while entries are deferred', async () => {
+        TestBed.resetTestingModule();
+        const { fixture } = await setupAsync(false);
+        const [block] = await fixture.getDeferBlocks();
+        const root = fixture.nativeElement as HTMLElement;
+        const target = root.querySelector('[data-tour-id="waist-history-entries"]');
+        expect(target).not.toBeNull();
+        expect(target?.querySelector('fd-waist-history-entries-card')).toBeNull();
+        await block.render(DeferBlockState.Complete);
+        fixture.detectChanges();
+        expect(root.querySelector('[data-tour-id="waist-history-entries"]')).toBe(target);
+        expect(target?.querySelector('fd-waist-history-entries-card')).not.toBeNull();
+    });
 });
