@@ -1278,8 +1278,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "11bd9fd9a6edcc4d6a21a4c5656887f8bf41c267a6bae0bfd12e073fae262923",
-          "reviewReason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts."
+          "sha256": "d37c29bf19fb7b32dc63bca476561372c455d94715d9151b5b010039a1f3e9a4",
+          "reviewReason": "Reviewed workflow-runtime-impact against the refreshed runtime-topology.json: only its source freshness fingerprint changed for the existing WebPushNotificationSender. No new backend host, provider, job, registration, timeout, retry, outbox or network policy was introduced. Client read receipts use the existing authorized idempotent PUT with a bounded timeout and foreground retry, and cleanup stops timers with app destruction."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1292,10 +1292,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Recipe import uses the same provider endpoint, model selection, client registration, operation deadline, response size bounds and quota transactions. Only GPT-5 Mini reasoning effort and unfinished-envelope rejection changed; the runtime-topology delta is its source freshness fingerprint, with unchanged service/worker/client counts.",
+      "reason": "Reviewed workflow-runtime-impact against the refreshed runtime-topology.json: only its source freshness fingerprint changed for the existing WebPushNotificationSender. No new backend host, provider, job, registration, timeout, retry, outbox or network policy was introduced. Client read receipts use the existing authorized idempotent PUT with a bounded timeout and foreground retry, and cleanup stops timers with app destruction.",
       "baseRef": "HEAD",
-      "gitHead": "caec3962e31f7f3726fc697750512ba276ade825",
-      "reviewedAtUtc": "2026-10-28T17:36:54.7986533Z"
+      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
+      "reviewedAtUtc": "2026-10-29T15:09:16.2036709Z"
     },
     {
       "pageId": "workflow-security-review",

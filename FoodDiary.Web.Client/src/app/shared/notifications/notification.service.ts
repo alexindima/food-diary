@@ -36,6 +36,7 @@ export type {
 
 type FetchUnreadCountOptions = {
     force?: boolean;
+    supersedePending?: boolean;
 };
 
 type NotificationState = {
@@ -66,6 +67,8 @@ export class NotificationService {
     public readonly notificationsChangedVersion = signal(0);
     private readonly unreadCountLoaded = signal(false);
     private unreadCountRequest$: Observable<{ count: number }> | null = null;
+    private unreadCountRequestVersion = 0;
+    private notificationsReloadRequested = false;
     private sessionOwner = this.readSessionOwner();
     private sessionVersion = 0;
 
@@ -89,10 +92,14 @@ export class NotificationService {
             return;
         }
 
-        if (this.unreadCountRequest$ !== null || (this.unreadCountLoaded() && options.force !== true)) {
+        if (
+            (this.unreadCountRequest$ !== null && options.supersedePending !== true) ||
+            (this.unreadCountLoaded() && options.force !== true)
+        ) {
             return;
         }
 
+        const requestVersion = ++this.unreadCountRequestVersion;
         this.unreadCountRequest$ = this.sdk.client
             .getNotificationsUnreadCount(
                 { version: this.sdk.version },
@@ -103,7 +110,7 @@ export class NotificationService {
             .pipe(
                 map(value => requireSdkFields(value, ['count'])),
                 finalize(() => {
-                    if (this.isCurrentSession(session)) {
+                    if (this.isCurrentSession(session) && requestVersion === this.unreadCountRequestVersion) {
                         this.unreadCountRequest$ = null;
                     }
                 }),
@@ -112,7 +119,7 @@ export class NotificationService {
 
         this.unreadCountRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: response => {
-                if (this.isCurrentSession(session)) {
+                if (this.isCurrentSession(session) && requestVersion === this.unreadCountRequestVersion) {
                     this.unreadCount.set(response.count);
                     this.unreadCountLoaded.set(true);
                 }
@@ -142,7 +149,14 @@ export class NotificationService {
         this.loadNotifications();
     }
 
-    public refreshNotifications(): void {
+    public refreshNotifications(options: { supersedePending?: boolean } = {}): void {
+        this.synchronizeSession();
+        if (this.notificationsLoading()) {
+            if (options.supersedePending === true) {
+                this.notificationsReloadRequested = true;
+            }
+            return;
+        }
         this.loadNotifications();
     }
 
@@ -240,13 +254,13 @@ export class NotificationService {
         this.unreadCountLoaded.set(true);
     }
 
-    public notifyNotificationsChanged(): void {
+    public notifyNotificationsChanged(options: { supersedePending?: boolean } = {}): void {
         this.synchronizeSession();
         if (this.sessionOwner === null) {
             return;
         }
         this.notificationsChangedVersion.update(version => version + 1);
-        this.refreshNotifications();
+        this.refreshNotifications(options);
     }
 
     private loadNotifications(): void {
@@ -264,13 +278,17 @@ export class NotificationService {
                 finalize(() => {
                     if (this.isCurrentSession(session)) {
                         this.notificationsLoading.set(false);
+                        if (this.notificationsReloadRequested) {
+                            this.notificationsReloadRequested = false;
+                            this.loadNotifications();
+                        }
                     }
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
                 next: notifications => {
-                    if (this.isCurrentSession(session)) {
+                    if (this.isCurrentSession(session) && !this.notificationsReloadRequested) {
                         this.notifications.set(notifications);
                         this.notificationsLoaded.set(true);
                     }
@@ -306,6 +324,7 @@ export class NotificationService {
         this.notificationsLoading.set(false);
         this.notificationsLoaded.set(false);
         this.notificationsRequested.set(false);
+        this.notificationsReloadRequested = false;
         this.notificationsChangedVersion.set(0);
     }
 }

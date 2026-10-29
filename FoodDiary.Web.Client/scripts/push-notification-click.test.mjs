@@ -89,6 +89,10 @@ for (const [target, expected] of [
     ['/profile?intent=set-password', 'https://fooddiary.example/profile?intent=set-password'],
     ['https://fooddiary.example/recommendations?recommendationId=123', 'https://fooddiary.example/recommendations?recommendationId=123'],
     ['/', 'https://fooddiary.example/'],
+    [
+        '/fasting?intent=check-in&notificationId=11111111-1111-1111-1111-111111111111&notificationUserId=user-a',
+        'https://fooddiary.example/fasting?intent=check-in&notificationId=11111111-1111-1111-1111-111111111111&notificationUserId=user-a',
+    ],
 ]) {
     test(`Angular worker opens ${target} when the PWA has no open windows`, async () => {
         assert.deepEqual(await clickNotification(navigationData(target)), [['open', expected]]);
@@ -117,4 +121,14 @@ test('Angular worker navigates and focuses the most recent window without openin
 
 test('a legacy payload without a worker click operation cannot open a closed PWA', async () => {
     assert.deepEqual(await clickNotification({ targetUrl: '/fasting?intent=eating-window' }), []);
+});
+
+test('versioned push artwork exists and uses the current launcher mark and a transparent notification badge', () => {
+    const icon = readFileSync(new URL('../assets/pwa/notification-icon-v20261029-192x192.png', import.meta.url));
+    const badge = readFileSync(new URL('../assets/pwa/notification-badge-v20261029-96x96.png', import.meta.url));
+    assert.deepEqual(icon, readFileSync(new URL('../assets/pwa/app-icon-192x192.png', import.meta.url)));
+    assert.deepEqual(badge, readFileSync(new URL('../assets/pwa/icon-96x96.png', import.meta.url)));
+    assert.equal(badge.readUInt32BE(16), 96);
+    assert.equal(badge.readUInt32BE(20), 96);
+    assert.equal(badge[25], 6, 'The notification badge must preserve its RGBA transparency.');
 });

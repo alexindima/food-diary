@@ -271,11 +271,16 @@ public sealed class WebPushNotificationSenderTests {
         Assert.True(data.TryGetProperty("onActionClick", out JsonElement clickActions),
             "Web push must define a default click operation so a closed PWA can open.");
         JsonElement defaultAction = clickActions.GetProperty("default");
+        string clickUrl = $"{expectedTargetUrl}{(expectedTargetUrl.Contains('?', StringComparison.Ordinal) ? "&" : "?")}notificationId={notification.Id.Value:D}&notificationUserId={user.Id.Value:D}";
         Assert.Multiple(
             () => Assert.Equal("navigateLastFocusedOrOpen", defaultAction.GetProperty("operation").GetString()),
-            () => Assert.Equal(expectedTargetUrl, defaultAction.GetProperty("url").GetString()),
-            () => Assert.Equal(expectedTargetUrl, data.GetProperty("targetUrl").GetString()),
-            () => Assert.Equal(expectedTargetUrl, data.GetProperty("url").GetString()),
+            () => Assert.Equal(clickUrl, defaultAction.GetProperty("url").GetString()),
+            () => Assert.Equal(clickUrl, data.GetProperty("targetUrl").GetString()),
+            () => Assert.Equal(clickUrl, data.GetProperty("url").GetString()),
+            () => Assert.Equal(notification.Id.Value.ToString("D"), data.GetProperty("notificationId").GetString()),
+            () => Assert.Equal(user.Id.Value.ToString("D"), data.GetProperty("userId").GetString()),
+            () => Assert.Equal("/assets/pwa/notification-icon-v20261029-192x192.png", document.RootElement.GetProperty("notification").GetProperty("icon").GetString()),
+            () => Assert.Equal("/assets/pwa/notification-badge-v20261029-96x96.png", document.RootElement.GetProperty("notification").GetProperty("badge").GetString()),
             () => Assert.Equal(notificationType, data.GetProperty("type").GetString()),
             () => Assert.Equal(referenceId, data.GetProperty("referenceId").GetString()));
     }

@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { DefaultUrlSerializer, NavigationEnd, Router, type UrlTree } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import { firstValueFrom, type Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -20,12 +20,15 @@ let service: PushNotificationService;
 let sessionEvents: SessionEventsService;
 let subscription$: Subject<PushSubscription | null>;
 let subscriptionChanges$: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
-let notificationClicks$: Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>;
+type NotificationClick = {
+    notification: { tag?: string; data?: { targetUrl?: string; url?: string; notificationId?: string; userId?: string } };
+};
+let notificationClicks$: Subject<NotificationClick>;
 let swPush: {
     isEnabled: boolean;
     subscription: Observable<PushSubscription | null>;
     pushSubscriptionChanges: Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>;
-    notificationClicks: Subject<{ notification: { data?: { url?: string } } }>;
+    notificationClicks: Subject<NotificationClick>;
     requestSubscription: ReturnType<typeof vi.fn<() => Promise<PushSubscription>>>;
 };
 let authService: {
@@ -41,10 +44,18 @@ let notificationService: {
     removeWebPushSubscription: ReturnType<typeof vi.fn>;
     fetchUnreadCount: ReturnType<typeof vi.fn>;
     notifyNotificationsChanged: ReturnType<typeof vi.fn>;
+    getNotificationPreferences: ReturnType<typeof vi.fn>;
+    markAsRead: ReturnType<typeof vi.fn>;
 };
-let router: { navigateByUrl: ReturnType<typeof vi.fn> };
+let router: {
+    navigateByUrl: ReturnType<typeof vi.fn>;
+    events: Subject<NavigationEnd>;
+    url: string;
+    parseUrl: (url: string) => UrlTree;
+};
 const pushOwnerStorageKey = 'webPushSubscriptionOwner';
 const cleanupTimeoutMs = 5000;
+const subscriptionSettleMs = 20;
 
 beforeEach(() => {
     localStorage.clear();
@@ -53,7 +64,7 @@ beforeEach(() => {
     // Replay only a discovered value; initial discovery can still be delayed.
     subscription$ = new ReplaySubject<PushSubscription | null>(1);
     subscriptionChanges$ = new Subject<{ oldSubscription: PushSubscription | null; newSubscription: PushSubscription | null }>();
-    notificationClicks$ = new Subject<{ notification: { data?: { targetUrl?: string; url?: string } } }>();
+    notificationClicks$ = new Subject<NotificationClick>();
 
     swPush = {
         isEnabled: true,
@@ -77,9 +88,14 @@ beforeEach(() => {
         removeWebPushSubscription: vi.fn(() => of(void 0)),
         fetchUnreadCount: vi.fn(),
         notifyNotificationsChanged: vi.fn(),
+        getNotificationPreferences: vi.fn(() => of({ pushNotificationsEnabled: true })),
+        markAsRead: vi.fn(() => of(void 0)),
     };
     router = {
         navigateByUrl: vi.fn().mockResolvedValue(true),
+        events: new Subject<NavigationEnd>(),
+        url: '/',
+        parseUrl: (url): UrlTree => new DefaultUrlSerializer().parse(url),
     };
 
     TestBed.configureTestingModule({
@@ -159,6 +175,9 @@ function ownerConflict(): { status: number; error: { error: string; message: str
 }
 
 function publishBobAfterGuestSubscription(subscription: PushSubscription | null): void {
+    // Bob has previously opted in on this device; Alice's endpoint must still be revoked first.
+    localStorage.setItem('webPushDeviceOptIn:user-b', 'true');
+    vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
     authService.isAuthenticated.mockReturnValue(false);
     authService.getUserId.mockReturnValue(null);
     authService.getSessionKey.mockReturnValue(null);
@@ -1185,11 +1204,129 @@ describe('PushNotificationService revoked permission session ownership', () => {
 });
 
 describe('PushNotificationService notification clicks', () => {
+    it('acknowledges the clicked notification before refreshing its unread count', async () => {
+        const notificationId = '11111111-1111-1111-1111-111111111111';
+        notificationClicks$.next({ notification: { data: { targetUrl: '/fasting', notificationId, userId: 'user-a' } } });
+
+        await vi.waitFor(() => {
+            expect(notificationService.markAsRead).toHaveBeenCalledWith(notificationId);
+        });
+        await vi.waitFor(() => {
+            expect(notificationService.fetchUnreadCount).toHaveBeenCalled();
+        });
+    });
+
+    it('acknowledges a notification carried by closed-PWA navigation', async () => {
+        const notificationId = '11111111-1111-1111-1111-111111111111';
+        const url = `/fasting?intent=check-in&notificationId=${notificationId}&notificationUserId=user-a`;
+        router.events.next(new NavigationEnd(1, url, url));
+
+        await vi.waitFor(() => {
+            expect(notificationService.markAsRead).toHaveBeenCalledWith(notificationId);
+        });
+    });
+
     it('should react to notification click by navigating and refreshing notifications', () => {
         notificationClicks$.next({ notification: { data: { targetUrl: '/fasting?intent=check-in' } } });
 
         expect(router.navigateByUrl).toHaveBeenCalledWith('/fasting?intent=check-in');
         expect(notificationService.fetchUnreadCount).toHaveBeenCalledTimes(1);
         expect(notificationService.notifyNotificationsChanged).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('PushNotificationService same-account return', () => {
+    it('does not prompt when permission changes while automatic restoration is waiting for configuration', async () => {
+        const permission = vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        localStorage.setItem('webPushDeviceOptIn:user-a', 'true');
+        const configuration = new Subject<{ enabled: boolean; publicKey: string }>();
+        notificationService.getWebPushConfiguration.mockReturnValue(configuration);
+        swPush.subscription = of(null);
+        window.dispatchEvent(new Event('focus'));
+        await vi.waitFor(() => {
+            expect(notificationService.getWebPushConfiguration).toHaveBeenCalled();
+        });
+        permission.mockReturnValue('default');
+        configuration.next({ enabled: true, publicKey: 'public-key' });
+        await vi.waitFor(() => {
+            expect(service.isBusy()).toBe(false);
+        });
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it.each(['default', 'denied', 'unsupported'] as const)(
+        'does not request a new subscription when browser permission is %s',
+        async permission => {
+            vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue(permission);
+            localStorage.setItem('webPushDeviceOptIn:user-a', 'true');
+            swPush.subscription = of(null);
+            window.dispatchEvent(new Event('focus'));
+            await new Promise<void>(resolve => setTimeout(resolve, subscriptionSettleMs));
+            expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        },
+    );
+
+    it('does not inherit a different account device opt-in', async () => {
+        vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        localStorage.setItem('webPushDeviceOptIn:user-b', 'true');
+        swPush.subscription = of(null);
+        window.dispatchEvent(new Event('focus'));
+        await new Promise<void>(resolve => setTimeout(resolve, subscriptionSettleMs));
+        expect(notificationService.getNotificationPreferences).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+});
+
+describe('PushNotificationService remembered device choices', () => {
+    it('keeps an explicitly disconnected device disabled after another sign-in', async () => {
+        vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/disabled');
+        confirmSubscriptionOwner(subscription, 'user-a');
+        swPush.subscription = of(subscription);
+        await service.ensureSubscriptionAsync();
+        await expect(service.removeSubscriptionAsync(subscription.endpoint)).resolves.toBe(true);
+        sessionEvents.notifyAuthenticated();
+        window.dispatchEvent(new Event('focus'));
+        await new Promise<void>(resolve => setTimeout(resolve, subscriptionSettleMs));
+        expect(localStorage.getItem('webPushDeviceOptIn:user-a')).toBe('false');
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it('does not restore a device when account-wide push is disabled', async () => {
+        vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        localStorage.setItem('webPushDeviceOptIn:user-a', 'true');
+        notificationService.getNotificationPreferences.mockReturnValue(of({ pushNotificationsEnabled: false }));
+        swPush.subscription = of(null);
+        window.dispatchEvent(new Event('focus'));
+        await vi.waitFor(() => {
+            expect(notificationService.getNotificationPreferences).toHaveBeenCalled();
+        });
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+    });
+
+    it('restores a previously enabled device after logout and same-account sign-in without another permission prompt', async () => {
+        vi.spyOn(TestBed.inject(BrowserNotificationCapabilityService), 'getPermission').mockReturnValue('granted');
+        const previous = createPushSubscription('https://push.example.com/subscriptions/previous');
+        const replacement = createPushSubscription('https://push.example.com/subscriptions/returned');
+        confirmSubscriptionOwner(previous, 'user-a');
+        swPush.subscription = of(previous);
+        subscription$.next(previous);
+        await service.ensureSubscriptionAsync();
+
+        await sessionEvents.prepareSessionEnd();
+        authService.isAuthenticated.mockReturnValue(false);
+        sessionEvents.notifySessionEnded();
+        expect(previous.unsubscribeMock).toHaveBeenCalledOnce();
+        resolveRequestedSubscription(replacement);
+        authService.isAuthenticated.mockReturnValue(true);
+        authService.getSessionKey.mockReturnValue('new-token-a');
+        sessionEvents.notifyAuthenticated();
+        window.dispatchEvent(new Event('focus'));
+
+        await vi.waitFor(() => {
+            expect(service.isSubscribed()).toBe(true);
+        });
+        expect(service.currentSubscriptionEndpoint()).toBe(replacement.endpoint);
+        expect(notificationService.getNotificationPreferences).toHaveBeenCalled();
     });
 });
