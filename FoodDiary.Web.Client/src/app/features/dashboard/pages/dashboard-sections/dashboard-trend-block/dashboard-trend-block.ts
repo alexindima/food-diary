@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
 import { WeightTrendCardComponent } from '../../../components/weight-trend-card/weight-trend-card';
@@ -12,7 +11,6 @@ import type { DashboardBlockState, DashboardWeightTrendPoint } from '../../dashb
     selector: 'fd-dashboard-trend-block',
     imports: [
         TranslatePipe,
-        FdUiLoaderComponent,
         DashboardBlockContentDirective,
         DashboardBlockHostDirective,
         DashboardCardShellComponent,

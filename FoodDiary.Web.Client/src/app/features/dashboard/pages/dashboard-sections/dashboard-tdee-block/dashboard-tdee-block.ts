@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FdUiStopActivationDirective } from 'fd-ui-kit';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
 import { TdeeInsightCardComponent } from '../../../components/tdee-insight-card/tdee-insight-card';
@@ -11,7 +10,6 @@ import type { DashboardBlockState, DashboardTdeeInsight } from '../../dashboard-
     selector: 'fd-dashboard-tdee-block',
     imports: [
         FdUiStopActivationDirective,
-        FdUiLoaderComponent,
         DashboardBlockContentDirective,
         DashboardBlockHostDirective,
         DashboardCardShellComponent,

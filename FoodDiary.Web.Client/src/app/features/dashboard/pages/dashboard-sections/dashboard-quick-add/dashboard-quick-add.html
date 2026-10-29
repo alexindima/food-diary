@@ -3,15 +3,11 @@
     data-tour-id="dashboard-quick-add"
     [attr.aria-label]="'DASHBOARD.QUICK_ADD_ARIA' | translate"
 >
-    @defer (on idle) {
-        <fd-ai-input-action-bar
-            mode="create"
-            [isProcessing]="isAiMealSaving()"
-            [clearToken]="aiMealClearToken()"
-            (mealCreateRequested)="mealCreateRequested.emit($event)"
-            (manualAction)="manualAdd.emit()"
-        />
-    } @placeholder {
-        <div class="dashboard__quick-add-placeholder" aria-hidden="true"></div>
-    }
+    <fd-ai-input-action-bar
+        mode="create"
+        [isProcessing]="isAiMealSaving()"
+        [clearToken]="aiMealClearToken()"
+        (mealCreateRequested)="mealCreateRequested.emit($event)"
+        (manualAction)="manualAdd.emit()"
+    />
 </section>

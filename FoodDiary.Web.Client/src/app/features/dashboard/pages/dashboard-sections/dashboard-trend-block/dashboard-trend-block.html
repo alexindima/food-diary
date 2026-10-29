@@ -1,32 +1,26 @@
 @if (shouldRender()) {
     <div fdDashboardBlockHost class="dashboard__block dashboard__card--clickable" [state]="state()" (blockActivated)="activate()">
-        @defer (on viewport) {
-            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-                <fd-weight-trend-card
-                    [class]="cardClass()"
-                    [title]="titleKey()"
-                    [unitKey]="unitKey()"
-                    [measurementKind]="measurementKind()"
-                    [emptyStateKey]="emptyStateKey()"
-                    [actionLabelKey]="actionLabelKey()"
-                    [actionRoute]="actionRoute()"
-                    [firstMeasurementKey]="firstMeasurementKey()"
-                    [twoMeasurementsKey]="twoMeasurementsKey()"
-                    [stableTrendKey]="stableTrendKey()"
-                    [iconName]="iconName()"
-                    [accentColor]="accentColor()"
-                    [targetValue]="targetValue()"
-                    [currentWeight]="current()"
-                    [change]="change()"
-                    [points]="points()"
-                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_30_DAYS' | translate"
-                    [isLoading]="isLoading()"
-                />
-            </fd-dashboard-card-shell>
-        } @placeholder {
-            <fd-ui-loader />
-        } @loading (minimum 300ms) {
-            <fd-ui-loader />
-        }
+        <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+            <fd-weight-trend-card
+                [class]="cardClass()"
+                [title]="titleKey()"
+                [unitKey]="unitKey()"
+                [measurementKind]="measurementKind()"
+                [emptyStateKey]="emptyStateKey()"
+                [actionLabelKey]="actionLabelKey()"
+                [actionRoute]="actionRoute()"
+                [firstMeasurementKey]="firstMeasurementKey()"
+                [twoMeasurementsKey]="twoMeasurementsKey()"
+                [stableTrendKey]="stableTrendKey()"
+                [iconName]="iconName()"
+                [accentColor]="accentColor()"
+                [targetValue]="targetValue()"
+                [currentWeight]="current()"
+                [change]="change()"
+                [points]="points()"
+                [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_30_DAYS' | translate"
+                [isLoading]="isLoading()"
+            />
+        </fd-dashboard-card-shell>
     </div>
 }

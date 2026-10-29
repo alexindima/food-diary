@@ -9,21 +9,15 @@
                 [attr.aria-label]="state().ariaLabel"
             ></button>
         }
-        @defer (on viewport) {
-            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-                <fd-tdee-insight-card
-                    class="dashboard__card dashboard__card--tdee"
-                    [insight]="insight()"
-                    [isHistorical]="isHistorical()"
-                    [isLoading]="isLoading()"
-                    [isApplyingGoal]="isApplyingGoal()"
-                    (applyGoal)="applyGoal.emit($event)"
-                />
-            </fd-dashboard-card-shell>
-        } @placeholder {
-            <fd-ui-loader />
-        } @loading (minimum 300ms) {
-            <fd-ui-loader />
-        }
+        <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+            <fd-tdee-insight-card
+                class="dashboard__card dashboard__card--tdee"
+                [insight]="insight()"
+                [isHistorical]="isHistorical()"
+                [isLoading]="isLoading()"
+                [isApplyingGoal]="isApplyingGoal()"
+                (applyGoal)="applyGoal.emit($event)"
+            />
+        </fd-dashboard-card-shell>
     </div>
 }

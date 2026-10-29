@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { CycleSummaryCardComponent } from '../../../components/cycle-summary-card/cycle-summary-card';
 import { DashboardCardShellComponent } from '../../../components/dashboard-card-shell/dashboard-card-shell';
@@ -8,13 +7,7 @@ import type { DashboardBlockState, DashboardCycleCardState } from '../../dashboa
 
 @Component({
     selector: 'fd-dashboard-cycle-block',
-    imports: [
-        FdUiLoaderComponent,
-        DashboardBlockContentDirective,
-        DashboardBlockHostDirective,
-        DashboardCardShellComponent,
-        CycleSummaryCardComponent,
-    ],
+    imports: [DashboardBlockContentDirective, DashboardBlockHostDirective, DashboardCardShellComponent, CycleSummaryCardComponent],
     templateUrl: './dashboard-cycle-block.html',
     styleUrl: '../../dashboard.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

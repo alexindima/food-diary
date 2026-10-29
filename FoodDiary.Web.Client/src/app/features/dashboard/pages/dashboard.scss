@@ -218,10 +218,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         color: $color-text-secondary;
     }
 
-    &__quick-add-placeholder {
-        min-height: calc(var(--fd-size-control-xl) + var(--fd-space-card-profile-gap) + var(--fd-size-control-sm));
-    }
-
     .meal-card__meta {
         font-size: var(--fd-text-caption-size);
         line-height: var(--fd-text-caption-line-height);
