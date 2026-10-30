@@ -59,6 +59,9 @@ jobs:
       - name: Test atomic frontend publication and retention
         run: python3 -B -m unittest discover -s scripts/deploy -p 'test_publish_frontend.py'
 
+      - name: Test bounded parallel server deployment and failure barriers
+        run: python3 -B -m unittest discover -s scripts/deploy -p 'test_parallel_tasks.py'
+
       - name: Test protected runtime diagnostics and Nginx rotation
         env:
           FOODDIARY_RUNTIME_DOCKER_TESTS: "1"

@@ -386,6 +386,7 @@ jobs:
           $SCP_CMD nginx/sites-enabled/techradar.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/techradar.fooddiary.club
           $SCP_CMD scripts/bootstrap-tech-radar-tls.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/bootstrap-tech-radar-tls.sh
           $SCP_CMD scripts/deploy/publish_frontend.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/publish_frontend.py
+          $SCP_CMD scripts/deploy/parallel_tasks.sh root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/parallel_tasks.sh
           $SCP_CMD scripts/deploy/configure_forwarded_proxy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/configure_forwarded_proxy.py
           $SCP_CMD scripts/deploy/install_nginx_logrotate.py scripts/deploy/nginx-logrotate.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/scripts/deploy/
           $SCP_CMD scripts/restart-mail-inbox-after-certificate-renewal.sh root@${{ env.SERVER_IP }}:/etc/letsencrypt/renewal-hooks/deploy/restart-fooddiary-mail-inbox.sh
@@ -435,6 +436,77 @@ jobs:
 
           docker compose --profile backend --profile full --profile mail-inbox pull
 
+          bash -n scripts/deploy/parallel_tasks.sh
+          task_logs=$(umask 077; mktemp -d "/tmp/fooddiary-deploy-${DEPLOY_COMMIT_SHA}.XXXXXX")
+          export FOODDIARY_INITIALIZER_LOCK="$task_logs/initializer.lock"
+          export FOODDIARY_MAIN_MIGRATED="$task_logs/main-migrated"
+          auxiliary_pid=""
+          id=""
+          finish_deployment() {
+            status=$?
+            trap - EXIT
+            # Release initializer waiters on both success and failure. Without the
+            # success marker they fail before any auxiliary database mutation.
+            exec 8>&-
+            if [ -n "$auxiliary_pid" ]; then
+              if ! wait "$auxiliary_pid"; then
+                if [ "$status" -eq 0 ]; then status=1; fi
+              fi
+            fi
+            if [ -n "$id" ]; then docker rm "$id" >/dev/null 2>&1 || true; fi
+            if [ "$status" -eq 0 ]; then
+              rm -f -- "$task_logs"/*.log "$FOODDIARY_INITIALIZER_LOCK" "$FOODDIARY_MAIN_MIGRATED"
+              rmdir "$task_logs"
+            else
+              echo "Private deployment task logs retained at: $task_logs" >&2
+            fi
+            exit "$status"
+          }
+          trap finish_deployment EXIT
+          trap 'exit 143' TERM
+          trap 'exit 130' INT
+          trap 'exit 129' HUP
+
+          deploy_initializer() {
+            flock "$FOODDIARY_INITIALIZER_LOCK" bash -e -c \
+              'test -f "$FOODDIARY_MAIN_MIGRATED"; exec "$@"' -- "$@"
+          }
+          deploy_mailrelay() {
+            deploy_initializer docker compose --profile backend run -T --rm mailrelay-db-init update
+            docker compose --profile backend up -d --force-recreate --no-deps mail-relay
+          }
+          deploy_mailinbox() {
+            docker compose --profile mail-inbox up -d mailinbox-postgres
+            deploy_initializer docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
+            docker compose --profile mail-inbox up -d --force-recreate --no-deps mail-inbox
+          }
+          deploy_bugtriage() {
+            deploy_initializer python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}'
+          }
+          deploy_tech_radar() {
+            docker compose --profile full up -d --force-recreate --no-deps tech-radar
+            echo "Waiting for Technology Radar readiness..."
+            for _ in $(seq 1 20); do
+              if curl -fsS "http://127.0.0.1:${TECH_RADAR_PORT:-4210}/" >/dev/null; then
+                return 0
+              fi
+              sleep 2
+            done
+            docker compose ps tech-radar
+            docker compose logs --tail=100 --timestamps tech-radar
+            return 1
+          }
+          export -f deploy_initializer deploy_mailrelay deploy_mailinbox deploy_bugtriage deploy_tech_radar
+
+          # Keep the small host to one initializer, including the primary one.
+          # Background workers must not inherit this lock's descriptor.
+          exec 8>"$FOODDIARY_INITIALIZER_LOCK"
+          flock 8
+          docker compose --profile backend up -d rabbitmq redis
+          bash scripts/deploy/parallel_tasks.sh "$task_logs" 2 \
+            deploy_tech_radar deploy_mailrelay deploy_mailinbox deploy_bugtriage 8>&- &
+          auxiliary_pid=$!
+
           # The Users split migration requires a coordinated release of every primary DB writer.
           backup_dir=/var/backups/fooddiary
           install -d -m 0700 "$backup_dir"
@@ -453,20 +525,11 @@ jobs:
           echo "Verified pre-migration database backup: $backup_file"
 
           docker compose --profile backend run -T --rm db-init update
-          docker compose --profile backend run -T --rm mailrelay-db-init update
-          docker compose --profile mail-inbox up -d mailinbox-postgres
-          docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
-
-          docker compose --profile backend up -d rabbitmq
-          docker compose --profile backend up -d redis
-          docker compose --profile backend up -d --force-recreate --no-deps mail-relay
-          docker compose --profile mail-inbox up -d --force-recreate --no-deps mail-inbox
-          python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.images.outputs.bugtriage }}'
+          (umask 077; : > "$FOODDIARY_MAIN_MIGRATED")
+          exec 8>&-
           docker compose --profile backend up -d --force-recreate --no-deps api
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager
-
-          docker compose --profile full up -d --force-recreate --no-deps tech-radar
 
           echo "Waiting for deployed API readiness..."
           echo "Expected commit SHA: $DEPLOY_COMMIT_SHA"
@@ -492,10 +555,13 @@ jobs:
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
+          # API recovery does not wait for auxiliary services, but publication does.
+          wait "$auxiliary_pid"
+          auxiliary_pid=""
+
           # Publish assets before SSR can return HTML referencing the new image.
           # TemporaryDirectory removes only its own extraction; releases remain.
           id=$(docker create "$CLIENT_IMAGE_REF")
-          trap 'docker rm "$id" >/dev/null 2>&1 || true' EXIT
           python3 - "$id" "$CLIENT_IMAGE_REF" <<'PYTHON_EOF'
           from pathlib import Path
           import subprocess
@@ -532,26 +598,12 @@ jobs:
             exit 1
           fi
 
-          echo "Waiting for Technology Radar readiness..."
-          for _ in $(seq 1 20); do
-            if curl -fsS "http://127.0.0.1:${TECH_RADAR_PORT:-4210}/" >/dev/null; then
-              tech_radar_ready=true
-              break
-            fi
-            sleep 2
-          done
-          if [ "${tech_radar_ready:-false}" != "true" ]; then
-            docker compose ps tech-radar
-            docker compose logs --tail=100 --timestamps tech-radar
-            exit 1
-          fi
-
           mkdir -p /var/www/storybook.fooddiary.club
           rm -rf /var/www/storybook.fooddiary.club/*
           docker cp $id:/usr/share/nginx/html-storybook/. /var/www/storybook.fooddiary.club/
           chmod -R a+rX /var/www/storybook.fooddiary.club
           docker rm "$id"
-          trap - EXIT
+          id=""
 
           # The hardened container drops DAC_OVERRIDE. Keep existing host log
           # files owned by root so nginx can open them after every recreate.

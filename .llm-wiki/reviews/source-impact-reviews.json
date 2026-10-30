@@ -304,8 +304,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
-          "reviewReason": "Reviewed the workflow diff and this page: only the backend dependency audit implementation and its focused Python suite change. The API baseline selection, api-compat command, snapshots and acceptance records are unchanged, so the documented compatibility behavior remains current."
+          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
+          "reviewReason": "Reviewed ci-tests.yml: the only addition is an unconditional isolated deployment-shell unittest step; API snapshots, successful-ancestor baseline selection and compatibility failure handling are unchanged."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -328,10 +328,10 @@
           "reviewReason": "Reviewed the merged nine-line snapshot addition. rememberMe is an optional boolean query parameter defaulting false, with unchanged response schemas and routes. User/admin SDKs were generated; no new breaking-change acceptance was introduced."
         }
       ],
-      "reason": "Reviewed the merged nine-line snapshot addition. rememberMe is an optional boolean query parameter defaulting false, with unchanged response schemas and routes. User/admin SDKs were generated; no new breaking-change acceptance was introduced.",
-      "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:31.4065977Z"
+      "reason": "Reviewed ci-tests.yml: the only addition is an unconditional isolated deployment-shell unittest step; API snapshots, successful-ancestor baseline selection and compatibility failure handling are unchanged.",
+      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "reviewedAtUtc": "2026-10-30T13:33:37.9469316Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -931,14 +931,14 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
-          "reviewReason": "Reviewed the affected CI source and the index-pipeline CI contracts: one Python dependency-audit regression step is added to common checks; common validation, four focused shards, applicable Full audits and the stable Wiki aggregate retain their existing order and requirements. No index generator or Wiki runner changes."
+          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
+          "reviewReason": "Reviewed ci-tests.yml and index-pipeline contract: the new deployment test executes before existing diagnostics in the focused Ubuntu job. Generator ordering, affected selection, resource limits, caches and every Wiki regression gate remain intact."
         }
       ],
-      "reason": "Reviewed the affected CI source and the index-pipeline CI contracts: one Python dependency-audit regression step is added to common checks; common validation, four focused shards, applicable Full audits and the stable Wiki aggregate retain their existing order and requirements. No index generator or Wiki runner changes.",
-      "baseRef": "HEAD",
-      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
-      "reviewedAtUtc": "2026-10-30T08:54:48.7674679Z"
+      "reason": "Reviewed ci-tests.yml and index-pipeline contract: the new deployment test executes before existing diagnostics in the focused Ubuntu job. Generator ordering, affected selection, resource limits, caches and every Wiki regression gate remain intact.",
+      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "reviewedAtUtc": "2026-10-30T13:33:39.3027728Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -947,14 +947,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "b1408874bb8636689aba84f4f2b547dd7921b1a1ec76bfad1ba79c0e3884394e",
-          "reviewReason": "Preserved the master CI instruction outcome and appended the sealed PWA completion through instruction-outcome-observe, rebuilding its chain link with the official command. No instruction adoption or experiment decision changed; the documented source fingerprints and append-only outcome model remain accurate."
+          "sha256": "43566028b59218141e18af2fd1378fca07cf278cf477eb86f856627a418cb3b8",
+          "reviewReason": "Reviewed the task-finish-generated append-only outcome event: it binds this deployment task completion and retrospective fingerprints to the applicable root AGENTS.md hash. The registry verifies successfully; no instruction, experiment, thresholds or learning behavior changes. The existing page accurately describes this new observation."
         }
       ],
-      "reason": "Preserved the master CI instruction outcome and appended the sealed PWA completion through instruction-outcome-observe, rebuilding its chain link with the official command. No instruction adoption or experiment decision changed; the documented source fingerprints and append-only outcome model remain accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:34.9843620Z"
+      "reason": "Reviewed the task-finish-generated append-only outcome event: it binds this deployment task completion and retrospective fingerprints to the applicable root AGENTS.md hash. The registry verifies successfully; no instruction, experiment, thresholds or learning behavior changes. The existing page accurately describes this new observation.",
+      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "gitHead": "d8026ade02071e02201b28f15759882c04826680",
+      "reviewedAtUtc": "2026-10-30T13:44:20.9343601Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1236,8 +1236,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
-          "reviewReason": "Reviewed the workflow diff against the report page: backend-dependency-audit remains an independent job alongside Wiki checks, while its internal implementation becomes a single solution JSON audit. API compatibility, dependency analysis and report publication in the Wiki job, and the aggregate gate, remain unchanged."
+          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
+          "reviewReason": "Reviewed ci-tests.yml and review-report contract: the focused job gains a mandatory deployment test without condition or continue-on-error; report publication, provenance and focused/Full aggregate requirements are unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1255,10 +1255,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed the workflow diff against the report page: backend-dependency-audit remains an independent job alongside Wiki checks, while its internal implementation becomes a single solution JSON audit. API compatibility, dependency analysis and report publication in the Wiki job, and the aggregate gate, remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
-      "reviewedAtUtc": "2026-10-30T08:54:51.5271848Z"
+      "reason": "Reviewed ci-tests.yml and review-report contract: the focused job gains a mandatory deployment test without condition or continue-on-error; report publication, provenance and focused/Full aggregate requirements are unchanged.",
+      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
+      "reviewedAtUtc": "2026-10-30T13:33:40.6631837Z"
     },
     {
       "pageId": "workflow-risk-calibration",

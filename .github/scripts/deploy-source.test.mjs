@@ -118,6 +118,35 @@ test("database readiness runs before server uploads and writer shutdown", () => 
     assert.ok(deployment < workflow.indexOf("stop --timeout 60 api telegram-bot job-manager"));
 });
 
+test("server bounds independent chains and preserves the primary and publication barriers", () => {
+    const remote = workflow.split("<< 'SCRIPT_EOF'\n")[1].split("          SCRIPT_EOF")[0];
+    assert.ok(workflow.indexOf("$SCP_CMD scripts/deploy/parallel_tasks.sh") < workflow.indexOf("bash /tmp/deploy.sh"));
+    assert.match(remote, /bash scripts\/deploy\/parallel_tasks\.sh "\$task_logs" 2/u);
+    assert.match(remote, /deploy_tech_radar deploy_mailrelay deploy_mailinbox deploy_bugtriage 8>&- &/u);
+    assert.match(remote, /trap finish_deployment EXIT/u);
+    assert.equal([...remote.matchAll(/trap - EXIT/gu)].length, 1);
+    assert.match(remote, /flock "\$FOODDIARY_INITIALIZER_LOCK" bash -e -c/u);
+    assert.match(remote, /test -f "\$FOODDIARY_MAIN_MIGRATED"; exec "\$@"/u);
+    const primary = remote.slice(remote.indexOf("backup_dir=/var/backups/fooddiary"));
+    const positions = [
+        "stop --timeout 60 api telegram-bot job-manager", "pg_dump --format=custom", "pg_restore --list",
+        "docker compose --profile backend run -T --rm db-init update", ': > "$FOODDIARY_MAIN_MIGRATED"',
+        "exec 8>&-", "--no-deps api", 'wait "$auxiliary_pid"', 'publish_frontend.py", "publish"',
+        "--no-deps client-ssr", "--no-deps nginx",
+    ].map(value => primary.indexOf(value));
+    assert.ok(positions.every(value => value >= 0));
+    assert.deepEqual(positions, [...positions].sort((left, right) => left - right));
+});
+
+test("parallel deployment behavioral tests are mandatory on the Linux CI runner", async () => {
+    const ci = await readFile(new URL("../workflows/ci-tests.yml", import.meta.url), "utf8");
+    const focused = ci.split("  llm-wiki-focused:\n")[1].split(/^  [\w-]+:/mu)[0];
+    assert.match(focused, /runs-on: ubuntu-24\.04/u);
+    assert.match(focused, /python3 -B -m unittest discover -s scripts\/deploy -p 'test_parallel_tasks\.py'/u);
+    const step = focused.split("- name: Test bounded parallel server deployment and failure barriers")[1].split("- name:")[0];
+    assert.doesNotMatch(step, /continue-on-error|if:/u);
+});
+
 const identity = { sourceSha: "a".repeat(40), runId: "1234", runAttempt: "2" };
 const receipts = () => images.map(({ name }, index) => createReceipt({
     name, digest: `sha256:${(index + 1).toString(16).padStart(64, "0")}`, ...identity,

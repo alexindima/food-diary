@@ -1,5 +1,38 @@
 # Production log rotation and temporary native crash diagnostics
 
+## Deployment task execution
+
+The server deployment retains one global `fooddiary-deploy.lock` through cleanup.
+TechRadar, MailRelay, MailInbox and BugTriage run as named background tasks with
+at most two workers. The primary chain still stops all main-database writers,
+verifies its backup, runs the main migration, then starts the API and other
+primary writers. API readiness does not wait for all auxiliary tasks.
+
+The current two-CPU, 2 GiB host keeps image pull concurrency at two. An exclusive
+initializer lock is held through the primary backup and migration, then shared
+by auxiliary chains, so .NET initializers never overlap. A private success marker
+prevents auxiliary migrations after a failed backup or primary migration.
+
+Every started task is joined, including when the primary chain fails. A branch
+failure prevents frontend publication and keeps the deploy failed. Assets are
+published only after all branches succeed, before new SSR and Nginx startup.
+The previous successful images and retained frontend releases remain the recovery
+references; a failed rollout can leave independent services updated, so inspect
+each service's actual image before an authorized roll-forward or rollback.
+
+Task logs use a deployment-specific private directory in `/tmp` (mode `0700`),
+with one `0600` log per task. The manager emits each task's log into the existing
+GitHub deployment log after joining it. Successful deployments remove their
+temporary logs; failures report and retain the private directory for diagnosis.
+Remove that exact owned directory after incident review; do not change unrelated
+temporary directories. No environment file or secret value is added to logging.
+
+`test_parallel_tasks.py` executes the actual remote shell with fixture commands
+and deterministic gates. It covers overlap, concurrency and initializer bounds,
+backup/migration failures, child draining and lock lifetime, log permissions and
+frontend order. Run it on Linux; on Windows use a Linux Python container after
+`scripts/Ensure-Docker.ps1`. The CI Wiki-focused job runs it unconditionally.
+
 ## Nginx rotation
 
 The hardened Nginx master runs as root without `DAC_OVERRIDE`. The host's former
