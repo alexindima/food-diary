@@ -3,6 +3,13 @@
     min-width: 0;
 }
 
+fd-ui-dialog {
+    --fd-dialog-header-border: var(--fd-border-none);
+    --fd-space-dialog-header-padding-bottom: 0;
+    --fd-space-dialog-header-margin-bottom: var(--fd-space-lg);
+    --fd-dialog-body-padding-block: 0;
+}
+
 :host p,
 :host h3,
 :host h2 {
@@ -39,6 +46,15 @@
 
     &__value {
         overflow-wrap: anywhere;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &__edit {
+        flex-shrink: 0;
+    }
+
+    &__empty {
+        --fd-space-empty-state-padding: var(--fd-space-md) 0;
     }
 
     &__sources fd-ui-button {
@@ -52,7 +68,7 @@
         width: 100%;
         gap: var(--fd-space-xxs);
         text-align: start;
-        padding-block: var(--fd-space-xs);
+        padding-block: var(--fd-space-xxs);
     }
 
     &__source-heading {

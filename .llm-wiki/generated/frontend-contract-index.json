@@ -21257,9 +21257,9 @@
         "DASHBOARD.NUTRITION_DETAILS.EDIT_GOALS",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_BODY",
         "DASHBOARD.NUTRITION_DETAILS.ERROR_TITLE",
-        "DASHBOARD.NUTRITION_DETAILS.GOAL",
         "DASHBOARD.NUTRITION_DETAILS.LOADING",
         "DASHBOARD.NUTRITION_DETAILS.NO_GOAL",
+        "DASHBOARD.NUTRITION_DETAILS.OF_GOAL",
         "DASHBOARD.NUTRITION_DETAILS.OPEN_DIARY",
         "DASHBOARD.NUTRITION_DETAILS.RETRY"
       ]
@@ -34352,6 +34352,19 @@
       "component": "FdUiEmptyStateComponent",
       "selector": "fd-ui-empty-state",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
+      "consumerFeature": "dashboard",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "icon",
+        "message"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiEmptyStateComponent",
+      "selector": "fd-ui-empty-state",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/empty-state/fd-ui-empty-state.ts",
       "consumerFeature": "lessons",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/lessons/pages/detail/lesson-detail-sections/lesson-detail-content/lesson-detail-content.html",
       "occurrences": 1,
@@ -38530,21 +38543,6 @@
       "outputsHandled": [
         "retry"
       ]
-    },
-    {
-      "component": "FdUiSectionStateComponent",
-      "selector": "fd-ui-section-state",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.ts",
-      "consumerFeature": "dashboard",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "appearance",
-        "emptyIcon",
-        "emptyMessage",
-        "state"
-      ],
-      "outputsHandled": []
     },
     {
       "component": "FdUiSectionStateComponent",

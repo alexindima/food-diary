@@ -751,7 +751,7 @@
             "ERROR_TITLE": "Couldn't load this day's details",
             "ERROR_BODY": "The full food log is needed for an accurate breakdown. Try again.",
             "RETRY": "Try again",
-            "GOAL": "Daily goal",
+            "OF_GOAL": "of {{value}} {{unit}}",
             "NO_GOAL": "No daily goal set",
             "MEALS": "Calories by meal",
             "SOURCES_PROTEIN": "Protein sources",

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
-import { FdUiSectionStateComponent } from 'fd-ui-kit/section-state/fd-ui-section-state';
 
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import type { Meal } from '../../../../shared/models/meal.data';
@@ -19,7 +19,7 @@ const SOURCE_KEYS: Record<NutritionMetric, { title: string; share: string }> = {
 
 @Component({
     selector: 'fd-nutrition-details-sources',
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, FdUiIconComponent, FdUiSectionStateComponent],
+    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, FdUiIconComponent, FdUiEmptyStateComponent],
     templateUrl: './nutrition-details-sources.html',
     styleUrl: './nutrition-details-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
