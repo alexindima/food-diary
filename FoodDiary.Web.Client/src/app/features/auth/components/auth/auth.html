@@ -37,6 +37,7 @@
                 } @else {
                     <fd-auth-login-form
                         [form]="loginForm"
+                        [showRememberMe]="showRememberMe()"
                         [errors]="loginFieldErrors()"
                         [globalError]="globalError()"
                         [isSubmitting]="isSubmitting()"

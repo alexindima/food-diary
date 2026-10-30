@@ -19,6 +19,27 @@ namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 public class AuthenticationTokenServiceTests {
     private static readonly IAuthenticationSessionLifetimePolicy Lifetimes = CreateLifetimePolicy();
 
+    [Theory]
+    [InlineData("google")]
+    [InlineData("telegram")]
+    [InlineData("telegram-login-widget")]
+    public async Task SocialBrowserIssuance_IsRememberedWithoutThePasswordCheckbox(string provider) {
+        var clock = new StubDateTimeProvider();
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var service = new AuthenticationTokenService(new InMemoryUserLoginEventRepository(), sessions,
+            Substitute.For<IJwtTokenGenerator>(), Substitute.For<IPasswordHasher>(), clock, Lifetimes);
+        var principal = new UserAuthenticationPrincipalModel(UserId.New(), "social@example.com", ["User"], AccessTokenCapUtc: null, User: null!, SecurityVersion: 7);
+
+        IssuedAuthenticationTokens issued = await service.IssueFromPrincipalAsync(principal, CancellationToken.None,
+            new AuthenticationClientContext(provider, IpAddress: null, UserAgent: null, CredentialKind: AuthenticationCredentialKind.Browser), rememberMe: false);
+
+        IssuedBrowserSession browser = Assert.IsType<IssuedBrowserSession>(issued.BrowserSession);
+        Assert.True(browser.RememberMe, "Social browser sign-ins must issue persistent credentials.");
+        UserRefreshTokenSession session = Assert.Single(sessions.Items);
+        Assert.True(session.RememberMe);
+        Assert.Equal(clock.GetUtcNow().UtcDateTime.AddDays(90), session.ExpiresAtUtc);
+    }
+
     private static IAuthenticationSessionLifetimePolicy CreateLifetimePolicy() {
         IAuthenticationSessionLifetimePolicy policy = Substitute.For<IAuthenticationSessionLifetimePolicy>();
         policy.GetLifetime(AuthenticationCredentialKind.Browser, rememberMe: false).Returns(TimeSpan.FromDays(30));
@@ -320,6 +341,8 @@ public class AuthenticationTokenServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryRefreshTokenSessionRepository : IRefreshTokenSessionRepository {
+        public Task<bool> TryRememberBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
         public Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
         public Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>

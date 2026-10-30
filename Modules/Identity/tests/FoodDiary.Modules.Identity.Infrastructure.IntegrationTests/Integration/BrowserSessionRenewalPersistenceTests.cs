@@ -16,6 +16,40 @@ namespace FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.Integration
 [ExcludeFromCodeCoverage]
 public sealed class BrowserSessionRenewalPersistenceTests(PostgresDatabaseFixture fixture) {
     [RequiresDockerFact]
+    public async Task PersistencePromotion_PreservesProofAndDeadline_AndFencesStaleRenewalAndRevocation() {
+        await using FoodDiaryDbContext context = await fixture.CreateDbContextAsync();
+        DateTime now = new(2030, 1, 25, 0, 0, 0, DateTimeKind.Utc);
+        var user = User.Create($"persistence-atomic-{Guid.NewGuid():N}@example.com", "hash");
+        var session = UserRefreshTokenSession.Create(RefreshTokenSessionId.New(), user.Id, "proof-hash", rememberMe: false,
+            "password", ipAddress: null, userAgent: null, now.AddDays(-24), now.AddDays(6));
+        session.ConvertToBrowserSession("proof-hash", 7, now.AddDays(-24), allowRenewal: true);
+        context.Users.Add(user);
+        context.UserRefreshTokenSessions.Add(session);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        RefreshTokenSessionRepository repository = Repository(context, now);
+        BrowserSessionProof proof = Assert.IsType<BrowserSessionProof>(await repository.ReadBrowserSessionProofAsync(session.Id));
+
+        Assert.False(await repository.TryRememberBrowserSessionAsync(proof with { UserId = UserId.New() }, now));
+        Assert.False(await repository.TryRememberBrowserSessionAsync(proof with { CredentialHash = "other" }, now));
+        Assert.False(await repository.TryRememberBrowserSessionAsync(proof with { SecurityVersion = 8 }, now));
+        Assert.True(await repository.TryRememberBrowserSessionAsync(proof, now));
+        BrowserSessionProof current = Assert.IsType<BrowserSessionProof>(await repository.ReadBrowserSessionProofAsync(session.Id));
+        Assert.Multiple(() => {
+            Assert.True(current.RememberMe);
+            Assert.Equal(proof.CredentialHash, current.CredentialHash);
+            Assert.Equal(proof.ExpiresAtUtc, current.ExpiresAtUtc);
+            Assert.Equal(proof.LastActiveAtUtc, current.LastActiveAtUtc);
+        });
+        Assert.False(await repository.TryRenewBrowserSessionAsync(proof, now, now.AddDays(30)));
+        Assert.True(await repository.TryRenewBrowserSessionAsync(current, now, now.AddDays(90)));
+        Assert.False(await repository.TryRememberBrowserSessionAsync(current, now.AddDays(90)));
+        await repository.RevokeByIdAsync(session.Id, user.Id, now);
+        Assert.False(await repository.TryRememberBrowserSessionAsync(current, now));
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task Renewal_IsAtomic_AndCannotOverwriteRevocationSecurityVersionOrAnotherCredential() {
         await using FoodDiaryDbContext context = await fixture.CreateDbContextAsync();
         DateTime now = new(2030, 1, 25, 0, 0, 0, DateTimeKind.Utc);
@@ -67,6 +101,7 @@ public sealed class BrowserSessionRenewalPersistenceTests(PostgresDatabaseFixtur
         RefreshTokenSessionRepository repository = Repository(context, now);
         BrowserSessionProof proof = Assert.IsType<BrowserSessionProof>(await repository.ReadBrowserSessionProofAsync(session.Id));
         Assert.False(await repository.TryRenewBrowserSessionAsync(proof, now, now.AddDays(90)));
+        Assert.False(await repository.TryRememberBrowserSessionAsync(proof, now));
         Assert.Equal(proof.ExpiresAtUtc, (await repository.ReadBrowserSessionProofAsync(session.Id))!.ExpiresAtUtc);
     }
 

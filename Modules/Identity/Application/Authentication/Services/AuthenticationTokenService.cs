@@ -63,6 +63,7 @@ public sealed class AuthenticationTokenService(
         bool rememberMe, CancellationToken cancellationToken) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         bool admin = client.CredentialKind == AuthenticationCredentialKind.AdminBrowser;
+        rememberMe |= !admin && client.AuthProvider is "google" or "telegram" or "telegram-login-widget" or "telegram-mini-app";
         DateTime expires = now.Add(lifetimes.GetLifetime(client.CredentialKind, rememberMe));
         if (admin && principal.AccessTokenCapUtc is { } cap && cap < expires) {
             expires = cap;

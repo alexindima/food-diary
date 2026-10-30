@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2760,
+    "typescriptFiles": 2761,
     "symbols": 870,
     "routes": 108,
     "features": 46,
-    "specs": 841,
+    "specs": 842,
     "localeFiles": 5,
     "roles": {
       "Component": 502,
@@ -3060,7 +3060,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-session.service.ts",
-      "line": 27
+      "line": 29
     },
     {
       "name": "AdminTelemetrySdk",
@@ -3739,7 +3739,7 @@
       "role": "Component",
       "selector": "fd-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "line": 57
+      "line": 58
     },
     {
       "name": "TelegramEntryButtonComponent",
@@ -6763,7 +6763,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "line": 44
+      "line": 45
     },
     {
       "name": "GlobalErrorHandler",
@@ -6910,7 +6910,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
-      "line": 124
+      "line": 126
     },
     {
       "name": "BillingSdk",

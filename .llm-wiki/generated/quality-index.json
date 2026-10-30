@@ -72,11 +72,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
-      "nonBlankLines": 1187,
+      "nonBlankLines": 1193,
       "decisionPoints": 148,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 245.74
+      "structuralRiskScore": 245.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
@@ -231,6 +231,22 @@
       "structuralRiskScore": 179.28
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
+      "nonBlankLines": 641,
+      "decisionPoints": 108,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 174.82
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "nonBlankLines": 372,
+      "decisionPoints": 111,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 173.94
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-manage-form/product-manage-form.ts",
       "nonBlankLines": 666,
       "decisionPoints": 106,
@@ -293,22 +309,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 162.2
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 616,
-      "decisionPoints": 99,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.82
-    },
-    {
-      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 358,
-      "decisionPoints": 102,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.16
     },
     {
       "path": "Modules/Cycles/Domain/Entities/CycleProfile.cs",
@@ -8610,11 +8610,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-session.service.ts",
-      "nonBlankLines": 95,
+      "nonBlankLines": 101,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.4
+      "structuralRiskScore": 15.52
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-telemetry.service.ts",
@@ -10762,11 +10762,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-login-form/auth-login-form.ts",
-      "nonBlankLines": 54,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
+      "structuralRiskScore": 1.1
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-password-reset-form/auth-password-reset-form.ts",
@@ -10794,11 +10794,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.ts",
-      "nonBlankLines": 486,
-      "decisionPoints": 55,
+      "nonBlankLines": 488,
+      "decisionPoints": 54,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.22
+      "structuralRiskScore": 90.76
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
@@ -16578,11 +16578,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 616,
-      "decisionPoints": 99,
+      "nonBlankLines": 641,
+      "decisionPoints": 108,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.82
+      "structuralRiskScore": 174.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -16818,11 +16818,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/auth.service.ts",
-      "nonBlankLines": 1187,
+      "nonBlankLines": 1193,
       "decisionPoints": 148,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 245.74
+      "structuralRiskScore": 245.86
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
@@ -20682,11 +20682,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/pwa-install.service.ts",
-      "nonBlankLines": 115,
-      "decisionPoints": 25,
+      "nonBlankLines": 119,
+      "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.8
+      "structuralRiskScore": 41.38
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/service-worker/service-worker-diagnostics.service.ts",
@@ -35946,11 +35946,11 @@
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 48,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.94
+      "structuralRiskScore": 0.96
     },
     {
       "path": "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
@@ -37034,19 +37034,19 @@
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
-      "nonBlankLines": 190,
-      "decisionPoints": 17,
+      "nonBlankLines": 191,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.3
+      "structuralRiskScore": 30.82
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/BrowserSessionService.cs",
-      "nonBlankLines": 164,
-      "decisionPoints": 50,
+      "nonBlankLines": 175,
+      "decisionPoints": 54,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 78.28
+      "structuralRiskScore": 84.5
     },
     {
       "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
@@ -37570,11 +37570,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "nonBlankLines": 358,
-      "decisionPoints": 102,
+      "nonBlankLines": 372,
+      "decisionPoints": 111,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 160.16
+      "structuralRiskScore": 173.94
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -37867,10 +37867,10 @@
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
       "nonBlankLines": 59,
-      "decisionPoints": 4,
+      "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.18
+      "structuralRiskScore": 10.68
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",

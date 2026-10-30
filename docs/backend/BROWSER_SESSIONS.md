@@ -66,6 +66,21 @@ current-session guard and list projection (previously five SELECTs).
 Ordinary browser sessions start with a 30-day lifetime, or 90 days with remember-me.
 Remember-me also makes the cookie persistent; otherwise it is a browser session
 cookie (browser session restoration settings can preserve such cookies).
+Google and Telegram ordinary browser sign-ins always use remember-me, independently
+of the password form checkbox. Installed PWA password sign-ins also request
+remember-me automatically, and their login form hides the redundant checkbox.
+
+`POST /api/v1/auth/session?rememberMe=true` can make an existing ordinary browser
+session persistent after PWA installation or at its first standalone startup.
+The existing cookie must still prove a live session. An atomic owner update checks
+the credential hash, owner, current security version, expiry, revocation and
+persisted renewal eligibility before setting remember-me. Promotion retains the
+same credential and current deadline; later sliding renewal uses the remembered
+lifetime. A stale renewal compares remembered state as well as expiry, so it
+cannot overwrite a concurrent promotion with a session-only cookie. Admin and
+impersonation contexts cannot gain persistence or a longer lifetime through this
+flag. Missing, expired and revoked credentials still require authentication.
+
 An independent persistent HttpOnly cookie, `fooddiary.browser.previous` (or
 `fooddiary.admin.previous`), remembers the last issued session for that browser
 profile for 365 days. HTTPS applies the same `__Host-` prefix and host-only scope.

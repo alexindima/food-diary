@@ -46,7 +46,9 @@
         />
     </div>
 
-    <fd-ui-checkbox [formField]="form().rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
+    @if (showRememberMe()) {
+        <fd-ui-checkbox [formField]="form().rememberMe" [label]="'AUTH.LOGIN.REMEMBER_ME' | translate" />
+    }
 
     <fd-ui-button class="auth__link" type="button" variant="secondary" fill="text" (click)="passwordResetOpen.emit()">
         {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}

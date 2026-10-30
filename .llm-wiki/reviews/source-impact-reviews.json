@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "352a6a89b40981929aecf0c038671cb09cb17e1b2a50bbc5e5a947a1bdf18516",
-          "reviewReason": "Reviewed the updated BROWSER_SESSIONS runbook against this navigation page. Its opaque cookie, public selector, shared queue/Web Lock, admin and Mini App descriptions remain accurate. The new persistent previous-session cookie is server-owned replacement metadata and introduces no JavaScript credential or SDK response field."
+          "sha256": "fbe13e98660d74715ccec1d9272e09ff1c09c397707e44156b3ad0c69d6cfa05",
+          "reviewReason": "Reviewed the merged AuthService, PwaInstallService, optional generated SDK parameter and browser-session guide. Opaque HttpOnly credentials, serialized restoration/logout and explicit Mini App transport remain accurate; automatic PWA/social persistence is documented in the owning guide."
         },
         {
           "path": "docs/frontend/WEB_QUALITY.md",
@@ -63,10 +63,10 @@
           "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         }
       ],
-      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
+      "reason": "Reviewed the merged AuthService, PwaInstallService, optional generated SDK parameter and browser-session guide. Opaque HttpOnly credentials, serialized restoration/logout and explicit Mini App transport remain accurate; automatic PWA/social persistence is documented in the owning guide.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:15.1252721Z"
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:34.0696704Z"
     },
     {
       "pageId": "module.mail-services",
@@ -107,8 +107,8 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "352a6a89b40981929aecf0c038671cb09cb17e1b2a50bbc5e5a947a1bdf18516",
-          "reviewReason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented."
+          "sha256": "fbe13e98660d74715ccec1d9272e09ff1c09c397707e44156b3ad0c69d6cfa05",
+          "reviewReason": "Reviewed the merged Identity promotion and renewal SQL: owner, credential, version, expiry, revocation and remembered-state fences stay in Identity. No module dependency or host/storage boundary changed; BROWSER_SESSIONS.md describes the optional promotion request."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -116,10 +116,10 @@
           "reviewReason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented."
         }
       ],
-      "reason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented.",
+      "reason": "Reviewed the merged Identity promotion and renewal SQL: owner, credential, version, expiry, revocation and remembered-state fences stay in Identity. No module dependency or host/storage boundary changed; BROWSER_SESSIONS.md describes the optional promotion request.",
       "baseRef": "HEAD",
-      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
-      "reviewedAtUtc": "2026-10-29T14:23:01.5275332Z"
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:33.2737362Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -324,14 +324,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "263d30bd729fda54031df1773f1501f7410f7b6a38b1f1f893cc7eb3dd86395d",
-          "reviewReason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change."
+          "sha256": "710bf67a8ffd149a64cb732f7ad622b36d5d2373f35be28ae7a6d6bea465e92f",
+          "reviewReason": "Reviewed the merged nine-line snapshot addition. rememberMe is an optional boolean query parameter defaulting false, with unchanged response schemas and routes. User/admin SDKs were generated; no new breaking-change acceptance was introduced."
         }
       ],
-      "reason": "Reviewed the workflow diff and this page: only the backend dependency audit implementation and its focused Python suite change. The API baseline selection, api-compat command, snapshots and acceptance records are unchanged, so the documented compatibility behavior remains current.",
+      "reason": "Reviewed the merged nine-line snapshot addition. rememberMe is an optional boolean query parameter defaulting false, with unchanged response schemas and routes. User/admin SDKs were generated; no new breaking-change acceptance was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
-      "reviewedAtUtc": "2026-10-30T08:54:46.6808745Z"
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:31.4065977Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -581,8 +581,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "3343af804a569761a51b0485e5b4f53b300e6c6f7996bf9657b2e838175adade",
-          "reviewReason": "Reviewed the new signal-effect-final completion observation: it appends a frontend-verify cost-calibration hypothesis only; decision is null and no approval, application, canary or policy edit occurs. The guide already documents automatic task-finish observation and the explicit promotion boundary."
+          "sha256": "beca3a5e6dcf42d454c1e63091e94fb9b90ca5ddef95872e44801378f054923b",
+          "reviewReason": "Reviewed task-finish additions: six observed retrospective hypotheses for the sealed PWA task. They do not approve/apply learning, modify policy or create durable memory. The documented independent review, experiment and append-only verification boundaries remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -605,10 +605,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the new signal-effect-final completion observation: it appends a frontend-verify cost-calibration hypothesis only; decision is null and no approval, application, canary or policy edit occurs. The guide already documents automatic task-finish observation and the explicit promotion boundary.",
-      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
-      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
-      "reviewedAtUtc": "2026-10-28T07:49:00.7418083Z"
+      "reason": "Reviewed task-finish additions: six observed retrospective hypotheses for the sealed PWA task. They do not approve/apply learning, modify policy or create durable memory. The documented independent review, experiment and append-only verification boundaries remain accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:30.2910902Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -947,14 +947,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "e62c05f36b0600cb90dde9bc85183ac62ba6a9c116cf904a56ac46c2acd164df",
-          "reviewReason": "Reviewed the task-finish diff: one schema-v2 instruction outcome is appended for the completed solution-dependency-audit workspace with its completion and retrospective hashes, root instruction fingerprint and previous event hash. instruction-outcome-verify passed; the append-only integrity and existing learning behavior documented on this page remain current."
+          "sha256": "b1408874bb8636689aba84f4f2b547dd7921b1a1ec76bfad1ba79c0e3884394e",
+          "reviewReason": "Preserved the master CI instruction outcome and appended the sealed PWA completion through instruction-outcome-observe, rebuilding its chain link with the official command. No instruction adoption or experiment decision changed; the documented source fingerprints and append-only outcome model remain accurate."
         }
       ],
-      "reason": "Reviewed the task-finish diff: one schema-v2 instruction outcome is appended for the completed solution-dependency-audit workspace with its completion and retrospective hashes, root instruction fingerprint and previous event hash. instruction-outcome-verify passed; the append-only integrity and existing learning behavior documented on this page remain current.",
+      "reason": "Preserved the master CI instruction outcome and appended the sealed PWA completion through instruction-outcome-observe, rebuilding its chain link with the official command. No instruction adoption or experiment decision changed; the documented source fingerprints and append-only outcome model remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
-      "reviewedAtUtc": "2026-10-30T09:08:31.0837362Z"
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:34.9843620Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -979,8 +979,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "0f012c22f3737cdc178437dd5871d7e360bc1eeaced3c029185581475c4a79b5",
-          "reviewReason": "Reviewed the appended learned-199356f0288abf44 observed case for signal-effect-final. It records the existing frontend path/rule/check expectations and a cost forecast observation; it does not promote or activate an evaluation or alter the execution/approval workflow documented here."
+          "sha256": "984233a22bf7f31cd44948c9954ed8695835ef63ab952f51391a47cd9cdcf9e1",
+          "reviewReason": "Reviewed the one observed eval candidate emitted by task completion. The active eval suite and approval/application policy are unchanged. Observation remains reviewable evidence rather than automatic activation, as documented."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -993,10 +993,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended learned-199356f0288abf44 observed case for signal-effect-final. It records the existing frontend path/rule/check expectations and a cost forecast observation; it does not promote or activate an evaluation or alter the execution/approval workflow documented here.",
-      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
-      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
-      "reviewedAtUtc": "2026-10-28T07:49:02.1481848Z"
+      "reason": "Reviewed the one observed eval candidate emitted by task completion. The active eval suite and approval/application policy are unchanged. Observation remains reviewable evidence rather than automatic activation, as documented.",
+      "baseRef": "HEAD",
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:29.2575964Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1283,8 +1283,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4830ef2cae430d4037225eb6cc1903b97da934d6cc63d2f13e2392eabfa0f2b4",
-          "reviewReason": "Compared topology identities and source anchors with the previous published baseline and current source changes: the 18 compose services, 16 hosted services, 22 HTTP clients, 22 webhooks and 18 recurring registrations retain their identities. Goal-history and search-reader edits add no runtime host/provider/job. Only current source coordinates and discovery evidence changed; resilience and deployment review guidance remains current."
+          "sha256": "adee6af1219594a320e12bd019b0320db601a5becef5cab095b736fad3383d10",
+          "reviewReason": "Reviewed merged runtime topology and existing master CI audit addition. PWA persistence remains inside the existing API/Identity/browser lifecycle with the same cancellation, restoration timeout, Web Lock and logout ownership. No production host, worker, webhook, provider call or recurring job is introduced."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1297,10 +1297,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Compared topology identities and source anchors with the previous published baseline and current source changes: the 18 compose services, 16 hosted services, 22 HTTP clients, 22 webhooks and 18 recurring registrations retain their identities. Goal-history and search-reader edits add no runtime host/provider/job. Only current source coordinates and discovery evidence changed; resilience and deployment review guidance remains current.",
-      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:45:08.9117012Z"
+      "reason": "Reviewed merged runtime topology and existing master CI audit addition. PWA persistence remains inside the existing API/Identity/browser lifecycle with the same cancellation, restoration timeout, Web Lock and logout ownership. No production host, worker, webhook, provider call or recurring job is introduced.",
+      "baseRef": "HEAD",
+      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
+      "reviewedAtUtc": "2026-10-30T11:06:32.4538336Z"
     },
     {
       "pageId": "workflow-security-review",

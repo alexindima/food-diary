@@ -26,9 +26,9 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
     [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.SessionRestoreRateLimitPolicyName)]
-    public Task<IActionResult> Restore() => HandleRestoreAsync();
+    public Task<IActionResult> Restore([FromQuery] bool rememberMe = false) => HandleRestoreAsync(rememberMe);
 
-    private Task<IActionResult> HandleRestoreAsync() {
+    private Task<IActionResult> HandleRestoreAsync(bool rememberMe) {
         if (ImpersonationCookieService.HasContext(HttpContext)) {
             if (!ImpersonationCookieService.TryReadAuthenticatedUserId(HttpContext, out Guid userId)) {
                 return HandleOk(AuthHttpMappings.InvalidBrowserSessionRestoration(), static value => value.ToHttpResponse());
@@ -36,12 +36,12 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
             return HandleOk(userId.ToBrowserSessionProfileQuery(), value => value.ToImpersonationHttpResponse(HttpContext));
         }
         BrowserSessionCookieService cookies = HttpContext.RequestServices.GetRequiredService<BrowserSessionCookieService>();
-        return HandleBrowserRestoreAsync(cookies);
+        return HandleBrowserRestoreAsync(cookies, rememberMe && !BrowserSessionCookieService.IsAdmin(HttpContext));
     }
 
-    private async Task<IActionResult> HandleBrowserRestoreAsync(BrowserSessionCookieService cookies) {
+    private async Task<IActionResult> HandleBrowserRestoreAsync(BrowserSessionCookieService cookies, bool rememberMe) {
         string? credential = cookies.Read(HttpContext);
-        IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(), value => {
+        IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(rememberMe), value => {
             if (value.Renewed) {
                 cookies.Set(HttpContext, value, BrowserSessionCookieService.IsAdmin(HttpContext));
             } else {

@@ -6263,6 +6263,15 @@
               "Nullable": false
             }
           ],
+          "QueryParameters": [
+            {
+              "Name": "rememberMe",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean",
+              "Default": "false"
+            }
+          ],
           "PathParameters": [
             {
               "Name": "version",

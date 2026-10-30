@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1369,
     "ambiguousContracts": 29,
-    "consumerEdges": 10998,
+    "consumerEdges": 11000,
     "productionConsumerEdges": 6129,
-    "testConsumerEdges": 4869,
+    "testConsumerEdges": 4871,
     "consumedContracts": 1369,
     "unconsumedContracts": 0
   },
@@ -88731,7 +88731,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IJwtTokenGenerator",
@@ -101576,7 +101576,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "IPasswordHasher",
@@ -112653,6 +112653,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/UserSessionCleanupJobTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "IRefreshTokenSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionPersistenceApiTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -151417,6 +151430,19 @@
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionApiTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BrowserSessionPersistenceApiTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "RegisterHttpRequest",

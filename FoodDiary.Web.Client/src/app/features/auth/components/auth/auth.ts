@@ -25,6 +25,7 @@ import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECON
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { BrowserWindowService } from '../../../../shared/platform/browser-window.service';
+import { PwaInstallService } from '../../../../shared/service-worker/pwa-install.service';
 import type { GoogleLoginRequest } from '../../models/google-auth.data';
 import { TelegramEntryButtonComponent } from '../telegram-entry-button/telegram-entry-button';
 import type { LoginFormValues } from './auth-lib/auth.types';
@@ -80,6 +81,8 @@ export class AuthComponent {
     private readonly googleManager = inject(AuthGoogleManager);
     private readonly authFlowFacade = inject(AuthFlowFacade);
     private readonly browserWindow = inject(BrowserWindowService);
+    private readonly pwa = inject(PwaInstallService);
+    protected readonly showRememberMe = computed(() => !this.pwa.shouldRememberSession());
 
     protected authMode: 'login' | 'register' = 'login';
 
@@ -314,8 +317,7 @@ export class AuthComponent {
 
     private onGoogleCredential(credential: string): void {
         this.isSubmitting.set(true);
-        const rememberMe = this.authMode === 'login' && this.loginModel().rememberMe;
-        const request: GoogleLoginRequest = { credential, rememberMe: Boolean(rememberMe) };
+        const request: GoogleLoginRequest = { credential, rememberMe: true };
         this.authFlowFacade.loginWithGoogle(request).subscribe(result => {
             this.isSubmitting.set(false);
             if (result === 'success') {

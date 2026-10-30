@@ -12,6 +12,7 @@
 import { HttpClient, HttpContext, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 import { AdminSsoExchangeHttpRequest } from '../model/admin-sso-exchange-http-request';
 
@@ -108,6 +109,7 @@ export interface PostAuthRestoreRequestParams {
 
 export interface PostAuthSessionRequestParams {
     version: string;
+    rememberMe?: boolean;
 }
 
 export interface PostAuthVerifyEmailRequestParams {
@@ -1138,6 +1140,11 @@ export class AuthSdk extends BaseService {
         if (version === null || version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling postAuthSession.');
         }
+        const rememberMe = requestParameters?.rememberMe;
+
+        let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'rememberMe', <any>rememberMe, QueryParamStyle.Form, true);
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -1166,6 +1173,7 @@ export class AuthSdk extends BaseService {
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<AuthenticationHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
+            params: localVarQueryParameters.toHttpParams(),
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

@@ -24,7 +24,7 @@ public sealed class RefreshTokenSessionRepository(
         return await sessions.AsNoTracking().Where(session => session.Id == id)
             .Select(session => new BrowserSessionProof(session.Id, session.UserId, session.RefreshTokenHash,
                 session.BrowserSecurityVersion, session.ExpiresAtUtc, session.RevokedAtUtc, session.LastRotatedAtUtc,
-                session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled))
+                session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled, session.RememberMe))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -52,8 +52,23 @@ public sealed class RefreshTokenSessionRepository(
         }
         int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
                 session.BrowserSlidingExpirationEnabled && session.RevokedAtUtc == null && session.ExpiresAtUtc == previous &&
-                session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash)
+                session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash && session.RememberMe == proof.RememberMe)
             .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.ExpiresAtUtc, expiresAtUtc)
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+        return affected == 1;
+    }
+
+    public async Task<bool> TryRememberBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, CancellationToken cancellationToken = default) {
+        if (proof.SecurityVersion is not { } version) {
+            return false;
+        }
+        if (synchronizeTransactionAsync is not null) {
+            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        }
+        int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
+                session.BrowserSlidingExpirationEnabled && session.RevokedAtUtc == null && session.ExpiresAtUtc > nowUtc &&
+                session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.RememberMe, valueExpression: true)
                 .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
         return affected == 1;
     }

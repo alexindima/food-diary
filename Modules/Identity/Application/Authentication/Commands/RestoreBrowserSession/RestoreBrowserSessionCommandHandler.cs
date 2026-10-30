@@ -8,5 +8,5 @@ namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.Restore
 public sealed class RestoreBrowserSessionCommandHandler(BrowserSessionService sessions)
     : ICommandHandler<RestoreBrowserSessionCommand, Result<BrowserSessionModel>> {
     public Task<Result<BrowserSessionModel>> Handle(RestoreBrowserSessionCommand command, CancellationToken cancellationToken) =>
-        sessions.RestoreAsync(command.Credential, cancellationToken);
+        sessions.RestoreAsync(command.Credential, command.RememberMe, cancellationToken);
 }

@@ -7,6 +7,6 @@ namespace FoodDiary.Modules.Identity.Application.Abstractions.Authentication.Mod
 public sealed record BrowserSessionProof(
     RefreshTokenSessionId Id, UserId UserId, [property: JsonIgnore] string CredentialHash,
     long? SecurityVersion, DateTime? ExpiresAtUtc, DateTime? RevokedAtUtc, DateTime LastActiveAtUtc,
-    DateTime CreatedAtUtc = default, bool SlidingExpirationEnabled = false) {
+    DateTime CreatedAtUtc = default, bool SlidingExpirationEnabled = false, bool RememberMe = false) {
     public override string ToString() => $"BrowserSessionProof {{ Id = {Id}, CredentialHash = [redacted] }}";
 }
