@@ -28,6 +28,7 @@ export class PwaInstallService {
     public readonly isInstalling = signal(false);
     public readonly installError = signal(false);
     public readonly isStandalone = this.standalone.asReadonly();
+    public readonly shouldRememberSession = computed(() => this.standalone() || this.installationAccepted());
     public readonly isMobileDevice = this.mobileDevice.asReadonly();
     public readonly installMode = computed(() => {
         if (this.standalone() || this.installationAccepted()) {
@@ -60,7 +61,10 @@ export class PwaInstallService {
         }
         this.mobileDevice.set(browserNavigator.userAgent.includes('Android') || isIosBrowser(browserNavigator));
 
-        const displayMode = view.matchMedia('(display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui)');
+        // Fullscreen also matches an ordinary browser tab and does not establish installation.
+        const displayMode = view.matchMedia(
+            '(display-mode: standalone), (display-mode: minimal-ui), (display-mode: window-controls-overlay)',
+        );
         const updateDisplayMode = (): void => {
             this.standalone.set(displayMode.matches || ('standalone' in browserNavigator && browserNavigator.standalone === true));
             this.installError.set(false);

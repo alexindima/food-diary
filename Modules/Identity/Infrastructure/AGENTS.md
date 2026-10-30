@@ -69,6 +69,9 @@ ordinary browser sessions within the configured renewal window and absolute cap.
 The renewal update must compare owner, proof, exact security version, previous
 expiry and revocation, and require the persisted eligibility flag. Admin and
 unknown sessions remain fixed; concurrent renewals re-read proof on a lost CAS.
+Persistence promotion checks the same live ordinary proof and only sets remember-me;
+it keeps the existing deadline. Renewal also compares remembered state, preventing
+a stale restoration from replacing a promoted persistent cookie with a session cookie.
 Session retention uses bounded SQL
 deletes after a past UTC cutoff, preserving active/recent records and legacy
 expiry semantics; JobManager dispatches the owner request without a whole-job

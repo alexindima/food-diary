@@ -28,6 +28,7 @@ import type { LoginFieldErrors, LoginFormValues } from '../auth-lib/auth.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthLoginFormComponent {
+    public readonly showRememberMe = input(true);
     public readonly form = input.required<FieldTree<LoginFormValues>>();
     public readonly errors = input.required<LoginFieldErrors>();
     public readonly globalError = input.required<string | null>();

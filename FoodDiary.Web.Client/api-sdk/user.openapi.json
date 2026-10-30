@@ -12819,6 +12819,14 @@
                 "operationId": "postAuthSession",
                 "parameters": [
                     {
+                        "in": "query",
+                        "name": "rememberMe",
+                        "schema": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    },
+                    {
                         "in": "path",
                         "name": "version",
                         "required": true,

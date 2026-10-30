@@ -60,11 +60,14 @@ describe('PwaInstallService browser prompts', () => {
     it('hides installation after acceptance and installation through browser UI', async () => {
         const service = TestBed.inject(PwaInstallService);
         service.initialize();
+        expect(service.shouldRememberSession()).toBe(false);
         view.dispatchEvent(installEvent('accepted'));
         await service.installAsync();
+        expect(service.shouldRememberSession()).toBe(true);
         expect(service.showInstallCard()).toBe(false);
         view.dispatchEvent(installEvent());
         view.dispatchEvent(new Event('appinstalled'));
+        expect(service.shouldRememberSession()).toBe(true);
         expect(service.showInstallCard()).toBe(false);
     });
 
@@ -101,6 +104,7 @@ describe('PwaInstallService platform capabilities', () => {
         const service = TestBed.inject(PwaInstallService);
         service.initialize();
         expect(service.isStandalone()).toBe(true);
+        expect(service.shouldRememberSession()).toBe(true);
         expect(service.showInstallCard()).toBe(false);
     });
 });

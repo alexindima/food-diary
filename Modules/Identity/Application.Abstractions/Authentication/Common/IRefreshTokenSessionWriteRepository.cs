@@ -14,6 +14,8 @@ public interface IRefreshTokenSessionWriteRepository {
 
     Task<bool> TryRenewBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime expiresAtUtc, CancellationToken cancellationToken = default);
 
+    Task<bool> TryRememberBrowserSessionAsync(BrowserSessionProof proof, DateTime nowUtc, CancellationToken cancellationToken = default);
+
     Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default);
 
     Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default);

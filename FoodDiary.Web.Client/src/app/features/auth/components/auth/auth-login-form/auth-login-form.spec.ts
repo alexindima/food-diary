@@ -40,6 +40,16 @@ function createComponent(): AuthLoginFormTestContext {
 }
 
 describe('AuthLoginFormComponent', () => {
+    it('hides the remember checkbox when the installed app remembers automatically', () => {
+        const { fixture } = createComponent();
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.querySelector('fd-ui-checkbox')).not.toBeNull();
+        fixture.componentRef.setInput('showRememberMe', false);
+        fixture.detectChanges();
+        expect(root.querySelector('fd-ui-checkbox')).toBeNull();
+        expect(root.querySelector('input[type="password"]')).not.toBeNull();
+    });
+
     it('should expose login form and google button refs', () => {
         const { component } = createComponent();
 

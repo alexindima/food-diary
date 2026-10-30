@@ -48,7 +48,10 @@ public sealed class BrowserSessionService(
         return Result.Success(new BrowserSessionIdentityModel(id, expires, principal.Value));
     }
 
-    public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, CancellationToken cancellationToken) {
+    public Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, CancellationToken cancellationToken) =>
+        RestoreAsync(credential, rememberMe: false, cancellationToken);
+
+    public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, bool rememberMe, CancellationToken cancellationToken) {
         Result<BrowserSessionModel> result = await AuthenticateCoreAsync(credential, allowStaleVersion: true, cancellationToken).ConfigureAwait(false);
         if (result.IsFailure) {
             return result;
@@ -62,12 +65,21 @@ public sealed class BrowserSessionService(
         }
         BrowserSessionModel session = result.Value;
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+        if (rememberMe && !session.RememberMe && session.SlidingExpirationEnabled) {
+            var persistenceProof = new BrowserSessionProof(new RefreshTokenSessionId(session.SessionId), session.Principal.UserId,
+                SecurityTokenGenerator.HashForStorage(credential!), session.Principal.SecurityVersion, session.ExpiresAtUtc,
+                RevokedAtUtc: null, now);
+            if (!await sessions.TryRememberBrowserSessionAsync(persistenceProof, now, cancellationToken).ConfigureAwait(false)) {
+                return RejectRestoration("persistence_conflict");
+            }
+            session = session with { RememberMe = true, Renewed = true };
+        }
         if (!session.SlidingExpirationEnabled || lifetimes.GetRenewedExpiration(session.CreatedAtUtc, session.ExpiresAtUtc, session.RememberMe, now) is not { } expires) {
-            return result;
+            return Result.Success(session);
         }
         var proof = new BrowserSessionProof(new RefreshTokenSessionId(session.SessionId), session.Principal.UserId,
             SecurityTokenGenerator.HashForStorage(credential!), session.Principal.SecurityVersion, session.ExpiresAtUtc,
-            RevokedAtUtc: null, now);
+            RevokedAtUtc: null, now, RememberMe: session.RememberMe);
         if (await sessions.TryRenewBrowserSessionAsync(proof, now, expires, cancellationToken).ConfigureAwait(false)) {
             return Result.Success(session with { ExpiresAtUtc = expires, Renewed = true });
         }
@@ -75,7 +87,7 @@ public sealed class BrowserSessionService(
         if (current is { RevokedAtUtc: null, ExpiresAtUtc: { } currentExpires } && currentExpires > now &&
             current.UserId == proof.UserId && current.SecurityVersion == proof.SecurityVersion &&
             SecurityTokenGenerator.VerifyFastStorageHash(credential!, current.CredentialHash)) {
-            return Result.Success(session with { ExpiresAtUtc = currentExpires, Renewed = true });
+            return Result.Success(session with { ExpiresAtUtc = currentExpires, RememberMe = current.RememberMe, Renewed = true });
         }
         return RejectRestoration("renewal_conflict");
     }

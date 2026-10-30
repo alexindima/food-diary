@@ -36,7 +36,7 @@ public static class AuthHttpMappings {
     public static RestoreBrowserSessionCommand InvalidBrowserSessionRestoration() => new(Credential: null);
 
     extension(string? credential) {
-        public RestoreBrowserSessionCommand ToBrowserRestoreCommand() => new(credential);
+        public RestoreBrowserSessionCommand ToBrowserRestoreCommand(bool rememberMe = false) => new(credential, rememberMe);
         public LogoutBrowserSessionCommand ToBrowserLogoutCommand() => new(credential);
     }
 

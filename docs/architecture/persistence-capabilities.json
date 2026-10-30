@@ -901,8 +901,8 @@
         "tracked:UserRefreshTokenSession",
         "write:UserRefreshTokenSession"
       ],
-      "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and changes only expiry plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation, User aggregate writes or context escapes; transaction synchronization remains; ADR 0058.",
-      "technicalSourceSha256": "e152e764b58a0290ed0fcc4f1d383d151325b328d32f54c73cc58924ea6706ad"
+      "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and compares remembered state and changes only expiry plus modification time. Proved persistence promotion requires the same owner, hash, version, active expiry and eligibility, and only sets remember-me plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation, User aggregate writes or context escapes; transaction synchronization remains; ADR 0058.",
+      "technicalSourceSha256": "a64474be19840413a8e390cc61ea5942161dc1a3f3c4fa07ec89d7b69c1a1968"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",

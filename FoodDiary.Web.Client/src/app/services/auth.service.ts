@@ -1,6 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
-import { computed, DestroyRef, inject, PLATFORM_ID, Service, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, PLATFORM_ID, Service, signal, untracked } from '@angular/core';
 import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap, timeout } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -32,6 +32,7 @@ import { fallbackApiError, rethrowApiError } from '../shared/lib/api-error.utils
 import { getStringProperty } from '../shared/lib/unknown-value.utils';
 import type { User } from '../shared/models/user.data';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
+import { PwaInstallService } from '../shared/service-worker/pwa-install.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { JwtDecoderService } from './jwt-decoder.service';
 import { NavigationService } from './navigation.service';
@@ -42,6 +43,8 @@ const SESSION_RESTORATION_TIMEOUT_MS = 30_000;
 
 @Service()
 export class AuthService {
+    private readonly pwa = inject(PwaInstallService);
+    private persistenceAttemptSessionId: string | null = null;
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly document = inject(DOCUMENT);
     private readonly navigationService = inject(NavigationService);
@@ -85,6 +88,27 @@ export class AuthService {
     public readonly isAuthReady = this.authReadySignal.asReadonly();
 
     public constructor() {
+        this.pwa.initialize();
+        effect(() => {
+            const session = this.session();
+            if (session === null || !this.pwa.shouldRememberSession()) {
+                this.persistenceAttemptSessionId = null;
+                return;
+            }
+            if (
+                session.rememberMe !== true &&
+                session.sessionId !== undefined &&
+                session.sessionId !== null &&
+                session.sessionId !== this.persistenceAttemptSessionId &&
+                !this.browserSession.telegram &&
+                !this.isImpersonating()
+            ) {
+                this.persistenceAttemptSessionId = session.sessionId;
+                untracked(() => {
+                    void firstValueFrom(this.refreshSession());
+                });
+            }
+        });
         // Previous browser bearer credentials are deliberately not restored.
         this.authMetadata.clearTabSession();
         const stop = this.browserWindow.onLocalStorageChange(event => {
@@ -169,13 +193,13 @@ export class AuthService {
         const loginData = {
             email: data.email,
             password: data.password,
-            rememberMe: data.rememberMe,
+            rememberMe: data.rememberMe || this.pwa.shouldRememberSession(),
         };
         return this.cookieSessions.run(() =>
             this.sdk.client.postAuthLogin({ version: this.sdk.version, loginHttpRequest: loginData }).pipe(
                 map(authResponseFromSdk),
                 tap(response => {
-                    this.onLogin(response, data.rememberMe || false);
+                    this.onLogin(response, loginData.rememberMe);
                 }),
                 catchError((error: unknown) => rethrowApiError('Login error', error)),
             ),
@@ -240,6 +264,7 @@ export class AuthService {
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {
+        const remembered = rememberMe || this.pwa.shouldRememberSession();
         return this.cookieSessions.run(() =>
             this.sdk.client
                 .postAuthRestore({
@@ -247,13 +272,13 @@ export class AuthService {
                     restoreAccountHttpRequest: {
                         email: data.email,
                         password: data.password,
-                        rememberMe,
+                        rememberMe: remembered,
                     },
                 })
                 .pipe(
                     map(authResponseFromSdk),
                     tap(response => {
-                        this.onLogin(response, rememberMe);
+                        this.onLogin(response, remembered);
                     }),
                     catchError((error: unknown) => rethrowApiError('Restore account error', error)),
                 ),
@@ -262,10 +287,10 @@ export class AuthService {
 
     public loginWithGoogle(data: GoogleLoginRequest): Observable<AuthResponse> {
         return this.cookieSessions.run(() =>
-            this.sdk.client.postAuthGoogle({ version: this.sdk.version, googleLoginHttpRequest: data }).pipe(
+            this.sdk.client.postAuthGoogle({ version: this.sdk.version, googleLoginHttpRequest: { ...data, rememberMe: true } }).pipe(
                 map(authResponseFromSdk),
                 tap(response => {
-                    this.onLogin(response, data.rememberMe ?? false);
+                    this.onLogin(response, true);
                 }),
                 catchError((error: unknown) => rethrowApiError('Google login error', error)),
             ),
@@ -348,7 +373,7 @@ export class AuthService {
         const request = usesTelegramRefresh
             ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
             : this.sdk.client.postAuthSession(
-                  { version: this.sdk.version },
+                  { version: this.sdk.version, rememberMe: contextId === null && this.pwa.shouldRememberSession() ? true : undefined },
                   'body',
                   false,
                   sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
@@ -573,7 +598,7 @@ export class AuthService {
         this.browserSession.sessionId.set(response.sessionId ?? null);
         this.browserSession.setContext(response.impersonationContext ?? null);
         this.authMetadata.bindOwner(response.user.id);
-        this.authMetadata.setRemembered(rememberMe ?? response.rememberMe ?? false);
+        this.authMetadata.setRemembered(response.rememberMe ?? rememberMe ?? false);
         if (!this.isImpersonating()) {
             this.authMetadata.setUserId(response.user.id);
             this.authMetadata.saveAccountAccess(response.user.id, this.roles(), rememberMe !== undefined);

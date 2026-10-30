@@ -5,6 +5,6 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Modules.Identity.Application.Authentication.Commands.RestoreBrowserSession;
 
-public sealed record RestoreBrowserSessionCommand([property: JsonIgnore] string? Credential) : ICommand<Result<BrowserSessionModel>> {
+public sealed record RestoreBrowserSessionCommand([property: JsonIgnore] string? Credential, bool RememberMe = false) : ICommand<Result<BrowserSessionModel>> {
     public override string ToString() => "RestoreBrowserSessionCommand { Credential = [redacted] }";
 }
