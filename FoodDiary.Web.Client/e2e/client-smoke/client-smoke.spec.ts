@@ -2926,12 +2926,18 @@ async function mockRecipeDetailAsync(page: Page, recipe: Record<string, unknown>
     );
 }
 
-async function verifyRecipeSummaryHelpAsync(page: Page, detail: Locator): Promise<void> {
+async function verifyRecipeSummaryAsync(page: Page, detail: Locator): Promise<void> {
     await expect(detail.getByRole('tab')).toHaveCount(2);
     const qualityHelp = detail.getByRole('button', { name: 'How healthiness is calculated', exact: true });
     await qualityHelp.click();
     await expect(page.getByRole('tooltip')).toContainText('A rough score from 0 to 100');
     await qualityHelp.click();
+    await expect(detail.locator('.recipe-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT);
+    await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
+    await detail.getByRole('button', { name: /Show 2 more/ }).click();
+    await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_ITEM_COUNT);
+    await expect(detail).toContainText('Ingredient 1');
+    await expect(detail).toContainText('Ingredient 7');
 }
 
 test.describe('recipe redesign regression', () => {
@@ -2976,7 +2982,11 @@ test.describe('recipe redesign regression', () => {
             });
             await page.goto('/recipes');
             const card = page.locator('fd-recipe-card').first();
-            await expect(card).toContainText('Ingredient 1');
+            await expect(card).toContainText('Roasted vegetable bowl');
+            await expect(card).toContainText('7 ingredients · 45 min');
+            await expect(card.locator('.entity-card__calories-value')).toHaveText('320');
+            await expect(card).not.toContainText('Ingredient 1');
+            await expect(card.getByRole('button', { name: 'Add to meal', exact: true })).toBeVisible();
             expect(pageRequests).toBe(0);
             await card.locator('.entity-card__thumb').press('Enter');
             const gallery = page.locator('fd-ui-image-preview-dialog');
@@ -2986,16 +2996,12 @@ test.describe('recipe redesign regression', () => {
             await page.keyboard.press('Escape');
             await card.locator('.entity-card__open-button').click();
             const detail = page.locator('fd-recipe-detail');
-            await verifyRecipeSummaryHelpAsync(page, detail);
-            await expect(detail.locator('.recipe-detail__macro-summary dd')).toHaveCount(MEAL_DIALOG_MACRO_COUNT);
-            await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_PREVIEW_COUNT);
-            await detail.getByRole('button', { name: /Show 2 more/ }).click();
-            await expect(detail.locator('.recipe-detail__list-row')).toHaveCount(MEAL_DIALOG_ITEM_COUNT);
+            await verifyRecipeSummaryAsync(page, detail);
             await page.screenshot({ path: testInfo.outputPath(`recipe-summary-${width}.png`) });
             await detail.getByRole('tab').nth(1).click();
             await expect(detail).toContainText('Mix and roast.');
             await page.keyboard.press('Escape');
-            await page.getByRole('button', { name: /Favorites ·/ }).click();
+            await page.getByRole('button', { name: 'Favorites, 1', exact: true }).click();
             const picker = page.locator('fd-recipe-favorites-picker');
             await expect(picker).toContainText('Rice, Carrots');
             const row = picker.locator('fd-favorite-recipe-row');
@@ -3066,7 +3072,11 @@ test.describe('product redesign regression', () => {
             });
             await page.goto('/products');
             const card = page.locator('fd-product-card').first();
-            await expect(card).toContainText('To diary');
+            await expect(card).toContainText('Greek yogurt');
+            await expect(card.locator('.entity-card__calories-value')).toHaveText('95');
+            await expect(card.locator('.entity-card__calories')).toContainText('100 g');
+            await expect(card.getByRole('button', { name: 'Add to meal', exact: true })).toBeVisible();
+            await expect(card).not.toContainText('To diary');
             expect(requests).toBe(0);
             await expect(card.locator('.entity-card__placeholder-icon')).toBeVisible();
             await page.screenshot({ path: testInfo.outputPath(`products-${width}.png`) });
@@ -3077,7 +3087,7 @@ test.describe('product redesign regression', () => {
             await expect(detail).toContainText('100');
             await page.screenshot({ path: testInfo.outputPath(`product-detail-${width}.png`) });
             await page.keyboard.press('Escape');
-            await page.getByRole('button', { name: /Favorites ·/ }).click();
+            await page.getByRole('button', { name: 'Favorites, 1', exact: true }).click();
             const picker = page.locator('fd-product-favorites-picker');
             const row = picker.locator('fd-favorite-product-row');
             await expect(row).toContainText('Greek yogurt');
