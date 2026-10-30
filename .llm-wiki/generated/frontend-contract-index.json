@@ -7,7 +7,7 @@
     "outputs": 559,
     "apiCalls": 318,
     "templatesWithTranslations": 370,
-    "translationKeys": 2210,
+    "translationKeys": 2209,
     "consumerEdges": 1299,
     "consumedComponents": 324,
     "unconsumedComponents": 186
@@ -24022,7 +24022,6 @@
         "GENERAL.NUTRIENTS.PROTEIN",
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
-        "NUTRITION_TREND.DAY_EMPTY",
         "NUTRITION_TREND.DAY_GOAL",
         "NUTRITION_TREND.DETAILS",
         "NUTRITION_TREND.GOAL",

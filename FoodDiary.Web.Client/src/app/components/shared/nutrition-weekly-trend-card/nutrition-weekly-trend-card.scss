@@ -202,9 +202,6 @@
     background: var(--fd-bg-surface-raised);
     font-variant-numeric: tabular-nums;
 }
-.nutrition-trend__day p {
-    margin: 0;
-}
 .nutrition-trend__day-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
