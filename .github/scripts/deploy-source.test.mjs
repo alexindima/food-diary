@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -153,6 +153,130 @@ const receipts = () => images.map(({ name }, index) => createReceipt({
 }));
 const helper = fileURLToPath(new URL("./deploy-images.mjs", import.meta.url));
 const job = name => workflow.match(new RegExp(`^  ${name}:\\r?\\n([\\s\\S]*?)(?=^  [\\w-]+:\\r?$|(?![\\s\\S]))`, "mu"))?.[1];
+
+test("cache failure recovery permits one classified clean rebuild before signing", () => {
+    const workers = job("build-images");
+    assert.ok(workers.includes("id: cached_build"), "A failed production build must be classified before a single cache-free retry");
+    const step = name => workers.split(`- name: ${name}\n`)[1]?.split("\n      - name:")[0];
+    const cached = step("Build and push production image");
+    const classify = step("Classify failed production build");
+    const builder = step("Set up clean retry builder");
+    const retry = step("Retry production image without cache");
+    const select = step("Select successful image digest");
+    assert.match(cached, /continue-on-error: true/u);
+    assert.match(cached, /builder: \$\{\{ steps\.cached_builder\.outputs\.name \}\}/u);
+    assert.match(cached, /cache-to: type=gha,scope=production-\$\{\{ matrix\.image \}\},mode=max,ignore-error=true/u);
+    assert.match(classify, /if: \$\{\{ !cancelled\(\) && steps\.cached_build\.outcome == 'failure' \}\}/u);
+    assert.match(classify, /node \.github\/scripts\/deploy-build-retry\.mjs classify/u);
+    for (const branch of [builder, retry]) assert.match(branch, /if: steps\.cache_failure\.outputs\.retry == 'true'/u);
+    assert.match(retry, /builder: \$\{\{ steps\.retry_builder\.outputs\.name \}\}/u);
+    assert.match(retry, /no-cache: true/u);
+    assert.doesNotMatch(retry, /cache-from:|cache-to:/u);
+    for (const branch of [classify, builder, retry, select]) assert.doesNotMatch(branch, /continue-on-error:/u);
+    for (const input of ["context", "file", "push", "provenance", "sbom", "tags", "build-args"]) {
+        const value = source => source.match(new RegExp(`^          ${input}: (.*)(?:\\n((?:            .*\\n)*))?`, "mu"))?.[0];
+        assert.ok(value(cached), input);
+        assert.equal(value(retry), value(cached), input);
+    }
+    assert.equal([...workers.matchAll(/uses: docker\/build-push-action@/gu)].length, 2);
+    assert.match(select, /id: build/u);
+    assert.match(select, /node \.github\/scripts\/deploy-build-retry\.mjs select/u);
+    for (const [name, value] of Object.entries({
+        PRIMARY_OUTCOME: "cached_build.outcome", PRIMARY_DIGEST: "cached_build.outputs.digest",
+        RETRY_OUTCOME: "retry_build.outcome", RETRY_DIGEST: "retry_build.outputs.digest",
+    })) assert.ok(select.includes(name + ": " + "${{ steps." + value + " }}"), name);
+    assert.ok(workers.indexOf("- name: Select successful image digest") < workers.indexOf("- name: Install Cosign"));
+});
+
+const missingCacheMessage = "failed to copy: GET https://productionresultssa32.blob.core.windows.net/actions-cache/fixture?sig=private-signed-value\nERROR CODE: BlobNotFound";
+const failedBuild = message => ({ Status: "failed", Error: { Code: 2, Message: message } });
+const recovery = () => import("./deploy-build-retry.mjs");
+
+test("cache classifier recognizes the observed BuildKit cache blob failure", async () => {
+    const { isMissingGitHubCacheBlob } = await recovery();
+    assert.equal(isMissingGitHubCacheBlob(failedBuild(missingCacheMessage)), true);
+    assert.equal(isMissingGitHubCacheBlob(failedBuild("failed to solve: " + missingCacheMessage)), true);
+});
+
+for (const [name, record] of [
+    ["compile failure", failedBuild('process "dotnet publish" did not complete successfully: exit code: 1')],
+    ["registry failure", failedBuild("failed to push ghcr.io/api: unauthorized")],
+    ["registry blob missing", failedBuild(missingCacheMessage.replace("productionresultssa32.blob.core.windows.net/actions-cache", "ghcr.io/v2/api/blobs"))],
+    ["unrelated Azure blob", failedBuild(missingCacheMessage.replace("/actions-cache/", "/user-uploads/"))],
+    ["untrusted hostname", failedBuild(missingCacheMessage.replace(".net/", ".net.example.com/"))],
+    ["cache authorization failure", failedBuild(missingCacheMessage.replace("BlobNotFound", "AuthorizationFailure"))],
+    ["cache words in a failed RUN command", failedBuild(`process "echo ${missingCacheMessage}" did not complete successfully: exit code: 1`)],
+    ["cancelled build", { ...failedBuild(missingCacheMessage), Status: "canceled" }],
+    ["successful record", { ...failedBuild(missingCacheMessage), Status: "completed" }],
+    ["missing history fields", {}],
+]) {
+    test(`cache classifier refuses automatic retry for ${name}`, async () => {
+        assert.equal((await recovery()).isMissingGitHubCacheBlob(record), false);
+    });
+}
+
+test("cache inspection reads only the matrix job builder with a bounded diagnostic command", async () => {
+    const { inspectFailedBuild } = await recovery();
+    const expected = failedBuild(missingCacheMessage);
+    const actual = inspectFailedBuild("builder-job-1", (command, args, options) => {
+        assert.equal(command, "docker");
+        assert.deepEqual(args, ["buildx", "history", "inspect", "--builder", "builder-job-1", "--format", "json"]);
+        assert.equal(options.timeout, 30_000);
+        assert.equal(options.maxBuffer, 4 * 1024 * 1024);
+        assert.deepEqual(options.stdio, ["ignore", "pipe", "pipe"]);
+        return { status: 0, stdout: JSON.stringify(expected) };
+    });
+    assert.deepEqual(actual, expected);
+});
+
+test("unavailable or invalid Buildx diagnostics fail closed without exposing signed URLs", async () => {
+    const { inspectFailedBuild } = await recovery();
+    for (const result of [{ status: 1, stderr: missingCacheMessage }, { status: null, error: new Error(missingCacheMessage) },
+        { status: 0, stdout: missingCacheMessage }]) {
+        assert.throws(() => inspectFailedBuild("builder-job-1", () => result), error =>
+            error.message.includes("automatic retry refused") && !error.message.includes("private-signed-value"));
+    }
+    for (const builder of [undefined, "", "--injected", "builder; echo secret"]) {
+        assert.throws(() => inspectFailedBuild(builder, () => assert.fail("Invalid builders must not start Docker")), /valid isolated build builder/u);
+    }
+});
+
+test("successful build selection uses the original digest or exclusively the successful retry", async () => {
+    const { selectBuildDigest } = await recovery();
+    const original = "sha256:" + "1".repeat(64);
+    const retried = "sha256:" + "2".repeat(64);
+    assert.equal(selectBuildDigest("success", original, "skipped", ""), original);
+    assert.equal(selectBuildDigest("failure", original, "success", retried), retried);
+    for (const [primary, retry] of [["failure", "failure"], ["failure", "skipped"], ["cancelled", "skipped"], ["success", "success"]]) {
+        assert.throws(() => selectBuildDigest(primary, original, retry, retried), /signing and deployment refused/u);
+    }
+    for (const digest of ["", "latest", "sha256:abc", original + "\ninjected=true"]) {
+        assert.throws(() => selectBuildDigest("success", digest, "skipped", ""), /valid immutable image digest/u);
+        assert.throws(() => selectBuildDigest("failure", original, "success", digest), /valid immutable image digest/u);
+    }
+});
+
+test("digest CLI publishes one successful output and none for a failed retry", async () => {
+    const directory = mkdtempSync(join(tmpdir(), "fooddiary-retry-test-"));
+    const script = fileURLToPath(new URL("./deploy-build-retry.mjs", import.meta.url));
+    const output = join(directory, "output");
+    const original = "sha256:" + "1".repeat(64);
+    const retried = "sha256:" + "2".repeat(64);
+    try {
+        for (const [primary, retry, expected] of [["success", "skipped", original], ["failure", "success", retried], ["failure", "failure", null]]) {
+            writeFileSync(output, "");
+            const result = spawnSync(process.execPath, [script, "select"], {
+                encoding: "utf8", env: { ...process.env, GITHUB_OUTPUT: output,
+                    PRIMARY_OUTCOME: primary, PRIMARY_DIGEST: original, RETRY_OUTCOME: retry, RETRY_DIGEST: retried },
+            });
+            assert.equal(result.status, expected ? 0 : 1, result.stderr);
+            assert.equal(readFileSync(output, "utf8"), expected ? `digest=${expected}\n` : "");
+        }
+    } finally {
+        assert.equal(dirname(directory), tmpdir());
+        rmSync(directory, { recursive: true });
+    }
+});
 
 test("parallel scheduling includes every production image and its existing Dockerfile", async () => {
     const expected = ["api", "telegram-bot", "initializer", "job-manager", "mail-relay", "mailrelay-initializer",

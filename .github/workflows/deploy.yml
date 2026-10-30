@@ -91,11 +91,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
+        id: cached_builder
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
       - name: Build and push production image
-        id: build
+        id: cached_build
+        continue-on-error: true
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
+          builder: ${{ steps.cached_builder.outputs.name }}
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
@@ -106,7 +109,41 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:sha-${{ env.SOURCE_COMMIT_SHA }}
           build-args: ${{ matrix.image == 'client' && format('BUILD_VERSION={0}', env.SOURCE_COMMIT_SHA) || '' }}
           cache-from: type=gha,scope=production-${{ matrix.image }}
-          cache-to: type=gha,scope=production-${{ matrix.image }},mode=max
+          cache-to: type=gha,scope=production-${{ matrix.image }},mode=max,ignore-error=true
+      - name: Classify failed production build
+        id: cache_failure
+        if: ${{ !cancelled() && steps.cached_build.outcome == 'failure' }}
+        env:
+          BUILDER_NAME: ${{ steps.cached_builder.outputs.name }}
+        run: node .github/scripts/deploy-build-retry.mjs classify
+      - name: Set up clean retry builder
+        id: retry_builder
+        if: steps.cache_failure.outputs.retry == 'true'
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+      - name: Retry production image without cache
+        id: retry_build
+        if: steps.cache_failure.outputs.retry == 'true'
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          builder: ${{ steps.retry_builder.outputs.name }}
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: true
+          provenance: mode=max
+          sbom: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:latest
+            ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:sha-${{ env.SOURCE_COMMIT_SHA }}
+          build-args: ${{ matrix.image == 'client' && format('BUILD_VERSION={0}', env.SOURCE_COMMIT_SHA) || '' }}
+          no-cache: true
+      - name: Select successful image digest
+        id: build
+        env:
+          PRIMARY_OUTCOME: ${{ steps.cached_build.outcome }}
+          PRIMARY_DIGEST: ${{ steps.cached_build.outputs.digest }}
+          RETRY_OUTCOME: ${{ steps.retry_build.outcome }}
+          RETRY_DIGEST: ${{ steps.retry_build.outputs.digest }}
+        run: node .github/scripts/deploy-build-retry.mjs select
       - name: Install Cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
       - name: Sign and verify production images

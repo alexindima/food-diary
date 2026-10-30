@@ -1,5 +1,25 @@
 # Production log rotation and temporary native crash diagnostics
 
+## Build cache recovery
+
+Each image matrix job first builds with its existing GitHub Actions cache.
+Cache export uses `ignore-error=true`: a failed optimization must not invalidate
+an otherwise successfully built and pushed image. If the build itself fails,
+the job inspects the failed record in that job's isolated Buildx builder.
+Only a terminal `failed to copy: GET` error with `BlobNotFound` for the Azure
+`/actions-cache/` endpoint permits one retry. Compilation, registry, cancellation,
+missing history and unrecognized errors remain failures.
+
+The retry uses a fresh builder, `no-cache: true` and no cache import or export.
+It keeps the same source, Dockerfile, tags, build arguments, provenance and SBOM.
+Only the digest from a successful attempt reaches Cosign and the image receipt;
+a failed retry blocks the server job. Other successful image jobs are unaffected.
+The existing 30-minute matrix-job timeout bounds both attempts together.
+
+Do not print raw Buildx history: its error URL can contain signed cache query
+parameters. The classifier emits only the retry decision and a fixed diagnostic.
+Regression cases run in the existing `deploy-source.test.mjs` CI step.
+
 ## Deployment task execution
 
 The server deployment retains one global `fooddiary-deploy.lock` through cleanup.
