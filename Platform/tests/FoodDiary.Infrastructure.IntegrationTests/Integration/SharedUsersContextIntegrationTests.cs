@@ -46,12 +46,17 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
         shared.WeightEntries.Add(WeightEntry.Create(user.Id, DateTime.UtcNow, 70));
-        Assert.Equal(8, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(9, owned.Model.GetEntityTypes().Count());
+        Assert.NotNull(owned.Model.FindEntityType(typeof(UserGoalRevision)));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<User>());
+        Assert.Empty(shared.ChangeTracker.Entries<UserGoalRevision>());
         await Assert.ThrowsAsync<InvalidOperationException>(() => shared.SaveChangesAsync());
         await provider.GetRequiredService<IUnitOfWork>().SaveChangesAsync();
         Assert.Single(await database.Users.ToListAsync());
+        UserGoalRevision initialGoals = Assert.Single(await database.Set<UserGoalRevision>()
+            .Where(revision => revision.UserId == user.Id).ToListAsync());
+        Assert.Equal(0, initialGoals.Revision);
         Assert.Single(await database.WeightEntries.ToListAsync());
         Assert.Single(await database.UserRefreshTokenSessions.ToListAsync());
         Assert.False(database.Database.HasPendingModelChanges());

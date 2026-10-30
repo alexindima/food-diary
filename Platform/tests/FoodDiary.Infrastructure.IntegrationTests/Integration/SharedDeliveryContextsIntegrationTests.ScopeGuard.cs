@@ -45,9 +45,10 @@ public sealed partial class SharedDeliveryContextsIntegrationTests {
         Assert.Contains("pending changes", error.Message, StringComparison.Ordinal);
         EntityEntry[] pendingEntries = [.. dirtyContext.ChangeTracker.Entries()];
         if (!foreignModule) {
-            Assert.Equal(new[] { typeof(User), typeof(UserNutritionProfile), typeof(UserPreferences) }.OrderBy(type => type.Name, StringComparer.Ordinal),
+            Assert.Equal(new[] { typeof(User), typeof(UserGoalRevision), typeof(UserNutritionProfile), typeof(UserPreferences) }.OrderBy(type => type.Name, StringComparer.Ordinal),
                 pendingEntries.Select(entry => entry.Entity.GetType()).OrderBy(type => type.Name, StringComparer.Ordinal));
             Assert.Same(user, Assert.Single(dirtyContext.ChangeTracker.Entries<User>()).Entity);
+            Assert.Same(Assert.Single(user.NutritionProfile.GoalHistory), Assert.Single(dirtyContext.ChangeTracker.Entries<UserGoalRevision>()).Entity);
         } else {
             Assert.Single(pendingEntries);
         }
