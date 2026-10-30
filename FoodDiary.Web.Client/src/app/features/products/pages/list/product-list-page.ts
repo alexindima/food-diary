@@ -7,6 +7,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -16,7 +17,6 @@ import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shar
 import type { Product } from '../../../../shared/models/product.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
-import { ProductListActiveFiltersComponent } from '../../components/list/product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../../components/list/product-list-sections/product-list-off-section/product-list-off-section';
@@ -48,7 +48,7 @@ import { ProductListRouteStateFacade } from '../../lib/list/product-list-route-s
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ProductListActiveFiltersComponent,
+        ActiveFiltersComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,
         ProductListOffSectionComponent,

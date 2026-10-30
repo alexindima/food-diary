@@ -215,7 +215,8 @@ export class FdUiInputComponent implements FormValueControl<string | number | nu
         }
 
         const target = event.target instanceof HTMLElement ? event.target : null;
-        if (target?.closest('.fd-ui-input__suffix') !== null && target?.closest('.fd-ui-input__suffix') !== undefined) {
+        const suffixAction = target?.closest('.fd-ui-input__suffix, .fd-ui-input__suffix-content');
+        if (suffixAction !== null && suffixAction !== undefined) {
             return;
         }
 

@@ -1,0 +1,31 @@
+:host {
+    display: block;
+}
+
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--fd-space-xxs);
+
+    &__chip {
+        max-width: 100%;
+        --fd-button-white-space: normal;
+        --fd-button-height-explicit: auto;
+        --fd-button-background-default: var(--fd-bg-accent-soft);
+        --fd-button-text-default: var(--fd-color-primary-700);
+    }
+
+    &__label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xxs);
+        padding-block: var(--fd-space-xxs);
+        overflow-wrap: anywhere;
+        text-align: start;
+
+        fd-ui-icon {
+            flex-shrink: 0;
+        }
+    }
+}

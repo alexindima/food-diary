@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2761,
+    "typescriptFiles": 2766,
     "symbols": 870,
     "routes": 108,
     "features": 46,
-    "specs": 842,
+    "specs": 844,
     "localeFiles": 5,
     "roles": {
       "Component": 502,
@@ -1078,7 +1078,6 @@
         "ProductExternalFoodFacade",
         "ProductFavoritesPickerComponent",
         "ProductFavoritesPickerFacade",
-        "ProductListActiveFiltersComponent",
         "ProductListBaseComponent",
         "ProductListDialogComponent",
         "ProductListDialogContentComponent",
@@ -1139,6 +1138,7 @@
         "FoodDiary.Web.Client/src/app/features/products/dialogs/public-product-preview/public-product-preview.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/detail/product-detail.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/favorites/product-favorites-picker.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list-filter-chips.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list-query.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list-route-state.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list-url.facade.spec.ts",
@@ -1357,6 +1357,7 @@
         "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-select-dialog/recipe-select-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/detail/recipe-detail.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/favorites/recipe-favorites-picker.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/recipes/lib/list/recipe-list-filter-chips.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/list/recipe-list-query.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-catalog-favorites.spec.ts",
         "FoodDiary.Web.Client/src/app/features/recipes/lib/public-recipe.utils.spec.ts",
@@ -3140,6 +3141,13 @@
       "line": 18
     },
     {
+      "name": "ActiveFiltersComponent",
+      "role": "Component",
+      "selector": "fd-active-filters",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.ts",
+      "line": 14
+    },
+    {
       "name": "AiConsentDialogComponent",
       "role": "Component",
       "selector": "fd-ai-consent-dialog",
@@ -3550,7 +3558,7 @@
       "role": "Component",
       "selector": "fd-product-card",
       "path": "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.ts",
-      "line": 38
+      "line": 42
     },
     {
       "name": "PwaInstallActionsComponent",
@@ -5342,7 +5350,7 @@
       "role": "Component",
       "selector": "fd-product-list-base",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-base/product-list-base.ts",
-      "line": 53
+      "line": 52
     },
     {
       "name": "ProductListFiltersDialogComponent",
@@ -5350,13 +5358,6 @@
       "selector": "fd-product-list-filters-dialog",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-filters-dialog/product-list-filters-dialog.ts",
       "line": 35
-    },
-    {
-      "name": "ProductListActiveFiltersComponent",
-      "role": "Component",
-      "selector": "fd-product-list-active-filters",
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-active-filters/product-list-active-filters.ts",
-      "line": 13
     },
     {
       "name": "ProductListEmptyStateComponent",
@@ -5503,7 +5504,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
-      "line": 65
+      "line": 67
     },
     {
       "name": "ProductExternalFoodFacade",
@@ -6210,7 +6211,7 @@
       "role": "Component",
       "selector": "fd-recipe-list",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/pages/list/recipe-list.ts",
-      "line": 78
+      "line": 82
     },
     {
       "name": "RecipeAddComponent",
@@ -8279,16 +8280,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4188,
-      "russianProperties": 4188,
+      "englishProperties": 4190,
+      "russianProperties": 4190,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1293,
-      "russianProperties": 1293,
+      "englishProperties": 1296,
+      "russianProperties": 1296,
       "countsMatch": true
     },
     {

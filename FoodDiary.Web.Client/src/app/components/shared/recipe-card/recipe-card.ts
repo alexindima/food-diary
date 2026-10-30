@@ -57,6 +57,7 @@ export class RecipeCardComponent {
     public readonly imageUrl = input.required<string | null | undefined>();
     public readonly favoriteLoading = input(false);
     public readonly showOwnership = input(true);
+    public readonly catalogLayout = input(false);
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
@@ -125,10 +126,6 @@ export class RecipeCardComponent {
     });
     private readonly language = injectCurrentLanguage();
     protected readonly description = computed(() => {
-        const names = (this.recipe().steps ?? [])
-            .flatMap(step => step.ingredients ?? [])
-            .map(item => capitalizeFirstLetter(item.textName ?? item.productName ?? item.nestedRecipeName))
-            .filter(Boolean);
         const count = this.ingredientCount();
         const category = new Intl.PluralRules(this.language()).select(count).toUpperCase();
         const ingredients = this.translateService.instant(`RECIPE_CARD.INGREDIENTS_${category}`, { count });
@@ -136,6 +133,14 @@ export class RecipeCardComponent {
             this.totalTime() === null
                 ? ingredients
                 : `${ingredients} · ${this.totalTime()} ${this.translateService.instant('RECIPE_DETAIL.MIN')}`;
+        if (this.catalogLayout()) {
+            return metadata;
+        }
+
+        const names = (this.recipe().steps ?? [])
+            .flatMap(step => step.ingredients ?? [])
+            .map(item => capitalizeFirstLetter(item.textName ?? item.productName ?? item.nestedRecipeName))
+            .filter(Boolean);
         return names.length > 0 ? `${metadata} · ${[...new Set(names)].join(', ')}` : metadata;
     });
     protected openCard(): void {

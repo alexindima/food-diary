@@ -2,12 +2,12 @@ import { HttpContext } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
@@ -25,6 +25,43 @@ import { PRODUCT_LIST_QUERY_STATE } from './product-list-query-state';
 const DEFAULT_TOTAL_PAGES = 3;
 
 describe('Product list page recovery', () => {
+    it('removes one type through URL state without losing search or other constraints', () => {
+        const { facade, writeAsync } = setup(
+            { page: '3', search: 'Milk', onlyMine: 'true', types: 'Fruit,Dairy', caloriesFrom: '0', caloriesTo: '500', hasImage: 'false' },
+            true,
+        );
+        writeAsync.mockClear();
+        facade.removeFilter('type:Fruit');
+        expect(writeAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                page: 1,
+                search: 'Milk',
+                onlyMine: true,
+                productTypes: ['Dairy'],
+                caloriesFrom: 0,
+                caloriesTo: 500,
+                hasImage: false,
+            }),
+        );
+    });
+
+    it('resets structured filters through URL state while preserving the search', () => {
+        const { facade, writeAsync } = setup(
+            { page: '3', search: 'Milk', onlyMine: 'true', types: 'Fruit', caloriesFrom: '0', hasImage: 'false' },
+            true,
+        );
+        writeAsync.mockClear();
+        facade.resetFilters();
+        expect(writeAsync).toHaveBeenCalledWith({
+            page: 1,
+            search: 'Milk',
+            onlyMine: false,
+            productTypes: [],
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
+        });
+    });
     it('replaces a stale page with the last result page and preserves ownership and filters', () => {
         const { facade, changes, products, writeAsync } = setup({ page: '3', onlyMine: 'true', types: 'Fruit', hasImage: 'false' }, true, {
             totalPages: 2,
@@ -202,7 +239,7 @@ function setup(
             { provide: ViewportService, useValue: { isMobile: signal(false) } },
             { provide: FdUiDialogService, useValue: {} },
             { provide: FdUiToastService, useValue: {} },
-            { provide: TranslateService, useValue: {} },
+            provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: 0 },
             ...(page ? [{ provide: PRODUCT_LIST_QUERY_STATE, useValue: { initial, changes, writeAsync } }] : []),
         ],

@@ -8,6 +8,7 @@ import { provideTranslateTesting } from '../../../../testing/translate-testing.m
 // eslint-disable-next-line scope-imports/shared-ui -- shared card spec needs the concrete feature favorite service token
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
 import { AuthService } from '../../../services/auth.service';
+import { MeasurementUnit } from '../../../shared/models/product.data';
 import { ProductCardComponent, type ProductCardItem } from './product-card';
 
 const MOCK_PRODUCT: ProductCardItem = {
@@ -24,6 +25,9 @@ const MOCK_PRODUCT: ProductCardItem = {
     qualityScore: 72,
     qualityGrade: 'green',
 };
+
+const GRAM_NUTRITION_BASE = 100;
+const DRINK_NUTRITION_BASE = 250;
 
 type ProductCardTestContext = {
     component: ProductCardComponent;
@@ -95,6 +99,42 @@ describe('ProductCardComponent', () => {
 });
 
 describe('ProductCardComponent content', () => {
+    it.each([
+        [GRAM_NUTRITION_BASE, MeasurementUnit.G],
+        [DRINK_NUTRITION_BASE, MeasurementUnit.ML],
+        [1, MeasurementUnit.PCS],
+    ])('shows the declared nutrition basis %s %s without rescaling calories', async (baseAmount, baseUnit) => {
+        const { el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, baseAmount, baseUnit });
+        fixture.detectChanges();
+
+        expect(el.querySelector('.entity-card__calories')?.textContent).toContain(`/ ${baseAmount} GENERAL.UNITS.${baseUnit}`);
+        expect(el.querySelector('.entity-card__calories-value')?.textContent.trim()).toBe('290');
+    });
+
+    it('keeps the brand in the catalog and leaves barcode and comments to product details', async () => {
+        const { el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, brand: 'Example brand', barcode: '1234567890123' });
+        fixture.detectChanges();
+
+        expect(el.querySelector('.entity-card__description')?.textContent.trim()).toBe('Example brand');
+        expect(el.textContent).not.toContain('1234567890123');
+        expect(el.querySelector('.entity-card__comment')).toBeNull();
+    });
+
+    it('keeps catalog nutrition and actions available when quality is absent', async () => {
+        const { el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('product', { ...MOCK_PRODUCT, qualityScore: null, qualityGrade: null });
+        fixture.detectChanges();
+
+        expect(el.querySelector('.nutrient-badges__chip--quality')).toBeNull();
+        expect(el.querySelector('.entity-card__calories-value')?.textContent.trim()).toBe('290');
+        expect(el.querySelector('.entity-card__compact-action')).not.toBeNull();
+    });
+
     it('should display product name', async () => {
         const { el, fixture } = await setupProductCardAsync();
         fixture.detectChanges();
@@ -144,6 +184,26 @@ describe('ProductCardComponent content', () => {
 });
 
 describe('ProductCardComponent events', () => {
+    it('keeps the catalog add and favorite controls independent from opening product details', async () => {
+        const { component, el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.detectChanges();
+        const opened = vi.fn();
+        const added = vi.fn();
+        const favorited = vi.fn();
+        component.open.subscribe(opened);
+        component.addToMeal.subscribe(added);
+        component.favoriteToggle.subscribe(favorited);
+
+        el.querySelector<HTMLButtonElement>('.entity-card__compact-action')?.click();
+        el.querySelector<HTMLButtonElement>('.entity-card__favorite-button')?.click();
+
+        expect(added).toHaveBeenCalledOnce();
+        expect(favorited).toHaveBeenCalledOnce();
+        expect(opened).not.toHaveBeenCalled();
+        expect(el.querySelector('.entity-card__compact-action')?.textContent).not.toContain('PRODUCT_CARD.TO_DIARY');
+    });
+
     it.each(['label', 'bar', 'value'])('opens product details when clicking the quality %s', async part => {
         const { component, el, fixture } = await setupProductCardAsync();
         fixture.detectChanges();

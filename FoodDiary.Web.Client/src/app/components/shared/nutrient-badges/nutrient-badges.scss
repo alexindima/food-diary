@@ -1,5 +1,38 @@
 @use 'variables' as variables;
 
+@mixin split-quality-layout {
+    display: contents;
+
+    .nutrient-badges {
+        display: contents;
+    }
+
+    .nutrient-badges__macros {
+        grid-area: nutrients;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--fd-space-xs);
+        min-width: 0;
+    }
+
+    .nutrient-badges__chip--quality {
+        grid-area: quality;
+        display: flex;
+        flex-wrap: nowrap;
+        width: 100%;
+        gap: var(--fd-space-xxs);
+    }
+
+    .nutrient-badges__quality-bar {
+        display: block;
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+    }
+}
+
 :host {
     display: block;
     flex: 1 1 auto;
@@ -384,37 +417,23 @@
     translate: 0 calc(var(--nutrient-badges-help-icon-offset, 0px) - 0.0625em);
 }
 
+:host(.nutrient-badges--split-quality) {
+    @include split-quality-layout;
+
+    .nutrient-badges__quality-bar {
+        max-width: clamp(72px, 12cqi, 150px);
+    }
+}
+
+@container (min-width: 760px) {
+    :host(.nutrient-badges--split-quality) .nutrient-badges__macros {
+        justify-content: flex-start;
+        gap: var(--fd-space-lg);
+    }
+}
+
 @media #{variables.$media-tablet} {
     :host(.nutrient-badges--meal) {
-        display: contents;
-
-        .nutrient-badges {
-            display: contents;
-        }
-
-        .nutrient-badges__macros {
-            grid-area: nutrients;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--fd-space-xs);
-            min-width: 0;
-        }
-
-        .nutrient-badges__chip--quality {
-            grid-area: quality;
-            display: flex;
-            flex-wrap: nowrap;
-            width: 100%;
-            gap: var(--fd-space-xxs);
-        }
-
-        .nutrient-badges__quality-bar {
-            display: block;
-            flex: 1 1 0;
-            width: auto;
-            min-width: 0;
-        }
+        @include split-quality-layout;
     }
 }

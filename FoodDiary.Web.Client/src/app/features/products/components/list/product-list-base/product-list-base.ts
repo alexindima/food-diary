@@ -7,18 +7,17 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormDirective } from 'fd-ui-kit/form/fd-ui-form.directive';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { ActiveFiltersComponent } from '../../../../../components/shared/active-filters/active-filters';
 import { ErrorStateComponent } from '../../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../../components/shared/skeleton-card/skeleton-card';
-import { buildProductTypeTranslationKey } from '../../../../../shared/lib/product-type.utils';
 import type { FavoriteProduct, Product } from '../../../../../shared/models/product.data';
 import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { scrollElementIntoView } from '../../../../../shared/ui/scroll/scroll-element-into-view';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
-import { ProductListActiveFiltersComponent } from '../product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../product-list-sections/product-list-off-section/product-list-off-section';
@@ -43,7 +42,7 @@ import { PRODUCT_LIST_TOUR } from './product-list-tour';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
-        ProductListActiveFiltersComponent,
+        ActiveFiltersComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,
         ProductListOffSectionComponent,
@@ -78,26 +77,7 @@ export class ProductListBaseComponent {
     protected readonly allProductItems = this.productListFacade.allProductItems;
     protected readonly hasVisibleProducts = this.productListFacade.hasVisibleProducts;
     protected readonly hasActiveFilters = this.productListFacade.hasActiveFilters;
-    protected readonly selectedProductTypeKeys = computed(() =>
-        this.productListFacade.selectedProductTypes().map(type => buildProductTypeTranslationKey(type)),
-    );
-    protected readonly activeFilterKeys = computed(() => {
-        const keys = [...this.selectedProductTypeKeys()];
-        if (this.onlyMineFilter()) {
-            keys.unshift('PRODUCT_LIST.FILTER_MY_PRODUCTS');
-        }
-        if (this.caloriesFromFilter() !== null || this.caloriesToFilter() !== null) {
-            keys.push('PRODUCT_LIST.FILTER_CALORIES_ACTIVE');
-        }
-        if (this.hasImageFilter() === true) {
-            keys.push('PRODUCT_LIST.FILTER_IMAGE_WITH');
-        }
-        if (this.hasImageFilter() === false) {
-            keys.push('PRODUCT_LIST.FILTER_IMAGE_WITHOUT');
-        }
-
-        return keys;
-    });
+    protected readonly activeFilterChips = this.productListFacade.activeFilterChips;
     protected readonly isEmptyState = this.productListFacade.isEmptyState;
     protected readonly allProductsSectionLabelKey = this.productListFacade.allProductsSectionLabelKey;
     protected readonly isMobileSearchVisible = this.productListFacade.isMobileSearchVisible;

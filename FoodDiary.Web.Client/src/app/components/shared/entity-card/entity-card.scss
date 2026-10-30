@@ -651,3 +651,71 @@ fd-entity-card-actions {
         margin-inline-end: var(--fd-size-control-sm);
     }
 }
+
+.entity-card--catalog {
+    --entity-card-action-count: 0;
+
+    .entity-card__favorite-button,
+    .entity-card__compact-action {
+        position: static;
+        grid-area: catalog-actions;
+        justify-self: end;
+        width: var(--fd-size-control-touch);
+        min-width: var(--fd-size-control-touch);
+        height: var(--fd-size-control-touch);
+        flex-shrink: 0;
+    }
+
+    .entity-card__favorite-button {
+        align-self: start;
+    }
+
+    .entity-card__compact-action {
+        align-self: start;
+        margin-block-start: calc(var(--fd-size-control-touch) + var(--fd-space-xxs));
+        background: var(--fd-bg-accent-soft);
+        color: var(--fd-color-primary-600);
+    }
+}
+
+@media (any-pointer: coarse) {
+    .entity-card--catalog {
+        --nutrient-badges-help-margin-block: calc(var(--fd-size-icon-sm) - var(--fd-size-control-touch)) 0;
+        --nutrient-badges-help-icon-offset: calc((var(--fd-size-control-touch) - var(--fd-size-icon-sm)) / 2);
+    }
+}
+
+:host(.entity-card-body--catalog) {
+    .entity-card__title-block {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--fd-space-xxs);
+        padding: 0;
+    }
+
+    .entity-card__name-row {
+        grid-area: 1 / 1;
+    }
+
+    .entity-card__name {
+        display: -webkit-box;
+        white-space: normal;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .entity-card__calories {
+        grid-area: 2 / 1;
+        flex-wrap: wrap;
+    }
+
+    .entity-card__description {
+        grid-area: 3 / 1;
+    }
+
+    .entity-card__summary-row,
+    .entity-card__nutrients,
+    .entity-card__nutrients-container {
+        display: contents;
+    }
+}

@@ -26,6 +26,24 @@ class TestHostComponent {
 })
 class ExplicitIdHostComponent {}
 
+@Component({
+    imports: [FdUiInputComponent],
+    template: `
+        <fd-ui-input
+            label="Search"
+            suffixButtonIcon="close"
+            suffixButtonAriaLabel="Clear search"
+            (suffixButtonClicked)="clears = clears + 1"
+        >
+            <button fdInputSuffix type="button" (click)="scans = scans + 1">Scan barcode</button>
+        </fd-ui-input>
+    `,
+})
+class ProjectedSuffixHostComponent {
+    public clears = 0;
+    public scans = 0;
+}
+
 type InputTestContext = {
     component: FdUiInputComponent;
     el: HTMLElement;
@@ -79,6 +97,23 @@ const FRACTIONAL_HOURS = 1.5;
 const NEGATIVE_FRACTIONAL_VALUE = -1.5;
 
 describe('FdUiInputComponent browser form metadata', () => {
+    it('keeps a projected suffix action and the existing clear action independent without stealing focus', async () => {
+        await TestBed.configureTestingModule({ imports: [ProjectedSuffixHostComponent] }).compileComponents();
+        const fixture = TestBed.createComponent(ProjectedSuffixHostComponent);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const focus = vi.spyOn(requireInput(element), 'focus');
+
+        element.querySelector<HTMLButtonElement>('.fd-ui-input__control-wrap [fdInputSuffix]')?.click();
+        expect(fixture.componentInstance.scans).toBe(1);
+        expect(fixture.componentInstance.clears).toBe(0);
+
+        element.querySelector<HTMLButtonElement>('.fd-ui-input__suffix')?.click();
+        expect(fixture.componentInstance.clears).toBe(1);
+        expect(fixture.componentInstance.scans).toBe(1);
+        expect(focus).not.toHaveBeenCalled();
+    });
+
     it('serializes a stable field name and disables correction for account identifiers', async () => {
         const { fixture, input, el } = await setupInputAsync();
         fixture.componentRef.setInput('id', 'account-email');

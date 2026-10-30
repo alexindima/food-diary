@@ -144,6 +144,9 @@
         "CONFIRM": "Confirm",
         "LOADING": "Loading",
         "MORE_ACTIONS": "More actions",
+        "ACTIVE_FILTERS": "Active filters",
+        "REMOVE_FILTER": "Remove filter: {{filter}}",
+        "RESET_FILTERS": "Reset all",
         "SKIP_TO_MAIN_CONTENT": "Skip to main content",
         "CLOSE_NOTIFICATION": "Close notification"
     },
@@ -619,6 +622,7 @@
         "FILTER_IMAGE_WITHOUT": "Without photo",
         "ACTIVE_FILTERS_LABEL": "Active filters",
         "ACTIVE_FILTERS_EDIT": "Edit",
+        "FAVORITES_WITH_COUNT": "Favorites, {{count}}",
         "TOUR": {
             "START_TOUR": "Show recipes tour",
             "ACTIONS_TITLE": "Create and filter recipes",
@@ -4682,6 +4686,7 @@
         "NO_RESULTS_TITLE": "No matching products",
         "NO_RESULTS_COPY": "Try another search phrase, scan a barcode, or broaden your filters to see more products.",
         "FAVORITES_TITLE": "Favorites",
+        "FAVORITES_WITH_COUNT": "Favorites, {{count}}",
         "FAVORITES_LOAD_MORE": "Load all favorites",
         "FAVORITE_UNNAMED": "Product",
         "FAVORITE_OPEN": "Open product",

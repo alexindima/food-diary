@@ -340,8 +340,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "aa847f3fe6c1efd9bb2dfde0abae2945793c6b8205b8672a64af01bda9980026",
-          "reviewReason": "Reviewed regenerated architecture-health index after removing hydration undo inputs and outputs and adding toast/facade checks. The workflow still correctly distinguishes enforced dependency failures from unreferenced-selector/test-gap investigation leads; no project dependencies or backend ownership changed."
+          "sha256": "8f3869d3ec70118819722bca0320dfccaca27ad87b256cd4ed8e61f1b90c9265",
+          "reviewReason": "Reviewed the architecture-health index diff: the product-only active filter renderer is replaced by shared ActiveFiltersComponent, consumed by ProductListBase/ProductListPage and RecipeList. The removed selector has no remaining source references; production frontend compilation and focused/dependent tests pass. Strict dependency-cruiser reports zero violations across 2740 modules. No .NET project, module dependency or domain ownership changes; existing workflow guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -354,10 +354,10 @@
           "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed regenerated architecture-health index after removing hydration undo inputs and outputs and adding toast/facade checks. The workflow still correctly distinguishes enforced dependency failures from unreferenced-selector/test-gap investigation leads; no project dependencies or backend ownership changed.",
+      "reason": "Reviewed the architecture-health index diff: the product-only active filter renderer is replaced by shared ActiveFiltersComponent, consumed by ProductListBase/ProductListPage and RecipeList. The removed selector has no remaining source references; production frontend compilation and focused/dependent tests pass. Strict dependency-cruiser reports zero violations across 2740 modules. No .NET project, module dependency or domain ownership changes; existing workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "e34223ff323edbb725b9e08cc5b79149be15afbb",
-      "reviewedAtUtc": "2026-10-29T20:09:59.8072412Z"
+      "gitHead": "3d519fabe53490148f40b8f6f60d1522fd144699",
+      "reviewedAtUtc": "2026-10-30T23:10:07.8635337Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

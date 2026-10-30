@@ -84,69 +84,51 @@
 
     <fd-page-body>
         <div class="product-list__search-toolbar">
-            @if (!isMobileView()) {
-                <div class="product-list__desktop-search" data-tour-id="product-list-search">
-                    <form method="post" class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
-                        <div class="product-list__search-control">
-                            <fd-ui-input
-                                class="product-list__search-input"
-                                size="md"
-                                prefixIcon="search"
-                                [suffixButtonIcon]="searchSuffixIcon()"
-                                [formField]="searchForm.search"
-                                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                                [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
-                                (suffixButtonClicked)="clearSearch()"
-                            />
-                            <fd-ui-button
-                                appearance="toolbar"
-                                fill="outline"
-                                size="md"
-                                icon="qr_code_scanner"
-                                [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                                (click)="openBarcodeScanner()"
-                            />
-                        </div>
-                    </form>
-                </div>
-            } @else {
-                <div class="product-list__mobile-search product-list__mobile-search--open" data-tour-id="product-list-search">
-                    <form method="post" class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
-                        <div class="product-list__search-control">
-                            <fd-ui-input
-                                class="product-list__search-input"
-                                size="md"
-                                prefixIcon="search"
-                                [suffixButtonIcon]="searchSuffixIcon()"
-                                [formField]="searchForm.search"
-                                [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
-                                [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
-                                [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
-                                (suffixButtonClicked)="clearSearch()"
-                            />
-                            <fd-ui-button
-                                appearance="toolbar"
-                                fill="outline"
-                                size="md"
-                                icon="qr_code_scanner"
-                                [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
-                                (click)="openBarcodeScanner()"
-                            />
-                        </div>
-                    </form>
-                </div>
-            }
-            <fd-ui-button variant="secondary" fill="outline" icon="star" data-tour-id="product-list-favorites" (click)="openFavorites()">
-                {{ 'PRODUCT_LIST.FAVORITES_TITLE' | translate }} · {{ favoriteTotalCount() }}
+            <div class="product-list__desktop-search" data-tour-id="product-list-search">
+                <form method="post" class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
+                    <fd-ui-input
+                        class="product-list__search-input"
+                        size="md"
+                        prefixIcon="search"
+                        [suffixButtonIcon]="searchSuffixIcon()"
+                        [formField]="searchForm.search"
+                        [label]="'PRODUCT_LIST.SEARCH_LABEL' | translate"
+                        [placeholder]="'PRODUCT_LIST.SEARCH_PLACEHOLDER' | translate"
+                        [suffixButtonAriaLabel]="'PRODUCT_LIST.SEARCH_CLEAR' | translate"
+                        (suffixButtonClicked)="clearSearch()"
+                    >
+                        <fd-ui-button
+                            fdInputSuffix
+                            appearance="toolbar"
+                            variant="secondary"
+                            fill="text"
+                            icon="qr_code_scanner"
+                            [ariaLabel]="'PRODUCT_LIST.SCAN_BARCODE' | translate"
+                            (click)="openBarcodeScanner()"
+                        />
+                    </fd-ui-input>
+                </form>
+            </div>
+            <fd-ui-button
+                class="product-list__favorites-trigger"
+                variant="secondary"
+                fill="outline"
+                icon="star"
+                data-tour-id="product-list-favorites"
+                [ariaLabel]="'PRODUCT_LIST.FAVORITES_WITH_COUNT' | translate: { count: favoriteTotalCount() }"
+                [fdUiHint]="'PRODUCT_LIST.FAVORITES_TITLE' | translate"
+                (click)="openFavorites()"
+            >
+                {{ favoriteTotalCount() }}
             </fd-ui-button>
         </div>
-        <fd-product-list-active-filters
-            [hidden]="!hasActiveFilters()"
-            [attr.aria-hidden]="!hasActiveFilters()"
-            [filterKeys]="activeFilterKeys()"
-            (filtersEdit)="openFilters()"
-        />
+        @if (hasActiveFilters()) {
+            <fd-active-filters
+                [chips]="activeFilterChips()"
+                (filterRemoved)="productListFacade.removeFilter($event)"
+                (filtersReset)="productListFacade.resetFilters()"
+            />
+        }
         @if (errorKey()) {
             <fd-error-state (retry)="retryLoad()" />
         } @else if (productData.isLoading()) {

@@ -228,6 +228,8 @@ The `id` input identifies the native input control and its label. The component 
 
 Trailing button space is reserved only when `suffixButtonIcon` is supplied. Text units participate in the field layout, leaving the remaining width for the value in compact forms.
 
+Project an additional action with `fdInputSuffix` to place it inside the field beside the existing suffix button, for example a barcode scanner beside search clearing. The actions reserve their own space and keep independent focus. Give projected actions an accessible name, `type="button"`, and their own disabled binding when needed.
+
 **Inputs**
 
 - `label?: string`

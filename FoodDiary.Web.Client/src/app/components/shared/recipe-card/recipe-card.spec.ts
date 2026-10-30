@@ -77,6 +77,21 @@ describe('RecipeCardComponent', () => {
 });
 
 describe('RecipeCardComponent content', () => {
+    it('keeps catalog ingredient count and cooking time while moving long ingredient names and comments to details', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('recipe', {
+            ...MOCK_RECIPE,
+            steps: [{ ingredients: [{ textName: 'olive oil' }, { productName: 'соль' }] }],
+        });
+        fixture.detectChanges();
+
+        expect(component['ingredientCount']()).toBe(2);
+        expect(el.querySelector('.entity-card__description')?.textContent).toContain(`${TOTAL_TIME_MINUTES} RECIPE_DETAIL.MIN`);
+        expect(el.querySelector('.entity-card__description')?.textContent).not.toContain('Olive oil');
+        expect(el.querySelector('.entity-card__comment')).toBeNull();
+    });
+
     it('should display recipe name', async () => {
         const { el, fixture } = await setupRecipeCardAsync();
         fixture.detectChanges();
@@ -126,6 +141,26 @@ describe('RecipeCardComponent content', () => {
 });
 
 describe('RecipeCardComponent events', () => {
+    it('keeps catalog add and favorite actions separate from opening the recipe', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.detectChanges();
+        const opened = vi.fn();
+        const added = vi.fn();
+        const favorited = vi.fn();
+        component.open.subscribe(opened);
+        component.addToMeal.subscribe(added);
+        component.favoriteToggle.subscribe(favorited);
+
+        el.querySelector<HTMLButtonElement>('.entity-card__compact-action')?.click();
+        el.querySelector<HTMLButtonElement>('.entity-card__favorite-button')?.click();
+
+        expect(added).toHaveBeenCalledOnce();
+        expect(favorited).toHaveBeenCalledOnce();
+        expect(opened).not.toHaveBeenCalled();
+        expect(el.querySelector('.entity-card__compact-action')?.textContent).not.toContain('RECIPE_CARD.TO_DIARY');
+    });
+
     it('uses a compact action without opening details and an icon for a missing photo', async () => {
         const { component, el, fixture } = await setupRecipeCardAsync();
         const add = vi.fn();
@@ -262,8 +297,9 @@ describe('RecipeCardComponent ingredients', () => {
 });
 
 describe('RecipeCardComponent nutrition completeness', () => {
-    it('renders the reported recipe per serving while retaining the source recipe used by actions', async () => {
+    it.each([false, true])('renders nutrition per serving without changing the source recipe, catalog layout: %s', async catalogLayout => {
         const { component, el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('catalogLayout', catalogLayout);
         const recipe = {
             ...MOCK_RECIPE,
             servings: 5,
@@ -280,6 +316,18 @@ describe('RecipeCardComponent nutrition completeness', () => {
         expect(component['nutrition']()).toEqual({ proteins: 36, fats: 47, carbs: 5, fiber: 1, alcohol: 0 });
         expect(component.recipe()).toBe(recipe);
         expect(component.recipe().totalCalories).toBe(recipe.totalCalories);
+    });
+
+    it('keeps unavailable catalog nutrition distinct from zero and retains its incomplete-data warning', async () => {
+        const { el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('catalogLayout', true);
+        fixture.componentRef.setInput('recipe', { ...MOCK_RECIPE, totalCalories: null, missingIngredientCount: 2 });
+        fixture.detectChanges();
+
+        expect(el.querySelector('.entity-card__calories-value')?.textContent).toBe('—');
+        expect(el.querySelector('fd-nutrient-badges')).toBeNull();
+        expect(el.querySelector('.entity-card__nutrition-warning')).not.toBeNull();
+        expect(el.querySelector('.entity-card__compact-action')).not.toBeNull();
     });
 
     it.each([null, 0, MOCK_RECIPE.totalCalories])(

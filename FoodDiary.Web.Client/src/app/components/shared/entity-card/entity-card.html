@@ -2,6 +2,8 @@
     class="entity-card"
     [class.entity-card--compact-action]="compactAction()"
     [class.media-card--meal]="mobileMealLayout()"
+    [class.media-card--catalog]="catalogLayout()"
+    [class.entity-card--catalog]="catalogLayout()"
     (click)="openCard()"
 >
     <span fdMediaCardContent class="entity-card__background" aria-hidden="true" [style.mask-image]="backgroundImage()"></span>
@@ -49,7 +51,9 @@
     <fd-entity-card-body
         fdMediaCardContent
         [mobileMealLayout]="mobileMealLayout()"
+        [catalogLayout]="catalogLayout()"
         [class.entity-card-body--meal]="mobileMealLayout()"
+        [class.entity-card-body--catalog]="catalogLayout()"
         [class.entity-card-body--favorite]="showFavorite()"
         [title]="title()"
         [titleMuted]="titleMuted()"
@@ -58,6 +62,7 @@
         [nutrition]="nutrition()"
         [calories]="calories()"
         [caloriesUnitKey]="caloriesUnitKey()"
+        [caloriesBasis]="caloriesBasis()"
         [nutritionNote]="nutritionNote()"
         [quality]="normalizedQuality()"
     />

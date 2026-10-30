@@ -28,6 +28,7 @@ import { BarcodeScannerComponent } from '../../../../components/shared/barcode-s
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import { developmentRequestContext } from '../../../../shared/development/development-request-context';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { resolveProductImageUrl } from '../../../../shared/lib/product-image.util';
 import { RequestPagedData } from '../../../../shared/lib/request-paged-data';
 import { RequestStateController } from '../../../../shared/lib/request-state';
@@ -58,6 +59,7 @@ import {
 } from '../../dialogs/product-favorites-picker/product-favorites-picker';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
 import { buildFavoriteProductSnapshot, getProductListActiveFilterCount, resolveProductListFilterChanges } from './product-list.state';
+import { productFilterChips, removeProductFilter, resetProductFilters } from './product-list-filter-chips';
 import { normalizeProductListSearch, type ProductListQuery, productListQueryKey } from './product-list-query';
 import { PRODUCT_LIST_QUERY_STATE } from './product-list-query-state';
 
@@ -141,6 +143,10 @@ export class ProductListFacade {
         }),
     );
     public readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
+    private readonly currentLanguage = injectCurrentLanguage();
+    public readonly activeFilterChips = computed(() =>
+        productFilterChips(this.currentQuery(1, this.searchValue()), key => this.translateService.instant(key), this.currentLanguage()),
+    );
     public readonly isEmptyState = computed(
         () => this.productData.totalItems === 0 && !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters(),
     );
@@ -156,6 +162,25 @@ export class ProductListFacade {
 
     public clearSearch(): void {
         this.searchForm.search().value.set('');
+    }
+
+    public removeFilter(id: string): void {
+        this.applyActiveFilterQuery(removeProductFilter(this.currentQuery(1, this.searchValue()), id));
+    }
+
+    public resetFilters(): void {
+        this.applyActiveFilterQuery(resetProductFilters(this.currentQuery(1, this.searchValue())));
+    }
+
+    private applyActiveFilterQuery(query: ProductListQuery): void {
+        if (this.queryState !== null) {
+            void this.queryState.writeAsync(query).catch(() => {
+                this.navigationError.set('ERRORS.LOAD_FAILED_TITLE');
+            });
+            return;
+        }
+        this.applyRouteQuery(query);
+        this.loadProducts(1, this.pageSize, query.search).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     public constructor() {

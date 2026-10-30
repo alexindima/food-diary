@@ -4903,27 +4903,6 @@
       "specPath": null
     },
     {
-      "class": "ProductListActiveFiltersComponent",
-      "selector": "fd-product-list-active-filters",
-      "feature": "products",
-      "path": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-active-filters/product-list-active-filters.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/list/product-list-sections/product-list-active-filters/product-list-active-filters.html",
-      "inputs": [
-        {
-          "name": "filterKeys",
-          "type": "readonly string[]",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "filtersEdit",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "PublicProductGalleryComponent",
       "selector": "fd-public-product-gallery",
       "feature": "products",
@@ -5277,6 +5256,31 @@
         {
           "name": "fileSelected",
           "type": "File | null"
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "ActiveFiltersComponent",
+      "selector": "fd-active-filters",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.html",
+      "inputs": [
+        {
+          "name": "chips",
+          "type": "readonly ActiveFilterChip[]",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "filterRemoved",
+          "type": "string"
+        },
+        {
+          "name": "filtersReset",
+          "type": ""
         }
       ],
       "specPath": null

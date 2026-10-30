@@ -3,6 +3,7 @@
         <div class="entity-card__calories fd-ui-body-sm">
             <span class="entity-card__calories-value">{{ (calories() | number: '1.0-0') ?? '—' }}</span>
             <span class="entity-card__calories-unit">{{ caloriesUnitKey() | translate }}</span>
+            <span class="entity-card__calories-unit" [hidden]="!caloriesBasis()">/ {{ caloriesBasis() }}</span>
             @if (nutritionNote(); as note) {
                 <button
                     fdUiStopActivation
@@ -42,6 +43,7 @@
                 >
                     <fd-nutrient-badges
                         [class.nutrient-badges--meal]="mobileMealLayout()"
+                        [class.nutrient-badges--split-quality]="catalogLayout()"
                         [proteins]="nutrition().proteins"
                         [fats]="nutrition().fats"
                         [carbs]="nutrition().carbs"

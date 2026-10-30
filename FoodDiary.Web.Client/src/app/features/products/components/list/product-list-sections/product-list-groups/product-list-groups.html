@@ -48,6 +48,7 @@
             <div class="product-list__section-grid fd-grid fd-gap-page-card">
                 @for (item of allItems(); track item.product.id) {
                     <fd-product-card
+                        [catalogLayout]="true"
                         [product]="item.product"
                         [imageUrl]="item.imageUrl"
                         [favoriteLoading]="favoriteLoadingIds().has(item.product.id)"

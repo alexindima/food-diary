@@ -5,6 +5,7 @@ import { EMPTY, type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../../../shared/models/recipe.data';
@@ -36,6 +37,7 @@ beforeEach(() => {
     TestBed.configureTestingModule({
         imports: [RecipeListComponent],
         providers: [
+            provideTranslateTesting({ lang: 'en', fallbackLang: 'en' }),
             { provide: ViewportService, useValue: { isMobile } },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
@@ -408,27 +410,45 @@ describe('RecipeListComponent presentation state', () => {
         expect(component['allRecipeItems']()[0].imageUrl).toBeUndefined();
     });
 
-    it('shows distinct filter chips for no photo, with photo, limits and ownership', () => {
+    it('shows applied filters and removes only the selected constraint while preserving the search', () => {
         const { component } = setupComponent();
         component['searchModel'].update(model => ({
             ...model,
+            search: 'Rice',
             onlyMine: true,
-            category: 'Soup',
+            category: 'soups',
             maxTotalTime: 0,
             caloriesFrom: 0,
             caloriesTo: 120,
             hasImage: false,
         }));
-        expect(component['activeFilterKeys']()).toEqual([
-            'RECIPE_LIST.FILTER_MY_RECIPES',
-            'RECIPE_LIST.FILTER_CATEGORY_ACTIVE',
-            'RECIPE_LIST.FILTER_MAX_TOTAL_TIME_ACTIVE',
-            'RECIPE_LIST.FILTER_CALORIES_ACTIVE',
-            'RECIPE_LIST.FILTER_IMAGE_WITHOUT',
+        expect(component['activeFilterChips']().map(chip => chip.id)).toEqual([
+            'onlyMine',
+            'category',
+            'maxTotalTime',
+            'caloriesFrom',
+            'caloriesTo',
+            'hasImage',
         ]);
-        component['searchModel'].update(model => ({ ...model, hasImage: true }));
-        expect(component['activeFilterKeys']()).toContain('RECIPE_LIST.FILTER_IMAGE_WITH');
-        expect(component['activeFilterKeys']()).not.toContain('RECIPE_LIST.FILTER_IMAGE_WITHOUT');
+        component['removeFilter']('caloriesFrom');
+        expect(component['searchModel']()).toMatchObject({
+            search: 'Rice',
+            category: 'soups',
+            caloriesFrom: null,
+            caloriesTo: 120,
+            hasImage: false,
+        });
+        expect(component['activeFilterChips']().map(chip => chip.id)).not.toContain('caloriesFrom');
+        component['resetFilters']();
+        expect(component['searchModel']()).toMatchObject({
+            search: 'Rice',
+            onlyMine: false,
+            category: null,
+            caloriesTo: null,
+            hasImage: null,
+        });
+        expect(component['activeFilterChips']()).toEqual([]);
+        expect(facade.loadRecipes).toHaveBeenLastCalledWith(1, PAGE_SIZE, { ...emptyRecipeFilters(), search: 'Rice' }, false);
     });
 
     it('does not reload when filters are unchanged', () => {

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
+import { type Meta, moduleMetadata, type StoryObj } from '@storybook/angular-vite';
 
+import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiInputComponent } from './fd-ui-input';
 
 const meta: Meta<FdUiInputComponent> = {
@@ -103,6 +104,21 @@ export const WithSuffixButton: Story = {
         suffixButtonAriaLabel: 'Toggle password visibility',
         size: 'md',
     },
+};
+
+export const WithProjectedSuffixAction: Story = {
+    decorators: [moduleMetadata({ imports: [FdUiButtonComponent] })],
+    render: () => ({
+        props: { searchValue: 'Yogurt', scans: 0 },
+        template: `
+            <fd-ui-input label="Search" prefixIcon="search" [value]="searchValue" (valueChange)="searchValue = $event"
+                suffixButtonIcon="close" suffixButtonAriaLabel="Clear search" (suffixButtonClicked)="searchValue = ''">
+                <fd-ui-button fdInputSuffix icon="qr_code_scanner" fill="text" variant="secondary"
+                    ariaLabel="Scan barcode" (click)="scans = scans + 1" />
+            </fd-ui-input>
+            <p>Scanner activations: {{ scans }}</p>
+        `,
+    }),
 };
 
 export const Small: Story = {

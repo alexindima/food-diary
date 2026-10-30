@@ -21,10 +21,12 @@ export class EntityCardBodyComponent {
     public readonly titleMuted = input<string | null>(null);
     public readonly description = input<string | null>(null);
     public readonly mobileMealLayout = input(false);
+    public readonly catalogLayout = input(false);
     public readonly comment = input<string | null>(null);
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly calories = input.required<number | null>();
     public readonly caloriesUnitKey = input('GENERAL.UNITS.KCAL');
+    public readonly caloriesBasis = input<string | null>(null);
     public readonly nutritionNote = input<string | null>(null);
     public readonly quality = input<EntityCardNormalizedQuality | null>(null);
 }

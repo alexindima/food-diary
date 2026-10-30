@@ -64,6 +64,7 @@
                 <fd-ui-icon [name]="suffixIconName" />
             </button>
         }
+        <span class="fd-ui-input__suffix-content"><ng-content select="[fdInputSuffix]" /></span>
     </div>
 
     @if (hasError()) {

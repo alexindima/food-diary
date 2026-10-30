@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { convertToParamMap, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -22,6 +22,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { debounceTime, distinctUntilChanged, EMPTY, skip, switchMap } from 'rxjs';
 
+import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -29,6 +30,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { devQuery } from '../../../../shared/development/development-input';
 import { connectDevelopmentScreen, DevelopmentToolError } from '../../../../shared/development/development-tools';
+import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { resolveRecipeImageUrl } from '../../../../shared/lib/recipe-image.util';
 import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../../../shared/models/recipe.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -42,6 +44,7 @@ import {
     RecipeListResultsComponent,
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
 import { RecipeFavoritesPickerComponent } from '../../dialogs/recipe-favorites-picker/recipe-favorites-picker';
+import { recipeFilterChips, removeRecipeFilter, resetRecipeFilters } from '../../lib/list/recipe-list-filter-chips';
 import { readRecipeListQuery } from '../../lib/list/recipe-list-query';
 import { RECIPE_LIST_QUERY_STATE } from '../../lib/list/recipe-list-query-state';
 import { RecipeListRouteStateFacade } from '../../lib/list/recipe-list-route-state.facade';
@@ -67,6 +70,7 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ActiveFiltersComponent,
         RecipeListResultsComponent,
     ],
     providers: [
@@ -76,6 +80,8 @@ import { RECIPE_LIST_TOUR } from './recipe-list-tour';
     ],
 })
 export class RecipeListComponent {
+    private readonly translateService = inject(TranslateService);
+    private readonly currentLanguage = injectCurrentLanguage();
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
@@ -111,32 +117,8 @@ export class RecipeListComponent {
         })),
     );
     protected readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
-    protected readonly activeFilterKeys = computed(() => {
-        const filters = this.buildRecipeFilters();
-        const keys: string[] = [];
-        if (this.searchModel().onlyMine) {
-            keys.push('RECIPE_LIST.FILTER_MY_RECIPES');
-        }
-        if (this.hasFilterText(filters.category)) {
-            keys.push('RECIPE_LIST.FILTER_CATEGORY_ACTIVE');
-        }
-        if (filters.maxTotalTime !== null && filters.maxTotalTime !== undefined) {
-            keys.push('RECIPE_LIST.FILTER_MAX_TOTAL_TIME_ACTIVE');
-        }
-        if (filters.caloriesFrom !== null || filters.caloriesTo !== null) {
-            keys.push('RECIPE_LIST.FILTER_CALORIES_ACTIVE');
-        }
-        if (filters.hasImage === true) {
-            keys.push('RECIPE_LIST.FILTER_IMAGE_WITH');
-        }
-        if (filters.hasImage === false) {
-            keys.push('RECIPE_LIST.FILTER_IMAGE_WITHOUT');
-        }
-
-        return keys;
-    });
-    protected readonly hasActiveFilters = computed(() =>
-        this.recipeListFacade.hasActiveFilters(this.searchModel().onlyMine, this.buildRecipeFilters()),
+    protected readonly activeFilterChips = computed(() =>
+        recipeFilterChips(this.searchModel(), key => this.translateService.instant(key), this.currentLanguage()),
     );
     protected readonly isEmptyState = computed(
         () =>
@@ -305,6 +287,16 @@ export class RecipeListComponent {
             .subscribe();
     }
 
+    protected removeFilter(id: string): void {
+        this.searchModel.update(model => removeRecipeFilter(model, id));
+        this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
+    }
+
+    protected resetFilters(): void {
+        this.searchModel.update(resetRecipeFilters);
+        this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), false).subscribe();
+    }
+
     protected startRecipeListTour(force = true): void {
         this.tourService.start(this.localizedTour.build(RECIPE_LIST_TOUR), { force });
     }
@@ -404,9 +396,5 @@ export class RecipeListComponent {
             (currentFilters.caloriesTo ?? null) === next.caloriesTo &&
             (currentFilters.hasImage ?? null) === next.hasImage
         );
-    }
-
-    private hasFilterText(value: string | null | undefined): boolean {
-        return value !== null && value !== undefined && value.trim().length > 0;
     }
 }

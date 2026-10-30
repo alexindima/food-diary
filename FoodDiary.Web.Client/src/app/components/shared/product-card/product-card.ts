@@ -4,7 +4,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
 import { AuthService } from '../../../services/auth.service';
+import { injectCurrentLanguage } from '../../../shared/i18n/inject-current-language';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
+import type { MeasurementUnit } from '../../../shared/models/product.data';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { EntityCardComponent } from '../entity-card/entity-card';
 
@@ -14,6 +16,8 @@ export type ProductCardItem = {
     name: string;
     brand?: string | null;
     barcode?: string | null;
+    baseAmount?: number;
+    baseUnit?: MeasurementUnit;
     comment?: string | null;
     isOwnedByCurrentUser: boolean;
     proteinsPerBase: number;
@@ -44,9 +48,29 @@ export class ProductCardComponent {
     public readonly imageUrl = input.required<string | null | undefined>();
     public readonly favoriteLoading = input(false);
     public readonly showOwnership = input(true);
+    public readonly catalogLayout = input(false);
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
+    private readonly locale = injectCurrentLanguage();
+    protected readonly caloriesBasis = computed(() => {
+        const { baseAmount, baseUnit } = this.product();
+        const locale = this.locale();
+        if (baseAmount === undefined || baseUnit === undefined || !this.catalogLayout()) {
+            return null;
+        }
+
+        const amount = new Intl.NumberFormat(locale, { maximumFractionDigits: 3 }).format(baseAmount);
+        return `${amount} ${this.translateService.instant(`GENERAL.UNITS.${baseUnit}`)}`;
+    });
+    protected readonly description = computed(() => {
+        const { brand, barcode } = this.product();
+        if (brand !== null && brand !== undefined && brand.length > 0) {
+            return brand;
+        }
+
+        return this.catalogLayout() ? null : (barcode ?? '');
+    });
     protected readonly isFavorite = computed(() => Boolean(this.product().isFavorite));
     protected readonly isAuthenticated = this.authService.isAuthenticated;
     protected readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.hasProductId());

@@ -68,7 +68,11 @@ let navigationService: {
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { error: ReturnType<typeof vi.fn> };
-let translateService: { instant: ReturnType<typeof vi.fn> };
+let translateService: {
+    instant: ReturnType<typeof vi.fn>;
+    onLangChange: Subject<{ lang: string }>;
+    getCurrentLang: () => string;
+};
 let isMobile: ReturnType<typeof signal<boolean>>;
 
 beforeEach(() => {
@@ -103,6 +107,8 @@ beforeEach(() => {
     };
     translateService = {
         instant: vi.fn((key: string) => key),
+        onLangChange: new Subject<{ lang: string }>(),
+        getCurrentLang: (): string => 'en',
     };
     isMobile = signal(false);
 

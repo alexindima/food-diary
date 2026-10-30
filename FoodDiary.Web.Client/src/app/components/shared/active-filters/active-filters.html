@@ -1,0 +1,20 @@
+@if (chips().length > 0) {
+    <section class="active-filters" [attr.aria-label]="'COMMON.ACTIVE_FILTERS' | translate">
+        @for (chip of chips(); track chip.id) {
+            <fd-ui-button
+                class="active-filters__chip"
+                appearance="chip"
+                variant="secondary"
+                fill="outline"
+                size="sm"
+                [ariaLabel]="'COMMON.REMOVE_FILTER' | translate: { filter: chip.label }"
+                (click)="filterRemoved.emit(chip.id)"
+            >
+                <span class="active-filters__label">{{ chip.label }} <fd-ui-icon name="close" size="sm" /></span>
+            </fd-ui-button>
+        }
+        <fd-ui-button class="active-filters__reset" variant="secondary" fill="text" size="sm" (click)="filtersReset.emit()">
+            {{ 'COMMON.RESET_FILTERS' | translate }}
+        </fd-ui-button>
+    </section>
+}

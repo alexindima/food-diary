@@ -237,3 +237,36 @@
         }
     }
 }
+
+:host(.media-card--catalog) .fd-media-card--raised {
+    grid-template-areas:
+        'media content catalog-actions'
+        'media quality catalog-actions'
+        'nutrients nutrients nutrients';
+    grid-template-columns: var(--fd-size-control-xxl) minmax(0, 1fr) var(--fd-size-control-touch);
+    grid-template-rows: auto auto auto;
+    gap: var(--fd-space-xs) var(--fd-space-xs);
+    padding: var(--fd-space-sm);
+
+    &:not(:where(:has(.nutrient-badges__chip--quality))) {
+        grid-template-areas:
+            'media content catalog-actions'
+            'nutrients nutrients nutrients';
+        grid-template-rows: auto auto;
+    }
+
+    :where(.media-card__media) {
+        inline-size: var(--fd-size-control-xxl);
+        min-inline-size: var(--fd-size-control-xxl);
+        block-size: var(--fd-size-control-xxl);
+    }
+}
+
+@container (max-width: 360px) {
+    :host(.media-card--catalog) .fd-media-card--raised:where(:has(.nutrient-badges__chip--quality)) {
+        grid-template-areas:
+            'media content catalog-actions'
+            'quality quality catalog-actions'
+            'nutrients nutrients nutrients';
+    }
+}

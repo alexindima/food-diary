@@ -144,6 +144,9 @@
         "CONFIRM": "Подтвердить",
         "LOADING": "Загрузка",
         "MORE_ACTIONS": "Ещё действия",
+        "ACTIVE_FILTERS": "Активные фильтры",
+        "REMOVE_FILTER": "Убрать фильтр: {{filter}}",
+        "RESET_FILTERS": "Сбросить всё",
         "SKIP_TO_MAIN_CONTENT": "Перейти к основному содержимому",
         "CLOSE_NOTIFICATION": "Закрыть уведомление"
     },
@@ -619,6 +622,7 @@
         "FILTER_IMAGE_WITHOUT": "Без фото",
         "ACTIVE_FILTERS_LABEL": "Активные фильтры",
         "ACTIVE_FILTERS_EDIT": "Изменить",
+        "FAVORITES_WITH_COUNT": "Избранное, {{count}}",
         "TOUR": {
             "START_TOUR": "Показать тур по рецептам",
             "ACTIONS_TITLE": "Создание и фильтры",
@@ -4654,6 +4658,7 @@
         "NO_RESULTS_TITLE": "Подходящих продуктов не найдено",
         "NO_RESULTS_COPY": "Попробуйте другой запрос, отсканируйте штрихкод или ослабьте фильтры, чтобы увидеть больше продуктов.",
         "FAVORITES_TITLE": "Избранное",
+        "FAVORITES_WITH_COUNT": "Избранное, {{count}}",
         "FAVORITES_LOAD_MORE": "Показать всё избранное",
         "FAVORITE_UNNAMED": "Продукт",
         "FAVORITE_OPEN": "Открыть продукт",

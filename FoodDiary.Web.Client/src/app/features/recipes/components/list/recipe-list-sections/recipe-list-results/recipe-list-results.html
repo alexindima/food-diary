@@ -22,6 +22,7 @@
                 <div class="recipe-list__section-grid fd-grid fd-gap-page-card fd-align-start">
                     @for (item of allRecipeItems(); track item.recipe.id) {
                         <fd-recipe-card
+                            [catalogLayout]="true"
                             [recipe]="item.recipe"
                             [imageUrl]="item.imageUrl"
                             [favoriteLoading]="favoriteLoadingIds().has(item.recipe.id)"
