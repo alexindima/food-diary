@@ -17,6 +17,24 @@ const workflow = parse(
 );
 const { jobs } = workflow;
 
+test("backend audit uses one solution runner with compact reporting and existing failure integration", () => {
+    const steps = jobs["backend-dependency-audit"].steps;
+    const audit = steps.find(step => step.name === "Audit backend dependencies");
+    assert.match(audit.run, /python3 -B scripts\/ci\/audit_backend_dependencies\.py/u);
+    assert.match(audit.run, /--output-dir "\$\{RUNNER_TEMP\}\/dependency-audit-logs"/u);
+    assert.match(audit.run, /--summary "\$GITHUB_STEP_SUMMARY"/u);
+    assert.match(audit.run, /set -euo pipefail/u);
+    assert.match(audit.run, /tee .*runner\.log/u);
+    assert.doesNotMatch(steps.map(step => step.run ?? "").join("\n"), /projects=\(|dotnet list|grep -qE/u);
+    assert.ok(!steps.some(step => step.name === "Append dependency audit summary"));
+    const upload = steps.find(step => step.name === "Upload dependency audit failure logs");
+    assert.equal(upload.if, "failure()");
+    assert.equal(upload.with.name, "ci-failure-logs-dependency-audit");
+    assert.equal(upload.with.path, "${{ runner.temp }}/dependency-audit-logs/");
+    const tests = jobs["llm-wiki-focused"].steps.find(step => step.name === "Test backend dependency audit");
+    assert.match(tests.run, /unittest discover -s scripts\/ci -p 'test_backend_dependency_audit\.py'/u);
+});
+
 test("hosted Ubuntu runners use an explicit image and artifact uploads share the Node 24 action pin", () => {
     const expectedUpload = jobs["llm-wiki-focused"].steps.find(step => step.uses?.startsWith("actions/upload-artifact@")).uses;
     for (const file of readdirSync(join(root, ".github/workflows")).filter(file => file.endsWith(".yml"))) {

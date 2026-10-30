@@ -304,8 +304,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "22f4d2f711abe92269d5b1c45e43ca25727cedfeb759e9e61fda05cbe6bdbc0e",
-          "reviewReason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged."
+          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
+          "reviewReason": "Reviewed the workflow diff and this page: only the backend dependency audit implementation and its focused Python suite change. The API baseline selection, api-compat command, snapshots and acceptance records are unchanged, so the documented compatibility behavior remains current."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -328,10 +328,10 @@
           "reviewReason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change."
         }
       ],
-      "reason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged.",
+      "reason": "Reviewed the workflow diff and this page: only the backend dependency audit implementation and its focused Python suite change. The API baseline selection, api-compat command, snapshots and acceptance records are unchanged, so the documented compatibility behavior remains current.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:20:52.7973980Z"
+      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
+      "reviewedAtUtc": "2026-10-30T08:54:46.6808745Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -927,18 +927,18 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "160955b9fc5fa27484afef55281fdc4447d223ecf3739633791e42dbb2a6a703",
+      "pageSha256": "0db41d7538eaac40f355fca45f03664a301eadd563ecc268a12b5e487c65e304",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
-          "reviewReason": "The CI change adds a Python deployment proxy regression step without altering the Wiki pipeline, focused regression catalog, generated artifacts or verification commands; the pipeline guidance remains current."
+          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
+          "reviewReason": "Reviewed the affected CI source and the index-pipeline CI contracts: one Python dependency-audit regression step is added to common checks; common validation, four focused shards, applicable Full audits and the stable Wiki aggregate retain their existing order and requirements. No index generator or Wiki runner changes."
         }
       ],
-      "reason": "The CI change adds a Python deployment proxy regression step without altering the Wiki pipeline, focused regression catalog, generated artifacts or verification commands; the pipeline guidance remains current.",
+      "reason": "Reviewed the affected CI source and the index-pipeline CI contracts: one Python dependency-audit regression step is added to common checks; common validation, four focused shards, applicable Full audits and the stable Wiki aggregate retain their existing order and requirements. No index generator or Wiki runner changes.",
       "baseRef": "HEAD",
-      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
-      "reviewedAtUtc": "2026-10-28T03:19:48.2709645Z"
+      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
+      "reviewedAtUtc": "2026-10-30T08:54:48.7674679Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -947,14 +947,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "11b44c682267e087a52bcf5c6666536ccb2a6ac0e6eecb212ed91561fa19ac8c",
-          "reviewReason": "Reviewed the new schemaVersion 2 observation for .artifacts/llm-wiki/tasks/parallel-deploy: task-finish appended one sealed outcome with root/scoped AGENTS fingerprints, cohort attribution and the correct previous-event hash. instruction-outcome-verify passed. The page describes the append-only event schema, attribution and governed experiment semantics without asserting a frozen sample count, so its explanation remains current and needs no prose change."
+          "sha256": "e62c05f36b0600cb90dde9bc85183ac62ba6a9c116cf904a56ac46c2acd164df",
+          "reviewReason": "Reviewed the task-finish diff: one schema-v2 instruction outcome is appended for the completed solution-dependency-audit workspace with its completion and retrospective hashes, root instruction fingerprint and previous event hash. instruction-outcome-verify passed; the append-only integrity and existing learning behavior documented on this page remain current."
         }
       ],
-      "reason": "Reviewed the new schemaVersion 2 observation for .artifacts/llm-wiki/tasks/parallel-deploy: task-finish appended one sealed outcome with root/scoped AGENTS fingerprints, cohort attribution and the correct previous-event hash. instruction-outcome-verify passed. The page describes the append-only event schema, attribution and governed experiment semantics without asserting a frozen sample count, so its explanation remains current and needs no prose change.",
+      "reason": "Reviewed the task-finish diff: one schema-v2 instruction outcome is appended for the completed solution-dependency-audit workspace with its completion and retrospective hashes, root instruction fingerprint and previous event hash. instruction-outcome-verify passed; the append-only integrity and existing learning behavior documented on this page remain current.",
       "baseRef": "HEAD",
-      "gitHead": "f74fbdffb51eac16361db2eca39a7be6c813eb97",
-      "reviewedAtUtc": "2026-10-30T01:49:33.0529840Z"
+      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
+      "reviewedAtUtc": "2026-10-30T09:08:31.0837362Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1236,8 +1236,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "22f4d2f711abe92269d5b1c45e43ca25727cedfeb759e9e61fda05cbe6bdbc0e",
-          "reviewReason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged."
+          "sha256": "28925d36357cd59e6753b1ca79dedb5bc2abb6a6ae40d4a40904a2c64ac7bf85",
+          "reviewReason": "Reviewed the workflow diff against the report page: backend-dependency-audit remains an independent job alongside Wiki checks, while its internal implementation becomes a single solution JSON audit. API compatibility, dependency analysis and report publication in the Wiki job, and the aggregate gate, remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1255,10 +1255,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged.",
+      "reason": "Reviewed the workflow diff against the report page: backend-dependency-audit remains an independent job alongside Wiki checks, while its internal implementation becomes a single solution JSON audit. API compatibility, dependency analysis and report publication in the Wiki job, and the aggregate gate, remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:20:53.1161150Z"
+      "gitHead": "2992dc5239c16a93de02e62fd6a584e45c7328ff",
+      "reviewedAtUtc": "2026-10-30T08:54:51.5271848Z"
     },
     {
       "pageId": "workflow-risk-calibration",

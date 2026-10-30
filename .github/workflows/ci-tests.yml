@@ -43,6 +43,9 @@ jobs:
       - name: Test deployment source authorization
         run: node --test .github/scripts/deploy-source.test.mjs
 
+      - name: Test backend dependency audit
+        run: python3 -B -m unittest discover -s scripts/ci -p 'test_backend_dependency_audit.py'
+
       - name: Test deployment database readiness
         run: python3 -B -m unittest discover -s scripts/database -p 'test_check_primary_baseline_readiness.py'
 
@@ -602,7 +605,12 @@ jobs:
         shell: bash
         run: |
           mkdir -p "${RUNNER_TEMP}/dependency-audit-logs"
-          : > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+          {
+            echo "FAILED_AREA=dotnet"
+            echo "FAILED_TARGET=Backend dependency audit did not complete"
+            echo "FAILED_LOG_FILE_NAME=runner.log"
+          } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
+          : > "${RUNNER_TEMP}/dependency-audit-logs/runner.log"
 
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -612,144 +620,14 @@ jobs:
         with:
           dotnet-version: 10.0.102
 
-      - name: Restore
-        shell: bash
-        run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/dependency-audit-logs/restore.log"
-          set +e
-          dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Restore dependency audit"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
-            exit "$status"
-          fi
-
       - name: Audit backend dependencies
         shell: bash
         run: |
           set -euo pipefail
-          projects=(
-            "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
-            "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
-            "FoodDiary.Initializer/FoodDiary.Initializer.csproj"
-            "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj"
-            "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
-            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
-            "Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
-            "Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
-            "Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
-            "Services/BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj"
-            "Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
-          )
-
-          for project in "${projects[@]}"; do
-            safe_name="${project//\//_}"
-            safe_name="${safe_name//\\/_}"
-            log_file="${RUNNER_TEMP}/dependency-audit-logs/${safe_name}.log"
-            set +e
-            dotnet list "$project" package --vulnerable --include-transitive 2>&1 | tee "$log_file"
-            status=${PIPESTATUS[0]}
-            set -e
-            if [ "$status" -ne 0 ]; then
-              {
-                echo "FAILED_AREA=dotnet"
-                echo "FAILED_TARGET=Audit dependencies for $project"
-                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-              } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
-              exit "$status"
-            fi
-
-            if grep -qE 'has the following vulnerable packages|severity:[[:space:]]*(Critical|High|Moderate|Low)' "$log_file"; then
-              {
-                echo "FAILED_AREA=dotnet"
-                echo "FAILED_TARGET=Vulnerable dependencies detected in $project"
-                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-              } > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
-              exit 1
-            fi
-          done
-
-      - name: Append dependency audit summary
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          logs_dir="${RUNNER_TEMP}/dependency-audit-logs"
-          failed_log_name=""
-          if [ -f "${logs_dir}/failure-meta.env" ]; then
-            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
-          fi
-
-          status_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
-              printf 'Failed'
-              return
-            fi
-
-            printf 'Passed'
-          }
-
-          audit_details_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            if grep -qE 'has the following vulnerable packages|severity:[[:space:]]*(Critical|High|Moderate|Low)' "$log_file"; then
-              printf 'Vulnerable package detected'
-              return
-            fi
-
-            if grep -q 'has no vulnerable packages' "$log_file"; then
-              printf 'No vulnerable packages'
-              return
-            fi
-
-            printf 'dotnet list package --vulnerable'
-          }
-
-          projects=(
-            "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
-            "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
-            "FoodDiary.Initializer/FoodDiary.Initializer.csproj"
-            "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj"
-            "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
-            "Shared/FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
-            "Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
-            "Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
-            "Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
-            "Services/BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj"
-            "Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
-          )
-
-          {
-            echo "## Backend dependency audit"
-            echo
-            echo "| Area | Check | Status | Details |"
-            echo "| --- | --- | --- | --- |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
-            for project in "${projects[@]}"; do
-              safe_name="${project//\//_}"
-              safe_name="${safe_name//\\/_}"
-              log_file="${logs_dir}/${safe_name}.log"
-              project_name=$(basename "$project" .csproj)
-              echo "| Security | ${project_name} dependencies | $(status_for_log "$log_file") | $(audit_details_for_log "$log_file") |"
-            done
-          } >> "$GITHUB_STEP_SUMMARY"
+          python3 -B scripts/ci/audit_backend_dependencies.py \
+            --output-dir "${RUNNER_TEMP}/dependency-audit-logs" \
+            --summary "$GITHUB_STEP_SUMMARY" \
+            2>&1 | tee "${RUNNER_TEMP}/dependency-audit-logs/runner.log"
 
       - name: Upload dependency audit failure logs
         if: failure()
