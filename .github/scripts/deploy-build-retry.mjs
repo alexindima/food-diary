@@ -42,6 +42,14 @@ export function selectBuildDigest(primaryOutcome, primaryDigest, retryOutcome, r
     return digest;
 }
 
+export function shouldExportCache(startedAt, nowSeconds = Math.floor(Date.now() / 1000)) {
+    if (typeof startedAt !== "string" || !/^\d+$/u.test(startedAt)) return false;
+    const start = Number(startedAt);
+    // Reserve five minutes for the optional two-minute step and job cleanup.
+    return Number.isSafeInteger(start) && Number.isSafeInteger(nowSeconds) &&
+        nowSeconds >= start && nowSeconds - start < 25 * 60;
+}
+
 function output(name, value) {
     if (!process.env.GITHUB_OUTPUT) throw new Error("GITHUB_OUTPUT is required.");
     appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`);
@@ -63,8 +71,12 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
                 output("digest", digest);
                 break;
             }
+            case "cache-budget": {
+                output("allowed", shouldExportCache(process.env.BUILD_STARTED_AT) ? "true" : "false");
+                break;
+            }
             default:
-                throw new Error("Expected classify or select command.");
+                throw new Error("Expected classify, select or cache-budget command.");
         }
     } catch (error) {
         console.error(error.message);

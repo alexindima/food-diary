@@ -3,8 +3,7 @@
 ## Build cache recovery
 
 Each image matrix job first builds with its existing GitHub Actions cache.
-Cache export uses `ignore-error=true`: a failed optimization must not invalidate
-an otherwise successfully built and pushed image. If the build itself fails,
+Image publication does not export cache. If the build itself fails,
 the job inspects the failed record in that job's isolated Buildx builder.
 Only a terminal `failed to copy: GET` error with `BlobNotFound` for the Azure
 `/actions-cache/` endpoint permits one retry. Compilation, registry, cancellation,
@@ -15,6 +14,15 @@ It keeps the same source, Dockerfile, tags, build arguments, provenance and SBOM
 Only the digest from a successful attempt reaches Cosign and the image receipt;
 a failed retry blocks the server job. Other successful image jobs are unaffected.
 The existing 30-minute matrix-job timeout bounds both attempts together.
+
+After signing and uploading the verified receipt, a successful primary build may
+export cache in a separate optional step. This uses the same warm builder and
+`type=cacheonly`, never pushes an image or changes the selected digest. Backend
+requests have `timeout=30s` and `ignore-error=true`; the step has its own two-minute
+timeout and `continue-on-error`. Unlike a backend timeout alone, the step timeout
+also bounds cache metadata enumeration and retry delays. Export is skipped after
+25 minutes of core work to reserve time for cleanup within the existing job limit.
+Recovered clean builds skip export. No cache failure can bypass image signing.
 
 Do not print raw Buildx history: its error URL can contain signed cache query
 parameters. The classifier emits only the retry decision and a fixed diagnostic.

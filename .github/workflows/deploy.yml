@@ -76,6 +76,9 @@ jobs:
       max-parallel: 6
       matrix: ${{ fromJSON(needs.authorize.outputs.matrix) }}
     steps:
+      - name: Record build budget start
+        id: build_budget
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -109,7 +112,6 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:sha-${{ env.SOURCE_COMMIT_SHA }}
           build-args: ${{ matrix.image == 'client' && format('BUILD_VERSION={0}', env.SOURCE_COMMIT_SHA) || '' }}
           cache-from: type=gha,scope=production-${{ matrix.image }}
-          cache-to: type=gha,scope=production-${{ matrix.image }},mode=max,ignore-error=true
       - name: Classify failed production build
         id: cache_failure
         if: ${{ !cancelled() && steps.cached_build.outcome == 'failure' }}
@@ -161,6 +163,26 @@ jobs:
           if-no-files-found: error
           retention-days: 7
           overwrite: true
+      - name: Check cache export budget
+        id: cache_budget
+        env:
+          BUILD_STARTED_AT: ${{ steps.build_budget.outputs.started_at }}
+        run: node .github/scripts/deploy-build-retry.mjs cache-budget
+      - name: Export production build cache
+        if: steps.cache_budget.outputs.allowed == 'true' && steps.cached_build.outcome == 'success'
+        timeout-minutes: 2
+        continue-on-error: true
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          builder: ${{ steps.cached_builder.outputs.name }}
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: false
+          outputs: type=cacheonly
+          provenance: mode=max
+          sbom: true
+          build-args: ${{ matrix.image == 'client' && format('BUILD_VERSION={0}', env.SOURCE_COMMIT_SHA) || '' }}
+          cache-to: type=gha,scope=production-${{ matrix.image }},mode=max,ignore-error=true,timeout=30s
 
   deploy:
     needs: [authorize, build-images]

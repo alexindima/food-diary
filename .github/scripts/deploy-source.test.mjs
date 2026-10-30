@@ -165,7 +165,7 @@ test("cache failure recovery permits one classified clean rebuild before signing
     const select = step("Select successful image digest");
     assert.match(cached, /continue-on-error: true/u);
     assert.match(cached, /builder: \$\{\{ steps\.cached_builder\.outputs\.name \}\}/u);
-    assert.match(cached, /cache-to: type=gha,scope=production-\$\{\{ matrix\.image \}\},mode=max,ignore-error=true/u);
+    assert.ok(!cached.includes("cache-to:"), "Production image publication must finish before optional cache export");
     assert.match(classify, /if: \$\{\{ !cancelled\(\) && steps\.cached_build\.outcome == 'failure' \}\}/u);
     assert.match(classify, /node \.github\/scripts\/deploy-build-retry\.mjs classify/u);
     for (const branch of [builder, retry]) assert.match(branch, /if: steps\.cache_failure\.outputs\.retry == 'true'/u);
@@ -178,7 +178,8 @@ test("cache failure recovery permits one classified clean rebuild before signing
         assert.ok(value(cached), input);
         assert.equal(value(retry), value(cached), input);
     }
-    assert.equal([...workers.matchAll(/uses: docker\/build-push-action@/gu)].length, 2);
+    assert.equal([...workers.matchAll(/push: true/gu)].length, 2);
+    assert.equal([...workers.matchAll(/uses: docker\/build-push-action@/gu)].length, 3);
     assert.match(select, /id: build/u);
     assert.match(select, /node \.github\/scripts\/deploy-build-retry\.mjs select/u);
     for (const [name, value] of Object.entries({
@@ -186,6 +187,27 @@ test("cache failure recovery permits one classified clean rebuild before signing
         RETRY_OUTCOME: "retry_build.outcome", RETRY_DIGEST: "retry_build.outputs.digest",
     })) assert.ok(select.includes(name + ": " + "${{ steps." + value + " }}"), name);
     assert.ok(workers.indexOf("- name: Select successful image digest") < workers.indexOf("- name: Install Cosign"));
+});
+
+test("optional cache export is bounded after the signed receipt and cannot block a valid image", () => {
+    const workers = job("build-images");
+    const cache = workers.split("- name: Export production build cache\n")[1];
+    assert.ok(cache, "Cache export needs its own optional bounded step");
+    assert.ok(workers.indexOf("- name: Upload verified image receipt") < workers.indexOf("- name: Export production build cache"));
+    assert.match(cache, /if: steps\.cache_budget\.outputs\.allowed == 'true' && steps\.cached_build\.outcome == 'success'/u);
+    assert.match(cache, /timeout-minutes: 2/u);
+    assert.match(cache, /continue-on-error: true/u);
+    assert.match(cache, /push: false/u);
+    assert.match(cache, /outputs: type=cacheonly/u);
+    assert.match(cache, /provenance: mode=max/u);
+    assert.match(cache, /sbom: true/u);
+    assert.match(cache, /builder: \$\{\{ steps\.cached_builder\.outputs\.name \}\}/u);
+    assert.match(cache, /cache-to: type=gha,scope=production-\$\{\{ matrix\.image \}\},mode=max,ignore-error=true,timeout=30s/u);
+    assert.doesNotMatch(cache, /tags:|no-cache: true|cache-from:/u);
+    assert.match(workers, /BUILD_STARTED_AT: \$\{\{ steps\.build_budget\.outputs\.started_at \}\}/u);
+    assert.match(workers, /node \.github\/scripts\/deploy-build-retry\.mjs cache-budget/u);
+    assert.match(workers, /timeout-minutes: 30/u);
+    assert.ok(workers.indexOf("- name: Record build budget start") < workers.indexOf("- name: Checkout code"));
 });
 
 const missingCacheMessage = "failed to copy: GET https://productionresultssa32.blob.core.windows.net/actions-cache/fixture?sig=private-signed-value\nERROR CODE: BlobNotFound";
@@ -271,6 +293,37 @@ test("digest CLI publishes one successful output and none for a failed retry", a
             });
             assert.equal(result.status, expected ? 0 : 1, result.stderr);
             assert.equal(readFileSync(output, "utf8"), expected ? `digest=${expected}\n` : "");
+        }
+    } finally {
+        assert.equal(dirname(directory), tmpdir());
+        rmSync(directory, { recursive: true });
+    }
+});
+
+test("cache export budget reserves cleanup time and rejects stale or invalid clocks", async () => {
+    const { shouldExportCache } = await recovery();
+    assert.equal(shouldExportCache("1000", 1000), true);
+    assert.equal(shouldExportCache("1000", 2499), true);
+    assert.equal(shouldExportCache("1000", 2500), false);
+    assert.equal(shouldExportCache("1000", 2800), false);
+    assert.equal(shouldExportCache("1000", 999), false);
+    for (const started of [undefined, "", "invalid", "1.5", "-1", "9007199254740992"]) {
+        assert.equal(shouldExportCache(started, 1000), false);
+    }
+});
+
+test("cache budget CLI exports an explicit skip for a depleted job budget", () => {
+    const directory = mkdtempSync(join(tmpdir(), "fooddiary-cache-budget-test-"));
+    const output = join(directory, "output");
+    const script = fileURLToPath(new URL("./deploy-build-retry.mjs", import.meta.url));
+    try {
+        for (const [started, allowed] of [[String(Math.floor(Date.now() / 1000)), "true"], ["0", "false"], ["invalid", "false"]]) {
+            writeFileSync(output, "");
+            const result = spawnSync(process.execPath, [script, "cache-budget"], {
+                encoding: "utf8", env: { ...process.env, GITHUB_OUTPUT: output, BUILD_STARTED_AT: started },
+            });
+            assert.equal(result.status, 0, result.stderr);
+            assert.equal(readFileSync(output, "utf8"), `allowed=${allowed}\n`);
         }
     } finally {
         assert.equal(dirname(directory), tmpdir());
