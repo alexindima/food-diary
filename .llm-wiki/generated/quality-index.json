@@ -4458,11 +4458,11 @@
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "nonBlankLines": 75,
+      "nonBlankLines": 70,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.5
+      "structuralRiskScore": 1.4
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Dashboard/DashboardMealItemsLoader.cs",
@@ -49746,19 +49746,19 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.GoalHistory.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 4,
+      "nonBlankLines": 30,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.54
+      "structuralRiskScore": 11.1
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "nonBlankLines": 141,
-      "decisionPoints": 27,
+      "nonBlankLines": 155,
+      "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.32
+      "structuralRiskScore": 49.6
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",

@@ -1322,10 +1322,11 @@
         "call:User.CalculateEstimatedTdee",
         "entity:Role",
         "entity:User",
+        "entity:UserGoalRevision",
         "entity:UserNutritionProfile",
         "entity:UserPreferences"
       ],
-      "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves. Reviewed BMR input grouping: same accessible no-tracking profile projection and owner calculation/rounding; the stored-profile adapter adds no entity writes or broader persistence capability."
+      "reason": "Persisted no-tracking consumer profile projections read the separate Users-owned state. Account-access predicates, role checks and pure static nutrition calculations remain; no aggregate loading or saves. Reviewed BMR input grouping: same accessible no-tracking profile projection and owner calculation/rounding; the stored-profile adapter adds no entity writes or broader persistence capability. Dashboard combines the scalar profile with bounded, explicitly no-tracking Users-owned goal revisions in one command; no tracked acquisition or writes."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.GoalHistory.cs": {
       "module": "Users",

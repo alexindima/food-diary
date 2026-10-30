@@ -1283,8 +1283,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "adee6af1219594a320e12bd019b0320db601a5becef5cab095b736fad3383d10",
-          "reviewReason": "Reviewed merged runtime topology and existing master CI audit addition. PWA persistence remains inside the existing API/Identity/browser lifecycle with the same cancellation, restoration timeout, Web Lock and logout ownership. No production host, worker, webhook, provider call or recurring job is introduced."
+          "sha256": "0e439c373f2604484b594021589edc220f9ff8089c6d40c0e5d7ed64ed7aae44",
+          "reviewReason": "Reviewed the rebased dashboard fix against local master: the generated runtime topology differs only in its source freshness fingerprint; all runtime registrations, clients, workers, webhooks and jobs remain byte-identical. The merged capability inventory retains master browser-session changes and adds only the existing bounded no-tracking Users-owned goal-revision read. Runtime, provider and transaction lifecycle guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1297,10 +1297,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed merged runtime topology and existing master CI audit addition. PWA persistence remains inside the existing API/Identity/browser lifecycle with the same cancellation, restoration timeout, Web Lock and logout ownership. No production host, worker, webhook, provider call or recurring job is introduced.",
-      "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:32.4538336Z"
+      "reason": "Reviewed the rebased dashboard fix against local master: the generated runtime topology differs only in its source freshness fingerprint; all runtime registrations, clients, workers, webhooks and jobs remain byte-identical. The merged capability inventory retains master browser-session changes and adds only the existing bounded no-tracking Users-owned goal-revision read. Runtime, provider and transaction lifecycle guidance remains accurate.",
+      "baseRef": "c8151353802fae44cec5f4e3b4c5840486fba553",
+      "gitHead": "c8151353802fae44cec5f4e3b4c5840486fba553",
+      "reviewedAtUtc": "2026-10-30T11:31:30.7344736Z"
     },
     {
       "pageId": "workflow-security-review",

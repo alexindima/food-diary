@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1369,
     "ambiguousContracts": 29,
-    "consumerEdges": 11000,
+    "consumerEdges": 11007,
     "productionConsumerEdges": 6129,
-    "testConsumerEdges": 4871,
+    "testConsumerEdges": 4878,
     "consumedContracts": 1369,
     "unconsumedContracts": 0
   },
@@ -34010,6 +34010,19 @@
         "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateCycleHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Presentation/Requests/CreateCycleHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationPayloadContractIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -35055,6 +35068,19 @@
         "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateMealHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/CreateMealHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DurableMealIdempotencyIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -35459,6 +35485,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateProductHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Presentation/Requests/CreateProductHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -141497,6 +141536,19 @@
         "Modules/Meals/Presentation/Requests/MealAiItemHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealAiItemHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/MealAiItemHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Presentation.Tests/MealHttpMappingsTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -141577,6 +141629,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Requests/UpdateMealHttpRequest.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealAiSessionHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/MealAiSessionHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -141836,6 +141901,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/CycleNutritionCalendarContractTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MealItemHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Presentation/Requests/MealItemHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -151519,6 +151597,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardGoalHistoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Presentation/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/DashboardQueryBudgetIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

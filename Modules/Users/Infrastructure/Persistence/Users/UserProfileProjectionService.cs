@@ -54,17 +54,32 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
         if (synchronizeTransactionAsync is not null) {
             await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
         }
-        Result<UserDashboardProfileModel> result = await ReadAsync(userId, user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
+        Expression<Func<User, UserDashboardProfileModel>> projection = user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
             user.Preferences.DashboardLayoutJson, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DesiredWaistCm, user.NutritionProfile.HydrationGoal, user.NutritionProfile.WaterGoal,
             user.NutritionProfile.ProteinTarget, user.NutritionProfile.FatTarget, user.NutritionProfile.CarbTarget, user.NutritionProfile.FiberTarget,
             new UserCalorieSchedule(user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled,
                 user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories, user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories,
-                user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId, GoalHistory: null), cancellationToken).ConfigureAwait(false);
-        if (result.IsFailure || goalsFrom is null) {
-            return result;
+                user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId, GoalHistory: null);
+        DateOnly goalsEnd = goalsTo ?? goalsFrom ?? DateOnly.MinValue;
+        if (goalsFrom is null || goalsEnd < goalsFrom.Value || goalsEnd.DayNumber - goalsFrom.Value.DayNumber > 366) {
+            Result<UserDashboardProfileModel> result = await ReadAsync(userId, projection, cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure || goalsFrom is null) {
+                return result;
+            }
+            // Preserve access-failure precedence and the existing invalid-range exception.
+            UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsEnd, cancellationToken).ConfigureAwait(false);
+            return Result.Success(result.Value with { GoalHistory = history });
         }
-        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
-        return Result.Success(result.Value with { GoalHistory = history });
+
+        IQueryable<UserGoalRevision> revisions = GetGoalHistoryQuery(userId, goalsFrom.Value, goalsEnd);
+        // One collection join keeps the scalar profile and its bounded timeline in one SQL command.
+        var row = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)
+            .Select(profile => new { Profile = profile, Revisions = revisions.AsNoTracking().ToList() })
+            .AsSingleQuery()
+            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return row is null
+            ? Result.Failure<UserDashboardProfileModel>(AuthenticationErrors.InvalidToken)
+            : Result.Success(row.Profile with { GoalHistory = ToGoalTimeline(row.Revisions) });
     }
 
     public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default,

@@ -121,16 +121,10 @@ public sealed class DashboardMealsReadServiceTests {
     }
 
     [Fact]
-    public async Task DashboardMealAiSessionsLoader_LoadAiItemsAsync_WithNoSessionIds_ReturnsEmptyLookup() {
+    public async Task DashboardMealAiSessionsLoader_WithNoMealIds_ReturnsEmptyLookup() {
         await using FoodDiaryDbContext context = CreateContext();
         var loader = new DashboardMealAiSessionsLoader(context);
-        MethodInfo method = typeof(DashboardMealAiSessionsLoader).GetMethod(
-            "LoadAiItemsAsync",
-            BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-        object task = method.Invoke(loader, [Array.Empty<MealAiSessionId>(), CancellationToken.None])!;
-        ILookup<MealAiSessionId, DashboardMealAiItemReadModel> lookup =
-            await (Task<ILookup<MealAiSessionId, DashboardMealAiItemReadModel>>)task;
+        ILookup<MealId, DashboardMealAiSessionReadModel> lookup = await loader.LoadAsync([], CancellationToken.None);
 
         Assert.Empty(lookup);
     }
