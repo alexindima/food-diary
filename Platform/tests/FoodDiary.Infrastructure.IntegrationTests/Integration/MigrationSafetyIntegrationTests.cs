@@ -2,6 +2,7 @@ using System.Data;
 using System.Security.Cryptography;
 using System.Data.Common;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -54,10 +55,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 INSERT INTO "__EFMigrationsHistory" VALUES ('20260208133129_SeedEmailTemplates', '10.0.11');
                 """);
         }
-        var user = User.Create("baseline-preservation@example.com", "test-hash");
-        user.SetLanguage("ru");
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        UserId userId = await InitialBaselineUserFixture.InsertAsync(context, "baseline-preservation@example.com", "ru");
         await context.Database.ExecuteSqlRawAsync("""
             UPDATE "EmailTemplates" SET "HtmlBody" = '<p>Custom template / Свой шаблон</p>';
             INSERT INTO "ConsumedTelegramAssertions" ("Fingerprint", "ExpiresAtUtc")
@@ -72,6 +70,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
         await context.Database.MigrateAsync();
         Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        await AssertMigratedUserAsync(context, userId, "ru");
     }
 
     [RequiresDockerTheory]
@@ -111,8 +110,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 INSERT INTO "__EFMigrationsHistory" VALUES ('20260208133129_SeedEmailTemplates', '10.0.11');
                 """);
         }
-        context.Users.Add(User.Create("coexisting-baseline@example.com", "test-hash"));
-        await context.SaveChangesAsync();
+        UserId userId = await InitialBaselineUserFixture.InsertAsync(context, "coexisting-baseline@example.com");
         await context.Database.ExecuteSqlRawAsync("""
             INSERT INTO _prisma_migrations (id, checksum, migration_name)
                 VALUES ('00000000-0000-0000-0000-000000000001', 'legacy-test-checksum', 'preserved_legacy_history');
@@ -123,11 +121,14 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
         await AdoptAsync(context);
         await AdoptAsync(context);
-        await context.Database.MigrateAsync();
 
+        // Adoption preserves every legacy row; later migrations intentionally add columns and backfill history.
         Assert.Equal(before, await ReadApplicationDataAsync(context));
+        Assert.Equal([Baseline], await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
+        await context.Database.MigrateAsync();
         Assert.Equal(context.Database.GetMigrations(), await context.Database.GetAppliedMigrationsAsync(), StringComparer.Ordinal);
         Assert.Empty(await context.Database.GetPendingMigrationsAsync());
+        await AssertMigratedUserAsync(context, userId, "en");
     }
 
     [RequiresDockerTheory]
@@ -253,6 +254,19 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
         await using FoodDiaryDbContext legacy = await CreateLegacyDatabaseAsync();
         Assert.Equal(await ReadReferenceContentAsync(legacy), await ReadReferenceContentAsync(context), StringComparer.Ordinal);
         await AdoptAsync(context);
+    }
+
+    private static async Task AssertMigratedUserAsync(FoodDiaryDbContext context, UserId userId, string language) {
+        User user = await context.Users.AsNoTracking().Include(item => item.NutritionProfile.GoalHistory)
+            .SingleAsync(item => item.Id == userId);
+        UserGoalRevision baseline = Assert.Single(user.NutritionProfile.GoalHistory);
+        Assert.Multiple(
+            () => Assert.Equal(language, user.Language),
+            () => Assert.Equal(0, user.NutritionProfile.GoalRevision),
+            () => Assert.Equal(userId, baseline.UserId),
+            () => Assert.Equal(0, baseline.Revision),
+            () => Assert.Equal(DateOnly.MinValue, baseline.EffectiveFrom),
+            () => Assert.Equal(user.NutritionProfile.GetDailyGoals(), baseline.ToDailyGoals()));
     }
 
     private static async Task<string[]> ReadReferenceContentAsync(FoodDiaryDbContext context) {

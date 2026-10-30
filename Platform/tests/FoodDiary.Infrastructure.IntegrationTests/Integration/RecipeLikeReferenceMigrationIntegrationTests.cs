@@ -2,7 +2,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.RecipeCommunity.Domain.Entities.Social;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Domain.Entities;
-using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -19,14 +19,13 @@ public sealed class RecipeLikeReferenceMigrationIntegrationTests(PostgresDatabas
     public async Task Upgrade_RemovesOnlyOrphanLikes_EnforcesRecipeExistenceAndCascadesRecipeDeletion() {
         await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(await databaseFixture.CreateIsolatedDatabaseAsync());
         await context.GetService<IMigrator>().MigrateAsync(Baseline);
-        var author = User.Create("recipe-like-author@example.test", "hash");
-        var reader = User.Create("recipe-like-reader@example.test", "hash");
-        var recipe = Recipe.Create(author.Id, "Liked recipe", 1);
-        var otherRecipe = Recipe.Create(author.Id, "Other liked recipe", 1);
-        var valid = RecipeLike.Create(reader.Id, recipe.Id);
-        var otherValid = RecipeLike.Create(reader.Id, otherRecipe.Id);
-        var orphan = RecipeLike.Create(reader.Id, RecipeId.New());
-        context.Users.AddRange(author, reader);
+        UserId authorId = await InitialBaselineUserFixture.InsertAsync(context, "recipe-like-author@example.test");
+        UserId readerId = await InitialBaselineUserFixture.InsertAsync(context, "recipe-like-reader@example.test");
+        var recipe = Recipe.Create(authorId, "Liked recipe", 1);
+        var otherRecipe = Recipe.Create(authorId, "Other liked recipe", 1);
+        var valid = RecipeLike.Create(readerId, recipe.Id);
+        var otherValid = RecipeLike.Create(readerId, otherRecipe.Id);
+        var orphan = RecipeLike.Create(readerId, RecipeId.New());
         context.Recipes.AddRange(recipe, otherRecipe);
         context.RecipeLikes.AddRange(valid, otherValid, orphan);
         await context.SaveChangesAsync();
@@ -45,7 +44,7 @@ public sealed class RecipeLikeReferenceMigrationIntegrationTests(PostgresDatabas
         Assert.Equal(2, await context.RecipeLikes.CountAsync());
         Assert.False(await context.RecipeLikes.AnyAsync(like => like.Id == orphan.Id));
 
-        context.RecipeLikes.Add(RecipeLike.Create(reader.Id, RecipeId.New()));
+        context.RecipeLikes.Add(RecipeLike.Create(readerId, RecipeId.New()));
         DbUpdateException rejected = await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
         PostgresException databaseError = Assert.IsType<PostgresException>(rejected.InnerException);
         Assert.Multiple(
@@ -59,7 +58,7 @@ public sealed class RecipeLikeReferenceMigrationIntegrationTests(PostgresDatabas
         Assert.Multiple(
             () => Assert.Equal(otherValid.Id, remaining.Id),
             () => Assert.Equal(otherRecipe.Id, remaining.RecipeId),
-            () => Assert.Equal(reader.Id, remaining.UserId));
+            () => Assert.Equal(readerId, remaining.UserId));
         Assert.Equal(2, await context.Users.CountAsync());
         Assert.True(await context.Recipes.AnyAsync(item => item.Id == otherRecipe.Id));
     }
