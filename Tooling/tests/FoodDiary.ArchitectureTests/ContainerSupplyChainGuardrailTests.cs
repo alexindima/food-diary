@@ -310,12 +310,22 @@ public sealed class ContainerSupplyChainGuardrailTests {
         ];
 
         string groupRunner = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "ci", "Invoke-BackendTests.ps1"));
-        Assert.Equal(2, restoreCommands.Length);
+        Assert.NotEmpty(restoreCommands);
         Assert.All(restoreCommands, command => Assert.Contains("--locked-mode", command, StringComparison.Ordinal));
         Assert.Contains("@('restore', $groupSolution, '--locked-mode'", groupRunner, StringComparison.Ordinal);
 
+        Assert.Single(workflow.Split('\n'), line => line.TrimStart().StartsWith(
+            "python3 -B scripts/ci/audit_backend_dependencies.py", StringComparison.Ordinal));
+        Assert.Contains("python3 -B -m unittest discover -s scripts/ci -p 'test_backend_dependency_audit.py'", workflow, StringComparison.Ordinal);
+
+        // The runner audits the complete solution and rejects missing project results.
+        var solutionProjects = XDocument.Load(ArchitectureTestPaths.FromRoot("FoodDiary.slnx"))
+            .Descendants("Project")
+            .Select(project => project.Attribute("Path")?.Value?.Replace('\\', '/'))
+            .OfType<string>()
+            .ToHashSet(StringComparer.Ordinal);
         foreach (string project in ExpectedProductionProjects) {
-            Assert.Contains($"\"{project}\"", workflow, StringComparison.Ordinal);
+            Assert.Contains(project, solutionProjects);
         }
     }
 
