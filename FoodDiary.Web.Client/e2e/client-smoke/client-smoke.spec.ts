@@ -1519,11 +1519,7 @@ test.describe('dashboard regression interactions', () => {
         expect(Math.abs(populatedPlot.height - emptyPlot.height)).toBeLessThanOrEqual(2);
         expect(Math.abs(populatedPlot.width - emptyPlot.width)).toBeLessThanOrEqual(2);
         expect(Math.abs(original.width - empty.width)).toBeLessThanOrEqual(2);
-        const detail = await dashboardBoundsAsync(chart.locator('.nutrition-trend__day'));
-        const bars = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
-        expect(detail.y).toBeGreaterThanOrEqual(bars.y + bars.height);
-        expect(Math.abs(detail.x - bars.x)).toBeLessThanOrEqual(2);
-        expect(Math.abs(detail.width - bars.width)).toBeLessThanOrEqual(2);
+        await expectFullWidthDaySummaryAsync(chart);
         await chart.locator('.nutrition-trend__open-day').click();
         await expect(page).toHaveURL(/date=2026-04-13/);
         await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
@@ -2543,6 +2539,14 @@ async function mealPreviewHeaderGapAsync(preview: Locator): Promise<number> {
         }
         return list.top - header.bottom;
     });
+}
+
+async function expectFullWidthDaySummaryAsync(chart: Locator): Promise<void> {
+    const detail = await dashboardBoundsAsync(chart.locator('.nutrition-trend__day'));
+    const bars = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
+    expect(detail.y).toBeGreaterThanOrEqual(bars.y + bars.height);
+    expect(Math.abs(detail.x - bars.x)).toBeLessThanOrEqual(2);
+    expect(Math.abs(detail.width - bars.width)).toBeLessThanOrEqual(2);
 }
 
 async function expectCompactMealFooterAsync(card: Locator): Promise<void> {
