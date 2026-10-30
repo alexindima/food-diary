@@ -19,7 +19,7 @@ If a Git lock prevents progress, inspect its exact path, active operations, and 
 
 ## Verify and publish
 
-Use the existing Wiki adaptive route and change-aware test plan where the change requires them. Avoid creating a second release checklist that copies their policies. Local hooks only check whitespace; run focused checks during development and keep the full CI gate. Run commit and push with hooks enabled; inspect the hook output on failure and fix the cause before retrying.
+Use the existing Wiki adaptive route and change-aware test plan where the change requires them. Avoid creating a second release checklist that copies their policies. Local hooks check whitespace, and pre-push additionally checks affected Wiki contracts and source reviews against the committed revision; run focused behavior checks during development and keep the full CI gate. Run commit and push with hooks enabled; inspect the hook output on failure and fix the cause before retrying.
 
 Check runtimes and Docker readiness before a long verification step that needs them. For an operating-system-sensitive CI failure, record exact SHA, workflow, job, step, and error, then reproduce on the relevant OS or clearly state the remaining verification gap. Local Windows success alone does not establish Linux correctness.
 

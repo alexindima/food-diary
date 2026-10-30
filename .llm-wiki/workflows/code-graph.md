@@ -329,6 +329,10 @@ longer prefixes so inflections cannot multiply one subject's weight during
 bounded candidate recall. Backend code and query-document projections receive
 the same frontend-intent penalty.
 
+Short query terms of one or two characters use exact FTS tokens in both lexical
+and path/title recall. Longer terms retain prefix matching, so `EF` cannot
+recall `EffectiveFrom`. Node and .NET share this token-matching contract.
+
 Prefix expansion alternatives ending in `$` match a complete literal term;
 other alternatives retain prefix matching. This shares identical English/Russian
 expansion lists without widening the English match or raising the 700-rule

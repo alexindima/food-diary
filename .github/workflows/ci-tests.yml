@@ -13,7 +13,7 @@ on:
 jobs:
   llm-wiki-focused:
     name: LLM Wiki focused regressions
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       actions: read
@@ -30,6 +30,15 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+
+      - name: Initialize Wiki diagnostics
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path .artifacts/llm-wiki/ci -Force | Out-Null
+          "Run: $env:GITHUB_RUN_ID; commit: $env:GITHUB_SHA" | Set-Content .artifacts/llm-wiki/ci/run.log
+
+      - name: Test committed Wiki pre-push guard
+        run: node --test scripts/ci/wiki-pre-push.test.mjs
 
       - name: Test deployment source authorization
         run: node --test .github/scripts/deploy-source.test.mjs
@@ -112,10 +121,15 @@ jobs:
       - name: Verify Wiki checks and focused partition
         shell: pwsh
         run: |
-          node --test scripts/ci/ci-parallelism.test.mjs
-          if ($LASTEXITCODE -ne 0) { throw 'CI orchestration contracts failed.' }
-          ./scripts/ci/Test-WikiSmokeShards.ps1
-          ./scripts/ci/Invoke-WikiCiChecks.ps1 -BaseRef $env:WIKI_BASE_REF
+          Start-Transcript -Path .artifacts/llm-wiki/ci/checks.log -Force
+          try {
+            node --test scripts/ci/ci-parallelism.test.mjs
+            if ($LASTEXITCODE -ne 0) { throw 'CI orchestration contracts failed.' }
+            ./scripts/ci/Test-WikiSmokeShards.ps1
+            ./scripts/ci/Invoke-WikiCiChecks.ps1 -BaseRef $env:WIKI_BASE_REF
+          } finally {
+            Stop-Transcript
+          }
 
       - name: Check Wiki API compatibility
         shell: pwsh
@@ -155,7 +169,7 @@ jobs:
 
   llm-wiki-smoke:
     name: LLM Wiki focused (${{ matrix.shard }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -201,7 +215,7 @@ jobs:
   llm-wiki-audit:
     name: LLM Wiki Full audit (${{ matrix.shard }})
     if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     strategy:
       fail-fast: false
@@ -258,7 +272,7 @@ jobs:
     name: LLM Wiki verification
     if: always()
     needs: [llm-wiki-focused, llm-wiki-smoke, llm-wiki-audit]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Wiki gate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -280,7 +294,7 @@ jobs:
 
   tech-radar:
     name: Technology Radar build and evidence validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -314,7 +328,7 @@ jobs:
 
   api-sdk:
     name: User and Admin API client contracts and generation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     permissions:
       contents: read
@@ -350,7 +364,7 @@ jobs:
 
   backend-format:
     name: Backend formatting and full solution build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Checkout code
@@ -438,7 +452,7 @@ jobs:
 
   backend-fast:
     name: Backend fast tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout code
@@ -479,7 +493,7 @@ jobs:
 
   backend-slow:
     name: Backend slow tests (${{ matrix.group }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -542,7 +556,7 @@ jobs:
     name: Backend .NET tests and formatting
     if: always()
     needs: [backend-format, backend-fast, backend-slow]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download backend failure diagnostics
         if: needs.backend-format.result != 'success' || needs.backend-fast.result != 'success' || needs.backend-slow.result != 'success'
@@ -581,7 +595,7 @@ jobs:
 
   backend-dependency-audit:
     name: Backend dependency audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Initialize dependency audit diagnostics
@@ -751,7 +765,7 @@ jobs:
 
   frontend-lanes:
     name: Frontend (${{ matrix.group }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -1384,7 +1398,7 @@ jobs:
     name: Frontend checks, tests, and builds
     if: always()
     needs: frontend-lanes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download frontend failure diagnostics
         if: needs.frontend-lanes.result != 'success'
@@ -1429,7 +1443,7 @@ jobs:
       - dotnet-tests
       - backend-dependency-audit
       - frontend-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code

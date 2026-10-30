@@ -127,14 +127,17 @@ public sealed class BuildWorkflowGuardrailTests {
     public void GitHooks_KeepCommitsAndPushesFreeOfApplicationTooling() {
         string preCommit = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-commit"));
         string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
+        string wikiGuard = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "ci", "Invoke-WikiPrePush.ps1"));
+        string hookTooling = preCommit + prePush + wikiGuard;
 
         Assert.Multiple(
             () => Assert.Contains("git diff --cached --check", preCommit, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("npm", preCommit + prePush, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("dotnet", preCommit + prePush, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("pwsh", preCommit + prePush, StringComparison.Ordinal),
-            () => Assert.DoesNotContain("node ", preCommit + prePush, StringComparison.Ordinal),
-            () => Assert.DoesNotContain(".llm-wiki/", preCommit + prePush, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("npm", hookTooling, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("dotnet", hookTooling, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("pwsh", preCommit, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("node ", hookTooling, StringComparison.Ordinal),
+            () => Assert.DoesNotContain(".llm-wiki/", preCommit, StringComparison.Ordinal),
+            () => Assert.Contains("-File scripts/ci/Invoke-WikiPrePush.ps1", prePush, StringComparison.Ordinal),
             () => Assert.DoesNotContain(".artifacts/", preCommit + prePush, StringComparison.Ordinal));
     }
 

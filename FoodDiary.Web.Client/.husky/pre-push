@@ -1,4 +1,4 @@
-# Keep pushes fast. Builds, linters, tests and Wiki verification run in CI.
+# Check committed content. Full builds, linters and behavioral tests run in CI.
 remote_name=${1:-origin}
 saw_ref_update=false
 
@@ -22,6 +22,15 @@ while read -r local_ref local_object_name remote_ref remote_object_name; do
     # Include root commits and every merge parent; do not read working-tree files.
     git diff-tree --check --root -r -m "$commit" -- || exit 1
   done
+
+  if [ -n "$commits" ] && git cat-file -e "$local_object_name:.llm-wiki/wiki.ps1" 2>/dev/null; then
+    command -v pwsh >/dev/null 2>&1 || {
+      printf 'Wiki pre-push requires PowerShell 7 (pwsh).\n' >&2
+      exit 1
+    }
+    pwsh -NoLogo -NoProfile -File scripts/ci/Invoke-WikiPrePush.ps1 \
+      -RemoteName "$remote_name" -LocalObjectName "$local_object_name" -RemoteObjectName "$remote_object_name" || exit 1
+  fi
 done
 
 if [ "$saw_ref_update" = false ]; then
@@ -29,4 +38,4 @@ if [ "$saw_ref_update" = false ]; then
   git diff --check HEAD -- || exit 1
 fi
 
-printf 'Pre-push whitespace checks passed. Full verification runs in CI.\n'
+printf 'Pre-push whitespace and applicable Wiki checks passed. Full verification runs in CI.\n'

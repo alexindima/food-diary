@@ -1231,9 +1231,10 @@ test.describe('mobile compact meal cards', () => {
                 expect(frameStyle.bottom).toBeLessThanOrEqual(COMPACT_MEAL_PADDING);
                 const metadataGap = await card.locator('.entity-card__title-block').evaluate(element => getComputedStyle(element).rowGap);
                 expect(Number.parseFloat(metadataGap)).toBeLessThanOrEqual(COMPACT_MEAL_METADATA_GAP);
-                const nutrients = await dashboardBoundsAsync(card.locator('.entity-card__summary-row'));
+                const nutrients = await dashboardBoundsAsync(card.locator('.nutrient-badges__macros'));
                 const metadata = await dashboardBoundsAsync(card.locator('.entity-card__title-block'));
-                const headerBottom = Math.max(photo.y + photo.height, metadata.y + metadata.height);
+                const quality = await dashboardBoundsAsync(card.locator('.nutrient-badges__chip--quality'));
+                const headerBottom = Math.max(photo.y + photo.height, metadata.y + metadata.height, quality.y + quality.height);
                 expect(Math.round(nutrients.y - headerBottom)).toBeLessThanOrEqual(COMPACT_MEAL_PADDING);
                 await expectCompactMealFooterAsync(card);
                 const help = card.getByRole('button', { name: 'Как считается полезность', exact: true });
@@ -1496,9 +1497,7 @@ test.describe('dashboard regression interactions', () => {
         await expect(page.locator('fd-tdee-insight-card')).toContainText('current', { ignoreCase: true });
     });
 
-    test('the weekly chart preserves desktop composition for both populated and empty days and opens the selected date', async ({
-        page,
-    }) => {
+    test('the weekly chart preserves its plot with a full-width summary below it and opens the selected date', async ({ page }) => {
         await page.setViewportSize({ width: 1440, height: 1000 });
         await page.route(/\/api\/v1\/dashboard\/?(?:\?|$)/u, async route =>
             route.fulfill(jsonResponse(createDashboardRegressionSnapshot())),
@@ -1512,15 +1511,19 @@ test.describe('dashboard regression interactions', () => {
         const original = await dashboardBoundsAsync(chart);
         await choices.nth(DASHBOARD_PREVIOUS_DAY_INDEX).click();
         await expect(chart.locator('.nutrition-trend__day-calories')).toContainText('1,800');
-        const populated = await dashboardBoundsAsync(chart);
+        const populatedPlot = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
         await choices.first().click();
         await expect(chart.locator('.nutrition-trend__day-calories')).toContainText('0');
         const empty = await dashboardBoundsAsync(chart);
-        expect(Math.abs(populated.height - empty.height)).toBeLessThanOrEqual(2);
+        const emptyPlot = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
+        expect(Math.abs(populatedPlot.height - emptyPlot.height)).toBeLessThanOrEqual(2);
+        expect(Math.abs(populatedPlot.width - emptyPlot.width)).toBeLessThanOrEqual(2);
         expect(Math.abs(original.width - empty.width)).toBeLessThanOrEqual(2);
         const detail = await dashboardBoundsAsync(chart.locator('.nutrition-trend__day'));
         const bars = await dashboardBoundsAsync(chart.locator('.nutrition-trend__chart'));
-        expect(detail.x).toBeGreaterThan(bars.x);
+        expect(detail.y).toBeGreaterThanOrEqual(bars.y + bars.height);
+        expect(Math.abs(detail.x - bars.x)).toBeLessThanOrEqual(2);
+        expect(Math.abs(detail.width - bars.width)).toBeLessThanOrEqual(2);
         await chart.locator('.nutrition-trend__open-day').click();
         await expect(page).toHaveURL(/date=2026-04-13/);
         await expect(page.locator('fd-dashboard-quick-add')).toHaveCount(0);
@@ -2545,14 +2548,21 @@ async function mealPreviewHeaderGapAsync(preview: Locator): Promise<number> {
 async function expectCompactMealFooterAsync(card: Locator): Promise<void> {
     const geometry = await card.evaluate(element => {
         const frame = element.querySelector('.media-card')?.getBoundingClientRect();
+        const nutrients = element.querySelector('.nutrient-badges__macros')?.getBoundingClientRect();
         const label = element.querySelector('.nutrient-badges__quality-label')?.getBoundingClientRect();
         const help = element.querySelector('.nutrient-badges__quality-help button')?.getBoundingClientRect();
-        if (frame === undefined || label === undefined || help === undefined) {
+        if (frame === undefined || nutrients === undefined || label === undefined || help === undefined) {
             throw new Error('Expected the meal card and healthiness help');
         }
-        return { gap: frame.bottom - label.bottom, helpTop: help.top - frame.top, helpBottom: frame.bottom - help.bottom };
+        return {
+            gap: frame.bottom - nutrients.bottom,
+            qualityGap: nutrients.top - label.bottom,
+            helpTop: help.top - frame.top,
+            helpBottom: frame.bottom - help.bottom,
+        };
     });
     expect(Math.round(geometry.gap)).toBeLessThanOrEqual(COMPACT_MEAL_FOOTER_MAX_GAP);
+    expect(Math.round(geometry.qualityGap)).toBeGreaterThanOrEqual(0);
     expect(Math.round(geometry.helpTop)).toBeGreaterThanOrEqual(0);
     expect(Math.round(geometry.helpBottom)).toBeGreaterThanOrEqual(0);
 }

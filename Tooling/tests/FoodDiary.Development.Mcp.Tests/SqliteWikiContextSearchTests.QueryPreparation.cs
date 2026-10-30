@@ -4,6 +4,24 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 public sealed partial class SqliteWikiContextSearchTests {
     [Fact]
+    public async Task SearchAsync_ShortAcronymsDoNotRecallUnrelatedWordPrefixes() {
+        ExecuteBatchFixtureSql("""
+            DELETE FROM context_search;
+            DELETE FROM context_search_identity;
+            INSERT INTO context_search VALUES
+                ('code','framework','Area/Mapping.cs','framework','csharp','Mapping','EF mapping'),
+                ('code','effective','Area/EffectiveFrom.cs','effective','csharp','EffectiveFrom','EffectiveFrom');
+            INSERT INTO context_search_identity(rowid,path,title) SELECT rowid,path,title FROM context_search;
+            """);
+
+        WikiContextSearchResult result = await new SqliteContextSearchReader(_fixtureRoot).SearchAsync(
+            "EF", 10, "Database", module: null, scopePaths: null, CancellationToken.None, "fixture-change-set");
+
+        Assert.True(result.Ready);
+        Assert.Equal("Area/Mapping.cs", Assert.Single(result.Candidates).Path);
+    }
+
+    [Fact]
     public async Task SearchBatchAsync_PreparesBoostsSeparatelyForEachQueryAndChangeType() {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
         JsonNode policy = JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;

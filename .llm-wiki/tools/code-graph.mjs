@@ -2260,14 +2260,16 @@ function searchContext(database, query, limit, filters = {}, batchState) {
       durationMs: Math.round((performance.now() - started) * 100) / 100,
     };
   }
-  const match = terms.map((term) => `"${term.replaceAll('"', '""')}"*`).join(' OR ');
+  // Match short acronyms exactly: EF must not recall EffectiveFrom (or AI Aisle).
+  const ftsTerms = new Map(terms.map((term) => [term, `"${term.replaceAll('"', '""')}"${term.length > 2 ? '*' : ''}`]));
+  const match = [...ftsTerms.values()].join(' OR ');
   const candidateLimit = Number(contextSearchRanking.candidatePoolLimit ?? 500);
   const candidates = findLexicalCandidates(database, match, candidateLimit);
   // Prefix expansion already matches every longer inflection; counting it again
   // overweights common words and can crowd a second subject out of the pool.
   const identityMatch = terms.filter(term => !terms.some(other => other !== term && term.startsWith(other))).flatMap((term) => {
-    const escaped = term.replaceAll('"', '""');
-    return [`path : "${escaped}"*`, `title : "${escaped}"*`];
+    const expression = ftsTerms.get(term);
+    return [`path : ${expression}`, `title : ${expression}`];
   }).join(' OR ');
   const identityLimit = Number(contextSearchRanking.identityCandidatePoolLimit ?? 100);
   const identityCandidates = findWeightedIdentityCandidates(database, identityMatch, identityLimit);

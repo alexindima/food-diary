@@ -19,9 +19,22 @@ whitespace in every outgoing commit for each updated ref, including root and
 merge commits. Deletion-only pushes need no checks. New refs and unavailable
 remote objects exclude commits already known through that remote's tracking
 refs. A manual invocation without ref input checks tracked changes against HEAD.
-The hook reads committed content during a push, so unrelated working changes do
-not affect the result. Neither hook needs npm, .NET, Docker or PowerShell, and
-neither hook builds the application or verifies Wiki indexes.
+Both gates read committed content during a push, so unrelated working changes
+do not affect the result. For each outgoing revision containing Wiki tooling,
+pre-push also runs the affected page-contract and source-review
+checks in an owned temporary Git worktree. The scope includes outgoing commits
+from every session, deleted paths and both sides of renames. New refs exclude
+history already known through the remote's tracking refs; deletion-only pushes
+and revisions without new commits skip Wiki execution.
+
+The Wiki gate requires PowerShell 7 and Git, without Node.js or .NET dependencies.
+It removes only its owned checkout in the system temporary directory.
+Logs remain under `.artifacts/llm-wiki/process-batches/`. Each verification process
+has a 60-second bound. Neither hook builds application assemblies, starts Docker,
+or runs index generation, full search evaluation, smoke, or behavior suites;
+those stay in CI. Index generation and source review remain explicit developer
+operations: the hook reports invalid or unreviewed content instead of modifying
+the commit.
 
 Run focused checks while developing the affected behavior. The full publication
 gate lives in `.github/workflows/ci-tests.yml`: Wiki verification, backend build,

@@ -47,6 +47,11 @@ directory discovery runs only on a cache miss.
 
 CLI and MCP context ranking share `FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs`. The CLI adapter restores indexed layer, module, role, and test features while preserving its response shape. Identical concurrent MCP command-cache misses share a bounded gate; cancelling a waiter leaves the running command intact.
 
+One- and two-character query terms use exact FTS tokens in both lexical and
+path/title recall. Longer terms retain prefix matching. This keeps framework
+acronyms such as `EF` from recalling unrelated identifiers such as `EffectiveFrom`;
+the Node graph search and the .NET reader apply the same rule.
+
 The MCP development bundle keeps implementation and test discovery together for
 mixed requests. Explicit flow requests expand from source-name anchors into
 bounded SQLite type and mediator relationships. `flowScope` reports relationship

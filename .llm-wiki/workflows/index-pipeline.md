@@ -41,6 +41,8 @@ sources:
   - scripts/Test-NestedDotnetArtifactsCleanup.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
   - FoodDiary.Web.Client/.husky/pre-push
+  - scripts/ci/Invoke-WikiPrePush.ps1
+  - scripts/ci/wiki-pre-push.test.mjs
   - .llm-wiki/policies/affected-smoke-catalog.psd1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
   - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
@@ -597,11 +599,17 @@ Only stale markerless initialization and incomplete `initializing` transactions
 are discarded. Unreadable or corrupt in-progress state is retained for diagnosis;
 legacy state uses its complete original backup, never its unverified checkpoint.
 
-The pre-commit hook runs `git diff --cached --check`. The pre-push hook only
-checks whitespace in outgoing commits with Git, including root and merge
-commits. It handles every updated ref, skips deleted refs and excludes history
-already known on the remote when a new ref is pushed. Wiki index freshness,
-retrieval regressions, frontend/backend checks and Storybook builds run in CI.
+The pre-commit hook runs `git diff --cached --check`. The pre-push hook checks
+whitespace in outgoing commits with Git, including root and merge commits.
+It also runs Wiki page contracts and source-impact review enforcement in an
+owned temporary checkout of each outgoing revision, without Node.js or .NET
+dependencies. The scope includes every outgoing commit, deleted paths and both
+rename endpoints; dirty working files cannot hide a missing committed receipt.
+It handles every updated ref, skips deleted refs and excludes history already
+known on the remote when a new ref is pushed. The Wiki worker has a 60-second
+timeout, preserves logs under `.artifacts/llm-wiki/process-batches/` and removes
+only its owned checkout. Wiki index freshness, retrieval regressions,
+frontend/backend checks and Storybook builds run in CI.
 Stylesheets do not select compiled-index generators. Changes to the hook select
 the real deletion/rename/Unicode/new-ref/multiple-ref/merge whitespace regression
 and invalidate its cached receipt.

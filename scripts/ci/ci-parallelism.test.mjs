@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, mkdirSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -16,6 +16,35 @@ const workflow = parse(
     readFileSync(join(root, ".github/workflows/ci-tests.yml"), "utf8"),
 );
 const { jobs } = workflow;
+
+test("hosted Ubuntu runners use an explicit image and artifact uploads share the Node 24 action pin", () => {
+    const expectedUpload = jobs["llm-wiki-focused"].steps.find(step => step.uses?.startsWith("actions/upload-artifact@")).uses;
+    for (const file of readdirSync(join(root, ".github/workflows")).filter(file => file.endsWith(".yml"))) {
+        const current = parse(readFileSync(join(root, ".github/workflows", file), "utf8"));
+        for (const [name, job] of Object.entries(current.jobs)) {
+            const runner = job["runs-on"];
+            if (typeof runner === "string" && runner.startsWith("ubuntu-")) {
+                assert.match(runner, /^ubuntu-\d+\.\d+$/u, `${file}/${name}: choose an OS version deliberately`);
+            }
+            for (const step of job.steps ?? []) {
+                if (step.uses?.startsWith("actions/upload-artifact@")) assert.equal(step.uses, expectedUpload, `${file}/${name}`);
+            }
+        }
+    }
+    assert.equal(expectedUpload, "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9");
+});
+
+test("Wiki failure diagnostics exist before checks and retain the failing source-check transcript", () => {
+    const steps = jobs["llm-wiki-focused"].steps;
+    const initialize = steps.findIndex(step => step.name === "Initialize Wiki diagnostics");
+    const verify = steps.findIndex(step => step.name === "Verify Wiki checks and focused partition");
+    assert.ok(initialize >= 0 && initialize < verify);
+    assert.match(steps[initialize].run, /Set-Content \.artifacts\/llm-wiki\/ci\/run\.log/u);
+    assert.match(steps[verify].run, /Start-Transcript -Path \.artifacts\/llm-wiki\/ci\/checks\.log/u);
+    assert.match(steps[verify].run, /finally\s*\{\s*Stop-Transcript/u);
+    const upload = steps.find(step => step.name === "Upload Wiki failure diagnostics");
+    assert.ok(upload.with.path.includes(".artifacts/llm-wiki/**/*.log"));
+});
 
 test("all original frontend checks run exactly once across four independent lanes", () => {
     const lanes = jobs["frontend-lanes"];

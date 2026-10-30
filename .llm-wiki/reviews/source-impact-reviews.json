@@ -18,8 +18,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
+          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         },
         {
           "path": "docs/ARCHITECTURE.md",
@@ -37,10 +37,10 @@
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:45.3901331Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:12.3635378Z"
     },
     {
       "pageId": "module.frontend",
@@ -56,12 +56,17 @@
           "path": "docs/frontend/WEB_QUALITY.md",
           "sha256": "d80f21475c8983c69ed4b6fa8507e129ac30b68e5f6947532e1721ca6aa032e1",
           "reviewReason": "Reviewed docs/frontend/WEB_QUALITY.md and the axe adapter: the documented web-quality ownership and three-engine audit remain accurate. The additive snapshot guard reanalyzes changed DOM at most three times, retains stable violations, and fails execution errors; controlled Chromium/Firefox/WebKit fixtures and the original CI production assets verified these boundaries. No frontend module or API ownership changed."
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
+          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         }
       ],
-      "reason": "Reviewed the updated BROWSER_SESSIONS runbook against this navigation page. Its opaque cookie, public selector, shared queue/Web Lock, admin and Mini App descriptions remain accurate. The new persistent previous-session cookie is server-owned replacement metadata and introduces no JavaScript credential or SDK response field.",
+      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
       "baseRef": "HEAD",
-      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
-      "reviewedAtUtc": "2026-10-29T14:36:08.9645630Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:15.1252721Z"
     },
     {
       "pageId": "module.mail-services",
@@ -159,8 +164,8 @@
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
+          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
@@ -168,10 +173,10 @@
           "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:45.7352304Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:15.3226284Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -180,8 +185,8 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
+          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         },
         {
           "path": "docs/adr/README.md",
@@ -194,10 +199,10 @@
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:45.9913981Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:12.6510552Z"
     },
     {
       "pageId": "system.quality-index",
@@ -299,8 +304,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
-          "reviewReason": "The CI change adds a Python deployment-origin regression step only. OpenAPI comparison baselines, snapshots, SDK contracts and browser auth response shapes remain unchanged; API compatibility guidance still matches code."
+          "sha256": "22f4d2f711abe92269d5b1c45e43ca25727cedfeb759e9e61fda05cbe6bdbc0e",
+          "reviewReason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -323,10 +328,10 @@
           "reviewReason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change."
         }
       ],
-      "reason": "Reviewed regenerated host OpenAPI and payload snapshots: optional nullable hydrationHistory and its new response schema are additive. Existing routes, requests, totals, status codes and nullable contracts remain intact; SDK generation and final snapshot tests passed. Compatibility workflow guidance needs no prose change.",
+      "reason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "43862ef822126771767ac9f1de2d62155d932ab9",
-      "reviewedAtUtc": "2026-10-29T14:23:09.3358652Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:20:52.7973980Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -361,14 +366,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Reviewed contract-consumer and SQLite lineage claims against code-graph diff: only awaited extraction/process supervision changed. Contract selection, Node writer ownership, no-JSON fallback and production/test distinctions remain valid."
+          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
+          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
         }
       ],
-      "reason": "Reviewed contract-consumer and SQLite lineage claims against code-graph diff: only awaited extraction/process supervision changed. Contract selection, Node writer ownership, no-JSON fallback and production/test distinctions remain valid.",
+      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T10:03:57.3328056Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:48:35.5455913Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -732,8 +737,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "729f3b0d772aa53ba504f3058dc6747c6d0cc4f4f099893bd136417a68fffb6d",
-          "reviewReason": "Reviewed the domain-data-index delta: UserRefreshTokenSession source coordinates changed for persisted renewal eligibility and Users shared privilege policy adds a UTC invariant. The workflow constructor/mutation/mapping/migration/provider verification requirements remain correct; real PostgreSQL renewal and eligibility-upgrade tests exercise this change."
+          "sha256": "e959cc87e5e3f0077f7fc6b1c1a4bbbf321edd4ef586494c6cc25153479db243",
+          "reviewReason": "Compared the incoming domain projection with the previous published baseline: the additions are UserGoalRevision, its owner ID and profile history mapping. Inspected Capture/ToDailyGoals, null-preserving initial history, revision ordering, the migration backfill and profile-owned cascade. Existing domain/persistence review commands and ownership guidance remain current; focused historical goal HTTP tests passed."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -746,10 +751,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed the domain-data-index delta: UserRefreshTokenSession source coordinates changed for persisted renewal eligibility and Users shared privilege policy adds a UTC invariant. The workflow constructor/mutation/mapping/migration/provider verification requirements remain correct; real PostgreSQL renewal and eligibility-upgrade tests exercise this change.",
-      "baseRef": "HEAD",
-      "gitHead": "b1522cb3841274e50c6133583fc089035d88df8a",
-      "reviewedAtUtc": "2026-10-26T04:31:05.4613501Z"
+      "reason": "Compared the incoming domain projection with the previous published baseline: the additions are UserGoalRevision, its owner ID and profile history mapping. Inspected Capture/ToDailyGoals, null-preserving initial history, revision ordering, the migration backfill and profile-owned cascade. Existing domain/persistence review commands and ownership guidance remain current; focused historical goal HTTP tests passed.",
+      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:45:08.2202052Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -816,8 +821,8 @@
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
+          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
@@ -825,10 +830,10 @@
           "reviewReason": "Reviewed package.json after adding reduced-motion checks: existing build, lint, test and frontend visual-evidence entrypoints remain available with their prior behavior. The additive test:motion scripts compile source SCSS with Angular encapsulation and run browser contracts; they complement the documented real application visual evidence workflow and do not replace its runtime ownership or screenshot requirements."
         }
       ],
-      "reason": "Reviewed package.json after adding reduced-motion checks: existing build, lint, test and frontend visual-evidence entrypoints remain available with their prior behavior. The additive test:motion scripts compile source SCSS with Angular encapsulation and run browser contracts; they complement the documented real application visual evidence workflow and do not replace its runtime ownership or screenshot requirements.",
+      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
       "baseRef": "HEAD",
-      "gitHead": "51c7b388d837173a7508af3609c3684c14b8dffc",
-      "reviewedAtUtc": "2026-10-29T22:34:46.7195355Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:15.6354472Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -853,8 +858,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Checked changed graph statements against impact projection and hash/cache narrative: no changes to source inventory, selection, ownership or simulation data. Awaited extractors still complete before graph transaction/publication; failure cannot publish a partial extraction."
+          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
+          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -862,10 +867,10 @@
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         }
       ],
-      "reason": "Checked changed graph statements against impact projection and hash/cache narrative: no changes to source inventory, selection, ownership or simulation data. Awaited extractors still complete before graph transaction/publication; failure cannot publish a partial extraction.",
+      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
       "baseRef": "HEAD",
-      "gitHead": "b5e40b9a25a287283f61eedd5abfb3abe39d2ab9",
-      "reviewedAtUtc": "2026-10-24T10:03:59.8045614Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:48:35.9804961Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -1095,13 +1100,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5daca76c5fc45ca21c98e27568ecea10f1b5ef9d362fc21a1c6ed0ac6a78c536",
-          "reviewReason": "Reviewed the regenerated sensitive-data index and the new PreviousBrowserSessionId context. The workflow still treats index fields as candidates requiring semantic review. The marker is a protected non-authenticating session selector, JsonIgnore excludes the context field, it is never logged, and no provider transfer or raw device fingerprint was added. Generic lifecycle and SQL-reader guidance remains accurate."
+          "sha256": "bf3ab711725484c9384459ddb39ff5fec2971685af56e65367cad61b5d4ab940",
+          "reviewReason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "8007e4880c19d1251472ab369ca63af67e4798328a32a705eeafac456e2cbac3",
-          "reviewReason": "Checked privacy source review narrative and changed Node process boundary. Query ranking, privacy views and coalescing implementation are unchanged; the new subprocess diagnostics contain command output from source extraction and introduce no query/credential telemetry fields."
+          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
+          "reviewReason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -1109,10 +1114,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed the regenerated sensitive-data index and the new PreviousBrowserSessionId context. The workflow still treats index fields as candidates requiring semantic review. The marker is a protected non-authenticating session selector, JsonIgnore excludes the context field, it is never logged, and no provider transfer or raw device fingerprint was added. Generic lifecycle and SQL-reader guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
-      "reviewedAtUtc": "2026-10-29T14:36:14.7446516Z"
+      "reason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current.",
+      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:50:12.2588443Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1231,8 +1236,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c5ca000dc65160f0923e6fccbab51f218835f74dd3e401241505538b3df559df",
-          "reviewReason": "The CI change adds an independent Python proxy regression before the existing Wiki steps; report generation, publication, API comparison and provenance are unchanged and the review-report guidance remains accurate."
+          "sha256": "22f4d2f711abe92269d5b1c45e43ca25727cedfeb759e9e61fda05cbe6bdbc0e",
+          "reviewReason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1250,10 +1255,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "The CI change adds an independent Python proxy regression before the existing Wiki steps; report generation, publication, API comparison and provenance are unchanged and the review-report guidance remains accurate.",
+      "reason": "Inspected the CI workflow diff and both pages. The changes pin Ubuntu 24.04, initialize retained failure metadata, capture the existing Wiki check transcript and test the pre-push guard. Successful-ancestor API baseline resolution, compatibility arguments, independent shard gates and the report publishing step remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e9a47534c53cd61abe563905ed28ac99b995014e",
-      "reviewedAtUtc": "2026-10-28T03:19:49.5576292Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:20:53.1161150Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1278,8 +1283,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "953998c98b0a469dbbad64080a7841879733b8cba0a76329f04eb869fe41977a",
-          "reviewReason": "Reviewed the combined master runtime topology after merging notifications: runtime deployment, providers, registrations and background jobs are preserved. The regenerated topology reconciles the existing master sources and notification sender changes; notification recipient identity, foreground retry and permission safeguards are covered by integration checks."
+          "sha256": "4830ef2cae430d4037225eb6cc1903b97da934d6cc63d2f13e2392eabfa0f2b4",
+          "reviewReason": "Compared topology identities and source anchors with the previous published baseline and current source changes: the 18 compose services, 16 hosted services, 22 HTTP clients, 22 webhooks and 18 recurring registrations retain their identities. Goal-history and search-reader edits add no runtime host/provider/job. Only current source coordinates and discovery evidence changed; resilience and deployment review guidance remains current."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1292,10 +1297,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the combined master runtime topology after merging notifications: runtime deployment, providers, registrations and background jobs are preserved. The regenerated topology reconciles the existing master sources and notification sender changes; notification recipient identity, foreground retry and permission safeguards are covered by integration checks.",
-      "baseRef": "HEAD",
-      "gitHead": "fe927c653b7ec55f60d54076b42a6d8b60f756ba",
-      "reviewedAtUtc": "2026-10-29T16:00:32.3506080Z"
+      "reason": "Compared topology identities and source anchors with the previous published baseline and current source changes: the 18 compose services, 16 hosted services, 22 HTTP clients, 22 webhooks and 18 recurring registrations retain their identities. Goal-history and search-reader edits add no runtime host/provider/job. Only current source coordinates and discovery evidence changed; resilience and deployment review guidance remains current.",
+      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:45:08.9117012Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1304,14 +1309,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
-          "reviewReason": "The ranking edit is restricted to the existing Frontend TypeScript component role and explicit template exclusions. Security-oriented control discovery, source filters, evidence warnings and validation requirements remain unchanged; the security retrieval corpus passed in the full context evaluation."
+          "sha256": "456a89f0e99f139dece070a11cbf3e053f7fcb14616a2991c41aeb59ba57817d",
+          "reviewReason": "Reviewed the ranking policy diff: the existing hydration goal-service affinity now matches the actual owner query handler after facade retirement. No security vocabulary, source filters, critical-symbol evidence, trust boundary or discovery scope changed; the policy rule count stays at 700. Existing security-discovery instructions remain current."
         }
       ],
-      "reason": "The ranking edit is restricted to the existing Frontend TypeScript component role and explicit template exclusions. Security-oriented control discovery, source filters, evidence warnings and validation requirements remain unchanged; the security retrieval corpus passed in the full context evaluation.",
+      "reason": "Reviewed the ranking policy diff: the existing hydration goal-service affinity now matches the actual owner query handler after facade retirement. No security vocabulary, source filters, critical-symbol evidence, trust boundary or discovery scope changed; the policy rule count stays at 700. Existing security-discovery instructions remain current.",
       "baseRef": "HEAD",
-      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
-      "reviewedAtUtc": "2026-10-29T10:36:35.4524471Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:48:37.1164436Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1450,14 +1455,14 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8c1a6d88ca8efc3ed0b20d6fb205c31aa159a891c19f4509fb6da9f1cf1d9f1a",
-          "reviewReason": "Reviewed TESTING_STRATEGY changes against the test-planning guide: new exhaustive payload cases and controlled Angular-worker tests run in existing backend/frontend CI checks; actual Android launch remains a documented device smoke check. Test discovery, Docker preparation, focused-check and regression-evidence instructions remain accurate."
+          "sha256": "43fb38c205eb69ddcac90330451d6c429bd316e54db33d0a8f01264583e32b24",
+          "reviewReason": "Compared the final testing-strategy diff with this workflow. The bounded Git/PowerShell-only pre-push gate checks committed page contracts and source reviews; index generation and application tests remain explicit developer and CI operations. Docker readiness, test selection, runner commands and verification receipt semantics remain current."
         }
       ],
-      "reason": "Reviewed TESTING_STRATEGY changes against the test-planning guide: new exhaustive payload cases and controlled Angular-worker tests run in existing backend/frontend CI checks; actual Android launch remains a documented device smoke check. Test discovery, Docker preparation, focused-check and regression-evidence instructions remain accurate.",
+      "reason": "Compared the final testing-strategy diff with this workflow. The bounded Git/PowerShell-only pre-push gate checks committed page contracts and source reviews; index generation and application tests remain explicit developer and CI operations. Docker readiness, test selection, runner commands and verification receipt semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "2be3f516b607f7dff52515b07df152eedec2f103",
-      "reviewedAtUtc": "2026-10-27T21:06:49.1593800Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:20:53.5462285Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1539,14 +1544,14 @@
         },
         {
           "path": "AGENTS.md",
-          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
+          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:46.6871394Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:12.9589628Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1597,14 +1602,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
-          "sha256": "8ca1c79606ad9cd2df8892b455e55676be1e5f9b963747bec6d3899f37557438",
-          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
+          "sha256": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8",
+          "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         }
       ],
-      "reason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps.",
+      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:48.3102637Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:16.0348352Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1625,12 +1630,17 @@
           "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
           "sha256": "b5a92aa4d02523f809fafba41cecf8999e85877256b0ec07758a8e3436ced27b",
           "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
+          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         }
       ],
-      "reason": "Reviewed the current repository catalog regeneration and context-navigation guidance. This change adds Identity cookie/replacement sources and tests within existing owners; it changes no context CLI/MCP command, SQLite query contract, module layout or ranking policy. The page describes those existing interfaces and contains no changed catalog-count assertion.",
+      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "9936e6f03ecdf55239c4ffdf22791ddde594713c",
-      "reviewedAtUtc": "2026-10-29T14:36:17.9254054Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:13.5797064Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1644,14 +1654,14 @@
         },
         {
           "path": "AGENTS.md",
-          "sha256": "192bd0ad8741c91eb8dd769cd5cdae00b040ca6045316a49edc6c4baed16c667",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
+          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:49.4933250Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:15:14.0582879Z"
     },
     {
       "pageId": "workflow.self-maintenance",
@@ -1659,15 +1669,20 @@
       "pageSha256": "95e3d3f9f3def07e12e906298c425d37920e54c1fd68fba8d9c9171c00711797",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
+          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
           "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
           "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:50.8596183Z"
+      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
+      "reviewedAtUtc": "2026-10-29T23:48:36.4878554Z"
     }
   ]
 }

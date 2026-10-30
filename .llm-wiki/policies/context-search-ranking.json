@@ -763,7 +763,10 @@
       "id": "goal-service-intent",
       "queryTerms": ["hydration", "goal", "calculate"],
       "minimumMatches": 2,
-      "identityTerms": ["goalservice"],
+      "identityTerms": ["hydration", "queryhandler"],
+      "minimumIdentityMatches": 2,
+      "identityScope": "file",
+      "changeTypes": ["Backend"],
       "score": 80
     },
     {

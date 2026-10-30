@@ -316,7 +316,8 @@ public sealed class SqliteContextSearchReader {
         SqliteTransaction? transaction = null) {
         string match = string.Join(
             " OR ",
-            queryTerms.Select(term => $"\"{term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"*"));
+            // Short acronyms such as EF and AI must not match EffectiveFrom or Aisle.
+            queryTerms.Select(term => $"\"{term.Replace("\"", "\"\"", StringComparison.Ordinal)}\"{(term.Length > 2 ? "*" : string.Empty)}"));
         List<RawCandidate> candidates = [];
         // The ordinary projection keeps paths outside FTS content so recalling
         // matches need not materialize every source body before applying limits.
@@ -382,7 +383,8 @@ public sealed class SqliteContextSearchReader {
             queryTerms.Where(term => !queryTerms.Any(other => !string.Equals(other, term, StringComparison.Ordinal) &&
                 term.StartsWith(other, StringComparison.Ordinal))).SelectMany(term => {
                     string escaped = term.Replace("\"", "\"\"", StringComparison.Ordinal);
-                    return new[] { $"path : \"{escaped}\"*", $"title : \"{escaped}\"*" };
+                    string suffix = term.Length > 2 ? "*" : string.Empty;
+                    return new[] { $"path : \"{escaped}\"{suffix}", $"title : \"{escaped}\"{suffix}" };
                 }));
         {
             SqliteCommand command = connection.CreateCommand();

@@ -13,6 +13,11 @@ using FoodDiary.Modules.Recipes.Presentation.Requests;
 using FoodDiary.Modules.MealPlanning.Presentation.ShoppingLists.Requests;
 using FoodDiary.Modules.Users.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -292,9 +297,19 @@ public sealed class PresentationPayloadContractIntegrationTests(
     [RequiresDockerFact]
     public async Task HydrationDaily_AfterCreate_MatchesNormalizedPayloadSnapshot() {
         HttpClient client = apiFactory.CreateClient();
-        string accessToken = await RegisterAndGetBrowserSessionAsync(client);
+        string email = $"hydration-snapshot-{Guid.NewGuid():N}@example.com";
+        string accessToken = await RegisterAndGetBrowserSessionAsync(client, email);
         AuthenticationResponseCookies.ApplyBrowserSession(client, accessToken);
         client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
+
+        // The frozen snapshot date needs its own goal, rather than today's registration defaults.
+        await using (AsyncServiceScope scope = apiFactory.Services.CreateAsyncScope()) {
+            FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            User user = await context.Users.SingleAsync(account => account.Email == email);
+            using IDisposable clock = DomainTime.Override(new SnapshotTimeProvider(new DateTimeOffset(2026, 3, 26, 0, 0, 0, TimeSpan.Zero)));
+            user.UpdateActivity(hydrationGoal: 1800);
+            await context.SaveChangesAsync();
+        }
 
         var createRequest = new CreateHydrationEntryHttpRequest(
             new DateTime(2026, 3, 26, 9, 30, 0, DateTimeKind.Utc),
@@ -316,6 +331,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(1800, json.RootElement.GetProperty("goalMl").GetDouble());
         await AssertPayloadSnapshotAsync("hydration-daily", actual);
     }
 
@@ -486,8 +502,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
         await AssertPayloadSnapshotAsync("image-upload-url", actual);
     }
 
-    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client) {
-        string email = $"api-tests-{Guid.NewGuid():N}@example.com";
+    private static async Task<string> RegisterAndGetBrowserSessionAsync(HttpClient client, string? email = null) {
+        email ??= $"api-tests-{Guid.NewGuid():N}@example.com";
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
@@ -497,6 +513,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
         return AuthenticationResponseCookies.ReadBrowserSession(response);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SnapshotTimeProvider(DateTimeOffset now) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => now;
     }
 
     private static JsonObject BuildAdminUsersSnapshot(JsonElement root) {

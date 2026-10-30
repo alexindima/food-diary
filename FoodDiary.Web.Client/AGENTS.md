@@ -1,4 +1,4 @@
-﻿# Frontend (Angular) Guidelines
+# Frontend (Angular) Guidelines
 
 ## Scope
 
@@ -131,5 +131,5 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 ## Git Hooks
 
 - Never bypass `pre-commit` or `pre-push` with `--no-verify`.
-- Pre-push only checks outgoing commits for whitespace errors with Git. Frontend formatting (`npm run check:format:ci`), linters, builds and tests run in CI; use focused checks during development.
-- On a hook failure, fix the whitespace errors reported by Git, then rerun the original command. Full verification diagnostics belong to the corresponding CI run; older hook step logs remain under `.git/hook-logs/`.
+- Pre-push checks outgoing whitespace and affected Wiki page contracts and source-review receipts in an isolated committed checkout. Index generation, application builds, frontend formatting (`npm run check:format:ci`), linters and behavior tests remain in CI; use focused checks during development.
+- On a hook failure, fix the reported whitespace or Wiki error, then rerun the original command. Wiki logs remain under `.artifacts/llm-wiki/process-batches/`; full verification diagnostics belong to CI, and older hook step logs remain under `.git/hook-logs/`.
