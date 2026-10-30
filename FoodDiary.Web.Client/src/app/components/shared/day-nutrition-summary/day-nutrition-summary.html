@@ -16,7 +16,7 @@
                         </clipPath>
                     </defs>
                     <circle class="day-summary__contour-track" cx="160" cy="160" r="117" />
-                    <g [attr.clip-path]="`url(#${chartId})`">
+                    <g class="day-summary__contour-fill" [attr.clip-path]="`url(#${chartId})`">
                         <foreignObject x="-48" y="-48" width="416" height="416">
                             <div class="day-summary__contour-color" [style.background]="contourGradient()"></div>
                         </foreignObject>

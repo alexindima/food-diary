@@ -66,10 +66,14 @@
         }
     }
 
+    // Keep opacity on the SVG group: an HTML opacity layer escapes its clip in WebKit.
+    &__contour-fill {
+        opacity: 0.85;
+    }
+
     &__contour-color {
         width: 100%;
         height: 100%;
-        opacity: 0.85;
     }
 
     &__contour-goal,
