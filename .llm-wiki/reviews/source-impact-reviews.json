@@ -947,14 +947,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "3a3fb1f1a554655ca65c527437152866c546c44f50a6e2f0b0935b9fb468c190",
-          "reviewReason": "Reviewed the appended signal-effect-final instruction outcome: it records source instruction hashes, task risk/complexity, completion and retrospective fingerprints and scores in the existing hash chain. It changes no AGENTS.md, policy, cohort logic or experiment procedure; the guide remains current."
+          "sha256": "11b44c682267e087a52bcf5c6666536ccb2a6ac0e6eecb212ed91561fa19ac8c",
+          "reviewReason": "Reviewed the new schemaVersion 2 observation for .artifacts/llm-wiki/tasks/parallel-deploy: task-finish appended one sealed outcome with root/scoped AGENTS fingerprints, cohort attribution and the correct previous-event hash. instruction-outcome-verify passed. The page describes the append-only event schema, attribution and governed experiment semantics without asserting a frozen sample count, so its explanation remains current and needs no prose change."
         }
       ],
-      "reason": "Reviewed the appended signal-effect-final instruction outcome: it records source instruction hashes, task risk/complexity, completion and retrospective fingerprints and scores in the existing hash chain. It changes no AGENTS.md, policy, cohort logic or experiment procedure; the guide remains current.",
-      "baseRef": "64b5e315d549c3ce60e7c19eaf3fcbc25bad9091",
-      "gitHead": "82fd45372730d745faca95972a66352a5c7745c3",
-      "reviewedAtUtc": "2026-10-28T07:49:01.4507724Z"
+      "reason": "Reviewed the new schemaVersion 2 observation for .artifacts/llm-wiki/tasks/parallel-deploy: task-finish appended one sealed outcome with root/scoped AGENTS fingerprints, cohort attribution and the correct previous-event hash. instruction-outcome-verify passed. The page describes the append-only event schema, attribution and governed experiment semantics without asserting a frozen sample count, so its explanation remains current and needs no prose change.",
+      "baseRef": "HEAD",
+      "gitHead": "f74fbdffb51eac16361db2eca39a7be6c813eb97",
+      "reviewedAtUtc": "2026-10-30T01:49:33.0529840Z"
     },
     {
       "pageId": "workflow-integration-scan",

@@ -33,19 +33,10 @@ public sealed class ContainerSupplyChainGuardrailTests {
         "Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
     ];
 
-    private static readonly string[] ExpectedBuildIds = [
-        "build_bugtriage",
-        "build_api",
-        "build_telegram_bot",
-        "build_initializer",
-        "build_job_manager",
-        "build_mail_relay",
-        "build_mailrelay_initializer",
-        "build_mail_inbox",
-        "build_mailinbox_postgres_tls_init",
-        "build_mailinbox_initializer",
-        "build_client",
-        "build_tech_radar",
+    private static readonly string[] ExpectedProductionImages = [
+        "bugtriage", "api", "telegram-bot", "initializer", "job-manager", "mail-relay",
+        "mailrelay-initializer", "mail-inbox", "mailinbox-postgres-tls-init",
+        "mailinbox-initializer", "client", "tech-radar",
     ];
 
     [Fact]
@@ -61,8 +52,13 @@ public sealed class ContainerSupplyChainGuardrailTests {
                 StringSplitOptions.None)[0]),
         ];
 
-        Assert.Equal(ExpectedBuildIds.Length, buildSteps.Length);
+        Assert.Single(buildSteps);
         Assert.DoesNotContain("provenance: false", workflow, StringComparison.Ordinal);
+        Assert.Contains("matrix: ${{ fromJSON(needs.authorize.outputs.matrix) }}", workflow, StringComparison.Ordinal);
+        string catalog = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "scripts", "deploy-images.mjs"));
+        foreach (string image in ExpectedProductionImages) {
+            Assert.Contains($"name: \"{image}\"", catalog, StringComparison.Ordinal);
+        }
 
         foreach (string step in buildSteps) {
             Assert.Contains("provenance: mode=max", step, StringComparison.Ordinal);
@@ -78,13 +74,18 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2", workflow, StringComparison.Ordinal);
 
         int signingStep = workflow.IndexOf("- name: Sign and verify production images", StringComparison.Ordinal);
+        int manifestStep = workflow.IndexOf("- name: Verify complete production image manifest", StringComparison.Ordinal);
         int sshStep = workflow.IndexOf("- name: Setup SSH", StringComparison.Ordinal);
 
         Assert.True(signingStep >= 0, "The image signing step is missing.");
-        Assert.True(sshStep > signingStep, "Images must be signed and verified before SSH deployment starts.");
+        Assert.True(manifestStep > signingStep && sshStep > manifestStep, "Every signed matrix output must be collected and verified before SSH deployment starts.");
+        Assert.Contains("needs: [authorize, build-images]", workflow, StringComparison.Ordinal);
+        Assert.Contains("sign-and-verify-images.sh \"${{ matrix.image }}=${{ steps.build.outputs.digest }}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("node .github/scripts/deploy-images.mjs collect", workflow, StringComparison.Ordinal);
+        Assert.Contains("cosign verify", workflow, StringComparison.Ordinal);
 
-        foreach (string buildId in ExpectedBuildIds) {
-            Assert.Contains($"steps.{buildId}.outputs.digest", workflow, StringComparison.Ordinal);
+        foreach (string image in ExpectedProductionImages) {
+            Assert.Contains($"steps.images.outputs.{image.Replace('-', '_')}", workflow, StringComparison.Ordinal);
         }
     }
 
@@ -386,8 +387,8 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("SOURCE_COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain(":sha-${{ github.sha }}", workflow, StringComparison.Ordinal);
 
-        foreach (string buildId in ExpectedBuildIds) {
-            Assert.Contains($"@${{{{ steps.{buildId}.outputs.digest }}}}", workflow, StringComparison.Ordinal);
+        foreach (string image in ExpectedProductionImages) {
+            Assert.Contains($"@${{{{ steps.images.outputs.{image.Replace('-', '_')} }}}}", workflow, StringComparison.Ordinal);
         }
 
         Assert.Contains("docker create \"$CLIENT_IMAGE_REF\"", workflow, StringComparison.Ordinal);
@@ -403,7 +404,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
             "Dockerfile.postgres-tls-init"));
 
         Assert.Matches(@"(?m)^FROM postgres:18-alpine@sha256:[0-9a-f]{64}\r?$", tlsInitializerDockerfile);
-        Assert.Contains("MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=\"${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=\"${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.images.outputs.mailinbox_postgres_tls_init }}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("$SCP_CMD Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf", workflow, StringComparison.Ordinal);
 
         int postgresStart = workflow.IndexOf("docker compose --profile mail-inbox up -d mailinbox-postgres", StringComparison.Ordinal);
