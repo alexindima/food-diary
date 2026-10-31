@@ -8,6 +8,7 @@ using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
 using FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
+using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationReadStatus;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Notifications.Presentation.Controllers;
 using FoodDiary.Modules.Notifications.Presentation.Requests;
@@ -20,6 +21,24 @@ namespace FoodDiary.Modules.Notifications.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationsControllerTests {
+    [Fact]
+    public async Task GetReadStatus_UsesCurrentUserAndReturnsOnlyConfirmedReadIdsAsync() {
+        Guid[] ids = [Guid.NewGuid(), Guid.NewGuid()];
+        IRequest<Result<IReadOnlyList<Guid>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<Guid>>([ids[0]]), request => sentRequest = request);
+        NotificationsController controller = CreateController(sender);
+        var userId = Guid.NewGuid();
+
+        IActionResult result = await controller.GetReadStatus(new NotificationReadStatusHttpRequest(ids), userId);
+
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        NotificationReadStatusHttpResponse response = Assert.IsType<NotificationReadStatusHttpResponse>(ok.Value);
+        Assert.Equal(ids[0], Assert.Single(response.ReadIds));
+        GetNotificationReadStatusQuery query = Assert.IsType<GetNotificationReadStatusQuery>(sentRequest);
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(ids, query.NotificationIds);
+    }
+
     [Fact]
     public async Task GetNotifications_SendsQueryAndReturnsNotifications() {
         var notification = new NotificationModel(

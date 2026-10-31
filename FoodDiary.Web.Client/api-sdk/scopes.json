@@ -389,6 +389,7 @@
             "DELETE /api/v{version}/notifications/push/subscription": "deleteNotificationsPushSubscription",
             "GET /api/v{version}/notifications": "getNotifications",
             "GET /api/v{version}/notifications/unread-count": "getNotificationsUnreadCount",
+            "POST /api/v{version}/notifications/read-status": "postNotificationsReadStatus",
             "PUT /api/v{version}/notifications/{notificationId}/read": "putNotificationsByNotificationIdRead",
             "PUT /api/v{version}/notifications/read-all": "putNotificationsReadAll",
             "POST /api/v{version}/notifications/test/schedule": "postNotificationsTestSchedule",

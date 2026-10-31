@@ -1080,7 +1080,14 @@
         "tracked:WebPushSubscription"
       ],
       "reason": "Creates the owned runtime context and supplies owner sets. Worker entry checks the shared scope; replay and purge retain shared transactional coordination.",
-      "technicalSourceSha256": "0229f13f2dbe1a4573458bacea5006824db6ba0b649330301adb026d7aee4f00"
+      "technicalSourceSha256": "fd0ed8d178004a30f959e771b6431f2eb39c50ba8c894190cbe43259910b70e6"
+    },
+    "Modules/Notifications/Infrastructure/Persistence/NotificationReadStatusRepository.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:Notification"
+      ],
+      "reason": "Read-only projection of requested notification ids filtered by owner and IsRead. Uses AsNoTracking on the owner entity set; no shared-context access, writes, or transaction ownership."
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",

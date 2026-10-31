@@ -44,6 +44,7 @@ import { SessionEventsService } from '../shared/auth/session-events.service';
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
+import { PushNotificationReadSyncService } from '../shared/notifications/push-notification-read-sync.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { PwaInstallPromotionService } from '../shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from '../shared/theme/theme.service';
@@ -144,6 +145,7 @@ export class AppComponent {
         if (this.browserWindow.isAvailable()) {
             this.injector.get(NotificationRealtimeService);
             this.injector.get(PushNotificationService);
+            this.injector.get(PushNotificationReadSyncService);
         }
 
         this.observeNavigationCompletion();

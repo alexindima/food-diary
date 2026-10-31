@@ -144,6 +144,8 @@ export * from './menstrual-episode-http-response';
 export * from './micronutrient-http-response';
 export * from './notification-http-response';
 export * from './notification-preferences-http-response';
+export * from './notification-read-status-http-request';
+export * from './notification-read-status-http-response';
 export * from './open-food-facts-product-http-response';
 export * from './portal-session-http-response';
 export * from './product-http-response';

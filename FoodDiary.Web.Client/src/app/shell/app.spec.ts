@@ -28,6 +28,7 @@ import { editorUnsavedChangesGuard } from '../shared/forms/editor-unsaved-change
 import { LocalizationService } from '../shared/i18n/localization.service';
 import { NotificationRealtimeService } from '../shared/notifications/notification-realtime.service';
 import { PushNotificationService } from '../shared/notifications/push-notification.service';
+import { PushNotificationReadSyncService } from '../shared/notifications/push-notification-read-sync.service';
 import { BrowserWindowService } from '../shared/platform/browser-window.service';
 import { PwaInstallPromotionService } from '../shared/service-worker/pwa-install-promotion.service';
 import { ThemeService } from '../shared/theme/theme.service';
@@ -459,6 +460,7 @@ async function createSessionShellAsync(lateRoute?: Route): Promise<{
             { provide: BrowserWindowService, useValue: createBrowserWindowStub(false) },
             { provide: NotificationRealtimeService, useValue: {} },
             { provide: PushNotificationService, useValue: {} },
+            { provide: PushNotificationReadSyncService, useValue: {} },
             { provide: PwaInstallPromotionService, useValue: { setActive: vi.fn(), shouldShowBanner: signal(false) } },
         ],
     });
@@ -533,6 +535,7 @@ async function createComponentAsync(
             { provide: BrowserWindowService, useValue: createBrowserWindowStub(options.reducedMotion ?? false) },
             { provide: NotificationRealtimeService, useValue: {} },
             { provide: PushNotificationService, useValue: {} },
+            { provide: PushNotificationReadSyncService, useValue: {} },
         ],
     });
     TestBed.overrideComponent(AppComponent, {

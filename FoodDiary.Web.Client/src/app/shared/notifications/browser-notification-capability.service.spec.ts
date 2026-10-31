@@ -10,6 +10,48 @@ describe('BrowserNotificationCapabilityService', () => {
         TestBed.resetTestingModule();
     });
 
+    it('enumerates displayed pushes from the existing scoped worker', async () => {
+        const getNotifications = vi.fn().mockResolvedValue([]);
+        const getRegistration = vi.fn().mockResolvedValue({ getNotifications });
+        TestBed.configureTestingModule({
+            providers: [{ provide: DOCUMENT, useValue: { defaultView: { navigator: { serviceWorker: { getRegistration } } } } }],
+        });
+        await expect(TestBed.inject(BrowserNotificationCapabilityService).getDisplayedNotificationsAsync()).resolves.toEqual([]);
+        expect(getRegistration).toHaveBeenCalledOnce();
+        expect(getNotifications).toHaveBeenCalledOnce();
+    });
+
+    it('returns immediately without a registered worker and does not wait for ready', async () => {
+        const getRegistration = vi.fn().mockResolvedValue(undefined);
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: DOCUMENT,
+                    useValue: { defaultView: { navigator: { serviceWorker: { getRegistration, ready: new Promise(() => {}) } } } },
+                },
+            ],
+        });
+        await expect(TestBed.inject(BrowserNotificationCapabilityService).getDisplayedNotificationsAsync()).resolves.toEqual([]);
+    });
+
+    it('does not access the browser worker during SSR', async () => {
+        const getRegistration = vi.fn();
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: PLATFORM_ID, useValue: 'server' },
+                { provide: DOCUMENT, useValue: { defaultView: { navigator: { serviceWorker: { getRegistration } } } } },
+            ],
+        });
+        await expect(TestBed.inject(BrowserNotificationCapabilityService).getDisplayedNotificationsAsync()).resolves.toEqual([]);
+        expect(getRegistration).not.toHaveBeenCalled();
+    });
+});
+
+describe('BrowserNotificationCapabilityService browser capabilities', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+    });
+
     it('should read notification permission and user agent from document default view', () => {
         TestBed.configureTestingModule({
             providers: [

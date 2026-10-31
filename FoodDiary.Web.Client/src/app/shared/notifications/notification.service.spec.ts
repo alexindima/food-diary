@@ -57,6 +57,54 @@ afterEach(() => {
     httpMock.verify();
 });
 
+describe('NotificationService push read synchronization', () => {
+    const id = entityId<'notification'>('11111111-1111-1111-1111-111111111111');
+    const expectedRefreshes = 3;
+
+    it('queries bounded read status through the SDK and normalizes IDs', () => {
+        const next = vi.fn();
+        service.getReadNotificationIds([id]).subscribe(next);
+        const request = httpMock.expectOne(`${baseUrl}/read-status`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual({ notificationIds: [id] });
+        expect(request.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
+        request.flush({ readIds: [id.toUpperCase()] });
+        expect(next).toHaveBeenCalledExactlyOnceWith([id]);
+    });
+
+    it('rejects incomplete status responses instead of inferring reads', () => {
+        const error = vi.fn();
+        service.getReadNotificationIds([id]).subscribe({ error });
+        httpMock.expectOne(`${baseUrl}/read-status`).flush({});
+        expect(error).toHaveBeenCalledOnce();
+    });
+
+    it('signals only successfully persisted local reads', () => {
+        const changed = vi.fn();
+        service.readStateChanged$.subscribe(changed);
+        service.markAsRead(id).subscribe();
+        expect(changed).not.toHaveBeenCalled();
+        httpMock.expectOne(`${baseUrl}/${id}/read`).flush(null);
+        expect(changed).toHaveBeenCalledOnce();
+        service.markAllRead().subscribe({ error: () => {} });
+        httpMock.expectOne(`${baseUrl}/read-all`).flush(null, { status: 500, statusText: 'offline' });
+        expect(changed).toHaveBeenCalledOnce();
+        service.markAllRead().subscribe();
+        httpMock.expectOne(`${baseUrl}/read-all`).flush(null);
+        expect(changed).toHaveBeenCalledTimes(2);
+    });
+
+    it('signals reconciliation even when the remote unread count has not changed', () => {
+        const changed = vi.fn();
+        service.readStateChanged$.subscribe(changed);
+        service.updateCount(1);
+        service.updateCount(1);
+        service.fetchUnreadCount({ force: true });
+        httpMock.expectOne(`${baseUrl}/unread-count`).flush({ count: 1 });
+        expect(changed).toHaveBeenCalledTimes(expectedRefreshes);
+    });
+});
+
 describe('NotificationService loading', () => {
     it('should load notifications only once via ensureNotificationsLoaded', () => {
         service.ensureNotificationsLoaded();

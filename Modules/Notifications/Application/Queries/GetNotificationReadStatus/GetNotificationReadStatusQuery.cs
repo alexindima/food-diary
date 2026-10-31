@@ -1,0 +1,7 @@
+using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
+using FoodDiary.Results;
+
+namespace FoodDiary.Modules.Notifications.Application.Queries.GetNotificationReadStatus;
+
+public sealed record GetNotificationReadStatusQuery(Guid? UserId, IReadOnlyList<Guid> NotificationIds)
+    : IQuery<Result<IReadOnlyList<Guid>>>, IUserRequest;

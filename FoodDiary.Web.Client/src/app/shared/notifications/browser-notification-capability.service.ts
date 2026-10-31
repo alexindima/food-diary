@@ -7,6 +7,13 @@ export class BrowserNotificationCapabilityService {
     private readonly platformId = inject(PLATFORM_ID);
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
+    public async getDisplayedNotificationsAsync(): Promise<Notification[]> {
+        const serviceWorker = this.isBrowser ? this.document.defaultView?.navigator.serviceWorker : undefined;
+        // Do not wait for `ready`: an unregistered worker can leave that promise pending forever.
+        const registration = await serviceWorker?.getRegistration();
+        return typeof registration?.getNotifications === 'function' ? registration.getNotifications() : [];
+    }
+
     public getPermission(): NotificationPermission | 'unsupported' {
         const notification = this.document.defaultView?.Notification;
         if (notification === undefined || !this.isBrowser) {

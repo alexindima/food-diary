@@ -4,6 +4,7 @@ using FoodDiary.Modules.Notifications.Application.Commands.ScheduleTestNotificat
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
 using FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
+using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationReadStatus;
 using FoodDiary.Modules.Notifications.Application.Queries.GetWebPushConfiguration;
 using FoodDiary.Modules.Notifications.Application.Queries.GetWebPushSubscriptions;
 using FoodDiary.Modules.Notifications.Application.Commands.MarkNotificationRead;
@@ -17,6 +18,10 @@ using FoodDiary.Modules.Notifications.Presentation.Responses;
 namespace FoodDiary.Modules.Notifications.Presentation.Mappings;
 
 public static class NotificationHttpMappings {
+    extension(NotificationReadStatusHttpRequest request) {
+        public GetNotificationReadStatusQuery ToQuery(Guid userId) => new(userId, request.NotificationIds);
+    }
+
     extension(Guid id) {
         public GetNotificationsQuery ToNotificationsQuery() => new(id);
         public GetUnreadCountQuery ToUnreadCountQuery() => new(id);

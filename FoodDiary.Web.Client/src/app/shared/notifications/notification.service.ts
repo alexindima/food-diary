@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, map, merge, type Observable, shareReplay, tap } from 'rxjs';
+import { finalize, map, merge, type Observable, shareReplay, Subject, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_GLOBAL_LOADING } from '../../constants/global-loading-context.tokens';
@@ -23,6 +23,7 @@ import type {
     WebPushSubscriptionRequest,
 } from '../models/notification.data';
 import type { NotificationId } from '../models/semantics/entity-id';
+import { parsePushNotificationId } from './push-notification-reference';
 export type {
     NotificationItem,
     NotificationPreferences,
@@ -50,6 +51,8 @@ type NotificationState = {
 
 @Service()
 export class NotificationService {
+    private readonly readStateChanged = new Subject<void>();
+    public readonly readStateChanged$ = this.readStateChanged.asObservable();
     private readonly http = inject(HttpClient);
     private readonly authService = inject(AuthService);
     private readonly sessionEvents = inject(SessionEventsService);
@@ -122,6 +125,7 @@ export class NotificationService {
                 if (this.isCurrentSession(session) && requestVersion === this.unreadCountRequestVersion) {
                     this.unreadCount.set(response.count);
                     this.unreadCountLoaded.set(true);
+                    this.readStateChanged.next();
                 }
             },
             error: () => {},
@@ -173,6 +177,7 @@ export class NotificationService {
                 }
 
                 this.notifications.update(items => items.map(item => (item.id === notificationId ? { ...item, isRead: true } : item)));
+                this.readStateChanged.next();
             }),
         );
     }
@@ -186,6 +191,7 @@ export class NotificationService {
                 }
                 this.unreadCount.set(0);
                 this.notifications.update(items => items.map(item => ({ ...item, isRead: true })));
+                this.readStateChanged.next();
             }),
         );
     }
@@ -194,6 +200,27 @@ export class NotificationService {
         return this.sdk.client
             .postNotificationsTestSchedule({ version: this.sdk.version, scheduleTestNotificationHttpRequest: request })
             .pipe(map(value => requireSdkFields(value, ['type', 'delaySeconds', 'scheduledAtUtc'])));
+    }
+
+    public getReadNotificationIds(notificationIds: readonly NotificationId[]): Observable<NotificationId[]> {
+        return this.sdk.client
+            .postNotificationsReadStatus(
+                { version: this.sdk.version, notificationReadStatusHttpRequest: { notificationIds: [...notificationIds] } },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.silentLoadingContext),
+            )
+            .pipe(
+                map(response =>
+                    requireSdkFields(response, ['readIds']).readIds.map(value => {
+                        const id = parsePushNotificationId(value);
+                        if (id === null) {
+                            throw new Error('API response contains an invalid notification id.');
+                        }
+                        return id;
+                    }),
+                ),
+            );
     }
 
     public getNotificationPreferences(): Observable<NotificationPreferences> {
@@ -252,6 +279,7 @@ export class NotificationService {
         }
         this.unreadCount.set(count);
         this.unreadCountLoaded.set(true);
+        this.readStateChanged.next();
     }
 
     public notifyNotificationsChanged(options: { supersedePending?: boolean } = {}): void {
@@ -260,6 +288,7 @@ export class NotificationService {
             return;
         }
         this.notificationsChangedVersion.update(version => version + 1);
+        this.readStateChanged.next();
         this.refreshNotifications(options);
     }
 

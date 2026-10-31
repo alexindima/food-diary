@@ -324,14 +324,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "710bf67a8ffd149a64cb732f7ad622b36d5d2373f35be28ae7a6d6bea465e92f",
-          "reviewReason": "Reviewed the merged nine-line snapshot addition. rememberMe is an optional boolean query parameter defaulting false, with unchanged response schemas and routes. User/admin SDKs were generated; no new breaking-change acceptance was introduced."
+          "sha256": "01276fe30f2aa2f18fe5e6f14a3faead5e1d2266d40654518d8e831b1ba945dd",
+          "reviewReason": "Reviewed the additive Notifications POST read-status contract: requests are authenticated and bounded to 1-100 nonempty IDs, responses expose only requested read IDs owned by the current user, and existing routes, status codes and payloads are preserved. The real host regenerated openapi-full-contract.json and the user SDK; six transport/OpenAPI checks and SDK contract tests passed. The general compatibility workflow remains accurate."
         }
       ],
-      "reason": "Reviewed ci-tests.yml: the only addition is an unconditional isolated deployment-shell unittest step; API snapshots, successful-ancestor baseline selection and compatibility failure handling are unchanged.",
-      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "reviewedAtUtc": "2026-10-30T13:33:37.9469316Z"
+      "reason": "Reviewed the additive Notifications POST read-status contract: requests are authenticated and bounded to 1-100 nonempty IDs, responses expose only requested read IDs owned by the current user, and existing routes, status codes and payloads are preserved. The real host regenerated openapi-full-contract.json and the user SDK; six transport/OpenAPI checks and SDK contract tests passed. The general compatibility workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "b4e461ce14488eea9a26cb449facac76dbb8b71c",
+      "reviewedAtUtc": "2026-10-31T17:05:10.0490271Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

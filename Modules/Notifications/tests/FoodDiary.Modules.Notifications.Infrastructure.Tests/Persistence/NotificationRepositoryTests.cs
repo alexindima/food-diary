@@ -11,6 +11,29 @@ namespace FoodDiary.Modules.Notifications.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationRepositoryTests {
     [Fact]
+    public async Task ReadStatus_ReturnsOnlyRequestedReadNotificationsOwnedByUserAsync() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create("read-status@example.com", "hash");
+        var other = User.Create("read-status-other@example.com", "hash");
+        var read = Notification.Create(user.Id, "info", "{}");
+        read.MarkAsRead();
+        var unread = Notification.Create(user.Id, "info", "{}");
+        var foreign = Notification.Create(other.Id, "info", "{}");
+        foreign.MarkAsRead();
+        var unrequested = Notification.Create(user.Id, "info", "{}");
+        unrequested.MarkAsRead();
+        context.Notifications.AddRange(read, unread, foreign, unrequested);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new NotificationReadStatusRepository(context.Notifications);
+
+        IReadOnlyList<Guid> ids = await repository.GetReadIdsAsync(user.Id, [read.Id, unread.Id, foreign.Id], CancellationToken.None);
+
+        Assert.Equal(read.Id.Value, Assert.Single(ids));
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [Fact]
     public async Task DeleteExpiredBatchAsync_WhenReadRecently_KeepsOldCreatedNotification() {
         await using FoodDiaryDbContext context = CreateContext();
         var user = User.Create("recent-read-notification@example.com", "hash");

@@ -37,6 +37,7 @@ public sealed class PersistenceCapabilityTests {
     [InlineData("Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs", "DbSet<BillingWebhookEvent>")]
     [InlineData("Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs", "DbSet<EmailTemplate>")]
     [InlineData("Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs", "DbSet<Notification>")]
+    [InlineData("Modules/Notifications/Infrastructure/Persistence/NotificationReadStatusRepository.cs", "DbSet<Notification>")]
     [InlineData("Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs", "DbSet<WebPushSubscription>")]
     public void SimpleOwnerRepositories_DependsOnReviewedEntitySetInsteadOfSharedContext(string relativePath, string expectedSet) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath));

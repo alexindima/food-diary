@@ -27,6 +27,12 @@ public sealed class NotificationsController(ISender mediator) : AuthorizedContro
     public Task<IActionResult> GetUnreadCount([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToUnreadCountQuery(), static value => new UnreadCountHttpResponse(value));
 
+    [HttpPost("read-status")]
+    [ProducesResponseType<NotificationReadStatusHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetReadStatus([FromBody] NotificationReadStatusHttpRequest request, [FromCurrentUser] Guid userId) =>
+        HandleOk(request.ToQuery(userId), static value => new NotificationReadStatusHttpResponse(value));
+
     [HttpPut("{notificationId:guid}/read")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

@@ -35,6 +35,8 @@ public static class ModuleRegistration {
         services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationReadModelRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWriteRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
+        services.AddScoped<INotificationReadStatusRepository>(static provider => new NotificationReadStatusRepository(
+            provider.GetRequiredService<NotificationsDbContext>().Notifications));
         services.AddScoped<INotificationWebPushOutbox>(static provider => new NotificationWebPushOutbox(
             provider.GetRequiredService<NotificationsDbContext>().NotificationWebPushOutbox, provider.GetRequiredService<TimeProvider>()));
         services.AddScoped<INotificationWebPushOutboxProcessor>(static provider => {
