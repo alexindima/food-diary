@@ -5,7 +5,6 @@
                 class="shopping-list__quick-add-input"
                 floatLabel="always"
                 enterKeyHint="done"
-                prefixIcon="add"
                 [formField]="itemForm().name"
                 [error]="
                     itemForm().name().value().length > nameLimit
@@ -18,19 +17,27 @@
             <fd-ui-button
                 type="button"
                 class="shopping-list__details-button"
-                variant="secondary"
                 fill="outline"
                 icon="tune"
+                [variant]="areDetailsVisible() ? 'primary' : 'secondary'"
                 [fdUiHint]="'SHOPPING_LIST.ADD_ITEM_DETAILS' | translate"
                 [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_DETAILS' | translate"
+                [ariaExpanded]="areDetailsVisible()"
+                [ariaControls]="areDetailsVisible() ? 'shopping-item-details' : null"
                 (click)="toggleDetails()"
             />
-            <fd-ui-button type="submit" class="shopping-list__quick-add-button" variant="primary" fill="solid">
-                {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
-            </fd-ui-button>
+            <fd-ui-button
+                type="submit"
+                class="shopping-list__quick-add-button"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [fdUiHint]="'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate"
+                [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate"
+            />
         </div>
         @if (areDetailsVisible()) {
-            <div class="shopping-list__add-details">
+            <div id="shopping-item-details" class="shopping-list__add-details">
                 <fd-ui-input
                     type="number"
                     [formField]="itemForm().amount"

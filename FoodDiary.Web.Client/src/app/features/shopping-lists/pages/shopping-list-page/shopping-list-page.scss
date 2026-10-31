@@ -117,19 +117,39 @@
         gap: var(--fd-space-md);
         min-width: 0;
     }
+    &__add-form {
+        gap: var(--fd-space-xs);
+    }
     &__quick-add-row {
+        --shopping-add-control-size: var(--fd-size-control-md);
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto auto;
-        gap: var(--fd-space-sm);
-        align-items: center;
+        gap: var(--fd-space-xs);
+        align-items: start;
     }
     &__quick-add-input {
+        --shopping-add-validation-height: calc(var(--fd-text-helper-size) * var(--fd-text-helper-line-height) * 2);
         min-width: 0;
+
+        // Keep a two-line validation slot so errors do not move the controls or list.
+        min-height: calc(var(--shopping-add-control-size) + var(--shopping-add-validation-height) + var(--fd-space-sm));
+    }
+    &__quick-add-button,
+    &__details-button {
+        --fd-button-width: var(--shopping-add-control-size);
+        --fd-button-min-width: var(--shopping-add-control-size);
+        --fd-button-height: var(--shopping-add-control-size);
+        --fd-button-padding-x: 0;
     }
     &__add-details {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--fd-space-sm);
+        padding: var(--fd-space-md);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-input);
+        background: var(--fd-bg-surface);
+        align-items: start;
     }
     &__items {
         list-style: none;
@@ -201,17 +221,16 @@
         &__list-tabs {
             gap: var(--fd-space-xs);
         }
-        &__quick-add-row {
-            grid-template-columns: minmax(0, 1fr) auto;
-        }
-        &__quick-add-button {
-            grid-column: 1 / -1;
-        }
         &__add-details {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         &__item {
             gap: var(--fd-space-xs);
+        }
+    }
+    @media (any-pointer: coarse) {
+        &__quick-add-row {
+            --shopping-add-control-size: var(--fd-size-control-lg);
         }
     }
 }

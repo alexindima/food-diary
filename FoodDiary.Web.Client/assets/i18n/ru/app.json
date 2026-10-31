@@ -3425,7 +3425,7 @@
         "CLEAR_CONFIRM_TITLE": "Очистить список?",
         "CLEAR_CONFIRM_MESSAGE": "Это удалит все позиции из «{{name}}».",
         "ADD_ITEM_NAME": "Продукт",
-        "ADD_ITEM_NAME_PLACEHOLDER": "Что нужно купить?",
+        "ADD_ITEM_NAME_PLACEHOLDER": "Что купить?",
         "ADD_ITEM_AMOUNT": "Количество",
         "ADD_ITEM_AMOUNT_PLACEHOLDER": "Например: 2",
         "AMOUNT_ERROR": "Введите количество больше 0 и не больше 1 000 000 или оставьте поле пустым.",

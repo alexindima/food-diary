@@ -1863,7 +1863,7 @@
         "CLEAR_CONFIRM_TITLE": "Clear this list?",
         "CLEAR_CONFIRM_MESSAGE": "This will remove all items from “{{name}}”.",
         "ADD_ITEM_NAME": "Item",
-        "ADD_ITEM_NAME_PLACEHOLDER": "What do you need to buy?",
+        "ADD_ITEM_NAME_PLACEHOLDER": "What to buy?",
         "ADD_ITEM_AMOUNT": "Amount",
         "ADD_ITEM_AMOUNT_PLACEHOLDER": "e.g. 2",
         "AMOUNT_ERROR": "Enter a quantity greater than 0 and no more than 1,000,000, or leave it empty.",
