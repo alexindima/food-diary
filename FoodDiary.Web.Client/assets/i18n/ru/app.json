@@ -258,7 +258,6 @@
             },
             "STABILITY": {
                 "TITLE": "Стабильность рациона",
-                "SUBTITLE": "За выбранный период",
                 "STABLE_DAYS": "{{current}} из {{total}} дней",
                 "STABLE_INTERVALS": "{{current}} из {{total}} интервалов",
                 "WITHOUT_SHARP_DEVIATIONS": "без резких отклонений",

@@ -1,10 +1,12 @@
-<fd-ui-card class="statistics-diet-stability-card" [title]="'STATISTICS.DASHBOARD.STABILITY.TITLE' | translate">
-    <p class="statistics-diet-stability-card__subtitle fd-ui-body-sm fd-ui-text-muted">
-        {{ 'STATISTICS.DASHBOARD.STABILITY.SUBTITLE' | translate }}
-    </p>
-
+<fd-ui-card
+    class="statistics-diet-stability-card"
+    [class.statistics-diet-stability-card--insufficient]="!hasEnoughData()"
+    [title]="'STATISTICS.DASHBOARD.STABILITY.TITLE' | translate"
+>
     @if (!hasEnoughData()) {
-        <p class="fd-ui-body-sm">{{ 'STATISTICS.DASHBOARD.STABILITY.INSUFFICIENT_DATA' | translate }}</p>
+        <p class="statistics-diet-stability-card__message fd-ui-body-sm">
+            {{ 'STATISTICS.DASHBOARD.STABILITY.INSUFFICIENT_DATA' | translate }}
+        </p>
     } @else if (data().hasGoal) {
         <div class="statistics-diet-stability-card__summary fd-stack fd-gap-xxs">
             <strong class="fd-ui-metric-lg">

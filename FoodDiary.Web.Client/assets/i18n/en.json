@@ -4802,7 +4802,6 @@
             },
             "STABILITY": {
                 "TITLE": "Diet stability",
-                "SUBTITLE": "For the selected period",
                 "STABLE_DAYS": "{{current}} of {{total}} days",
                 "STABLE_INTERVALS": "{{current}} of {{total}} intervals",
                 "WITHOUT_SHARP_DEVIATIONS": "without sharp deviations",
