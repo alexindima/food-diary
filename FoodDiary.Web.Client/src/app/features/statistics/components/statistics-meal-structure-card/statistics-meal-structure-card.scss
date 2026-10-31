@@ -6,26 +6,23 @@
 }
 
 .statistics-meal-structure-card {
+    --fd-card-content-height: auto;
+    --fd-card-content-justify: flex-start;
     height: 100%;
 
-    &__subtitle {
-        margin: 0 0 var(--fd-space-sm);
-    }
-    &__bar-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: var(--fd-space-xxs);
+    &__distribution {
+        display: grid;
+        gap: var(--fd-space-xxs);
     }
     &__bar {
         display: flex;
         height: var(--fd-size-control-lg);
         overflow: hidden;
         border-radius: var(--fd-radius-md);
-        background: var(--fd-bg-track-muted);
     }
     &__bar-segment {
         display: grid;
+        flex-basis: 0;
         min-width: 0;
         place-items: center;
         color: var(--fd-color-white);
@@ -48,9 +45,6 @@
     }
     &__bar-segment--other {
         background: var(--fd-color-gray-600);
-    }
-    &__table {
-        margin-top: var(--fd-space-md);
     }
     &__row {
         --meal-color: var(--fd-color-primary-400);
@@ -93,8 +87,7 @@
     &__insights {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        margin-top: var(--fd-space-xs);
-        padding-top: var(--fd-space-sm);
+        padding-top: var(--fd-space-xs);
         border-top: var(--fd-border-subtle);
     }
     &__insights > div + div {

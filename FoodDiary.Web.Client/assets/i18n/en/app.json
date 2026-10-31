@@ -276,7 +276,6 @@
             },
             "MEAL_STRUCTURE": {
                 "TITLE": "Average day structure",
-                "SUBTITLE": "Average per logged day",
                 "DISTRIBUTION": "Calorie distribution by meal",
                 "MEAL": "Meal",
                 "SHARE": "Share",
