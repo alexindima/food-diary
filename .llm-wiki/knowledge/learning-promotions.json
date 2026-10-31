@@ -6102,6 +6102,55 @@
       "targetId": "",
       "reason": "",
       "eventHash": "f9d8e15f9521656f4effe887d3b1c1d7f7337168d40b381c97cf14dedd5b6bb5"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 46,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-10-31T22:23:38.4692926Z",
+      "previousHash": "f9d8e15f9521656f4effe887d3b1c1d7f7337168d40b381c97cf14dedd5b6bb5",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/paddle-sandbox-20261101",
+        "retrospectiveHash": "47f63cba30742573a75ad945110555373ae6fe01e90f9262256453d31d5bf669",
+        "completionFingerprint": "19ba73e4cb228fca74677f107bc3ffbb8625272f5ff4db8697639360f83adb52",
+        "packetFingerprint": "9c7275595f1746d125503357cb5caf5d4b9b49e09305328155f9acb9da8ac902",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1488s versus 117s, error 1171.79%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1171.79%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 117.0,
+          "expectedSeconds": 1488.0,
+          "errorPercent": 1171.79
+        },
+        "changedPaths": [
+          "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+          "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.PaddlePaginationTests.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/PaddleNotificationRecoveryServiceTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "7923a6aee4091d96f01991d0cf2cec1f3aeefeaa6afc79cf795b94aa198039f7"
     }
   ],
   "hashSchemaVersion": 2

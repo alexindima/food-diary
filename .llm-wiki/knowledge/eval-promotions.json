@@ -1628,6 +1628,63 @@
       },
       "reason": "",
       "eventHash": "d84137d82cb802e9d3a150452ab476fb14516ef5e4ee4fb6e615315a9e0c7e2f"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 10,
+      "kind": "observed",
+      "candidateId": "learned-224f82680ddecd73",
+      "createdAtUtc": "2026-10-31T22:23:41.7614477Z",
+      "previousHash": "d84137d82cb802e9d3a150452ab476fb14516ef5e4ee4fb6e615315a9e0c7e2f",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/paddle-sandbox-20261101",
+        "retrospectiveHash": "47f63cba30742573a75ad945110555373ae6fe01e90f9262256453d31d5bf669",
+        "packetFingerprint": "9c7275595f1746d125503357cb5caf5d4b9b49e09305328155f9acb9da8ac902",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1171.79%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-224f82680ddecd73",
+          "changedPaths": [
+            "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+            "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.PaddlePaginationTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/PaddleNotificationRecoveryServiceTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "deployment-rollout",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "1c25501ca915e7154c5baadddac0cf8edb617ce93be55f780db42308cb037582"
+      },
+      "reason": "",
+      "eventHash": "5912831a5acd3c7df86014b3262ebf4174a4761763309c840e2ed23f5e48010c"
     }
   ]
 }

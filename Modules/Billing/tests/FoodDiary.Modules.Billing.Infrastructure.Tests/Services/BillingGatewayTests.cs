@@ -451,7 +451,7 @@ public sealed partial class BillingGatewayTests {
                 Content = JsonContent("""
                     {
                       "data": [],
-                      "meta": { "pagination": { "next": "https://attacker.example/customers?after=cursor" } }
+                      "meta": { "pagination": { "has_more": true, "next": "https://attacker.example/customers?after=cursor" } }
                     }
                     """),
             },
@@ -493,7 +493,7 @@ public sealed partial class BillingGatewayTests {
                 Content = JsonContent("""
                     {
                       "data": [],
-                      "meta": { "pagination": { "next": "https://api.paddle.test/transactions?after=cursor" } }
+                      "meta": { "pagination": { "has_more": true, "next": "https://api.paddle.test/transactions?after=cursor" } }
                     }
                     """),
             },
