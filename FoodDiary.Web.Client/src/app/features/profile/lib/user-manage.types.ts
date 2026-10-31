@@ -1,4 +1,3 @@
-import type { BillingOverview } from '../../../shared/models/billing.models';
 import type { DietologistPermissions } from '../../../shared/models/dietologist.data';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import type { ActivityLevelOption, Gender, UiStyleOption } from '../../../shared/models/user.data';
@@ -58,16 +57,6 @@ export type ConnectedDeviceViewModel = {
 };
 
 export type ConnectedDevicesSectionState = 'loading' | 'content' | 'empty';
-
-export type BillingViewModel = {
-    overview: BillingOverview;
-    statusTone: 'success' | 'muted';
-    endLabelKey: string;
-    showNextAttempt: boolean;
-    premiumActionVariant: 'secondary' | 'primary';
-    premiumActionLabelKey: string;
-    showManagedSupportNote: boolean;
-};
 
 export type PasswordActionState = {
     buttonLabelKey: string;

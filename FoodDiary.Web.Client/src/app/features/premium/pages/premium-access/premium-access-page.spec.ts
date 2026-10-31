@@ -183,6 +183,20 @@ describe('PremiumAccessPageComponent entitlement recovery', () => {
 describe('PremiumAccessPageComponent prices', () => {
     beforeEach(resetMocks);
 
+    it('keeps an unpaid subscription manageable without offering a duplicate checkout', async () => {
+        billingService.getOverview.mockReturnValue(
+            of({ ...createOverview(), isPremium: false, subscriptionStatus: 'unpaid', manageBillingAvailable: true }),
+        );
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(component['overviewViewModel']().showManageBilling).toBe(true);
+        expect(component['showPlans']()).toBe(false);
+        expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+        await component['openPortalAsync']();
+        expect(fakeDocument.location.href).toBe(PORTAL_URL);
+    });
+
     it('loads visible plan prices from public catalog configuration without creating checkout', async () => {
         billingService.getOverview.mockReturnValue(
             of({

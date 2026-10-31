@@ -52,7 +52,13 @@ describe('premium access view mapper', () => {
     });
 
     it('builds overview card model with manage hint', () => {
-        expect(buildPremiumOverviewCardViewModel(overview, true, true, 'Jun 1, 2026')).toEqual({
+        expect(
+            buildPremiumOverviewCardViewModel(overview, true, true, {
+                periodEnd: 'Jun 1, 2026',
+                periodStart: null,
+                nextBillingAttempt: null,
+            }),
+        ).toMatchObject({
             copyState: {
                 stateLabelKey: 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE',
                 periodLabelKey: 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
@@ -81,13 +87,17 @@ describe('premium access view mapper', () => {
             canStartPremiumTrial: true,
         };
 
-        expect(buildPremiumOverviewCardViewModel(freeOverview, false, true, null)).toMatchObject({
+        expect(
+            buildPremiumOverviewCardViewModel(freeOverview, false, true, { periodEnd: null, periodStart: null, nextBillingAttempt: null }),
+        ).toMatchObject({
             hintKey: 'PREMIUM_PAGE.OVERVIEW.TRIAL_HINT',
             showManageBilling: false,
             showStartTrial: true,
         });
     });
+});
 
+describe('premium plan choices', () => {
     it('builds plan cards with provider labels and loading state', () => {
         expect(buildPremiumPlanCards(['paddle', 'stripe'], 'yearly')).toMatchObject([
             {
@@ -118,12 +128,29 @@ describe('premium access view mapper', () => {
 });
 
 describe('premium account entitlement', () => {
+    it('keeps self-service management available when payment issues remove premium access', () => {
+        const result = buildPremiumOverviewCardViewModel({ ...overview, isPremium: false, subscriptionStatus: 'unpaid' }, false, true, {
+            periodEnd: null,
+            periodStart: null,
+            nextBillingAttempt: null,
+        });
+
+        expect(result.showManageBilling).toBe(true);
+        expect(result.showStartTrial).toBe(false);
+    });
+
+    it('describes non-renewing access by its end date', () => {
+        const result = buildPremiumOverviewCopyState({ ...overview, renewalEnabled: false }, true);
+
+        expect(result.periodLabelKey).toBe('PREMIUM_PAGE.OVERVIEW.ENDS_ON');
+    });
+
     it('presents entitlement without a billing subscription as active access', () => {
         const result = buildPremiumOverviewCardViewModel(
             { ...overview, subscriptionStatus: null, plan: null, manageBillingAvailable: false },
             true,
             true,
-            null,
+            { periodEnd: null, periodStart: null, nextBillingAttempt: null },
         );
         expect(result.badges).toEqual({ planLabelKey: null, statusLabelKey: 'PREMIUM_PAGE.STATUS.ACCESS_ACTIVE' });
         expect(result.hintKey).toBe('PREMIUM_PAGE.OVERVIEW.ACCESS_HINT');

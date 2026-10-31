@@ -1,4 +1,4 @@
-<fd-ui-card class="premium-access-page__card fd-grid fd-gap-card-profile">
+<fd-ui-card class="premium-access-page__card" density="profile">
     <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
         <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.BENEFITS.TITLE' | translate }}</h2>
         <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
@@ -14,9 +14,4 @@
         <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_5' | translate }}</li>
         <li>{{ 'PREMIUM_PAGE.BENEFITS.ITEM_6' | translate }}</li>
     </ul>
-
-    <p class="premium-access-page__text premium-access-page__text--muted fd-ui-body-sm">
-        {{ 'PREMIUM_PAGE.SUPPORT.TEXT' | translate }}
-        <a class="premium-access-page__link" [href]="supportEmailHref">{{ supportEmail }}</a>
-    </p>
 </fd-ui-card>

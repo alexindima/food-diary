@@ -72,6 +72,16 @@ afterEach(() => {
 });
 
 describe('Profile time zone saved selection', () => {
+    it('offers subscription management in the first card without an accordion', () => {
+        const host = fixture.nativeElement as HTMLElement;
+        const link = host.querySelector<HTMLAnchorElement>('fd-ui-card a[href="/premium"]');
+
+        expect(link, 'Subscription management must be visible in the first profile card').not.toBeNull();
+        expect(link?.closest('details')).toBeNull();
+        expect(host.querySelector('[profileBilling]')).toBeNull();
+        expect(host.querySelector('[data-tour-id="user-manage-billing"]')).toBe(link);
+    });
+
     it('preserves the saved zone without dirtying the profile when Enter follows focus alone', async () => {
         input.focus();
         fixture.detectChanges();

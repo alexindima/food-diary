@@ -1,15 +1,15 @@
-<fd-ui-card class="premium-access-page__card premium-access-page__card--overview fd-grid fd-gap-card-profile">
+<fd-ui-card class="premium-access-page__card premium-access-page__card--overview" density="profile">
     <div class="premium-access-page__section-header fd-row fd-align-start fd-justify-between fd-gap-card-header fd-wrap">
         <div class="premium-access-page__section-copy fd-grid fd-gap-card-header">
             <h2 class="premium-access-page__title fd-ui-section-title">{{ 'PREMIUM_PAGE.OVERVIEW.TITLE' | translate }}</h2>
             <p class="premium-access-page__text fd-ui-body">{{ viewModel().copyState.stateLabelKey | translate }}</p>
         </div>
 
-        @if (viewModel().showManageBilling) {
+        @if (!isLoading() && viewModel().showManageBilling) {
             <fd-ui-button variant="secondary" fill="outline" [loading]="portalLoading()" (click)="manageBilling.emit()">
                 {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
             </fd-ui-button>
-        } @else if (viewModel().showStartTrial) {
+        } @else if (!isLoading() && viewModel().showStartTrial) {
             <fd-ui-button variant="primary" [loading]="trialLoading()" (click)="startTrial.emit()">
                 {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
             </fd-ui-button>
@@ -31,6 +31,15 @@
                 {{ viewModel().badges.statusLabelKey | translate }}
             </span>
         </div>
+
+        <dl class="premium-access-page__details fd-grid fd-gap-sm">
+            @for (detail of viewModel().details; track detail.labelKey) {
+                <div class="premium-access-page__detail fd-stack fd-gap-xxs">
+                    <dt class="fd-ui-body-sm fd-ui-text-muted">{{ detail.labelKey | translate }}</dt>
+                    <dd class="fd-ui-body">{{ detail.translateValue ? (detail.value | translate) : detail.value }}</dd>
+                </div>
+            }
+        </dl>
 
         @if (viewModel().currentPeriodEndLabel; as currentPeriodEnd) {
             <p class="premium-access-page__meta fd-ui-body-sm">

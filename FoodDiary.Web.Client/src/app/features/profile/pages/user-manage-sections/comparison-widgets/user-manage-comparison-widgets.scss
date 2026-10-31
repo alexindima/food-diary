@@ -90,6 +90,26 @@
         font-size: var(--fd-text-body-sm-size);
     }
 
+    &__subscription-link {
+        align-items: center;
+        flex-wrap: wrap;
+        width: fit-content;
+        padding-block: var(--fd-space-xs);
+        color: var(--fd-color-primary-600);
+        font-weight: var(--fd-font-weight-bold);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:focus-visible {
+            outline: var(--fd-outline-focus);
+            outline-offset: var(--fd-outline-offset);
+            border-radius: var(--fd-radius-xs);
+        }
+    }
+
     &__completion-heading {
         justify-content: space-between;
         color: var(--fd-color-text);

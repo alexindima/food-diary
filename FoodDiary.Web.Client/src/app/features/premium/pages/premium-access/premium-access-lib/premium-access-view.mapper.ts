@@ -5,27 +5,30 @@ import type {
     PremiumOverviewCopyState,
     PremiumPlanCardViewModel,
     PremiumProviderOptionViewModel,
+    PremiumSubscriptionDates,
+    PremiumSubscriptionDetail,
 } from './premium-access.types';
 
 export function buildPremiumOverviewCardViewModel(
     overview: BillingOverview | null,
     isPremium: boolean,
     checkoutAvailable: boolean,
-    currentPeriodEndLabel: string | null,
+    dates: PremiumSubscriptionDates,
 ): PremiumOverviewCardViewModel {
-    const showManageBilling = (overview?.manageBillingAvailable ?? false) && isPremium;
-    const showStartTrial = !isPremium && (overview?.canStartPremiumTrial ?? false);
+    const showManageBilling = overview?.manageBillingAvailable ?? false;
+    const showStartTrial = !showManageBilling && !isPremium && (overview?.canStartPremiumTrial ?? false);
 
     return {
         copyState: buildPremiumOverviewCopyState(overview, isPremium),
         badges: buildPremiumOverviewBadges(overview, isPremium),
-        currentPeriodEndLabel,
+        currentPeriodEndLabel: dates.periodEnd,
         hintKey:
             isPremium && !showManageBilling
-                ? 'PREMIUM_PAGE.OVERVIEW.ACCESS_HINT'
+                ? getAccessHintKey(overview)
                 : getPremiumOverviewHintKey(showManageBilling, showStartTrial, checkoutAvailable),
         showManageBilling,
         showStartTrial,
+        details: buildSubscriptionDetails(overview, dates),
     };
 }
 
@@ -46,13 +49,60 @@ export function buildPremiumOverviewCopyState(overview: BillingOverview | null, 
             : isPremium
               ? 'PREMIUM_PAGE.OVERVIEW.PREMIUM_STATE'
               : 'PREMIUM_PAGE.OVERVIEW.FREE_STATE',
-        periodLabelKey: isTrialActive
-            ? 'PREMIUM_PAGE.OVERVIEW.TRIAL_ENDS_ON'
-            : overview?.cancelAtPeriodEnd === true
-              ? 'PREMIUM_PAGE.OVERVIEW.ENDS_ON'
-              : 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON',
+        periodLabelKey: getPeriodLabelKey(overview),
         showCancelAtPeriodEndBanner: overview?.cancelAtPeriodEnd ?? false,
     };
+}
+
+function getAccessHintKey(overview: BillingOverview | null): string {
+    if ((overview?.subscriptionStatus ?? null) === null || overview?.premiumTrialActive === true) {
+        return 'PREMIUM_PAGE.OVERVIEW.ACCESS_HINT';
+    }
+    return 'PREMIUM_PAGE.OVERVIEW.SUPPORT_MANAGED';
+}
+
+function getPeriodLabelKey(overview: BillingOverview | null): string {
+    if (overview?.premiumTrialActive === true) {
+        return 'PREMIUM_PAGE.OVERVIEW.TRIAL_ENDS_ON';
+    }
+    if (overview?.cancelAtPeriodEnd === true || overview?.renewalEnabled === false) {
+        return 'PREMIUM_PAGE.OVERVIEW.ENDS_ON';
+    }
+    return 'PREMIUM_PAGE.OVERVIEW.RENEWS_ON';
+}
+
+function buildSubscriptionDetails(overview: BillingOverview | null, dates: PremiumSubscriptionDates): PremiumSubscriptionDetail[] {
+    if (overview === null) {
+        return [];
+    }
+
+    const details: PremiumSubscriptionDetail[] = [];
+    const provider = overview.subscriptionProvider?.trim() ?? '';
+    if (provider.length > 0) {
+        details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.PROVIDER', value: getPremiumProviderLabel(provider), translateValue: false });
+    }
+    details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.RENEWAL', value: getRenewalLabelKey(overview), translateValue: true });
+    if (dates.periodStart !== null) {
+        details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.PERIOD_START', value: dates.periodStart, translateValue: false });
+    }
+    if (dates.nextBillingAttempt !== null && shouldShowNextBillingAttempt(overview)) {
+        details.push({ labelKey: 'PREMIUM_PAGE.OVERVIEW.NEXT_CHARGE', value: dates.nextBillingAttempt, translateValue: false });
+    }
+    return details;
+}
+
+function shouldShowNextBillingAttempt(overview: BillingOverview): boolean {
+    return overview.renewalEnabled && !overview.cancelAtPeriodEnd && !overview.premiumTrialActive;
+}
+
+function getRenewalLabelKey(overview: BillingOverview): string {
+    if (overview.cancelAtPeriodEnd) {
+        return 'PREMIUM_PAGE.OVERVIEW.RENEWAL_OFF';
+    }
+    if (overview.premiumTrialActive) {
+        return 'PREMIUM_PAGE.OVERVIEW.RENEWAL_TRIAL';
+    }
+    return overview.renewalEnabled ? 'PREMIUM_PAGE.OVERVIEW.RENEWAL_ON' : 'PREMIUM_PAGE.OVERVIEW.RENEWAL_NONE';
 }
 
 export function buildPremiumPlanCards(providers: BillingProvider[], loadingPlan: BillingPlan | null): PremiumPlanCardViewModel[] {

@@ -346,8 +346,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8f3869d3ec70118819722bca0320dfccaca27ad87b256cd4ed8e61f1b90c9265",
-          "reviewReason": "Reviewed the architecture-health index diff: the product-only active filter renderer is replaced by shared ActiveFiltersComponent, consumed by ProductListBase/ProductListPage and RecipeList. The removed selector has no remaining source references; production frontend compilation and focused/dependent tests pass. Strict dependency-cruiser reports zero violations across 2740 modules. No .NET project, module dependency or domain ownership changes; existing workflow guidance remains accurate."
+          "sha256": "7a84aadb610fc3e6a828f07c5fc96284cfb1e3733dd63c31553ee93e32fd9b3f",
+          "reviewReason": "Reviewed the architecture-health index delta: the existing Premium overview now has focused rendered tests, and the new support card is covered by the profile-to-Subscription browser journey. Removed profile billing UI/facade/contracts have no remaining runtime consumers; checkout, trial, portal APIs and route ownership stay within premium. No backend project edges or enforced drift changed. The workflow guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -360,10 +360,10 @@
           "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
         }
       ],
-      "reason": "Reviewed the architecture-health index diff: the product-only active filter renderer is replaced by shared ActiveFiltersComponent, consumed by ProductListBase/ProductListPage and RecipeList. The removed selector has no remaining source references; production frontend compilation and focused/dependent tests pass. Strict dependency-cruiser reports zero violations across 2740 modules. No .NET project, module dependency or domain ownership changes; existing workflow guidance remains accurate.",
+      "reason": "Reviewed the architecture-health index delta: the existing Premium overview now has focused rendered tests, and the new support card is covered by the profile-to-Subscription browser journey. Removed profile billing UI/facade/contracts have no remaining runtime consumers; checkout, trial, portal APIs and route ownership stay within premium. No backend project edges or enforced drift changed. The workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3d519fabe53490148f40b8f6f60d1522fd144699",
-      "reviewedAtUtc": "2026-10-30T23:10:07.8635337Z"
+      "gitHead": "b808e454a498bdce9fee204f3618557c1c8dda24",
+      "reviewedAtUtc": "2026-10-31T21:27:25.8616449Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

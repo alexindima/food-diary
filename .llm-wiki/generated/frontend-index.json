@@ -8,16 +8,16 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2779,
-    "symbols": 873,
+    "typescriptFiles": 2772,
+    "symbols": 871,
     "routes": 108,
     "features": 46,
-    "specs": 847,
+    "specs": 844,
     "localeFiles": 5,
     "roles": {
-      "Component": 504,
+      "Component": 503,
       "Directive": 20,
-      "Facade": 90,
+      "Facade": 89,
       "Other": 41,
       "Pipe": 5,
       "Service": 213
@@ -1038,7 +1038,8 @@
         "PremiumOverviewCardComponent",
         "PremiumPlanPriceComponent",
         "PremiumPlanPricingFacade",
-        "PremiumPlansCardComponent"
+        "PremiumPlansCardComponent",
+        "PremiumSupportCardComponent"
       ],
       "routes": [
         ""
@@ -1048,6 +1049,7 @@
         "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-price-preview.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-lib/premium-access-date.utils.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-lib/premium-access-error.utils.spec.ts",
@@ -1169,14 +1171,11 @@
         "ActiveSessionsService",
         "ChangePasswordDialogComponent",
         "PasswordSuccessDialogComponent",
-        "ProfileBillingFacade",
         "ProfileDietologistFacade",
         "ProfileManageFacade",
         "ProfileMeasurementsService",
         "UpdateSuccessDialogComponent",
         "UserManageBackupEmailComponent",
-        "UserManageBillingCardComponent",
-        "UserManageBillingSummaryComponent",
         "UserManageComparisonWidgetsComponent",
         "UserManageComponent",
         "UserManageConnectedDevicesComponent",
@@ -1199,10 +1198,7 @@
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/lib/active-sessions.facade.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/lib/profile-billing.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.spec.ts",
@@ -1212,7 +1208,6 @@
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-billing.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-date.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-dietologist-form.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-form.mapper.spec.ts",
@@ -5268,7 +5263,7 @@
       "role": "Component",
       "selector": "fd-premium-benefits-card",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.ts",
-      "line": 14
+      "line": 12
     },
     {
       "name": "PremiumOverviewCardComponent",
@@ -5292,11 +5287,18 @@
       "line": 18
     },
     {
+      "name": "PremiumSupportCardComponent",
+      "role": "Component",
+      "selector": "fd-premium-support-card",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
+      "line": 14
+    },
+    {
       "name": "PremiumAccessPageComponent",
       "role": "Component",
       "selector": "fd-premium-access-page",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "line": 57
+      "line": 59
     },
     {
       "name": "FavoriteProductService",
@@ -5642,13 +5644,6 @@
       "line": 9
     },
     {
-      "name": "ProfileBillingFacade",
-      "role": "Facade",
-      "selector": null,
-      "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-billing.facade.ts",
-      "line": 17
-    },
-    {
       "name": "ProfileDietologistFacade",
       "role": "Facade",
       "selector": null,
@@ -5661,20 +5656,6 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
       "line": 37
-    },
-    {
-      "name": "UserManageBillingCardComponent",
-      "role": "Component",
-      "selector": "fd-user-manage-billing-card",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.ts",
-      "line": 15
-    },
-    {
-      "name": "UserManageBillingSummaryComponent",
-      "role": "Component",
-      "selector": "fd-user-manage-billing-summary",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.ts",
-      "line": 23
     },
     {
       "name": "UserManageComparisonWidgetsComponent",
@@ -5765,7 +5746,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 103
+      "line": 100
     },
     {
       "name": "DietologistPromoComponent",
@@ -8303,8 +8284,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4189,
-      "russianProperties": 4189,
+      "englishProperties": 4170,
+      "russianProperties": 4170,
       "countsMatch": true
     },
     {

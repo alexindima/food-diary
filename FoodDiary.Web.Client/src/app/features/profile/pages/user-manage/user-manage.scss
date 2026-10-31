@@ -41,10 +41,6 @@
             background: var(--fd-bg-profile-section-icon-notifications);
         }
 
-        &--billing {
-            background: var(--fd-bg-profile-section-icon-billing);
-        }
-
         &--dietologist {
             background: var(--fd-bg-profile-section-icon-dietologist);
         }
@@ -132,47 +128,6 @@
 
     &__body {
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    &__billing-plan {
-        font-size: var(--fd-text-title-compact-size);
-        line-height: var(--fd-text-title-compact-line-height);
-        font-weight: var(--fd-text-title-compact-weight);
-        color: var(--fd-color-text);
-    }
-
-    &__billing-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    &__billing-item {
-        padding: var(--fd-space-sm) var(--fd-space-md);
-        border-radius: var(--fd-radius-button);
-        background: var(--fd-bg-surface-raised);
-        border: var(--fd-border-default);
-        min-width: 0;
-
-        strong {
-            color: var(--fd-color-text);
-            font-size: var(--fd-text-body-emphasis-size);
-        }
-    }
-
-    &__billing-label {
-        color: var(--fd-color-text-muted);
-        font-size: var(--fd-text-body-micro-size);
-        font-weight: var(--fd-text-section-title-weight);
-        text-transform: uppercase;
-    }
-
-    &__billing-state,
-    &__billing-note {
-        color: var(--fd-color-text-muted);
-        line-height: 1.4;
-    }
-
-    &__billing-state--error {
-        color: var(--fd-color-danger);
     }
 
     &__notifications-item {

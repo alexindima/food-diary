@@ -3490,7 +3490,7 @@ async function verifyRecognitionJourneyAsync(page: Page, terminalStatus: string)
 const RECENT_SHORTCUT_COUNT = 5;
 const RECENT_STRIP_MAX_HEIGHT = 120;
 test.describe('scoped frontend owners', () => {
-    test('profile billing retries and cycle setup keeps working after navigation', async ({ page }, testInfo) => {
+    test('subscription management retries and cycle setup keep working after profile navigation', async ({ page }, testInfo) => {
         test.setTimeout(ACCESSIBILITY_TEST_TIMEOUT_MS);
         const runtimeErrors: string[] = [];
         page.on('pageerror', error => runtimeErrors.push(error.message));
@@ -3509,19 +3509,34 @@ test.describe('scoped frontend owners', () => {
         });
         await page.goto('/profile');
         await expect(page.getByRole('heading', { name: 'Profile', exact: true, level: 1 })).toBeVisible();
-        await page.locator('summary').filter({ hasText: 'Subscription' }).click();
-        const billingCard = page.locator('fd-user-manage-billing-card');
-        const retry = billingCard.getByRole('button', { name: 'Retry', exact: true });
+        const subscriptionLink = page
+            .locator('.profile-comparison__summary')
+            .getByRole('link', { name: 'Manage subscription', exact: true });
+        await expect(subscriptionLink).toBeVisible();
+        await expect(page.locator('summary').filter({ hasText: 'Subscription' })).toHaveCount(0);
+        expect(billingAttempts).toBe(0);
+        await stabilizeAccessibilityPageAsync(page, '/profile');
+        const profileAccessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+        expect(profileAccessibility.violations).toEqual([]);
+        await page.screenshot({ path: testInfo.outputPath('profile-subscription-link.png') });
+        await subscriptionLink.click();
+        await expect(page.getByRole('heading', { name: 'Subscription', exact: true, level: 1 })).toBeVisible();
+        const subscriptionPage = page.locator('fd-premium-access-page');
+        const retry = subscriptionPage.getByRole('button', { name: 'Try again', exact: true });
         await expect(retry).toBeVisible({ timeout: API_RETRY_EXHAUSTION_TIMEOUT_MS });
         const failedAttempts = billingAttempts;
         billingCanSucceed = true;
         await retry.click();
-        await expect(billingCard.locator('fd-user-manage-billing-summary')).toBeVisible();
+        await expect(subscriptionPage.getByText('You are currently using the free plan.', { exact: true })).toBeVisible();
+        await expect(subscriptionPage.getByRole('link', { name: 'admin@fooddiary.club', exact: true })).toHaveAttribute(
+            'href',
+            'mailto:admin@fooddiary.club',
+        );
         expect(billingAttempts).toBe(failedAttempts + 1);
-        await stabilizeAccessibilityPageAsync(page, '/profile');
-        const profileAccessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
-        expect(profileAccessibility.violations).toEqual([]);
-        await page.screenshot({ path: testInfo.outputPath('profile-billing.png') });
+        await stabilizeAccessibilityPageAsync(page, '/premium');
+        const subscriptionAccessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+        expect(subscriptionAccessibility.violations).toEqual([]);
+        await page.screenshot({ path: testInfo.outputPath('subscription.png') });
 
         await page.goto('/cycle-tracking');
         await expect(page.getByRole('heading', { name: 'Cycle tracking', exact: true, level: 1 })).toBeVisible();

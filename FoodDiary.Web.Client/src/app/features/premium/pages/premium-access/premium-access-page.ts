@@ -25,6 +25,7 @@ import { PremiumAccessBannersComponent } from '../premium-access-sections/access
 import { PremiumBenefitsCardComponent } from '../premium-access-sections/benefits-card/premium-benefits-card';
 import { PremiumOverviewCardComponent } from '../premium-access-sections/overview-card/premium-overview-card';
 import { PremiumPlansCardComponent } from '../premium-access-sections/plans-card/premium-plans-card';
+import { PremiumSupportCardComponent } from '../premium-access-sections/support-card/premium-support-card';
 import type {
     PremiumCheckoutRequest,
     PremiumOverviewCardViewModel,
@@ -52,6 +53,7 @@ import { PREMIUM_ACCESS_TOUR } from './premium-access-tour';
         PremiumOverviewCardComponent,
         PremiumPlansCardComponent,
         PremiumBenefitsCardComponent,
+        PremiumSupportCardComponent,
     ],
 })
 export class PremiumAccessPageComponent {
@@ -90,14 +92,23 @@ export class PremiumAccessPageComponent {
     });
     protected readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
     protected readonly showPlans = computed(
-        () => !this.isLoading() && (!this.isPremium() || this.overview()?.premiumTrialActive === true) && this.checkoutAvailable(),
+        () =>
+            !this.isLoading() &&
+            this.overview() !== null &&
+            this.overview()?.manageBillingAvailable !== true &&
+            (!this.isPremium() || this.overview()?.premiumTrialActive === true) &&
+            this.checkoutAvailable(),
     );
     protected readonly currentPeriodEndLabel = computed(() => {
         this.languageVersion();
         return this.formatMediumDate(this.overview()?.currentPeriodEndUtc);
     });
     protected readonly overviewViewModel = computed<PremiumOverviewCardViewModel>(() =>
-        buildPremiumOverviewCardViewModel(this.overview(), this.isPremium(), this.checkoutAvailable(), this.currentPeriodEndLabel()),
+        buildPremiumOverviewCardViewModel(this.overview(), this.isPremium(), this.checkoutAvailable(), {
+            periodEnd: this.currentPeriodEndLabel(),
+            periodStart: this.formatMediumDate(this.overview()?.currentPeriodStartUtc),
+            nextBillingAttempt: this.formatMediumDate(this.overview()?.nextBillingAttemptUtc),
+        }),
     );
     protected readonly planCards = computed<PremiumPlanCardViewModel[]>(() =>
         buildPremiumPlanCards(this.availableProviders(), this.checkoutLoadingPlan()),

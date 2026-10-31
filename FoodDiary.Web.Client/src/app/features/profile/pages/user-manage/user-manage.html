@@ -55,18 +55,6 @@
                         (passwordChange)="openChangePasswordDialog()"
                     />
 
-                    <fd-user-manage-billing-card
-                        profileBilling
-                        data-tour-id="user-manage-billing"
-                        [isLoadingBilling]="isLoadingBilling()"
-                        [billingError]="billingError()"
-                        [billingView]="billingView()"
-                        [isOpeningBillingPortal]="isOpeningBillingPortal()"
-                        (billingReload)="reloadBillingOverview()"
-                        (billingPortalOpen)="openBillingPortal()"
-                        (premiumPageOpen)="openPremiumPage()"
-                    />
-
                     <fd-user-manage-notifications-card
                         profileNotifications
                         data-tour-id="user-manage-notifications"

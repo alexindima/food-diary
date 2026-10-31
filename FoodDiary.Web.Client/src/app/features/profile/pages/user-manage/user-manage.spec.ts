@@ -22,7 +22,6 @@ import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
 import { DIETOLOGIST_RELATIONSHIP_ACTIONS } from '../../../dietologist/contracts/relationship-actions';
-import { BILLING_ACCOUNT_ACTIONS } from '../../../premium/contracts/billing-account-actions';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS, DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS } from '../../lib/user-manage.config';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
@@ -946,7 +945,6 @@ async function createComponentAsync(
 function createTestingProviders(queryParams: Record<string, string>): unknown[] {
     return [
         { provide: DIETOLOGIST_RELATIONSHIP_ACTIONS, useValue: dietologistService },
-        { provide: BILLING_ACCOUNT_ACTIONS, useValue: createPremiumBillingFacadeMock() },
         { provide: AuthService, useValue: { isAdmin: vi.fn(() => false) } },
         { provide: ActivatedRoute, useValue: { queryParamMap: of(convertToParamMap(queryParams)) } },
         { provide: Router, useValue: router },
@@ -965,34 +963,6 @@ function createDietologistServiceMock(relationship: DietologistRelationship | nu
         invite: vi.fn().mockReturnValue(of(void 0)),
         updatePermissions: vi.fn().mockReturnValue(of(void 0)),
         revokeRelationship: vi.fn().mockReturnValue(of(void 0)),
-    };
-}
-
-function createPremiumBillingFacadeMock(): { getOverview: ReturnType<typeof vi.fn>; createPortalSession: ReturnType<typeof vi.fn> } {
-    return {
-        getOverview: vi.fn().mockReturnValue(
-            of({
-                isPremium: false,
-                subscriptionStatus: null,
-                plan: null,
-                subscriptionProvider: null,
-                currentPeriodStartUtc: null,
-                currentPeriodEndUtc: null,
-                nextBillingAttemptUtc: null,
-                cancelAtPeriodEnd: false,
-                renewalEnabled: false,
-                manageBillingAvailable: false,
-                premiumTrialStartUtc: null,
-                premiumTrialEndUtc: null,
-                premiumTrialActive: false,
-                premiumTrialUsed: false,
-                canStartPremiumTrial: true,
-                provider: 'none',
-                paddleClientToken: null,
-                availableProviders: [],
-            }),
-        ),
-        createPortalSession: vi.fn().mockReturnValue(of({ url: 'https://billing.example/session' })),
     };
 }
 

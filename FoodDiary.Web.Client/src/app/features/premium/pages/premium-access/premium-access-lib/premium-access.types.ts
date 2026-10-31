@@ -18,6 +18,19 @@ export type PremiumOverviewCardViewModel = {
     hintKey: string;
     showManageBilling: boolean;
     showStartTrial: boolean;
+    details: PremiumSubscriptionDetail[];
+};
+
+export type PremiumSubscriptionDetail = {
+    labelKey: string;
+    value: string;
+    translateValue: boolean;
+};
+
+export type PremiumSubscriptionDates = {
+    periodEnd: string | null;
+    periodStart: string | null;
+    nextBillingAttempt: string | null;
 };
 
 export type PremiumPlanCardViewModel = {

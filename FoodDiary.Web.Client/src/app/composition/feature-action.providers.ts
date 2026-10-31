@@ -12,8 +12,6 @@ import { HYDRATION_ACTIONS, type HydrationActions } from '../features/hydration/
 import type { FavoriteMealService } from '../features/meals/api/favorite-meal.service';
 import type { MealService } from '../features/meals/api/meal.service';
 import { FAVORITE_MEAL_ACTIONS, type FavoriteMealActions, MEAL_ACTIONS, type MealActions } from '../features/meals/contracts/meal-actions';
-import { BILLING_ACCOUNT_ACTIONS, type BillingAccountActions } from '../features/premium/contracts/billing-account-actions';
-import type { PremiumBillingFacade } from '../features/premium/lib/premium-billing.facade';
 import type { RecipeService } from '../features/recipes/api/recipe.service';
 import { RECIPE_LOOKUP, type RecipeLookup } from '../features/recipes/contracts/recipe-lookup';
 import type { UsdaService } from '../features/usda/api/usda.service';
@@ -117,20 +115,6 @@ export const FEATURE_ACTION_PROVIDERS: Provider[] = [
                 invite: request => lazyFeatureAction(injector, loadAsync, service => service.invite(request)),
                 updatePermissions: permissions => lazyFeatureAction(injector, loadAsync, service => service.updatePermissions(permissions)),
                 revokeRelationship: () => lazyFeatureAction(injector, loadAsync, service => service.revokeRelationship()),
-            };
-        },
-    },
-    {
-        provide: BILLING_ACCOUNT_ACTIONS,
-        useFactory: (): BillingAccountActions => {
-            const injector = inject(Injector);
-            const loadAsync = async (): Promise<Type<PremiumBillingFacade>> => {
-                const { PremiumBillingFacade } = await import('../features/premium/lib/premium-billing.facade');
-                return PremiumBillingFacade;
-            };
-            return {
-                getOverview: () => lazyFeatureAction(injector, loadAsync, service => service.getOverview()),
-                createPortalSession: () => lazyFeatureAction(injector, loadAsync, service => service.createPortalSession()),
             };
         },
     },

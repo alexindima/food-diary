@@ -37,7 +37,6 @@ import type { ActivityLevelOption, Gender } from '../../../../shared/models/user
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
-import { ProfileBillingFacade } from '../../lib/profile-billing.facade';
 import { ProfileDietologistFacade } from '../../lib/profile-dietologist.facade';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import type {
@@ -56,7 +55,6 @@ import {
     normalizeOptionalTextInput,
     parseOptionalNumberInput,
 } from '../../lib/user-manage-form.mapper';
-import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
@@ -87,7 +85,6 @@ const MAX_PROFILE_HEIGHT_CM = 300;
         PageBodyComponent,
         UnsavedChangesBarComponent,
         FdPageContainerDirective,
-        UserManageBillingCardComponent,
         UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
@@ -97,12 +94,11 @@ const MAX_PROFILE_HEIGHT_CM = 300;
     ],
     templateUrl: './user-manage.html',
     styleUrl: './user-manage.scss',
-    providers: [ProfileManageFacade, UserManageNotificationsFacade, ProfileDietologistFacade, ProfileBillingFacade],
+    providers: [ProfileManageFacade, UserManageNotificationsFacade, ProfileDietologistFacade],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManageComponent {
     private readonly dietologist = inject(ProfileDietologistFacade);
-    private readonly billing = inject(ProfileBillingFacade);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
@@ -157,10 +153,6 @@ export class UserManageComponent {
     protected readonly isSavingDietologistPermissions = this.dietologist.isSavingDietologistPermissions;
     protected readonly isSavingDietologistRelationshipAction = this.dietologist.isSavingDietologistRelationshipAction;
     protected readonly isSavingDietologist = this.dietologist.isSavingDietologist;
-    protected readonly billingOverview = this.billing.billingOverview;
-    protected readonly isLoadingBilling = this.billing.isLoadingBilling;
-    protected readonly isOpeningBillingPortal = this.billing.isOpeningBillingPortal;
-    protected readonly billingError = this.billing.billingError;
     protected readonly isDeleting = this.facade.isDeleting;
     protected readonly isSavingProfile = this.facade.isSavingProfile;
     protected readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
@@ -200,7 +192,6 @@ export class UserManageComponent {
     protected readonly currentWeight = this.facade.currentWeight;
     protected readonly currentWaist = this.facade.currentWaist;
     protected readonly dietologistInviteEmailError = this.dietologist.dietologistInviteEmailError;
-    protected readonly billingView = this.billing.billingView;
     protected readonly hasUnsavedProfileChanges = computed(() => {
         this.userFormInputVersion();
         return this.birthDateInputInvalid() || this.hasUserFormChanges();
@@ -233,7 +224,6 @@ export class UserManageComponent {
         });
 
         this.facade.initialize();
-        this.loadBillingOverview();
     }
 
     private watchLanguageChanges(): void {
@@ -470,18 +460,6 @@ export class UserManageComponent {
         this.dietologist.updateDietologistInviteEmailError();
     }
 
-    protected reloadBillingOverview(): void {
-        this.billing.reloadBillingOverview();
-    }
-
-    protected openPremiumPage(): void {
-        void this.router.navigate(['/premium']);
-    }
-
-    protected openBillingPortal(): void {
-        this.billing.openBillingPortal();
-    }
-
     private applyUserData(userData: Partial<UserFormValues>): void {
         const formData = {
             ...createUserManageFormModel(),
@@ -606,10 +584,6 @@ export class UserManageComponent {
         this.dietologist.loadDietologistRelationship();
     }
 
-    private loadBillingOverview(): void {
-        this.billing.loadBillingOverview();
-    }
-
     private buildSelectOptions(): void {
         const options = buildUserManageSelectOptions(key => this.translateService.instant(key));
         this.genderOptions = options.genderOptions;
@@ -646,8 +620,6 @@ export class UserManageComponent {
             this.notifications.isSchedulingTestNotification(),
             this.isSavingDietologist(),
             this.isLoadingDietologist(),
-            this.isLoadingBilling(),
-            this.isOpeningBillingPortal(),
             this.notifications.isLoadingConnectedDevices(),
             this.notifications.removingConnectedDeviceEndpoint() !== null,
         ];

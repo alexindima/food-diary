@@ -4780,51 +4780,6 @@
       "specPath": null
     },
     {
-      "class": "PremiumOverviewCardComponent",
-      "selector": "fd-premium-overview-card",
-      "feature": "premium",
-      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
-      "inputs": [
-        {
-          "name": "viewModel",
-          "type": "PremiumOverviewCardViewModel",
-          "required": true
-        },
-        {
-          "name": "portalLoading",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "trialLoading",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "isLoading",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "overview",
-          "type": "BillingOverview | null",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "manageBilling",
-          "type": ""
-        },
-        {
-          "name": "startTrial",
-          "type": ""
-        }
-      ],
-      "specPath": null
-    },
-    {
       "class": "PremiumPlanPriceComponent",
       "selector": "fd-premium-plan-price",
       "feature": "premium",
@@ -4852,6 +4807,16 @@
           "required": false
         }
       ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PremiumSupportCardComponent",
+      "selector": "fd-premium-support-card",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "inputs": [],
       "outputs": [],
       "specPath": null
     },

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 513,
+    "components": 512,
     "componentsWithoutDirectSpecs": 129,
-    "inputs": 1668,
-    "outputs": 560,
+    "inputs": 1662,
+    "outputs": 555,
     "apiCalls": 320,
-    "templatesWithTranslations": 371,
-    "translationKeys": 2206,
-    "consumerEdges": 1308,
-    "consumedComponents": 326,
+    "templatesWithTranslations": 370,
+    "translationKeys": 2199,
+    "consumerEdges": 1305,
+    "consumedComponents": 325,
     "unconsumedComponents": 186
   },
   "components": [
@@ -9470,7 +9470,7 @@
           "type": ""
         }
       ],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.spec.ts"
     },
     {
       "class": "PremiumPlanPriceComponent",
@@ -9542,6 +9542,16 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.spec.ts"
+    },
+    {
+      "class": "PremiumSupportCardComponent",
+      "selector": "fd-premium-support-card",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "FavoriteProductRowComponent",
@@ -10333,80 +10343,6 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.spec.ts"
-    },
-    {
-      "class": "UserManageBillingCardComponent",
-      "selector": "fd-user-manage-billing-card",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
-      "inputs": [
-        {
-          "name": "isLoadingBilling",
-          "type": "boolean",
-          "required": true
-        },
-        {
-          "name": "billingError",
-          "type": "string | null",
-          "required": true
-        },
-        {
-          "name": "billingView",
-          "type": "BillingViewModel | null",
-          "required": true
-        },
-        {
-          "name": "isOpeningBillingPortal",
-          "type": "boolean",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "billingReload",
-          "type": ""
-        },
-        {
-          "name": "billingPortalOpen",
-          "type": ""
-        },
-        {
-          "name": "premiumPageOpen",
-          "type": ""
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.spec.ts"
-    },
-    {
-      "class": "UserManageBillingSummaryComponent",
-      "selector": "fd-user-manage-billing-summary",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
-      "inputs": [
-        {
-          "name": "billing",
-          "type": "BillingViewModel",
-          "required": true
-        },
-        {
-          "name": "isOpeningBillingPortal",
-          "type": "boolean",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "billingPortalOpen",
-          "type": ""
-        },
-        {
-          "name": "premiumPageOpen",
-          "type": ""
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts"
     },
     {
       "class": "UserManageComparisonWidgetsComponent",
@@ -22641,8 +22577,7 @@
         "PREMIUM_PAGE.BENEFITS.ITEM_5",
         "PREMIUM_PAGE.BENEFITS.ITEM_6",
         "PREMIUM_PAGE.BENEFITS.SUBTITLE",
-        "PREMIUM_PAGE.BENEFITS.TITLE",
-        "PREMIUM_PAGE.SUPPORT.TEXT"
+        "PREMIUM_PAGE.BENEFITS.TITLE"
       ]
     },
     {
@@ -22674,6 +22609,15 @@
         "PREMIUM_PAGE.PLANS.PRICE_UNAVAILABLE",
         "PREMIUM_PAGE.PLANS.SUBTITLE",
         "PREMIUM_PAGE.PLANS.TITLE"
+      ]
+    },
+    {
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "keys": [
+        "PREMIUM_PAGE.SUPPORT.MANAGEMENT_HELP",
+        "PREMIUM_PAGE.SUPPORT.PAYMENT_HELP",
+        "PREMIUM_PAGE.SUPPORT.TITLE"
       ]
     },
     {
@@ -22979,26 +22923,6 @@
     },
     {
       "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
-      "keys": [
-        "USER_MANAGE.BILLING_LOADING",
-        "USER_MANAGE.BILLING_RETRY"
-      ]
-    },
-    {
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
-      "keys": [
-        "USER_MANAGE.BILLING_MANAGE",
-        "USER_MANAGE.BILLING_NEXT_CHARGE",
-        "USER_MANAGE.BILLING_PERIOD_START",
-        "USER_MANAGE.BILLING_PROVIDER",
-        "USER_MANAGE.BILLING_RENEWAL",
-        "USER_MANAGE.BILLING_SUPPORT_MANAGED"
-      ]
-    },
-    {
-      "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "keys": [
         "IMAGE_UPLOAD_FIELD.REMOVE",
@@ -23007,8 +22931,7 @@
         "USER_MANAGE.ACCOUNT_SECTION",
         "USER_MANAGE.ACTIVITY_DEFAULT_HINT",
         "USER_MANAGE.ACTIVITY_LEVEL",
-        "USER_MANAGE.BILLING_DESC",
-        "USER_MANAGE.BILLING_SECTION",
+        "USER_MANAGE.BILLING_MANAGE",
         "USER_MANAGE.BIRTH_DATE",
         "USER_MANAGE.BIRTH_DATE_INVALID",
         "USER_MANAGE.BODY_SECTION",
@@ -30817,35 +30740,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "fill",
-        "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "fill",
-        "loading",
-        "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -32646,7 +32540,9 @@
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "density"
+      ],
       "outputsHandled": []
     },
     {
@@ -32656,7 +32552,9 @@
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "density"
+      ],
       "outputsHandled": []
     },
     {
@@ -32666,7 +32564,21 @@
       "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plans-card.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "density"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "density"
+      ],
       "outputsHandled": []
     },
     {
@@ -39829,18 +39741,6 @@
       "outputsHandled": []
     },
     {
-      "component": "FdUiStatusBadgeComponent",
-      "selector": "fd-ui-status-badge",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
       "component": "FdUiSwitchComponent",
       "selector": "fd-ui-switch",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/switch/fd-ui-switch.ts",
@@ -42659,6 +42559,16 @@
       ]
     },
     {
+      "component": "PremiumSupportCardComponent",
+      "selector": "fd-premium-support-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
       "component": "ProductAiRecognitionResultComponent",
       "selector": "fd-product-ai-recognition-result",
       "componentPath": "FoodDiary.Web.Client/src/app/features/products/dialogs/product-ai-recognition-dialog/product-ai-recognition-result/product-ai-recognition-result.ts",
@@ -44108,41 +44018,6 @@
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
-    },
-    {
-      "component": "UserManageBillingCardComponent",
-      "selector": "fd-user-manage-billing-card",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "billingError",
-        "billingView",
-        "isLoadingBilling",
-        "isOpeningBillingPortal"
-      ],
-      "outputsHandled": [
-        "billingPortalOpen",
-        "billingReload",
-        "premiumPageOpen"
-      ]
-    },
-    {
-      "component": "UserManageBillingSummaryComponent",
-      "selector": "fd-user-manage-billing-summary",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "billing",
-        "isOpeningBillingPortal"
-      ],
-      "outputsHandled": [
-        "billingPortalOpen",
-        "premiumPageOpen"
-      ]
     },
     {
       "component": "UserManageComparisonWidgetsComponent",
