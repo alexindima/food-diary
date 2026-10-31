@@ -82,7 +82,7 @@
     "adminPathFragments": ["/Admin/", "/admin-", "admin-", "/fooddiary-admin/", "ForAdministration/"],
     "adminScore": 140,
     "integrationIntentTerms": ["adapter", "client", "external", "gateway", "integration", "provider"],
-    "integrationPathPrefixes": ["FoodDiary.Integrations/", "Shared/FoodDiary.Email.MailRelay/", "Services/MailInbox/FoodDiary.MailInbox.Client/", "Services/MailRelay/FoodDiary.MailRelay.Client/"],
+    "integrationPathPrefixes": ["FoodDiary.Integrations/", "Services/MailInbox/FoodDiary.MailInbox.Client/", "Services/MailRelay/FoodDiary.MailRelay.Client/"],
     "integrationScore": 180,
     "infrastructureIntentTerms": ["implementation", "persistence", "provider", "storage", "store"],
     "infrastructureMinimumMatches": 2,

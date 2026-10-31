@@ -8,14 +8,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
-          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
+          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
+          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
         }
       ],
-      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
+      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ef158655032224870223606111cabb3c61464370",
-      "reviewedAtUtc": "2026-10-31T17:56:52.4811532Z"
+      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
+      "reviewedAtUtc": "2026-10-31T18:12:21.6323641Z"
     },
     {
       "pageId": "index",
@@ -424,14 +424,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
-          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
+          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
+          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
         }
       ],
-      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
+      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ef158655032224870223606111cabb3c61464370",
-      "reviewedAtUtc": "2026-10-31T17:56:52.7724407Z"
+      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
+      "reviewedAtUtc": "2026-10-31T18:12:21.9293887Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1305,14 +1305,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
-          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
+          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
+          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
         }
       ],
-      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
+      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ef158655032224870223606111cabb3c61464370",
-      "reviewedAtUtc": "2026-10-31T17:56:53.0583741Z"
+      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
+      "reviewedAtUtc": "2026-10-31T18:12:22.2807773Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1614,14 +1614,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
-          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
+          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
+          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
         }
       ],
-      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
+      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ef158655032224870223606111cabb3c61464370",
-      "reviewedAtUtc": "2026-10-31T17:56:53.3371997Z"
+      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
+      "reviewedAtUtc": "2026-10-31T18:12:22.6151907Z"
     },
     {
       "pageId": "workflow.review-diff",

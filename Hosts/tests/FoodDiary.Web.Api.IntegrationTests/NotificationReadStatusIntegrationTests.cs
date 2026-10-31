@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Entities;
@@ -18,8 +19,10 @@ public sealed class NotificationReadStatusIntegrationTests(TestAuthApiWebApplica
         var user = User.Create($"push-sync-{Guid.NewGuid():N}@example.com", "hash");
         var other = User.Create($"push-sync-other-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.AddRange(user, other);
-        var old = Notification.Create(user.Id, "info", "{}");
-        typeof(Notification).GetProperty(nameof(Notification.CreatedOnUtc))!.SetValue(old, DateTime.UtcNow.AddDays(-1));
+        Notification old;
+        using (DomainTime.Override(new FixedTimeProvider(DateTimeOffset.UtcNow.AddDays(-1)))) {
+            old = Notification.Create(user.Id, "info", "{}");
+        }
         var unread = Notification.Create(user.Id, "info", "{}");
         var foreign = Notification.Create(other.Id, "info", "{}");
         foreign.MarkAsRead();
@@ -58,4 +61,9 @@ public sealed class NotificationReadStatusIntegrationTests(TestAuthApiWebApplica
 
     [ExcludeFromCodeCoverage]
     private sealed record ReadStatusPayload(Guid[] ReadIds);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => now;
+    }
 }
