@@ -40,17 +40,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 29
+- Public contract files: 30
 - Observed external consumer groups: 8
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 29
-- Interfaces: 18
+- Public contract types: 30
+- Interfaces: 19
 - DTO/read-model/projection types: 2
 - Enums: 0
-- Exported repository-shaped contracts: 9
+- Exported repository-shaped contracts: 10
 - Contracts referencing domain entities: 0
 - `class NotificationErrors`
 - `class NotificationTargetUrlResolver`
@@ -59,6 +59,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface INotificationPusher`
 - `interface INotificationReadModelRepository`
 - `interface INotificationReadRepository`
+- `interface INotificationReadStatusRepository`
 - `interface INotificationRepository`
 - `interface INotificationTestScheduler`
 - `interface INotificationTextRenderer`
@@ -98,6 +99,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.Preferences.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.Queries.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.ReadCommands.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.ReadStatus.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.WebPush.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsValidatorTests.cs`
@@ -115,7 +117,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushClientAdapterTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderLoggingTests.cs`
-- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs`
 
 ## Working Rule
 

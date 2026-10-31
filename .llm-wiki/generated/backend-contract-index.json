@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1369,
+    "contracts": 1373,
     "ambiguousContracts": 29,
-    "consumerEdges": 11007,
-    "productionConsumerEdges": 6129,
-    "testConsumerEdges": 4878,
-    "consumedContracts": 1369,
+    "consumerEdges": 11025,
+    "productionConsumerEdges": 6142,
+    "testConsumerEdges": 4883,
+    "consumedContracts": 1373,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -8085,6 +8085,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetNotificationsQuery",
       "roles": [
         "Query"
@@ -13805,6 +13822,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "INotificationReadStatusRepository",
+      "roles": [
+        "Repository"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "INotificationRepository",
       "roles": [
         "Repository"
@@ -18221,6 +18255,40 @@
       ],
       "definitionPaths": [
         "Modules/Notifications/Presentation.Contracts/Responses/NotificationPreferencesHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "NotificationReadStatusHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "NotificationReadStatusHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Responses/NotificationReadStatusHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -53506,6 +53574,71 @@
       "referenceCount": 2
     },
     {
+      "contract": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.ReadStatus.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "GetNotificationReadStatusQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "GetNotificationsQuery",
       "roles": [
         "Query"
@@ -72571,6 +72704,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97900,6 +98046,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "INotificationReadStatusRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationReadStatusRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationReadStatusRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/Persistence/NotificationReadStatusRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationReadStatusRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.ReadStatus.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "INotificationRepository",
       "roles": [
         "Repository"
@@ -105721,6 +105919,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Queries/GetNotifications/GetNotificationsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -107880,6 +108091,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115161,7 +115385,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 7
+      "referenceCount": 8
     },
     {
       "contract": "IRequest",
@@ -121700,7 +121924,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "ISender",
@@ -133658,6 +133882,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Queries/GetNotifications/GetNotificationsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -142774,6 +143011,71 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "NotificationReadStatusHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/NotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationReadStatusHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationReadStatusHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "NotificationReadStatusHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Responses/NotificationReadStatusHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/NotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "NotificationReadStatusHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Responses/NotificationReadStatusHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "NotificationRequest",

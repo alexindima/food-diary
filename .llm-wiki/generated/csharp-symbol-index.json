@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4666,
-    "symbols": 4601,
-    "interfaceImplementationLinks": 206,
+    "sourceFiles": 4673,
+    "symbols": 4608,
+    "interfaceImplementationLinks": 207,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2379,
+      "class": 2382,
       "enum": 73,
-      "interface": 421,
-      "record": 1586,
+      "interface": 422,
+      "record": 1589,
       "record struct": 142
     },
     "roles": {
@@ -33,15 +33,15 @@
       "Mapping": 4,
       "Options": 74,
       "Other": 1900,
-      "Query": 304,
-      "QueryHandler": 218,
+      "Query": 305,
+      "QueryHandler": 219,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
-      "Repository": 99,
-      "Request": 178,
-      "Response": 268,
+      "Repository": 101,
+      "Request": 179,
+      "Response": 269,
       "Service": 177,
-      "Validator": 236,
+      "Validator": 237,
       "ValueObject": 182,
       "WriteRepository": 47
     }
@@ -21090,6 +21090,13 @@
       "line": 5
     },
     {
+      "name": "INotificationReadStatusRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs",
+      "line": 5
+    },
+    {
       "name": "INotificationRepository",
       "kind": "interface",
       "role": "Repository",
@@ -21524,6 +21531,27 @@
       "line": 4
     },
     {
+      "name": "GetNotificationReadStatusQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetNotificationReadStatusQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetNotificationReadStatusQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Queries/GetNotificationReadStatus/GetNotificationReadStatusQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetNotificationsQuery",
       "kind": "record",
       "role": "Query",
@@ -21783,6 +21811,13 @@
       "line": 4
     },
     {
+      "name": "NotificationReadStatusRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Notifications/Infrastructure/Persistence/NotificationReadStatusRepository.cs",
+      "line": 8
+    },
+    {
       "name": "NotificationRepository",
       "kind": "class",
       "role": "Repository",
@@ -21969,7 +22004,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
-      "line": 18
+      "line": 19
+    },
+    {
+      "name": "NotificationReadStatusHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "RemoveWebPushSubscriptionHttpRequest",
@@ -22011,6 +22053,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Notifications/Presentation/Responses/NotificationHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationReadStatusHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Notifications/Presentation/Responses/NotificationReadStatusHttpResponse.cs",
       "line": 2
     },
     {
@@ -33101,6 +33150,13 @@
       "interfacePath": "Modules/Notifications/Application.Abstractions/Common/INotificationPusher.cs",
       "implementation": "NotificationPusher",
       "implementationPath": "Modules/Notifications/Presentation/Services/NotificationPusher.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "INotificationReadStatusRepository",
+      "interfacePath": "Modules/Notifications/Application.Abstractions/Common/INotificationReadStatusRepository.cs",
+      "implementation": "NotificationReadStatusRepository",
+      "implementationPath": "Modules/Notifications/Infrastructure/Persistence/NotificationReadStatusRepository.cs",
       "confidence": "naming-convention"
     },
     {
