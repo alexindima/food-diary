@@ -1,8 +1,48 @@
 // The application foundation must survive component outline resets and system
 // palettes, which remove box shadows. The browser owns focus-visible modality.
-:root :is(button, input):focus-visible:not(:where(.fd-ui-input__control)),
-:root :is(select, textarea):focus-visible,
-:root :is([href], [tabindex]):focus-visible {
+:root
+    :is(input, textarea):focus-visible:not(
+        :where(
+            .fd-ui-input__control,
+            .fd-ui-textarea__control,
+            .fd-ui-date-input__control,
+            .fd-ui-time-input__control,
+            .fd-ui-datetime-input__control
+        )
+    ),
+:root :is(button, select):focus-visible,
+:root
+    :is([href], [tabindex]):focus-visible:not(
+        :where(
+            .fd-ui-input__control,
+            .fd-ui-textarea__control,
+            .fd-ui-date-input__control,
+            .fd-ui-time-input__control,
+            .fd-ui-datetime-input__control
+        )
+    ) {
     outline: var(--fd-outline-focus-strong);
     outline-offset: var(--fd-outline-offset);
+}
+
+// Wrapped text controls already draw one focus ring around the complete field.
+// System palettes can remove that shadow, so retain an outer outline there.
+@media (forced-colors: active) {
+    :root
+        :is(
+            .fd-ui-textarea__control-wrap,
+            .fd-ui-date-input__control-wrap,
+            .fd-ui-time-input__control-wrap,
+            .fd-ui-datetime-input__control-wrap
+        ):has(
+            :is(
+                .fd-ui-textarea__control,
+                .fd-ui-date-input__control,
+                .fd-ui-time-input__control,
+                .fd-ui-datetime-input__control
+            ):focus-visible
+        ) {
+        outline: var(--fd-outline-focus-strong);
+        outline-offset: var(--fd-outline-offset);
+    }
 }

@@ -6,10 +6,26 @@
             fill="text"
             icon="chevron_left"
             [ariaLabel]="'CALENDAR.PREVIOUS_MONTH' | translate"
+            [disabled]="previousMonthDisabled()"
+            [disabledReason]="'CALENDAR.OUTSIDE_RANGE' | translate"
             (click)="showPreviousMonth()"
         />
 
-        <div class="fd-ui-calendar__title">{{ monthLabel() }}</div>
+        @if (allowYearSelection()) {
+            <div class="fd-ui-calendar__title fd-ui-calendar__title--year-picker">
+                <span>{{ monthOnlyLabel() }}</span>
+                <fd-ui-select
+                    appearance="text"
+                    size="sm"
+                    [ariaLabel]="'CALENDAR.CHOOSE_YEAR' | translate"
+                    [options]="yearOptions()"
+                    [value]="visibleYear()"
+                    (valueChange)="onYearChange($event)"
+                />
+            </div>
+        } @else {
+            <div class="fd-ui-calendar__title">{{ monthLabel() }}</div>
+        }
 
         <fd-ui-button
             appearance="plain-icon"
@@ -17,6 +33,8 @@
             fill="text"
             icon="chevron_right"
             [ariaLabel]="'CALENDAR.NEXT_MONTH' | translate"
+            [disabled]="nextMonthDisabled()"
+            [disabledReason]="'CALENDAR.OUTSIDE_RANGE' | translate"
             (click)="showNextMonth()"
         />
     </div>
@@ -38,7 +56,7 @@
                         [class.fd-ui-calendar__day--outside]="!cell.isCurrentMonth"
                         [class.fd-ui-calendar__day--today]="cell.isToday"
                         [class.fd-ui-calendar__day--selected]="cell.isSelected"
-                        [class.fd-ui-calendar__day--week-selected]="selectionMode() === 'week' && cell.isSelected"
+                        [class.fd-ui-calendar__day--week-selected]="cell.isWeekSelected"
                         [class.fd-ui-calendar__day--active]="cell.isActive"
                         [disabled]="cell.isDisabled"
                         [attr.data-date]="cell.iso"
@@ -49,20 +67,18 @@
                         (keydown)="onCellKeydown($event, cell.date)"
                     >
                         <span>{{ cell.label }}</span>
-                        @if (cell.markers.length > 0) {
-                            <span class="fd-ui-calendar__markers" aria-hidden="true">
-                                @for (marker of cell.markers; track marker.label + marker.tone) {
-                                    <span
-                                        class="fd-ui-calendar__marker"
-                                        [class.fd-ui-calendar__marker--danger]="marker.tone === 'danger'"
-                                        [class.fd-ui-calendar__marker--warning]="marker.tone === 'warning'"
-                                    ></span>
-                                }
-                            </span>
-                        }
+                        <span class="fd-ui-calendar__markers" aria-hidden="true">
+                            @for (marker of cell.markers; track marker.label + marker.tone) {
+                                <span
+                                    class="fd-ui-calendar__marker"
+                                    [class.fd-ui-calendar__marker--danger]="marker.tone === 'danger'"
+                                    [class.fd-ui-calendar__marker--warning]="marker.tone === 'warning'"
+                                ></span>
+                            }
+                        </span>
                     </button>
                 }
-                @if (selectionMode() === 'week' && week[0].isSelected && selectedWeekLabel(); as label) {
+                @if (week[0].isWeekSelected && selectedWeekLabel(); as label) {
                     <span class="fd-ui-calendar__selected-week-label">{{ label }}</span>
                 }
             </div>

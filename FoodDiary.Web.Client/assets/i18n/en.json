@@ -157,6 +157,8 @@
     },
     "CALENDAR": {
         "CHOOSE_DATE": "Choose date",
+        "CHOOSE_YEAR": "Choose year",
+        "OUTSIDE_RANGE": "Outside the available date range",
         "PREVIOUS_MONTH": "Previous month",
         "NEXT_MONTH": "Next month"
     },

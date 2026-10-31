@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2766,
-    "symbols": 870,
+    "typescriptFiles": 2771,
+    "symbols": 871,
     "routes": 108,
     "features": 46,
-    "specs": 844,
+    "specs": 846,
     "localeFiles": 5,
     "roles": {
       "Component": 502,
@@ -20,7 +20,7 @@
       "Facade": 90,
       "Other": 41,
       "Pipe": 5,
-      "Service": 212
+      "Service": 213
     }
   },
   "features": [
@@ -1717,7 +1717,7 @@
       "role": "Component",
       "selector": "fd-ui-calendar",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "line": 73
+      "line": 78
     },
     {
       "name": "FdUiCardActionsDirective",
@@ -3425,7 +3425,7 @@
       "role": "Component",
       "selector": "fd-meal-details-fields",
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "MealSatietyFieldsComponent",
@@ -5196,7 +5196,7 @@
       "role": "Component",
       "selector": "fd-meal-list",
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.ts",
-      "line": 56
+      "line": 58
     },
     {
       "name": "MealAddComponent",
@@ -6400,7 +6400,7 @@
       "role": "Component",
       "selector": "fd-statistics-nutrition-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
-      "line": 70
+      "line": 67
     },
     {
       "name": "StatisticsOverviewCardComponent",
@@ -7058,7 +7058,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/notifications.service.ts",
-      "line": 92
+      "line": 101
     },
     {
       "name": "OpenFoodFactsSdk",
@@ -7499,7 +7499,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 52
+      "line": 53
     },
     {
       "name": "PushNotificationInteractionService",
@@ -7507,6 +7507,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification-interaction.service.ts",
       "line": 24
+    },
+    {
+      "name": "PushNotificationReadSyncService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification-read-sync.service.ts",
+      "line": 19
     },
     {
       "name": "PushNotificationService",
@@ -7681,7 +7688,7 @@
       "role": "Component",
       "selector": "fd-root",
       "path": "FoodDiary.Web.Client/src/app/shell/app.ts",
-      "line": 77
+      "line": 78
     },
     {
       "name": "AdminPanelLauncherService",
@@ -8280,16 +8287,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4190,
-      "russianProperties": 4190,
+      "englishProperties": 4188,
+      "russianProperties": 4188,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1296,
-      "russianProperties": 1296,
+      "englishProperties": 1298,
+      "russianProperties": 1298,
       "countsMatch": true
     },
     {

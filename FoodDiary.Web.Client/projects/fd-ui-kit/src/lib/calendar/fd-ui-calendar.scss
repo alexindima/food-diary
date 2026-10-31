@@ -45,6 +45,14 @@
     gap: var(--fd-space-calendar-grid-gap);
 }
 
+.fd-ui-calendar__title--year-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--fd-space-xxs);
+    min-width: 0;
+}
+
 .fd-ui-calendar__week {
     position: relative;
 }

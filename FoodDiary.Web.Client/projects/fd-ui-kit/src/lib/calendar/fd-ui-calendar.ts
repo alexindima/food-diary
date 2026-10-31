@@ -26,6 +26,7 @@ import {
     fdUiStartOfLocalDay,
     fdUiStartOfLocalMonth,
 } from '../date/fd-ui-date.utils';
+import { FdUiSelectComponent, type FdUiSelectOption } from '../select/fd-ui-select';
 
 export type FdUiCalendarSelectionMode = 'date' | 'week';
 export type FdUiCalendarAppearance = 'standalone' | 'embedded';
@@ -49,6 +50,9 @@ const NEXT_WEEK_OFFSET = WEEK_DAYS_COUNT;
 const PREVIOUS_MONTH_OFFSET = -1;
 const NEXT_MONTH_OFFSET = 1;
 const LAST_WEEKDAY_OFFSET = CALENDAR_WEEKS_COUNT;
+const YEAR_PICKER_PAST_YEARS = 120;
+const YEAR_PICKER_FUTURE_YEARS = 10;
+const MONTHS_PER_YEAR = 12;
 
 type FdUiCalendarCell = {
     date: Date;
@@ -57,6 +61,7 @@ type FdUiCalendarCell = {
     isCurrentMonth: boolean;
     isToday: boolean;
     isSelected: boolean;
+    isWeekSelected: boolean;
     isActive: boolean;
     isDisabled: boolean;
     ariaLabel: string;
@@ -65,7 +70,7 @@ type FdUiCalendarCell = {
 
 @Component({
     selector: 'fd-ui-calendar',
-    imports: [CommonModule, FdUiButtonComponent, TranslatePipe],
+    imports: [CommonModule, FdUiButtonComponent, FdUiSelectComponent, TranslatePipe],
     templateUrl: './fd-ui-calendar.html',
     styleUrl: './fd-ui-calendar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,6 +97,7 @@ export class FdUiCalendarComponent {
     public readonly locale = input<string | null>(null);
     public readonly selectedWeekLabel = input<string | null>(null);
     public readonly markers = input<readonly FdUiCalendarMarker[]>([]);
+    public readonly allowYearSelection = input(false);
 
     protected readonly visibleMonth = computed(() => {
         const month = this.displayMonth() ?? this.value() ?? this.activeDate();
@@ -103,6 +109,28 @@ export class FdUiCalendarComponent {
             month: 'long',
             year: 'numeric',
         }).format(this.visibleMonth());
+    });
+
+    protected readonly monthOnlyLabel = computed(() =>
+        new Intl.DateTimeFormat(this.effectiveLocale(), { month: 'long' }).format(this.visibleMonth()),
+    );
+    protected readonly visibleYear = computed(() => this.visibleMonth().getFullYear());
+    protected readonly previousMonthDisabled = computed(() => {
+        const min = this.min();
+        return min !== null && this.visibleMonth() <= this.startOfMonth(min);
+    });
+    protected readonly nextMonthDisabled = computed(() => {
+        const max = this.max();
+        return max !== null && this.visibleMonth() >= this.startOfMonth(max);
+    });
+    protected readonly yearOptions = computed<Array<FdUiSelectOption<number>>>(() => {
+        const year = this.visibleYear();
+        const first = this.min()?.getFullYear() ?? Math.min(year, this.today.getFullYear() - YEAR_PICKER_PAST_YEARS);
+        const last = this.max()?.getFullYear() ?? Math.max(year, this.today.getFullYear() + YEAR_PICKER_FUTURE_YEARS);
+        return Array.from({ length: Math.max(0, last - first + 1) }, (_, index) => ({
+            value: first + index,
+            label: String(first + index),
+        }));
     });
 
     protected readonly weekdayLabels = computed(() => {
@@ -139,6 +167,10 @@ export class FdUiCalendarComponent {
                     month: 'long',
                     year: 'numeric',
                 }).format(cellDate);
+                const isSelected =
+                    this.selectionMode() === 'week'
+                        ? selectedWeekStart !== null && this.isSameWeek(cellDate, selectedWeekStart)
+                        : iso === selectedIso;
 
                 return {
                     date: cellDate,
@@ -146,10 +178,8 @@ export class FdUiCalendarComponent {
                     label: String(cellDate.getDate()),
                     isCurrentMonth: cellDate.getMonth() === monthStart.getMonth(),
                     isToday: iso === this.toIsoDate(this.today),
-                    isSelected:
-                        this.selectionMode() === 'week'
-                            ? selectedWeekStart !== null && this.isSameWeek(cellDate, selectedWeekStart)
-                            : iso === selectedIso,
+                    isSelected,
+                    isWeekSelected: this.selectionMode() === 'week' && isSelected,
                     isActive: iso === activeIso,
                     isDisabled: this.isSelectionOutOfRange(cellDate),
                     ariaLabel: [dateLabel, ...markers.map(marker => marker.label)].join('. '),
@@ -184,6 +214,13 @@ export class FdUiCalendarComponent {
 
     protected showNextMonth(): void {
         this.changeMonth(1);
+    }
+
+    protected onYearChange(year: number | null): void {
+        if (year === null || !this.yearOptions().some(option => option.value === year)) {
+            return;
+        }
+        this.changeMonth((year - this.visibleYear()) * MONTHS_PER_YEAR);
     }
 
     protected onCellKeydown(event: KeyboardEvent, date: Date): void {
@@ -230,7 +267,9 @@ export class FdUiCalendarComponent {
     }
 
     private changeMonth(offset: number): void {
-        const target = this.startOfMonth(this.addMonths(this.visibleMonth(), offset));
+        const target = this.startOfMonth(
+            this.clampDate(this.startOfMonth(this.addMonths(this.visibleMonth(), offset)), this.min(), this.max()),
+        );
         this.displayMonth.set(target);
         this.activeDate.set(this.clampDate(target, this.min(), this.max()));
         this.focusCell(this.activeDate());

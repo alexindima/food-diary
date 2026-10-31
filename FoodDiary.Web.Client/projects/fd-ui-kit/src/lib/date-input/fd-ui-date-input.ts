@@ -53,6 +53,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
         initialValue: this.translateService?.getCurrentLang() ?? this.locale,
     });
     public readonly allowManualInput = input(false);
+    public readonly allowYearSelection = input(false);
     public readonly manualInputFormat = input<'native' | 'localized'>('native');
     protected readonly isLocalizedInput = computed(() => this.allowManualInput() && this.manualInputFormat() === 'localized');
     public readonly id = input(`fd-ui-date-input-${uniqueId++}`);
@@ -65,7 +66,12 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     public readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
     public readonly invalidDateLabel = input<string>();
     private readonly invalidManualDate = signal(false);
-    protected readonly fieldError = computed(() => this.resolvedError() ?? (this.invalidManualDate() ? this.invalidDateLabel() : null));
+    protected readonly fieldError = computed(() => {
+        if (this.invalidManualDate()) {
+            return this.isFocused() ? null : (this.invalidDateLabel() ?? this.resolvedError());
+        }
+        return this.resolvedError();
+    });
     public readonly required = input(false);
     public readonly showRequiredIndicator = input(true);
     public readonly size = input<FdUiFieldSize>('md');
@@ -97,7 +103,7 @@ export class FdUiDateInputComponent implements FormValueControl<string | Date | 
     protected readonly sizeClass = computed(() => `fd-ui-date-input--size-${this.size()}`);
     protected readonly hasError = computed(() => {
         if (this.invalidManualDate()) {
-            return true;
+            return !this.isFocused();
         }
         const error = this.fieldError();
 

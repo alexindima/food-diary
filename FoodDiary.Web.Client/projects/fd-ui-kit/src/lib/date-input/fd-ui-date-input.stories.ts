@@ -12,6 +12,7 @@ const meta: Meta<FdUiDateInputComponent> = {
         todayLabel: { control: 'text' },
         error: { control: 'text' },
         required: { control: 'boolean' },
+        allowYearSelection: { control: 'boolean' },
         size: { control: 'select', options: ['sm', 'md', 'lg'] },
     },
 };
@@ -69,4 +70,16 @@ export const Large: Story = {
 
 export const Clearable: Story = {
     args: { label: 'Last login', value: '2026-07-24', clearAriaLabel: 'Clear last login date' },
+};
+
+export const Birthday: Story = {
+    args: {
+        label: 'Date of birth',
+        allowManualInput: true,
+        manualInputFormat: 'localized',
+        allowYearSelection: true,
+        latestDate: new Date(),
+        invalidDateLabel: 'Enter a valid date of birth that is not in the future.',
+        value: '1990-06-15',
+    },
 };

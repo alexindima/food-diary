@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiDateInputComponent, FdUiTimeInputComponent } from 'fd-ui-kit';
 
 import { normalizeSatietyLevel } from '../../../shared/lib/satiety-level.utils';
 import { MealSatietyFieldsComponent } from '../meal-satiety-fields/meal-satiety-fields';
@@ -8,7 +9,7 @@ const DEFAULT_COMMENT_ROWS = 3;
 
 @Component({
     selector: 'fd-meal-details-fields',
-    imports: [TranslatePipe, MealSatietyFieldsComponent],
+    imports: [TranslatePipe, FdUiDateInputComponent, FdUiTimeInputComponent, MealSatietyFieldsComponent],
     templateUrl: './meal-details-fields.html',
     styleUrls: ['./meal-details-fields.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +24,16 @@ export class MealDetailsFieldsComponent {
     public readonly surface = input(true);
     public readonly density = input<'compact' | 'regular'>('compact');
     public readonly satietyLayout = input<'stacked' | 'columns'>('stacked');
+
+    protected onDateChange(value: string | Date | null): void {
+        if (typeof value === 'string') {
+            this.date.set(value);
+        }
+    }
+
+    protected onTimeChange(value: string | null): void {
+        this.time.set(value ?? '');
+    }
 
     protected onPreMealSatietyLevelChange(value: number | null): void {
         const normalized = normalizeSatietyLevel(value);

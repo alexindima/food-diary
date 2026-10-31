@@ -16,6 +16,8 @@ const MIN_DAY = 10;
 const TEST_DAY = 15;
 const MAX_DAY = 20;
 const MARCH_DATE = new Date(TEST_YEAR, MARCH_INDEX, TEST_DAY);
+const BIRTH_YEAR = 1990;
+const BEFORE_BIRTH_YEAR = BIRTH_YEAR - 1;
 
 let component: FdUiCalendarComponent;
 let fixture: ComponentFixture<FdUiCalendarComponent>;
@@ -45,6 +47,42 @@ describe('FdUiCalendarComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('jumps to a birth year without changing the selected date until a day is chosen', () => {
+        fixture.componentRef.setInput('allowYearSelection', true);
+        fixture.componentRef.setInput('max', new Date(TEST_YEAR, MARCH_INDEX, MAX_DAY));
+        component.value.set(MARCH_DATE);
+        fixture.detectChanges();
+        expect(host().querySelector('fd-ui-select')).not.toBeNull();
+        expect(component['yearOptions']().some(option => option.value === BIRTH_YEAR)).toBe(true);
+        expect(component['yearOptions']().some(option => option.value > TEST_YEAR)).toBe(false);
+        component['onYearChange'](BIRTH_YEAR);
+        fixture.detectChanges();
+        expect(component.displayMonth()?.getFullYear()).toBe(BIRTH_YEAR);
+        expect(component.displayMonth()?.getMonth()).toBe(MARCH_INDEX);
+        expect(component.value()).toEqual(MARCH_DATE);
+        const day = host().querySelector<HTMLButtonElement>('[data-date="1990-03-15"]');
+        day?.click();
+        expect(component.value()).toEqual(new Date(BIRTH_YEAR, MARCH_INDEX, TEST_DAY));
+    });
+
+    it('keeps year selection inside bounds and leaves one keyboard target in a bounded month', () => {
+        fixture.componentRef.setInput('allowYearSelection', true);
+        fixture.componentRef.setInput('min', new Date(BIRTH_YEAR, MARCH_INDEX, MIN_DAY));
+        fixture.componentRef.setInput('max', new Date(TEST_YEAR, MARCH_INDEX, MAX_DAY));
+        fixture.detectChanges();
+        component['onYearChange'](BEFORE_BIRTH_YEAR);
+        expect(component.displayMonth()?.getFullYear()).toBe(TEST_YEAR);
+        component['showNextMonth']();
+        fixture.detectChanges();
+        expect(component.displayMonth()?.getMonth()).toBe(MARCH_INDEX);
+        expect(component['nextMonthDisabled']()).toBe(true);
+        component['onYearChange'](BIRTH_YEAR);
+        fixture.detectChanges();
+        expect(component['previousMonthDisabled']()).toBe(true);
+        expect(host().querySelectorAll('button[data-date][tabindex="0"]:not([disabled])')).toHaveLength(1);
+        expect(component.value()).toBeNull();
     });
 
     registerRenderTests();

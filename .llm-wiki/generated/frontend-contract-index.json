@@ -3,12 +3,12 @@
   "summary": {
     "components": 511,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1661,
+    "inputs": 1663,
     "outputs": 560,
-    "apiCalls": 318,
+    "apiCalls": 319,
     "templatesWithTranslations": 370,
-    "translationKeys": 2209,
-    "consumerEdges": 1301,
+    "translationKeys": 2206,
+    "consumerEdges": 1304,
     "consumedComponents": 324,
     "unconsumedComponents": 186
   },
@@ -4827,6 +4827,11 @@
           "name": "markers",
           "type": "readonly FdUiCalendarMarker[]",
           "required": false
+        },
+        {
+          "name": "allowYearSelection",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -5011,6 +5016,11 @@
       "inputs": [
         {
           "name": "allowManualInput",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "allowYearSelection",
           "type": "",
           "required": false
         },
@@ -19434,7 +19444,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/unread-count",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 103,
+      "line": 106,
       "publicMethod": "fetchUnreadCount",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19446,7 +19456,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/{notificationId}/read",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 165,
+      "line": 169,
       "publicMethod": "markAsRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19458,7 +19468,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/read-all",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 182,
+      "line": 187,
       "publicMethod": "markAllRead",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19470,7 +19480,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/test/schedule",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 194,
+      "line": 200,
       "publicMethod": "scheduleTestNotification",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19478,11 +19488,23 @@
     },
     {
       "feature": "shell",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/notifications/read-status",
+      "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
+      "line": 206,
+      "publicMethod": "getReadNotificationIds",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
+      "resolvedUrlExpression": "/api/v{version}/notifications/read-status"
+    },
+    {
+      "feature": "shell",
       "method": "GET",
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 200,
+      "line": 227,
       "publicMethod": "getNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19494,7 +19516,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/preferences",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 204,
+      "line": 231,
       "publicMethod": "updateNotificationPreferences",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19506,7 +19528,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscriptions",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 210,
+      "line": 237,
       "publicMethod": "getWebPushSubscriptions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19518,7 +19540,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/config",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 216,
+      "line": 243,
       "publicMethod": "getWebPushConfiguration",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19530,7 +19552,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 222,
+      "line": 249,
       "publicMethod": "upsertWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19542,7 +19564,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications/push/subscription",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 229,
+      "line": 256,
       "publicMethod": "removeWebPushSubscription",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -19554,7 +19576,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/notifications",
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/notification.service.ts",
-      "line": 274,
+      "line": 303,
       "publicMethod": "loadNotifications",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.auth.replace('/auth', '/notifications')",
@@ -21894,7 +21916,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.html",
       "keys": [
+        "CALENDAR.CHOOSE_YEAR",
         "CALENDAR.NEXT_MONTH",
+        "CALENDAR.OUTSIDE_RANGE",
         "CALENDAR.PREVIOUS_MONTH"
       ]
     },
@@ -22087,9 +22111,7 @@
       "keys": [
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
-        "GOALS_PAGE.EDITOR.CALORIES",
         "GOALS_PAGE.EDITOR.MACRO_RATIO",
-        "GOALS_PAGE.EDITOR.RECOMMENDED_TARGET",
         "GOALS_PAGE.EDITOR.SUMMARY_TITLE"
       ]
     },
@@ -22513,10 +22535,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
       "keys": [
         "AI_INPUT_BAR.FAVORITES_ACTION",
-        "MEAL_LIST.ACTIVE_FILTERS_LABEL",
         "MEAL_LIST.DATE_FILTER_BUTTON",
-        "MEAL_LIST.REMOVE_FILTER",
-        "MEAL_LIST.RESET_ALL",
         "MEAL_LIST.SUBTITLE",
         "MEAL_LIST.TITLE",
         "MEAL_LIST.TOUR.START_TOUR"
@@ -23985,6 +24004,8 @@
       "keys": [
         "MEAL_DETAILS.COMMENT",
         "MEAL_DETAILS.DATE",
+        "MEAL_DETAILS.HOURS",
+        "MEAL_DETAILS.MINUTES",
         "MEAL_DETAILS.TIME"
       ]
     },
@@ -24357,7 +24378,6 @@
         "STATISTICS.DASHBOARD.STABILITY.STATUS.DEVIATION",
         "STATISTICS.DASHBOARD.STABILITY.STATUS.MISSING",
         "STATISTICS.DASHBOARD.STABILITY.STATUS.STABLE",
-        "STATISTICS.DASHBOARD.STABILITY.SUBTITLE",
         "STATISTICS.DASHBOARD.STABILITY.TIMELINE",
         "STATISTICS.DASHBOARD.STABILITY.TITLE",
         "STATISTICS.DASHBOARD.STABILITY.WITHOUT_SHARP_DEVIATIONS"
@@ -24375,7 +24395,6 @@
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.SHARE",
-        "STATISTICS.DASHBOARD.MEAL_STRUCTURE.SUBTITLE",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE"
       ]
     },
@@ -24402,7 +24421,8 @@
         "STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN",
         "STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL",
         "STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE",
-        "STATISTICS.DASHBOARD.TREND.TITLE"
+        "STATISTICS.DASHBOARD.TREND.TITLE",
+        "STATISTICS.NUTRITION_TABS_LABEL"
       ]
     },
     {
@@ -24850,6 +24870,21 @@
     }
   ],
   "consumerEdges": [
+    {
+      "component": "ActiveFiltersComponent",
+      "selector": "fd-active-filters",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.ts",
+      "consumerFeature": "meals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "chips"
+      ],
+      "outputsHandled": [
+        "filterRemoved",
+        "filtersReset"
+      ]
+    },
     {
       "component": "ActiveFiltersComponent",
       "selector": "fd-active-filters",
@@ -27790,6 +27825,8 @@
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "disabled",
+        "disabledReason",
         "fill",
         "icon",
         "variant"
@@ -30365,7 +30402,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "meals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
-      "occurrences": 6,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -31504,6 +31541,7 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-items-panel/shopping-list-items-panel.html",
       "occurrences": 4,
       "inputsUsed": [
+        "ariaControls",
         "ariaExpanded",
         "ariaLabel",
         "fill",
@@ -31927,6 +31965,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.html",
       "occurrences": 1,
       "inputsUsed": [
+        "allowYearSelection",
         "displayMonth",
         "locale",
         "max",
@@ -33204,6 +33243,22 @@
       "component": "FdUiDateInputComponent",
       "selector": "fd-ui-date-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "size",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiDateInputComponent",
+      "selector": "fd-ui-date-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/cycle-export-dialog/cycle-export-dialog.html",
       "occurrences": 2,
@@ -33277,6 +33332,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "allowManualInput",
+        "allowYearSelection",
         "invalidDateLabel",
         "label",
         "latestDate",
@@ -37256,7 +37312,6 @@
         "floatLabel",
         "label",
         "placeholder",
-        "prefixIcon",
         "type"
       ],
       "outputsHandled": []
@@ -38923,15 +38978,16 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "appearance",
+        "ariaLabel",
+        "fitContent",
         "fullWidth",
         "options",
         "selectedValue",
         "size",
-        "stackOnNarrow",
-        "wrapOnNarrow"
+        "stackOnNarrow"
       ],
       "outputsHandled": [
         "selectedValueChange"
@@ -38952,6 +39008,24 @@
       ],
       "outputsHandled": [
         "selectedValueChange"
+      ]
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "fd-ui-kit",
+      "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "options",
+        "size",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
       ]
     },
     {
@@ -39528,24 +39602,6 @@
         "placeholder"
       ],
       "outputsHandled": []
-    },
-    {
-      "component": "FdUiSelectComponent",
-      "selector": "fd-ui-select",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "consumerFeature": "statistics",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "id",
-        "options",
-        "size",
-        "value"
-      ],
-      "outputsHandled": [
-        "valueChange"
-      ]
     },
     {
       "component": "FdUiSidebarComponent",
@@ -40179,6 +40235,24 @@
         "required",
         "rows",
         "stretch",
+        "value"
+      ],
+      "outputsHandled": [
+        "valueChange"
+      ]
+    },
+    {
+      "component": "FdUiTimeInputComponent",
+      "selector": "fd-ui-time-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/time-input/fd-ui-time-input.ts",
+      "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "hoursLabel",
+        "label",
+        "minutesLabel",
+        "size",
         "value"
       ],
       "outputsHandled": [

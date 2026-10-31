@@ -4,32 +4,20 @@
     [class.meal-details-fields--regular]="density() === 'regular'"
 >
     <div class="meal-details-fields__date-time fd-grid fd-gap-xs">
-        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
-            <label class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating" for="meal-details-date">
-                {{ 'MEAL_DETAILS.DATE' | translate }}
-            </label>
-            <input
-                #dateInput
-                id="meal-details-date"
-                class="meal-details-fields__input fd-ui-body-sm"
-                type="date"
-                [value]="date()"
-                (input)="date.set(dateInput.value)"
-            />
-        </div>
-        <div class="meal-details-fields__field fd-grid fd-gap-xxs">
-            <label class="meal-details-fields__label fd-ui-field-label fd-ui-field-label--floating" for="meal-details-time">
-                {{ 'MEAL_DETAILS.TIME' | translate }}
-            </label>
-            <input
-                #timeInput
-                id="meal-details-time"
-                class="meal-details-fields__input fd-ui-body-sm"
-                type="time"
-                [value]="time()"
-                (input)="time.set(timeInput.value)"
-            />
-        </div>
+        <fd-ui-date-input
+            [size]="density() === 'compact' ? 'md' : 'lg'"
+            [label]="'MEAL_DETAILS.DATE' | translate"
+            [value]="date()"
+            (valueChange)="onDateChange($event)"
+        />
+        <fd-ui-time-input
+            [size]="density() === 'compact' ? 'md' : 'lg'"
+            [label]="'MEAL_DETAILS.TIME' | translate"
+            [hoursLabel]="'MEAL_DETAILS.HOURS' | translate"
+            [minutesLabel]="'MEAL_DETAILS.MINUTES' | translate"
+            [value]="time()"
+            (valueChange)="onTimeChange($event)"
+        />
     </div>
 
     <div class="meal-details-fields__field fd-grid fd-gap-xxs">

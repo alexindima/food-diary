@@ -35,9 +35,16 @@ the document. The class does not choose a palette or modify account preferences.
 
 Most inputs accept `size` (`'sm' | 'md' | 'lg'`). The default is `md`.
 
-`fd-ui-input` displays focus around its complete rounded field. The application
-focus foundation excludes the inner `.fd-ui-input__control` to avoid a second
-rectangular outline; forced-color mode retains an outline on the field wrapper.
+Text inputs, textareas, dates and times display focus around the complete rounded
+field. The application focus foundation excludes their inner controls to avoid a
+second rectangular outline; forced-color mode retains an outline on the wrapper.
+
+`fd-ui-date-input` accepts `allowYearSelection` for distant dates such as birthdays.
+It forwards this option to `fd-ui-calendar`, whose year selector respects `min` and
+`max`. Browsing another year does not change the value until a day is selected.
+Manual date drafts continue to block invalid saves while their error message is
+shown after leaving the field. `invalidDateLabel` takes precedence over a generic
+Signal Forms validation error for an invalid manual date.
 
 `fd-ui-input` forwards `name` to its native input, defaulting to the control's
 `id`. Provide stable IDs for account fields so native form serialization and

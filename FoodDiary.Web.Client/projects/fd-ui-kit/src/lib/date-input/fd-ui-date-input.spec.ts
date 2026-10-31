@@ -168,6 +168,38 @@ function registerLocalizedInputTests(): void {
 
 function registerManualInputValidationTests(): void {
     describe('manual input validation state', () => {
+        it('waits until leaving a partial date before showing its specific validation message', () => {
+            const input = prepareManualDateInput();
+            fixture.componentRef.setInput('manualInputFormat', 'localized');
+            fixture.componentRef.setInput('errors', [{ kind: 'birthDateInput' }]);
+            fixture.detectChanges();
+            input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+            input.value = '1';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            expect(host().querySelector('[role="alert"]'), 'Do not interrupt an unfinished date').toBeNull();
+            expect(input.getAttribute('aria-invalid')).toBeNull();
+            expect(component.value()).toBe(MARCH_DATE_STRING);
+
+            input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+            fixture.detectChanges();
+            expect(host().querySelector('[role="alert"]')?.textContent).toBe('Invalid date');
+            expect(input.getAttribute('aria-describedby')).toBe(host().querySelector('[role="alert"]')?.id);
+        });
+
+        it('prefers the supplied date message over an unknown framework validation kind', () => {
+            const input = prepareManualDateInput();
+            fixture.componentRef.setInput('errors', [{ kind: 'birthDateInput' }]);
+            fixture.detectChanges();
+            input.value = '2027-01-01';
+            input.dispatchEvent(new Event('input'));
+            input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+            fixture.detectChanges();
+
+            expect(host().querySelector('[role="alert"]')?.textContent).toBe('Invalid date');
+        });
+
         it('reports invalid input without emitting a replacement value, then recovers', () => {
             const input = prepareManualDateInput();
             const invalid = vi.fn();
