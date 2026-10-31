@@ -82,7 +82,12 @@
     }
     &__composition {
         display: grid;
+        align-content: start;
         gap: var(--fd-space-md);
+    }
+    &__distribution {
+        display: grid;
+        gap: var(--fd-space-xs);
     }
     &__bar {
         display: flex;
@@ -491,9 +496,6 @@
         gap: var(--fd-space-sm);
     }
     .goals-editor-summary__calories {
-        flex-direction: row;
-        align-items: baseline;
-        justify-content: space-between;
         padding-bottom: var(--fd-space-sm);
     }
     .goals-editor-summary__value {
@@ -512,26 +514,5 @@
     .goals-editor-summary__macro-label {
         font-size: var(--fd-text-caption-size);
         gap: var(--fd-space-xxs);
-    }
-}
-
-@media #{variables.$media-tablet} {
-    .goals-editor-summary__calories {
-        display: grid;
-        grid-template-columns: 1fr auto;
-    }
-    .goals-editor-summary__calories .goals-editor-card__title {
-        grid-column: 1;
-    }
-    .goals-editor-summary__calories .goals-editor-card__label {
-        display: none;
-    }
-    .goals-editor-summary__value {
-        grid-column: 2;
-        grid-row: 1;
-        white-space: nowrap;
-    }
-    .goals-editor-summary__calories .goals-editor-card__hint {
-        grid-column: 1 / -1;
     }
 }
