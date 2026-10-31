@@ -84,16 +84,6 @@
         border-radius: var(--fd-radius-pill);
         background: var(--meal-color);
     }
-    &__insights {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        padding-top: var(--fd-space-xs);
-        border-top: var(--fd-border-subtle);
-    }
-    &__insights > div + div {
-        padding-left: var(--fd-space-lg);
-        border-left: var(--fd-border-subtle);
-    }
     &__empty {
         display: grid;
         min-height: 330px;
@@ -108,16 +98,6 @@
         &__row {
             grid-template-columns: minmax(110px, 1fr) auto auto;
             gap: var(--fd-space-sm);
-        }
-        &__insights {
-            grid-template-columns: 1fr;
-            gap: var(--fd-space-md);
-        }
-        &__insights > div + div {
-            padding-top: var(--fd-space-md);
-            padding-left: 0;
-            border-top: var(--fd-border-subtle);
-            border-left: 0;
         }
     }
 }

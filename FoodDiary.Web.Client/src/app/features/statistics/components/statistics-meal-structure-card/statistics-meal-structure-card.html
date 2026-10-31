@@ -1,5 +1,10 @@
 <fd-ui-card class="statistics-meal-structure-card" [title]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate">
     @if (data().totalCalories > 0) {
+        <div class="fd-row fd-justify-between fd-gap-sm">
+            <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY' | translate }}</span>
+            <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | localizedNumber: locale() : 1 : 1 }}</strong>
+        </div>
+
         <div class="statistics-meal-structure-card__distribution">
             <span class="statistics-meal-structure-card__bar-heading fd-ui-caption fd-ui-text-muted">
                 {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate }}
@@ -41,22 +46,6 @@
                     >
                 </div>
             }
-        </div>
-
-        <div class="statistics-meal-structure-card__insights">
-            <div class="fd-stack fd-gap-xxs">
-                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DOMINANT' | translate }}</span>
-                <strong class="fd-ui-metric-md">
-                    {{ getMealLabelKey(data().dominantMeal) | translate }}
-                    @if (data().dominantMeal !== null) {
-                        · {{ getDominantPercentage() }}%
-                    }
-                </strong>
-            </div>
-            <div class="fd-stack fd-gap-xxs">
-                <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY' | translate }}</span>
-                <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | localizedNumber: locale() : 1 : 1 }}</strong>
-            </div>
         </div>
     } @else {
         <div class="statistics-meal-structure-card__empty fd-ui-body-sm fd-ui-text-muted">

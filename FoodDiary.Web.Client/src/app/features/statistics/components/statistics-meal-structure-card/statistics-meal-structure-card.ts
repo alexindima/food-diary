@@ -28,14 +28,4 @@ export class StatisticsMealStructureCardComponent {
     protected getRowClass(item: StatisticsMealStructureItem): string {
         return `statistics-meal-structure-card__row statistics-meal-structure-card__row--${item.key}`;
     }
-
-    protected getMealLabelKey(key: StatisticsMealStructureData['dominantMeal']): string {
-        return key === null
-            ? 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.NO_DATA'
-            : `STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS.${key.toUpperCase()}`;
-    }
-
-    protected getDominantPercentage(): number {
-        return this.data().items.find(item => item.key === this.data().dominantMeal)?.percentage ?? 0;
-    }
 }
