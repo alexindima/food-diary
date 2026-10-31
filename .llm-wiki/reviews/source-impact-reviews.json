@@ -5,11 +5,17 @@
       "pageId": "generated-context-evaluation-summary",
       "pagePath": ".llm-wiki/generated/context-evaluation-summary.md",
       "pageSha256": "5199e751921d6bd1b5ebfe1c31ca3a50d3008ba171740180cd13de6d8ef391b6",
-      "sources": [],
-      "reason": "Reviewed bounded trace navigation: HTTP query and qualified static mapping edges, one unambiguous interface inheritance hop, explicit unresolved dependencies, and starting-path partitions. Fast indexed MCP behavior and full test-planning scope remain intact; historical retrieval gates and stale benchmark semantics are preserved.",
+      "sources": [
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
+          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
+        }
+      ],
+      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
       "baseRef": "HEAD",
-      "gitHead": "6c3249c2ee538c0d02b812acf240dcd2a91532ae",
-      "reviewedAtUtc": "2026-09-10T14:43:00.7480336Z"
+      "gitHead": "ef158655032224870223606111cabb3c61464370",
+      "reviewedAtUtc": "2026-10-31T17:56:52.4811532Z"
     },
     {
       "pageId": "index",
@@ -414,28 +420,18 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "91c9a80596373b16aaaf88c43fa44023e82adae4457a2516a02b39c55bdb9b90",
+      "pageSha256": "d579b45acf7f945aed0470c1531b53e2f7f337fbf9f77c500471f2108c1e1e30",
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
-          "reviewReason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
-          "sha256": "b5a92aa4d02523f809fafba41cecf8999e85877256b0ec07758a8e3436ced27b",
-          "reviewReason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed."
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
+          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
         }
       ],
-      "reason": "Reviewed shared ranking policy and regression guard: the existing Frontend TypeScript source role now recognizes interface requests and excludes explicit HTML/template requests. Graph ownership, bounds and snapshot contracts are unchanged; ranking and all 22 corpus checks with Node/.NET parity passed.",
+      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
       "baseRef": "HEAD",
-      "gitHead": "584ba95fe9e2266135d9f5bfc1c4d91922e0d57f",
-      "reviewedAtUtc": "2026-10-29T10:36:29.9931803Z"
+      "gitHead": "ef158655032224870223606111cabb3c61464370",
+      "reviewedAtUtc": "2026-10-31T17:56:52.7724407Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1309,14 +1305,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "456a89f0e99f139dece070a11cbf3e053f7fcb14616a2991c41aeb59ba57817d",
-          "reviewReason": "Reviewed the ranking policy diff: the existing hydration goal-service affinity now matches the actual owner query handler after facade retirement. No security vocabulary, source filters, critical-symbol evidence, trust boundary or discovery scope changed; the policy rule count stays at 700. Existing security-discovery instructions remain current."
+          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
+          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
         }
       ],
-      "reason": "Reviewed the ranking policy diff: the existing hydration goal-service affinity now matches the actual owner query handler after facade retirement. No security vocabulary, source filters, critical-symbol evidence, trust boundary or discovery scope changed; the policy rule count stays at 700. Existing security-discovery instructions remain current.",
+      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:48:37.1164436Z"
+      "gitHead": "ef158655032224870223606111cabb3c61464370",
+      "reviewedAtUtc": "2026-10-31T17:56:53.0583741Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1614,33 +1610,18 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "7f59e6f68c048550fd92069410b395c49a4d3d7d3216cabed94b0905efd757a5",
+      "pageSha256": "901bff07ffe15e58cbdf52f3e2bb284cc4d394cf44485ddeea5c5406b5546118",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "16f046c966c4164dc3e2ecd0ee01e96b57eb74c7cd00b6e2ccf4da29b11884b3",
-          "reviewReason": "Reviewed the current repository catalog regeneration and context-navigation guidance. This change adds Identity cookie/replacement sources and tests within existing owners; it changes no context CLI/MCP command, SQLite query contract, module layout or ranking policy. The page describes those existing interfaces and contains no changed catalog-count assertion."
-        },
-        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "50701865250115c61b9b1fdb4e1a65c80a06563390c8bf8f263eedb4b111401f",
-          "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiContextRanking.ps1",
-          "sha256": "b5a92aa4d02523f809fafba41cecf8999e85877256b0ec07758a8e3436ced27b",
-          "reviewReason": "Confirmed runtime-mismatch from competing HTML and TS siblings; extended the generic interface source role, with positive sibling and explicit-template guards. Frozen targets and thresholds remain unchanged; full SQL context evaluation and Node/.NET parity passed."
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
-          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
+          "sha256": "253ed1cb3b448a5932f0e0ce24455a78bf85dae834a472310fc2858a35a749e5",
+          "reviewReason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement."
         }
       ],
-      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
+      "reason": "Reviewed the shared ranking policy against graph, query, security navigation and the historical evaluation snapshot. Notification-feed affinity now requires the GetNotifications handler identity so the new read-status handler cannot receive its bonus; the canonical shared MailRelay transport prefix preserves integration-owner discovery. Candidate budgets, frozen cases, thresholds, SQL reader semantics and security abstention are unchanged. Full SQL evaluation passed 22 corpora plus four .NET parity corpora (302 cases); the original probe improved from 28/30 to 29/30 top-1. The stale historical benchmark remains point-in-time evidence, not a new measurement.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:13.5797064Z"
+      "gitHead": "ef158655032224870223606111cabb3c61464370",
+      "reviewedAtUtc": "2026-10-31T17:56:53.3371997Z"
     },
     {
       "pageId": "workflow.review-diff",

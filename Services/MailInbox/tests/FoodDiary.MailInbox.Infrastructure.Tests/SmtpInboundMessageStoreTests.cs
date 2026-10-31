@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Text;
 using System.Diagnostics.Metrics;
@@ -24,7 +25,7 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 public sealed class SmtpInboundMessageStoreTests {
     [Fact]
     public async Task SaveAsync_RecordsBoundedTelemetryWithoutMessageMetadata() {
-        var measurements = new List<(string Instrument, string Outcome)>();
+        var measurements = new ConcurrentQueue<(string Instrument, string Outcome)>();
         using var listener = new MeterListener {
             InstrumentPublished = (instrument, meterListener) => {
                 if (string.Equals(instrument.Meter.Name, MailInboxTelemetry.MeterName, StringComparison.Ordinal)) {
@@ -33,9 +34,9 @@ public sealed class SmtpInboundMessageStoreTests {
             },
         };
         listener.SetMeasurementEventCallback<long>((instrument, _, tags, _) =>
-            measurements.Add((instrument.Name, GetOutcome(tags))));
+            measurements.Enqueue((instrument.Name, GetOutcome(tags))));
         listener.SetMeasurementEventCallback<double>((instrument, _, tags, _) =>
-            measurements.Add((instrument.Name, GetOutcome(tags))));
+            measurements.Enqueue((instrument.Name, GetOutcome(tags))));
         listener.Start();
         IOptions<MailInboxSmtpOptions> options =
             MsOptions.Create(new MailInboxSmtpOptions {

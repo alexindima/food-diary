@@ -12,7 +12,10 @@ export const platformBrowserChecks = new Set([
 
 async function focusStyles(element, blur = false) {
     return element.evaluate(async (node, blur) => {
-        const owner = node.closest('.fd-ui-input__control-wrap, .fd-ui-select__control-wrap') ?? node;
+        const owner =
+            node.closest(
+                '.fd-ui-input__control-wrap, .fd-ui-select__control-wrap, .fd-ui-textarea__control-wrap, .fd-ui-date-input__control-wrap, .fd-ui-time-input__control-wrap, .fd-ui-datetime-input__control-wrap',
+            ) ?? node;
         if (blur) node.blur();
         await Promise.allSettled(
             owner

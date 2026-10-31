@@ -2,6 +2,7 @@ using FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage
 using FluentValidation;
 using FluentValidation.Results;
 using System.Diagnostics.Metrics;
+using System.Collections.Concurrent;
 using System.Globalization;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
@@ -558,7 +559,7 @@ public sealed class MailInboxApplicationTests {
     }
 
     private static IReadOnlyList<string> CaptureOutcomes(Action record) {
-        var outcomes = new List<string>();
+        var outcomes = new ConcurrentQueue<string>();
         using var listener = new MeterListener {
             InstrumentPublished = (instrument, meterListener) => {
                 if (string.Equals(instrument.Meter.Name, MailInboxTelemetry.MeterName, StringComparison.Ordinal)) {
@@ -566,12 +567,12 @@ public sealed class MailInboxApplicationTests {
                 }
             },
         };
-        listener.SetMeasurementEventCallback<long>((_, _, tags, _) => outcomes.Add(GetOutcome(tags)));
-        listener.SetMeasurementEventCallback<double>((_, _, tags, _) => outcomes.Add(GetOutcome(tags)));
+        listener.SetMeasurementEventCallback<long>((_, _, tags, _) => outcomes.Enqueue(GetOutcome(tags)));
+        listener.SetMeasurementEventCallback<double>((_, _, tags, _) => outcomes.Enqueue(GetOutcome(tags)));
         listener.Start();
 
         record();
-        return outcomes;
+        return outcomes.ToArray();
     }
 
     private static string GetOutcome(ReadOnlySpan<KeyValuePair<string, object?>> tags) {

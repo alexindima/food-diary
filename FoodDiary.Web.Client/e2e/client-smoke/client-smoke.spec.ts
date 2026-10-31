@@ -1435,10 +1435,10 @@ for (const scenario of [
                 expect(new URL(request.url()).searchParams.get('dateFrom')).toBe(start);
                 expect(new URL(request.url()).searchParams.get('dateTo')).toBe(end);
                 await expect(page).toHaveURL(`/meals?dateFrom=${day}&dateTo=${day}`);
-                await expect(page.locator('.meal-list__active-filter-chip')).toHaveCount(2);
+                await expect(page.locator('fd-active-filters .active-filters__chip')).toHaveCount(2);
                 await expect(page.locator('fd-meal-list-content fd-meal-card')).toHaveCount(2);
                 await page.reload();
-                await expect(page.locator('.meal-list__active-filter-chip')).toHaveCount(2);
+                await expect(page.locator('fd-active-filters .active-filters__chip')).toHaveCount(2);
                 await expect(page.locator('fd-meal-list-content fd-meal-card')).toHaveCount(2);
                 await page.goBack();
                 await expect(page).toHaveURL(dashboardPath);
