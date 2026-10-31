@@ -13,19 +13,17 @@ public sealed class ImageAssetRepository(DbSet<ImageAsset> assets, IImageAssetUs
     }
 
     public async Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
-        return await assets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken).ConfigureAwait(false);
+        return await assets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
 
     public async Task<ImageAsset?> GetOwnedByIdAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) {
         return await assets.AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken);
     }
 
     public async Task<ImageAsset?> GetOwnedForUpdateAsync(ImageAssetId id, UserId userId, CancellationToken cancellationToken = default) {
         return await assets
-            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId, cancellationToken);
     }
 
     public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {

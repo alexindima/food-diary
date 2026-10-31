@@ -20,13 +20,13 @@ public sealed class MarkAllNotificationsReadCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        await notificationWriteRepository.MarkAllReadAsync(userId, cancellationToken).ConfigureAwait(false);
+        await notificationWriteRepository.MarkAllReadAsync(userId, cancellationToken);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,

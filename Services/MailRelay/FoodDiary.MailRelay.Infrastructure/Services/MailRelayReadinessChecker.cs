@@ -4,11 +4,11 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 
 public sealed class MailRelayReadinessChecker(NpgsqlDataSource dataSource) : IMailRelayReadinessChecker {
     public async Task CheckReadyAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand("select 1", connection);
-            await using (command.ConfigureAwait(false)) {
-                await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            await using (command) {
+                await command.ExecuteScalarAsync(cancellationToken);
             }
         }
     }

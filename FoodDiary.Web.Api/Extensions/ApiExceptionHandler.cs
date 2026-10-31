@@ -24,7 +24,7 @@ public sealed class ApiExceptionHandler(
                         "The request payload is too large.",
                         httpContext.TraceIdentifier);
 
-                    await httpContext.Response.WriteAsJsonAsync(payloadTooLargeResponse, cancellationToken).ConfigureAwait(false);
+                    await httpContext.Response.WriteAsJsonAsync(payloadTooLargeResponse, cancellationToken);
                     return true;
                 }
             case CurrentUserUnavailableException: {
@@ -35,7 +35,7 @@ public sealed class ApiExceptionHandler(
                         "Authentication is required.",
                         httpContext.TraceIdentifier);
 
-                    await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken).ConfigureAwait(false);
+                    await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken);
                     return true;
                 }
             case DbUpdateConcurrencyException: {
@@ -50,7 +50,7 @@ public sealed class ApiExceptionHandler(
                         "The resource was modified by another request. Please retry.",
                         httpContext.TraceIdentifier);
 
-                    await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
+                    await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken);
                     return true;
                 }
         }
@@ -67,7 +67,7 @@ public sealed class ApiExceptionHandler(
             "An unexpected error occurred.",
             httpContext.TraceIdentifier);
 
-        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken).ConfigureAwait(false);
+        await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
         return true;
     }
 

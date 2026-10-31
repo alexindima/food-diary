@@ -52,14 +52,14 @@ public sealed class PaddleNotificationRecoveryService(
                 using HttpResponseMessage response = await httpClient.SendAsync(
                     listRequest,
                     HttpCompletionOption.ResponseHeadersRead,
-                    deadline.Token).ConfigureAwait(false);
+                    deadline.Token);
                 response.EnsureSuccessStatusCode();
                 ListNotificationsResponse payload = await BoundedHttpContentReader.ReadFromJsonAsync<ListNotificationsResponse>(
                     response.Content,
                     JsonOptions,
                     BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                     BoundedHttpContentReader.DefaultReadTimeout,
-                    deadline.Token).ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
+                    deadline.Token) ?? throw new JsonException("Paddle notifications response was empty.");
 
                 IReadOnlyList<NotificationResponse> notifications = payload.Data
                     ?? throw new JsonException("Paddle notifications response data was missing.");
@@ -76,7 +76,7 @@ public sealed class PaddleNotificationRecoveryService(
                     using HttpResponseMessage replayResponse = await httpClient.SendAsync(
                         replayRequest,
                         HttpCompletionOption.ResponseHeadersRead,
-                        deadline.Token).ConfigureAwait(false);
+                        deadline.Token);
                     replayResponse.EnsureSuccessStatusCode();
                     replayed++;
                     if (replayed == _maximumReplaysPerRun) {

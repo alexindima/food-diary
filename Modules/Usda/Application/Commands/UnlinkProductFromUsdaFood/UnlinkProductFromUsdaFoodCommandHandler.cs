@@ -17,14 +17,14 @@ public sealed class UnlinkProductFromUsdaFoodCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var productId = (ProductId)command.ProductId;
         Result unlinked = await productLinkService.UnlinkAsync(
-            productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
+            productId, userIdResult.Value, cancellationToken);
 
         if (unlinked.IsFailure) {
             return unlinked;

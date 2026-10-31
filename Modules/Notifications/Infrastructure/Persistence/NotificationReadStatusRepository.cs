@@ -14,5 +14,5 @@ internal sealed class NotificationReadStatusRepository(DbSet<Notification> notif
         await notifications.AsNoTracking()
             .Where(notification => notification.UserId == userId && notification.IsRead && notificationIds.Contains(notification.Id))
             .Select(notification => notification.Id.Value)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 }

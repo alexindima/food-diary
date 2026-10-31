@@ -46,8 +46,7 @@ public sealed class UpdateAdminUserCommandHandler(
                     command.AiInputTokenLimit,
                     command.AiOutputTokenLimit,
                     actorUserIdResult.Value,
-                    dateTimeProvider.GetUtcNow().UtcDateTime)), cancellationToken)
-            .ConfigureAwait(false);
+                    dateTimeProvider.GetUtcNow().UtcDateTime)), cancellationToken);
         if (updateResult.IsFailure) {
             return Result.Failure<AdminUserModel>(updateResult.Error);
         }

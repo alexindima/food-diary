@@ -47,8 +47,7 @@ public sealed class ImportAdminLessonsCommandHandler(ISender lessonAdministratio
                 item.SortOrder, item.IsPublished));
         }
 
-        Result<IReadOnlyList<LessonAdminReadModel>> importResult = await lessonAdministrationService.Send(new ImportLessonsCommand(Items: lessons), cancellationToken)
-            .ConfigureAwait(false);
+        Result<IReadOnlyList<LessonAdminReadModel>> importResult = await lessonAdministrationService.Send(new ImportLessonsCommand(Items: lessons), cancellationToken);
         if (importResult.IsFailure) {
             return Result.Failure<AdminLessonsImportModel>(importResult.Error);
         }

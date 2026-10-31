@@ -14,7 +14,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
     public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
-        Result<EmailTemplateReadModel> templateResult = await administrationService.Send(new UpsertEmailTemplateCommand(Key: command.Key, Locale: command.Locale, Subject: command.Subject, HtmlBody: command.HtmlBody, TextBody: command.TextBody, IsActive: command.IsActive), cancellationToken).ConfigureAwait(false);
+        Result<EmailTemplateReadModel> templateResult = await administrationService.Send(new UpsertEmailTemplateCommand(Key: command.Key, Locale: command.Locale, Subject: command.Subject, HtmlBody: command.HtmlBody, TextBody: command.TextBody, IsActive: command.IsActive), cancellationToken);
 
         return templateResult.IsSuccess
             ? Result.Success(templateResult.Value.ToAdminModel())

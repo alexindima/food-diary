@@ -17,7 +17,7 @@ public sealed class LoginCommandHandler(
     IAuthenticationTokenService authenticationTokenService,
     IPasswordLoginThrottle passwordLoginThrottle) : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
-        PasswordLoginAttempt attempt = await passwordLoginThrottle.TryBeginAsync(command.Email, cancellationToken).ConfigureAwait(false);
+        PasswordLoginAttempt attempt = await passwordLoginThrottle.TryBeginAsync(command.Email, cancellationToken);
         if (!attempt.IsAcquired) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.PasswordLoginThrottled(attempt.RetryAfterSeconds));
         }
@@ -29,8 +29,7 @@ public sealed class LoginCommandHandler(
                     command.Email,
                     command.Password,
                     dateTimeProvider.GetUtcNow().UtcDateTime,
-                    cancellationToken)
-                .ConfigureAwait(false);
+                    cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             PasswordLoginAttemptOutcome outcome = PasswordLoginAttemptOutcome.Abandoned;
             if (authenticationResult.IsSuccess) {
@@ -38,7 +37,7 @@ public sealed class LoginCommandHandler(
             } else if (string.Equals(authenticationResult.Error.Code, AuthenticationErrors.InvalidCredentials.Code, StringComparison.Ordinal)) {
                 outcome = PasswordLoginAttemptOutcome.InvalidCredentials;
             }
-            bool owned = await passwordLoginThrottle.CompleteAsync(attempt, outcome, cancellationToken).ConfigureAwait(false);
+            bool owned = await passwordLoginThrottle.CompleteAsync(attempt, outcome, cancellationToken);
             completed = true;
             if (!owned) {
                 return Result.Failure<AuthenticationModel>(IdentityErrors.PasswordLoginThrottled(1));
@@ -49,14 +48,12 @@ public sealed class LoginCommandHandler(
 
             UserAuthenticationPrincipalModel principal = authenticationResult.Value;
             IssuedAuthenticationTokens tokens = await authenticationTokenService
-                .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
-                .ConfigureAwait(false);
+                .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);
             return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
         } finally {
             if (!completed) {
                 using var cleanupCancellation = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                await passwordLoginThrottle.CompleteAsync(attempt, PasswordLoginAttemptOutcome.Abandoned, cleanupCancellation.Token)
-                    .ConfigureAwait(false);
+                await passwordLoginThrottle.CompleteAsync(attempt, PasswordLoginAttemptOutcome.Abandoned, cleanupCancellation.Token);
             }
         }
     }

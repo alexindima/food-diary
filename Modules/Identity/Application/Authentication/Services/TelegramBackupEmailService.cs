@@ -29,36 +29,36 @@ public sealed class TelegramBackupEmailService(ITelegramAuthValidator validator,
         if (proof.Value.AuthDateUtc.Kind != DateTimeKind.Utc || proof.Value.AuthDateUtc > now || proof.Value.AuthDateUtc <= now.AddMinutes(-5)) {
             return InvalidProof();
         }
-        Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(proof.Value.UserId, now, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(proof.Value.UserId, now, cancellationToken);
         if (principal.IsFailure) {
             return Result.Failure(principal.Error);
         }
         if (principal.Value.UserId.Value != userId || principal.Value.Email is not null) {
             return InvalidProof();
         }
-        if (!await replay.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken).ConfigureAwait(false)) {
+        if (!await replay.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken)) {
             return InvalidProof();
         }
-        return await SendAsync(principal.Value, address.Address, cancellationToken).ConfigureAwait(false);
+        return await SendAsync(principal.Value, address.Address, cancellationToken);
     }
 
     public async Task<Result> RequestOidcAsync(Guid userId, string email, long telegramUserId, long securityVersion, CancellationToken cancellationToken) {
         Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(
-            telegramUserId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            telegramUserId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (principal.IsFailure || principal.Value.UserId.Value != userId || principal.Value.Email is not null ||
             principal.Value.SecurityVersion != securityVersion) {
             return InvalidProof();
         }
-        return await SendAsync(principal.Value, email, cancellationToken).ConfigureAwait(false);
+        return await SendAsync(principal.Value, email, cancellationToken);
     }
 
     private async Task<Result> SendAsync(UserAuthenticationPrincipalModel principal, string email, CancellationToken cancellationToken) {
         Guid userId = principal.UserId.Value;
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         string payload = JsonSerializer.Serialize(new EmailProof(userId, email.Trim().ToLowerInvariant(), principal.SecurityVersion));
-        string ticket = await tickets.CreateAsync(Purpose, userId.ToString("D"), payload, now.AddMinutes(15), cancellationToken).ConfigureAwait(false);
+        string ticket = await tickets.CreateAsync(Purpose, userId.ToString("D"), payload, now.AddMinutes(15), cancellationToken);
         await emailSender.SendEmailVerificationAsync(new EmailVerificationMessage(email, userId.ToString("D"),
-            TokenPrefix + ticket, principal.User.Language), cancellationToken).ConfigureAwait(false);
+            TokenPrefix + ticket, principal.User.Language), cancellationToken);
         return Result.Success();
     }
 
@@ -66,7 +66,7 @@ public sealed class TelegramBackupEmailService(ITelegramAuthValidator validator,
         if (userId == Guid.Empty || !token.StartsWith(TokenPrefix, StringComparison.Ordinal)) {
             return InvalidProof();
         }
-        string? payload = await tickets.ConsumeAsync(token[TokenPrefix.Length..], Purpose, userId.ToString("D"), cancellationToken).ConfigureAwait(false);
+        string? payload = await tickets.ConsumeAsync(token[TokenPrefix.Length..], Purpose, userId.ToString("D"), cancellationToken);
         if (payload is null) {
             return InvalidProof();
         }
@@ -79,7 +79,7 @@ public sealed class TelegramBackupEmailService(ITelegramAuthValidator validator,
         if (proof is null || proof.UserId != userId || string.IsNullOrWhiteSpace(proof.Email)) {
             return InvalidProof();
         }
-        return await accounts.AddVerifiedEmailAsync(new UserId(userId), proof.Email, proof.SecurityVersion, cancellationToken).ConfigureAwait(false);
+        return await accounts.AddVerifiedEmailAsync(new UserId(userId), proof.Email, proof.SecurityVersion, cancellationToken);
     }
 
     private sealed record EmailProof(Guid UserId, string Email, long SecurityVersion);

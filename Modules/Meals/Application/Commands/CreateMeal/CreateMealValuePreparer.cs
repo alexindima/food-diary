@@ -17,7 +17,7 @@ internal static class CreateMealValuePreparer {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<CreateMealValues>(userIdResult);
         }
@@ -28,7 +28,7 @@ internal static class CreateMealValuePreparer {
             nameof(command.ImageAssetId),
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<CreateMealValues>(imageAssetResult.Error);
         }

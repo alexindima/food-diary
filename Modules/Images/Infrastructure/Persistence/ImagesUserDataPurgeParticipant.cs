@@ -14,21 +14,21 @@ internal sealed class ImagesUserDataPurgeParticipant(
     public int Order => 135;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         var deletedImages = await context.ImageAssets
             .Where(asset => asset.UserId == userId)
             .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         foreach (var image in deletedImages.DistinctBy(static image => new { image.ObjectKey, image.IsConfirmed })) {
-            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), image.IsConfirmed, cancellationToken).ConfigureAwait(false);
+            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), image.IsConfirmed, cancellationToken);
             if (!image.IsConfirmed) {
-                await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true, cancellationToken).ConfigureAwait(false);
+                await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(image.ObjectKey), isConfirmed: true, cancellationToken);
             }
         }
 
         await context.ImageAssets
             .Where(asset => asset.UserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

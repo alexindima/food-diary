@@ -21,6 +21,6 @@ public sealed class RecipeUsageQuery(ICompositionReadContext context) : IRecipeU
             .Select(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count +
                 context.MealPlans.AsNoTracking().SelectMany(plan => plan.Days).SelectMany(day => day.Meals)
                     .Count(meal => meal.RecipeId == r.Id))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
 
 }

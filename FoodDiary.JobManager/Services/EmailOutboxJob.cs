@@ -26,7 +26,7 @@ public sealed class EmailOutboxJob(
                 return;
             }
 
-            int processed = await processor.ProcessDueAsync(settings.BatchSize, cancellationToken).ConfigureAwait(false);
+            int processed = await processor.ProcessDueAsync(settings.BatchSize, cancellationToken);
             if (processed > 0) {
                 logger.LogInformation("Processed {ProcessedCount} email outbox messages.", processed);
             }

@@ -16,9 +16,9 @@ public sealed class EfLessonProgressTransactionRunner(IModuleTransactionCoordina
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
         return await coordinator.ExecuteAsync(async (transaction, token) => {
-            await AcquireLockAsync(userId, lessonId, transaction, token).ConfigureAwait(false);
-            return await operation(token).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
+            await AcquireLockAsync(userId, lessonId, transaction, token);
+            return await operation(token);
+        }, cancellationToken);
     }
 
     private static async Task AcquireLockAsync(
@@ -31,12 +31,12 @@ public sealed class EfLessonProgressTransactionRunner(IModuleTransactionCoordina
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             postgresTransaction.Connection,
             postgresTransaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue(
                 "serialization_key",
                 NpgsqlDbType.Text,
                 $"lesson-progress:{userId.Value:N}:{lessonId.Value:N}");
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

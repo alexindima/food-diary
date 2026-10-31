@@ -18,12 +18,12 @@ public sealed class GetFastingInsightsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FastingInsightsModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return Result.Success(await sender.Send(new ReadFastingInsightsQuery(userId), cancellationToken).ConfigureAwait(false));
+        return Result.Success(await sender.Send(new ReadFastingInsightsQuery(userId), cancellationToken));
     }
 }

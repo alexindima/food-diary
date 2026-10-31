@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using Npgsql;
@@ -40,7 +39,7 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
                 case when expires_at_utc > @now then short_summary else null end
             """;
         NpgsqlCommand command = dataSource.CreateCommand(rows + " select count(*) " + predicate + "; " + rows + " " + projection + " " + predicate + " order by received_at_utc desc, id desc limit @limit offset @offset");
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, (object?)filter.FromUtc?.ToUniversalTime() ?? DBNull.Value);
         command.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, (object?)filter.ToUtc?.ToUniversalTime() ?? DBNull.Value);
         command.Parameters.AddWithValue("id", NpgsqlDbType.Uuid, (object?)filter.Id ?? DBNull.Value);
@@ -50,28 +49,28 @@ public sealed class NpgsqlBugReportJournal(NpgsqlDataSource dataSource, IAuditRu
         command.Parameters.AddWithValue("source", filter.Source ?? "");
         command.Parameters.AddWithValue("limit", Math.Clamp(filter.Limit, 1, 100));
         command.Parameters.AddWithValue("offset", (Math.Clamp(filter.Page, 1, 10000) - 1) * Math.Clamp(filter.Limit, 1, 100));
-        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
-        await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using IAsyncDisposable readerScope = reader;
+        await reader.ReadAsync(cancellationToken);
         long total = reader.GetInt64(0);
-        await reader.NextResultAsync(cancellationToken).ConfigureAwait(false);
+        await reader.NextResultAsync(cancellationToken);
         var items = new List<BugReportJournalEntry>();
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-            items.Add(new BugReportJournalEntry(reader.GetGuid(0), await reader.IsDBNullAsync(1, cancellationToken).ConfigureAwait(false) ? null : reader.GetGuid(1),
-                await reader.GetFieldValueAsync<DateTimeOffset>(2, cancellationToken).ConfigureAwait(false), reader.GetString(3), reader.GetString(4), reader.GetInt32(5),
-                await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6),
-                await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(7), reader.GetBoolean(8)) {
+        while (await reader.ReadAsync(cancellationToken)) {
+            items.Add(new BugReportJournalEntry(reader.GetGuid(0), await reader.IsDBNullAsync(1, cancellationToken) ? null : reader.GetGuid(1),
+                await reader.GetFieldValueAsync<DateTimeOffset>(2, cancellationToken), reader.GetString(3), reader.GetString(4), reader.GetInt32(5),
+                await reader.IsDBNullAsync(6, cancellationToken) ? null : reader.GetString(6),
+                await reader.IsDBNullAsync(7, cancellationToken) ? null : reader.GetString(7), reader.GetBoolean(8)) {
                 Source = reader.GetString(9),
-                Title = await reader.IsDBNullAsync(13, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(13),
-                ShortSummary = await reader.IsDBNullAsync(14, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(14),
-                AuditRunId = await reader.IsDBNullAsync(10, cancellationToken).ConfigureAwait(false) ? null : reader.GetGuid(10),
-                AuditFromUtc = await reader.IsDBNullAsync(11, cancellationToken).ConfigureAwait(false) ? null :
-                    await reader.GetFieldValueAsync<DateTimeOffset>(11, cancellationToken).ConfigureAwait(false),
-                AuditToUtc = await reader.IsDBNullAsync(12, cancellationToken).ConfigureAwait(false) ? null :
-                    await reader.GetFieldValueAsync<DateTimeOffset>(12, cancellationToken).ConfigureAwait(false),
+                Title = await reader.IsDBNullAsync(13, cancellationToken) ? null : reader.GetString(13),
+                ShortSummary = await reader.IsDBNullAsync(14, cancellationToken) ? null : reader.GetString(14),
+                AuditRunId = await reader.IsDBNullAsync(10, cancellationToken) ? null : reader.GetGuid(10),
+                AuditFromUtc = await reader.IsDBNullAsync(11, cancellationToken) ? null :
+                    await reader.GetFieldValueAsync<DateTimeOffset>(11, cancellationToken),
+                AuditToUtc = await reader.IsDBNullAsync(12, cancellationToken) ? null :
+                    await reader.GetFieldValueAsync<DateTimeOffset>(12, cancellationToken),
             });
         }
-        await reader.CloseAsync().ConfigureAwait(false);
-        return new BugReportJournalPage(items, total) { LatestAudit = await auditRuns.GetLatestAsync(now, cancellationToken).ConfigureAwait(false) };
+        await reader.CloseAsync();
+        return new BugReportJournalPage(items, total) { LatestAudit = await auditRuns.GetLatestAsync(now, cancellationToken) };
     }
 }

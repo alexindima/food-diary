@@ -14,5 +14,5 @@ public sealed class GetAdminAchievementDefinitionsQueryHandler(ISender service)
         CancellationToken cancellationToken) =>
         Result.Success(await service.Send(new GetAchievementDefinitionsForAdministrationQuery(
             PaginationPolicy.NormalizePage(query.Page),
-            PaginationPolicy.NormalizePageSize(query.Limit)), cancellationToken).ConfigureAwait(false));
+            PaginationPolicy.NormalizePageSize(query.Limit)), cancellationToken));
 }

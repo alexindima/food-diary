@@ -44,7 +44,7 @@ public sealed class DuplicateRecipeCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<RecipeModel>(userIdResult);
         }
@@ -57,15 +57,15 @@ public sealed class DuplicateRecipeCommandHandler(
             userId,
             includePublic: true,
             includeSteps: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (original is null) {
             return Result.Failure<RecipeModel>(RecipeErrors.NotAccessible(command.RecipeId));
         }
 
         Recipe duplicate = CreateDuplicate(userId, original);
-        await recipeWriteRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
-        await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.AddAsync(duplicate, cancellationToken);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeNutritionWriter, cancellationToken);
 
         return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
     }

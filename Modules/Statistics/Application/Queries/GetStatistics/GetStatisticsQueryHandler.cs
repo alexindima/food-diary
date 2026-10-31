@@ -23,7 +23,7 @@ public sealed class GetStatisticsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<AggregatedStatisticsModel>>(userIdResult);
         }
@@ -61,7 +61,7 @@ public sealed class GetStatisticsQueryHandler(
             period.To,
             request.QuantizationDays,
             period.TimeZoneId),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (statisticsResult.IsFailure) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(statisticsResult.Error);

@@ -18,13 +18,13 @@ public sealed class ChangePasswordCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -42,10 +42,9 @@ public sealed class ChangePasswordCommandHandler(
         string hashedPassword = passwordHasher.Hash(command.NewPassword);
         currentUser.UpdatePassword(hashedPassword);
 
-        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken);
         await refreshTokenSessionRepository
-            .RevokeAllAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .RevokeAllAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
 
         return Result.Success();
     }

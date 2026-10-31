@@ -27,7 +27,7 @@ public sealed class DeleteHydrationEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -35,12 +35,12 @@ public sealed class DeleteHydrationEntryCommandHandler(
         UserId userId = userIdResult.Value;
         HydrationEntryId hydrationEntryId = hydrationEntryIdResult.Value;
 
-        HydrationEntry? entry = await repository.GetByIdForUpdateAsync(hydrationEntryId, cancellationToken).ConfigureAwait(false);
+        HydrationEntry? entry = await repository.GetByIdForUpdateAsync(hydrationEntryId, cancellationToken);
         if (entry is null || entry.UserId != userId) {
             return Result.Failure(HydrationEntryErrors.NotAccessible(command.HydrationEntryId));
         }
 
-        await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.DeleteAsync(entry, cancellationToken);
         return Result.Success();
     }
 }

@@ -20,11 +20,11 @@ public sealed class CheckpointTelegramOperationCommandHandler(ITelegramOperation
         if (!TelegramOperationChecks.ValidPayload(checkpoint) || nextAttemptAtUtc.Kind != DateTimeKind.Utc || nextAttemptAtUtc > timeProvider.GetUtcNow().UtcDateTime.AddDays(1)) {
             return Result.Failure(TelegramOperationChecks.Invalid);
         }
-        TelegramOperationLease? lease = await store.GetLeaseAsync(policy.BotId, operationId, leaseId, cancellationToken).ConfigureAwait(false);
-        if (lease is null || !await TelegramOperationChecks.IsCurrentAsync(lease, store, policy, identities, timeProvider, cancellationToken).ConfigureAwait(false)) {
+        TelegramOperationLease? lease = await store.GetLeaseAsync(policy.BotId, operationId, leaseId, cancellationToken);
+        if (lease is null || !await TelegramOperationChecks.IsCurrentAsync(lease, store, policy, identities, timeProvider, cancellationToken)) {
             return Result.Failure(TelegramOperationChecks.Conflict);
         }
         return await store.CheckpointAsync(policy.BotId, operationId, leaseId, checkpoint, completed, nextAttemptAtUtc,
-            cancellationToken).ConfigureAwait(false) ? Result.Success() : Result.Failure(TelegramOperationChecks.Conflict);
+            cancellationToken) ? Result.Success() : Result.Failure(TelegramOperationChecks.Conflict);
     }
 }

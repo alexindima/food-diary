@@ -40,14 +40,13 @@ public sealed class CreateAdminUserCommandHandler(
                     command.IsEmailConfirmed,
                     command.RequirePasswordChange,
                     actorIdResult.Value,
-                    timeProvider.GetUtcNow().UtcDateTime)), cancellationToken)
-            .ConfigureAwait(false);
+                    timeProvider.GetUtcNow().UtcDateTime)), cancellationToken);
         if (creationResult.IsFailure) {
             return Result.Failure<AdminUserCreationModel>(creationResult.Error);
         }
 
         UserAdminReadModel user = creationResult.Value;
-        await SendCredentialsAsync(command, user, temporaryPassword, cancellationToken).ConfigureAwait(false);
+        await SendCredentialsAsync(command, user, temporaryPassword, cancellationToken);
 
         auditLogger.Log(
             "admin.user.created",

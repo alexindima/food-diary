@@ -9,7 +9,7 @@ internal sealed class AdminUserDataPurgeParticipant(AdminDbContext context, IMod
     public int Order => 30;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.AdminImpersonationSessions.Where(item => item.ActorUserId == userId || item.TargetUserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.AdminImpersonationSessions.Where(item => item.ActorUserId == userId || item.TargetUserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

@@ -11,7 +11,7 @@ internal sealed class DashboardStatisticsReadService(IMealNutritionStatisticsRea
     public async Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
         UserId userId, DateTime dateFrom, DateTime dateTo, int quantizationDays, CancellationToken cancellationToken = default,
         TimeZoneInfo? timeZone = null) {
-        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await meals.GetStatisticsAsync(userId, dateFrom, dateTo, quantizationDays, cancellationToken, timeZone).ConfigureAwait(false);
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await meals.GetStatisticsAsync(userId, dateFrom, dateTo, quantizationDays, cancellationToken, timeZone);
         return result.IsFailure
             ? Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(result.Error)
             : Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([.. result.Value.Select(bucket => new DashboardStatisticsBucketReadModel(

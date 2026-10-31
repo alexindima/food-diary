@@ -21,7 +21,7 @@ public sealed class GetLessonsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<LessonPageModel>(userIdResult);
         }
@@ -41,8 +41,7 @@ public sealed class GetLessonsQueryHandler(
                 sort,
                 PaginationPolicy.NormalizePage(query.Page),
                 PaginationPolicy.NormalizePageSize(query.PageSize),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
 
         return Result.Success(model);
     }
@@ -64,20 +63,18 @@ public sealed class GetLessonsQueryHandler(
         CancellationToken cancellationToken) {
         int skip = (page - 1) * pageSize;
         LessonSummaryPageReadModel result = await readModelRepository
-            .GetSummaryPageByLocaleAsync(locale, categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken)
-            .ConfigureAwait(false);
+            .GetSummaryPageByLocaleAsync(locale, categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken);
 
         string effectiveLocale = locale;
         if (result.TotalLessonCount == 0 && !string.Equals(locale, "en", StringComparison.Ordinal)) {
             effectiveLocale = "en";
             result = await readModelRepository
-                .GetSummaryPageByLocaleAsync("en", categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken)
-                .ConfigureAwait(false);
+                .GetSummaryPageByLocaleAsync("en", categoryFilter, difficultyFilter, search, sort, skip, pageSize, cancellationToken);
         }
 
-        IReadOnlyList<Guid> readLessonIds = await readModelRepository.GetReadLessonIdsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Guid> readLessonIds = await readModelRepository.GetReadLessonIdsAsync(userId, cancellationToken);
         var readIds = new HashSet<Guid>(readLessonIds);
-        int readLessonCount = await readModelRepository.CountReadLessonsByLocaleAsync(userId, effectiveLocale, cancellationToken).ConfigureAwait(false);
+        int readLessonCount = await readModelRepository.CountReadLessonsByLocaleAsync(userId, effectiveLocale, cancellationToken);
         int totalPages = result.TotalCount == 0 ? 0 : (int)Math.Ceiling(result.TotalCount / (double)pageSize);
 
         return new LessonPageModel(

@@ -24,7 +24,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DailyMicronutrientSummaryModel>(userIdResult);
         }
@@ -32,7 +32,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
         return await GetDailySummaryAsync(
             userIdResult.Value,
             query.Date,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
     public const int MaximumProductItemsPerDay = 1000;
     public const int MaximumProviderFoodsPerRequest = 20;
@@ -46,7 +46,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             userId,
             date,
             MaximumProductItemsPerDay + 1,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (productItems.Count > MaximumProductItemsPerDay) {
             return Result.Failure<DailyMicronutrientSummaryModel>(
@@ -70,11 +70,9 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             .ToList();
 
         IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientsByFdcId = await usdaFoodRepository
-            .GetNutrientReadModelsByFdcIdsAsync(fdcIds, cancellationToken)
-            .ConfigureAwait(false);
+            .GetNutrientReadModelsByFdcIdsAsync(fdcIds, cancellationToken);
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await usdaFoodRepository
-            .GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            .GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken);
 
         int[] providerFdcIds = [.. fdcIds.Where(fdcId => !nutrientsByFdcId.ContainsKey(fdcId))];
         if (providerFdcIds.Length > MaximumProviderFoodsPerRequest) {
@@ -85,7 +83,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             using var budget = new CancellationTokenSource(ProviderLookupBudget, timeProvider);
             using var lookupCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, budget.Token);
             try {
-                nutrientsByFdcId = await ResolveProviderNutrientsAsync(providerFdcIds, nutrientsByFdcId, lookupCancellation.Token).ConfigureAwait(false);
+                nutrientsByFdcId = await ResolveProviderNutrientsAsync(providerFdcIds, nutrientsByFdcId, lookupCancellation.Token);
                 lookupCancellation.Token.ThrowIfCancellationRequested();
             } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && budget.IsCancellationRequested) {
                 return Result.Failure<DailyMicronutrientSummaryModel>(UsdaErrors.ProviderLookupTimedOut());
@@ -115,7 +113,7 @@ public sealed class GetDailyMicronutrientsQueryHandler(
             if (resolved.ContainsKey(fdcId)) {
                 continue;
             }
-            UsdaFoodDetailModel? detail = await provider.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+            UsdaFoodDetailModel? detail = await provider.GetFoodDetailAsync(fdcId, cancellationToken);
             if (detail is null || detail.FdcId != fdcId) {
                 continue;
             }

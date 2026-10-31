@@ -8,6 +8,7 @@ import { provideTranslateTesting } from '../../../../../../../src/testing/transl
 import { adminCalendarDate, adminId, adminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUserNotificationDialogComponent } from '../dialogs/admin-user-notification-dialog';
 import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent, PagedResponse } from '../models/admin-user.models';
@@ -265,6 +266,24 @@ describe('AdminUserPageComponent', () => {
 });
 
 describe('AdminUserPageComponent actions and navigation', () => {
+    it('opens test notifications for the selected active user', async () => {
+        const { component, dialogs } = await createContextAsync();
+        component['sendNotification'](baseUser);
+        expect(dialogs.open).toHaveBeenCalledWith(AdminUserNotificationDialogComponent, { size: 'sm', data: baseUser });
+    });
+
+    it('disables notifications for inactive and deleted users', async () => {
+        const { component, dialogs } = await createContextAsync();
+        for (const user of [
+            { ...baseUser, isActive: false },
+            { ...baseUser, deletedAt: adminUtcInstant('2026-10-31T12:00:00Z') },
+        ]) {
+            component['user'].set(user);
+            expect(component['canNotify']()).toBe(false);
+            component['sendNotification'](user);
+        }
+        expect(dialogs.open).not.toHaveBeenCalled();
+    });
     it('exposes edit, password and impersonation actions directly on the page', async () => {
         const { component, dialogs, usersFacade } = await createContextAsync();
         dialogs.open.mockReturnValue({ afterClosed: () => of(true) });

@@ -33,19 +33,19 @@ internal sealed class DashboardMealsReadService(ICompositionReadContext context,
         DateTime normalizedTo = NormalizeUtcInstant(dateTo);
         IQueryable<DashboardMealProjection> filteredMeals = CreateFilteredMealsQuery(userId, normalizedFrom, normalizedTo);
 
-        int totalItems = await filteredMeals.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await filteredMeals.CountAsync(cancellationToken);
         List<DashboardMealProjection> meals = await filteredMeals
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         if (meals.Count == 0) {
             return Result.Success(new DashboardMealsReadModel([], pageNumber, pageSize, 0, totalItems));
         }
 
         MealId[] mealIds = [.. meals.Select(meal => meal.MealId)];
-        ILookup<MealId, DashboardMealItemReadModel> itemsByMealId = await _mealItemsLoader.LoadAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
-        ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId = await _aiSessionsLoader.LoadAsync(mealIds, cancellationToken).ConfigureAwait(false);
+        ILookup<MealId, DashboardMealItemReadModel> itemsByMealId = await _mealItemsLoader.LoadAsync(userId, mealIds, cancellationToken);
+        ILookup<MealId, DashboardMealAiSessionReadModel> aiSessionsByMealId = await _aiSessionsLoader.LoadAsync(mealIds, cancellationToken);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         return Result.Success(new DashboardMealsReadModel(

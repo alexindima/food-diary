@@ -16,16 +16,14 @@ public sealed class TelegramBotAuthCommandHandler(
             .AuthenticateTelegramAsync(
                 command.TelegramUserId,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (authenticationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
 
         UserAuthenticationPrincipalModel principal = authenticationResult.Value;
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

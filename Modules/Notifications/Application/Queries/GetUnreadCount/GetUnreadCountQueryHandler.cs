@@ -17,30 +17,28 @@ public sealed class GetUnreadCountQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             notificationUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<int>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken);
         if (contextResult.IsFailure) {
             return Result.Failure<int>(contextResult.Error);
         }
 
-        int count = await GetVisibleUnreadCountAsync(userId, contextResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+        int count = await GetVisibleUnreadCountAsync(userId, contextResult.Value, cancellationToken);
         return Result.Success(count);
     }
     private async Task<int> GetVisibleUnreadCountAsync(
         UserId userId,
         NotificationUserContext context,
         CancellationToken cancellationToken) {
-        int count = await notificationReadModelRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int count = await notificationReadModelRepository.GetUnreadCountAsync(userId, cancellationToken);
         if (context.HasPassword) {
             count -= await notificationReadModelRepository
-                .GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken)
-                .ConfigureAwait(false);
+                .GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken);
         }
 
         return count;

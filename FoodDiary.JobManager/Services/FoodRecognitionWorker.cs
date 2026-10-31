@@ -9,7 +9,7 @@ public sealed class FoodRecognitionWorker(IServiceScopeFactory scopes, ILogger<F
             try {
                 using IServiceScope scope = scopes.CreateScope();
                 bool processed = await scope.ServiceProvider.GetRequiredService<ISender>()
-                    .Send(new ProcessNextFoodRecognitionCommand(), stoppingToken).ConfigureAwait(false);
+                    .Send(new ProcessNextFoodRecognitionCommand(), stoppingToken);
                 if (processed) {
                     continue;
                 }
@@ -18,7 +18,7 @@ public sealed class FoodRecognitionWorker(IServiceScopeFactory scopes, ILogger<F
             } catch (Exception ex) {
                 logger.LogError(ex, "Food recognition worker failed. Claimed tasks are not redispatched after an uncertain provider outcome.");
             }
-            await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
         }
     }
 }

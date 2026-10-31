@@ -71,13 +71,13 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("lockTimeoutSeconds", _queueOptions.LockTimeoutSeconds);
             },
             async (reader, token) => {
-                await RequireReturnedRowAsync(reader, token, "Inbox claim did not return a row.").ConfigureAwait(false);
+                await RequireReturnedRowAsync(reader, token, "Inbox claim did not return a row.");
                 Guid inboxId = reader.GetGuid(0);
                 bool claimed = reader.GetBoolean(1);
                 MailRelayTelemetry.RecordInboxEvent(claimed ? "claimed" : "duplicate");
                 return new MailRelayInboxClaimResult(claimed, inboxId);
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) {
@@ -91,7 +91,7 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id, cancellationToken).ConfigureAwait(false);
+        await ExecuteStatusCommandAsync(sql, id, cancellationToken);
         MailRelayTelemetry.RecordInboxEvent("processed");
     }
 
@@ -105,13 +105,13 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await command.ExecuteNonQueryAsync(cancellationToken);
                 MailRelayTelemetry.RecordInboxEvent("failed");
             }
         }

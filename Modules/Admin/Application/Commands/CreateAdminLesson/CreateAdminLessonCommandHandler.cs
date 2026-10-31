@@ -25,7 +25,7 @@ public sealed class CreateAdminLessonCommandHandler(ISender lessonAdministration
             return Result.Failure<AdminLessonModel>(difficultyResult.Error);
         }
 
-        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new CreateLessonCommand(Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken).ConfigureAwait(false);
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new CreateLessonCommand(Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken);
 
         return lessonResult.IsSuccess
             ? Result.Success(lessonResult.Value.ToAdminModel())

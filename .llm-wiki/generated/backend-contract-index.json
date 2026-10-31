@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1373,
+    "contracts": 1374,
     "ambiguousContracts": 29,
-    "consumerEdges": 11025,
-    "productionConsumerEdges": 6142,
-    "testConsumerEdges": 4883,
-    "consumedContracts": 1373,
+    "consumerEdges": 11045,
+    "productionConsumerEdges": 6153,
+    "testConsumerEdges": 4892,
+    "consumedContracts": 1374,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -20491,6 +20491,23 @@
       ],
       "definitionPaths": [
         "Modules/MealPlanning/Presentation/MealPlans/Requests/SaveCatalogMealPlanHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -62355,6 +62372,19 @@
         "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditLogger",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -62488,6 +62518,19 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAuditLogger",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAuditLogger",
@@ -67269,6 +67312,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -69610,6 +69666,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98262,6 +98331,19 @@
         "Modules/Notifications/Application.Abstractions/Common/INotificationTestScheduler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTestScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationTestScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -98291,6 +98373,19 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTestScheduler",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationTestScheduler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "INotificationTextRenderer",
@@ -115370,6 +115465,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -120011,6 +120119,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -121899,6 +122020,19 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/TestNotificationDeliveryDispatcherTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -131360,6 +131494,19 @@
         "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserNotificationProfileService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -131491,6 +131638,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/NotificationWriterDeliveryEligibilityTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserNotificationProfileService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -154856,6 +155016,84 @@
       "referenceCount": 1
     },
     {
+      "contract": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "ScheduleAdminTestNotificationCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ScheduledNotificationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Responses/ScheduledNotificationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "ScheduledNotificationHttpResponse",
       "roles": [
         "Response"
@@ -154880,6 +155118,19 @@
       "consumerPath": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ScheduledNotificationHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Responses/ScheduledNotificationHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ScheduledNotificationHttpResponse",
@@ -155007,6 +155258,19 @@
         "Modules/Notifications/Presentation/Requests/ScheduleTestNotificationHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ScheduleTestNotificationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/ScheduleTestNotificationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Presentation/Controllers/NotificationsController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -155022,6 +155286,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ScheduleTestNotificationHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Presentation/Requests/ScheduleTestNotificationHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {

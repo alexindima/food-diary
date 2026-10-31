@@ -18,8 +18,7 @@ public sealed class GetAdminBillingRevenueSummaryQueryHandler(IAdminBillingQuery
         }
 
         AdminBillingRevenueSummaryReadModel summary = await billingRepository
-            .GetRevenueSummaryAsync(normalizedFrom, normalizedTo, cancellationToken)
-            .ConfigureAwait(false);
+            .GetRevenueSummaryAsync(normalizedFrom, normalizedTo, cancellationToken);
         return Result.Success(summary);
     }
 }

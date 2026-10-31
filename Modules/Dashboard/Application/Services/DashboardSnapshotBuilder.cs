@@ -52,26 +52,26 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         : _snapshotExecutor.ExecuteAsync(SnapshotBudget, token => BuildSnapshotAsync(request, token), cancellationToken);
 
     private async Task<Result<DashboardSnapshotModel>> BuildSnapshotAsync(DashboardSnapshotRequest request, CancellationToken cancellationToken) {
-        Result<DashboardBuildContext> contextResult = await _dataLoader.CreateBuildContextAsync(request, cancellationToken).ConfigureAwait(false);
+        Result<DashboardBuildContext> contextResult = await _dataLoader.CreateBuildContextAsync(request, cancellationToken);
         if (contextResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(contextResult.Error);
         }
 
         DashboardBuildContext context = contextResult.Value;
-        Result<DashboardReadModel> readResult = await _dataLoader.LoadDashboardDataAsync(context, cancellationToken).ConfigureAwait(false);
+        Result<DashboardReadModel> readResult = await _dataLoader.LoadDashboardDataAsync(context, cancellationToken);
         if (readResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(readResult.Error);
         }
 
         DashboardReadModel readModel = readResult.Value;
-        Result<DailyAdviceModel>? adviceResult = await _dataLoader.LoadAdviceAsync(context, cancellationToken).ConfigureAwait(false);
-        FastingSessionModel? fastingSession = await _dataLoader.LoadFastingAsync(context, cancellationToken).ConfigureAwait(false);
+        Result<DailyAdviceModel>? adviceResult = await _dataLoader.LoadAdviceAsync(context, cancellationToken);
+        FastingSessionModel? fastingSession = await _dataLoader.LoadFastingAsync(context, cancellationToken);
         DashboardLayoutModel? layout = context.Sections.IncludeLayout
             ? ParseDashboardLayout(context.CurrentUser.DashboardLayoutJson, context.UserId)
             : null;
-        double caloriesBurned = await _dataLoader.LoadCaloriesBurnedAsync(context, cancellationToken).ConfigureAwait(false);
-        Result<TdeeInsightModel>? tdeeInsightResult = await _dataLoader.LoadTdeeAsync(request, context, cancellationToken).ConfigureAwait(false);
-        Result<CycleModel?>? currentCycleResult = await _dataLoader.LoadCycleAsync(request, context, cancellationToken).ConfigureAwait(false);
+        double caloriesBurned = await _dataLoader.LoadCaloriesBurnedAsync(context, cancellationToken);
+        Result<TdeeInsightModel>? tdeeInsightResult = await _dataLoader.LoadTdeeAsync(request, context, cancellationToken);
+        Result<CycleModel?>? currentCycleResult = await _dataLoader.LoadCycleAsync(request, context, cancellationToken);
         UserDailyGoals[] dailyGoals = GetDailyGoals(context);
 
         return Result.Success(new DashboardSnapshotModel(

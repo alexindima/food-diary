@@ -16,7 +16,7 @@ public sealed class CreateHydrationFromOperationCommandHandler(
     ICurrentUserAccessService currentUserAccessService,
     IHydrationOperationTransactionRunner transactionRunner) : ICommandHandler<CreateHydrationFromOperationCommand, Result<HydrationOperationModel>> {
     public async Task<Result<HydrationOperationModel>> Handle(CreateHydrationFromOperationCommand command, CancellationToken cancellationToken) {
-        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (owner.IsFailure) {
             return Result.Failure<HydrationOperationModel>(owner.Error);
         }
@@ -28,11 +28,11 @@ public sealed class CreateHydrationFromOperationCommandHandler(
             return Result.Failure<HydrationOperationModel>(new Error("Hydration.InvalidOperation", "Operation ID and UTC timestamp are required.", ErrorKind.Validation));
         }
         return await transactionRunner.ExecuteSerializedAsync(owner.Value, command.OperationId,
-            token => CreateAsync(command, owner.Value, token), cancellationToken).ConfigureAwait(false);
+            token => CreateAsync(command, owner.Value, token), cancellationToken);
     }
 
     private async Task<Result<HydrationOperationModel>> CreateAsync(CreateHydrationFromOperationCommand command, UserId userId, CancellationToken cancellationToken) {
-        HydrationOperationReceipt? existing = await receipts.FindAsync(userId, command.OperationId, cancellationToken).ConfigureAwait(false);
+        HydrationOperationReceipt? existing = await receipts.FindAsync(userId, command.OperationId, cancellationToken);
         if (existing is not null) {
             return existing.OperationId == command.OperationId && existing.Matches(userId, command.AmountMl, command.TimestampUtc)
                 ? Result.Success(ToModel(existing))
@@ -42,8 +42,8 @@ public sealed class CreateHydrationFromOperationCommandHandler(
         var entry = HydrationEntry.CreateWithAmount(userId, timestamp, HydrationAmount.FromMilliliters(command.AmountMl));
         var receipt = HydrationOperationReceipt.Create(command.OperationId, entry);
         // The serialized transaction saves the entry and permanent receipt together.
-        await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
-        await receipts.AddAsync(receipt, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(entry, cancellationToken);
+        await receipts.AddAsync(receipt, cancellationToken);
         return Result.Success(ToModel(receipt));
     }
 

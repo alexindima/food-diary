@@ -27,7 +27,7 @@ public sealed class LogoutCommandHandler(
             sessionId,
             userId,
             timeProvider.GetUtcNow().UtcDateTime,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 }

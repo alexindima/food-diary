@@ -30,13 +30,13 @@ public sealed class MealNutritionService(
             .Distinct()
             .ToList();
 
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
         if (products.Count != productIds.Count) {
             ProductId missingProduct = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(ProductErrors.NotAccessible(missingProduct.Value));
         }
 
-        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken);
         if (recipes.Count != recipeIds.Count) {
             RecipeId missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(RecipeErrors.NotAccessible(missingRecipe.Value));

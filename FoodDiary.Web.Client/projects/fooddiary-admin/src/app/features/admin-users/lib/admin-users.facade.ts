@@ -3,6 +3,7 @@ import type { Observable } from 'rxjs';
 
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUsersService } from '../api/admin-users.service';
+import type { AdminTestNotification } from '../models/admin-test-notification';
 import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
@@ -40,6 +41,10 @@ export class AdminUsersFacade {
 
     public setPassword(userId: AdminId<'user'>, payload: AdminUserSetPassword): Observable<void> {
         return this.usersService.setPassword(userId, payload);
+    }
+
+    public scheduleTestNotification(userId: AdminId<'user'>, payload: AdminTestNotification): Observable<void> {
+        return this.usersService.scheduleTestNotification(userId, payload);
     }
 
     public getUser(userId: AdminId<'user'>): Observable<AdminUser> {

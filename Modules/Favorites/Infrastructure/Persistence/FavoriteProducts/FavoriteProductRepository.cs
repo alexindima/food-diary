@@ -23,33 +23,33 @@ public sealed class FavoriteProductRepository(DbSet<FavoriteProduct> favorites, 
 
     public async Task<FavoriteProduct?> GetByIdAsync(FavoriteProductId id, UserId userId,
         bool asTracking = false, CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, favoriteId: id, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, favoriteId: id, cancellationToken: cancellationToken);
         if (ids.Count == 0) { return null; }
-        return await GetOwnedByIdAsync(id, userId, asTracking, cancellationToken).ConfigureAwait(false);
+        return await GetOwnedByIdAsync(id, userId, asTracking, cancellationToken);
     }
 
     public async Task<FavoriteProduct?> GetOwnedByIdAsync(FavoriteProductId id, UserId userId,
         bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<FavoriteProduct> query = asTracking ? favorites.AsTracking() : favorites.AsNoTracking();
-        return await query.FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(f => f.Id == id && f.UserId == userId, cancellationToken);
     }
 
     public async Task<FavoriteProduct?> GetByProductIdAsync(ProductId productId, UserId userId,
         CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: [productId], cancellationToken: cancellationToken).ConfigureAwait(false);
-        return await favorites.AsNoTracking().FirstOrDefaultAsync(f => f.UserId == userId && ids.Contains(f.Id), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: [productId], cancellationToken: cancellationToken);
+        return await favorites.AsNoTracking().FirstOrDefaultAsync(f => f.UserId == userId && ids.Contains(f.Id), cancellationToken);
     }
 
     public async Task<bool> ExistsByProductIdAsync(ProductId productId, UserId userId,
         CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: [productId], cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: [productId], cancellationToken: cancellationToken);
         return ids.Count != 0;
     }
 
     public async Task<IReadOnlyList<FavoriteProduct>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default) {
-        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, cancellationToken: cancellationToken);
         return await favorites.AsNoTracking().Where(f => f.UserId == userId && ids.Contains(f.Id))
-            .OrderByDescending(f => f.CreatedAtUtc).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .OrderByDescending(f => f.CreatedAtUtc).ToListAsync(cancellationToken);
     }
 
     public Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
@@ -58,9 +58,9 @@ public sealed class FavoriteProductRepository(DbSet<FavoriteProduct> favorites, 
     public async Task<IReadOnlyDictionary<ProductId, FavoriteProduct>> GetByProductIdsAsync(UserId userId,
         IReadOnlyCollection<ProductId> productIds, CancellationToken cancellationToken = default) {
         if (productIds.Count == 0) { return new Dictionary<ProductId, FavoriteProduct>(); }
-        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: productIds, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProductId> ids = await queries.GetAccessibleIdsAsync(userId, sourceIds: productIds, cancellationToken: cancellationToken);
         List<FavoriteProduct> results = await favorites.AsNoTracking()
-            .Where(f => f.UserId == userId && ids.Contains(f.Id)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Where(f => f.UserId == userId && ids.Contains(f.Id)).ToListAsync(cancellationToken);
         return results.ToDictionary(f => f.ProductId);
     }
 }

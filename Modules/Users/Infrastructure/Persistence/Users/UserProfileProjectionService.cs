@@ -24,35 +24,35 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
     public async Task<UserBillingProfileModel?> GetBillingProfileIncludingDeletedAsync(
         UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await users.AsNoTracking().Where(user => user.Id == userId)
             .Select(user => new UserBillingProfileModel(user.Id, user.Email, user.IsActive,
                 user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
                 user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken).ConfigureAwait(false)
+        return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken)
             ? null : AuthenticationErrors.InvalidToken;
     }
 
     public async Task<Result<UserAiProfileModel>> GetAiProfileAsync(UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Preferences.Language,
-            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken).ConfigureAwait(false);
+            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken);
     }
 
     public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default,
         DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         Expression<Func<User, UserDashboardProfileModel>> projection = user => new UserDashboardProfileModel(user.Id.Value, user.Email, user.Preferences.Language,
             user.Preferences.DashboardLayoutJson, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DesiredWaistCm, user.NutritionProfile.HydrationGoal, user.NutritionProfile.WaterGoal,
@@ -62,12 +62,12 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
                 user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories, user.NutritionProfile.SundayCalories), user.Preferences.TimeZoneId, GoalHistory: null);
         DateOnly goalsEnd = goalsTo ?? goalsFrom ?? DateOnly.MinValue;
         if (goalsFrom is null || goalsEnd < goalsFrom.Value || goalsEnd.DayNumber - goalsFrom.Value.DayNumber > 366) {
-            Result<UserDashboardProfileModel> result = await ReadAsync(userId, projection, cancellationToken).ConfigureAwait(false);
+            Result<UserDashboardProfileModel> result = await ReadAsync(userId, projection, cancellationToken);
             if (result.IsFailure || goalsFrom is null) {
                 return result;
             }
             // Preserve access-failure precedence and the existing invalid-range exception.
-            UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsEnd, cancellationToken).ConfigureAwait(false);
+            UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsEnd, cancellationToken);
             return Result.Success(result.Value with { GoalHistory = history });
         }
 
@@ -76,7 +76,7 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
         var row = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)
             .Select(profile => new { Profile = profile, Revisions = revisions.AsNoTracking().ToList() })
             .AsSingleQuery()
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
         return row is null
             ? Result.Failure<UserDashboardProfileModel>(AuthenticationErrors.InvalidToken)
             : Result.Success(row.Profile with { GoalHistory = ToGoalTimeline(row.Revisions) });
@@ -85,39 +85,39 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
     public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(UserId userId, CancellationToken cancellationToken = default,
         DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         Result<UserGamificationProfileModel> result = await ReadAsync(userId, user => new UserGamificationProfileModel(new UserCalorieSchedule(
             user.NutritionProfile.DailyCalorieTarget, user.NutritionProfile.CalorieCyclingEnabled, user.NutritionProfile.MondayCalories, user.NutritionProfile.TuesdayCalories,
             user.NutritionProfile.WednesdayCalories, user.NutritionProfile.ThursdayCalories, user.NutritionProfile.FridayCalories, user.NutritionProfile.SaturdayCalories,
-            user.NutritionProfile.SundayCalories), GoalHistory: null), cancellationToken).ConfigureAwait(false);
+            user.NutritionProfile.SundayCalories), GoalHistory: null), cancellationToken);
         if (result.IsFailure || goalsFrom is null) {
             return result;
         }
-        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken);
         return Result.Success(result.Value with { GoalHistory = history });
     }
 
     public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        UserDietologistProfileModel? profile = await FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? profile = await FindByIdAsync(userId, cancellationToken);
         return profile is null ? Result.Failure<UserDietologistProfileModel>(AuthenticationErrors.InvalidToken) : Result.Success(profile);
     }
 
     public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)).FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Email == email)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await DietologistProfiles(AccessibleUsers.AsNoTracking().Where(user => user.Email == email)).FirstOrDefaultAsync(cancellationToken);
     }
 
     private static IQueryable<UserDietologistProfileModel> DietologistProfiles(IQueryable<User> users) =>
@@ -127,13 +127,13 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
     public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(UserId userId, CancellationToken cancellationToken = default,
         DateOnly? date = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        Result<UserHydrationProfileModel> result = await ReadAsync(userId, user => new UserHydrationProfileModel(user.NutritionProfile.HydrationGoal ?? user.NutritionProfile.WaterGoal), cancellationToken).ConfigureAwait(false);
+        Result<UserHydrationProfileModel> result = await ReadAsync(userId, user => new UserHydrationProfileModel(user.NutritionProfile.HydrationGoal ?? user.NutritionProfile.WaterGoal), cancellationToken);
         if (result.IsFailure || date is null) {
             return result;
         }
-        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, date.Value, date.Value, cancellationToken).ConfigureAwait(false);
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, date.Value, date.Value, cancellationToken);
         return Result.Success(new UserHydrationProfileModel(history.GetGoalsForDate(date.Value)?.EffectiveWaterGoal));
     }
 
@@ -143,30 +143,30 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
     public async Task<Result<UserTdeeProfileModel>> GetTdeeProfileWithWeightAsync(
         UserId userId, double? currentWeightKg, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await ReadAsync(userId, user => new UserTdeeProfileModel(
             User.CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender)),
             User.CalculateEstimatedTdee(User.CalculateBmrFromProfile(BmrCalculationInput.FromStoredProfile(currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.HeightCm, user.NutritionProfile.BirthDate, user.NutritionProfile.Gender)), user.NutritionProfile.ActivityLevel),
-            currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DailyCalorieTarget), cancellationToken).ConfigureAwait(false);
+            currentWeightKg ?? user.NutritionProfile.WeightKg, user.NutritionProfile.DesiredWeightKg, user.NutritionProfile.DailyCalorieTarget), cancellationToken);
     }
 
     public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(UserId userId, CancellationToken cancellationToken = default,
         DateOnly? goalsFrom = null, DateOnly? goalsTo = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        Result<UserWeeklyCheckInProfileModel> result = await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.NutritionProfile.DailyCalorieTarget, GoalHistory: null), cancellationToken).ConfigureAwait(false);
+        Result<UserWeeklyCheckInProfileModel> result = await ReadAsync(userId, user => new UserWeeklyCheckInProfileModel(user.NutritionProfile.DailyCalorieTarget, GoalHistory: null), cancellationToken);
         if (result.IsFailure || goalsFrom is null) {
             return result;
         }
-        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken).ConfigureAwait(false);
+        UserGoalTimeline history = await ReadGoalHistoryAsync(userId, goalsFrom.Value, goalsTo ?? goalsFrom.Value, cancellationToken);
         return Result.Success(result.Value with { GoalHistory = history });
     }
 
     private async Task<Result<T>> ReadAsync<T>(UserId userId, Expression<Func<User, T>> projection, CancellationToken cancellationToken) where T : class {
         T? profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId).Select(projection)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
         return profile is null ? Result.Failure<T>(AuthenticationErrors.InvalidToken) : Result.Success(profile);
     }
 }

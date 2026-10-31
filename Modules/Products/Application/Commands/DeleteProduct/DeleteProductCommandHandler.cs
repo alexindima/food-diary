@@ -34,7 +34,7 @@ public sealed class DeleteProductCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -44,7 +44,7 @@ public sealed class DeleteProductCommandHandler(
 
         return await transactionRunner.ExecuteAsync(
             token => DeleteAsync(command, productId, userId, token),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<Result> DeleteAsync(
@@ -56,7 +56,7 @@ public sealed class DeleteProductCommandHandler(
             productId,
             userId,
             includePublic: false,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (product is null) {
             return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
         }
@@ -65,7 +65,7 @@ public sealed class DeleteProductCommandHandler(
             product.Id,
             product.UserId,
             includePublic: false,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (usageCount > 0) {
             return Result.Failure(Errors.Validation.Invalid(
                 nameof(command.ProductId),
@@ -74,14 +74,14 @@ public sealed class DeleteProductCommandHandler(
 
         var galleryAssets = product.Images.Select(image => image.ImageAssetId).ToList();
         ImageAssetId? assetId = product.ImageAssetId;
-        await productRepository.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
+        await productRepository.DeleteAsync(product, cancellationToken);
 
         if (assetId.HasValue) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken);
         }
 
         foreach (ImageAssetId id in galleryAssets.Where(id => id != assetId)) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(id, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(id, cancellationToken);
         }
         return Result.Success();
     }

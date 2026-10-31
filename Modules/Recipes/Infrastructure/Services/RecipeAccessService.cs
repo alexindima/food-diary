@@ -12,8 +12,7 @@ public sealed class RecipeAccessService(IRecipeOverviewReadService recipeReadSer
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeReadService
-            .GetByIdsWithUsageAsync([recipeId], userId, includePublic, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdsWithUsageAsync([recipeId], userId, includePublic, cancellationToken);
         return recipes.GetValueOrDefault(recipeId);
     }
 }

@@ -18,14 +18,14 @@ public sealed class AdminDashboardMetricsReader(ICompositionReadContext context)
             (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc &&
             payment.Kind == BillingPaymentKinds.Transaction && payment.Status == "completed" && payment.Amount != null && payment.Currency != null);
         IQueryable<AiUsage> usage = context.AiUsages.AsNoTracking().Where(item => item.CreatedOnUtc >= fromUtc && item.CreatedOnUtc < toUtc);
-        int payingUsers = await payments.AsNoTracking().Where(payment => payment.Amount > 0).Select(payment => payment.UserId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
+        int payingUsers = await payments.AsNoTracking().Where(payment => payment.Amount > 0).Select(payment => payment.UserId).Distinct().CountAsync(cancellationToken);
         var registrations = await users.AsNoTracking().GroupBy(user => user.CreatedOnUtc.Date)
-            .Select(group => new { Date = group.Key, Count = group.Count() }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(group => new { Date = group.Key, Count = group.Count() }).ToListAsync(cancellationToken);
         var tokens = await usage.AsNoTracking().GroupBy(item => item.CreatedOnUtc.Date)
-            .Select(group => new { Date = group.Key, Total = group.Sum(item => (long)item.TotalTokens) }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(group => new { Date = group.Key, Total = group.Sum(item => (long)item.TotalTokens) }).ToListAsync(cancellationToken);
         var revenue = await payments.AsNoTracking().GroupBy(payment => new { (payment.OccurredAtUtc ?? payment.CreatedOnUtc).Date, payment.Currency })
             .Select(group => new { group.Key.Date, group.Key.Currency, Gross = group.Sum(payment => payment.Amount ?? 0m) })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         DateTime Bucket(DateTime date) => monthly ? new DateTime(date.Year, date.Month, 1, 0, 0, 0, DateTimeKind.Utc) : date;
         var registrationBuckets = registrations.GroupBy(row => Bucket(row.Date)).ToDictionary(group => group.Key, group => group.Sum(row => row.Count));
         var tokenBuckets = tokens.GroupBy(row => Bucket(row.Date)).ToDictionary(group => group.Key, group => group.Sum(row => row.Total));

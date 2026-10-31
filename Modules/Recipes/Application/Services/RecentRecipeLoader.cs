@@ -14,16 +14,14 @@ public sealed class RecentRecipeLoader(ISender sender, IRecipeOverviewReadServic
         int limit,
         bool includePublic,
         CancellationToken cancellationToken) {
-        IReadOnlyList<RecentRecipeUsage> recents = await sender.Send(new ReadRecentRecipesQuery(userId, limit), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<RecentRecipeUsage> recents = await sender.Send(new ReadRecentRecipesQuery(userId, limit), cancellationToken);
         if (recents.Count == 0) {
             return [];
         }
 
         RecipeId[] idsInOrder = [.. recents.Select(recent => recent.RecipeId)];
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> itemsById = await recipeOverviewReadService
-            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken);
 
         return [.. idsInOrder.Where(itemsById.ContainsKey).Select(id => itemsById[id])];
     }

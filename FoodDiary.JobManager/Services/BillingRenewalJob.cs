@@ -30,7 +30,7 @@ public sealed class BillingRenewalJob(
 
             BillingRenewalRunResult result = await sender.Send(
                 new RenewDueSubscriptionsCommand(settings.Provider, settings.BatchSize),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
 
             if (result.Processed > 0) {
                 logger.LogInformation(

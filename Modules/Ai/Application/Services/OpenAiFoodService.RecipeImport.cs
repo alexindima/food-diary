@@ -11,7 +11,7 @@ public sealed partial class OpenAiFoodService {
         string? sourceUrl, string? text, UserId userId, string requestId, CancellationToken cancellationToken) {
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<UserAiProfileModel> context = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> context = await GetUserContextAsync(userId, deadline.Token);
             if (context.IsFailure) {
                 return Result.Failure<RecipeImportDraftModel>(context.Error);
             }
@@ -35,7 +35,7 @@ public sealed partial class OpenAiFoodService {
                 if (recipeSourceReader is null || string.IsNullOrWhiteSpace(sourceUrl)) {
                     return Result.Failure<RecipeImportDraftModel>(AiErrors.RecipeSourceUnavailable());
                 }
-                Result<RecipeSource> source = await recipeSourceReader.ReadAsync(sourceUrl, deadline.Token).ConfigureAwait(false);
+                Result<RecipeSource> source = await recipeSourceReader.ReadAsync(sourceUrl, deadline.Token);
                 if (source.IsFailure) {
                     return Result.Failure<RecipeImportDraftModel>(source.Error);
                 }
@@ -43,7 +43,7 @@ public sealed partial class OpenAiFoodService {
                 canonicalUrl = source.Value.SourceUrl;
             }
 
-            return await ParseRecipeSourceAsync(sourceText, canonicalUrl, userId, requestId, context.Value, deadline.Token).ConfigureAwait(false);
+            return await ParseRecipeSourceAsync(sourceText, canonicalUrl, userId, requestId, context.Value, deadline.Token);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             return Result.Failure<RecipeImportDraftModel>(AiErrors.OpenAiFailed("Recipe import deadline expired."));
         }
@@ -53,21 +53,21 @@ public sealed partial class OpenAiFoodService {
         string sourceText, string? canonicalUrl, UserId userId, string requestId, UserAiProfileModel context, CancellationToken cancellationToken) {
         const string operation = "recipe-import";
         Result<AiProviderTokenBudget> budget = await openAiFoodClient.GetRecipeImportTokenBudgetAsync(
-            sourceText, context.Language, cancellationToken).ConfigureAwait(false);
+            sourceText, context.Language, cancellationToken);
         if (budget.IsFailure) {
             return Result.Failure<RecipeImportDraftModel>(budget.Error);
         }
         Result reservation = await ReserveAsync(
-            requestId, userId, operation, context, budget.Value, cancellationToken).ConfigureAwait(false);
+            requestId, userId, operation, context, budget.Value, cancellationToken);
         if (reservation.IsFailure) {
             return Result.Failure<RecipeImportDraftModel>(reservation.Error);
         }
         Result<OpenAiFoodClientResponse<RecipeImportDraftModel>> response = await openAiFoodClient.ImportRecipeAsync(
-            sourceText, context.Language, cancellationToken).ConfigureAwait(false);
+            sourceText, context.Language, cancellationToken);
         if (response.IsFailure) {
             return Result.Failure<RecipeImportDraftModel>(response.Error);
         }
-        await ReconcileAsync(requestId, response.Value, budget.Value).ConfigureAwait(false);
+        await ReconcileAsync(requestId, response.Value, budget.Value);
         if (response.Value.Value.Ingredients.Count == 0) {
             return Result.Failure<RecipeImportDraftModel>(AiErrors.RecipeNotFound());
         }

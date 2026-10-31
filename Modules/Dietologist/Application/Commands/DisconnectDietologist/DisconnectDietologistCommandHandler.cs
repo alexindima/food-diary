@@ -15,8 +15,7 @@ public sealed class DisconnectDietologistCommandHandler(
     : ICommandHandler<DisconnectDietologistCommand, Result> {
     public async Task<Result> Handle(DisconnectDietologistCommand command, CancellationToken cancellationToken) {
         Result<UserId> dietologistUserIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (dietologistUserIdResult.IsFailure) {
             return Result.Failure(dietologistUserIdResult.Error);
         }
@@ -31,14 +30,14 @@ public sealed class DisconnectDietologistCommandHandler(
 
         UserId clientUserId = clientUserIdResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
-            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
+            clientUserId, dietologistUserId, cancellationToken);
 
         if (invitation is null) {
             return Result.Failure(DietologistErrors.NoActiveRelationship);
         }
 
         invitation.Revoke();
-        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken);
         return Result.Success();
     }
 }

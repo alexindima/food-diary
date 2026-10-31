@@ -16,7 +16,7 @@ public sealed class RecommendationCreatedEventHandler(
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
     public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> notification, CancellationToken cancellationToken) {
         RecommendationCreatedDomainEvent domainEvent = notification.Value;
-        UserDietologistProfileModel? dietologist = await userLookupService.FindByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? dietologist = await userLookupService.FindByIdAsync(domainEvent.DietologistUserId, cancellationToken);
         string dietologistName = ResolveDietologistLabel(dietologist);
 
         NotificationRequest createdNotification = DietologistNotificationFactory.CreateNewRecommendation(
@@ -24,7 +24,7 @@ public sealed class RecommendationCreatedEventHandler(
             dietologistName,
             domainEvent.RecommendationId.Value.ToString());
 
-        await notificationWriter.AddAsync(createdNotification, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(createdNotification, cancellationToken: cancellationToken);
         DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,

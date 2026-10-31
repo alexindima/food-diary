@@ -34,10 +34,10 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
         if (string.Equals(command.Action, "register", StringComparison.Ordinal) && !IsValidTimeZone(command.TimeZoneId, TimeZoneInfo.FindSystemTimeZoneById)) {
             return Result.Failure<AuthenticationModel>(TelegramIdentityErrors.TimeZoneRequired);
         }
-        string? json = await tickets.ConsumeAsync(command.Ticket, purpose, command.BrowserBinding, cancellationToken).ConfigureAwait(false);
+        string? json = await tickets.ConsumeAsync(command.Ticket, purpose, command.BrowserBinding, cancellationToken);
         if (json is null && string.Equals(command.Action, "link", StringComparison.Ordinal)) {
             json = await tickets.ConsumeAsync(command.Ticket, TelegramAuthenticationIntentService.OnboardingPurpose,
-                command.BrowserBinding, cancellationToken).ConfigureAwait(false);
+                command.BrowserBinding, cancellationToken);
         }
         if (json is null) {
             return Invalid();
@@ -58,16 +58,16 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
         if (string.Equals(command.Action, "register", StringComparison.Ordinal)) {
             principal = await accounts.RegisterAsync(new UserTelegramRegistrationModel(
                 identity.TelegramUserId, identity.FirstName, identity.LastName,
-                command.Language ?? identity.Language, command.TimeZoneId!, now, identity.OidcIssuer, identity.OidcSubject), cancellationToken).ConfigureAwait(false);
+                command.Language ?? identity.Language, command.TimeZoneId!, now, identity.OidcIssuer, identity.OidcSubject), cancellationToken);
         } else if (string.Equals(command.Action, "link", StringComparison.Ordinal)) {
             var userId = new UserId(command.CurrentUserId!.Value);
-            Result<UserModel> linked = await identities.LinkTelegramAsync(userId, identity.TelegramUserId, cancellationToken).ConfigureAwait(false);
+            Result<UserModel> linked = await identities.LinkTelegramAsync(userId, identity.TelegramUserId, cancellationToken);
             if (linked.IsFailure) {
                 return Result.Failure<AuthenticationModel>(linked.Error);
             }
-            principal = await identities.RecordAuthenticationAsync(userId, now, cancellationToken).ConfigureAwait(false);
+            principal = await identities.RecordAuthenticationAsync(userId, now, cancellationToken);
         } else {
-            principal = await identities.AuthenticateTelegramAsync(identity.TelegramUserId, now, cancellationToken).ConfigureAwait(false);
+            principal = await identities.AuthenticateTelegramAsync(identity.TelegramUserId, now, cancellationToken);
         }
         if (principal.IsFailure) {
             return Result.Failure<AuthenticationModel>(principal.Error);
@@ -75,12 +75,12 @@ public sealed class CompleteTelegramAuthenticationCommandHandler(
         if (!string.Equals(command.Action, "register", StringComparison.Ordinal) &&
             identity.OidcIssuer is not null && identity.OidcSubject is not null) {
             Result bound = await accounts.BindOidcIdentityAsync(principal.Value.UserId, identity.TelegramUserId,
-                identity.OidcIssuer, identity.OidcSubject, cancellationToken).ConfigureAwait(false);
+                identity.OidcIssuer, identity.OidcSubject, cancellationToken);
             if (bound.IsFailure) {
                 return Result.Failure<AuthenticationModel>(bound.Error);
             }
         }
-        IssuedAuthenticationTokens issued = await tokens.IssueFromPrincipalAsync(principal.Value, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        IssuedAuthenticationTokens issued = await tokens.IssueFromPrincipalAsync(principal.Value, cancellationToken, command.ClientContext);
         return Result.Success(new AuthenticationModel(issued.AccessToken, issued.RefreshToken, principal.Value.User, issued.BrowserSession));
     }
 

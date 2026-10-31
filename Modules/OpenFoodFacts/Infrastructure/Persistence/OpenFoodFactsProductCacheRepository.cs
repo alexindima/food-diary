@@ -19,7 +19,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext
             return [];
         }
 
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         string pattern = $"%{EscapeLikePattern(normalizedQuery)}%";
         return await context.OpenFoodFactsProducts
             .AsNoTracking()
@@ -45,7 +45,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext
                 product.FatsPer100G,
                 product.CarbsPer100G,
                 product.FiberPer100G))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task UpsertAsync(
@@ -58,7 +58,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext
             return;
         }
 
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         var acceptedBarcodes = new HashSet<string>(StringComparer.Ordinal);
         foreach (OpenFoodFactsProductModel product in candidates) {
@@ -84,7 +84,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext
                 continue;
             }
 
-            await UpsertProductAsync(candidate, cancellationToken).ConfigureAwait(false);
+            await UpsertProductAsync(candidate, cancellationToken);
         }
     }
 
@@ -129,11 +129,11 @@ internal sealed class OpenFoodFactsProductCacheRepository(OpenFoodFactsDbContext
                 new NpgsqlParameter<DateTime>("lastSeen", product.LastSeenAtUtc),
                 new NpgsqlParameter<int>("searchHitCount", product.SearchHitCount),
             ],
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken);
     }
 
     private static string EscapeLikePattern(string value) {

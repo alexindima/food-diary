@@ -28,7 +28,7 @@ public sealed class ExportDiaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FileExportResult>(userIdResult);
         }
@@ -61,7 +61,7 @@ public sealed class ExportDiaryQueryHandler(
             userId,
             period,
             mealLimit,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (diary.HasMore) {
             string mealLimitText = mealLimit.ToString(CultureInfo.InvariantCulture);
             return Result.Failure<FileExportResult>(
@@ -80,7 +80,7 @@ public sealed class ExportDiaryQueryHandler(
                     query.Locale,
                     query.TimeZoneOffsetMinutes,
                     NormalizeReportOrigin(query.ReportOrigin),
-                    cancellationToken).ConfigureAwait(false),
+                    cancellationToken),
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(
@@ -113,7 +113,7 @@ public sealed class ExportDiaryQueryHandler(
             period.From,
             period.To,
             checked(limit + 1)),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         List<MealProjectionReadModel> matchingMeals = [.. meals.Where(meal => meal.Date >= period.From && meal.Date <= period.To)];
 

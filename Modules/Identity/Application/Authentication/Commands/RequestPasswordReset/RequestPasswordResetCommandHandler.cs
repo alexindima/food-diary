@@ -26,8 +26,7 @@ public sealed class RequestPasswordResetCommandHandler(
                 nowUtc.Add(TokenLifetime),
                 nowUtc,
                 Cooldown,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (issue.Status == UserPasswordResetIssueStatus.Throttled) {
             logger.LogInformation("Password reset request throttled by cooldown.");
         }
@@ -43,7 +42,7 @@ public sealed class RequestPasswordResetCommandHandler(
             token,
             delivery.Language,
             command.ClientOrigin);
-        await emailSender.SendPasswordResetAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailSender.SendPasswordResetAsync(message, cancellationToken);
 
         return Result.Success();
     }

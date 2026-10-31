@@ -26,13 +26,13 @@ public sealed class AcceptInvitationCommandHandler(
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = await ResolveUserIdAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(command, cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -43,7 +43,7 @@ public sealed class AcceptInvitationCommandHandler(
         }
 
         DietologistInvitationId invitationId = invitationIdResult.Value;
-        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken);
 
         if (invitation is null) {
             return Result.Failure(DietologistErrors.InvitationNotFound);
@@ -69,10 +69,10 @@ public sealed class AcceptInvitationCommandHandler(
         invitation.Accept(dietologistUserId);
 
         if (!user.IsDietologist) {
-            await userRoleMembershipService.EnsureRoleAsync(new UserId(user.Id), RoleNames.Dietologist, cancellationToken).ConfigureAwait(false);
+            await userRoleMembershipService.EnsureRoleAsync(new UserId(user.Id), RoleNames.Dietologist, cancellationToken);
         }
 
-        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
             notificationWriter,
             notificationClientRefreshService,
@@ -80,7 +80,7 @@ public sealed class AcceptInvitationCommandHandler(
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 

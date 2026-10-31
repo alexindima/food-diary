@@ -22,14 +22,14 @@ public sealed class DeleteRecipeCommentCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
-        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken);
 
         if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure(RecipeCommentErrors.NotFound(command.CommentId));
@@ -39,14 +39,14 @@ public sealed class DeleteRecipeCommentCommandHandler(
         bool isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
             RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
-                recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+                recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken);
 
             if (recipe is null) {
                 return Result.Failure(RecipeCommentErrors.NotAuthor);
             }
         }
 
-        await commentRepository.DeleteAsync(comment, cancellationToken).ConfigureAwait(false);
+        await commentRepository.DeleteAsync(comment, cancellationToken);
         return Result.Success();
     }
 }

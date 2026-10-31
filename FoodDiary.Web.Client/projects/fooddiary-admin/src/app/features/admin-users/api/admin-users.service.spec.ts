@@ -80,6 +80,24 @@ describe('AdminUsersService', () => {
         req.flush(response);
     });
 
+    it('schedules for the selected user with a stable idempotency key per invocation', () => {
+        const request = service.scheduleTestNotification(adminId<'user'>('selected-user'), {
+            type: 'EatingWindowStarted',
+            delaySeconds: 30,
+        });
+        request.subscribe();
+        const first = httpMock.expectOne(`${baseUrl}/selected-user/notifications/test`);
+        const key = first.request.headers.get('Idempotency-Key');
+        expect(key).toBeTruthy();
+        expect(first.request.method).toBe('POST');
+        expect(first.request.body).toEqual({ type: 'EatingWindowStarted', delaySeconds: 30 });
+        first.flush({ type: 'EatingWindowStarted', delaySeconds: 30, scheduledAtUtc: '2026-10-31T12:00:30Z' });
+        request.subscribe();
+        const second = httpMock.expectOne(`${baseUrl}/selected-user/notifications/test`);
+        expect(second.request.headers.get('Idempotency-Key')).toBe(key);
+        second.flush({});
+    });
+
     it('should patch user update payload', () => {
         const payload = {
             isActive: false,

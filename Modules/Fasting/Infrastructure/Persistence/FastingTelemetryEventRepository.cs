@@ -41,7 +41,7 @@ public sealed class FastingTelemetryEventRepository(DbSet<FastingTelemetryEvent>
             .OrderBy(item => item.OccurredAtUtc)
             .Select(item => item.Id)
             .Take(Math.Max(batchSize, 1))
-            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .ToArrayAsync(cancellationToken);
 
         if (ids.Length == 0) {
             return 0;
@@ -49,7 +49,7 @@ public sealed class FastingTelemetryEventRepository(DbSet<FastingTelemetryEvent>
 
         return await entries
             .Where(item => Enumerable.Contains(ids, item.Id))
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingTelemetryEventRecord>> GetRangeAsync(
@@ -79,6 +79,6 @@ public sealed class FastingTelemetryEventRepository(DbSet<FastingTelemetryEvent>
                 x.MoodLevel,
                 x.SymptomsCount,
                 x.HadNotes))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

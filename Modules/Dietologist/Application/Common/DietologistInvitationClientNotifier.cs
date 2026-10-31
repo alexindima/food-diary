@@ -47,7 +47,7 @@ internal static class DietologistInvitationClientNotifier {
             IPostCommitActionQueue postCommitActionQueue,
         NotificationRequest notification,
         CancellationToken cancellationToken) {
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken);
         DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,

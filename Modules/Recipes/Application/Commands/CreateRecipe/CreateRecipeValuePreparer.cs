@@ -17,7 +17,7 @@ internal static class CreateRecipeValuePreparer {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<CreateRecipeValues>(userIdResult);
         }
@@ -28,7 +28,7 @@ internal static class CreateRecipeValuePreparer {
             nameof(command.ImageAssetId),
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<CreateRecipeValues>(imageAssetResult.Error);
         }

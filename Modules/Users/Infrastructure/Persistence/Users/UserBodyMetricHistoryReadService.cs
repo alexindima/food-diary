@@ -17,23 +17,23 @@ public sealed class UserBodyMetricHistoryReadService(
 
     private async Task<bool> CanReadAsync(UserId userId, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken).ConfigureAwait(false);
+        return await AccessibleUsers.AsNoTracking().AnyAsync(user => user.Id == userId, cancellationToken);
     }
 
     public async Task<Result<WeightHistoryProfileModel>> GetWeightHistoryProfileAsync(UserId userId, CancellationToken cancellationToken) {
-        if (!await CanReadAsync(userId, cancellationToken).ConfigureAwait(false)) {
+        if (!await CanReadAsync(userId, cancellationToken)) {
             return Result.Failure<WeightHistoryProfileModel>(AuthenticationErrors.InvalidToken);
         }
         var profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)
-            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWeightKg }).SingleAsync(cancellationToken).ConfigureAwait(false);
+            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWeightKg }).SingleAsync(cancellationToken);
         IQueryable<WeightGoal> owned = weights.AsNoTracking().Where(goal => goal.UserId == userId);
         List<WeightGoalHistoryModel> active = await ProjectWeight(owned.Where(goal => goal.Status == WeightGoalStatus.Active).Take(1))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         List<WeightGoalHistoryModel> latest = await ProjectWeight(owned.Where(goal => goal.Status != WeightGoalStatus.Active)
             .OrderByDescending(goal => goal.StartedAtUtc).ThenByDescending(goal => goal.Id).Take(1))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         WeightGoalHistoryModel? current = active.SingleOrDefault();
         return Result.Success(new WeightHistoryProfileModel(profile.HeightCm,
             new UserDesiredWeightModel(profile.DesiredWeightKg, current?.StartWeightKg, current?.StartedAtUtc), [.. active, .. latest]));
@@ -41,13 +41,13 @@ public sealed class UserBodyMetricHistoryReadService(
 
     public async Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> ReadWeightGoalsAsync(
         UserId userId, DateTime snapshotUtc, int offset, int limit, CancellationToken cancellationToken) {
-        if (!await CanReadAsync(userId, cancellationToken).ConfigureAwait(false)) {
+        if (!await CanReadAsync(userId, cancellationToken)) {
             return Result.Failure<IReadOnlyList<WeightGoalHistoryModel>>(AuthenticationErrors.InvalidToken);
         }
         List<WeightGoalHistoryModel> items = await ProjectWeight(weights.AsNoTracking()
             .Where(goal => goal.UserId == userId && goal.Status != WeightGoalStatus.Active && goal.EndedAtUtc <= snapshotUtc)
             .OrderByDescending(goal => goal.StartedAtUtc).ThenByDescending(goal => goal.Id)
-            .Skip(offset).Take(limit)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Skip(offset).Take(limit)).ToListAsync(cancellationToken);
         return Result.Success<IReadOnlyList<WeightGoalHistoryModel>>(items);
     }
 
@@ -56,17 +56,17 @@ public sealed class UserBodyMetricHistoryReadService(
             goal.StartedAtUtc, goal.EndedAtUtc, goal.Status.ToString()));
 
     public async Task<Result<WaistHistoryProfileModel>> GetWaistHistoryProfileAsync(UserId userId, CancellationToken cancellationToken) {
-        if (!await CanReadAsync(userId, cancellationToken).ConfigureAwait(false)) {
+        if (!await CanReadAsync(userId, cancellationToken)) {
             return Result.Failure<WaistHistoryProfileModel>(AuthenticationErrors.InvalidToken);
         }
         var profile = await AccessibleUsers.AsNoTracking().Where(user => user.Id == userId)
-            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWaistCm }).SingleAsync(cancellationToken).ConfigureAwait(false);
+            .Select(user => new { user.NutritionProfile.HeightCm, user.NutritionProfile.DesiredWaistCm }).SingleAsync(cancellationToken);
         IQueryable<WaistGoal> owned = waists.AsNoTracking().Where(goal => goal.UserId == userId);
         List<WaistGoalHistoryModel> active = await ProjectWaist(owned.Where(goal => goal.Status == WaistGoalStatus.Active).Take(1))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         List<WaistGoalHistoryModel> latest = await ProjectWaist(owned.Where(goal => goal.Status != WaistGoalStatus.Active)
             .OrderByDescending(goal => goal.StartedAtUtc).ThenByDescending(goal => goal.Id).Take(1))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         WaistGoalHistoryModel? current = active.SingleOrDefault();
         return Result.Success(new WaistHistoryProfileModel(profile.HeightCm,
             new UserDesiredWaistModel(profile.DesiredWaistCm, current?.StartWaistCm, current?.StartedAtUtc), [.. active, .. latest]));
@@ -74,13 +74,13 @@ public sealed class UserBodyMetricHistoryReadService(
 
     public async Task<Result<IReadOnlyList<WaistGoalHistoryModel>>> ReadWaistGoalsAsync(
         UserId userId, DateTime snapshotUtc, int offset, int limit, CancellationToken cancellationToken) {
-        if (!await CanReadAsync(userId, cancellationToken).ConfigureAwait(false)) {
+        if (!await CanReadAsync(userId, cancellationToken)) {
             return Result.Failure<IReadOnlyList<WaistGoalHistoryModel>>(AuthenticationErrors.InvalidToken);
         }
         List<WaistGoalHistoryModel> items = await ProjectWaist(waists.AsNoTracking()
             .Where(goal => goal.UserId == userId && goal.Status != WaistGoalStatus.Active && goal.EndedAtUtc <= snapshotUtc)
             .OrderByDescending(goal => goal.StartedAtUtc).ThenByDescending(goal => goal.Id)
-            .Skip(offset).Take(limit)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Skip(offset).Take(limit)).ToListAsync(cancellationToken);
         return Result.Success<IReadOnlyList<WaistGoalHistoryModel>>(items);
     }
 

@@ -24,14 +24,14 @@ public sealed class CleanupOrphanImagesCommandHandler(IImageAssetUsageQuery usag
         while (true) {
             cancellationToken.ThrowIfCancellationRequested();
             IReadOnlyList<ImageCleanupCandidate> candidates = await usageQuery
-                .GetUnusedCandidatesOlderThanAsync(normalizedOlderThanUtc, batchSize, after, cancellationToken).ConfigureAwait(false);
+                .GetUnusedCandidatesOlderThanAsync(normalizedOlderThanUtc, batchSize, after, cancellationToken);
             if (candidates.Count == 0) {
                 break;
             }
             foreach (ImageCleanupCandidate candidate in candidates) {
                 try {
                     cancellationToken.ThrowIfCancellationRequested();
-                    if (await cleanupBatch.DeleteUnusedAsync(candidate.Id, cancellationToken).ConfigureAwait(false)) {
+                    if (await cleanupBatch.DeleteUnusedAsync(candidate.Id, cancellationToken)) {
                         removed++;
                     }
                 } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

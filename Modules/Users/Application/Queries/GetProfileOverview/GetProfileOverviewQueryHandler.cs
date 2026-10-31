@@ -16,31 +16,29 @@ public sealed class GetProfileOverviewQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ProfileOverviewModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return await GetOverviewAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await GetOverviewAsync(userId, cancellationToken);
     }
     private async Task<Result<ProfileOverviewModel>> GetOverviewAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<ProfileOverviewModel>(userResult.Error);
         }
 
-        Result<UserNotificationPreferencesModel> preferencesResult = await userProfileReadService.GetNotificationPreferencesAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserNotificationPreferencesModel> preferencesResult = await userProfileReadService.GetNotificationPreferencesAsync(userId, cancellationToken);
         if (preferencesResult.IsFailure) {
             return Result.Failure<ProfileOverviewModel>(preferencesResult.Error);
         }
 
         IReadOnlyList<ProfileWebPushSubscriptionModel> webPushSubscriptions = await notificationReadService
-            .GetWebPushSubscriptionsAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetWebPushSubscriptionsAsync(userId, cancellationToken);
         Result<ProfileDietologistRelationshipModel?> relationshipResult = await dietologistReadService
-            .GetRelationshipAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetRelationshipAsync(userId, cancellationToken);
         if (relationshipResult.IsFailure) {
             return Result.Failure<ProfileOverviewModel>(relationshipResult.Error);
         }

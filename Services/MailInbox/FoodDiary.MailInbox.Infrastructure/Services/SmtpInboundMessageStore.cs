@@ -41,8 +41,7 @@ public sealed class SmtpInboundMessageStore(
         long messageSize = buffer.Length;
         using Activity? activity = MailInboxTelemetry.ActivitySource.StartActivity("MailInbox.Ingest");
         bool entered = await _processingSlots
-            .WaitAsync(_options.ProcessingQueueTimeout, cancellationToken)
-            .ConfigureAwait(false);
+            .WaitAsync(_options.ProcessingQueueTimeout, cancellationToken);
         if (!entered) {
             MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.Overloaded, Stopwatch.GetElapsedTime(startedAt), messageSize);
             return new SmtpResponse(SmtpReplyCode.Overloaded, "Mail processing capacity is temporarily exhausted.");
@@ -79,7 +78,7 @@ public sealed class SmtpInboundMessageStore(
                     rawBytes,
                     _options.MaxMimeParts,
                     _options.MaxMimeDepth,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
             } catch (MimeStructureLimitExceededException) {
                 MailInboxTelemetry.RecordIngestion(MailInboxIngestionOutcome.MimePartLimit, Stopwatch.GetElapsedTime(startedAt), messageSize);
                 return new SmtpResponse(SmtpReplyCode.TransactionFailed, "MIME part limit exceeded.");
@@ -125,8 +124,7 @@ public sealed class SmtpInboundMessageStore(
                                   _trustedRelayNetworks.Any(range => range.Contains(sourceAddress));
             var admission = new InboundMailAdmission(isTrustedRelay, envelopeFromAddress);
             InboundMailSaveResult saveResult = await store
-                .SaveAsync(inboundMessage, admission, cancellationToken)
-                .ConfigureAwait(false);
+                .SaveAsync(inboundMessage, admission, cancellationToken);
 
             logger.LogInformation(
                 "Inbound email accepted. StoredId={StoredId}; RecipientCount={RecipientCount}; Duplicate={Duplicate}",
@@ -180,7 +178,7 @@ public sealed class SmtpInboundMessageStore(
         int maxMimeDepth,
         CancellationToken cancellationToken) {
         var stream = new MemoryStream(rawBytes);
-        await using (stream.ConfigureAwait(false)) {
+        await using (stream) {
             ParserOptions parserOptions = ParserOptions.Default.Clone();
             parserOptions.MaxMimeDepth = maxMimeDepth;
             var parser = new MimeParser(parserOptions, stream, MimeFormat.Entity);
@@ -190,7 +188,7 @@ public sealed class SmtpInboundMessageStore(
                     throw new MimeStructureLimitExceededException();
                 }
             };
-            return await parser.ParseMessageAsync(cancellationToken).ConfigureAwait(false);
+            return await parser.ParseMessageAsync(cancellationToken);
         }
     }
 

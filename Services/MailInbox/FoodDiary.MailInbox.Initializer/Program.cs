@@ -67,9 +67,9 @@ builder.Services.AddMailInboxInitializerServices(connectionString, builder.Confi
 
 using IHost host = builder.Build();
 try {
-    await host.StartAsync().ConfigureAwait(false);
+    await host.StartAsync();
     AsyncServiceScope scope = host.Services.CreateAsyncScope();
-    await using (scope.ConfigureAwait(false)) {
+    await using (scope) {
         IMailInboxReadinessChecker readinessChecker = scope.ServiceProvider.GetRequiredService<IMailInboxReadinessChecker>();
         IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
         NpgsqlMailInboxRuntimeRoleProvisioner runtimeRoleProvisioner =
@@ -84,7 +84,7 @@ try {
             schemaInitializer,
             runtimeRoleProvisioner,
             runtimeDatabaseOptions,
-            lifetime.ApplicationStopping).ConfigureAwait(false);
+            lifetime.ApplicationStopping);
     }
 
     return 0;
@@ -95,7 +95,7 @@ try {
     Console.Error.WriteLine($"MailInbox initializer failed. ErrorType={exception.GetType().Name}");
     return 1;
 } finally {
-    await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
+    await host.StopAsync(CancellationToken.None);
 }
 
 static async Task ExecuteAsync(
@@ -107,16 +107,16 @@ static async Task ExecuteAsync(
     CancellationToken cancellationToken) {
     switch (command.Name) {
         case "status":
-            await PrintStatusAsync(readinessChecker, cancellationToken).ConfigureAwait(false);
+            await PrintStatusAsync(readinessChecker, cancellationToken);
             break;
         case "update":
             Console.WriteLine("Updating MailInbox schema...");
-            await schemaInitializer.EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
+            await schemaInitializer.EnsureSchemaAsync(cancellationToken);
             if (runtimeDatabaseOptions.ProvisionRole) {
                 await runtimeRoleProvisioner.ProvisionAsync(
                     runtimeDatabaseOptions.RoleName,
                     runtimeDatabaseOptions.Password,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
             }
 
             Console.WriteLine("MailInbox schema update completed.");
@@ -129,7 +129,7 @@ static async Task ExecuteAsync(
 static async Task PrintStatusAsync(
     IMailInboxReadinessChecker readinessChecker,
     CancellationToken cancellationToken) {
-    await readinessChecker.CheckReadyAsync(cancellationToken).ConfigureAwait(false);
+    await readinessChecker.CheckReadyAsync(cancellationToken);
     Console.WriteLine("Can connect:       True");
     Console.WriteLine("Schema ready:      True");
 }

@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Protocol;
 
@@ -27,11 +26,11 @@ internal static class ContextRoutingRetirementEvaluationRunner {
 
         string resolvedCorpusPath = Path.GetFullPath(corpusPath);
         FileStream corpusStream = File.OpenRead(resolvedCorpusPath);
-        await using ConfiguredAsyncDisposable corpusStreamDisposal = corpusStream.ConfigureAwait(false);
+        await using IAsyncDisposable corpusStreamDisposal = corpusStream;
         EvaluationCorpus? corpus = await JsonSerializer.DeserializeAsync<EvaluationCorpus>(
             corpusStream,
             InputOptions,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         Validate(corpus);
         if (maximumCases is <= 0) {
             throw new ArgumentOutOfRangeException(nameof(maximumCases), "Maximum cases must be positive.");
@@ -47,7 +46,7 @@ internal static class ContextRoutingRetirementEvaluationRunner {
                 plannedPath: null,
                 baseRevision: null,
                 headRevision: null,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             stopwatch.Stop();
 
             bool expectedPathInTopTen = context.SqlContextSearch?.Candidates
@@ -90,8 +89,8 @@ internal static class ContextRoutingRetirementEvaluationRunner {
             results,
         };
         string json = JsonSerializer.Serialize(evaluation, OutputOptions);
-        await output.WriteAsync(json.AsMemory(), cancellationToken).ConfigureAwait(false);
-        await output.WriteLineAsync().ConfigureAwait(false);
+        await output.WriteAsync(json.AsMemory(), cancellationToken);
+        await output.WriteLineAsync();
 
         if (!passed) {
             throw new InvalidOperationException(

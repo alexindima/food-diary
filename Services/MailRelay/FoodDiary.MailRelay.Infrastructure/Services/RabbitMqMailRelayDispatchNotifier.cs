@@ -8,6 +8,6 @@ public sealed class RabbitMqMailRelayDispatchNotifier(
             return;
         }
         logger.LogDebug("Queued relay email {QueuedEmailId} is ready for outbox publication to RabbitMQ.", queuedEmailId);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 }

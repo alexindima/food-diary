@@ -39,22 +39,22 @@ public sealed class MailRelayJournalReader(NpgsqlDataSource dataSource) : IMailR
                 command.Parameters.AddWithValue("limit", Math.Clamp(limit, 1, 100));
                 command.Parameters.AddWithValue("offset", (Math.Clamp(page, 1, 10000) - 1) * Math.Clamp(limit, 1, 100));
             }, async (reader, token) => {
-                await reader.ReadAsync(token).ConfigureAwait(false);
+                await reader.ReadAsync(token);
                 long total = reader.GetInt64(0);
-                await reader.NextResultAsync(token).ConfigureAwait(false);
+                await reader.NextResultAsync(token);
                 var items = new List<OutgoingEmailJournalEntry>();
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) {
+                while (await reader.ReadAsync(token)) {
                     items.Add(new OutgoingEmailJournalEntry(reader.GetGuid(0), reader.GetString(1), reader.GetString(2), reader.GetString(3),
                         JsonSerializer.Deserialize<string[]>(reader.GetString(4)) ?? [], reader.GetString(5),
-                        MailRelayQueueRowMapper.GetDateTimeOffset(reader, 6), await reader.IsDBNullAsync(7, token).ConfigureAwait(false) ? null : MailRelayQueueRowMapper.GetDateTimeOffset(reader, 7),
-                        reader.GetInt32(8), reader.GetInt32(9), await reader.IsDBNullAsync(10, token).ConfigureAwait(false) ? null : reader.GetString(10),
-                        await reader.IsDBNullAsync(11, token).ConfigureAwait(false) ? null : reader.GetString(11), !string.Equals(reader.GetString(2), "bug_report_received", StringComparison.Ordinal),
-                        await reader.IsDBNullAsync(12, token).ConfigureAwait(false) ? null : reader.GetString(12), await reader.IsDBNullAsync(13, token).ConfigureAwait(false) ? null : reader.GetString(13)));
+                        MailRelayQueueRowMapper.GetDateTimeOffset(reader, 6), await reader.IsDBNullAsync(7, token) ? null : MailRelayQueueRowMapper.GetDateTimeOffset(reader, 7),
+                        reader.GetInt32(8), reader.GetInt32(9), await reader.IsDBNullAsync(10, token) ? null : reader.GetString(10),
+                        await reader.IsDBNullAsync(11, token) ? null : reader.GetString(11), !string.Equals(reader.GetString(2), "bug_report_received", StringComparison.Ordinal),
+                        await reader.IsDBNullAsync(12, token) ? null : reader.GetString(12), await reader.IsDBNullAsync(13, token) ? null : reader.GetString(13)));
                 }
-                await reader.NextResultAsync(token).ConfigureAwait(false);
+                await reader.NextResultAsync(token);
                 var counts = new Dictionary<string, long>(StringComparer.Ordinal);
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) { counts.Add(reader.GetString(0), reader.GetInt64(1)); }
+                while (await reader.ReadAsync(token)) { counts.Add(reader.GetString(0), reader.GetInt64(1)); }
                 return new OutgoingEmailJournalPage(items, total, counts);
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken);
     }
 }

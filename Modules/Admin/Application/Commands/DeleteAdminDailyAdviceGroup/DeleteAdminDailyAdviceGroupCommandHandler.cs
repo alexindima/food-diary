@@ -7,6 +7,6 @@ namespace FoodDiary.Modules.Admin.Application.Commands.DeleteAdminDailyAdviceGro
 
 public sealed class DeleteAdminDailyAdviceGroupCommandHandler(ISender sender) : ICommandHandler<DeleteAdminDailyAdviceGroupCommand, Result> {
     public async Task<Result> Handle(DeleteAdminDailyAdviceGroupCommand command, CancellationToken cancellationToken) {
-        return await sender.Send(new DeleteDailyAdviceGroupCommand(command.Id), cancellationToken).ConfigureAwait(false);
+        return await sender.Send(new DeleteDailyAdviceGroupCommand(command.Id), cancellationToken);
     }
 }

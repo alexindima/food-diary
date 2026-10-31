@@ -26,7 +26,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             return [];
         }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         // Restrict the aggregate to the page's local dates, never to its meal filters or page limit.
         ParameterExpression meal = Expression.Parameter(typeof(Meal), "meal");
@@ -47,7 +47,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .GroupBy(Expression.Lambda<Func<Meal, DateOnly>>(day, meal))
             .OrderByDescending(group => group.Key)
             .Select(group => new MealDaySummary(group.Key, group.Sum(value => value.TotalCalories), group.Count()))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     private static DateTime StartOfUtcDay(DateTime value) =>
@@ -72,25 +72,25 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
 
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        await records.AddAsync(meal, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(meal, cancellationToken);
         return meal;
     }
 
     public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         records.Update(meal);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        Meal? tracked = await records.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
+        Meal? tracked = await records.FindAsync([meal.Id], cancellationToken);
         if (tracked is not null) {
             records.Remove(tracked);
         }
@@ -103,7 +103,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         IQueryable<Meal> query = records;
 
@@ -117,7 +117,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
 
         return await query.FirstOrDefaultAsync(
             m => m.Id == id && m.UserId == userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
@@ -127,7 +127,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
@@ -138,7 +138,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
 
         filteredQuery = ApplyFilters(filteredQuery, filters);
 
-        int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await filteredQuery.CountAsync(cancellationToken);
         int skip = (pageNumber - 1) * pageSize;
 
         IOrderedQueryable<Meal> itemsQuery = IncludeMealGraph(filteredQuery)
@@ -148,7 +148,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         List<Meal> items = await itemsQuery
             .Skip(skip)
             .Take(pageSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, totalItems);
     }
@@ -160,7 +160,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
@@ -171,7 +171,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
 
         filteredQuery = ApplyFilters(filteredQuery, filters);
 
-        int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await filteredQuery.CountAsync(cancellationToken);
         int skip = (pageNumber - 1) * pageSize;
 
         List<Meal> meals = await IncludeMealGraph(filteredQuery)
@@ -179,11 +179,11 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .ThenByDescending(m => m.CreatedOnUtc)
             .Skip(skip)
             .Take(pageSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         IReadOnlyList<MealProjectionReadModel> projections = await ToMealProjectionReadModelsAsync(
             meals,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return (projections, totalItems);
     }
 
@@ -192,11 +192,11 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         UserId userId,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         Meal? meal = await IncludeMealGraph(records.AsNoTracking())
             .Where(m => m.Id == id && m.UserId == userId)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (meal is null) {
             return null;
@@ -204,7 +204,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
 
         IReadOnlyList<MealProjectionReadModel> projections = await ToMealProjectionReadModelsAsync(
             [meal],
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return projections[0];
     }
 
@@ -213,14 +213,14 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         IQueryable<Meal> filteredQuery = records
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
         return await ApplyFilters(filteredQuery, filters)
-            .CountAsync(cancellationToken).ConfigureAwait(false);
+            .CountAsync(cancellationToken);
     }
 
     private static IQueryable<Meal> ApplyFilters(IQueryable<Meal> query, MealQueryFilters filters) {
@@ -278,7 +278,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         DateTime from = StartOfUtcDay(dateFrom);
         DateTime toInclusive = EndOfUtcDay(dateTo);
@@ -287,7 +287,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
@@ -296,10 +296,10 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-        return await ToMealProjectionReadModelsAsync(meals, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken);
+        return await ToMealProjectionReadModelsAsync(meals, cancellationToken);
     }
 
     public async Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
@@ -309,7 +309,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         int limit,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(limit);
         DateTime from = NormalizeUtcInstant(dateFrom);
@@ -320,8 +320,8 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .OrderBy(meal => meal.Date)
             .ThenBy(meal => meal.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-        return await ToMealProjectionReadModelsAsync(meals, cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
+        return await ToMealProjectionReadModelsAsync(meals, cancellationToken);
     }
 
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -331,7 +331,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         CancellationToken cancellationToken = default,
         TimeZoneInfo? timeZone = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         DateTime from = timeZone is null ? StartOfUtcDay(dateFrom) : dateFrom;
         DateTime toInclusive = timeZone is null ? EndOfUtcDay(dateTo) : dateTo;
@@ -341,18 +341,18 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             ? meals.Select(m => m.Date.Date)
             : meals.Select(m => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(m.Date, timeZone.Id).Date);
         return await dates.Distinct().OrderByDescending(d => d)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<int> GetTotalMealCountAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await records
             .AsNoTracking()
-            .CountAsync(m => m.UserId == userId, cancellationToken).ConfigureAwait(false);
+            .CountAsync(m => m.UserId == userId, cancellationToken);
     }
 
     public async Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
@@ -360,7 +360,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
         DateTime date,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         DateTime from = StartOfUtcDay(date);
         DateTime toInclusive = EndOfUtcDay(date);
@@ -370,7 +370,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .AsSplitQuery()
             .Include(m => m.Items)
             .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
@@ -390,7 +390,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .Distinct()];
 
         IReadOnlyDictionary<ImageAssetId, string> imageUrlsById = await sourceSnapshots.GetImageUrlsAsync(
-            imageAssetIds, cancellationToken).ConfigureAwait(false);
+            imageAssetIds, cancellationToken);
 
         RecipeId[] legacyRecipeIds = [.. meals
             .SelectMany(static meal => meal.Items)
@@ -399,7 +399,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .Distinct()];
 
         IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel> legacyRecipesById = await sourceSnapshots.GetLegacyRecipesAsync(
-            legacyRecipeIds, cancellationToken).ConfigureAwait(false);
+            legacyRecipeIds, cancellationToken);
 
         // Product type is not snapshotted, so even complete snapshots need current metadata.
         // One bounded lookup also supplies fallback fields for legacy rows.
@@ -410,7 +410,7 @@ public sealed class MealRepository(DbSet<Meal> records, IMealProductNutritionQue
             .Distinct()];
 
         IReadOnlyDictionary<ProductId, Product> legacyProductsById = await products.GetByIdsAsync(
-            legacyProductIds, cancellationToken).ConfigureAwait(false);
+            legacyProductIds, cancellationToken);
 
         return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById, legacyRecipesById, legacyProductsById))];
     }

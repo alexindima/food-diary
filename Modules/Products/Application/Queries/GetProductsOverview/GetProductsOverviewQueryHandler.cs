@@ -44,7 +44,7 @@ public sealed class GetProductsOverviewQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ProductOverviewModel>(userIdResult);
         }
@@ -58,7 +58,7 @@ public sealed class GetProductsOverviewQueryHandler(
             options.PageNumber,
             options.PageSize,
             options.ToFilters(query.Search),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         var allProducts = items.ToList();
         IReadOnlyList<ProductOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
@@ -66,12 +66,12 @@ public sealed class GetProductsOverviewQueryHandler(
             options.RecentLimit,
             query.IncludePublic,
             options.ToFilters(query.Search),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         ProductId[] favoriteProductIds = [.. allProducts
             .Select(x => x.Id)
             .Concat(recentItems.Select(x => x.Id))
             .Distinct()];
-        FavoriteProductOverviewModel favorites = await sender.Send(new ReadFavoriteProductOverviewQuery(options.UserId, favoriteProductIds, options.FavoriteLimit), cancellationToken).ConfigureAwait(false);
+        FavoriteProductOverviewModel favorites = await sender.Send(new ReadFavoriteProductOverviewQuery(options.UserId, favoriteProductIds, options.FavoriteLimit), cancellationToken);
         var favoritesByProductId = favorites.Items.ToDictionary(ToFavoriteProductId);
 
         PagedResponse<ProductModel> allPaged = CreatePagedProducts(
@@ -139,7 +139,7 @@ public sealed class GetProductsOverviewQueryHandler(
             userId,
             limit,
             includePublic,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. items.Where(item => MatchesFilters(item, filters))];
     }

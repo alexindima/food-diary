@@ -8,7 +8,7 @@ public interface IWebPushNotificationSender {
 
     async Task<WebPushDeliveryOutcome> SendBatchAsync(Notification notification, IReadOnlySet<Guid> completedSubscriptionIds,
         CancellationToken cancellationToken = default) {
-        await SendAsync(notification, cancellationToken).ConfigureAwait(false);
+        await SendAsync(notification, cancellationToken);
         return WebPushDeliveryOutcome.Skipped;
     }
 }

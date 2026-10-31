@@ -26,7 +26,7 @@ public sealed class BillingAccessService(
             bool wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
             subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.GetUtcNow().UtcDateTime);
             if (subscription.PremiumRoleManagedByBilling != wasManagedByBilling) {
-                await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
+                await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
             }
 
             return;
@@ -34,11 +34,11 @@ public sealed class BillingAccessService(
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            await billingUserContextService.Send(new EnsureUserPremiumRoleCommand(UserId: user.UserId), cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.Send(new EnsureUserPremiumRoleCommand(UserId: user.UserId), cancellationToken);
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
-            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
+            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
         } else {
-            await RevokeManagedPremiumRoleAsync(subscription, cancellationToken).ConfigureAwait(false);
+            await RevokeManagedPremiumRoleAsync(subscription, cancellationToken);
         }
     }
 
@@ -47,9 +47,9 @@ public sealed class BillingAccessService(
             return;
         }
 
-        await billingUserContextService.Send(new RemoveUserPremiumRoleCommand(UserId: subscription.UserId), cancellationToken).ConfigureAwait(false);
+        await billingUserContextService.Send(new RemoveUserPremiumRoleCommand(UserId: subscription.UserId), cancellationToken);
         subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
-        await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
+        await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken);
     }
 
     public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) =>

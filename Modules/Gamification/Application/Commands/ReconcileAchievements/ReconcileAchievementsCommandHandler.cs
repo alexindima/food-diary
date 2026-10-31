@@ -19,15 +19,13 @@ public sealed class ReconcileAchievementsCommandHandler(
         UserId userId = request.UserId;
         DateTime occurredAtUtc = request.OccurredAtUtc;
         DateTime today = timeProvider.GetUtcNow().UtcDateTime.Date;
-        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, DateTime.UnixEpoch, today), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, DateTime.UnixEpoch, today), cancellationToken);
         (_, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
-        int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken).ConfigureAwait(false);
+        int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken);
         int totalAcademyArticlesRead = await achievementMetricReader
-            .GetCompletedAcademyArticleCountAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetCompletedAcademyArticleCountAsync(userId, cancellationToken);
         var metrics = new AchievementMetricSnapshot(longestStreak, totalMeals, totalAcademyArticlesRead);
-        await achievementAwardService.EvaluateAndGrantAsync(userId, metrics, cancellationToken, occurredAtUtc).ConfigureAwait(false);
+        await achievementAwardService.EvaluateAndGrantAsync(userId, metrics, cancellationToken, occurredAtUtc);
         return Unit.Value;
     }
 }

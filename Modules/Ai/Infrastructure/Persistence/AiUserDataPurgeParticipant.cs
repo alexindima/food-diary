@@ -10,8 +10,8 @@ internal sealed class AiUserDataPurgeParticipant(AiDbContext context, IModuleTra
     public int Order => 120;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.Set<FoodRecognitionJob>().Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await context.AiUsages.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.Set<FoodRecognitionJob>().Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await context.AiUsages.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

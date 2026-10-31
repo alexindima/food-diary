@@ -10,10 +10,10 @@ namespace FoodDiary.Modules.Ai.Application.Commands.ImportRecipeVideo;
 public sealed class ImportRecipeVideoCommandHandler(IOpenAiFoodService service, ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ImportRecipeVideoCommand, Result<RecipeImportDraftModel>> {
     public async Task<Result<RecipeImportDraftModel>> Handle(ImportRecipeVideoCommand command, CancellationToken cancellationToken) {
-        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (user.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeImportDraftModel>(user);
         }
-        return await service.ImportRecipeVideoAsync(command.Video, command.SourceUrl, command.Text, user.Value, command.RequestId, cancellationToken).ConfigureAwait(false);
+        return await service.ImportRecipeVideoAsync(command.Video, command.SourceUrl, command.Text, user.Value, command.RequestId, cancellationToken);
     }
 }

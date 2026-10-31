@@ -31,15 +31,13 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
         (IReadOnlyList<DashboardWeightPointReadModel> latestWeightEntries, IReadOnlyList<DashboardWeightPointReadModel> weightTrendEntries) =
             includeWeight
                 ? await GetWeightDataAsync(userId, normalizedDayEndStart, normalizedTrendStart, normalizedDayStart, cancellationToken)
-                    .ConfigureAwait(false)
                 : ([], []);
         (IReadOnlyList<DashboardWaistPointReadModel> latestWaistEntries, IReadOnlyList<DashboardWaistPointReadModel> waistTrendEntries) =
             includeWaist
                 ? await GetWaistDataAsync(userId, normalizedDayEndStart, normalizedTrendStart, normalizedDayStart, cancellationToken)
-                    .ConfigureAwait(false)
                 : ([], []);
         int hydrationTotalMl = includeHydration
-            ? await GetHydrationTotalAsync(userId, dayStart, dayEndStart, cancellationToken).ConfigureAwait(false)
+            ? await GetHydrationTotalAsync(userId, dayStart, dayEndStart, cancellationToken)
             : 0;
         List<DashboardHydrationEntryModel> hydrationEntries = includeHydration
             ? await context.HydrationEntries.AsNoTracking()
@@ -48,7 +46,7 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
                 .ThenByDescending(entry => entry.Id)
                 .Take(DashboardHydrationHistoryModel.EntryLimit + 1)
                 .Select(entry => new DashboardHydrationEntryModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))
-                .ToListAsync(cancellationToken).ConfigureAwait(false)
+                .ToListAsync(cancellationToken)
             : [];
 
         return new DashboardBodyReadModel(
@@ -82,8 +80,7 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
 
         var entries = await latestQuery
             .Concat(trendQuery)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return (
             [.. entries
                 .Where(static entry => entry.IsLatest)
@@ -117,8 +114,7 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
 
         var entries = await latestQuery
             .Concat(trendQuery)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return (
             [.. entries
                 .Where(static entry => entry.IsLatest)
@@ -140,7 +136,7 @@ internal sealed class DashboardBodyReadService(ICompositionReadContext context) 
         return await context.HydrationEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId && entry.Timestamp >= dayStart && entry.Timestamp <= dayEndStart)
-            .SumAsync(entry => entry.AmountMl, cancellationToken).ConfigureAwait(false);
+            .SumAsync(entry => entry.AmountMl, cancellationToken);
     }
 
     private static IReadOnlyList<DashboardWeightSummaryReadModel> BuildWeightTrend(

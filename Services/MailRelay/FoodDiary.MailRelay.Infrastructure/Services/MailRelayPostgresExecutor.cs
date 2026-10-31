@@ -10,15 +10,15 @@ internal sealed class MailRelayPostgresExecutor(NpgsqlDataSource dataSource) {
         Action<NpgsqlCommand>? configure,
         Func<NpgsqlDataReader, CancellationToken, Task<T>> readAsync,
         CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 configure?.Invoke(command);
 
-                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                await using (reader.ConfigureAwait(false)) {
-                    return await readAsync(reader, cancellationToken).ConfigureAwait(false);
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+                await using (reader) {
+                    return await readAsync(reader, cancellationToken);
                 }
             }
         }
@@ -28,12 +28,12 @@ internal sealed class MailRelayPostgresExecutor(NpgsqlDataSource dataSource) {
         string sql,
         Action<NpgsqlCommand>? configure,
         CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 configure?.Invoke(command);
-                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
     }
@@ -44,13 +44,13 @@ internal sealed class MailRelayPostgresExecutor(NpgsqlDataSource dataSource) {
         Func<object, T> map,
         string missingValueError,
         CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 configure?.Invoke(command);
 
-                object value = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)
+                object value = await command.ExecuteScalarAsync(cancellationToken)
                                ?? throw new InvalidOperationException(missingValueError);
                 return map(value);
             }
@@ -60,12 +60,12 @@ internal sealed class MailRelayPostgresExecutor(NpgsqlDataSource dataSource) {
     public async Task<T> InTransactionAsync<T>(
         Func<NpgsqlConnection, NpgsqlTransaction, CancellationToken, Task<T>> action,
         CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                T result = await action(connection, transaction, cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
+            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+            await using (transaction) {
+                T result = await action(connection, transaction, cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
                 return result;
             }
         }
@@ -79,12 +79,12 @@ internal sealed class MailRelayPostgresExecutor(NpgsqlDataSource dataSource) {
         Func<NpgsqlDataReader, CancellationToken, Task<T>> readAsync,
         CancellationToken cancellationToken) {
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             configure?.Invoke(command);
 
-            NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using (reader.ConfigureAwait(false)) {
-                return await readAsync(reader, cancellationToken).ConfigureAwait(false);
+            NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using (reader) {
+                return await readAsync(reader, cancellationToken);
             }
         }
     }

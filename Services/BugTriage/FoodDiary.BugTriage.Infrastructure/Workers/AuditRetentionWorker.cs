@@ -13,13 +13,13 @@ public sealed class AuditRetentionWorker(IAuditRunStore store, TimeProvider time
             try {
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 timeout.CancelAfter(options.Value.ImportTimeout);
-                await store.PurgeAsync(timeProvider.GetUtcNow(), timeout.Token).ConfigureAwait(false);
+                await store.PurgeAsync(timeProvider.GetUtcNow(), timeout.Token);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception) {
                 logger.LogWarning("Audit content cleanup failed; the next polling cycle will retry.");
             }
-            await Task.Delay(options.Value.PollInterval, timeProvider, stoppingToken).ConfigureAwait(false);
+            await Task.Delay(options.Value.PollInterval, timeProvider, stoppingToken);
         }
     }
 }

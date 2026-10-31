@@ -14,7 +14,7 @@ public sealed class GetDailyAdviceGroupsQueryHandler(IDailyAdviceReadModelReposi
         IReadOnlyList<DailyAdviceReadModel> items = await repository.GetGroupPageReadModelsAsync(
             PaginationPolicy.NormalizePage(request.Page),
             PaginationPolicy.NormalizePageSize(request.Limit),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success<IReadOnlyList<DailyAdviceGroupModel>>(items
             .GroupBy(item => item.GroupId == Guid.Empty ? item.Id : item.GroupId)
             .Select(group => new DailyAdviceGroupModel(group.Key,

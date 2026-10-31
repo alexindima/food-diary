@@ -16,13 +16,12 @@ public sealed class GetWeightGoalHistoryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WeightGoalHistoryModel>>(userIdResult);
         }
 
         return await userProfileReadService
-            .GetWeightGoalHistoryAsync(userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .GetWeightGoalHistoryAsync(userIdResult.Value, cancellationToken);
     }
 }

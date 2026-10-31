@@ -42,7 +42,7 @@ public static class RecipesModuleRegistration {
         RecipesDbContext owned = provider.GetRequiredService<RecipesDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
             }
         };
     }

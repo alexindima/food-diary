@@ -16,15 +16,14 @@ public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelR
         GetActiveSessionsQuery query,
         CancellationToken cancellationToken) {
         UserId userId = query.UserId;
-        if (!await repository.IsActiveAsync(userId, query.CurrentSessionId, cancellationToken).ConfigureAwait(false)) {
+        if (!await repository.IsActiveAsync(userId, query.CurrentSessionId, cancellationToken)) {
             return Result.Failure<IReadOnlyList<ActiveSessionModel>>(AuthenticationErrors.InvalidToken);
         }
 
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         IReadOnlyList<RefreshTokenSessionReadModel> sessions = await repository
-            .GetActivePageReadModelsAsync(userId, page, limit, cancellationToken)
-            .ConfigureAwait(false);
+            .GetActivePageReadModelsAsync(userId, page, limit, cancellationToken);
 
         ActiveSessionModel[] models = [.. sessions.Select(session => {
             ParsedUserAgent userAgent = UserAgentParser.Parse(session.UserAgent);

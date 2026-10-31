@@ -27,7 +27,7 @@ public sealed class UpdateMealCommandHandler(
             mealReadRepository,
             currentUserAccessService,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<MealModel>(valuesResult.Error);
         }
@@ -40,23 +40,23 @@ public sealed class UpdateMealCommandHandler(
             mealNutritionService,
             imageAssetAccessService,
             dateTimeProvider,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (updateResult.IsFailure) {
             return Result.Failure<MealModel>(updateResult.Error);
         }
 
-        await mealWriteRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.UpdateAsync(values.Meal, cancellationToken);
         await recentItemUsageRecorder.RegisterUsageAsync(
             values.UserId,
             values.Meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             values.Meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         await UpdateMealImageCleanup.DeleteOldImageAssetAsync(
             command,
             values.OldAssetId,
             imageAssetCleanupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         // The command pipeline persists staged changes after this handler returns.
         return Result.Success(values.Meal.ToModel());
     }

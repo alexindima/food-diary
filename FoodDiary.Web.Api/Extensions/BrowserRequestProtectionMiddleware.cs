@@ -18,7 +18,7 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
         bool unsafeMethod = !HttpMethods.IsGet(context.Request.Method) && !HttpMethods.IsHead(context.Request.Method) && !HttpMethods.IsOptions(context.Request.Method);
         if (!bearer && (browser || authEntry) && unsafeMethod &&
             context.Request.Headers.XRequestedWith != "XMLHttpRequest") {
-            await RejectAsync(context, context.RequestAborted).ConfigureAwait(false);
+            await RejectAsync(context, context.RequestAborted);
             return;
         }
         string origin = context.Request.Headers.Origin.ToString();
@@ -28,22 +28,22 @@ public sealed class BrowserRequestProtectionMiddleware(RequestDelegate next) {
             !string.Equals(expectedSession, actualSession.ToString("D"), StringComparison.Ordinal)) {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
-                "Authentication.SessionChanged", "The request belongs to another session.", context.TraceIdentifier), context.RequestAborted).ConfigureAwait(false);
+                "Authentication.SessionChanged", "The request belongs to another session.", context.TraceIdentifier), context.RequestAborted);
             return;
         }
         string ownOrigin = $"{context.Request.Scheme}://{context.Request.Host}";
         if (!bearer && BrowserSessionCookieService.IsAdmin(context) && !environment.IsDevelopment() && origin.Length > 0 &&
             !string.Equals(origin, ownOrigin, StringComparison.OrdinalIgnoreCase)) {
-            await RejectAsync(context, context.RequestAborted).ConfigureAwait(false);
+            await RejectAsync(context, context.RequestAborted);
             return;
         }
         if (!bearer && (browser || authEntry) && origin.Length > 0 &&
             !string.Equals(origin, ownOrigin, StringComparison.OrdinalIgnoreCase) &&
             !cors.Value.Origins.Contains(origin, StringComparer.OrdinalIgnoreCase)) {
-            await RejectAsync(context, context.RequestAborted).ConfigureAwait(false);
+            await RejectAsync(context, context.RequestAborted);
             return;
         }
-        await next(context).ConfigureAwait(false);
+        await next(context);
     }
 
     private static Task RejectAsync(HttpContext context, CancellationToken cancellationToken) {

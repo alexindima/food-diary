@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.Notifications.Application.Services;
 
 public sealed class TestNotificationDeliveryDispatcher(ISender sender) : ITestNotificationDeliveryDispatcher {
     public async Task DispatchAsync(Guid userId, string type, CancellationToken cancellationToken = default) {
-        Result result = await sender.Send(new DeliverTestNotificationCommand(userId, type), cancellationToken).ConfigureAwait(false);
+        Result result = await sender.Send(new DeliverTestNotificationCommand(userId, type), cancellationToken);
         if (result.IsFailure) {
             throw new InvalidOperationException($"Test notification delivery failed: {result.Error.Code}.");
         }

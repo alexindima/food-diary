@@ -11,7 +11,7 @@ public sealed class RecipeVideoAdmissionAttribute : Attribute, IAsyncResourceFil
 
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next) {
         // Admit before multipart model binding creates temporary upload files.
-        if (!await Slots.WaitAsync(0, context.HttpContext.RequestAborted).ConfigureAwait(false)) {
+        if (!await Slots.WaitAsync(0, context.HttpContext.RequestAborted)) {
             context.Result = new ObjectResult(new ApiErrorHttpResponse(
                 "Ai.VideoBusy", "Video recognition is busy. Try again shortly.", context.HttpContext.TraceIdentifier)) {
                 StatusCode = StatusCodes.Status429TooManyRequests,
@@ -19,7 +19,7 @@ public sealed class RecipeVideoAdmissionAttribute : Attribute, IAsyncResourceFil
             return;
         }
         try {
-            await next().ConfigureAwait(false);
+            await next();
         } finally {
             Slots.Release();
         }

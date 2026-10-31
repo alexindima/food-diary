@@ -19,7 +19,7 @@ public sealed class MailRelayProviderEventsController(
     [ProducesMailRelayApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesMailRelayApiErrorResponse(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> IngestAwsSesSns(AwsSesSnsWebhookHttpRequest request) {
-        if (!await providerWebhookAuthorizer.IsAwsSesSnsAuthorizedAsync(request, HttpContext.RequestAborted).ConfigureAwait(false)) {
+        if (!await providerWebhookAuthorizer.IsAwsSesSnsAuthorizedAsync(request, HttpContext.RequestAborted)) {
             return Unauthorized(new MailRelayApiErrorHttpResponse(
                 "MailRelay.ProviderWebhook.Unauthorized",
                 "The AWS SES SNS webhook signature is invalid.",
@@ -30,7 +30,7 @@ public sealed class MailRelayProviderEventsController(
             request,
             static value => value.ToMappedCommand(),
             "/api/email/providers/aws-ses/sns",
-            static value => value.ToProviderIngestionHttpResponse()).ConfigureAwait(false);
+            static value => value.ToProviderIngestionHttpResponse());
     }
 
     [HttpPost("mailgun/events")]

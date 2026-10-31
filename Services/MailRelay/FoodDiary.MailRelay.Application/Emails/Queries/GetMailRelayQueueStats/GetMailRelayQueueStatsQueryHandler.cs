@@ -5,7 +5,7 @@ namespace FoodDiary.MailRelay.Application.Emails.Queries.GetMailRelayQueueStats;
 public sealed class GetMailRelayQueueStatsQueryHandler(MailRelayEmailUseCases useCases)
     : IRequestHandler<GetMailRelayQueueStatsQuery, Result<MailRelayQueueStats>> {
     public async Task<Result<MailRelayQueueStats>> Handle(GetMailRelayQueueStatsQuery request, CancellationToken cancellationToken) {
-        MailRelayQueueStats stats = await useCases.GetStatsAsync(cancellationToken).ConfigureAwait(false);
+        MailRelayQueueStats stats = await useCases.GetStatsAsync(cancellationToken);
         return Result.Success(stats);
     }
 }

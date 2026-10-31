@@ -22,7 +22,7 @@ WebApplication app = builder.Build();
 
 app.MapMailRelayPresentation();
 
-await app.RunAsync().ConfigureAwait(false);
+await app.RunAsync();
 
 [ExcludeFromCodeCoverage]
 public partial class Program;

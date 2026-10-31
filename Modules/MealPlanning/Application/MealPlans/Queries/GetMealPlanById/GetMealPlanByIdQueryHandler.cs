@@ -21,7 +21,7 @@ public sealed class GetMealPlanByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<MealPlanModel>(userIdResult);
         }
@@ -36,8 +36,7 @@ public sealed class GetMealPlanByIdQueryHandler(
         }
 
         MealPlanId planId = planIdResult.Value;
-        MealPlanModel? plan = await GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+        MealPlanModel? plan = await GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken);
         if (plan is null) {
             return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(query.PlanId));
         }
@@ -49,8 +48,7 @@ public sealed class GetMealPlanByIdQueryHandler(
         UserId userId,
         CancellationToken cancellationToken) {
         MealPlanReadModel? plan = await mealPlanRepository
-            .GetReadModelByIdAsync(mealPlanId, userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetReadModelByIdAsync(mealPlanId, userId, cancellationToken);
 
         if (plan is null || (!plan.IsCurated && plan.UserId != userId.Value)) {
             return null;

@@ -25,10 +25,10 @@ public sealed class CleanupExpiredNotificationsCommandHandler(
             utcNow.AddDays(-Math.Max(policy.StandardReadRetentionDays, 1)),
             utcNow.AddDays(-Math.Max(policy.StandardUnreadRetentionDays, 1)),
             policy.BatchSize,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (deleted > 0) {
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         return deleted;

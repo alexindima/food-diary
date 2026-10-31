@@ -1,12 +1,14 @@
+import { DOCUMENT } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { map, type Observable } from 'rxjs';
+import { map, noop, type Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { AdminUsersSdk } from '../../../shared/api/sdk/generated/api/admin-users.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
 import { sdkPage } from '../../../shared/api/sdk/sdk-response';
 import type { AdminId } from '../../../shared/models/semantics/admin-meaning';
+import type { AdminTestNotification } from '../models/admin-test-notification';
 import type {
     AdminImpersonationSession,
     AdminImpersonationStart,
@@ -35,6 +37,7 @@ const DEFAULT_ROLE_AUDIT_LIMIT = 20;
 @Service()
 export class AdminUsersService {
     private readonly http = inject(HttpClient);
+    private readonly document = inject(DOCUMENT);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/users`;
     private readonly sdk = createSdkConnection(AdminUsersSdk, this.baseUrl, this.http);
 
@@ -94,6 +97,21 @@ export class AdminUsersService {
 
     public getUser(userId: AdminId<'user'>): Observable<AdminUser> {
         return this.sdk.client.getAdminUsersById({ version: this.sdk.version, id: userId }).pipe(map(adminUserFromSdk));
+    }
+
+    public scheduleTestNotification(userId: AdminId<'user'>, payload: AdminTestNotification): Observable<void> {
+        const key = this.document.defaultView?.crypto.randomUUID();
+        if (key === undefined) {
+            throw new Error('A secure browser context is required.');
+        }
+        return this.sdk.client
+            .postAdminUsersByIdNotificationsTest({
+                version: this.sdk.version,
+                id: userId,
+                idempotencyKey: key,
+                scheduleTestNotificationHttpRequest: payload,
+            })
+            .pipe(map(noop));
     }
 
     public getUserRoleAudit(userId: AdminId<'user'>, limit = DEFAULT_ROLE_AUDIT_LIMIT): Observable<AdminUserRoleAuditEvent[]> {

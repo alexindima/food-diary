@@ -23,7 +23,7 @@ public sealed class SetAttentionSignalStateCommandHandler(
         Result<UserId> dietologistIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (dietologistIdResult.IsFailure) {
             return Result.Failure(dietologistIdResult.Error);
         }
@@ -40,7 +40,7 @@ public sealed class SetAttentionSignalStateCommandHandler(
             invitationRepository,
             dietologistIdResult.Value,
             clientId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure(accessResult.Error);
         }
@@ -61,7 +61,7 @@ public sealed class SetAttentionSignalStateCommandHandler(
             "AttentionSignal",
             command.SignalId,
             metadata,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 }

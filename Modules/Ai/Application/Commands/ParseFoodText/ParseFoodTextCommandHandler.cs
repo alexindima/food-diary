@@ -18,7 +18,7 @@ public sealed class ParseFoodTextCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FoodVisionModel>(userIdResult);
         }
@@ -28,6 +28,6 @@ public sealed class ParseFoodTextCommandHandler(
             command.Text,
             userId,
             command.RequestId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

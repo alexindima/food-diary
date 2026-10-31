@@ -13,7 +13,7 @@ public sealed class CachedProductRepository(
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
-        Product result = await inner.AddAsync(product, cancellationToken).ConfigureAwait(false);
+        Product result = await inner.AddAsync(product, cancellationToken);
         Evict(result.Id);
         return result;
     }
@@ -28,7 +28,7 @@ public sealed class CachedProductRepository(
             return IsAccessible(cached, userId, includePublic) ? cached : null;
         }
 
-        Product? product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
+        Product? product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken);
         if (product is not null) {
             cache.Set(key, product, CacheDuration);
         }
@@ -58,12 +58,12 @@ public sealed class CachedProductRepository(
         inner.GetUsageCountAsync(id, userId, includePublic, cancellationToken);
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
-        await inner.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        await inner.UpdateAsync(product, cancellationToken);
         Evict(product.Id);
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
-        await inner.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
+        await inner.DeleteAsync(product, cancellationToken);
         Evict(product.Id);
     }
 

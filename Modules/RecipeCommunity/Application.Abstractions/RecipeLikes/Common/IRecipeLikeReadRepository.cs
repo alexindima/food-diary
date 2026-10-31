@@ -14,7 +14,7 @@ public interface IRecipeLikeReadRepository {
         UserId userId,
         RecipeId recipeId,
         CancellationToken cancellationToken = default) =>
-        await GetByUserAndRecipeAsync(userId, recipeId, cancellationToken).ConfigureAwait(false) is not null;
+        await GetByUserAndRecipeAsync(userId, recipeId, cancellationToken) is not null;
 
     Task<int> CountByRecipeAsync(RecipeId recipeId, CancellationToken cancellationToken = default);
 }

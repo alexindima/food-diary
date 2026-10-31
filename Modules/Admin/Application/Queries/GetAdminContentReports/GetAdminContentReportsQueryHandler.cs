@@ -19,8 +19,7 @@ public sealed class GetAdminContentReportsQueryHandler(ISender contentReportRead
         int pageNumber = PaginationPolicy.NormalizePage(query.Page);
         ReportStatus? status = EnumFilterParser.ParseOptional<ReportStatus>(query.Status);
 
-        (IReadOnlyList<ContentReportAdminReadModel> items, int total) = await contentReportReadService.Send(new GetContentReportsForAdministrationQuery(Status: status, Page: pageNumber, Limit: pageSize, Filter: new ContentReportAdminFilter(query.FromUtc, query.ToUtc, query.TargetType, query.ReporterId, query.TargetId)), cancellationToken)
-            .ConfigureAwait(false);
+        (IReadOnlyList<ContentReportAdminReadModel> items, int total) = await contentReportReadService.Send(new GetContentReportsForAdministrationQuery(Status: status, Page: pageNumber, Limit: pageSize, Filter: new ContentReportAdminFilter(query.FromUtc, query.ToUtc, query.TargetType, query.ReporterId, query.TargetId)), cancellationToken);
 
         IReadOnlyList<AdminContentReportModel> models = [
             .. items.Select(static report => report.ToAdminModel()),

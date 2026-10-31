@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FoodDiary.Development.Mcp.Protocol;
 using Microsoft.Data.Sqlite;
@@ -49,15 +48,15 @@ internal sealed class SqliteFlowScopeReader(string repositoryRoot) {
                     Pooling = false,
                     DefaultTimeout = 2,
                 }.ToString());
-                await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
-                await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                await using IAsyncDisposable connectionDisposal = connection;
+                await connection.OpenAsync(cancellationToken);
                 SqliteTransaction transaction = connection.BeginTransaction(deferred: true);
-                await using ConfiguredAsyncDisposable transactionDisposal = transaction.ConfigureAwait(false);
+                await using IAsyncDisposable transactionDisposal = transaction;
                 SqliteCommand metadata = connection.CreateCommand();
-                await using ConfiguredAsyncDisposable metadataDisposal = metadata.ConfigureAwait(false);
+                await using IAsyncDisposable metadataDisposal = metadata;
                 metadata.Transaction = transaction;
                 metadata.CommandText = "SELECT value FROM metadata WHERE key = 'change_set_fingerprint';";
-                if (!string.Equals(await metadata.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) as string,
+                if (!string.Equals(await metadata.ExecuteScalarAsync(cancellationToken) as string,
                     expectedFingerprint, StringComparison.Ordinal)) {
                     result = Unavailable("snapshot-mismatch");
                 } else {
@@ -71,7 +70,7 @@ internal sealed class SqliteFlowScopeReader(string repositoryRoot) {
                             cancellationToken.ThrowIfCancellationRequested();
                             if (!visited.Add(source)) { continue; }
                             SqliteCommand command = connection.CreateCommand();
-                            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+                            await using IAsyncDisposable commandDisposal = command;
                             command.Transaction = transaction;
                             command.CommandTimeout = 2;
                             command.CommandText = """
@@ -121,10 +120,10 @@ internal sealed class SqliteFlowScopeReader(string repositoryRoot) {
                                     WHEN path LIKE '%Service.cs' THEN 2 ELSE 3 END, path, kind, evidence LIMIT 41;
                                 """;
                             command.Parameters.AddWithValue("$path", source);
-                            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-                            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+                            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken: cancellationToken);
+                            await using IAsyncDisposable readerDisposal = reader;
                             int count = 0;
-                            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                            while (await reader.ReadAsync(cancellationToken)) {
                                 if (++count > 40 || links.Count >= 80) { truncated = true; break; }
                                 string target = reader.GetString(0);
                                 if (!IsRelevantPath(target, includeTests)) { continue; }

@@ -21,7 +21,7 @@ public sealed class GetClientGoalsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ClientGoalsModel>(userIdResult);
         }
@@ -29,8 +29,7 @@ public sealed class GetClientGoalsQueryHandler(
         UserId dietologistUserId = userIdResult.Value;
         Guid clientUserId = query.ClientUserId;
         Result<string> dietologistResult = await dietologistUserContextService
-            .GetAccessibleUserEmailAsync(dietologistUserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAccessibleUserEmailAsync(dietologistUserId, cancellationToken);
         if (dietologistResult.IsFailure) {
             return Result.Failure<ClientGoalsModel>(dietologistResult.Error);
         }
@@ -43,7 +42,7 @@ public sealed class GetClientGoalsQueryHandler(
         }
 
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
-            invitationRepository, dietologistUserId, clientResult.Value, cancellationToken).ConfigureAwait(false);
+            invitationRepository, dietologistUserId, clientResult.Value, cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure<ClientGoalsModel>(accessResult.Error);
         }
@@ -54,8 +53,7 @@ public sealed class GetClientGoalsQueryHandler(
         }
 
         Result<GoalsModel> goalsResult = await dietologistUserContextService
-            .GetGoalsByIdAsync(clientResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .GetGoalsByIdAsync(clientResult.Value, cancellationToken);
         if (goalsResult.IsFailure) {
             return Result.Failure<ClientGoalsModel>(goalsResult.Error);
         }

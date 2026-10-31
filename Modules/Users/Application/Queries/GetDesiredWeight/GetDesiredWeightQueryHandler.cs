@@ -16,12 +16,12 @@ public sealed class GetDesiredWeightQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<UserDesiredWeightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return await userProfileReadService.GetDesiredWeightAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await userProfileReadService.GetDesiredWeightAsync(userId, cancellationToken);
     }
 }

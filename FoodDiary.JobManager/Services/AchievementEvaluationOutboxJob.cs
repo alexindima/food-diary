@@ -24,7 +24,7 @@ public sealed class AchievementEvaluationOutboxJob(
                 return;
             }
 
-            int processed = await processor.ProcessDueAsync(settings.BatchSize, cancellationToken).ConfigureAwait(false);
+            int processed = await processor.ProcessDueAsync(settings.BatchSize, cancellationToken);
             if (processed > 0) {
                 logger.LogInformation("Processed {ProcessedCount} achievement evaluation messages.", processed);
             }

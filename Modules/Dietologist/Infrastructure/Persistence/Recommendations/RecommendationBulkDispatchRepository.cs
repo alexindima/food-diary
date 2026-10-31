@@ -23,14 +23,13 @@ internal sealed class RecommendationBulkDispatchRepository(DbSet<RecommendationB
             .Select(dispatch => new RecommendationBulkDispatchReadModel(
                 dispatch.ClientUserId.Value,
                 dispatch.RecommendationId.Value))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<RecommendationBulkDispatch> AddAsync(
         RecommendationBulkDispatch dispatch,
         CancellationToken cancellationToken = default) {
-        await records.AddAsync(dispatch, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(dispatch, cancellationToken);
         return dispatch;
     }
 }

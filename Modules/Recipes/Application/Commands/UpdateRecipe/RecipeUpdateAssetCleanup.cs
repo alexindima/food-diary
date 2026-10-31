@@ -14,7 +14,7 @@ internal static class RecipeUpdateAssetCleanup {
                                  (!values.OldAssetId.HasValue || values.OldAssetId.Value.Value != command.ImageAssetId.Value));
 
         if (values.OldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(values.OldAssetId.Value, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(values.OldAssetId.Value, cancellationToken);
         }
 
         if (values.OldStepAssetIds.Count == 0) {
@@ -30,7 +30,7 @@ internal static class RecipeUpdateAssetCleanup {
 
         foreach (ImageAssetId assetId in values.OldStepAssetIds) {
             if (!newStepAssetIds.Contains(assetId)) {
-                await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+                await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
             }
         }
     }

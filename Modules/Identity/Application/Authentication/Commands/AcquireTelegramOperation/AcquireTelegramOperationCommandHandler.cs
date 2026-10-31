@@ -13,8 +13,8 @@ public sealed class AcquireTelegramOperationCommandHandler(ITelegramOperationSto
         if (!TelegramOperationChecks.IsEnabled(policy)) {
             return Result.Failure<TelegramOperationLease>(TelegramOperationChecks.Unavailable);
         }
-        TelegramOperationLease? lease = await store.AcquireAsync(policy.BotId, operationId, cancellationToken).ConfigureAwait(false);
-        if (lease is null || !await TelegramOperationChecks.IsCurrentAsync(lease, store, policy, identities, timeProvider, cancellationToken).ConfigureAwait(false)) {
+        TelegramOperationLease? lease = await store.AcquireAsync(policy.BotId, operationId, cancellationToken);
+        if (lease is null || !await TelegramOperationChecks.IsCurrentAsync(lease, store, policy, identities, timeProvider, cancellationToken)) {
             return Result.Failure<TelegramOperationLease>(TelegramOperationChecks.Conflict);
         }
         return Result.Success(lease);

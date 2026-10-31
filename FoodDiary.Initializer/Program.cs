@@ -90,7 +90,7 @@ Program.ConfigureServices(builder.Services, builder.Configuration, command);
 
 using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
-await using (scope.ConfigureAwait(false)) {
+await using (scope) {
     FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
     try {
@@ -98,7 +98,7 @@ await using (scope.ConfigureAwait(false)) {
             command,
             dbContext,
             scope.ServiceProvider,
-            builder.Configuration).ConfigureAwait(false);
+            builder.Configuration);
         return 0;
     } catch (Exception exception) {
         Console.Error.WriteLine($"Initializer failed: {exception}");
@@ -113,46 +113,46 @@ static async Task ExecuteAsync(
     IConfiguration configuration) {
     switch (command.Name) {
         case "list":
-            await ListMigrationsAsync(dbContext).ConfigureAwait(false);
+            await ListMigrationsAsync(dbContext);
             break;
         case "status":
-            await PrintStatusAsync(dbContext).ConfigureAwait(false);
+            await PrintStatusAsync(dbContext);
             break;
         case "update":
-            await UpdateDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
+            await UpdateDatabaseAsync(dbContext, command.TargetMigration);
             if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
                 await InitialAdminBootstrapper.BootstrapAsync(
                     services.GetRequiredService<ISender>(),
-                    InitialAdminBootstrapOptions.FromConfiguration(configuration)).ConfigureAwait(false);
+                    InitialAdminBootstrapOptions.FromConfiguration(configuration));
             }
             break;
         case "rollback":
-            await RollbackDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
+            await RollbackDatabaseAsync(dbContext, command.TargetMigration);
             break;
         case "rollback-last":
-            await RollbackLastMigrationAsync(dbContext).ConfigureAwait(false);
+            await RollbackLastMigrationAsync(dbContext);
             break;
         case "seed-usda":
             if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
                 throw new InvalidOperationException("seed-usda requires a path to the USDA CSV directory.");
             }
             if (command.Force) {
-                await UsdaDataSeeder.ForceSeedAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
+                await UsdaDataSeeder.ForceSeedAsync(dbContext, command.TargetMigration);
             } else {
-                await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
+                await UsdaDataSeeder.SeedAsync(dbContext, command.TargetMigration);
             }
             break;
         case "replay-outbox":
-            await ReplayOutboxAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
+            await ReplayOutboxAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
             break;
         case "list-dead-letters":
-            await ListDeadLettersAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
+            await ListDeadLettersAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
             break;
         case "show-dead-letter":
-            await ShowDeadLetterAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
+            await ShowDeadLetterAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
             break;
         case "list-outbox-replays":
-            await ListOutboxReplaysAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
+            await ListOutboxReplaysAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>());
             break;
         default:
             throw new InvalidOperationException($"Unknown command '{command.Name}'.");
@@ -170,7 +170,6 @@ static async Task ReplayOutboxAsync(
 
     OutboxDeadLetterMessageModel message = await replayService
         .GetDeadLetterAsync(outboxName, messageId)
-        .ConfigureAwait(false)
         ?? throw new InvalidOperationException("Dead-lettered outbox message was not found.");
     PrintDeadLetter(message);
     if (command.DryRun) {
@@ -189,7 +188,7 @@ static async Task ReplayOutboxAsync(
         messageId,
         command.RequestedBy,
         command.Reason,
-        command.ExpectedAttemptCount.Value).ConfigureAwait(false);
+        command.ExpectedAttemptCount.Value);
     Console.WriteLine($"Replayed {audit.OutboxName} outbox message {audit.MessageId}. Audit id: {audit.Id}.");
 }
 
@@ -197,8 +196,7 @@ static async Task ListDeadLettersAsync(
     InitializerCommand command,
     IOutboxDeadLetterReplayService replayService) {
     IReadOnlyList<OutboxDeadLetterMessageModel> messages = await replayService
-        .ListDeadLettersAsync(command.TargetMigration, command.Limit)
-        .ConfigureAwait(false);
+        .ListDeadLettersAsync(command.TargetMigration, command.Limit);
     foreach (OutboxDeadLetterMessageModel message in messages) {
         PrintDeadLetter(message);
     }
@@ -210,8 +208,7 @@ static async Task ShowDeadLetterAsync(
     IOutboxDeadLetterReplayService replayService) {
     (string outboxName, Guid messageId) = ParseOutboxTarget(command, "show-dead-letter");
     OutboxDeadLetterMessageModel? message = await replayService
-        .GetDeadLetterAsync(outboxName, messageId)
-        .ConfigureAwait(false);
+        .GetDeadLetterAsync(outboxName, messageId);
     if (message is null) {
         throw new InvalidOperationException("Dead-lettered outbox message was not found.");
     }
@@ -227,8 +224,7 @@ static async Task ListOutboxReplaysAsync(
         ? parsedMessageId
         : null;
     IReadOnlyList<OutboxReplayAuditModel> audits = await replayService
-        .ListReplayHistoryAsync(outboxName, messageId, command.Limit)
-        .ConfigureAwait(false);
+        .ListReplayHistoryAsync(outboxName, messageId, command.Limit);
     foreach (OutboxReplayAuditModel audit in audits) {
         Console.WriteLine(
             string.Create(
@@ -258,7 +254,7 @@ static void PrintDeadLetter(OutboxDeadLetterMessageModel message) {
 static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
     IMigrationsAssembly migrationsAssembly = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrationsAssembly>();
     IEnumerable<string> allMigrations = migrationsAssembly.Migrations.Keys;
-    var appliedMigrations = new HashSet<string>(await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false), StringComparer.OrdinalIgnoreCase);
+    var appliedMigrations = new HashSet<string>(await dbContext.Database.GetAppliedMigrationsAsync(), StringComparer.OrdinalIgnoreCase);
 
     foreach (string migration in allMigrations) {
         string state = appliedMigrations.Contains(migration) ? "applied" : "pending";
@@ -267,9 +263,9 @@ static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
 }
 
 static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
-    bool canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
-    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)];
-    string[] pendingMigrations = [.. await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)];
+    bool canConnect = await dbContext.Database.CanConnectAsync();
+    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync()];
+    string[] pendingMigrations = [.. await dbContext.Database.GetPendingMigrationsAsync()];
 
     Console.WriteLine($"Can connect:       {canConnect}");
     Console.WriteLine($"Applied count:     {appliedMigrations.Length}");
@@ -289,7 +285,7 @@ static async Task UpdateDatabaseAsync(FoodDiaryDbContext dbContext, string? targ
     string destination = string.IsNullOrWhiteSpace(targetMigration) ? "<latest>" : targetMigration;
 
     Console.WriteLine($"Updating database to {destination}...");
-    await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
+    await migrator.MigrateAsync(targetMigration);
     Console.WriteLine("Database update completed.");
 }
 
@@ -301,19 +297,19 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
     IMigrator migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
 
     Console.WriteLine($"Rolling database back to {targetMigration}...");
-    await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
+    await migrator.MigrateAsync(targetMigration);
     Console.WriteLine("Database rollback completed.");
 }
 
 static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
-    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)];
+    string[] appliedMigrations = [.. await dbContext.Database.GetAppliedMigrationsAsync()];
     if (appliedMigrations.Length == 0) {
         Console.WriteLine("Database has no applied migrations.");
         return;
     }
 
     string targetMigration = appliedMigrations.Length == 1 ? "0" : appliedMigrations[^2];
-    await RollbackDatabaseAsync(dbContext, targetMigration).ConfigureAwait(false);
+    await RollbackDatabaseAsync(dbContext, targetMigration);
 }
 
 static void PrintUsage() {

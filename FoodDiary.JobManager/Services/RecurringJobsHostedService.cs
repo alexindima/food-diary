@@ -52,7 +52,7 @@ public sealed class RecurringJobsHostedService(
                         "The JobManager will retry without restarting the host.");
                 }
 
-                await Task.Delay(RegistrationRetryDelay, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(RegistrationRetryDelay, cancellationToken);
             }
         }
     }

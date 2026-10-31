@@ -14,7 +14,7 @@ internal sealed class BugAcknowledgementSource(IMailInboxExportClient export, IM
         DateTimeOffset? before = null;
         Guid? beforeId = null;
         while (true) {
-            IReadOnlyList<MailInboxExportEntryResponse> page = await export.GetPageAsync("bugs@fooddiary.club", before, beforeId, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<MailInboxExportEntryResponse> page = await export.GetPageAsync("bugs@fooddiary.club", before, beforeId, cancellationToken);
             if (page.Count == 0) {
                 yield break;
             }
@@ -22,14 +22,14 @@ internal sealed class BugAcknowledgementSource(IMailInboxExportClient export, IM
                 if (entry.ReceivedAtUtc < since) {
                     yield break;
                 }
-                if (!entry.ContentAvailable || await receipts.ContainsAsync(entry.Id, cancellationToken).ConfigureAwait(false)) {
+                if (!entry.ContentAvailable || await receipts.ContainsAsync(entry.Id, cancellationToken)) {
                     continue;
                 }
-                InboundMailMessageDetailsResponse? details = await inbox.GetMessageAsync(entry.Id, cancellationToken).ConfigureAwait(false);
+                InboundMailMessageDetailsResponse? details = await inbox.GetMessageAsync(entry.Id, cancellationToken);
                 if (details is null || string.IsNullOrWhiteSpace(details.EnvelopeFromAddress) || details.ContentPurgedAtUtc is not null) {
                     continue;
                 }
-                byte[]? bytes = await export.GetMimeAsync(entry.Id, "bugs@fooddiary.club", cancellationToken).ConfigureAwait(false);
+                byte[]? bytes = await export.GetMimeAsync(entry.Id, "bugs@fooddiary.club", cancellationToken);
                 if (bytes is null) {
                     continue;
                 }

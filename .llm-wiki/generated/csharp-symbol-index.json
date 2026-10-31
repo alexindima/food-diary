@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4673,
-    "symbols": 4608,
+    "sourceFiles": 4677,
+    "symbols": 4612,
     "interfaceImplementationLinks": 207,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2382,
+      "class": 2385,
       "enum": 73,
       "interface": 422,
-      "record": 1589,
+      "record": 1590,
       "record struct": 142
     },
     "roles": {
-      "Command": 237,
-      "CommandHandler": 231,
+      "Command": 238,
+      "CommandHandler": 232,
       "Configuration": 102,
-      "Controller": 113,
+      "Controller": 114,
       "Entity": 103,
       "Event": 19,
       "Factory": 15,
@@ -41,7 +41,7 @@
       "Request": 179,
       "Response": 269,
       "Service": 177,
-      "Validator": 237,
+      "Validator": 238,
       "ValueObject": 182,
       "WriteRepository": 47
     }
@@ -143,7 +143,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "IChangeSetSnapshotService",
@@ -367,7 +367,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/ContextRoutingRetirementEvaluationRunner.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ContextRoutingTelemetryStore",
@@ -381,7 +381,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "IWikiCommandExecutor",
@@ -416,14 +416,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "SqliteFlowScopeReader",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "SqliteWikiContextSearch",
@@ -465,7 +465,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "WikiOutputParser",
@@ -850,7 +850,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 353
+      "line": 349
     },
     {
       "name": "UsdaCsvReader",
@@ -4280,7 +4280,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementWorker.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -6156,7 +6156,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/AiQuotaRepository.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "AiUserDataPurgeParticipant",
@@ -6170,7 +6170,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "OpenAiOptions",
@@ -6772,7 +6772,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -17951,7 +17951,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Providers/Services/S3ObjectStorageClient.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "StoredObjectInfo",
@@ -21335,6 +21335,27 @@
       "line": 12
     },
     {
+      "name": "ScheduleAdminTestNotificationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ScheduleAdminTestNotificationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "ScheduleAdminTestNotificationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandValidator.cs",
+      "line": 5
+    },
+    {
       "name": "ScheduleTestNotificationCommand",
       "kind": "record",
       "role": "Command",
@@ -21956,6 +21977,13 @@
       "role": "Other",
       "path": "Modules/Notifications/Presentation.Mappings/Mappings/NotificationProfileHttpResponseMappings.cs",
       "line": 5
+    },
+    {
+      "name": "AdminNotificationsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
+      "line": 22
     },
     {
       "name": "NotificationPushController",
@@ -28836,28 +28864,28 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "NpgsqlAuditRunStore",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlAuditRunStore.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "NpgsqlBugReportJournal",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportJournal.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "NpgsqlBugReportStore",
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "AuditRetentionWorker",
@@ -29473,7 +29501,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "NpgsqlInboundMailStore",
@@ -29788,7 +29816,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 47
+      "line": 45
     },
     {
       "name": "IMailRelayDeliveryPolicy",
@@ -33761,49 +33789,49 @@
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 115
+      "line": 111
     },
     {
       "service": "IServerStatusService",
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 116
+      "line": 112
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 117
+      "line": 113
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 118
+      "line": 114
     },
     {
       "service": "ITaskToolExecutor",
       "implementation": "NodeTaskToolExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 120
+      "line": 116
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 432
+      "line": 428
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 433
+      "line": 429
     },
     {
       "service": "IRecurringJobRegistrationVerifier",

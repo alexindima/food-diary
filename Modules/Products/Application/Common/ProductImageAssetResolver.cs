@@ -19,7 +19,7 @@ internal static class ProductImageAssetResolver {
             propertyName,
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return resolutionResult.IsFailure
             ? Result.Failure<ProductImageAssetResolution>(resolutionResult.Error)
             : Result.Success(new ProductImageAssetResolution(
@@ -35,7 +35,7 @@ internal static class ProductImageAssetResolver {
         }
         List<ProductImage> images = [];
         foreach (Guid id in ids) {
-            Result<ProductImageAssetResolution> resolved = await ResolveOptionalAsync(id, "ImageAssetIds", fallbackImageUrl: null, userId, service, cancellationToken).ConfigureAwait(false);
+            Result<ProductImageAssetResolution> resolved = await ResolveOptionalAsync(id, "ImageAssetIds", fallbackImageUrl: null, userId, service, cancellationToken);
             if (resolved.IsFailure) { return Result.Failure<IReadOnlyList<ProductImage>?>(resolved.Error); }
             images.Add(new ProductImage(resolved.Value.ImageAssetId!.Value, resolved.Value.ImageUrl!, images.Count));
         }

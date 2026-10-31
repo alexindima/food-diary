@@ -23,13 +23,13 @@ public sealed class GetCurrentCycleQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userId, cancellationToken);
         return Result.Success(profile?.ToModel(CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider), currentDate));
     }
 }

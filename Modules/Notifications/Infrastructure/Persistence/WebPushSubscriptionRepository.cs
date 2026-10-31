@@ -16,14 +16,14 @@ public sealed class WebPushSubscriptionRepository(DbSet<WebPushSubscription> sub
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(x => x.Endpoint == endpoint, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(x => x.Endpoint == endpoint, cancellationToken);
     }
 
     public async Task<IReadOnlyList<WebPushSubscription>> GetByUserAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await subscriptions
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.ModifiedOnUtc ?? x.CreatedOnUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<WebPushSubscriptionReadModel>> GetByUserReadModelsAsync(
@@ -40,11 +40,11 @@ public sealed class WebPushSubscriptionRepository(DbSet<WebPushSubscription> sub
                 x.UserAgent,
                 x.CreatedOnUtc,
                 x.ModifiedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<WebPushSubscription> AddAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
-        await subscriptions.AddAsync(subscription, cancellationToken).ConfigureAwait(false);
+        await subscriptions.AddAsync(subscription, cancellationToken);
         return subscription;
     }
 

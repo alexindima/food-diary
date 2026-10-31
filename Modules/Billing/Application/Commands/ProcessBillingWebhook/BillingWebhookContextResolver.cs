@@ -17,8 +17,8 @@ public sealed class BillingWebhookContextResolver(
     ISender billingUserContextService,
     IBillingPaymentWriteRepository? billingPaymentRepository = null) {
     public async Task<string> GetSerializationKeyAsync(string provider, BillingWebhookEventModel webhookEvent, CancellationToken cancellationToken) {
-        BillingSubscription? subscription = await ResolveSubscriptionAsync(provider, webhookEvent, cancellationToken).ConfigureAwait(false);
-        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(provider, webhookEvent.RelatedTransactionId, cancellationToken).ConfigureAwait(false);
+        BillingSubscription? subscription = await ResolveSubscriptionAsync(provider, webhookEvent, cancellationToken);
+        BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(provider, webhookEvent.RelatedTransactionId, cancellationToken);
         Guid? userId = subscription?.UserId.Value ?? (webhookEvent.UserId is { } metadataUserId && metadataUserId != Guid.Empty ? metadataUserId : relatedPayment?.UserId.Value);
         return userId is { } id && id != Guid.Empty
             ? BillingOperationLockKeys.ForUser(id)
@@ -32,13 +32,13 @@ public sealed class BillingWebhookContextResolver(
         BillingSubscription? subscription = await ResolveSubscriptionAsync(
             provider,
             webhookEvent,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         BillingPayment? payment = await ResolveRelatedPaymentAsync(provider,
-            webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId, cancellationToken).ConfigureAwait(false);
+            webhookEvent.ExternalPaymentId ?? webhookEvent.ExternalSubscriptionId, cancellationToken);
         webhookEvent = NormalizeRenewal(provider, webhookEvent, subscription, payment);
         if (subscription is null && webhookEvent.UserId is { } ownerId && ownerId != Guid.Empty) {
             // A late notification from the previous provider still belongs to this user's payment history.
-            subscription = await billingSubscriptionRepository.GetByUserIdAsync(new UserId(ownerId), cancellationToken).ConfigureAwait(false);
+            subscription = await billingSubscriptionRepository.GetByUserIdAsync(new UserId(ownerId), cancellationToken);
         }
         bool shouldUpdateSubscription = webhookEvent.UpdatesSubscription &&
             (subscription is null || string.Equals(subscription.Provider, provider, StringComparison.OrdinalIgnoreCase));
@@ -65,12 +65,12 @@ public sealed class BillingWebhookContextResolver(
         BillingPayment? relatedPayment = await ResolveRelatedPaymentAsync(
             provider,
             webhookEvent.RelatedTransactionId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         UserBillingProfileModel? user = await ResolveUserAsync(
             subscription,
             webhookEvent.UserId,
             relatedPayment?.UserId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(
                 BillingErrors.WebhookValidationFailed("Webhook user could not be resolved."))
@@ -137,7 +137,7 @@ public sealed class BillingWebhookContextResolver(
             BillingSubscription? bySubscription = await billingSubscriptionRepository.GetByExternalSubscriptionIdAsync(
                 provider,
                 webhookEvent.ExternalSubscriptionId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (bySubscription is not null) {
                 return bySubscription;
             }
@@ -149,19 +149,19 @@ public sealed class BillingWebhookContextResolver(
                 : await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
                     provider,
                     webhookEvent.ExternalCustomerId,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
         }
 
         BillingSubscription? byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
             provider,
             webhookEvent.ExternalPaymentMethodId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return byPaymentMethod ?? (string.IsNullOrWhiteSpace(webhookEvent.ExternalCustomerId)
             ? null
             : await billingSubscriptionRepository.GetByExternalCustomerIdAsync(
                 provider,
                 webhookEvent.ExternalCustomerId,
-                cancellationToken).ConfigureAwait(false));
+                cancellationToken));
     }
 
     private Task<BillingPayment?> ResolveRelatedPaymentAsync(
@@ -179,15 +179,15 @@ public sealed class BillingWebhookContextResolver(
         UserId? relatedPaymentUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
-            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), cancellationToken).ConfigureAwait(false);
+            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: subscription.UserId), cancellationToken);
         }
 
         if (webhookUserId.HasValue && webhookUserId.Value != Guid.Empty) {
-            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: new UserId(webhookUserId.Value)), cancellationToken).ConfigureAwait(false);
+            return await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: new UserId(webhookUserId.Value)), cancellationToken);
         }
 
         return relatedPaymentUserId is null || relatedPaymentUserId == UserId.Empty
             ? null
-            : await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: relatedPaymentUserId.Value), cancellationToken).ConfigureAwait(false);
+            : await billingUserContextService.Send(new GetUserBillingProfileIncludingDeletedQuery(UserId: relatedPaymentUserId.Value), cancellationToken);
     }
 }

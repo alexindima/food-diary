@@ -24,11 +24,11 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                IConnection connection = await _createConnectionAsync(stoppingToken).ConfigureAwait(false);
-                await using (connection.ConfigureAwait(false)) {
-                    IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
-                    await using (channel.ConfigureAwait(false)) {
-                        await RunConsumerAsync(channel, stoppingToken).ConfigureAwait(false);
+                IConnection connection = await _createConnectionAsync(stoppingToken);
+                await using (connection) {
+                    IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
+                    await using (channel) {
+                        await RunConsumerAsync(channel, stoppingToken);
                     }
                 }
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
@@ -39,7 +39,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
                     "RabbitMQ relay consumer connection failed. Retrying in {RetryDelaySeconds} seconds.",
                     _brokerOptions.ConnectionRetryDelaySeconds);
 
-                if (!await DelayBeforeRetryAsync(stoppingToken).ConfigureAwait(false)) {
+                if (!await DelayBeforeRetryAsync(stoppingToken)) {
                     return;
                 }
             }
@@ -48,8 +48,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
     private async Task<bool> DelayBeforeRetryAsync(CancellationToken cancellationToken) {
         try {
-            await Task.Delay(TimeSpan.FromSeconds(_brokerOptions.ConnectionRetryDelaySeconds), cancellationToken)
-                .ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(_brokerOptions.ConnectionRetryDelaySeconds), cancellationToken);
             return true;
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             return false;
@@ -67,15 +66,15 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     }
 
     private async Task RunConsumerAsync(IChannel channel, CancellationToken stoppingToken) {
-        await broker.DeclareTopologyAsync(stoppingToken).ConfigureAwait(false);
-        await channel.BasicQosAsync(0, _brokerOptions.PrefetchCount, global: false, cancellationToken: stoppingToken).ConfigureAwait(false);
+        await broker.DeclareTopologyAsync(stoppingToken);
+        await channel.BasicQosAsync(0, _brokerOptions.PrefetchCount, global: false, cancellationToken: stoppingToken);
 
         AsyncEventingBasicConsumer consumer = CreateConsumer(channel, stoppingToken);
         string consumerTag = await channel.BasicConsumeAsync(
             queue: _brokerOptions.QueueName,
             autoAck: false,
             consumer: consumer,
-            cancellationToken: stoppingToken).ConfigureAwait(false);
+            cancellationToken: stoppingToken);
 
         logger.LogInformation("RabbitMQ relay consumer started. Queue={QueueName}, ConsumerTag={ConsumerTag}", _brokerOptions.QueueName, consumerTag);
 
@@ -85,14 +84,14 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         var stopRequested = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         CancellationTokenRegistration registration =
             stoppingToken.Register(static state => ((TaskCompletionSource)state!).TrySetResult(), stopRequested);
-        await using (registration.ConfigureAwait(false)) {
-            await stopRequested.Task.ConfigureAwait(false);
+        await using (registration) {
+            await stopRequested.Task;
         }
 
         logger.LogDebug("RabbitMQ relay consumer stop was requested.");
 
         if (channel.IsOpen) {
-            await channel.BasicCancelAsync(consumerTag, noWait: false, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+            await channel.BasicCancelAsync(consumerTag, noWait: false, cancellationToken: CancellationToken.None);
         }
     }
 
@@ -106,13 +105,13 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         ulong deliveryTag = eventArgs.DeliveryTag;
 
         try {
-            await ProcessDeliveryAsync(channel, eventArgs, stoppingToken).ConfigureAwait(false);
+            await ProcessDeliveryAsync(channel, eventArgs, stoppingToken);
         } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
             if (channel.IsOpen) {
-                await channel.BasicNackAsync(deliveryTag, multiple: false, requeue: true, cancellationToken: CancellationToken.None).ConfigureAwait(false);
+                await channel.BasicNackAsync(deliveryTag, multiple: false, requeue: true, cancellationToken: CancellationToken.None);
             }
         } catch (Exception ex) {
-            await HandleDeliveryFailureAsync(channel, eventArgs, ex, stoppingToken).ConfigureAwait(false);
+            await HandleDeliveryFailureAsync(channel, eventArgs, ex, stoppingToken);
         }
     }
 
@@ -121,30 +120,30 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         string bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
         if (!Guid.TryParse(bodyText, out Guid rawQueuedEmailId)) {
             logger.LogWarning("RabbitMQ relay message payload is not a valid email id: {Payload}", bodyText);
-            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken);
             return;
         }
 
         var queuedEmailId = new QueuedEmailId(rawQueuedEmailId);
-        QueuedEmailMessage? claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        QueuedEmailMessage? claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken);
         if (claimedMessage is null) {
             logger.LogDebug("Queued email {QueuedEmailId} was not claimable when RabbitMQ delivered it.", queuedEmailId);
-            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken);
             return;
         }
 
-        await ProcessClaimedMessageAsync(queuedEmailId, claimedMessage, cancellationToken).ConfigureAwait(false);
-        await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await ProcessClaimedMessageAsync(queuedEmailId, claimedMessage, cancellationToken);
+        await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken);
     }
 
     private async Task ProcessClaimedMessageAsync(QueuedEmailId queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
-        MailRelayProcessResult result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken).ConfigureAwait(false);
+        MailRelayProcessResult result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken);
         if (result.Succeeded) {
             return;
         }
 
         if (result.IsTerminalFailure) {
-            await broker.PublishDeadLetterAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+            await broker.PublishDeadLetterAsync(queuedEmailId, cancellationToken);
         }
     }
 
@@ -159,7 +158,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
             eventArgs.DeliveryTag,
             exception.GetType().Name);
         if (channel.IsOpen) {
-            await channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false, cancellationToken: cancellationToken);
         }
     }
 }

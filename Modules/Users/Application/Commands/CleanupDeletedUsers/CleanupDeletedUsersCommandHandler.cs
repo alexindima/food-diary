@@ -13,7 +13,7 @@ public sealed class CleanupDeletedUsersCommandHandler(IUserCleanupService cleanu
         while (true) {
             cancellationToken.ThrowIfCancellationRequested();
             UserCleanupBatch batch = await cleanup.CleanupDeletedUsersAsync(
-                request.OlderThanUtc, request.BatchSize, request.ReassignUserId, after, cancellationToken).ConfigureAwait(false);
+                request.OlderThanUtc, request.BatchSize, request.ReassignUserId, after, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             removed = checked(removed + batch.RemovedCount);
             if (batch.LastExamined is null) {

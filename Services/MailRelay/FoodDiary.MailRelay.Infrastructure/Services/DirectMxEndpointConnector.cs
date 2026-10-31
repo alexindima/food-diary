@@ -24,13 +24,13 @@ public sealed class DirectMxEndpointConnector : IDirectMxEndpointConnector {
     public async Task<Socket> ConnectAsync(string mxHost, int port, CancellationToken cancellationToken) {
         IPAddress[] addresses = IPAddress.TryParse(mxHost, out IPAddress? literalAddress)
             ? [literalAddress]
-            : await Dns.GetHostAddressesAsync(mxHost, cancellationToken).ConfigureAwait(false);
+            : await Dns.GetHostAddressesAsync(mxHost, cancellationToken);
         IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress) ?? throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
         Socket socket = _socketFactory(publicAddress.AddressFamily);
         socket.NoDelay = true;
 
         try {
-            await _connectAsync(socket, new IPEndPoint(publicAddress, port), cancellationToken).ConfigureAwait(false);
+            await _connectAsync(socket, new IPEndPoint(publicAddress, port), cancellationToken);
             return socket;
         } catch {
             socket.Dispose();

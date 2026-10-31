@@ -20,14 +20,14 @@ public sealed class UpdateRecipeCommentCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeCommentModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
-        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken);
 
         if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure<RecipeCommentModel>(RecipeCommentErrors.NotFound(command.CommentId));
@@ -38,7 +38,7 @@ public sealed class UpdateRecipeCommentCommandHandler(
         }
 
         comment.UpdateText(command.Text);
-        await commentRepository.UpdateAsync(comment, cancellationToken).ConfigureAwait(false);
+        await commentRepository.UpdateAsync(comment, cancellationToken);
 
         return Result.Success(new RecipeCommentModel(
             comment.Id.Value,

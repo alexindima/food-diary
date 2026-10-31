@@ -14,7 +14,7 @@ internal sealed class ImageDeletionOutboxReplayStream(ImagesDbContext context) :
         ImageObjectDeletionOutboxMessage? message = await (forUpdate
             ? context.ImageObjectDeletionOutbox.FromSqlInterpolated($"SELECT * FROM \"ImageObjectDeletionOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
             : context.ImageObjectDeletionOutbox.Where(message => message.Id == messageId))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.ObjectKey);
     }
 
@@ -34,6 +34,5 @@ internal sealed class ImageDeletionOutboxReplayStream(ImagesDbContext context) :
                 message.AttemptCount,
                 message.LastError,
                 message.ObjectKey))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 }

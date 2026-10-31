@@ -27,13 +27,13 @@ public sealed class BrowserSessionService(
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid id)) {
             return Result.Failure<BrowserSessionIdentityModel>(AuthenticationErrors.InvalidToken);
         }
-        BrowserSessionProof? proof = await sessions.ReadBrowserSessionProofAsync(new RefreshTokenSessionId(id), cancellationToken).ConfigureAwait(false);
+        BrowserSessionProof? proof = await sessions.ReadBrowserSessionProofAsync(new RefreshTokenSessionId(id), cancellationToken);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (proof is not { RevokedAtUtc: null, SecurityVersion: not null, ExpiresAtUtc: { } expires } || expires <= now ||
             !SecurityTokenGenerator.VerifyFastStorageHash(credential!, proof.CredentialHash)) {
             return Result.Failure<BrowserSessionIdentityModel>(AuthenticationErrors.InvalidToken);
         }
-        Result<UserSessionPrincipalModel> principal = await principals.GetCurrentAsync(proof.UserId, now, cancellationToken).ConfigureAwait(false);
+        Result<UserSessionPrincipalModel> principal = await principals.GetCurrentAsync(proof.UserId, now, cancellationToken);
         expires = EffectiveExpiration(expires, proof.CreatedAtUtc, proof.SlidingExpirationEnabled);
         if (expires <= now) {
             return Result.Failure<BrowserSessionIdentityModel>(AuthenticationErrors.InvalidToken);
@@ -43,7 +43,7 @@ public sealed class BrowserSessionService(
         }
         DateTime activityCutoff = now.AddMinutes(-5);
         if (proof.LastActiveAtUtc <= activityCutoff) {
-            await sessions.TryRecordBrowserActivityAsync(proof, now, activityCutoff, cancellationToken).ConfigureAwait(false);
+            await sessions.TryRecordBrowserActivityAsync(proof, now, activityCutoff, cancellationToken);
         }
         return Result.Success(new BrowserSessionIdentityModel(id, expires, principal.Value));
     }
@@ -52,14 +52,14 @@ public sealed class BrowserSessionService(
         RestoreAsync(credential, rememberMe: false, cancellationToken);
 
     public async Task<Result<BrowserSessionModel>> RestoreAsync(string? credential, bool rememberMe, CancellationToken cancellationToken) {
-        Result<BrowserSessionModel> result = await AuthenticateCoreAsync(credential, allowStaleVersion: true, cancellationToken).ConfigureAwait(false);
+        Result<BrowserSessionModel> result = await AuthenticateCoreAsync(credential, allowStaleVersion: true, cancellationToken);
         if (result.IsFailure) {
             return result;
         }
         bool restored = await sessions.TryRevalidateBrowserSessionAsync(
             new RefreshTokenSessionId(result.Value.SessionId), result.Value.Principal.UserId,
             SecurityTokenGenerator.HashForStorage(credential!), result.Value.Principal.SecurityVersion,
-            timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (!restored) {
             return RejectRestoration("revalidation_conflict");
         }
@@ -69,7 +69,7 @@ public sealed class BrowserSessionService(
             var persistenceProof = new BrowserSessionProof(new RefreshTokenSessionId(session.SessionId), session.Principal.UserId,
                 SecurityTokenGenerator.HashForStorage(credential!), session.Principal.SecurityVersion, session.ExpiresAtUtc,
                 RevokedAtUtc: null, now);
-            if (!await sessions.TryRememberBrowserSessionAsync(persistenceProof, now, cancellationToken).ConfigureAwait(false)) {
+            if (!await sessions.TryRememberBrowserSessionAsync(persistenceProof, now, cancellationToken)) {
                 return RejectRestoration("persistence_conflict");
             }
             session = session with { RememberMe = true, Renewed = true };
@@ -80,10 +80,10 @@ public sealed class BrowserSessionService(
         var proof = new BrowserSessionProof(new RefreshTokenSessionId(session.SessionId), session.Principal.UserId,
             SecurityTokenGenerator.HashForStorage(credential!), session.Principal.SecurityVersion, session.ExpiresAtUtc,
             RevokedAtUtc: null, now, RememberMe: session.RememberMe);
-        if (await sessions.TryRenewBrowserSessionAsync(proof, now, expires, cancellationToken).ConfigureAwait(false)) {
+        if (await sessions.TryRenewBrowserSessionAsync(proof, now, expires, cancellationToken)) {
             return Result.Success(session with { ExpiresAtUtc = expires, Renewed = true });
         }
-        BrowserSessionProof? current = await sessions.ReadBrowserSessionProofAsync(proof.Id, cancellationToken).ConfigureAwait(false);
+        BrowserSessionProof? current = await sessions.ReadBrowserSessionProofAsync(proof.Id, cancellationToken);
         if (current is { RevokedAtUtc: null, ExpiresAtUtc: { } currentExpires } && currentExpires > now &&
             current.UserId == proof.UserId && current.SecurityVersion == proof.SecurityVersion &&
             SecurityTokenGenerator.VerifyFastStorageHash(credential!, current.CredentialHash)) {
@@ -96,7 +96,7 @@ public sealed class BrowserSessionService(
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid sessionId)) {
             return RejectRestoration(string.IsNullOrEmpty(credential) ? "missing_credential" : "malformed_credential");
         }
-        UserRefreshTokenSession? session = await sessions.GetByIdAsync(new RefreshTokenSessionId(sessionId), cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? session = await sessions.GetByIdAsync(new RefreshTokenSessionId(sessionId), cancellationToken);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (session is null) {
             return RejectRestoration("session_missing");
@@ -113,7 +113,7 @@ public sealed class BrowserSessionService(
         if (!SecurityTokenGenerator.VerifyFastStorageHash(credential!, session.RefreshTokenHash)) {
             return RejectRestoration("credential_mismatch");
         }
-        Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken);
         expires = EffectiveExpiration(expires, session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled);
         if (expires <= now) {
             return RejectRestoration("absolute_lifetime_expired");
@@ -145,27 +145,27 @@ public sealed class BrowserSessionService(
         if (proof is not { refreshSessionId: { } sessionId }) {
             return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
         }
-        UserRefreshTokenSession? session = await sessions.GetByIdAsync(sessionId, cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? session = await sessions.GetByIdAsync(sessionId, cancellationToken);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (session is null || session.UserId != proof.Value.userId || !session.IsActive || session.BrowserSecurityVersion.HasValue ||
             session.ExpiresAtUtc is not { } expires || expires <= now || maximumExpiresAtUtc <= now ||
             !SecurityTokenGenerator.VerifyFastStorageHash(refreshToken, session.RefreshTokenHash)) {
             return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
         }
-        Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> principal = await users.GetAuthenticationPrincipalAsync(session.UserId, now, cancellationToken);
         if (principal.IsFailure) {
             return Result.Failure<BrowserSessionModel>(AuthenticationErrors.InvalidToken);
         }
         string credential = BrowserSessionCredential.Create(sessionId.Value);
         session.ConvertToBrowserSession(SecurityTokenGenerator.HashForStorage(credential), principal.Value.SecurityVersion, now, maximumExpiresAtUtc,
             allowRenewal: maximumExpiresAtUtc is null && !string.Equals(session.AuthProvider, "admin-sso", StringComparison.Ordinal));
-        await sessions.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
+        await sessions.UpdateAsync(session, cancellationToken);
         if (BrowserSessionCredential.TryReadSessionId(existingCredential, out Guid oldId) && oldId != sessionId.Value) {
-            UserRefreshTokenSession? previous = await sessions.GetByIdAsync(new RefreshTokenSessionId(oldId), cancellationToken).ConfigureAwait(false);
+            UserRefreshTokenSession? previous = await sessions.GetByIdAsync(new RefreshTokenSessionId(oldId), cancellationToken);
             if (previous is { IsActive: true, BrowserSecurityVersion: not null } &&
                 SecurityTokenGenerator.VerifyFastStorageHash(existingCredential!, previous.RefreshTokenHash)) {
                 previous.Revoke(now);
-                await sessions.UpdateAsync(previous, cancellationToken).ConfigureAwait(false);
+                await sessions.UpdateAsync(previous, cancellationToken);
             }
         }
         return Result.Success(new BrowserSessionModel(credential, sessionId.Value, session.ExpiresAtUtc ?? expires, session.RememberMe, principal.Value));
@@ -175,10 +175,10 @@ public sealed class BrowserSessionService(
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid id)) {
             return Result.Success();
         }
-        UserRefreshTokenSession? session = await sessions.GetByIdAsync(new RefreshTokenSessionId(id), cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? session = await sessions.GetByIdAsync(new RefreshTokenSessionId(id), cancellationToken);
         if (session is { BrowserSecurityVersion: not null } && SecurityTokenGenerator.VerifyFastStorageHash(credential!, session.RefreshTokenHash)) {
             await sessions.RevokeByIdAsync(session.Id, session.UserId,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         }
         return Result.Success();
     }

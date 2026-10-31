@@ -9,11 +9,11 @@ public sealed class BillingPaymentRepository(DbSet<BillingPayment> payments, Fun
         string provider,
         string externalPaymentId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await payments
             .FirstOrDefaultAsync(
                 payment => payment.Provider == provider && payment.ExternalPaymentId == externalPaymentId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {

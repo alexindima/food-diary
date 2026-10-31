@@ -25,8 +25,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
             return Result.Failure<UserAdminReadModel>(UserErrors.NotFound(input.UserId));
         }
         User? user = await userLookupRepository
-            .GetByIdIncludingDeletedAsync(input.UserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdIncludingDeletedAsync(input.UserId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserAdminReadModel>(UserErrors.NotFound(input.UserId));
         }
@@ -39,7 +38,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
             return Result.Failure<UserAdminReadModel>(languageResult.Error);
         }
 
-        Result<RoleUpdate?> roleUpdateResult = await PrepareRoleUpdateAsync(user, input, cancellationToken).ConfigureAwait(false);
+        Result<RoleUpdate?> roleUpdateResult = await PrepareRoleUpdateAsync(user, input, cancellationToken);
         if (roleUpdateResult.IsFailure) {
             return Result.Failure<UserAdminReadModel>(roleUpdateResult.Error);
         }
@@ -59,7 +58,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
         await userWriteRepository.UpdateAsync(
             user,
             roleUpdateResult.Value?.AuditEvents ?? [],
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success(user.ToAdminReadModel());
 
     }
@@ -79,8 +78,7 @@ public sealed class UpdateUserByAdministratorCommandHandler(IUserLookupRepositor
         }
 
         IReadOnlyList<Role> roles = await roleCatalogService
-            .GetRolesByNamesAsync(requestedRoles, cancellationToken)
-            .ConfigureAwait(false);
+            .GetRolesByNamesAsync(requestedRoles, cancellationToken);
         if (roles.Count != requestedRoles.Length) {
             return Result.Failure<RoleUpdate?>(Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
         }

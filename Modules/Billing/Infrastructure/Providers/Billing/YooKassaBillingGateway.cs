@@ -47,7 +47,7 @@ public sealed class YooKassaBillingGateway(
                     ["plan"] = request.Plan,
                 }),
                 request.IdempotencyKey,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);
         }
@@ -101,7 +101,7 @@ public sealed class YooKassaBillingGateway(
                     ["renewal_period_start"] = request.CurrentPeriodEndUtc?.ToString("O", CultureInfo.InvariantCulture) ?? string.Empty,
                 }),
             request.IdempotenceKey,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingRecurringPaymentModel>(paymentResponse.Error);
         }
@@ -119,7 +119,7 @@ public sealed class YooKassaBillingGateway(
         if (!IsValidPaymentId(paymentId)) {
             return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderOperationFailed(Provider, "Invalid payment identifier."));
         }
-        Result<YooKassaPayment> response = await FetchPaymentAsync(paymentId, cancellationToken).ConfigureAwait(false);
+        Result<YooKassaPayment> response = await FetchPaymentAsync(paymentId, cancellationToken);
         if (response.IsFailure) {
             return Result.Failure<BillingRecurringPaymentModel>(response.Error);
         }
@@ -193,7 +193,7 @@ public sealed class YooKassaBillingGateway(
                 BillingErrors.WebhookValidationFailed("YooKassa payment id is invalid."));
         }
 
-        Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
+        Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken);
         if (paymentResult.IsFailure) {
             return Result.Failure<BillingWebhookEventModel?>(paymentResult.Error);
         }
@@ -259,7 +259,7 @@ public sealed class YooKassaBillingGateway(
             : null;
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
-        return await _apiClient.SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);
+        return await _apiClient.SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken);
     }
 
     private static bool IsValidPaymentId(string value) {

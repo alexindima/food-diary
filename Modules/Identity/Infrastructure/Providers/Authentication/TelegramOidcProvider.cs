@@ -58,20 +58,20 @@ public sealed class TelegramOidcProvider(HttpClient httpClient, IOptions<Telegra
         Result<TelegramOidcIdentity> result;
         string stage = "token_exchange";
         try {
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (!response.IsSuccessStatusCode) {
                 return Invalid(stage, "http_error", (int)response.StatusCode);
             }
             stage = "token_response";
-            await response.Content.LoadIntoBufferAsync(32768, cancellationToken).ConfigureAwait(false);
-            Stream content = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            await using (content.ConfigureAwait(false)) {
-                using JsonDocument document = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await response.Content.LoadIntoBufferAsync(32768, cancellationToken);
+            Stream content = await response.Content.ReadAsStreamAsync(cancellationToken);
+            await using (content) {
+                using JsonDocument document = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken);
                 if (!document.RootElement.TryGetProperty("id_token", out JsonElement idToken) || idToken.ValueKind != JsonValueKind.String) {
                     return Invalid(stage, "id_token_missing_or_invalid");
                 }
                 stage = "token_validation";
-                result = await tokens.ValidateAsync(idToken.GetString()!, exchange.ExpectedNonce, cancellationToken).ConfigureAwait(false);
+                result = await tokens.ValidateAsync(idToken.GetString()!, exchange.ExpectedNonce, cancellationToken);
             }
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;

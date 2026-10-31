@@ -57,7 +57,7 @@ internal sealed class OpenFoodFactsService(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             response.EnsureSuccessStatusCode();
 
             OffApiResponse? result = await BoundedHttpContentReader.ReadFromJsonAsync<OffApiResponse>(
@@ -65,7 +65,7 @@ internal sealed class OpenFoodFactsService(
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (result?.Status != 1 || result.Product is null) {
                 outcome = "not_found";
                 return null;
@@ -124,7 +124,7 @@ internal sealed class OpenFoodFactsService(
             if (InFlightSearches.TryGetValue(
                     cacheKey,
                     out Lazy<Task<IReadOnlyList<OpenFoodFactsProductModel>>>? existing)) {
-                return await existing.Value.WaitAsync(cancellationToken).ConfigureAwait(false);
+                return await existing.Value.WaitAsync(cancellationToken);
             }
 
             int reservedCount = Interlocked.Increment(ref InFlightSearchCountValue);
@@ -161,7 +161,7 @@ internal sealed class OpenFoodFactsService(
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously,
                 TaskScheduler.Default);
-            return await pendingTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return await pendingTask.WaitAsync(cancellationToken);
         }
     }
 
@@ -196,7 +196,7 @@ internal sealed class OpenFoodFactsService(
         using var operationTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         operationTimeout.CancelAfter(SearchOperationTimeout);
         try {
-            await SearchConcurrencyGate.WaitAsync(operationTimeout.Token).ConfigureAwait(false);
+            await SearchConcurrencyGate.WaitAsync(operationTimeout.Token);
             concurrencyLeaseAcquired = true;
             string baseUrl = options.Value.BaseUrl.TrimEnd('/');
             string encodedQuery = Uri.EscapeDataString(query);
@@ -206,7 +206,7 @@ internal sealed class OpenFoodFactsService(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                operationTimeout.Token).ConfigureAwait(false);
+                operationTimeout.Token);
             response.EnsureSuccessStatusCode();
 
             OffSearchResponse? result = await BoundedHttpContentReader.ReadFromJsonAsync<OffSearchResponse>(
@@ -214,7 +214,7 @@ internal sealed class OpenFoodFactsService(
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                operationTimeout.Token).ConfigureAwait(false);
+                operationTimeout.Token);
             if (result?.Products is null) {
                 outcome = "empty";
                 return [];

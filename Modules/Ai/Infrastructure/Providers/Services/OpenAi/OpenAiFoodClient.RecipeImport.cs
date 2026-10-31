@@ -15,7 +15,7 @@ public sealed partial class OpenAiFoodClient {
             return Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
         Result<long> count = await CountInputTokensAsync(
-            BuildRecipeImportRequest(text, userLanguage), cancellationToken).ConfigureAwait(false);
+            BuildRecipeImportRequest(text, userLanguage), cancellationToken);
         return count.IsFailure
             ? Result.Failure<AiProviderTokenBudget>(count.Error)
             : Result.Success(new AiProviderTokenBudget(count.Value, _options.MaxOutputTokens));
@@ -29,7 +29,7 @@ public sealed partial class OpenAiFoodClient {
                 AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
         (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(
-            BuildRecipeImportRequest(text, userLanguage), operation, _options.TextModel, cancellationToken).ConfigureAwait(false);
+            BuildRecipeImportRequest(text, userLanguage), operation, _options.TextModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<RecipeImportDraftModel>>(response.Error);
         }

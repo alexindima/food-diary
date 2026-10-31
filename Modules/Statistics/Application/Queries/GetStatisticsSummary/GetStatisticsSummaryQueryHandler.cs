@@ -26,7 +26,7 @@ public sealed class GetStatisticsSummaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<StatisticsSummaryModel>(userIdResult);
         }
@@ -70,13 +70,13 @@ public sealed class GetStatisticsSummaryQueryHandler(
             statisticsPeriod.To,
             request.QuantizationDays,
             statisticsPeriod.TimeZoneId),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (statisticsResult.IsFailure) {
             return Result.Failure<StatisticsSummaryModel>(statisticsResult.Error);
         }
 
-        IReadOnlyList<WeightEntrySummaryModel> weight = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> weight = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken);
+        IReadOnlyList<WaistEntrySummaryModel> waist = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: bodyPeriod.From, DateTo: bodyPeriod.To, QuantizationDays: request.QuantizationDays), cancellationToken);
 
         return Result.Success(new StatisticsSummaryModel(
             [.. statisticsResult.Value.Select(StatisticsMappings.ToModel)],

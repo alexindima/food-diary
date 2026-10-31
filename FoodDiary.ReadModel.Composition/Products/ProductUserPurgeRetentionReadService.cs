@@ -16,5 +16,5 @@ public sealed class ProductUserPurgeRetentionReadService(ICompositionReadContext
                 context.FavoriteProducts.AsNoTracking().Any(favorite => favorite.ProductId == product.Id && favorite.UserId != sourceUserId) ||
                 context.ShoppingLists.AsNoTracking().Where(list => list.UserId != sourceUserId).SelectMany(list => list.Items)
                     .Any(item => item.ProductId == product.Id))
-            .Select(product => product.Id).ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .Select(product => product.Id).ToArrayAsync(cancellationToken);
 }

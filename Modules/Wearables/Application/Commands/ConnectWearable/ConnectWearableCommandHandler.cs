@@ -25,7 +25,7 @@ public sealed class ConnectWearableCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WearableConnectionModel>(userIdResult);
         }
@@ -41,7 +41,7 @@ public sealed class ConnectWearableCommandHandler(
         return await transactionRunner.ExecuteSerializedAsync(
             serializationKey,
             token => ConnectAsync(command, userIdResult.Value, provider, token),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<Result<WearableConnectionModel>> ConnectAsync(
@@ -50,8 +50,7 @@ public sealed class ConnectWearableCommandHandler(
         WearableProvider provider,
         CancellationToken cancellationToken) {
         WearableConnection? existing = await connectionRepository
-            .GetAsync(userId, provider, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAsync(userId, provider, cancellationToken);
         if (existing is not null && string.Equals(existing.LastConnectRequestId, command.RequestId, StringComparison.Ordinal)) {
             return string.Equals(existing.LastConnectRequestHash, command.RequestHash, StringComparison.Ordinal)
                 ? Result.Success(ToModel(existing))
@@ -67,7 +66,7 @@ public sealed class ConnectWearableCommandHandler(
             return Result.Failure<WearableConnectionModel>(WearableErrors.InvalidState);
         }
 
-        WearableTokenResult? tokenResult = await client.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
+        WearableTokenResult? tokenResult = await client.ExchangeCodeAsync(command.Code, cancellationToken);
         if (tokenResult is null) {
             return Result.Failure<WearableConnectionModel>(WearableErrors.AuthFailed(command.Provider));
         }
@@ -81,7 +80,7 @@ public sealed class ConnectWearableCommandHandler(
                 protectedRefreshToken,
                 tokenResult.ExpiresAtUtc);
             existing.RecordConnectRequest(command.RequestId, command.RequestHash);
-            await connectionRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+            await connectionRepository.UpdateAsync(existing, cancellationToken);
             return Result.Success(ToModel(existing));
         }
 
@@ -94,7 +93,7 @@ public sealed class ConnectWearableCommandHandler(
             tokenResult.ExpiresAtUtc);
         connection.RecordConnectRequest(command.RequestId, command.RequestHash);
 
-        await connectionRepository.AddAsync(connection, cancellationToken).ConfigureAwait(false);
+        await connectionRepository.AddAsync(connection, cancellationToken);
         return Result.Success(ToModel(connection));
     }
 

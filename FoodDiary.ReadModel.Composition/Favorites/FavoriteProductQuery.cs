@@ -20,21 +20,21 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
                 (source.UserId == userId || source.Visibility == Visibility.Public)));
         if (favoriteId.HasValue) { query = query.AsNoTracking().Where(f => f.Id == favoriteId.Value); }
         if (sourceIds is not null) { query = query.AsNoTracking().Where(f => sourceIds.Contains(f.ProductId)); }
-        return await query.AsNoTracking().Select(f => f.Id).ToListAsync(cancellationToken).ConfigureAwait(false);
+        return await query.AsNoTracking().Select(f => f.Id).ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default) =>
         await Project(userId, BuildFavoritesQuery(userId, search: null).AsNoTracking().OrderByDescending(row => row.CreatedAtUtc).ThenByDescending(row => row.Id)
-            .Take(PaginationPolicy.MaxCollectionSize)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Take(PaginationPolicy.MaxCollectionSize)).ToListAsync(cancellationToken);
 
     public async Task<(IReadOnlyList<FavoriteProductReadModel> Items, int Total)> GetPageReadModelsAsync(
         UserId userId, int page, int limit, string? search, CancellationToken cancellationToken = default) {
         IQueryable<FavoriteProduct> query = BuildFavoritesQuery(userId, search);
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
         if (limit == 0) { return ([], total); }
         List<FavoriteProductReadModel> items = await Project(userId, query.AsNoTracking().OrderByDescending(row => row.CreatedAtUtc).ThenByDescending(row => row.Id)
-            .Skip((page - 1) * limit).Take(limit)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Skip((page - 1) * limit).Take(limit)).ToListAsync(cancellationToken);
         return (items, total);
     }
 
@@ -43,7 +43,7 @@ public sealed class FavoriteProductQuery(ICompositionReadContext context) : IFav
         if (productIds.Count == 0) { return []; }
         ProductId[] ids = [.. productIds];
         return await Project(userId, BuildFavoritesQuery(userId, search: null).AsNoTracking().Where(row => Enumerable.Contains(ids, row.ProductId)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     private IQueryable<FavoriteProduct> BuildFavoritesQuery(UserId userId, string? search) {

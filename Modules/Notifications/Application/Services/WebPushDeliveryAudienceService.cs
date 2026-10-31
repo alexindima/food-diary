@@ -19,18 +19,16 @@ public sealed class WebPushDeliveryAudienceService(
         DateTime utcNow,
         CancellationToken cancellationToken) {
         Result<UserNotificationProfileModel> profileResult = await userProfileService
-            .GetAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAsync(userId, cancellationToken);
         if (profileResult.IsFailure || !profileResult.Value.PushNotificationsEnabled || !IsCategoryEnabled(profileResult.Value, notificationType)) {
             return [];
         }
 
         IReadOnlyList<WebPushSubscription> subscriptions = await subscriptionReadRepository
-            .GetByUserAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserAsync(userId, cancellationToken);
         WebPushSubscription[] expired = [.. subscriptions.Where(subscription => subscription.ExpirationTimeUtc <= utcNow)];
         if (expired.Length > 0) {
-            await subscriptionWriteRepository.DeleteRangeAsync(expired, cancellationToken).ConfigureAwait(false);
+            await subscriptionWriteRepository.DeleteRangeAsync(expired, cancellationToken);
         }
 
         return [.. subscriptions
@@ -53,12 +51,11 @@ public sealed class WebPushDeliveryAudienceService(
         }
 
         IReadOnlyList<WebPushSubscription> subscriptions = await subscriptionReadRepository
-            .GetByUserAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserAsync(userId, cancellationToken);
         HashSet<Guid> ids = [.. subscriptionIds];
         WebPushSubscription[] invalid = [.. subscriptions.Where(subscription => ids.Contains(subscription.Id.Value))];
         if (invalid.Length > 0) {
-            await subscriptionWriteRepository.DeleteRangeAsync(invalid, cancellationToken).ConfigureAwait(false);
+            await subscriptionWriteRepository.DeleteRangeAsync(invalid, cancellationToken);
         }
     }
 

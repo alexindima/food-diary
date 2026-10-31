@@ -37,7 +37,7 @@ public sealed class AdminImpersonationSessionQuery(ICompositionReadContext conte
         if (toUtc.HasValue) { DateTime end = toUtc.Value.UtcDateTime; query = query.Where(item => item.session.StartedAtUtc < end); }
         if (actorId.HasValue) { var actor = new UserId(actorId.Value); query = query.Where(item => item.session.ActorUserId == actor); }
         if (targetId.HasValue) { var target = new UserId(targetId.Value); query = query.Where(item => item.session.TargetUserId == target); }
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken);
         List<AdminImpersonationSessionReadModel> items = await query
             .OrderByDescending(item => item.session.StartedAtUtc)
             .ThenBy(item => item.session.Id)
@@ -53,7 +53,7 @@ public sealed class AdminImpersonationSessionQuery(ICompositionReadContext conte
                 item.session.ActorIpAddress,
                 item.session.ActorUserAgent,
                 item.session.StartedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }

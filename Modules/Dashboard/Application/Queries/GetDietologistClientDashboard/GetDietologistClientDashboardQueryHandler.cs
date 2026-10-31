@@ -25,7 +25,7 @@ public sealed class GetDietologistClientDashboardQueryHandler(
         GetDietologistClientDashboardQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> dietologistResult = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            query.UserId, currentUserAccessService, cancellationToken);
         if (dietologistResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(dietologistResult);
         }
@@ -38,7 +38,7 @@ public sealed class GetDietologistClientDashboardQueryHandler(
         }
 
         Result<DietologistPermissionsReadModel> permissionsResult = await accessService.GetPermissionsAsync(
-            dietologistResult.Value, clientResult.Value, cancellationToken).ConfigureAwait(false);
+            dietologistResult.Value, clientResult.Value, cancellationToken);
         if (permissionsResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(permissionsResult.Error);
         }
@@ -66,7 +66,7 @@ public sealed class GetDietologistClientDashboardQueryHandler(
                     IncludeTdee: false,
                     IncludeCycle: false),
                 UseUserTimeZone: true),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (dashboardResult.IsFailure) {
             return dashboardResult;
         }
@@ -74,7 +74,7 @@ public sealed class GetDietologistClientDashboardQueryHandler(
         await RecordRequiredAccessAuditAsync(
             dietologistResult.Value,
             query.ClientUserId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success(ApplyPermissions(dashboardResult.Value, permissions));
     }
 
@@ -89,8 +89,8 @@ public sealed class GetDietologistClientDashboardQueryHandler(
             "ClientDashboard",
             clientUserId.ToString(),
             metadata: null,
-            cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private static DashboardSnapshotModel ApplyPermissions(

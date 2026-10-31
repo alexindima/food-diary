@@ -18,6 +18,6 @@ public interface IRecommendationTemplateReadModelRepository {
         int page,
         int limit,
         CancellationToken cancellationToken = default) =>
-        (await SearchAsync(dietologistUserId, search, includeArchived, cancellationToken).ConfigureAwait(false))
+        (await SearchAsync(dietologistUserId, search, includeArchived, cancellationToken))
             .Skip((page - 1) * limit).Take(limit).ToList();
 }

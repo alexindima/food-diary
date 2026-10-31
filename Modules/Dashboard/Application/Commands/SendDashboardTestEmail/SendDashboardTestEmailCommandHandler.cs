@@ -24,8 +24,7 @@ public sealed class SendDashboardTestEmailCommandHandler(
         }
 
         Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-            .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -34,7 +33,7 @@ public sealed class SendDashboardTestEmailCommandHandler(
             return Result.Failure(UserErrors.EmailRequired);
         }
         try {
-            await emailSender.SendTestEmailAsync(new TestEmailMessage(email, userResult.Value.Language), cancellationToken).ConfigureAwait(false);
+            await emailSender.SendTestEmailAsync(new TestEmailMessage(email, userResult.Value.Language), cancellationToken);
             return Result.Success();
         } catch (Exception ex) {
             logger.LogWarning(ex, "Dashboard test email dispatch failed for user {UserId}.", command.UserId);

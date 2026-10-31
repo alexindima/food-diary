@@ -51,25 +51,25 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
 
         if (!context.Database.IsRelational()) {
-            await TrackItemsAsync(userId, distinctProductIds, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
+            await TrackItemsAsync(userId, distinctProductIds, distinctRecipeIds, now, cancellationToken);
             return;
         }
 
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         if (distinctProductIds.Count > 0) {
-            await UpsertItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);
+            await UpsertItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken);
         }
 
         if (distinctRecipeIds.Count > 0) {
-            await UpsertItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
+            await UpsertItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken);
         }
 
         if (distinctProductIds.Count > 0) {
-            await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken).ConfigureAwait(false);
+            await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken);
         }
 
         if (distinctRecipeIds.Count > 0) {
-            await TrimOverflowAsync(userId, RecentItemType.Recipe, cancellationToken).ConfigureAwait(false);
+            await TrimOverflowAsync(userId, RecentItemType.Recipe, cancellationToken);
         }
     }
 
@@ -80,13 +80,13 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
         DateTime usedAtUtc,
         CancellationToken cancellationToken) {
         if (productIds.Count > 0) {
-            await TouchTrackedItemsAsync(userId, RecentItemType.Product, productIds, usedAtUtc, cancellationToken).ConfigureAwait(false);
-            await TrimTrackedOverflowAsync(userId, RecentItemType.Product, cancellationToken).ConfigureAwait(false);
+            await TouchTrackedItemsAsync(userId, RecentItemType.Product, productIds, usedAtUtc, cancellationToken);
+            await TrimTrackedOverflowAsync(userId, RecentItemType.Product, cancellationToken);
         }
 
         if (recipeIds.Count > 0) {
-            await TouchTrackedItemsAsync(userId, RecentItemType.Recipe, recipeIds, usedAtUtc, cancellationToken).ConfigureAwait(false);
-            await TrimTrackedOverflowAsync(userId, RecentItemType.Recipe, cancellationToken).ConfigureAwait(false);
+            await TouchTrackedItemsAsync(userId, RecentItemType.Recipe, recipeIds, usedAtUtc, cancellationToken);
+            await TrimTrackedOverflowAsync(userId, RecentItemType.Recipe, cancellationToken);
         }
     }
 
@@ -98,7 +98,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
         CancellationToken cancellationToken) {
         List<RecentItem> existingItems = await context.RecentItems
             .Where(item => item.UserId == userId && item.ItemType == itemType && itemIds.Contains(item.ItemId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         var existingByItemId = existingItems.ToDictionary(item => item.ItemId);
 
         foreach (Guid itemId in itemIds) {
@@ -116,7 +116,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
         CancellationToken cancellationToken) {
         List<RecentItem> storedItems = await context.RecentItems
             .Where(item => item.UserId == userId && item.ItemType == itemType)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         RecentItem[] addedItems = [.. context.ChangeTracker
             .Entries<RecentItem>()
             .Where(entry => entry.State == EntityState.Added && entry.Entity.UserId == userId && entry.Entity.ItemType == itemType)
@@ -138,7 +138,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
@@ -149,14 +149,14 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             .ThenBy(x => x.ItemId)
             .Take(sanitizedLimit)
             .Select(x => new RecentProductUsage(new ProductId(x.ItemId), x.UsageCount, x.LastUsedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<RecentRecipeUsage>> GetRecentRecipesAsync(
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
@@ -167,7 +167,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
             .ThenBy(x => x.ItemId)
             .Take(sanitizedLimit)
             .Select(x => new RecentRecipeUsage(new RecipeId(x.ItemId), x.UsageCount, x.LastUsedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     private async Task UpsertItemsAsync(
@@ -191,7 +191,7 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
                 "ModifiedOnUtc" = GREATEST(
                     COALESCE("RecentItems"."ModifiedOnUtc", "RecentItems"."CreatedOnUtc"),
                     EXCLUDED."LastUsedAtUtc")
-            """, cancellationToken).ConfigureAwait(false);
+            """, cancellationToken);
     }
 
     private async Task TrimOverflowAsync(
@@ -207,11 +207,11 @@ public sealed class RecentItemRepository(RecentItemsDbContext context, Func<DbTr
                 WHERE "UserId" = {{userId.Value}} AND "ItemType" = {{itemTypeValue}}
                 ORDER BY "LastUsedAtUtc" DESC, "CreatedOnUtc" DESC, "ItemId" ASC
                 OFFSET {{MaxStoredPerType}})
-            """, cancellationToken).ConfigureAwait(false);
+            """, cancellationToken);
     }
     private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
         if (context.Database.IsRelational()) {
-            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken);
         }
     }
 

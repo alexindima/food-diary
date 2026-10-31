@@ -24,14 +24,14 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             notificationUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<NotificationPreferencesModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
         Result<NotificationPreferencesModel> currentPreferencesResult =
-            await GetAsync(userId, cancellationToken).ConfigureAwait(false);
+            await GetAsync(userId, cancellationToken);
         if (currentPreferencesResult.IsFailure) {
             return Result.Failure<NotificationPreferencesModel>(currentPreferencesResult.Error);
         }
@@ -51,7 +51,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
         Result<NotificationPreferencesUpdateResult> updateResult = await UpdateAsync(
             userId,
             update,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (updateResult.IsFailure) {
             return Result.Failure<NotificationPreferencesModel>(updateResult.Error);
@@ -69,7 +69,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
         return Result.Success(preferences);
     }
     private async Task<Result<NotificationPreferencesModel>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<NotificationPreferencesModel>(result.Error);
         }
@@ -81,8 +81,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
         UserPreferenceUpdate update,
         CancellationToken cancellationToken = default) {
         Result<UserNotificationProfileModel> result = await userProfileService
-            .UpdatePreferencesAsync(userId, update, cancellationToken)
-            .ConfigureAwait(false);
+            .UpdatePreferencesAsync(userId, update, cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<NotificationPreferencesUpdateResult>(result.Error);
         }

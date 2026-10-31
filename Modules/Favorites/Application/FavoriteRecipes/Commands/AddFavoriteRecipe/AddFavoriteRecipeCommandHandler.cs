@@ -21,8 +21,7 @@ public sealed class AddFavoriteRecipeCommandHandler(
         AddFavoriteRecipeCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<FavoriteRecipeModel>(userIdResult);
         }
@@ -39,20 +38,20 @@ public sealed class AddFavoriteRecipeCommandHandler(
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
         Result<FavoriteRecipeSourceModel> sourceResult = await sourceReadService
-            .GetAccessibleAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+            .GetAccessibleAsync(recipeId, userId, cancellationToken);
         if (sourceResult.IsFailure) {
             return Result.Failure<FavoriteRecipeModel>(sourceResult.Error);
         }
 
         FavoriteRecipeSourceModel recipe = sourceResult.Value;
 
-        FavoriteRecipe? existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+        FavoriteRecipe? existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken);
         if (existing is not null) {
             return Result.Failure<FavoriteRecipeModel>(FavoriteRecipeErrors.AlreadyExists);
         }
 
         var favorite = FavoriteRecipe.Create(userId, recipeId, command.Name);
-        await favoriteRecipeRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
+        await favoriteRecipeRepository.AddAsync(favorite, cancellationToken);
 
         return Result.Success(favorite.ToModel(recipe));
     }

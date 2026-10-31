@@ -19,8 +19,7 @@ public sealed class SearchProductSuggestionsQueryHandler(IEnumerable<IProductSea
             }
 
             IReadOnlyList<ProductSearchSuggestionModel> providerSuggestions = await provider
-                .SearchAsync(query.Search, remaining, cancellationToken)
-                .ConfigureAwait(false);
+                .SearchAsync(query.Search, remaining, cancellationToken);
             suggestions.AddRange(providerSuggestions);
         }
 

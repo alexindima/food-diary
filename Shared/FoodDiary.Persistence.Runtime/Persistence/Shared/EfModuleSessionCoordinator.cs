@@ -18,17 +18,16 @@ internal sealed class EfModuleSessionCoordinator(SharedPersistenceDbContext cont
         string connectionString = context.Database.GetConnectionString()
             ?? throw new InvalidOperationException("The session coordinator requires a relational connection string.");
         PostgresAdvisoryLockLease advisoryLock = await PostgresAdvisoryLockLease
-            .AcquireAsync(connectionString, serializationKey, cancellationToken)
-            .ConfigureAwait(false);
-        await using (advisoryLock.ConfigureAwait(false)) {
+            .AcquireAsync(connectionString, serializationKey, cancellationToken);
+        await using (advisoryLock) {
             // SaveChanges owns its atomic transaction and retries. Never replay provider calls.
             return await SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
-                T result = await operation(cancellationToken).ConfigureAwait(false);
+                T result = await operation(cancellationToken);
                 if (result is not Result { IsFailure: true }) {
-                    await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await unitOfWork.SaveChangesAsync(cancellationToken);
                 }
                 return result;
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken);
         }
     }
 }

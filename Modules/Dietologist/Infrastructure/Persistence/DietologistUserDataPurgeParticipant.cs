@@ -9,7 +9,7 @@ internal sealed class DietologistUserDataPurgeParticipant(DietologistDbContext c
     public int Order => 40;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.ClientTasks.Where(item => item.ClientUserId == userId || item.DietologistUserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.ClientTasks.Where(item => item.ClientUserId == userId || item.DietologistUserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

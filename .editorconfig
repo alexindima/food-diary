@@ -162,6 +162,21 @@ dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
 dotnet_diagnostic.CA1869.severity = error
 
+# Server application code uses the default ASP.NET Core/worker context.
+# Reusable libraries keep MA0004 enabled: Mediator, HTTP, Outbox, PostgreSQL
+# and the independent MailInbox/MailRelay clients.
+[{FoodDiary.Development.Mcp,FoodDiary.Infrastructure,FoodDiary.Initializer,FoodDiary.JobManager,FoodDiary.Presentation.Api,FoodDiary.ReadModel.Composition,FoodDiary.Telegram.Bot,FoodDiary.Web.Api}/**.cs]
+dotnet_diagnostic.MA0004.severity = none
+
+[Modules/**.cs]
+dotnet_diagnostic.MA0004.severity = none
+
+[Services/*/FoodDiary.*.{Application,Infrastructure,Initializer,Presentation,WebApi}/**.cs]
+dotnet_diagnostic.MA0004.severity = none
+
+[Shared/{FoodDiary.Application.Runtime,FoodDiary.Audit.Infrastructure,FoodDiary.Email.Infrastructure,FoodDiary.Email.MailRelay,FoodDiary.Persistence.Runtime}/**.cs]
+dotnet_diagnostic.MA0004.severity = none
+
 [FoodDiary.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 # Domain value objects are not interop contracts; keep layout attributes out of business code.

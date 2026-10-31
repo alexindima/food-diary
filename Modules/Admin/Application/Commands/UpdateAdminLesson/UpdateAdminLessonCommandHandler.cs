@@ -36,7 +36,7 @@ public sealed class UpdateAdminLessonCommandHandler(ISender lessonAdministration
             return RequiredIdParser.ToFailure<AdminLessonModel, NutritionLessonId>(lessonIdResult);
         }
 
-        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new UpdateLessonCommand(LessonId: lessonIdResult.Value, Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken).ConfigureAwait(false);
+        Result<LessonAdminReadModel> lessonResult = await lessonAdministrationService.Send(new UpdateLessonCommand(LessonId: lessonIdResult.Value, Title: command.Title, Content: command.Content, Summary: command.Summary, Locale: command.Locale, Category: categoryResult.Value, Difficulty: difficultyResult.Value, EstimatedReadMinutes: command.EstimatedReadMinutes, SortOrder: command.SortOrder, IsPublished: command.IsPublished), cancellationToken);
 
         return lessonResult.IsSuccess
             ? Result.Success(lessonResult.Value.ToAdminModel())

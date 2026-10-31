@@ -14,25 +14,25 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(Deleted: false, "invalid");
         }
 
-        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken);
         if (asset is null) {
             return new DeleteImageAssetResult(Deleted: false, "not_found");
         }
 
-        bool inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken).ConfigureAwait(false);
+        bool inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken);
         if (inUse) {
             return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
-        await EnqueueObjectDeletionAsync(asset, cancellationToken).ConfigureAwait(false);
-        await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
+        await EnqueueObjectDeletionAsync(asset, cancellationToken);
+        await imageAssetRepository.DeleteAsync(asset, cancellationToken);
         return new DeleteImageAssetResult(Deleted: true);
     }
 
     private async Task EnqueueObjectDeletionAsync(ImageAsset asset, CancellationToken cancellationToken) {
-        await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), asset.IsConfirmed, cancellationToken).ConfigureAwait(false);
+        await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), asset.IsConfirmed, cancellationToken);
         if (!asset.IsConfirmed) {
-            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: true, cancellationToken).ConfigureAwait(false);
+            await imageObjectDeletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: true, cancellationToken);
         }
     }
 }

@@ -17,13 +17,13 @@ public sealed class GetCurrentFastingQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FastingSessionModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        FastingSessionModel? current = await sender.Send(new ReadCurrentFastingQuery(userId), cancellationToken).ConfigureAwait(false);
+        FastingSessionModel? current = await sender.Send(new ReadCurrentFastingQuery(userId), cancellationToken);
         return Result.Success(current);
     }
 }

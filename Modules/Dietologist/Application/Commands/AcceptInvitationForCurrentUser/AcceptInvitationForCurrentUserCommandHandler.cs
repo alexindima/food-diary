@@ -27,13 +27,13 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             dietologistUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -51,7 +51,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
             invitationIdResult.Value,
             asTracking: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure(DietologistErrors.InvitationNotFound);
         }
@@ -67,10 +67,10 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         invitation.Accept(dietologistUserId);
 
         if (!user.IsDietologist) {
-            await userRoleMembershipService.EnsureRoleAsync(new UserId(user.Id), RoleNames.Dietologist, cancellationToken).ConfigureAwait(false);
+            await userRoleMembershipService.EnsureRoleAsync(new UserId(user.Id), RoleNames.Dietologist, cancellationToken);
         }
 
-        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
             notificationWriter,
             notificationClientRefreshService,
@@ -78,7 +78,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 

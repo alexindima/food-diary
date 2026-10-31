@@ -41,7 +41,7 @@ internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions o
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!response.IsSuccessStatusCode) {
                 return Result.Failure<TResponse>(BillingErrors.ProviderOperationFailed(
                     BillingProviderNames.YooKassa,
@@ -53,7 +53,7 @@ internal sealed class YooKassaApiClient(HttpClient httpClient, YooKassaOptions o
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             return result is null
                 ? Result.Failure<TResponse>(BillingErrors.ProviderOperationFailed(
                     BillingProviderNames.YooKassa,

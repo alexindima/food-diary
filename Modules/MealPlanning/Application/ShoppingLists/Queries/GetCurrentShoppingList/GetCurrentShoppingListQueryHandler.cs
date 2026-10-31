@@ -19,13 +19,13 @@ public sealed class GetCurrentShoppingListQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        ShoppingListModel? list = await GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
+        ShoppingListModel? list = await GetCurrentAsync(userId, cancellationToken);
 
         return list is null
             ? Result.Failure<ShoppingListModel>(ShoppingListErrors.CurrentNotFound())
@@ -36,7 +36,7 @@ public sealed class GetCurrentShoppingListQueryHandler(
         CancellationToken cancellationToken) {
         ShoppingListReadModel? list = await shoppingListRepository.GetCurrentReadModelAsync(
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return list?.ToModel();
     }

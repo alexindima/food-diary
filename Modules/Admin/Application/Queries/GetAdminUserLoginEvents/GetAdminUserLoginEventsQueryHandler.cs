@@ -15,7 +15,7 @@ public sealed class GetAdminUserLoginEventsQueryHandler(ISender sender)
         int normalizedPage = PaginationPolicy.NormalizePage(query.Page);
         int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
         (IReadOnlyList<UserLoginEventReadModel> items, int totalItems) =
-            await sender.Send(new GetLoginEventsQuery(normalizedPage, normalizedLimit, query.UserId, query.Search, query.FromUtc, query.ToUtc, query.Provider, query.Device), cancellationToken).ConfigureAwait(false);
+            await sender.Send(new GetLoginEventsQuery(normalizedPage, normalizedLimit, query.UserId, query.Search, query.FromUtc, query.ToUtc, query.Provider, query.Device), cancellationToken);
         AdminUserLoginEventModel[] models = [.. items.Select(ToModel)];
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);
         return Result.Success(new PagedResponse<AdminUserLoginEventModel>(

@@ -26,7 +26,7 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
             method,
             path,
             body,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (envelopeResult.IsFailure) {
             return Result.Failure<TResponse>(envelopeResult.Error);
         }
@@ -44,7 +44,7 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
             HttpMethod.Get,
             NormalizeRelativePath(path),
             body: null,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (envelopeResult.IsFailure) {
             return Result.Failure<PaddlePage<TItem>>(envelopeResult.Error);
         }
@@ -65,7 +65,7 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
         using HttpResponseMessage response = await httpClient.SendAsync(
             request,
             HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (!response.IsSuccessStatusCode) {
             return Result.Failure<PaddleEnvelope<TResponse>>(CreateProviderFailure(
                 $"Paddle returned HTTP status {((int)response.StatusCode).ToString(CultureInfo.InvariantCulture)}."));
@@ -77,7 +77,7 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             return envelope is null
                 ? Result.Failure<PaddleEnvelope<TResponse>>(CreateProviderFailure("Paddle returned an empty response."))
                 : Result.Success(envelope);

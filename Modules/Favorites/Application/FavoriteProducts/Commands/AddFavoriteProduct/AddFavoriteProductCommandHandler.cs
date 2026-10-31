@@ -22,8 +22,7 @@ public sealed class AddFavoriteProductCommandHandler(
         AddFavoriteProductCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<FavoriteProductModel>(userIdResult);
         }
@@ -40,20 +39,20 @@ public sealed class AddFavoriteProductCommandHandler(
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
         Result<FavoriteProductSourceModel> sourceResult = await sourceReadService
-            .GetAccessibleAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+            .GetAccessibleAsync(productId, userId, cancellationToken);
         if (sourceResult.IsFailure) {
             return Result.Failure<FavoriteProductModel>(sourceResult.Error);
         }
 
         FavoriteProductSourceModel product = sourceResult.Value;
 
-        FavoriteProduct? existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        FavoriteProduct? existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken);
         if (existing is not null) {
             return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.AlreadyExists);
         }
 
         var favorite = FavoriteProduct.CreateWithPreferredQuantity(userId, productId, command.Name, PreferredProductQuantity.FromAmount(command.PreferredPortionAmount ?? product.DefaultPortionAmount));
-        await favoriteProductRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
+        await favoriteProductRepository.AddAsync(favorite, cancellationToken);
 
         return Result.Success(favorite.ToModel(product));
     }

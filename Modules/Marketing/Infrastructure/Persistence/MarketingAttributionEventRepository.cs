@@ -39,7 +39,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .OrderBy(item => item.OccurredAtUtc)
             .Select(item => item.Id)
             .Take(Math.Max(batchSize, 1))
-            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .ToArrayAsync(cancellationToken);
 
         if (ids.Length == 0) {
             return 0;
@@ -47,7 +47,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
 
         return await attributionEvents
             .Where(item => Enumerable.Contains(ids, item.Id))
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task<MarketingAttributionSummaryRecord> GetSummaryAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {
@@ -55,7 +55,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .AsNoTracking()
             .Where(x => x.OccurredAtUtc >= sinceUtc);
 
-        return await LoadSummaryAsync(events, cancellationToken).ConfigureAwait(false);
+        return await LoadSummaryAsync(events, cancellationToken);
     }
 
     private static async Task<MarketingAttributionSummaryRecord> LoadSummaryAsync(IQueryable<MarketingAttributionEvent> events, CancellationToken cancellationToken) {
@@ -69,15 +69,15 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
                 group.Count(x => x.UtmSource != null || x.UtmMedium != null || x.UtmCampaign != null || x.UtmContent != null || x.UtmTerm != null || x.ReferrerHost != null),
                 group.Count(x => x.EventType == "page_landing" && (x.UtmSource != null || x.UtmMedium != null || x.UtmCampaign != null || x.UtmContent != null || x.UtmTerm != null || x.ReferrerHost != null)),
                 group.Max(x => (DateTime?)x.OccurredAtUtc)))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false) ?? new(
+            .FirstOrDefaultAsync(cancellationToken) ?? new(
                 Events: 0, Visits: 0, Signups: 0, PremiumStarts: 0,
                 AttributedEvents: 0, AttributedVisits: 0, LastEventAtUtc: null);
 
-        int anonymousVisitors = await events.Select(x => x.AnonymousId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
-        int sessions = await events.Select(x => x.SessionId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<MarketingAttributionBreakdownRecord> topCampaigns = await LoadBreakdownAsync(events, includeCampaign: true, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<MarketingAttributionBreakdownRecord> topSources = await LoadBreakdownAsync(events, includeCampaign: false, cancellationToken).ConfigureAwait(false);
-        List<MarketingAttributionEventRecord> recentEvents = await LoadRecentEventsAsync(events, cancellationToken).ConfigureAwait(false);
+        int anonymousVisitors = await events.Select(x => x.AnonymousId).Distinct().CountAsync(cancellationToken);
+        int sessions = await events.Select(x => x.SessionId).Distinct().CountAsync(cancellationToken);
+        IReadOnlyList<MarketingAttributionBreakdownRecord> topCampaigns = await LoadBreakdownAsync(events, includeCampaign: true, cancellationToken);
+        IReadOnlyList<MarketingAttributionBreakdownRecord> topSources = await LoadBreakdownAsync(events, includeCampaign: false, cancellationToken);
+        List<MarketingAttributionEventRecord> recentEvents = await LoadRecentEventsAsync(events, cancellationToken);
 
         return new MarketingAttributionSummaryRecord(
             counts.Events,
@@ -109,7 +109,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             .Select(x => new MarketingAttributionEventRecord(
                 x.EventType, x.OccurredAtUtc, x.UserId, x.AnonymousId, x.SessionId, x.LandingPath,
                 x.ReferrerHost, x.UtmSource, x.UtmMedium, x.UtmCampaign, x.UtmContent, x.UtmTerm, x.BuildVersion, x.Id.Value))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<MarketingAttributionEventRecord?> GetLatestForUserAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -132,7 +132,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
                 x.UtmTerm,
                 x.BuildVersion,
                 x.Id.Value))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<bool> ExistsForUserAsync(UserId userId, string eventType, CancellationToken cancellationToken = default) {
@@ -172,7 +172,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
                 group.Count(x => x.EventType == "signup_completed"),
                 group.Count(x => x.EventType == "premium_started"),
                 group.Max(x => (DateTime?)x.OccurredAtUtc)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<MarketingAttributionBreakdownRecord> result = [];
         foreach (MarketingAttributionBreakdownAggregate aggregate in aggregates) {
@@ -180,8 +180,8 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
                 (x.UtmSource ?? x.ReferrerHost ?? "direct") == aggregate.Source &&
                 (x.UtmMedium ?? (x.ReferrerHost == null ? "none" : "referral")) == aggregate.Medium &&
                 (!includeCampaign || (x.UtmCampaign ?? "none") == aggregate.Campaign));
-            int visitors = await matching.Select(x => x.AnonymousId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
-            int sessions = await matching.Select(x => x.SessionId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
+            int visitors = await matching.Select(x => x.AnonymousId).Distinct().CountAsync(cancellationToken);
+            int sessions = await matching.Select(x => x.SessionId).Distinct().CountAsync(cancellationToken);
             result.Add(new MarketingAttributionBreakdownRecord(
                 aggregate.Source, aggregate.Medium, aggregate.Campaign, aggregate.Events, aggregate.Visits,
                 aggregate.Signups, aggregate.PremiumStarts, visitors, sessions, aggregate.LastEventAtUtc));

@@ -20,12 +20,12 @@ public sealed class SendClientTaskRemindersCommandHandler(
             utcNow,
             utcNow.Add(ReminderWindow),
             BatchSize,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         foreach (ClientTask task in tasks) {
             await notificationWriter.AddAsync(
                 DietologistNotificationFactory.CreateClientTaskDueSoon(task.ClientUserId),
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken);
             task.MarkDueReminderSent(utcNow);
         }
 

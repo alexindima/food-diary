@@ -26,7 +26,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         return await query
             .OrderBy(l => l.Category)
             .ThenBy(l => l.SortOrder)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<LessonSummaryReadModel>> GetSummaryReadModelsByLocaleAsync(
@@ -52,7 +52,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
                 l.Difficulty.ToString(),
                 l.EstimatedReadMinutes,
                 l.SortOrder))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<LessonSummaryPageReadModel> GetSummaryPageByLocaleAsync(
@@ -67,11 +67,11 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         IQueryable<NutritionLesson> localeQuery = lessonSet
             .AsNoTracking()
             .Where(lesson => lesson.Locale == locale && lesson.IsPublished);
-        int totalLessonCount = await localeQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalLessonCount = await localeQuery.CountAsync(cancellationToken);
         IReadOnlyList<LessonCategory> availableCategoryValues = await localeQuery
             .Select(lesson => lesson.Category)
             .Distinct()
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         IReadOnlyList<string> availableCategories = [.. availableCategoryValues.Order().Select(category => category.ToString())];
 
         IQueryable<NutritionLesson> filteredQuery = localeQuery;
@@ -90,7 +90,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
                 EF.Functions.ILike(lesson.Summary ?? string.Empty, pattern, LikeEscapeCharacter));
         }
 
-        int totalCount = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalCount = await filteredQuery.CountAsync(cancellationToken);
         IOrderedQueryable<NutritionLesson> orderedQuery = sort == LessonSortOption.Shortest
             ? filteredQuery.OrderBy(lesson => lesson.EstimatedReadMinutes).ThenBy(lesson => lesson.Category).ThenBy(lesson => lesson.SortOrder)
             : filteredQuery.OrderBy(lesson => lesson.Category).ThenBy(lesson => lesson.SortOrder);
@@ -105,7 +105,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
                 lesson.Difficulty.ToString(),
                 lesson.EstimatedReadMinutes,
                 lesson.SortOrder))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return new LessonSummaryPageReadModel(items, totalCount, totalLessonCount, availableCategories);
     }
@@ -126,7 +126,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
             .ThenBy(l => l.Category)
             .ThenBy(l => l.SortOrder)
             .ThenBy(l => l.CreatedOnUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<NutritionLessonId, int>> GetCompletionCountsAsync(
@@ -142,8 +142,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
             .Where(progress => Enumerable.Contains(ids, progress.LessonId))
             .GroupBy(progress => progress.LessonId)
             .Select(group => new { LessonId = group.Key, CompletedCount = group.Count() })
-            .ToDictionaryAsync(item => item.LessonId, item => item.CompletedCount, cancellationToken)
-            .ConfigureAwait(false);
+            .ToDictionaryAsync(item => item.LessonId, item => item.CompletedCount, cancellationToken);
     }
 
     public async Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
@@ -170,7 +169,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
                 l.SortOrder,
                 l.CreatedOnUtc,
                 l.ModifiedOnUtc, l.IsPublished, progressSet.AsNoTracking().Count(progress => progress.LessonId == l.Id)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<NutritionLesson?> GetByIdAsync(
@@ -178,7 +177,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         CancellationToken cancellationToken = default) {
         return await lessonSet
             .AsNoTracking()
-            .FirstOrDefaultAsync(l => l.Id == id && l.IsPublished, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(l => l.Id == id && l.IsPublished, cancellationToken);
     }
 
     public async Task<LessonDetailReadModel?> GetDetailReadModelByIdAsync(
@@ -195,14 +194,14 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
                 l.Category.ToString(),
                 l.Difficulty.ToString(),
                 l.EstimatedReadMinutes))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<NutritionLesson?> GetByIdTrackingAsync(
         NutritionLessonId id,
         CancellationToken cancellationToken = default) {
         return await lessonSet
-            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(
@@ -211,7 +210,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         return await progressSet
             .AsNoTracking()
             .Where(p => p.UserId == userId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<Guid>> GetReadLessonIdsAsync(
@@ -221,7 +220,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
             .AsNoTracking()
             .Where(p => p.UserId == userId)
             .Select(p => p.LessonId.Value)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<UserLessonProgress?> GetUserProgressForLessonAsync(
@@ -230,7 +229,7 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         CancellationToken cancellationToken = default) {
         return await progressSet
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken);
     }
 
     public async Task<bool> IsLessonReadAsync(
@@ -239,26 +238,26 @@ public sealed class NutritionLessonRepository(DbSet<NutritionLesson> lessonSet, 
         CancellationToken cancellationToken = default) {
         return await progressSet
             .AsNoTracking()
-            .AnyAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken).ConfigureAwait(false);
+            .AnyAsync(p => p.UserId == userId && p.LessonId == lessonId, cancellationToken);
     }
 
     public async Task<UserLessonProgress> AddProgressAsync(
         UserLessonProgress progress,
         CancellationToken cancellationToken = default) {
-        await progressSet.AddAsync(progress, cancellationToken).ConfigureAwait(false);
+        await progressSet.AddAsync(progress, cancellationToken);
         return progress;
     }
 
     public async Task AddAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        await lessonSet.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
+        await lessonSet.AddAsync(lesson, cancellationToken);
     }
 
     public async Task AddRangeAsync(
         IReadOnlyCollection<NutritionLesson> lessons,
         CancellationToken cancellationToken = default) {
-        await lessonSet.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
+        await lessonSet.AddRangeAsync(lessons, cancellationToken);
     }
 
     public Task UpdateAsync(

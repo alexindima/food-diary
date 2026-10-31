@@ -11,7 +11,7 @@ internal sealed class WearableConnectionRepository(DbSet<WearableConnection> rec
     public async Task<WearableConnection?> GetAsync(
         UserId userId, WearableProvider provider, CancellationToken cancellationToken = default) {
         return await records
-            .FirstOrDefaultAsync(c => c.UserId == userId && c.Provider == provider, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(c => c.UserId == userId && c.Provider == provider, cancellationToken);
     }
 
     public async Task<IReadOnlyList<WearableConnection>> GetAllForUserAsync(
@@ -20,7 +20,7 @@ internal sealed class WearableConnectionRepository(DbSet<WearableConnection> rec
             .AsNoTracking()
             .Where(c => c.UserId == userId)
             .OrderBy(c => c.Provider)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<WearableConnectionModel>> GetConnectionModelsAsync(
@@ -36,18 +36,18 @@ internal sealed class WearableConnectionRepository(DbSet<WearableConnection> rec
                 c.IsActive,
                 c.LastSyncedAtUtc,
                 c.CreatedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<WearableConnection> AddAsync(
         WearableConnection connection, CancellationToken cancellationToken = default) {
-        await records.AddAsync(connection, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(connection, cancellationToken);
         return connection;
     }
 
     public async Task UpdateAsync(
         WearableConnection connection, CancellationToken cancellationToken = default) {
         records.Update(connection);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 }

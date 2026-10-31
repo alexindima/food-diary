@@ -30,7 +30,7 @@ public sealed class GetShoppingListByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
@@ -41,7 +41,7 @@ public sealed class GetShoppingListByIdQueryHandler(
         ShoppingListModel? list = await GetByIdAsync(
             shoppingListId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return list is null
             ? Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(query.ShoppingListId))
@@ -54,7 +54,7 @@ public sealed class GetShoppingListByIdQueryHandler(
         ShoppingListReadModel? list = await shoppingListRepository.GetReadModelByIdAsync(
             shoppingListId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return list?.ToModel();
     }

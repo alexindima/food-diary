@@ -30,7 +30,7 @@ public sealed class GetProductsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<ProductModel>>(userIdResult);
         }
@@ -49,11 +49,11 @@ public sealed class GetProductsQueryHandler(
                 query.CaloriesFrom,
                 query.CaloriesTo,
                 query.HasImage),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         FavoriteProductOverviewModel favorites = items.Count == 0
             ? new([], [], 0)
-            : await sender.Send(new ReadFavoriteProductOverviewQuery(userId, [.. items.Select(product => product.Id)]), cancellationToken).ConfigureAwait(false);
+            : await sender.Send(new ReadFavoriteProductOverviewQuery(userId, [.. items.Select(product => product.Id)]), cancellationToken);
         var favoritesByProductId = favorites.Items.ToDictionary(favorite => favorite.ProductId);
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<ProductModel>(

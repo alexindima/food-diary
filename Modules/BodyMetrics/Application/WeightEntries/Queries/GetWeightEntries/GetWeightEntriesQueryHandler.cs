@@ -20,7 +20,7 @@ public sealed class GetWeightEntriesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WeightEntryModel>>(userIdResult);
         }
@@ -33,7 +33,7 @@ public sealed class GetWeightEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WeightEntryModel> response = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntryModel> response = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken);
 
         return Result.Success<IReadOnlyList<WeightEntryModel>>(response);
     }

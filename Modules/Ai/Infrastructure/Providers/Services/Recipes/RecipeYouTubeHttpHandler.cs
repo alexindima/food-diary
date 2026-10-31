@@ -7,7 +7,7 @@ internal sealed class RecipeYouTubeHttpHandler : DelegatingHandler {
         HttpRequestMessage current = request;
         try {
             for (int hop = 0; hop <= 3; hop++) {
-                HttpResponseMessage response = await SendAllowedAsync(current, cancellationToken).ConfigureAwait(false);
+                HttpResponseMessage response = await SendAllowedAsync(current, cancellationToken);
                 if ((int)response.StatusCode is not (301 or 302 or 303 or 307 or 308)) {
                     return response;
                 }
@@ -25,7 +25,7 @@ internal sealed class RecipeYouTubeHttpHandler : DelegatingHandler {
                     }
                     if (keepBody && current.Content is not null) {
                         next.Content = new ByteArrayContent(await BoundedHttpContentReader.ReadAsByteArrayAsync(
-                            current.Content, 64 * 1024, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false));
+                            current.Content, 64 * 1024, TimeSpan.FromSeconds(10), cancellationToken));
                         next.Content.Headers.ContentType = current.Content.Headers.ContentType;
                     }
                     if (!ReferenceEquals(current, request)) {
@@ -48,7 +48,7 @@ internal sealed class RecipeYouTubeHttpHandler : DelegatingHandler {
             url.UserInfo.Length != 0 || !IsAllowedHost(url.IdnHost)) {
             throw new HttpRequestException("Unsupported YouTube network destination.");
         }
-        HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
         if (IsMediaHost(url.IdnHost)) {
             // Media is streamed in bounded segments and copied through the shared 50 MiB limit.
             return response;
@@ -56,7 +56,7 @@ internal sealed class RecipeYouTubeHttpHandler : DelegatingHandler {
         try {
             HttpContent original = response.Content;
             byte[] body = await BoundedHttpContentReader.ReadAsByteArrayAsync(
-                original, 4 * 1024 * 1024, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
+                original, 4 * 1024 * 1024, TimeSpan.FromSeconds(10), cancellationToken);
             var buffered = new ByteArrayContent(body);
             foreach (KeyValuePair<string, IEnumerable<string>> header in original.Headers) {
                 buffered.Headers.TryAddWithoutValidation(header.Key, header.Value);

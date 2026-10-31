@@ -92,7 +92,7 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
                     flushTimeoutSource.Token,
                     actionTimeoutSource.Token);
                 try {
-                    await action.ExecuteAsync(actionSource.Token).ConfigureAwait(false);
+                    await action.ExecuteAsync(actionSource.Token);
                     ApplicationRuntimeTelemetry.RecordActionSucceeded();
                 } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                     throw;

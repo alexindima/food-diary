@@ -26,7 +26,7 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
                 throw new InvalidOperationException("An atomic command must own the outer command boundary.");
             }
             try {
-                TResponse nestedResponse = await next(cancellationToken).ConfigureAwait(false);
+                TResponse nestedResponse = await next(cancellationToken);
                 if (nestedResponse is Result { IsFailure: true }) {
                     _executionScope.MarkNestedFailure();
                 }
@@ -46,10 +46,10 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
                     throw new InvalidOperationException("The atomic operation must belong to the command's authenticated user.");
                 }
                 response = request is IIdempotentAtomicCommand { Operation: { } identity }
-                    ? await executor.ExecuteAsync(identity, ExecuteHandlerAsync, cancellationToken).ConfigureAwait(false)
-                    : await executor.ExecuteAsync(ExecuteHandlerAsync, cancellationToken).ConfigureAwait(false);
+                    ? await executor.ExecuteAsync(identity, ExecuteHandlerAsync, cancellationToken)
+                    : await executor.ExecuteAsync(ExecuteHandlerAsync, cancellationToken);
             } else {
-                response = await ExecuteHandlerAsync(cancellationToken).ConfigureAwait(false);
+                response = await ExecuteHandlerAsync(cancellationToken);
             }
 
             if (response is Result { IsFailure: true }) {
@@ -59,11 +59,11 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
             }
 
             if (!atomic && unitOfWork.HasPendingChanges) {
-                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             if (postCommitActionQueue.HasActions) {
-                await postCommitActionQueue.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+                await postCommitActionQueue.FlushAsync(CancellationToken.None);
             }
 
             return response;
@@ -75,7 +75,7 @@ internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
 
         async Task<TResponse> ExecuteHandlerAsync(CancellationToken token) {
             _executionScope.ResetNestedFailures();
-            TResponse result = await next(token).ConfigureAwait(false);
+            TResponse result = await next(token);
             if (_executionScope.HasFailedNestedCommand && result is not Result { IsFailure: true }) {
                 throw new InvalidOperationException("A failed nested command prevents committing the outer command.");
             }

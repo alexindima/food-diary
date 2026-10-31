@@ -13,8 +13,7 @@ public sealed class CleanupFastingTelemetryCommandHandler(IFastingTelemetryEvent
         do {
             cancellationToken.ThrowIfCancellationRequested();
             deletedCount = await repository
-                .DeleteOlderThanAsync(olderThanUtc, batchSize, cancellationToken)
-                .ConfigureAwait(false);
+                .DeleteOlderThanAsync(olderThanUtc, batchSize, cancellationToken);
             totalDeletedCount += deletedCount;
         } while (deletedCount == batchSize);
 

@@ -9,7 +9,7 @@ public sealed class MarkInboundMailMessageReadCommandHandler(
     IInboundMailStore store,
     TimeProvider timeProvider) : IRequestHandler<MarkInboundMailMessageReadCommand, Result> {
     public async Task<Result> Handle(MarkInboundMailMessageReadCommand request, CancellationToken cancellationToken) {
-        bool updated = await store.MarkAsReadAsync(request.Id, timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+        bool updated = await store.MarkAsReadAsync(request.Id, timeProvider.GetUtcNow(), cancellationToken);
         return updated
             ? Result.Success()
             : Result.Failure(MailInboxErrors.MessageNotFound(request.Id));

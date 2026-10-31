@@ -21,7 +21,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         context.HttpContext.Items[ObservationKey] = observation;
 
         try {
-            ResourceExecutedContext executedContext = await next().ConfigureAwait(false);
+            ResourceExecutedContext executedContext = await next();
             Exception? exception = executedContext.ExceptionHandled ? null : executedContext.Exception;
             if (IsClientCancellation(executedContext.HttpContext, exception)) {
                 CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);
@@ -57,13 +57,13 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         ResultExecutingContext context,
         ResultExecutionDelegate next) {
         if (context.HttpContext.Items.ContainsKey(ObservationKey)) {
-            await next().ConfigureAwait(false);
+            await next();
             return;
         }
 
         PresentationOperationObservation observation = BeginObservation(context);
         try {
-            ResultExecutedContext executedContext = await next().ConfigureAwait(false);
+            ResultExecutedContext executedContext = await next();
             Exception? exception = executedContext.ExceptionHandled ? null : executedContext.Exception;
             if (IsClientCancellation(executedContext.HttpContext, exception)) {
                 CompleteObservation(observation, StatusCodes.Status499ClientClosedRequest, exception: null, isCancelled: true);

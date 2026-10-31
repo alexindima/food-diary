@@ -15,8 +15,7 @@ public sealed class RedisAdminSsoCodeStore(IConnectionMultiplexer connectionMult
         await connectionMultiplexer
             .GetDatabase()
             .StringSetAsync(BuildKey(code), userId, lifetime)
-            .WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .WaitAsync(cancellationToken);
     }
 
     public async Task<string?> ConsumeAsync(string code, CancellationToken cancellationToken = default) {
@@ -24,8 +23,7 @@ public sealed class RedisAdminSsoCodeStore(IConnectionMultiplexer connectionMult
         RedisValue value = await connectionMultiplexer
             .GetDatabase()
             .StringGetDeleteAsync(BuildKey(code))
-            .WaitAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .WaitAsync(cancellationToken);
         return value.HasValue ? value.ToString() : null;
     }
 

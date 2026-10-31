@@ -70,7 +70,7 @@ internal static class MailInboxHostConfiguration {
                 $"{MailInboxDatabaseConfiguration.RuntimeRoleConfigurationKey} must be configured in Production.");
         NpgsqlMailInboxRuntimeRoleValidator validator =
             services.GetRequiredService<NpgsqlMailInboxRuntimeRoleValidator>();
-        await validator.ValidateAsync(runtimeRoleName, cancellationToken).ConfigureAwait(false);
+        await validator.ValidateAsync(runtimeRoleName, cancellationToken);
     }
 
     private static string? GetValidationFailure(

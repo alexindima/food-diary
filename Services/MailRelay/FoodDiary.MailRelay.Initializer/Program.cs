@@ -49,12 +49,12 @@ builder.Services.AddMailRelayInitializerServices(builder.Configuration, connecti
 
 using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
-await using (scope.ConfigureAwait(false)) {
+await using (scope) {
     NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
     IMailRelaySchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
 
     try {
-        await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None).ConfigureAwait(false);
+        await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None);
         return 0;
     } catch (Exception exception) {
         Console.Error.WriteLine($"MailRelay initializer failed: {exception}");
@@ -69,11 +69,11 @@ static async Task ExecuteAsync(
     CancellationToken cancellationToken) {
     switch (command.Name) {
         case "status":
-            await PrintStatusAsync(dataSource, cancellationToken).ConfigureAwait(false);
+            await PrintStatusAsync(dataSource, cancellationToken);
             break;
         case "update":
             Console.WriteLine("Updating MailRelay schema...");
-            await schemaInitializer.EnsureSchemaAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            await schemaInitializer.EnsureSchemaAsync(cancellationToken: cancellationToken);
             Console.WriteLine("MailRelay schema update completed.");
             break;
         default:
@@ -82,8 +82,8 @@ static async Task ExecuteAsync(
 }
 
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToken cancellationToken) {
-    NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-    await using (connection.ConfigureAwait(false)) {
+    NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+    await using (connection) {
         string[] requiredTables = [
         "mailrelay_outbound_emails",
         "mailrelay_outbox_messages",
@@ -101,11 +101,11 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToke
                        """;
 
         var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("tableNames", requiredTables);
-            NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using (reader.ConfigureAwait(false)) {
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using (reader) {
+                while (await reader.ReadAsync(cancellationToken)) {
                     existingTables.Add(reader.GetString(0));
                 }
 

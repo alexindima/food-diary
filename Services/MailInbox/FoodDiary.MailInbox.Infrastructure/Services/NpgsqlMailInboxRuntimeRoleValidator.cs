@@ -99,13 +99,13 @@ public sealed class NpgsqlMailInboxRuntimeRoleValidator(NpgsqlDataSource dataSou
                                     )
                               );
                            """;
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("expected_role_name", expectedRoleName);
                 command.Parameters.AddWithValue("role_marker", NpgsqlMailInboxRuntimeRoleProvisioner.RoleMarker);
-                object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                object? result = await command.ExecuteScalarAsync(cancellationToken);
                 if (result is not true) {
                     throw new InvalidOperationException(
                         "MailInbox runtime database role is not provisioner-owned or does not have the required least-privilege grants.");

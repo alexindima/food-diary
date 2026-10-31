@@ -64,7 +64,7 @@ public sealed class IdempotencyFilter(
         }
 
         string cacheKey = ComputeCacheKey(context, idempotencyKey);
-        string requestHash = await ComputeRequestHashAsync(context, context.HttpContext.RequestAborted).ConfigureAwait(false);
+        string requestHash = await ComputeRequestHashAsync(context, context.HttpContext.RequestAborted);
         IdempotencyRequestContext.SetRequest(context.HttpContext, cacheKey, requestHash);
         IdempotencyRequestContext.SetRetention(context.HttpContext, _options.ResponseTtl);
         IdempotencyReservation reservation = await idempotencyStore
@@ -73,8 +73,7 @@ public sealed class IdempotencyFilter(
                 requestHash,
                 _options.ResponseTtl,
                 _options.ProcessingTtl,
-                context.HttpContext.RequestAborted)
-            .ConfigureAwait(false);
+                context.HttpContext.RequestAborted);
 
         if (TryApplyReservation(context, reservation)) {
             return;
@@ -85,7 +84,7 @@ public sealed class IdempotencyFilter(
             next,
             cacheKey,
             requestHash,
-            reservation.OwnerToken!).ConfigureAwait(false);
+            reservation.OwnerToken!);
     }
 
     [ExcludeFromCodeCoverage]
@@ -104,11 +103,11 @@ public sealed class IdempotencyFilter(
         var actionStopwatch = Stopwatch.StartNew();
         ActionExecutedContext executedContext;
         try {
-            executedContext = await next().ConfigureAwait(false);
+            executedContext = await next();
         } catch {
             RecordActionDuration(actionStopwatch);
-            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance).ConfigureAwait(false);
-            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
+            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance);
+            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken);
             throw;
         }
         RecordActionDuration(actionStopwatch);
@@ -121,8 +120,8 @@ public sealed class IdempotencyFilter(
                 out string? body,
                 out string? location) ||
             !IsSuccessfulStatusCode(statusCode)) {
-            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance).ConfigureAwait(false);
-            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false);
+            await StopLeaseMaintenanceAsync(leaseMaintenanceCancellation, leaseMaintenance);
+            await TryReleaseReservationAsync(cacheKey, requestHash, ownerToken);
             return;
         }
 
@@ -136,7 +135,7 @@ public sealed class IdempotencyFilter(
             body,
             location,
             leaseMaintenanceCancellation,
-            leaseMaintenance).ConfigureAwait(false);
+            leaseMaintenance);
     }
 
     private async Task FinalizeSuccessfulResultAsync(
@@ -156,9 +155,9 @@ public sealed class IdempotencyFilter(
 
         LeaseMaintenanceStatus maintenanceStatus = await StopLeaseMaintenanceAsync(
             leaseMaintenanceCancellation,
-            leaseMaintenance).ConfigureAwait(false);
+            leaseMaintenance);
         if (maintenanceStatus != LeaseMaintenanceStatus.Stopped ||
-            !await TryRenewLeaseForFinalizationAsync(cacheKey, requestHash, ownerToken).ConfigureAwait(false)) {
+            !await TryRenewLeaseForFinalizationAsync(cacheKey, requestHash, ownerToken)) {
             ApplyLeaseLostResult(context, executedContext, "renewal");
             return;
         }
@@ -173,7 +172,7 @@ public sealed class IdempotencyFilter(
                 body,
                 location,
                 _options.ResponseTtl,
-                completionTimeout.Token).ConfigureAwait(false);
+                completionTimeout.Token);
             if (!completed) {
                 PresentationApiTelemetry.IdempotencyCompletionCasFailureCounter.Add(1);
                 _logger.LogError(
@@ -196,7 +195,7 @@ public sealed class IdempotencyFilter(
         TimeSpan delay = _options.LeaseRenewalInterval;
         while (true) {
             try {
-                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(delay, cancellationToken);
                 using var renewalTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 renewalTimeout.CancelAfter(_options.StoreOperationTimeout);
                 bool renewed = await idempotencyStore.RenewAsync(
@@ -204,7 +203,7 @@ public sealed class IdempotencyFilter(
                     requestHash,
                     ownerToken,
                     _options.ProcessingTtl,
-                    renewalTimeout.Token).ConfigureAwait(false);
+                    renewalTimeout.Token);
                 if (!renewed) {
                     PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
                         1,
@@ -242,7 +241,7 @@ public sealed class IdempotencyFilter(
                 requestHash,
                 ownerToken,
                 _options.ProcessingTtl,
-                renewalTimeout.Token).ConfigureAwait(false);
+                renewalTimeout.Token);
             if (!renewed) {
                 PresentationApiTelemetry.IdempotencyLeaseRenewalFailureCounter.Add(
                     1,
@@ -263,8 +262,8 @@ public sealed class IdempotencyFilter(
     private static async Task<LeaseMaintenanceStatus> StopLeaseMaintenanceAsync(
         CancellationTokenSource cancellation,
         Task<LeaseMaintenanceStatus> maintenance) {
-        await cancellation.CancelAsync().ConfigureAwait(false);
-        return await maintenance.ConfigureAwait(false);
+        await cancellation.CancelAsync();
+        return await maintenance;
     }
 
     private static void RecordActionDuration(Stopwatch stopwatch) {
@@ -324,7 +323,7 @@ public sealed class IdempotencyFilter(
                 cacheKey,
                 requestHash,
                 ownerToken,
-                releaseTimeout.Token).ConfigureAwait(false);
+                releaseTimeout.Token);
         } catch (Exception exception) {
             _logger.LogWarning(exception, "Failed to release an incomplete idempotency reservation");
         }
@@ -521,8 +520,8 @@ public sealed class IdempotencyFilter(
         foreach ((string key, object? value) in context.ActionArguments) {
             if (value is IFormFile file) {
                 Stream stream = file.OpenReadStream();
-                await using (stream.ConfigureAwait(false)) {
-                    byte[] digest = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+                await using (stream) {
+                    byte[] digest = await SHA256.HashDataAsync(stream, cancellationToken);
                     payload[key] = new { file.Length, ContentHash = Convert.ToHexString(digest) };
                 }
             }

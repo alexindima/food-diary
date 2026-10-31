@@ -33,7 +33,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -42,7 +42,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         WebPushSubscription? existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (existing is not null && existing.UserId != userId) {
             return Result.Failure(Errors.Validation.Invalid(
@@ -51,7 +51,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         }
 
         if (existing is null) {
-            await EvictOldestSubscriptionsAsync(userId, cancellationToken).ConfigureAwait(false);
+            await EvictOldestSubscriptionsAsync(userId, cancellationToken);
         }
 
         if (existing is null) {
@@ -64,7 +64,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
                 command.Locale,
                 command.UserAgent);
 
-            await webPushSubscriptionRepository.AddAsync(subscription, cancellationToken).ConfigureAwait(false);
+            await webPushSubscriptionRepository.AddAsync(subscription, cancellationToken);
             auditLogger.Log(
                 "notifications.push-subscription.connected",
                 userId,
@@ -81,7 +81,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
             command.Locale,
             command.UserAgent);
 
-        await webPushSubscriptionRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+        await webPushSubscriptionRepository.UpdateAsync(existing, cancellationToken);
         auditLogger.Log(
             "notifications.push-subscription.refreshed",
             userId,
@@ -93,8 +93,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
 
     private async Task EvictOldestSubscriptionsAsync(UserId userId, CancellationToken cancellationToken) {
         IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository
-            .GetByUserAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserAsync(userId, cancellationToken);
         int countToDelete = subscriptions.Count - WebPushDeliveryLimits.MaximumSubscriptionsPerUser + 1;
         if (countToDelete <= 0) {
             return;
@@ -103,6 +102,6 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         WebPushSubscription[] oldest = [.. subscriptions
             .OrderBy(subscription => subscription.ModifiedOnUtc ?? subscription.CreatedOnUtc)
             .Take(countToDelete)];
-        await webPushSubscriptionRepository.DeleteRangeAsync(oldest, cancellationToken).ConfigureAwait(false);
+        await webPushSubscriptionRepository.DeleteRangeAsync(oldest, cancellationToken);
     }
 }

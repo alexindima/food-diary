@@ -18,13 +18,13 @@ public sealed class GetLatestWaistEntryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WaistEntryModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        WaistEntryModel? latest = await sender.Send(new ReadLatestWaistEntryQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        WaistEntryModel? latest = await sender.Send(new ReadLatestWaistEntryQuery(UserId: userId), cancellationToken);
         return Result.Success(latest);
     }
 }

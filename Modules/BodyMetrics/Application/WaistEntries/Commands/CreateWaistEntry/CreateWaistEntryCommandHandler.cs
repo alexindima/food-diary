@@ -25,7 +25,7 @@ public sealed class CreateWaistEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<WaistEntryModel>(userIdResult);
         }
@@ -36,7 +36,7 @@ public sealed class CreateWaistEntryCommandHandler(
         WaistEntry? existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (existing is not null) {
             if (existing.CircumferenceCm.Equals(command.CircumferenceCm)) {
                 return Result.Success(existing.ToModel());
@@ -47,8 +47,8 @@ public sealed class CreateWaistEntryCommandHandler(
         }
 
         var entry = WaistEntry.CreateWithMeasurement(userId, day, MeasuredWaistCm.Create(command.CircumferenceCm));
-        entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
-        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Waist: MeasuredWaistCm.Create(command.CircumferenceCm)), cancellationToken).ConfigureAwait(false);
+        entry = await waistEntryRepository.AddAsync(entry, cancellationToken);
+        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Waist: MeasuredWaistCm.Create(command.CircumferenceCm)), cancellationToken);
         return Result.Success(entry.ToModel());
     }
 }

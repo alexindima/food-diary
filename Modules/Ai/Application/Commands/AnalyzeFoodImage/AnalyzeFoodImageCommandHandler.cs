@@ -35,8 +35,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
         UserId userId = userIdResult.Value;
         var imageAssetId = (ImageAssetId)query.ImageAssetId;
         Result<string> assetResult = await imageAssetContentService
-            .GetDataUrlAsync(imageAssetId, userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetDataUrlAsync(imageAssetId, userId, cancellationToken);
         if (assetResult.IsFailure) {
             Error error = assetResult.Error.Code switch {
                 "Image.NotFound" => AiErrors.ImageNotFound(query.ImageAssetId),
@@ -48,7 +47,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
 
         var additionalUrls = new List<string>();
         foreach (Guid id in query.AdditionalImageAssetIds ?? []) {
-            Result<string> additional = await imageAssetContentService.GetDataUrlAsync((ImageAssetId)id, userId, cancellationToken).ConfigureAwait(false);
+            Result<string> additional = await imageAssetContentService.GetDataUrlAsync((ImageAssetId)id, userId, cancellationToken);
             if (additional.IsFailure) {
                 return Result.Failure<FoodVisionModel>(additional.Error);
             }
@@ -59,6 +58,6 @@ public sealed class AnalyzeFoodImageCommandHandler(
             userId,
             query.Description,
             query.RequestId,
-            cancellationToken, product: query.IsProductLabel ? new ProductImageAnalysis(additionalUrls) : null).ConfigureAwait(false);
+            cancellationToken, product: query.IsProductLabel ? new ProductImageAnalysis(additionalUrls) : null);
     }
 }

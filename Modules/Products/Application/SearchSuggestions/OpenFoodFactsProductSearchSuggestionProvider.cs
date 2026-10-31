@@ -13,7 +13,7 @@ public sealed class OpenFoodFactsProductSearchSuggestionProvider(ISender cachedP
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<OpenFoodFactsProductModel> products = (await cachedProductSearch.Send(new SearchOpenFoodFactsQuery(search, limit), cancellationToken).ConfigureAwait(false)).Value;
+        IReadOnlyList<OpenFoodFactsProductModel> products = (await cachedProductSearch.Send(new SearchOpenFoodFactsQuery(search, limit), cancellationToken)).Value;
         return products
             .Select(ToSuggestion)
             .ToList();

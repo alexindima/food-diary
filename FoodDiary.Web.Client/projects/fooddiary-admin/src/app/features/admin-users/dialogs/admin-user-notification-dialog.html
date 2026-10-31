@@ -1,0 +1,30 @@
+<fd-ui-dialog size="sm" [title]="'ADMIN_NOTIFICATION.TITLE' | translate" [disableClose]="isSubmitting()">
+    <form method="post" class="fd-grid fd-gap-md" [formRoot]="form">
+        <p>{{ 'ADMIN_NOTIFICATION.RECIPIENT' | translate: { recipient: recipient } }}</p>
+        <p>{{ 'ADMIN_NOTIFICATION.DESCRIPTION' | translate }}</p>
+        <fd-ui-select [label]="'ADMIN_NOTIFICATION.TYPE' | translate" [options]="types()" [formField]="form.type" />
+        <fd-ui-select [label]="'ADMIN_NOTIFICATION.DELAY' | translate" [options]="delays()" [formField]="form.delaySeconds" />
+        @if (failed()) {
+            <p class="fd-ui-error-text" role="alert">{{ 'ADMIN_NOTIFICATION.ERROR' | translate }}</p>
+        }
+        @if (scheduled()) {
+            <p role="status">{{ 'ADMIN_NOTIFICATION.SUCCESS' | translate }}</p>
+        }
+        <div fdUiDialogFooter class="fd-row fd-justify-end fd-gap-sm">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                [disabled]="isSubmitting()"
+                [disabledReason]="'ADMIN_NOTIFICATION.SENDING' | translate"
+                (click)="close()"
+            >
+                {{ 'ADMIN_NOTIFICATION.CLOSE' | translate }}
+            </fd-ui-button>
+            @if (!scheduled()) {
+                <fd-ui-button type="submit" [loading]="isSubmitting()">
+                    {{ (isSubmitting() ? 'ADMIN_NOTIFICATION.SENDING' : 'ADMIN_NOTIFICATION.SEND') | translate }}
+                </fd-ui-button>
+            }
+        </div>
+    </form>
+</fd-ui-dialog>

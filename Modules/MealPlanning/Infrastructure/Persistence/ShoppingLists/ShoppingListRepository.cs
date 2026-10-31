@@ -32,7 +32,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
 
         return await query.FirstOrDefaultAsync(
             list => list.Id == id && list.UserId == userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<ShoppingListReadModel?> GetReadModelByIdAsync(
@@ -42,8 +42,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
         return await ProjectReadModel(entries
                 .AsNoTracking()
                 .Where(list => list.Id == id && list.UserId == userId))
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<ShoppingList?> GetCurrentAsync(
@@ -64,7 +63,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
         return await query
             .Where(list => list.UserId == userId)
             .OrderByDescending(list => list.CreatedOnUtc)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<ShoppingListReadModel?> GetCurrentReadModelAsync(
@@ -74,8 +73,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
                 .AsNoTracking()
                 .Where(list => list.UserId == userId)
                 .OrderByDescending(list => list.CreatedOnUtc))
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ShoppingList>> GetAllAsync(
@@ -91,7 +89,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
         return await query
             .Where(list => list.UserId == userId)
             .OrderByDescending(list => list.CreatedOnUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ShoppingListSummaryReadModel>> GetAllSummaryReadModelsAsync(
@@ -115,8 +113,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
             .Select(list => new ShoppingListSummaryReadModel(
                 list.Id.Value, list.Name, list.CreatedOnUtc, list.Items.Count,
                 list.Items.Count(item => !item.IsChecked)))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
@@ -125,7 +122,7 @@ public sealed class ShoppingListRepository(DbSet<ShoppingList> entries) : IShopp
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        ShoppingList? tracked = await entries.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
+        ShoppingList? tracked = await entries.FindAsync([list.Id], cancellationToken);
         if (tracked is not null) {
             entries.Remove(tracked);
         }

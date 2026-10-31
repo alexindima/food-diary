@@ -6,7 +6,7 @@ namespace FoodDiary.Email.MailRelay;
 
 internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IEmailTransport {
     public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {
-        await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken).ConfigureAwait(false);
+        await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken);
     }
 
     private static EnqueueMailRelayEmailRequest CreatePayload(EmailMessage message) {

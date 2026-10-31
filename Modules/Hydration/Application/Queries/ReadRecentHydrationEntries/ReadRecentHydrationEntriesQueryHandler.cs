@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Hydration.Application.Queries.ReadRecentHydrationEnt
 public sealed class ReadRecentHydrationEntriesQueryHandler(IHydrationEntryReadModelRepository repository) : IQueryHandler<ReadRecentHydrationEntriesQuery, IReadOnlyList<HydrationEntryModel>> {
     public async Task<IReadOnlyList<HydrationEntryModel>> Handle(ReadRecentHydrationEntriesQuery request, CancellationToken cancellationToken) {
         IReadOnlyList<HydrationEntryReadModel> entries = await repository.GetRecentReadModelsAsync(
-            request.UserId, request.StartUtc, request.EndUtc, Math.Clamp(request.Limit, 1, 100), cancellationToken).ConfigureAwait(false);
+            request.UserId, request.StartUtc, request.EndUtc, Math.Clamp(request.Limit, 1, 100), cancellationToken);
         return [.. entries.Select(entry => entry.ToModel())];
     }
 }

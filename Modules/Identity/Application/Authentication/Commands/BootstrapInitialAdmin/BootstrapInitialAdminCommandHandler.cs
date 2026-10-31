@@ -30,14 +30,13 @@ public sealed class BootstrapInitialAdminCommandHandler(
         }
 
         UserInitialAdminBootstrapModel bootstrap = await userRegistrationService
-            .BootstrapInitialAdminAsync(normalizedEmail, password, BootstrapRoles, cancellationToken)
-            .ConfigureAwait(false);
+            .BootstrapInitialAdminAsync(normalizedEmail, password, BootstrapRoles, cancellationToken);
         if (!bootstrap.Created) {
             return Result.Success(new BootstrapInitialAdminModel(
                 BootstrapInitialAdminStatus.SkippedExistingUser,
                 normalizedEmail));
         }
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(new BootstrapInitialAdminModel(
             BootstrapInitialAdminStatus.Created,

@@ -14,7 +14,7 @@ internal static class FastingCurrentUserResolver {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             userId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return userIdResult.IsFailure
             ? UserIdParser.ToFailure<UserId>(userIdResult)
             : userIdResult;

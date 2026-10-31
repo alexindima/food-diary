@@ -23,7 +23,7 @@ public sealed class S3HealthCheck(
         try {
             await s3Client.GetBucketLocationAsync(
                 new GetBucketLocationRequest { BucketName = bucket },
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             return HealthCheckResult.Healthy();
         } catch (Exception ex) {
             return HealthCheckResult.Unhealthy($"S3 bucket unreachable: {bucket}", ex);

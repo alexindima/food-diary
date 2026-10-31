@@ -18,7 +18,7 @@ internal sealed class RecipesUserContentRetentionParticipant(
     public int Order => 7;
 
     public async Task LockOwnedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         FormattableString sql = $"""
             SELECT "Id" AS "Value"
             FROM "Recipes"
@@ -26,19 +26,19 @@ internal sealed class RecipesUserContentRetentionParticipant(
             ORDER BY "Id"
             FOR UPDATE
             """;
-        _ = await context.Database.SqlQuery<Guid>(sql).ToArrayAsync(cancellationToken).ConfigureAwait(false);
+        _ = await context.Database.SqlQuery<Guid>(sql).ToArrayAsync(cancellationToken);
     }
 
     public async Task<bool> HasReferencedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
         IReadOnlyCollection<RecipeId> recipeIds = await retentionReadService
-            .GetRetainedRecipeIdsAsync(sourceUserId, cancellationToken).ConfigureAwait(false);
+            .GetRetainedRecipeIdsAsync(sourceUserId, cancellationToken);
         return recipeIds.Count > 0;
     }
 
     public async Task RetainReferencedContentAsync(UserId sourceUserId, UserId targetUserId, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         IReadOnlyCollection<RecipeId> recipeIds = await retentionReadService
-            .GetRetainedRecipeIdsAsync(sourceUserId, cancellationToken).ConfigureAwait(false);
+            .GetRetainedRecipeIdsAsync(sourceUserId, cancellationToken);
         if (recipeIds.Count == 0) {
             return;
         }
@@ -46,15 +46,15 @@ internal sealed class RecipesUserContentRetentionParticipant(
         IQueryable<Recipe> recipes = context.Recipes.Where(recipe => recipe.UserId == sourceUserId && recipeIds.Contains(recipe.Id));
         IQueryable<RecipeStep> steps = context.RecipeSteps.Where(step => step.Recipe.UserId == sourceUserId && recipeIds.Contains(step.RecipeId));
         List<ImageAssetId> imageIds = await recipes.Where(recipe => recipe.ImageAssetId != null)
-            .Select(recipe => recipe.ImageAssetId!.Value).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(recipe => recipe.ImageAssetId!.Value).ToListAsync(cancellationToken);
         imageIds.AddRange(await recipes.SelectMany(recipe => recipe.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false));
+            .ToListAsync(cancellationToken));
         imageIds.AddRange(await steps.Where(step => step.ImageAssetId != null)
-            .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken).ConfigureAwait(false));
+            .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken));
         imageIds.AddRange(await steps.SelectMany(step => step.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false));
+            .ToListAsync(cancellationToken));
 
-        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken).ConfigureAwait(false);
-        await recipes.ExecuteUpdateAsync(setters => setters.SetProperty(recipe => recipe.UserId, targetUserId), cancellationToken).ConfigureAwait(false);
+        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken);
+        await recipes.ExecuteUpdateAsync(setters => setters.SetProperty(recipe => recipe.UserId, targetUserId), cancellationToken);
     }
 }

@@ -23,7 +23,7 @@ internal static class MealNutritionApplier {
             }
             manual = manualValidation.Value;
         }
-        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
+        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken);
         if (nutritionResult.IsFailure) {
             return nutritionResult;
         }

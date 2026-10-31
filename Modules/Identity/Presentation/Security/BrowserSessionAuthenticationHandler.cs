@@ -26,7 +26,7 @@ public sealed class BrowserSessionAuthenticationHandler(
         if (credential is null) {
             return AuthenticateResult.NoResult();
         }
-        Result<BrowserSessionIdentityModel> result = await sender.Send(new AuthenticateBrowserSessionQuery(credential), Context.RequestAborted).ConfigureAwait(false);
+        Result<BrowserSessionIdentityModel> result = await sender.Send(new AuthenticateBrowserSessionQuery(credential), Context.RequestAborted);
         if (result.IsFailure) {
             return AuthenticateResult.Fail("The browser session is no longer valid.");
         }

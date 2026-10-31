@@ -19,6 +19,6 @@ public sealed class ProductUsageQuery(ICompositionReadContext context) : IProduc
                 ? p.UserId == userId || p.Visibility == Visibility.Public
                 : p.UserId == userId))
             .Select(p => context.MealItems.AsNoTracking().Count(item => item.ProductId == p.Id) + context.RecipeIngredients.AsNoTracking().Count(ingredient => ingredient.ProductId == p.Id))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
 
 }

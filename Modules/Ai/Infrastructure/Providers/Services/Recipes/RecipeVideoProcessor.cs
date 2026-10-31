@@ -30,7 +30,7 @@ public sealed partial class RecipeVideoProcessor(
         }
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(TimeSpan.FromSeconds(75));
-        await ProcessingSlots.WaitAsync(deadline.Token).ConfigureAwait(false);
+        await ProcessingSlots.WaitAsync(deadline.Token);
         string directory = Path.Combine(Path.GetTempPath(), "fooddiary-recipe-" + Guid.NewGuid().ToString("N"));
         try {
             Directory.CreateDirectory(directory);
@@ -39,20 +39,20 @@ public sealed partial class RecipeVideoProcessor(
             }
             string videoPath = Path.Combine(directory, "video.bin");
             FileStream destination = File.Create(videoPath);
-            await using (destination.ConfigureAwait(false)) {
+            await using (destination) {
                 if (video is not null) {
-                    await CopyBoundedAsync(video, destination, deadline.Token).ConfigureAwait(false);
+                    await CopyBoundedAsync(video, destination, deadline.Token);
                 } else {
-                    await DownloadAsync(source!, destination, deadline.Token).ConfigureAwait(false);
+                    await DownloadAsync(source!, destination, deadline.Token);
                 }
             }
             byte[] header = new byte[12];
             FileStream input = File.OpenRead(videoPath);
-            await using (input.ConfigureAwait(false)) {
+            await using (input) {
                 if (input.Length < header.Length) {
                     throw new InvalidDataException("Incomplete video container.");
                 }
-                await input.ReadExactlyAsync(header, deadline.Token).ConfigureAwait(false);
+                await input.ReadExactlyAsync(header, deadline.Token);
             }
             string format;
             if (header.AsSpan(4, 4).SequenceEqual("ftyp"u8)) {
@@ -63,12 +63,12 @@ public sealed partial class RecipeVideoProcessor(
                 throw new InvalidDataException("Unsupported video container.");
             }
             string audioPath = Path.Combine(directory, "audio.wav");
-            await ExtractLocalAsync(videoPath, audioPath, format, deadline.Token).ConfigureAwait(false);
+            await ExtractLocalAsync(videoPath, audioPath, format, deadline.Token);
             var audioFile = new FileInfo(audioPath);
             if (!audioFile.Exists || audioFile.Length > MaximumAudioBytes) {
                 throw new InvalidDataException("Invalid audio size.");
             }
-            byte[] audio = await File.ReadAllBytesAsync(audioPath, deadline.Token).ConfigureAwait(false);
+            byte[] audio = await File.ReadAllBytesAsync(audioPath, deadline.Token);
             double duration = ReadDuration(audio);
             if (duration is <= 0 or > 300) {
                 throw new InvalidDataException("Audio duration exceeds the supported limit.");
@@ -97,12 +97,12 @@ public sealed partial class RecipeVideoProcessor(
         bool inspectedPage = false;
         for (int hop = 0; hop < 5; hop++) {
             if (RecipeYouTubeVideoSource.IsYouTubeUrl(url)) {
-                await youTube.DownloadAsync(url, destination, cancellationToken).ConfigureAwait(false);
+                await youTube.DownloadAsync(url, destination, cancellationToken);
                 return;
             }
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.UserAgent.ParseAdd("FoodDiary-RecipeImport/1.0");
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if ((int)response.StatusCode is >= 300 and <= 399) {
                 url = NormalizeTarget(url, response.Headers.Location?.ToString());
                 continue;
@@ -113,7 +113,7 @@ public sealed partial class RecipeVideoProcessor(
             string? mediaType = response.Content.Headers.ContentType?.MediaType;
             if (!inspectedPage && string.Equals(mediaType, "text/html", StringComparison.Ordinal)) {
                 inspectedPage = true;
-                string html = await BoundedHttpContentReader.ReadAsStringAsync(response.Content, 1024 * 1024, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
+                string html = await BoundedHttpContentReader.ReadAsStringAsync(response.Content, 1024 * 1024, TimeSpan.FromSeconds(10), cancellationToken);
                 url = NormalizeTarget(url, FindVideoUrl(html));
                 continue;
             }
@@ -121,9 +121,9 @@ public sealed partial class RecipeVideoProcessor(
                 response.Content.Headers.ContentLength > MaximumVideoBytes) {
                 throw new HttpRequestException("Unsupported video source.");
             }
-            Stream body = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            await using (body.ConfigureAwait(false)) {
-                await CopyBoundedAsync(body, destination, cancellationToken).ConfigureAwait(false);
+            Stream body = await response.Content.ReadAsStreamAsync(cancellationToken);
+            await using (body) {
+                await CopyBoundedAsync(body, destination, cancellationToken);
             }
             return;
         }
@@ -158,12 +158,12 @@ public sealed partial class RecipeVideoProcessor(
         byte[] buffer = new byte[64 * 1024];
         long total = 0;
         int read;
-        while ((read = await source.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
+        while ((read = await source.ReadAsync(buffer, cancellationToken)) > 0) {
             total += read;
             if (total > MaximumVideoBytes) {
                 throw new InvalidDataException("Video exceeds the supported limit.");
             }
-            await destination.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+            await destination.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
         }
     }
 
@@ -180,17 +180,17 @@ public sealed partial class RecipeVideoProcessor(
         using Process process = Process.Start(start) ?? throw new IOException("Audio processor did not start.");
         Task drain = process.StandardError.BaseStream.CopyToAsync(Stream.Null);
         try {
-            await process.WaitForExitAsync(deadline.Token).ConfigureAwait(false);
-            await drain.ConfigureAwait(false);
+            await process.WaitForExitAsync(deadline.Token);
+            await drain;
             if (process.ExitCode != 0) {
                 throw new InvalidDataException("No supported audio track found.");
             }
         } finally {
             if (!process.HasExited) {
                 process.Kill(entireProcessTree: true);
-                await process.WaitForExitAsync(CancellationToken.None).ConfigureAwait(false);
+                await process.WaitForExitAsync(CancellationToken.None);
             }
-            await drain.ConfigureAwait(false);
+            await drain;
         }
     }
 

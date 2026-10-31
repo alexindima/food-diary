@@ -19,7 +19,7 @@ internal sealed partial class DiaryPdfGenerator {
 
         MealImageEntry[] entries;
         try {
-            entries = await Task.WhenAll(tasks).ConfigureAwait(false);
+            entries = await Task.WhenAll(tasks);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             return new Dictionary<Guid, byte[]>();
         }
@@ -34,7 +34,7 @@ internal sealed partial class DiaryPdfGenerator {
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        byte[]? image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken).ConfigureAwait(false);
+        byte[]? image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken);
         return new MealImageEntry(meal.Id, image);
     }
 
@@ -65,13 +65,13 @@ internal sealed partial class DiaryPdfGenerator {
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
         if (!string.IsNullOrWhiteSpace(meal.ImageUrl)) {
-            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken).ConfigureAwait(false);
+            return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken);
         }
 
         byte[]?[] compositionImages = await Task.WhenAll(
             GetCompositionImageUrls(meal)
                 .Take(MaxIngredientImagesPerCollage)
-                .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken))).ConfigureAwait(false);
+                .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken)));
 
         return CreateMealImageCollage(compositionImages.Where(image => image is not null).Cast<byte[]>().ToArray());
     }
@@ -91,16 +91,16 @@ internal sealed partial class DiaryPdfGenerator {
             }
         }
 
-        return await cached.Value.ConfigureAwait(false);
+        return await cached.Value;
     }
 
     private async Task<byte[]?> LoadMealImageWithGateAsync(
         string imageUrl,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await gate.WaitAsync(cancellationToken);
         try {
-            return await LoadMealImageAsync(imageUrl, cancellationToken).ConfigureAwait(false);
+            return await LoadMealImageAsync(imageUrl, cancellationToken);
         } finally {
             gate.Release();
         }
@@ -119,25 +119,25 @@ internal sealed partial class DiaryPdfGenerator {
             using var downloadCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             downloadCancellation.CancelAfter(_remoteImageDownloadTimeout);
             CancellationToken downloadCancellationToken = downloadCancellation.Token;
-            if (!await IsAllowedRemoteImageUriAsync(uri, downloadCancellationToken).ConfigureAwait(false)) {
+            if (!await IsAllowedRemoteImageUriAsync(uri, downloadCancellationToken)) {
                 return null;
             }
 
-            using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, downloadCancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, downloadCancellationToken);
             if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
                 return null;
             }
 
-            Stream stream = await response.Content.ReadAsStreamAsync(downloadCancellationToken).ConfigureAwait(false);
+            Stream stream = await response.Content.ReadAsStreamAsync(downloadCancellationToken);
             byte[] downloaded;
-            await using (stream.ConfigureAwait(false)) {
+            await using (stream) {
                 var memory = new MemoryStream();
-                await using (memory.ConfigureAwait(false)) {
+                await using (memory) {
                     byte[] buffer = new byte[81920];
                     int read;
 
-                    while ((read = await stream.ReadAsync(buffer, downloadCancellationToken).ConfigureAwait(false)) > 0) {
-                        await memory.WriteAsync(buffer.AsMemory(0, read), downloadCancellationToken).ConfigureAwait(false);
+                    while ((read = await stream.ReadAsync(buffer, downloadCancellationToken)) > 0) {
+                        await memory.WriteAsync(buffer.AsMemory(0, read), downloadCancellationToken);
                         if (memory.Length > MaxMealImageBytes) {
                             return null;
                         }

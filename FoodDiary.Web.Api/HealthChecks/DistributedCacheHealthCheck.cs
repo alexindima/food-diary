@@ -19,8 +19,8 @@ public sealed class DistributedCacheHealthCheck(IDistributedCache cache, TimePro
                 new DistributedCacheEntryOptions {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
                 },
-                cancellationToken).ConfigureAwait(false);
-            await cache.RemoveAsync(ProbeKey, cancellationToken).ConfigureAwait(false);
+                cancellationToken);
+            await cache.RemoveAsync(ProbeKey, cancellationToken);
 
             return HealthCheckResult.Healthy();
         } catch (Exception exception) {

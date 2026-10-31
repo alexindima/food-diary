@@ -4759,6 +4759,82 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/users/{id}/notifications/test",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/ScheduleTestNotificationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/ScheduleTestNotificationHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/ScheduleTestNotificationHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "202",
+            "400",
+            "401",
+            "403",
+            "404",
+            "409",
+            "413",
+            "429",
+            "500",
+            "503"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "202",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/ScheduledNotificationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "202",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/ScheduledNotificationHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "202",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/ScheduledNotificationHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "id",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/users/{id}/password",
       "Operations": [
         {

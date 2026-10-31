@@ -24,14 +24,14 @@ public sealed class StartFoodRecognitionCommandHandler(
             return Result.Failure<FoodRecognitionJobModel>(Errors.Validation.Invalid("Images", "Invalid product image selection."));
         }
         var userId = (UserId)request.UserId;
-        Result<UserAiProfileModel> context = await userContext.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserAiProfileModel> context = await userContext.GetAiProfileAsync(userId, cancellationToken);
         if (context.IsFailure) {
             return Result.Failure<FoodRecognitionJobModel>(context.Error);
         }
         if (!context.Value.HasAcceptedAiConsent) {
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.ConsentRequired());
         }
-        Result<ImageAssetReadModel?> image = await images.ResolveOptionalAsync((ImageAssetId)request.ImageAssetId, userId, cancellationToken).ConfigureAwait(false);
+        Result<ImageAssetReadModel?> image = await images.ResolveOptionalAsync((ImageAssetId)request.ImageAssetId, userId, cancellationToken);
         if (image.IsFailure) {
             return Result.Failure<FoodRecognitionJobModel>(image.Error);
         }
@@ -40,7 +40,7 @@ public sealed class StartFoodRecognitionCommandHandler(
         }
         var additionalImages = new List<FoodRecognitionImageModel>();
         foreach (Guid id in request.AdditionalImageAssetIds ?? []) {
-            Result<ImageAssetReadModel?> additional = await images.ResolveOptionalAsync((ImageAssetId)id, userId, cancellationToken).ConfigureAwait(false);
+            Result<ImageAssetReadModel?> additional = await images.ResolveOptionalAsync((ImageAssetId)id, userId, cancellationToken);
             if (additional.IsFailure) {
                 return Result.Failure<FoodRecognitionJobModel>(additional.Error);
             }
@@ -52,6 +52,6 @@ public sealed class StartFoodRecognitionCommandHandler(
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         return await store.CreateAsync(new FoodRecognitionJobModel(
             request.Id, request.UserId, request.ImageAssetId, image.Value.Url, request.Description,
-            "Queued", now, now, IsProductLabel: request.IsProductLabel, AdditionalImages: additionalImages), cancellationToken).ConfigureAwait(false);
+            "Queued", now, now, IsProductLabel: request.IsProductLabel, AdditionalImages: additionalImages), cancellationToken);
     }
 }

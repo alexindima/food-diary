@@ -18,7 +18,7 @@ public sealed class IsRecipeFavoriteQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<bool>(userIdResult);
         }
@@ -34,7 +34,7 @@ public sealed class IsRecipeFavoriteQueryHandler(
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        bool isFavorite = await sender.Send(new ReadRecipeFavoriteStatusQuery(recipeId, userId), cancellationToken).ConfigureAwait(false);
+        bool isFavorite = await sender.Send(new ReadRecipeFavoriteStatusQuery(recipeId, userId), cancellationToken);
         return Result.Success(isFavorite);
     }
 }

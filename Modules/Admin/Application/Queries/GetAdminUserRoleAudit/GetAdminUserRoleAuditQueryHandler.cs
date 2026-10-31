@@ -21,14 +21,14 @@ public sealed class GetAdminUserRoleAuditQueryHandler(ISender userReadService, I
             return UserIdParser.ToFailure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(userIdResult);
         }
 
-        bool userExists = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userIdResult.Value), cancellationToken).ConfigureAwait(false) is not null;
+        bool userExists = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userIdResult.Value), cancellationToken) is not null;
         if (!userExists) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(UserErrors.NotFound(query.UserId));
         }
 
         int normalizedLimit = Math.Clamp(query.Limit, 1, 50);
         IReadOnlyList<AdminUserRoleAuditEventReadModel> events =
-            await roleAuditRepository.GetRecentForUserAsync(query.UserId, normalizedLimit, cancellationToken).ConfigureAwait(false);
+            await roleAuditRepository.GetRecentForUserAsync(query.UserId, normalizedLimit, cancellationToken);
 
         return Result.Success(events);
     }

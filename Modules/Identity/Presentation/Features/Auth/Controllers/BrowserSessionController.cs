@@ -48,7 +48,7 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
                 cookies.EnsurePreviousSession(HttpContext, value.SessionId, BrowserSessionCookieService.IsAdmin(HttpContext));
             }
             return value.ToHttpResponse();
-        }).ConfigureAwait(false);
+        });
         if (result is IStatusCodeActionResult { StatusCode: StatusCodes.Status401Unauthorized }) {
             bool admin = BrowserSessionCookieService.IsAdmin(HttpContext);
             string family = admin ? BrowserSessionCookieService.AdminCookieName : BrowserSessionCookieService.BrowserCookieName;

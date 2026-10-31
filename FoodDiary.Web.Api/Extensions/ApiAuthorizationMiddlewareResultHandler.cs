@@ -14,28 +14,28 @@ public sealed class ApiAuthorizationMiddlewareResultHandler : IAuthorizationMidd
         AuthorizationPolicy policy,
         PolicyAuthorizationResult authorizeResult) {
         if (authorizeResult.Succeeded) {
-            await next(context).ConfigureAwait(false);
+            await next(context);
             return;
         }
 
         if (authorizeResult.Forbidden) {
-            await context.ForbidAsync().ConfigureAwait(false);
+            await context.ForbidAsync();
             await WriteErrorAsync(
                 context,
                 StatusCodes.Status403Forbidden,
                 "Authentication.Forbidden",
                 "You do not have permission to access this resource.",
-                context.RequestAborted).ConfigureAwait(false);
+                context.RequestAborted);
             return;
         }
 
-        await context.ChallengeAsync().ConfigureAwait(false);
+        await context.ChallengeAsync();
         await WriteErrorAsync(
             context,
             StatusCodes.Status401Unauthorized,
             "Authentication.Unauthorized",
             "Authentication is required.",
-            context.RequestAborted).ConfigureAwait(false);
+            context.RequestAborted);
     }
 
     private static async Task WriteErrorAsync(
@@ -50,6 +50,6 @@ public sealed class ApiAuthorizationMiddlewareResultHandler : IAuthorizationMidd
 
         context.Response.StatusCode = statusCode;
         var response = new ApiErrorHttpResponse(error, message, context.TraceIdentifier);
-        await context.Response.WriteAsJsonAsync(response, cancellationToken).ConfigureAwait(false);
+        await context.Response.WriteAsJsonAsync(response, cancellationToken);
     }
 }

@@ -24,7 +24,7 @@ public sealed class CreateMealFromRecognitionCommandHandler(
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider) : ICommandHandler<CreateMealFromRecognitionCommand, Result<RecognizedMealCreationModel>> {
     public async Task<Result<RecognizedMealCreationModel>> Handle(CreateMealFromRecognitionCommand command, CancellationToken cancellationToken) {
-        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (owner.IsFailure) {
             return Result.Failure<RecognizedMealCreationModel>(owner.Error);
         }
@@ -34,16 +34,16 @@ public sealed class CreateMealFromRecognitionCommandHandler(
         // PostgreSQL timestamps have microsecond precision; canonicalize before comparing replay payloads.
         var occurredAt = new DateTime(command.OccurredAtUtc.Ticks / 10 * 10, DateTimeKind.Utc);
         return await transactions.ExecuteSerializedAsync(owner.Value, async token => {
-            Result<UserId> access = await CurrentUserAccessResolver.ResolveAsync(owner.Value, currentUserAccessService, token).ConfigureAwait(false);
+            Result<UserId> access = await CurrentUserAccessResolver.ResolveAsync(owner.Value, currentUserAccessService, token);
             if (access.IsFailure) {
                 return Result.Failure<RecognizedMealCreationModel>(access.Error);
             }
             // Recognition ID is also the permanent operation ID; clients cannot remap a job to another operation.
-            MealRecognitionReceipt? existing = await receipts.FindByRecognitionAsync(owner.Value, command.RecognitionId, token).ConfigureAwait(false);
+            MealRecognitionReceipt? existing = await receipts.FindByRecognitionAsync(owner.Value, command.RecognitionId, token);
             if (existing is not null) {
-                return await ReplayAsync(existing, owner.Value, command.RecognitionId, occurredAt, token).ConfigureAwait(false);
+                return await ReplayAsync(existing, owner.Value, command.RecognitionId, occurredAt, token);
             }
-            Result<FoodRecognitionJobModel> recognized = await recognitionResults.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value.Value, JobId: command.RecognitionId), token).ConfigureAwait(false);
+            Result<FoodRecognitionJobModel> recognized = await recognitionResults.Send(new GetCompletedFoodRecognitionQuery(UserId: owner.Value.Value, JobId: command.RecognitionId), token);
             if (recognized.IsFailure) {
                 return Result.Failure<RecognizedMealCreationModel>(recognized.Error);
             }
@@ -52,21 +52,21 @@ public sealed class CreateMealFromRecognitionCommandHandler(
                 return Failure("Meal.InvalidRecognitionResult", "Recognition does not contain an owned complete result.", ErrorKind.Validation);
             }
             CreateMealCommand create = ToCreateCommand(owner.Value, occurredAt, job);
-            ValidationResult validation = await new CreateMealCommandValidator().ValidateAsync(create, token).ConfigureAwait(false);
+            ValidationResult validation = await new CreateMealCommandValidator().ValidateAsync(create, token);
             if (!validation.IsValid) {
                 return Failure("Meal.InvalidRecognitionResult", "Recognition contains invalid meal values.", ErrorKind.Validation);
             }
-            Result<MealModel> created = await createMeal.Handle(create, token).ConfigureAwait(false);
+            Result<MealModel> created = await createMeal.Handle(create, token);
             if (created.IsFailure) {
                 return Result.Failure<RecognizedMealCreationModel>(created.Error);
             }
             var mealId = new MealId(created.Value.Id);
-            uint version = await transactions.FlushCreatedMealAsync(mealId, owner.Value, token).ConfigureAwait(false);
+            uint version = await transactions.FlushCreatedMealAsync(mealId, owner.Value, token);
             var receipt = MealRecognitionReceipt.Create(command.RecognitionId, owner.Value, command.RecognitionId,
                 mealId, version, occurredAt, timeProvider.GetUtcNow().UtcDateTime, TimeSpan.FromHours(24));
-            await receipts.AddAsync(receipt, token).ConfigureAwait(false);
+            await receipts.AddAsync(receipt, token);
             return Result.Success(ToModel(receipt));
-        }, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken);
     }
 
     private async Task<Result<RecognizedMealCreationModel>> ReplayAsync(MealRecognitionReceipt receipt, UserId owner,
@@ -77,7 +77,7 @@ public sealed class CreateMealFromRecognitionCommandHandler(
         if (!receipt.UndoneAtUtc.HasValue) {
             // Reuse the owned row lock inside the recognition transaction so a manual deletion
             // cannot be reported as a fresh save. Never recreate or undo a still-present meal.
-            (Meal Meal, uint Version)? current = await receipts.LockMealForUndoAsync(owner, receipt.MealId, cancellationToken).ConfigureAwait(false);
+            (Meal Meal, uint Version)? current = await receipts.LockMealForUndoAsync(owner, receipt.MealId, cancellationToken);
             if (current is null) {
                 receipt.TryUndo(currentMealVersion: null, timeProvider.GetUtcNow().UtcDateTime);
             }

@@ -20,7 +20,7 @@ public sealed class GetMyRecommendationsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationModel>>(userIdResult);
         }
@@ -28,7 +28,7 @@ public sealed class GetMyRecommendationsQueryHandler(
         UserId userId = userIdResult.Value;
         IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, limit: PaginationPolicy.NormalizePageSize(query.Limit, 50),
             page: PaginationPolicy.NormalizePage(query.Page),
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         var models = recommendations.Select(recommendation => recommendation.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
 

@@ -27,7 +27,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
         CreateRecommendationCommentCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            command.UserId, userContextService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecommendationCommentModel>(userIdResult);
         }
@@ -43,7 +43,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
 
         Recommendation? recommendation = await recommendationRepository.GetByIdAsync(
             recommendationIdResult.Value,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         UserId authorUserId = userIdResult.Value;
         if (recommendation is null ||
             (recommendation.ClientUserId != authorUserId && recommendation.DietologistUserId != authorUserId)) {
@@ -51,13 +51,13 @@ public sealed class CreateRecommendationCommentCommandHandler(
         }
 
         Result accessResult = await EnsureCanPostAsync(
-            recommendation, authorUserId, cancellationToken).ConfigureAwait(false);
+            recommendation, authorUserId, cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure<RecommendationCommentModel>(accessResult.Error);
         }
 
         Result<UserDietologistProfileModel> authorResult = await profileReadService.GetAccessibleProfileAsync(
-            authorUserId, cancellationToken).ConfigureAwait(false);
+            authorUserId, cancellationToken);
         if (authorResult.IsFailure) {
             return Result.Failure<RecommendationCommentModel>(authorResult.Error);
         }
@@ -66,7 +66,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
             recommendation.Id,
             authorUserId,
             command.Text);
-        await commentRepository.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await commentRepository.AddAsync(comment, cancellationToken);
 
         UserId recipientUserId = authorUserId == recommendation.ClientUserId
             ? recommendation.DietologistUserId
@@ -76,8 +76,8 @@ public sealed class CreateRecommendationCommentCommandHandler(
             recommendation.Id.Value.ToString(),
             recommendation.ClientUserId.Value.ToString(),
             forDietologist: authorUserId == recommendation.ClientUserId);
-        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-        await WriteAuditAsync(recommendation, authorUserId, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken);
+        await WriteAuditAsync(recommendation, authorUserId, cancellationToken);
 
         return Result.Success(ToModel(comment, authorResult.Value));
     }
@@ -108,7 +108,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
                 invitationRepository,
                 recommendation.DietologistUserId,
                 recommendation.ClientUserId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         return accessResult.IsFailure
             ? Result.Failure(accessResult.Error)
             : Result.Success();

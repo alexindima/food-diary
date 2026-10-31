@@ -39,7 +39,7 @@ public static class ModuleRegistration {
         AiDbContext owned = provider.GetRequiredService<AiDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
             }
         };
     }

@@ -20,8 +20,7 @@ public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : I
             .AsNoTracking()
             .Where(asset => ((IEnumerable<ImageAssetId>)ids).Contains(asset.Id))
             .Select(asset => new { asset.Id, asset.Url })
-            .ToDictionaryAsync(asset => asset.Id, asset => asset.Url, cancellationToken)
-            .ConfigureAwait(false);
+            .ToDictionaryAsync(asset => asset.Id, asset => asset.Url, cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, MealRecipeSourceReadModel>> GetLegacyRecipesAsync(
@@ -51,7 +50,6 @@ public sealed class MealSourceSnapshotQuery(ICompositionReadContext context) : I
             .ToDictionaryAsync(recipe => recipe.Id, recipe => new MealRecipeSourceReadModel(
                 recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories,
                 recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs,
-                recipe.TotalFiber, recipe.TotalAlcohol) { OwnerUserId = recipe.OwnerUserId, IsPublic = recipe.IsPublic }, cancellationToken)
-            .ConfigureAwait(false);
+                recipe.TotalFiber, recipe.TotalAlcohol) { OwnerUserId = recipe.OwnerUserId, IsPublic = recipe.IsPublic }, cancellationToken);
     }
 }

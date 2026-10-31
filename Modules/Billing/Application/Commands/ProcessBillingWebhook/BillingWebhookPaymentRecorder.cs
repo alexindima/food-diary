@@ -24,7 +24,7 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
         BillingPayment? existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
             provider,
             externalPaymentId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (existingPayment is not null) {
             if (existingPayment.OccurredAtUtc is { } lastOccurredAtUtc &&
                 webhookEvent.OccurredAtUtc is { } occurredAtUtc && occurredAtUtc < lastOccurredAtUtc) {
@@ -53,7 +53,7 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             webhookEventId: webhookEvent.EventId,
             providerMetadataJson: webhookEvent.ProviderMetadataJson,
             occurredAtUtc: webhookEvent.OccurredAtUtc);
-            await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken).ConfigureAwait(false);
+            await billingPaymentRepository.UpdateAsync(existingPayment, cancellationToken);
             return;
         }
 
@@ -82,7 +82,7 @@ public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository
             webhookEventId: webhookEvent.EventId,
             providerMetadataJson: webhookEvent.ProviderMetadataJson,
             occurredAtUtc: webhookEvent.OccurredAtUtc);
-        await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
+        await billingPaymentRepository.AddAsync(payment, cancellationToken);
     }
 
     private static string ResolvePaymentKind(BillingWebhookEventModel webhookEvent) {

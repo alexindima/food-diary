@@ -24,7 +24,7 @@ public sealed class CancelClientTaskCommandHandler(
         CancelClientTaskCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, currentUserAccessService, cancellationToken: cancellationToken).ConfigureAwait(false);
+            command.UserId, currentUserAccessService, cancellationToken: cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ClientTaskModel>(userIdResult);
         }
@@ -39,7 +39,7 @@ public sealed class CancelClientTaskCommandHandler(
         }
 
         ClientTask? task = await taskRepository.GetByIdAsync(
-            taskIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+            taskIdResult.Value, asTracking: true, cancellationToken);
         if (task is null || task.DietologistUserId != userIdResult.Value) {
             return Result.Failure<ClientTaskModel>(DietologistErrors.InvitationNotFound);
         }
@@ -48,7 +48,7 @@ public sealed class CancelClientTaskCommandHandler(
             invitationRepository,
             task.DietologistUserId,
             task.ClientUserId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure<ClientTaskModel>(accessResult.Error);
         }
@@ -62,7 +62,7 @@ public sealed class CancelClientTaskCommandHandler(
                     task.ClientUserId.Value.ToString(),
                     forDietologist: false,
                     cancelled: true),
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken);
         }
         return Result.Success(task.ToModel(timeProvider.GetUtcNow().UtcDateTime));
     }

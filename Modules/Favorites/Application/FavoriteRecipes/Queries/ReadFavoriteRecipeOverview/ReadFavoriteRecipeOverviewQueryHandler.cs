@@ -9,8 +9,8 @@ namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.ReadFa
 public sealed class ReadFavoriteRecipeOverviewQueryHandler(IFavoriteRecipeQuery queries)
     : IQueryHandler<ReadFavoriteRecipeOverviewQuery, FavoriteRecipeOverviewModel> {
     public async Task<FavoriteRecipeOverviewModel> Handle(ReadFavoriteRecipeOverviewQuery request, CancellationToken cancellationToken) {
-        (IReadOnlyList<FavoriteRecipeReadModel> preview, int total) = await queries.GetPageReadModelsAsync(request.UserId, 1, Math.Clamp(request.PreviewLimit, 0, 50), search: null, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<FavoriteRecipeReadModel> items = await queries.GetByRecipeIdsReadModelsAsync(request.UserId, request.RecipeIds, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<FavoriteRecipeReadModel> preview, int total) = await queries.GetPageReadModelsAsync(request.UserId, 1, Math.Clamp(request.PreviewLimit, 0, 50), search: null, cancellationToken);
+        IReadOnlyList<FavoriteRecipeReadModel> items = await queries.GetByRecipeIdsReadModelsAsync(request.UserId, request.RecipeIds, cancellationToken);
         return new FavoriteRecipeOverviewModel(items.Select(item => item.ToModel()).ToArray(), preview.Select(item => item.ToModel()).ToArray(), total);
     }
 }

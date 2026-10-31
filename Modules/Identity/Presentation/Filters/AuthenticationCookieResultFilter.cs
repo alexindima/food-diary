@@ -37,7 +37,7 @@ public sealed class AuthenticationCookieResultFilter(
                     : null;
                 string? existing = context.HttpContext.Request.Cookies[BrowserSessionCookieService.CookieName(context.HttpContext, admin)];
                 Result<BrowserSessionModel> session = await sender.Send(
-                    new CreateBrowserSessionCommand(authentication.RefreshToken, existing, maximumExpires), context.HttpContext.RequestAborted).ConfigureAwait(false);
+                    new CreateBrowserSessionCommand(authentication.RefreshToken, existing, maximumExpires), context.HttpContext.RequestAborted);
                 if (session.IsFailure) {
                     context.Result = new UnauthorizedResult();
                 } else {
@@ -56,7 +56,7 @@ public sealed class AuthenticationCookieResultFilter(
             }
         }
 
-        await next().ConfigureAwait(false);
+        await next();
     }
 
     private void SetIssuedSession(HttpContext context, ObjectResult response, AuthenticationHttpResponse authentication, IssuedBrowserSession session) {

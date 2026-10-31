@@ -21,7 +21,7 @@ public sealed class GetClientTasksForDietologistQueryHandler(
         GetClientTasksForDietologistQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> dietologistIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, currentUserAccessService, cancellationToken: cancellationToken).ConfigureAwait(false);
+            query.UserId, currentUserAccessService, cancellationToken: cancellationToken);
         if (dietologistIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientTaskModel>>(dietologistIdResult);
         }
@@ -39,7 +39,7 @@ public sealed class GetClientTasksForDietologistQueryHandler(
             invitationRepository,
             dietologistIdResult.Value,
             clientIdResult.Value,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure<IReadOnlyList<ClientTaskModel>>(accessResult.Error);
         }
@@ -51,7 +51,7 @@ public sealed class GetClientTasksForDietologistQueryHandler(
             clientIdResult.Value,
             page,
             limit,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
         return Result.Success<IReadOnlyList<ClientTaskModel>>(
             tasks.Select(task => task.ToModel(utcNow)).ToList());

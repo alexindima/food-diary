@@ -14,7 +14,7 @@ public sealed class AtomicCommandReceiptCleanupJob(IAtomicCommandReceiptMaintena
         int deleted = 0;
         try {
             for (int batch = 0; batch < 100; batch++) {
-                int count = await maintenance.DeleteExpiredBatchAsync(1000, cancellationToken).ConfigureAwait(false);
+                int count = await maintenance.DeleteExpiredBatchAsync(1000, cancellationToken);
                 deleted += count;
                 if (count < 1000) {
                     break;

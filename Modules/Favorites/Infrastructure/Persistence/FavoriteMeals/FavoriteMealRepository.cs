@@ -38,7 +38,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
 
         return await query.FirstOrDefaultAsync(
             f => f.Id == id && f.UserId == userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<FavoriteMeal?> GetByMealIdAsync(
@@ -49,7 +49,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.MealId == mealId && f.UserId == userId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<bool> ExistsByMealIdAsync(
@@ -60,7 +60,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
             .AsNoTracking()
             .AnyAsync(
                 f => f.MealId == mealId && f.UserId == userId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
@@ -74,7 +74,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
         List<FavoriteMeal> results = await favorites
             .AsNoTracking()
             .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return results.ToDictionary(favorite => favorite.MealId);
     }
@@ -91,7 +91,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
             .AsNoTracking()
             .Where(f => f.UserId == userId && mealIds.Contains(f.MealId))
             .Select(f => new FavoriteMealIdByMealIdReadModel(MealId: f.MealId, FavoriteMealId: f.Id))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return results.ToDictionary(favorite => favorite.MealId, favorite => favorite.FavoriteMealId);
     }
@@ -103,7 +103,7 @@ public sealed class FavoriteMealRepository(DbSet<FavoriteMeal> favorites, IFavor
             .AsNoTracking()
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(

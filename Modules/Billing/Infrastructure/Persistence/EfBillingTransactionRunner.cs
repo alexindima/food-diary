@@ -22,10 +22,10 @@ public sealed class EfBillingTransactionRunner(IModuleTransactionCoordinator coo
         ArgumentNullException.ThrowIfNull(operation);
         await coordinator.ExecuteAsync(async (transaction, token) => {
             if (serializationKey is not null) {
-                await AcquireTransactionLockAsync(serializationKey, transaction, token).ConfigureAwait(false);
+                await AcquireTransactionLockAsync(serializationKey, transaction, token);
             }
-            await operation(token).ConfigureAwait(false);
-        }, TranslateException, cancellationToken).ConfigureAwait(false);
+            await operation(token);
+        }, TranslateException, cancellationToken);
     }
 
     private static Exception TranslateException(Exception exception) {
@@ -45,9 +45,9 @@ public sealed class EfBillingTransactionRunner(IModuleTransactionCoordinator coo
         var command = new NpgsqlCommand(
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             connection, (NpgsqlTransaction)transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("serialization_key", NpgsqlDbType.Text, serializationKey);
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 

@@ -12,17 +12,14 @@ internal sealed class NotificationClientRefreshService(
         bool pushChanged,
         CancellationToken cancellationToken) {
         int unreadCount = await notificationReadModelRepository
-            .GetUnreadCountAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetUnreadCountAsync(userId, cancellationToken);
 
         await notificationPusher
-            .PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken)
-            .ConfigureAwait(false);
+            .PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken);
 
         if (pushChanged) {
             await notificationPusher
-                .PushNotificationsChangedAsync(userId.Value, cancellationToken)
-                .ConfigureAwait(false);
+                .PushNotificationsChangedAsync(userId.Value, cancellationToken);
         }
     }
 }

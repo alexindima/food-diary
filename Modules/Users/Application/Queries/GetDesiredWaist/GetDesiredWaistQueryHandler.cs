@@ -16,12 +16,12 @@ public sealed class GetDesiredWaistQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<UserDesiredWaistModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return await userProfileReadService.GetDesiredWaistAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await userProfileReadService.GetDesiredWaistAsync(userId, cancellationToken);
     }
 }

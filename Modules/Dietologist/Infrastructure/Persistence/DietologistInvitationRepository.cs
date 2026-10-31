@@ -26,7 +26,7 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
         }
 
         return await query
-            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
     }
 
     public async Task<DietologistInvitation?> GetByClientAndStatusAsync(
@@ -41,7 +41,7 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
         }
 
         return await query
-            .FirstOrDefaultAsync(i => i.ClientUserId == clientUserId && i.Status == status, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(i => i.ClientUserId == clientUserId && i.Status == status, cancellationToken);
     }
 
     public Task<DietologistInvitationReadModel?> GetByClientAndStatusReadModelAsync(
@@ -59,7 +59,7 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
         UserId clientUserId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        return await GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted, asTracking, cancellationToken).ConfigureAwait(false);
+        return await GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted, asTracking, cancellationToken);
     }
 
     public Task<DietologistInvitationReadModel?> GetActiveByClientAndDietologistReadModelAsync(
@@ -78,7 +78,7 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
@@ -100,7 +100,7 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
             .AsNoTracking()
             .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
             .OrderByDescending(i => i.AcceptedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> HasActiveRelationshipAsync(
@@ -112,12 +112,12 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<DietologistInvitation> AddAsync(
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
-        await context.DietologistInvitations.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await context.DietologistInvitations.AddAsync(invitation, cancellationToken);
         return invitation;
     }
 
@@ -126,11 +126,11 @@ public sealed class DietologistInvitationRepository(DietologistDbContext context
         EntityEntry<DietologistInvitation> entry = context.Entry(invitation);
         if (entry.State == EntityState.Detached) {
             DietologistInvitation? existing = await context.DietologistInvitations
-                .FirstOrDefaultAsync(i => i.Id == invitation.Id, cancellationToken).ConfigureAwait(false) ?? throw new DbUpdateConcurrencyException(
+                .FirstOrDefaultAsync(i => i.Id == invitation.Id, cancellationToken) ?? throw new DbUpdateConcurrencyException(
                     $"Dietologist invitation '{invitation.Id.Value}' was not found while updating.");
             context.Entry(existing).CurrentValues.SetValues(invitation);
         }
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
 }

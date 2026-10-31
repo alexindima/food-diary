@@ -25,7 +25,7 @@ public sealed class ExportCycleQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FileExportResult>(userIdResult);
         }
@@ -42,7 +42,7 @@ public sealed class ExportCycleQueryHandler(
         }
 
         var period = CycleExportPeriod.FromDates(query.DateFrom, query.DateTo);
-        Result<CycleModel?> cycleResult = await sender.Send(new GetCurrentCycleQuery(userId.Value), cancellationToken).ConfigureAwait(false);
+        Result<CycleModel?> cycleResult = await sender.Send(new GetCurrentCycleQuery(userId.Value), cancellationToken);
         if (cycleResult.IsFailure) {
             return Result.Failure<FileExportResult>(cycleResult.Error);
         }
@@ -58,8 +58,7 @@ public sealed class ExportCycleQueryHandler(
             }
 
             Result passwordVerification = await credentialVerificationService
-                .VerifyPasswordAsync(userId, query.CurrentPassword ?? string.Empty, cancellationToken)
-                .ConfigureAwait(false);
+                .VerifyPasswordAsync(userId, query.CurrentPassword ?? string.Empty, cancellationToken);
             if (passwordVerification.IsFailure) {
                 return Result.Failure<FileExportResult>(passwordVerification.Error);
             }

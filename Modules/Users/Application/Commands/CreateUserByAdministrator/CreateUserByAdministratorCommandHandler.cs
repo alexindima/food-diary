@@ -24,8 +24,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
     public async Task<Result<UserAdminReadModel>> Handle(CreateUserByAdministratorCommand request, CancellationToken cancellationToken) {
         UserAdminCreateModel input = request.Request;
         User? existingUser = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(input.Email, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(input.Email, cancellationToken);
         if (existingUser is not null) {
             return Result.Failure<UserAdminReadModel>(UserErrors.EmailAlreadyExists);
         }
@@ -36,8 +35,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
         }
 
         IReadOnlyList<Role> roles = await roleCatalogService
-            .GetRolesByNamesAsync(requestedRoles, cancellationToken)
-            .ConfigureAwait(false);
+            .GetRolesByNamesAsync(requestedRoles, cancellationToken);
         if (roles.Count != requestedRoles.Length) {
             return Result.Failure<UserAdminReadModel>(
                 Errors.Validation.Invalid("Roles", "One or more roles are not configured in the system."));
@@ -59,7 +57,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
             user.RequirePasswordChange();
         }
 
-        await userWriteRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.AddAsync(user, cancellationToken);
         UserRoleAuditEvent[] auditEvents = [.. roles.Select(role => UserRoleAuditEvent.Create(
             user.Id,
             role,
@@ -67,7 +65,7 @@ public sealed class CreateUserByAdministratorCommandHandler(IUserLookupRepositor
             input.ActorUserId,
             CreatorAuditSource,
             input.CreatedAtUtc))];
-        await userWriteRepository.UpdateAsync(user, auditEvents, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, auditEvents, cancellationToken);
         return Result.Success(user.ToAdminReadModel());
 
     }

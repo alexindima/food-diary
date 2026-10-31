@@ -15,8 +15,7 @@ public static class CurrentUserAccessResolver {
         }
 
         Error? accessError = await currentUserAccessService
-            .EnsureCanAccessAsync(userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .EnsureCanAccessAsync(userIdResult.Value, cancellationToken);
         return accessError is null
             ? userIdResult
             : Result.Failure<UserId>(accessError);
@@ -27,8 +26,7 @@ public static class CurrentUserAccessResolver {
         ICurrentUserAccessService currentUserAccessService,
         CancellationToken cancellationToken) {
         Error? accessError = await currentUserAccessService
-            .EnsureCanAccessAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .EnsureCanAccessAsync(userId, cancellationToken);
         return accessError is null
             ? Result.Success(userId)
             : Result.Failure<UserId>(accessError);

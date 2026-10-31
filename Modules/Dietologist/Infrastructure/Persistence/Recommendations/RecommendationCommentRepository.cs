@@ -19,7 +19,7 @@ internal sealed class RecommendationCommentRepository(DbSet<RecommendationCommen
     public async Task<RecommendationComment> AddAsync(
         RecommendationComment comment,
         CancellationToken cancellationToken = default) {
-        await records.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(comment, cancellationToken);
         return comment;
     }
 

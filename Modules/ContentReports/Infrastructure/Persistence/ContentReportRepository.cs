@@ -10,14 +10,14 @@ namespace FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 
 internal sealed class ContentReportRepository(DbSet<ContentReport> reports) : IContentReportWriteRepository {
     public async Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) {
-        await reports.AddAsync(report, cancellationToken).ConfigureAwait(false);
+        await reports.AddAsync(report, cancellationToken);
         return report;
     }
 
     public async Task<ContentReport?> GetByIdAsync(
         ContentReportId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<ContentReport> query = asTracking ? reports.AsTracking() : reports.AsNoTracking();
-        return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
     public Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) {
@@ -32,7 +32,7 @@ internal sealed class ContentReportRepository(DbSet<ContentReport> reports) : IC
         Guid targetId = target.Id;
         return await reports
             .AsNoTracking()
-            .AnyAsync(r => r.UserId == userId && r.TargetType == targetType && r.TargetId == targetId, cancellationToken).ConfigureAwait(false);
+            .AnyAsync(r => r.UserId == userId && r.TargetType == targetType && r.TargetId == targetId, cancellationToken);
     }
 
 }

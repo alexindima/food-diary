@@ -10,7 +10,7 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 118,
+    "selectorUnreferencedComponents": 119,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 128,
     "criticalSymbolsWithoutTestReferences": 43,
@@ -868,6 +868,14 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.html",
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.spec.ts"
+    },
+    {
+      "class": "AdminUserNotificationDialogComponent",
+      "selector": "fd-admin-user-notification-dialog",
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.spec.ts"
     },
     {
       "class": "AdminUserSetPasswordDialogComponent",
@@ -6024,7 +6032,7 @@
     },
     {
       "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
-      "line": 104,
+      "line": 102,
       "marker": "#pragma warning disable"
     },
     {

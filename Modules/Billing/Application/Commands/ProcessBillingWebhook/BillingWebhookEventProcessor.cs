@@ -21,12 +21,12 @@ public sealed class BillingWebhookEventProcessor(
         BillingWebhookEvent? inboxEvent,
         CancellationToken cancellationToken) {
         var processingResult = Result.Success();
-        string serializationKey = await billingWebhookContextResolver.GetSerializationKeyAsync(provider, webhookEvent, cancellationToken).ConfigureAwait(false);
+        string serializationKey = await billingWebhookContextResolver.GetSerializationKeyAsync(provider, webhookEvent, cancellationToken);
         try {
             await billingTransactionRunner.ExecuteSerializedAsync(serializationKey, async ct => {
                 processingResult = Result.Success();
                 if (inboxEvent is not null) {
-                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct).ConfigureAwait(false)
+                    inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct)
                         ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
                     if (inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
                         return;
@@ -35,7 +35,7 @@ public sealed class BillingWebhookEventProcessor(
                 Result<BillingWebhookProcessingContext?> contextResult = await billingWebhookContextResolver.ResolveAsync(
                     provider,
                     webhookEvent,
-                    ct).ConfigureAwait(false);
+                    ct);
                 if (contextResult.IsFailure) {
                     processingResult = Result.Failure(contextResult.Error);
                     return;
@@ -44,19 +44,19 @@ public sealed class BillingWebhookEventProcessor(
                 BillingWebhookEvent persistedEvent = inboxEvent ??
                     billingWebhookSubscriptionWriter.CreateProcessedEvent(provider, webhookEvent, payload);
                 if (inboxEvent is null) {
-                    await billingWebhookEventRepository.AddAsync(persistedEvent, ct).ConfigureAwait(false);
+                    await billingWebhookEventRepository.AddAsync(persistedEvent, ct);
                 }
 
                 BillingWebhookProcessingContext? context = contextResult.Value;
                 if (context is not null) {
-                    await ApplyBusinessEffectsAsync(provider, context.EffectiveEvent, context, ct).ConfigureAwait(false);
+                    await ApplyBusinessEffectsAsync(provider, context.EffectiveEvent, context, ct);
                 }
 
                 if (inboxEvent is not null) {
                     inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
-                    await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);
+                    await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct);
                 }
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
         } catch (BillingPaymentAlreadyExistsException) {
@@ -65,12 +65,12 @@ public sealed class BillingWebhookEventProcessor(
             }
 
             await billingTransactionRunner.ExecuteAsync(async ct => {
-                inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct).ConfigureAwait(false)
+                inboxEvent = await billingWebhookEventRepository.GetByIdAsync(inboxEvent.TypedId, ct)
                     ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
                 inboxEvent.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
-                await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);
+                await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct);
             },
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
 
             return Result.Success();
         }
@@ -90,13 +90,13 @@ public sealed class BillingWebhookEventProcessor(
                 webhookEvent,
                 context.Subscription,
                 context.User,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
 
             await billingWebhookPremiumRoleSyncer.SyncAsync(
                 context.User,
                 updatedSubscription,
                 webhookEvent,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         }
 
         await billingWebhookPaymentRecorder.AddIfPresentAsync(
@@ -104,6 +104,6 @@ public sealed class BillingWebhookEventProcessor(
             context.User.UserId,
             provider,
             webhookEvent,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

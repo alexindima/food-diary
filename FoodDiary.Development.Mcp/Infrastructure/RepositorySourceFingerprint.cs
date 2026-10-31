@@ -18,12 +18,12 @@ internal static class RepositorySourceFingerprint {
             repositoryRoot,
             ["-c", "core.fsmonitor=false", "ls-files", "-co", "--exclude-standard", "-z"],
             inputLines: null,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         string deletedOutput = await RunGitAsync(
             repositoryRoot,
             ["-c", "core.fsmonitor=false", "ls-files", "--deleted", "-z"],
             inputLines: null,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         HashSet<string> deletedPaths = [.. deletedOutput
             .Split('\0', StringSplitOptions.RemoveEmptyEntries)
             .Select(path => path.Replace('\\', '/'))];
@@ -38,7 +38,7 @@ internal static class RepositorySourceFingerprint {
             repositoryRoot,
             ["hash-object", "--stdin-paths"],
             paths,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         string[] hashes = hashesOutput.Split(
             ['\r', '\n'],
             StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -89,13 +89,13 @@ internal static class RepositorySourceFingerprint {
             Task<string> errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
             if (inputLines is not null) {
                 foreach (string line in inputLines) {
-                    await process.StandardInput.WriteLineAsync(line.AsMemory(), cancellationToken).ConfigureAwait(false);
+                    await process.StandardInput.WriteLineAsync(line.AsMemory(), cancellationToken);
                 }
             }
             process.StandardInput.Close();
-            await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
-            string output = await outputTask.ConfigureAwait(false);
-            string error = await errorTask.ConfigureAwait(false);
+            await process.WaitForExitAsync(linkedCancellation.Token);
+            string output = await outputTask;
+            string error = await errorTask;
             if (process.ExitCode != 0) {
                 throw new DevelopmentMcpException(
                     DevelopmentMcpErrorCodes.RepositoryNotFound,

@@ -21,8 +21,7 @@ public sealed class SetUserPasswordByAdministratorCommandHandler(IUserLookupRepo
             return Result.Failure(UserErrors.NotFound(userId));
         }
         User? user = await userLookupRepository
-            .GetByIdIncludingDeletedAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdIncludingDeletedAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure(UserErrors.NotFound(userId));
         }
@@ -33,7 +32,7 @@ public sealed class SetUserPasswordByAdministratorCommandHandler(IUserLookupRepo
 
         user.UpdatePassword(passwordHasher.Hash(newPassword));
         user.RequirePasswordChange();
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success();
 
     }

@@ -15,8 +15,8 @@ internal static class NpgsqlExtensions {
         this NpgsqlDataReader reader,
         int ordinal,
         CancellationToken cancellationToken) {
-        return await reader.IsDBNullAsync(ordinal, cancellationToken).ConfigureAwait(false)
+        return await reader.IsDBNullAsync(ordinal, cancellationToken)
             ? null
-            : await reader.GetFieldValueAsync<DateTimeOffset>(ordinal, cancellationToken).ConfigureAwait(false);
+            : await reader.GetFieldValueAsync<DateTimeOffset>(ordinal, cancellationToken);
     }
 }

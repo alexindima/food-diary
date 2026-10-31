@@ -14,8 +14,7 @@ public sealed class GetAdminEmailTemplatesQueryHandler(ISender emailTemplateRead
     public async Task<Result<IReadOnlyList<AdminEmailTemplateModel>>> Handle(GetAdminEmailTemplatesQuery query, CancellationToken cancellationToken) {
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
-        IReadOnlyList<EmailTemplateReadModel> templates = await emailTemplateReadService.Send(new GetEmailTemplatePageQuery(page, limit), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<EmailTemplateReadModel> templates = await emailTemplateReadService.Send(new GetEmailTemplatePageQuery(page, limit), cancellationToken);
         return Result.Success<IReadOnlyList<AdminEmailTemplateModel>>(templates.Select(static template => template.ToAdminModel()).ToList());
     }
 }

@@ -20,8 +20,8 @@ public sealed class GetAdminUsersQueryHandler(ISender userReadService)
         int limit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
 
         (IReadOnlyList<UserAdminReadModel> items, int totalItems) = query.Filter is null
-            ? await userReadService.Send(new GetUsersForAdministrationQuery(Search: query.Search, Page: page, Limit: limit, Status: query.Status), cancellationToken).ConfigureAwait(false)
-            : await userReadService.Send(new GetFilteredUsersForAdministrationQuery(Search: query.Search, Page: page, Limit: limit, Status: query.Status, Filter: query.Filter), cancellationToken).ConfigureAwait(false);
+            ? await userReadService.Send(new GetUsersForAdministrationQuery(Search: query.Search, Page: page, Limit: limit, Status: query.Status), cancellationToken)
+            : await userReadService.Send(new GetFilteredUsersForAdministrationQuery(Search: query.Search, Page: page, Limit: limit, Status: query.Status, Filter: query.Filter), cancellationToken);
         int totalPages = (int)Math.Ceiling(totalItems / (double)limit);
         var response = new PagedResponse<AdminUserModel>([.. items.Select(AdminUserMappings.ToAdminModel)], page, limit, totalPages, totalItems);
         return Result.Success(response);

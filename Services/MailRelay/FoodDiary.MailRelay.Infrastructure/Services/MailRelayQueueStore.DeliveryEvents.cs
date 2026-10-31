@@ -5,7 +5,7 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 public sealed partial class MailRelayQueueStore {
     public async Task<IReadOnlyList<MailRelayDeliveryEventEntry>> GetDeliveryEventsAsync(
         string? email, CancellationToken cancellationToken) =>
-        (await GetDeliveryEventsPageAsync(email, 1, 100, cancellationToken).ConfigureAwait(false)).Data;
+        (await GetDeliveryEventsPageAsync(email, 1, 100, cancellationToken)).Data;
 
     public async Task<MailRelayDeliveryEventEntry> RecordDeliveryEventAsync(
         IngestMailEventRequest request,
@@ -59,10 +59,10 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("occurredAtUtc", occurredAtUtc);
             },
             async (reader, token) => {
-                await RequireReturnedRowAsync(reader, token, "Delivery event insert did not return an event.").ConfigureAwait(false);
+                await RequireReturnedRowAsync(reader, token, "Delivery event insert did not return an event.");
                 return (reader.GetGuid(0), MailRelayQueueRowMapper.GetDateTimeOffset(reader, 1));
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return new MailRelayDeliveryEventEntry(
             storedEvent.EventId,
@@ -112,18 +112,18 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("offset", offset);
             },
             async (reader, token) => {
-                await RequireReturnedRowAsync(reader, token, "Delivery event count query did not return a row.").ConfigureAwait(false);
+                await RequireReturnedRowAsync(reader, token, "Delivery event count query did not return a row.");
                 int total = checked((int)reader.GetInt64(0));
-                await reader.NextResultAsync(token).ConfigureAwait(false);
+                await reader.NextResultAsync(token);
                 var result = new List<MailRelayDeliveryEventEntry>();
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) {
-                    result.Add(await MailRelayQueueRowMapper.ReadDeliveryEventEntryAsync(reader, token).ConfigureAwait(false));
+                while (await reader.ReadAsync(token)) {
+                    result.Add(await MailRelayQueueRowMapper.ReadDeliveryEventEntryAsync(reader, token));
                 }
 
                 int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)normalizedLimit);
                 return new MailRelayPage<MailRelayDeliveryEventEntry>(result, normalizedPage, normalizedLimit, totalPages, total);
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
 }

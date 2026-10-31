@@ -28,7 +28,7 @@ public sealed class UpsertEmailTemplateCommandHandler(IEmailTemplateWriteReposit
             htmlBody,
             textBody,
             isActive,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(new EmailTemplateReadModel(
             template.Id, template.Key, template.Locale, template.Subject, template.HtmlBody,

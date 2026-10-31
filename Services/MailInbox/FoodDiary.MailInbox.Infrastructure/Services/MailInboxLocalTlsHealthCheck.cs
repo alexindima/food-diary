@@ -26,8 +26,7 @@ public static class MailInboxLocalTlsHealthCheck {
         try {
             Uri requestUri = new UriBuilder(Uri.UriSchemeHttps, serverName, HttpsPort, "/health/ready").Uri;
             using HttpResponseMessage response = await client
-                .GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                .ConfigureAwait(false);
+                .GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             return response.IsSuccessStatusCode;
         } catch (HttpRequestException) {
             return false;
@@ -41,7 +40,7 @@ public static class MailInboxLocalTlsHealthCheck {
         CancellationToken cancellationToken) {
         var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
         try {
-            await socket.ConnectAsync(IPAddress.Loopback, HttpsPort, cancellationToken).ConfigureAwait(false);
+            await socket.ConnectAsync(IPAddress.Loopback, HttpsPort, cancellationToken);
             return new NetworkStream(socket, ownsSocket: true);
         } catch {
             socket.Dispose();

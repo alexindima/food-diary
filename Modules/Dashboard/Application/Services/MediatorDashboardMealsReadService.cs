@@ -19,7 +19,7 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
         CancellationToken cancellationToken = default) {
         Result<PagedResponse<MealModel>> result = await sender.Send(
             new GetMealsQuery(userId.Value, page, limit, dateFrom, dateTo),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<DashboardMealsReadModel>(result.Error);
         }

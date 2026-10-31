@@ -17,12 +17,12 @@ public sealed class GetMyDietologistRelationshipQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DietologistRelationshipModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return await readService.GetMyRelationshipAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await readService.GetMyRelationshipAsync(userId, cancellationToken);
     }
 }

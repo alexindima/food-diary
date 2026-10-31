@@ -9,7 +9,6 @@ internal sealed class EfModuleSessionLock(SharedPersistenceDbContext context) : 
         string connectionString = context.Database.GetConnectionString()
             ?? throw new InvalidOperationException("The session lock requires a relational connection string.");
         return await PostgresAdvisoryLockLease
-            .AcquireAsync(connectionString, lockKey, cancellationToken)
-            .ConfigureAwait(false);
+            .AcquireAsync(connectionString, lockKey, cancellationToken);
     }
 }

@@ -9,6 +9,6 @@ internal sealed class ImageAssetOwnershipService(ImagesDbContext context) : IIma
     public async Task ReassignAsync(IReadOnlyCollection<ImageAssetId> assetIds, UserId sourceUserId, UserId targetUserId, CancellationToken cancellationToken) {
         if (assetIds.Count == 0) { return; }
         await context.ImageAssets.Where(asset => asset.UserId == sourceUserId && assetIds.Contains(asset.Id))
-            .ExecuteUpdateAsync(setters => setters.SetProperty(asset => asset.UserId, targetUserId), cancellationToken).ConfigureAwait(false);
+            .ExecuteUpdateAsync(setters => setters.SetProperty(asset => asset.UserId, targetUserId), cancellationToken);
     }
 }

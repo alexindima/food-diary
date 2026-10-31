@@ -23,14 +23,14 @@ public sealed class CreateProductCommandHandler(
             command,
             currentUserAccessService,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<ProductModel>(valuesResult.Error);
         }
 
         Product product = CreateProduct(command, valuesResult.Value);
         if (valuesResult.Value.Images is { } images) { product.ReplaceImages(images); }
-        product = await productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
+        product = await productRepository.AddAsync(product, cancellationToken);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
     }

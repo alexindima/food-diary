@@ -12,12 +12,12 @@ public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTr
         UserId userId,
         DateTime weekStartUtc,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await context.WeeklyGoals.AsNoTracking()
             .Where(goal => goal.UserId == userId && goal.WeekStartUtc == weekStartUtc)
             .Select(goal => new WeeklyGoalReadModel(goal.Id, goal.WeekStartUtc, goal.Type, goal.TargetDays,
                 goal.ReminderEnabled, goal.ReminderTimeMinutes, goal.TimeZoneOffsetMinutes))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<WeeklyGoal?> GetAsync(
@@ -25,7 +25,7 @@ public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTr
         DateTime weekStartUtc,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         IQueryable<WeeklyGoal> query = context.WeeklyGoals;
         if (!asTracking) {
             query = query.AsNoTracking();
@@ -33,11 +33,11 @@ public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTr
 
         return await query.SingleOrDefaultAsync(
             goal => goal.UserId == userId && goal.WeekStartUtc == weekStartUtc,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task AddAsync(WeeklyGoal goal, CancellationToken cancellationToken = default) {
-        await context.WeeklyGoals.AddAsync(goal, cancellationToken).ConfigureAwait(false);
+        await context.WeeklyGoals.AddAsync(goal, cancellationToken);
     }
 
     public async Task<IReadOnlyList<WeeklyGoal>> GetReminderCandidatesAsync(
@@ -46,7 +46,7 @@ public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTr
         int offset,
         int limit,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await context.WeeklyGoals
             .Where(goal =>
                 goal.ReminderEnabled &&
@@ -56,13 +56,12 @@ public sealed class WeeklyGoalRepository(WeeklyGoalsDbContext context, Func<DbTr
             .ThenBy(goal => goal.Id)
             .Skip(offset)
             .Take(limit)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
         if (context.Database.IsRelational()) {
-            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken);
         }
     }
 }

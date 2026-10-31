@@ -13,7 +13,7 @@ public sealed class GetAdminDailyAdvicesQueryHandler(ISender sender)
     public async Task<Result<IReadOnlyList<AdminDailyAdviceModel>>> Handle(GetAdminDailyAdvicesQuery query, CancellationToken cancellationToken) {
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
-        Result<IReadOnlyList<DailyAdviceModel>> result = await sender.Send(new GetDailyAdvicesForAdministrationQuery(page, limit), cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<DailyAdviceModel>> result = await sender.Send(new GetDailyAdvicesForAdministrationQuery(page, limit), cancellationToken);
         return result.IsFailure
             ? Result.Failure<IReadOnlyList<AdminDailyAdviceModel>>(result.Error)
             : Result.Success<IReadOnlyList<AdminDailyAdviceModel>>(result.Value.Select(item =>

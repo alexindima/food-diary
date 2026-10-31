@@ -23,7 +23,7 @@ public sealed class CreateAchievementDefinitionCommandHandler(IAchievementDefini
             var definition = AchievementDefinition.CreateWithTarget(
                 input.Key, input.Category, AchievementTarget.FromFields(metric.Value, input.Threshold), input.TitleRu, input.TitleEn,
                 input.DescriptionRu, input.DescriptionEn, input.Icon, input.SortOrder, input.IsActive);
-            bool added = await store.TryAddAsync(definition, cancellationToken).ConfigureAwait(false);
+            bool added = await store.TryAddAsync(definition, cancellationToken);
             if (!added) {
                 return Result.Failure<AchievementDefinitionAdminModel>(AchievementDefinitionErrors.KeyConflict(definition.Key));
             }

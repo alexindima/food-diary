@@ -22,7 +22,7 @@ internal sealed class WebPushClientAdapter : IWebPushClientAdapter {
         string payload,
         VapidDetails vapidDetails,
         CancellationToken cancellationToken) {
-        await _sendNotificationAsync(subscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
+        await _sendNotificationAsync(subscription, payload, vapidDetails, cancellationToken);
     }
 
     private static async Task SendWithWebPushClientAsync(
@@ -32,6 +32,6 @@ internal sealed class WebPushClientAdapter : IWebPushClientAdapter {
         VapidDetails vapidDetails,
         CancellationToken cancellationToken) {
         using var client = new WebPushClient(httpClient);
-        await client.SendNotificationAsync(subscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
+        await client.SendNotificationAsync(subscription, payload, vapidDetails, cancellationToken);
     }
 }

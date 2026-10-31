@@ -9,8 +9,8 @@ namespace FoodDiary.Modules.Recipes.Infrastructure.Services;
 internal sealed class RecipeCatalogIdReadService(RecipesDbContext context, Func<CancellationToken, Task> synchronizeTransactionAsync)
     : IRecipeCatalogIdReadService {
     public async Task<bool?> CatalogIdIsPublicAsync(Guid id, CancellationToken cancellationToken = default) {
-        await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await synchronizeTransactionAsync(cancellationToken);
         return await context.Recipes.AsNoTracking().Where(item => item.Id == new RecipeId(id))
-            .Select(item => (bool?)(item.Visibility == Visibility.Public)).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .Select(item => (bool?)(item.Visibility == Visibility.Public)).FirstOrDefaultAsync(cancellationToken);
     }
 }

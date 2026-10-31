@@ -22,7 +22,7 @@ public sealed class MarkNotificationReadCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -40,14 +40,14 @@ public sealed class MarkNotificationReadCommandHandler(
         NotificationId notificationId = notificationIdResult.Value;
 
         Notification? notification = await notificationWriteRepository.GetByIdAsync(
-            notificationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            notificationId, asTracking: true, cancellationToken: cancellationToken);
 
         if (notification is null || notification.UserId != userId) {
             return Result.Failure(NotificationErrors.LegacyNotFound);
         }
 
         notification.MarkAsRead();
-        await notificationWriteRepository.UpdateAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriteRepository.UpdateAsync(notification, cancellationToken);
         NotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,

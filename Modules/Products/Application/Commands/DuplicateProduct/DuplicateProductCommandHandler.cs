@@ -33,7 +33,7 @@ public sealed class DuplicateProductCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<ProductModel>(userIdResult);
         }
@@ -45,7 +45,7 @@ public sealed class DuplicateProductCommandHandler(
             productId,
             userId,
             includePublic: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (original is null) {
             return Result.Failure<ProductModel>(ProductErrors.NotAccessible(command.ProductId));
@@ -75,7 +75,7 @@ public sealed class DuplicateProductCommandHandler(
 
         if (isOwnedByCurrentUser && original.Images.Count > 0) { duplicate.ReplaceImages(original.Images.OrderBy(image => image.Position).ToList()); }
 
-        await productWriteRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
+        await productWriteRepository.AddAsync(duplicate, cancellationToken);
 
         return Result.Success(duplicate.ToModel(isOwnedByCurrentUser: true));
     }

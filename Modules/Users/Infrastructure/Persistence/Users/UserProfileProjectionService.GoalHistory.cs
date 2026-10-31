@@ -9,7 +9,7 @@ public sealed partial class UserProfileProjectionService {
     private async Task<UserGoalTimeline> ReadGoalHistoryAsync(UserId userId, DateOnly from, DateOnly to, CancellationToken cancellationToken) {
         List<UserGoalRevision> revisions = await GetGoalHistoryQuery(userId, from, to)
             .AsNoTracking()
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return ToGoalTimeline(revisions);
     }
 

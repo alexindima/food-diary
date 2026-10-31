@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using FoodDiary.BugTriage.Application.Reports.Identifiers;
 using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
@@ -15,23 +14,23 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             select id, status, attempt, summary, merge_request_url from bugtriage_reports
             where expires_at_utc > @now order by received_at_utc desc, id desc limit 50
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("now", now);
-        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
+        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using IAsyncDisposable readerScope = reader;
         var reports = new List<ReportSummary>();
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+        while (await reader.ReadAsync(cancellationToken)) {
             reports.Add(new ReportSummary(reader.GetGuid(0), reader.GetString(1), reader.GetInt32(2),
-                await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(3), await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(4)));
+                await reader.IsDBNullAsync(3, cancellationToken) ? null : reader.GetString(3), await reader.IsDBNullAsync(4, cancellationToken) ? null : reader.GetString(4)));
         }
         return reports;
     }
 
     public async Task<bool> ContainsAsync(SourceMessageId sourceMessageId, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("select exists(select 1 from bugtriage_reports where source_message_id = @source)");
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("source", sourceMessageId.Value);
-        return (bool)(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false))!;
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken))!;
     }
 
     public async Task ImportAsync(ImportedReport report, DateTimeOffset expiresAtUtc, CancellationToken cancellationToken) {
@@ -40,7 +39,7 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             values (@id, @source, @received, @subject, @body, @mime, @expires, @status)
             on conflict (source_message_id) do nothing
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("id", Guid.NewGuid());
         command.Parameters.AddWithValue("source", report.SourceMessageId.Value);
         command.Parameters.AddWithValue("received", report.ReceivedAtUtc);
@@ -49,19 +48,19 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
         command.Parameters.AddWithValue("mime", NpgsqlDbType.Bytea, (object?)report.RawMime ?? DBNull.Value);
         command.Parameters.AddWithValue("expires", expiresAtUtc);
         command.Parameters.AddWithValue("status", report.RawMime is null ? "content_unavailable" : "pending");
-        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     public async Task<ReportLease?> ClaimAsync(DateTimeOffset now, TimeSpan duration, int maxAttempts, CancellationToken cancellationToken) {
         // Lock before taking the claim snapshot: concurrent service instances must share the same capacity limit.
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable connectionScope = connection.ConfigureAwait(false);
-        NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable transactionScope = transaction.ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using IAsyncDisposable connectionScope = connection;
+        NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await using IAsyncDisposable transactionScope = transaction;
         {
             var gate = new NpgsqlCommand("select pg_advisory_xact_lock(724936129)", connection, transaction);
-            await using ConfiguredAsyncDisposable gateScope = gate.ConfigureAwait(false);
-            await gate.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await using IAsyncDisposable gateScope = gate;
+            await gate.ExecuteNonQueryAsync(cancellationToken);
         }
         NpgsqlCommand command = new("""
             with exhausted as (
@@ -82,20 +81,20 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             from candidate c where r.id = c.id
             returning r.id, source_message_id, subject, text_body, lease_token, lease_expires_at_utc, attempt, expires_at_utc
             """, connection, transaction);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("now", now);
         command.Parameters.AddWithValue("expires", now.Add(duration));
         command.Parameters.AddWithValue("token", Guid.NewGuid());
         command.Parameters.AddWithValue("max_attempts", maxAttempts);
         command.Parameters.AddWithValue("capacity", options?.Value.MaxConcurrentReports ?? 1);
-        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
-        ReportLease? lease = await reader.ReadAsync(cancellationToken).ConfigureAwait(false)
+        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using IAsyncDisposable readerScope = reader;
+        ReportLease? lease = await reader.ReadAsync(cancellationToken)
             ? new ReportLease((BugReportId)reader.GetGuid(0), (SourceMessageId)reader.GetGuid(1), reader.GetString(2), reader.GetString(3),
-                (LeaseToken)reader.GetGuid(4), await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken).ConfigureAwait(false), reader.GetInt32(6),
-                await reader.GetFieldValueAsync<DateTimeOffset>(7, cancellationToken).ConfigureAwait(false)) : null;
-        await reader.CloseAsync().ConfigureAwait(false);
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                (LeaseToken)reader.GetGuid(4), await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken), reader.GetInt32(6),
+                await reader.GetFieldValueAsync<DateTimeOffset>(7, cancellationToken)) : null;
+        await reader.CloseAsync();
+        await transaction.CommitAsync(cancellationToken);
         return lease;
     }
 
@@ -105,10 +104,10 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             where id = @id and lease_token = @token and status = 'in_progress'
                 and lease_expires_at_utc > @now and expires_at_utc > @now
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         AddLeaseParameters(command, id, token, now);
         command.Parameters.AddWithValue("expires", now.Add(duration));
-        return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
+        return await command.ExecuteNonQueryAsync(cancellationToken) == 1;
     }
 
     public async Task<bool> CompleteAsync(BugReportId id, LeaseToken token, ReportCompletion completion, DateTimeOffset now, CancellationToken cancellationToken) {
@@ -125,14 +124,14 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
                 or (completed_token = @token and status = @outcome and summary = @summary and merge_request_url is not distinct from @url
                     and report_title is not distinct from @title and short_summary is not distinct from @short_summary))
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         AddLeaseParameters(command, id, token, now);
         command.Parameters.AddWithValue("outcome", completion.Outcome);
         command.Parameters.AddWithValue("summary", completion.Summary);
         command.Parameters.AddWithValue("url", NpgsqlDbType.Text, (object?)completion.MergeRequestUrl ?? DBNull.Value);
         command.Parameters.AddWithValue("title", NpgsqlDbType.Text, (object?)completion.Title ?? DBNull.Value);
         command.Parameters.AddWithValue("short_summary", NpgsqlDbType.Text, (object?)completion.ShortSummary ?? DBNull.Value);
-        return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false) == 1;
+        return await command.ExecuteNonQueryAsync(cancellationToken) == 1;
     }
 
     public async Task<byte[]?> GetMimeAsync(BugReportId id, LeaseToken token, DateTimeOffset now, CancellationToken cancellationToken) {
@@ -140,9 +139,9 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
             select raw_mime from bugtriage_reports where id = @id and lease_token = @token
                 and status = 'in_progress' and lease_expires_at_utc > @now and expires_at_utc > @now
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         AddLeaseParameters(command, id, token, now);
-        return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) as byte[];
+        return await command.ExecuteScalarAsync(cancellationToken) as byte[];
     }
 
     public async Task PurgeAsync(DateTimeOffset now, CancellationToken cancellationToken) {
@@ -152,9 +151,9 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<B
                 merge_request_url = null, lease_token = null, lease_expires_at_utc = null, completed_token = null, status = 'expired'
             where expires_at_utc <= @now and status <> 'expired'
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("now", now);
-        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private static void AddLeaseParameters(NpgsqlCommand command, BugReportId id, LeaseToken token, DateTimeOffset now) {

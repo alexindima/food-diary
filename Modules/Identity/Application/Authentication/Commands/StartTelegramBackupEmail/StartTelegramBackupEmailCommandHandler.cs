@@ -27,14 +27,14 @@ public sealed class StartTelegramBackupEmailCommandHandler(ITelegramOidcProvider
         if (!provider.IsEnabled) {
             return Result.Failure<TelegramOidcStartModel>(TelegramIdentityErrors.NotConfigured);
         }
-        Result<UserAuthenticationPrincipalModel> principal = await identities.GetAuthenticationPrincipalAsync(new UserId(userId), timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> principal = await identities.GetAuthenticationPrincipalAsync(new UserId(userId), timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (principal.IsFailure || principal.Value.Email is not null || !principal.Value.User.HasTelegramIdentity) {
             return Result.Failure<TelegramOidcStartModel>(TelegramIdentityErrors.InvalidProof);
         }
         var attempt = new TelegramBackupEmailOidcAttempt(userId, address.Address.Trim().ToLowerInvariant(), principal.Value.SecurityVersion,
             SecurityTokenGenerator.GenerateUrlSafeToken(), SecurityTokenGenerator.GenerateUrlSafeToken());
         string state = await tickets.CreateAsync(TelegramBackupEmailOidcAttempt.Purpose, TelegramBackupEmailOidcAttempt.Binding(browserBinding, userId), JsonSerializer.Serialize(attempt),
-            timeProvider.GetUtcNow().UtcDateTime.AddMinutes(5), cancellationToken).ConfigureAwait(false);
+            timeProvider.GetUtcNow().UtcDateTime.AddMinutes(5), cancellationToken);
         Result<string> url = provider.CreateAuthorizationUrl(new TelegramOidcAuthorizationRequest(new TelegramOAuthState(state), new TelegramOidcNonce(attempt.Nonce), new TelegramPkceVerifier(attempt.CodeVerifier)));
         return url.IsSuccess ? Result.Success(new TelegramOidcStartModel(url.Value)) : Result.Failure<TelegramOidcStartModel>(url.Error);
     }

@@ -30,7 +30,7 @@ internal sealed class ExerciseEntryRepository(DbSet<ExerciseEntry> entries) : IE
             : entries.AsNoTracking();
 
         return await query.FirstOrDefaultAsync(
-            e => e.Id == id && e.UserId == userId, cancellationToken).ConfigureAwait(false);
+            e => e.Id == id && e.UserId == userId, cancellationToken);
     }
 
     public async Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(
@@ -43,7 +43,7 @@ internal sealed class ExerciseEntryRepository(DbSet<ExerciseEntry> entries) : IE
             .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
             .OrderByDescending(e => e.Date)
             .ThenByDescending(e => e.CreatedOnUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
@@ -64,7 +64,7 @@ internal sealed class ExerciseEntryRepository(DbSet<ExerciseEntry> entries) : IE
                 e.DurationMinutes,
                 e.CaloriesBurned,
                 e.Notes))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<double> GetTotalCaloriesBurnedAsync(
@@ -74,6 +74,6 @@ internal sealed class ExerciseEntryRepository(DbSet<ExerciseEntry> entries) : IE
         return await entries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
-            .SumAsync(e => e.CaloriesBurned, cancellationToken).ConfigureAwait(false);
+            .SumAsync(e => e.CaloriesBurned, cancellationToken);
     }
 }

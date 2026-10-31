@@ -33,8 +33,7 @@ public sealed class AdminSsoStartCommandHandler(
             .GetAuthenticationPrincipalAsync(
                 userId,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (principalResult.IsFailure) {
             Error error = string.Equals(principalResult.Error.Code, "User.NotFound", StringComparison.Ordinal)
                 ? AuthenticationErrors.InvalidCredentials
@@ -46,7 +45,7 @@ public sealed class AdminSsoStartCommandHandler(
             return Result.Failure<AdminSsoStartModel>(IdentityErrors.AdminSsoForbidden);
         }
 
-        AdminSsoCode code = await adminSsoService.CreateCodeAsync(userId, cancellationToken).ConfigureAwait(false);
+        AdminSsoCode code = await adminSsoService.CreateCodeAsync(userId, cancellationToken);
         var response = new AdminSsoStartModel(code.Code, code.ExpiresAtUtc);
         return Result.Success(response);
     }

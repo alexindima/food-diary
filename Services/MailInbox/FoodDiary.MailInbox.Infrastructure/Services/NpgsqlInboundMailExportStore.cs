@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Messages.Models;
@@ -19,16 +18,16 @@ public sealed class NpgsqlInboundMailExportStore(NpgsqlDataSource dataSource) : 
             order by received_at_utc desc, id desc
             limit @limit
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
         command.Parameters.AddWithValue("before_time", NpgsqlDbType.TimestampTz, (object?)beforeReceivedAtUtc?.ToUniversalTime() ?? DBNull.Value);
         command.Parameters.AddWithValue("before_id", NpgsqlDbType.Uuid, (object?)beforeId ?? DBNull.Value);
         command.Parameters.AddWithValue("limit", limit);
-        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
+        NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using IAsyncDisposable readerScope = reader;
         var entries = new List<InboundMailExportEntry>();
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-            entries.Add(new InboundMailExportEntry(reader.GetGuid(0), await reader.GetFieldValueAsync<DateTimeOffset>(1, cancellationToken).ConfigureAwait(false), reader.GetBoolean(2)));
+        while (await reader.ReadAsync(cancellationToken)) {
+            entries.Add(new InboundMailExportEntry(reader.GetGuid(0), await reader.GetFieldValueAsync<DateTimeOffset>(1, cancellationToken), reader.GetBoolean(2)));
         }
         return entries;
     }
@@ -38,9 +37,9 @@ public sealed class NpgsqlInboundMailExportStore(NpgsqlDataSource dataSource) : 
             select raw_mime from mailinbox_messages
             where id = @id and to_recipients_json @> @recipient
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
         command.Parameters.AddWithValue("id", id);
         command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
-        return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) as byte[];
+        return await command.ExecuteScalarAsync(cancellationToken) as byte[];
     }
 }

@@ -59,7 +59,7 @@ public static class IdentityModuleRegistration {
         IdentityDbContext owned = provider.GetRequiredService<IdentityDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
             }
         };
     }

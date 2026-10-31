@@ -9,8 +9,8 @@ internal sealed class MealPlanningUserDataPurgeParticipant(MealPlanningDbContext
     public int Order => 6;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.ShoppingLists.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await context.MealPlans.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.ShoppingLists.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await context.MealPlans.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

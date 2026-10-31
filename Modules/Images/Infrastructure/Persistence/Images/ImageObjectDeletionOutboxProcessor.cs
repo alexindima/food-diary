@@ -19,8 +19,8 @@ internal sealed class ImageObjectDeletionOutboxProcessor(
     public async Task<int> ProcessKeysAsync(IReadOnlyList<string> objectKeys, CancellationToken cancellationToken) {
         ensureCleanEntry?.Invoke();
         List<Guid> ids = await messages.AsNoTracking().Where(message => objectKeys.Contains(message.ObjectKey) && message.ProcessedOnUtc == null && message.DeadLetteredOnUtc == null)
-            .Select(message => message.Id).ToListAsync(cancellationToken).ConfigureAwait(false);
-        return await ProcessAsync(ids.Count, ids, cancellationToken).ConfigureAwait(false);
+            .Select(message => message.Id).ToListAsync(cancellationToken);
+        return await ProcessAsync(ids.Count, ids, cancellationToken);
     }
 
     public Task<int> ProcessDueAsync(int batchSize, CancellationToken cancellationToken = default) => ProcessAsync(batchSize, allowedMessageIds: null, cancellationToken);

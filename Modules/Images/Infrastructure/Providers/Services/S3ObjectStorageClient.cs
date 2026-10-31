@@ -2,7 +2,6 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using System.Buffers;
 using System.Net;
-using System.Runtime.CompilerServices;
 
 namespace FoodDiary.Modules.Images.Infrastructure.Providers.Services;
 
@@ -45,7 +44,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         ReadOnlyMemory<byte> content,
         CancellationToken cancellationToken) {
         var stream = new MemoryStream(content.ToArray(), writable: false);
-        await using ConfiguredAsyncDisposable _ = stream.ConfigureAwait(false);
+        await using IAsyncDisposable _ = stream;
         var request = new PutObjectRequest {
             BucketName = bucketName,
             Key = key,
@@ -53,7 +52,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             InputStream = stream,
         };
 
-        await s3Client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
+        await s3Client.PutObjectAsync(request, cancellationToken);
     }
 
     public async Task<StoredObjectInfo?> GetObjectInfoAsync(
@@ -64,7 +63,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             GetObjectMetadataResponse response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
                 BucketName = bucketName,
                 Key = key,
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken);
 
             return new StoredObjectInfo(response.ContentLength, response.Headers.ContentType);
         } catch (AmazonS3Exception ex) when (ex.StatusCode == HttpStatusCode.NotFound) {
@@ -83,12 +82,12 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
             using GetObjectResponse response = await s3Client.GetObjectAsync(new GetObjectRequest {
                 BucketName = bucketName,
                 Key = key,
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken);
             Stream responseStream = response.ResponseStream;
             var content = new ArrayBufferWriter<byte>();
             while (true) {
                 Memory<byte> buffer = content.GetMemory(81920);
-                int bytesRead = await responseStream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+                int bytesRead = await responseStream.ReadAsync(buffer, cancellationToken);
                 if (bytesRead == 0) {
                     return content.WrittenSpan.ToArray();
                 }

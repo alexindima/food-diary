@@ -58,7 +58,7 @@ internal sealed class FitbitClient(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             response.EnsureSuccessStatusCode();
 
             FitbitTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<FitbitTokenResponse>(
@@ -66,7 +66,7 @@ internal sealed class FitbitClient(
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!IsValidTokenResponse(token)) {
                 logger.LogWarning("Fitbit token exchange returned an invalid token response.");
                 return null;
@@ -100,12 +100,12 @@ internal sealed class FitbitClient(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!response.IsSuccessStatusCode) {
                 if (response.StatusCode == HttpStatusCode.BadRequest) {
                     JsonElement error = await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
                         response.Content, JsonOptions, BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
-                        BoundedHttpContentReader.DefaultReadTimeout, cancellationToken).ConfigureAwait(false);
+                        BoundedHttpContentReader.DefaultReadTimeout, cancellationToken);
                     if (IsInvalidRefreshGrant(error)) {
                         return Result.Failure<WearableTokenResult>(WearableErrors.AuthFailed(Provider.ToString()));
                     }
@@ -118,7 +118,7 @@ internal sealed class FitbitClient(
                 JsonOptions,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!IsValidTokenResponse(token)) {
                 logger.LogWarning("Fitbit token refresh returned an invalid token response.");
                 return Result.Failure<WearableTokenResult>(WearableErrors.SyncFailed(Provider.ToString()));
@@ -162,7 +162,7 @@ internal sealed class FitbitClient(
         try {
             // Fetch activity summary (steps, calories, active minutes)
             string activityUrl = $"https://api.fitbit.com/1/user/-/activities/date/{dateStr}.json";
-            JsonElement activityResponse = await GetJsonAsync(activityUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
+            JsonElement activityResponse = await GetJsonAsync(activityUrl, accessToken, operationDeadline.Token);
 
             if (activityResponse.TryGetProperty("summary", out JsonElement summary)) {
                 if (summary.TryGetProperty("steps", out JsonElement steps)) {
@@ -180,7 +180,7 @@ internal sealed class FitbitClient(
 
             // Fetch resting heart rate
             string heartUrl = $"https://api.fitbit.com/1/user/-/activities/heart/date/{dateStr}/1d.json";
-            JsonElement heartResponse = await GetJsonAsync(heartUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
+            JsonElement heartResponse = await GetJsonAsync(heartUrl, accessToken, operationDeadline.Token);
 
             if (heartResponse.TryGetProperty("activities-heart", out JsonElement heartArray) &&
                 heartArray.GetArrayLength() > 0) {
@@ -193,7 +193,7 @@ internal sealed class FitbitClient(
 
             // Fetch sleep
             string sleepUrl = $"https://api.fitbit.com/1.2/user/-/sleep/date/{dateStr}.json";
-            JsonElement sleepResponse = await GetJsonAsync(sleepUrl, accessToken, operationDeadline.Token).ConfigureAwait(false);
+            JsonElement sleepResponse = await GetJsonAsync(sleepUrl, accessToken, operationDeadline.Token);
 
             if (sleepResponse.TryGetProperty("summary", out JsonElement sleepSummary) &&
                 sleepSummary.TryGetProperty("totalMinutesAsleep", out JsonElement sleepMinutes)) {
@@ -225,14 +225,14 @@ internal sealed class FitbitClient(
         using HttpResponseMessage response = await httpClient.SendAsync(
             request,
             HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         response.EnsureSuccessStatusCode();
         return await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
             response.Content,
             JsonOptions,
             BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
             BoundedHttpContentReader.DefaultReadTimeout,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private sealed class FitbitTokenResponse {

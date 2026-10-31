@@ -33,7 +33,7 @@ internal static class UpdateMealValuePreparer {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<UpdateMealValues>(userIdResult);
         }
@@ -45,7 +45,7 @@ internal static class UpdateMealValuePreparer {
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (meal is null) {
             return Result.Failure<UpdateMealValues>(MealErrors.NotFound(command.MealId));
         }
@@ -64,7 +64,7 @@ internal static class UpdateMealValuePreparer {
             nameof(command.ImageAssetId),
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<UpdateMealValues>(imageAssetResult.Error);
         }

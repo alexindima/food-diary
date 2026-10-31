@@ -13,12 +13,10 @@ internal sealed class AchievementEvaluationOutbox(
         DateTime requestedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         if (!context.Database.IsRelational()) {
             AchievementEvaluationOutboxMessage? existing = await messages
-                .SingleOrDefaultAsync(message => message.UserId == userId, cancellationToken)
-                .ConfigureAwait(false);
+                .SingleOrDefaultAsync(message => message.UserId == userId, cancellationToken);
             if (existing is null) {
                 await messages
-                    .AddAsync(AchievementEvaluationOutboxMessage.Create(userId, requestedOnUtc), cancellationToken)
-                    .ConfigureAwait(false);
+                    .AddAsync(AchievementEvaluationOutboxMessage.Create(userId, requestedOnUtc), cancellationToken);
             } else {
                 existing.RequestEvaluation(requestedOnUtc);
             }
@@ -26,7 +24,7 @@ internal sealed class AchievementEvaluationOutbox(
             return;
         }
 
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         var message = AchievementEvaluationOutboxMessage.Create(userId, requestedOnUtc);
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"""
@@ -43,11 +41,11 @@ internal sealed class AchievementEvaluationOutbox(
                 "DeadLetteredOnUtc" = NULL,
                 "LastError" = NULL
             """,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
     private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
         if (currentTransaction is not null && context.Database.IsRelational()) {
-            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken);
         }
     }
 }

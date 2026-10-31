@@ -30,12 +30,12 @@ public sealed class DeleteImageAssetCommandHandler(
         UserId userId = userIdResult.Value;
         ImageAssetId assetId = assetIdResult.Value;
 
-        ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId, userId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId, userId, cancellationToken);
         if (asset is null) {
             return Result.Failure(ImageErrors.NotFound(request.AssetId));
         }
 
-        DeleteImageAssetResult cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+        DeleteImageAssetResult cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
         if (cleanupResult.Deleted) {
             return Result.Success();
         }

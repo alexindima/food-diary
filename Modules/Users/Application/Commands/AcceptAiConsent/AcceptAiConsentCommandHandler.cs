@@ -13,20 +13,20 @@ public sealed class AcceptAiConsentCommandHandler(IUserContextService userContex
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
 
         User user = userResult.Value;
         user.AcceptAiConsent();
-        await userContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(user, cancellationToken);
 
         return Result.Success();
     }

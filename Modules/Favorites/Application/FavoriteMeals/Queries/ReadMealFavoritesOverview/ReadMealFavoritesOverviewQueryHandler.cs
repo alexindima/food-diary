@@ -12,8 +12,7 @@ public sealed class ReadMealFavoritesOverviewQueryHandler(IFavoriteMealReadModel
         UserId userId = request.UserId;
         int limit = request.Limit;
         (IReadOnlyList<FavoriteMealReadModel> favorites, int totalItems) = await favoriteMealReadModelRepository
-            .GetOverviewReadModelsAsync(userId, limit, cancellationToken)
-            .ConfigureAwait(false);
+            .GetOverviewReadModelsAsync(userId, limit, cancellationToken);
 
         return ([.. favorites.Select(ToMealModel)], totalItems);
     }

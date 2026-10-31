@@ -36,7 +36,7 @@ public sealed class CreateCycleCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleModel>(userIdResult);
         }
@@ -45,7 +45,7 @@ public sealed class CreateCycleCommandHandler(
         CycleProfile? existing = await cycleRepository.GetCurrentAsync(
             userId,
             includeDetails: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (existing is not null) {
             existing.UpdateSettings(new CycleProfileSettings(
@@ -66,7 +66,7 @@ public sealed class CreateCycleCommandHandler(
             existing.GrantConsent(CycleConsentPurpose.CycleTracking, nowUtc);
             ApplyOptionalConsents(existing, command, nowUtc);
 
-            await cycleRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+            await cycleRepository.UpdateAsync(existing, cancellationToken);
             CyclePredictionsModel existingPredictions = CyclePredictionService.CalculatePredictions(
                 existing,
                 currentDate: currentDate, timeProvider: timeProvider);
@@ -94,7 +94,7 @@ public sealed class CreateCycleCommandHandler(
 
         ApplyOptionalConsents(profile, command, createdAtUtc);
 
-        profile = await cycleRepository.AddAsync(profile, cancellationToken).ConfigureAwait(false);
+        profile = await cycleRepository.AddAsync(profile, cancellationToken);
 
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(
             profile,

@@ -17,7 +17,7 @@ public sealed class UpdateAchievementDefinitionCommandHandler(IAchievementDefini
         Guid id = request.Id;
         AchievementDefinitionUpdateInput input = request.Input;
         var definitionId = new AchievementDefinitionId(id);
-        AchievementDefinition? definition = await store.GetByIdTrackingAsync(definitionId, cancellationToken).ConfigureAwait(false);
+        AchievementDefinition? definition = await store.GetByIdTrackingAsync(definitionId, cancellationToken);
         if (definition is null) {
             return Result.Failure<AchievementDefinitionAdminModel>(AchievementDefinitionErrors.NotFound(id));
         }
@@ -35,7 +35,7 @@ public sealed class UpdateAchievementDefinitionCommandHandler(IAchievementDefini
             definition.UpdateTarget(
                 input.Category, AchievementTarget.FromFields(metric.Value, input.Threshold), input.TitleRu, input.TitleEn,
                 input.DescriptionRu, input.DescriptionEn, input.Icon, input.SortOrder, input.IsActive);
-            await store.UpdateAsync(definition, cancellationToken).ConfigureAwait(false);
+            await store.UpdateAsync(definition, cancellationToken);
             return Result.Success(ToModel(definition));
         } catch (ArgumentException exception) {
             return Result.Failure<AchievementDefinitionAdminModel>(Errors.Validation.Invalid("definition", exception.Message));

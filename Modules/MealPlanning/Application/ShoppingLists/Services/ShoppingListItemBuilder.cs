@@ -38,7 +38,7 @@ public static class ShoppingListItemBuilder {
 
         IReadOnlyList<ProductId> productIds = productIdsResult.Value;
 
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
         if (products.Count == productIds.Count) {
             return BuildNormalizedItems(items, products);
         }

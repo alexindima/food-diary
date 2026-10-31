@@ -301,7 +301,7 @@
       "reason": "Reviewed current owner persistence, dependency matrix, migration pair, runtime helpers and browser tests. Added owner-scoped atomic revalidation keeps proof, expiry and revocation fences; no new host/provider, aggregate write edge or schema rewrite is introduced. Runtime readiness now proves a real HttpOnly cookie instead of JavaScript token seeding. Existing generic workflow limitations and verification obligations remain accurate; rendered desktop/phone sign-in and scoped logout were observed.",
       "baseRef": "HEAD",
       "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:51.8912260Z"
+      "reviewedAtUtc": "2026-10-25T21:37:51.891226Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -330,14 +330,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "01276fe30f2aa2f18fe5e6f14a3faead5e1d2266d40654518d8e831b1ba945dd",
-          "reviewReason": "Reviewed the additive Notifications POST read-status contract: requests are authenticated and bounded to 1-100 nonempty IDs, responses expose only requested read IDs owned by the current user, and existing routes, status codes and payloads are preserved. The real host regenerated openapi-full-contract.json and the user SDK; six transport/OpenAPI checks and SDK contract tests passed. The general compatibility workflow remains accurate."
+          "sha256": "0416170332c5fbc220fadc528ff0166b8d28f84c58ef2dd9fa81dc51057d46cf",
+          "reviewReason": "Reviewed the actual OpenAPI delta: one additive admin POST for selected-user test scheduling, reusing unchanged request/response schemas. Existing operations, properties and documented responses are unchanged; SDK export and HTTP snapshot tests passed. The compatibility workflow remains accurate."
         }
       ],
-      "reason": "Reviewed the additive Notifications POST read-status contract: requests are authenticated and bounded to 1-100 nonempty IDs, responses expose only requested read IDs owned by the current user, and existing routes, status codes and payloads are preserved. The real host regenerated openapi-full-contract.json and the user SDK; six transport/OpenAPI checks and SDK contract tests passed. The general compatibility workflow remains accurate.",
+      "reason": "Reviewed the actual OpenAPI delta: one additive admin POST for selected-user test scheduling, reusing unchanged request/response schemas. Existing operations, properties and documented responses are unchanged; SDK export and HTTP snapshot tests passed. The compatibility workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b4e461ce14488eea9a26cb449facac76dbb8b71c",
-      "reviewedAtUtc": "2026-10-31T17:05:10.0490271Z"
+      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
+      "reviewedAtUtc": "2026-10-31T19:29:06.0366887Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -424,14 +424,39 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
-          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
+          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
+          "sha256": "265e9c0941094d989aea9e17758211102f8fb1ada6e868f4eb908716a3acd69a",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "169c3db38a44f5af518e4f2a75b4f0a4b13e3188fbf027824793c7cb6c1123d7",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+          "sha256": "32ac9cfcabede42c0dbecac581887cdabea871e8ae2481ca08228c71fd17ab87",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "14ddad5765cf9862b11280e00b6d34788cb6daa0b2b28f424a896b0b7cbf92b9",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/WikiContextSearchEvaluationRunner.cs",
+          "sha256": "03498a4786ce2d643a1f5169d9ac8a4ad6993829d21292e24ec32302ebf4436e",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
+      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
-      "reviewedAtUtc": "2026-10-31T18:12:21.9293887Z"
+      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
+      "reviewedAtUtc": "2026-10-31T19:38:23.5959716Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1305,14 +1330,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
-          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
+          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
+      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
-      "reviewedAtUtc": "2026-10-31T18:12:22.2807773Z"
+      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
+      "reviewedAtUtc": "2026-10-31T19:38:24.3153558Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1614,14 +1639,29 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "61b8c7893ef20cf397eafcac8805f4d9e575ea86da3e1e097035790c0df19784",
-          "reviewReason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged."
+          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
+          "sha256": "169c3db38a44f5af518e4f2a75b4f0a4b13e3188fbf027824793c7cb6c1123d7",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
+          "sha256": "32ac9cfcabede42c0dbecac581887cdabea871e8ae2481ca08228c71fd17ab87",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+          "sha256": "5dee837eda9979bf9aa855bf75cfa5b60f9b47ce6d94d805e6882f8ce430b293",
+          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the bounded reversal of the extra Shared MailRelay integration prefix after the existing negative module-layer fixture detected broader affinity. Generic integration scope returns to its original contract; the only retained ranking change requires the GetNotifications handler identity for feed intent. Candidate limits, frozen corpora, thresholds, SQL reader implementation, security abstention and historical benchmark measurements remain unchanged.",
+      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "1d25c34fc6375e043fd2a529bf5ec730970f8912",
-      "reviewedAtUtc": "2026-10-31T18:12:22.6151907Z"
+      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
+      "reviewedAtUtc": "2026-10-31T19:38:23.953469Z"
     },
     {
       "pageId": "workflow.review-diff",

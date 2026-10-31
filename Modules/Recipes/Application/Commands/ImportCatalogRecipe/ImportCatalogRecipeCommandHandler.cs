@@ -18,7 +18,7 @@ public sealed class ImportCatalogRecipeCommandHandler(
         if (item.Id == Guid.Empty) {
             return Report(item.Id, "invalid", ["Id must not be empty."]);
         }
-        bool? isPublic = await repository.CatalogIdIsPublicAsync(item.Id, cancellationToken).ConfigureAwait(false);
+        bool? isPublic = await repository.CatalogIdIsPublicAsync(item.Id, cancellationToken);
         if (isPublic is false) {
             return Report(item.Id, "invalid", ["This ID cannot be imported."]);
         }
@@ -38,14 +38,14 @@ public sealed class ImportCatalogRecipeCommandHandler(
             LanguageConfirmed = item.LanguageConfirmed,
             CatalogImportId = item.Id,
         };
-        ValidationResult validation = await validator.ValidateAsync(create, cancellationToken).ConfigureAwait(false);
+        ValidationResult validation = await validator.ValidateAsync(create, cancellationToken);
         if (!validation.IsValid) {
             return Report(item.Id, "invalid", validation.Errors.Select(error => $"{error.PropertyName}: {error.ErrorMessage}").ToArray());
         }
         if (request.Preview) {
             return Report(item.Id, "ready", []);
         }
-        Result<RecipeModel> created = await sender.Send(create, cancellationToken).ConfigureAwait(false);
+        Result<RecipeModel> created = await sender.Send(create, cancellationToken);
         return created.IsSuccess ? Report(item.Id, "imported", []) : Result.Failure<CatalogRecipeImportResult>(created.Error);
     }
 

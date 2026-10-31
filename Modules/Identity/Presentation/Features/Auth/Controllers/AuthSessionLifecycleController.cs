@@ -71,12 +71,12 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
         BrowserSessionCookieService browserCookies = HttpContext.RequestServices.GetRequiredService<BrowserSessionCookieService>();
         if (ImpersonationCookieService.HasContext(HttpContext)) {
             await HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>()
-                .DeleteAsync(HttpContext, HttpContext.RequestAborted).ConfigureAwait(false);
+                .DeleteAsync(HttpContext, HttpContext.RequestAborted);
             return NoContent();
         }
         if (HttpContext.Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" &&
             browserCookies.Read(HttpContext) is { } browserCredential) {
-            IActionResult result = await HandleNoContent(browserCredential.ToBrowserLogoutCommand()).ConfigureAwait(false);
+            IActionResult result = await HandleNoContent(browserCredential.ToBrowserLogoutCommand());
             if (result is NoContentResult) {
                 browserCookies.Delete(HttpContext);
             }
@@ -89,7 +89,7 @@ public sealed class AuthSessionLifecycleController(ISender mediator) : BaseApiCo
             return Result.Failure(new Error(selectionError, "The selected session could not be verified.", ErrorKind.Unauthorized))
                 .ToNoContentActionResult(this);
         }
-        IActionResult tokenResult = await HandleNoContent(refreshToken.ToLogoutCommand()).ConfigureAwait(false);
+        IActionResult tokenResult = await HandleNoContent(refreshToken.ToLogoutCommand());
         if (tokenResult is NoContentResult) {
             refreshTokenCookies.Delete(HttpContext);
         }

@@ -21,26 +21,26 @@ public sealed class EndFastingCommandHandler(
         Result<UserId> userIdResult = await FastingCurrentUserResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return FastingCurrentUserResolver.ToSessionFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
-        FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken);
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         FastingEndPolicy.End(plan, current, now);
-        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
-        await fastingPlanRepository.UpdateAsync(plan, cancellationToken).ConfigureAwait(false);
+        await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken);
+        await fastingPlanRepository.UpdateAsync(plan, cancellationToken);
 
         return Result.Success(current.ToModel(plan));
     }

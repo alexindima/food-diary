@@ -26,13 +26,13 @@ public sealed class UpdateDesiredWeightCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<UserDesiredWeightModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserDesiredWeightModel>(userResult.Error);
         }
@@ -46,8 +46,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
 
         DateTime nowUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
         double? trackedWeight = await currentWeightProvider
-            .GetCurrentWeightAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetCurrentWeightAsync(userId, cancellationToken);
         double? activeGoalStartWeight = activeGoal?.StartWeightKg;
         double? currentWeight = trackedWeight ?? currentUser.WeightKg ?? activeGoalStartWeight;
         if (command.DesiredWeightKg.HasValue) {
@@ -59,7 +58,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
         } else {
             currentUser.CancelWeightGoalWithMeasurement(nowUtc, activeGoal is null ? null : MeasuredWeightKg.FromGoalValue(currentWeight!.Value));
         }
-        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken);
 
         activeGoal = currentUser.WeightGoals.SingleOrDefault(
             goal => goal.Status == WeightGoalStatus.Active);

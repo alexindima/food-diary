@@ -15,22 +15,22 @@ public sealed partial class MailRelayQueueStore(
     private NpgsqlDataSource DataSource => dataSource;
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(MailRelayQueueSchema.EnsureSchemaSql, connection);
-            await using (command.ConfigureAwait(false)) {
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await using (command) {
+                await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
     }
 
     private async Task ExecuteStatusCommandAsync(string sql, Guid id, CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("id", id);
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
     }
@@ -51,7 +51,7 @@ public sealed partial class MailRelayQueueStore(
         NpgsqlDataReader reader,
         CancellationToken cancellationToken,
         string missingRowMessage) {
-        if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+        if (!await reader.ReadAsync(cancellationToken)) {
             throw new InvalidOperationException(missingRowMessage);
         }
     }

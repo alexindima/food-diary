@@ -18,14 +18,13 @@ internal sealed class GetWearableDailySummaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WearableDailySummaryModel>(userIdResult);
         }
 
         IReadOnlyList<WearableSyncEntryReadModel> entries = await syncRepository
-            .GetDailySummaryReadModelsAsync(userIdResult.Value, query.Date, cancellationToken)
-            .ConfigureAwait(false);
+            .GetDailySummaryReadModelsAsync(userIdResult.Value, query.Date, cancellationToken);
         return Result.Success(WearableSummaryCalculator.Calculate(query.Date, entries.Select(entry => (entry.DataType, entry.Value))));
     }
 }

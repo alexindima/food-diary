@@ -15,20 +15,20 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
         if (!validators.Any()) {
-            return await next(cancellationToken).ConfigureAwait(false);
+            return await next(cancellationToken);
         }
 
         var context = new ValidationContext<TRequest>(request);
 
         ValidationResult[] validationResults = await Task.WhenAll(
-            validators.Select(v => v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
+            validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
         ValidationFailure[] errors = [.. validationResults
             .Where(r => !r.IsValid)
             .SelectMany(r => r.Errors)];
 
         if (errors.Length == 0) {
-            return await next(cancellationToken).ConfigureAwait(false);
+            return await next(cancellationToken);
         }
 
         var groupedDetails = errors

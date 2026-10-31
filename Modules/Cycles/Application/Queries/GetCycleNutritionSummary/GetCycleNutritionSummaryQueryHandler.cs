@@ -26,7 +26,7 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleNutritionSummaryModel?>(userIdResult);
         }
@@ -59,7 +59,7 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
             }
         }
 
-        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        CycleProfileReadModel? profile = await cycleRepository.GetCurrentReadModelAsync(userIdResult.Value, cancellationToken);
         if (profile is null) {
             return Result.Success<CycleNutritionSummaryModel?>(value: null);
         }
@@ -72,7 +72,7 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
             to,
             quantizationDays: 1,
             cancellationToken,
-            calendarZone).ConfigureAwait(false);
+            calendarZone);
         return nutrition.IsFailure
             ? Result.Failure<CycleNutritionSummaryModel?>(nutrition.Error)
             : Result.Success<CycleNutritionSummaryModel?>(CycleNutritionSummaryCalculator.BuildSummary(profile, nutrition.Value, query.DateFrom, query.DateTo, calendarZone));

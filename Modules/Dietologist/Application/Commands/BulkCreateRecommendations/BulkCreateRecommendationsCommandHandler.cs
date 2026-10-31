@@ -21,7 +21,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
         BulkCreateRecommendationsCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> dietologistIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            command.UserId, userContextService, cancellationToken);
         if (dietologistIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<BulkRecommendationResultModel>(dietologistIdResult);
         }
@@ -33,7 +33,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
             dietologistId,
             idempotencyKey,
             clientIds,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         var existingByClient = existing.ToDictionary(
             dispatch => dispatch.ClientUserId,
             dispatch => dispatch.RecommendationId);
@@ -46,7 +46,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
                 command.Text,
                 idempotencyKey,
                 existingByClient,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             results.Add(result);
         }
 
@@ -73,7 +73,7 @@ public sealed class BulkCreateRecommendationsCommandHandler(
             invitationRepository,
             dietologistId,
             clientId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (accessResult.IsFailure) {
             return new(
                 ClientUserId: clientId.Value,
@@ -94,10 +94,10 @@ public sealed class BulkCreateRecommendationsCommandHandler(
         }
 
         var recommendation = Recommendation.Create(dietologistId, clientId, text);
-        await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await recommendationRepository.AddAsync(recommendation, cancellationToken);
         await dispatchWriteRepository.AddAsync(
             RecommendationBulkDispatch.Create(dietologistId, clientId, recommendation.Id, idempotencyKey),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return new(
             ClientUserId: clientId.Value,
             Succeeded: true,

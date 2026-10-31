@@ -47,7 +47,7 @@ internal sealed class UsdaFoodDetailCache {
         _entries.TryRemove(key, out _);
         Lazy<Task<UsdaFoodDetailModel?>>? pending;
         while (!_inFlight.TryGetValue(key, out pending)) {
-            await _inFlightAdmission.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await _inFlightAdmission.WaitAsync(cancellationToken);
             lock (_inFlight) {
                 if (_inFlight.TryGetValue(key, out pending)) {
                     _inFlightAdmission.Release();
@@ -77,7 +77,7 @@ internal sealed class UsdaFoodDetailCache {
             TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler.Default);
 
-        return await pendingTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return await pendingTask.WaitAsync(cancellationToken);
     }
 
     private async Task<UsdaFoodDetailModel?> CreateAndCacheAsync(
@@ -86,7 +86,7 @@ internal sealed class UsdaFoodDetailCache {
         using var sharedDeadline = new CancellationTokenSource(_sharedOperationTimeout, _timeProvider);
         UsdaFoodDetailLookupResult result;
         try {
-            result = await factory(sharedDeadline.Token).ConfigureAwait(false);
+            result = await factory(sharedDeadline.Token);
         } catch (OperationCanceledException) when (sharedDeadline.IsCancellationRequested) {
             return null;
         }

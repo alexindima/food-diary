@@ -25,7 +25,7 @@ public sealed class GetWeightHistoryPageSummaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WeightHistoryPageSummaryModel>(userIdResult);
         }
@@ -39,14 +39,13 @@ public sealed class GetWeightHistoryPageSummaryQueryHandler(
         DateTime dateFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime dateTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
         Result<WeightHistoryProfileModel> profileResult = await userProfileReadService
-            .GetWeightHistoryProfileAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetWeightHistoryProfileAsync(userId, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<WeightHistoryPageSummaryModel>(profileResult.Error);
         }
 
-        IReadOnlyList<WeightEntryModel> entries = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WeightEntrySummaryModel> summary = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntryModel> entries = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken);
+        IReadOnlyList<WeightEntrySummaryModel> summary = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken);
         WeightHistoryProfileModel profile = profileResult.Value;
         return Result.Success(new WeightHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }

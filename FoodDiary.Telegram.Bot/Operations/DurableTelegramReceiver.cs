@@ -13,14 +13,14 @@ internal sealed class DurableTelegramReceiver(ITelegramBotClient botClient,
         while (!cancellationToken.IsCancellationRequested) {
             try {
                 Update[] updates = await botClient.GetUpdates(offset: NextOffset, timeout: 30,
-                    allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery], cancellationToken: cancellationToken).ConfigureAwait(false);
-                await ProcessBatchAsync(updates, cancellationToken).ConfigureAwait(false);
+                    allowedUpdates: [UpdateType.Message, UpdateType.CallbackQuery], cancellationToken: cancellationToken);
+                await ProcessBatchAsync(updates, cancellationToken);
                 retrySeconds = 2;
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 return;
             } catch (Exception error) {
                 logger.LogWarning("Telegram intake paused after {ErrorType}; the unpersisted update remains unacknowledged.", error.GetType().Name);
-                await Task.Delay(TimeSpan.FromSeconds(retrySeconds), timeProvider, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(retrySeconds), timeProvider, cancellationToken);
                 retrySeconds = Math.Min(retrySeconds * 2, 30);
             }
         }
@@ -31,7 +31,7 @@ internal sealed class DurableTelegramReceiver(ITelegramBotClient botClient,
             if (NextOffset.HasValue && update.Id < NextOffset.Value) {
                 continue;
             }
-            await persist(update, cancellationToken).ConfigureAwait(false);
+            await persist(update, cancellationToken);
             NextOffset = checked(update.Id + 1);
         }
     }

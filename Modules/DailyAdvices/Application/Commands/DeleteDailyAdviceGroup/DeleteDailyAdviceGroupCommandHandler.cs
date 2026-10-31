@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.DailyAdvices.Application.Commands.DeleteDailyAdviceG
 public sealed class DeleteDailyAdviceGroupCommandHandler(IDailyAdviceWriteRepository repository)
     : IRequestHandler<DeleteDailyAdviceGroupCommand, Result> {
     public async Task<Result> Handle(DeleteDailyAdviceGroupCommand request, CancellationToken cancellationToken) {
-        IReadOnlyList<DailyAdvice> items = await repository.GetGroupAsync(request.Id, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdvice> items = await repository.GetGroupAsync(request.Id, cancellationToken);
         if (items.Count == 0) {
             return Result.Failure(DailyAdviceErrors.NotFound());
         }

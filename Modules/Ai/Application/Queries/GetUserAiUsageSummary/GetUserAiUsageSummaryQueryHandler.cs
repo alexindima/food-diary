@@ -27,7 +27,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserAiProfileModel> contextResult = await userProfileReadService.GetAiProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserAiProfileModel> contextResult = await userProfileReadService.GetAiProfileAsync(userId, cancellationToken);
         if (contextResult.IsFailure) {
             return Result.Failure<UserAiUsageModel>(contextResult.Error);
         }
@@ -38,7 +38,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
             userId,
             monthStartUtc,
             monthEndUtc,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(new UserAiUsageModel(
             context.InputTokenLimit,

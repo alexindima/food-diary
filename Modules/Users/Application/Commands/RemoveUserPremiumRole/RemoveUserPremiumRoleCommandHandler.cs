@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Users.Application.Commands.RemoveUserPremiumRole;
 public sealed class RemoveUserPremiumRoleCommandHandler(IUserRoleMembershipService roleMembershipService) : IRequestHandler<RemoveUserPremiumRoleCommand, Unit> {
     public async Task<Unit> Handle(RemoveUserPremiumRoleCommand request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
-        await roleMembershipService.RemoveRoleAsync(userId, RoleNames.Premium, cancellationToken).ConfigureAwait(false);
+        await roleMembershipService.RemoveRoleAsync(userId, RoleNames.Premium, cancellationToken);
         return Unit.Value;
     }
 

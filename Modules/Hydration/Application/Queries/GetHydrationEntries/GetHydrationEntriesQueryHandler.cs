@@ -19,15 +19,14 @@ public sealed class GetHydrationEntriesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<HydrationEntryModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
         DateTime dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
-        IReadOnlyList<HydrationEntryModel> response = await sender.Send(new ReadHydrationEntriesQuery(userId, dateUtc), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<HydrationEntryModel> response = await sender.Send(new ReadHydrationEntriesQuery(userId, dateUtc), cancellationToken);
         return Result.Success<IReadOnlyList<HydrationEntryModel>>(response);
     }
 }

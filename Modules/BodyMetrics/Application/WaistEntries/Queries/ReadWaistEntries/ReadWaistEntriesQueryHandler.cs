@@ -21,7 +21,7 @@ public sealed class ReadWaistEntriesQueryHandler(IWaistEntryReadModelRepository 
             dateTo,
             limit,
             descending,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. entries.Select(entry => entry.ToModel())];
 

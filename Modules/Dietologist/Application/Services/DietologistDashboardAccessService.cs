@@ -14,8 +14,7 @@ public sealed class DietologistDashboardAccessService(
         UserId clientUserId,
         CancellationToken cancellationToken = default) {
         DietologistInvitationReadModel? invitation = await invitationRepository
-            .GetActiveByClientAndDietologistReadModelAsync(clientUserId, dietologistUserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetActiveByClientAndDietologistReadModelAsync(clientUserId, dietologistUserId, cancellationToken);
 
         if (invitation is null) {
             return Result.Failure<DietologistPermissionsReadModel>(DietologistErrors.AccessDenied);

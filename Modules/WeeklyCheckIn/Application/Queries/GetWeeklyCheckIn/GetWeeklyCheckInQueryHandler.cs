@@ -34,13 +34,13 @@ public sealed class GetWeeklyCheckInQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WeeklyCheckInModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserWeeklyCheckInProfileModel> profileResult = await userProfileReadService.GetWeeklyCheckInProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserWeeklyCheckInProfileModel> profileResult = await userProfileReadService.GetWeeklyCheckInProfileAsync(userId, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(profileResult.Error);
         }
@@ -83,17 +83,17 @@ public sealed class GetWeeklyCheckInQueryHandler(
         }
 
         profileResult = await userProfileReadService.GetWeeklyCheckInProfileAsync(userId, cancellationToken,
-            DateOnly.FromDateTime(thisWeekStart), DateOnly.FromDateTime(thisWeekEnd)).ConfigureAwait(false);
+            DateOnly.FromDateTime(thisWeekStart), DateOnly.FromDateTime(thisWeekEnd));
         if (profileResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(profileResult.Error);
         }
         UserWeeklyCheckInProfileModel profile = profileResult.Value;
-        Result<WeekSummaryModel> thisWeekSummaryResult = await LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, timeZone, query.TimeZoneId, cancellationToken).ConfigureAwait(false);
+        Result<WeekSummaryModel> thisWeekSummaryResult = await LoadWeekSummaryAsync(userId, thisWeekStart, thisWeekEnd, timeZone, query.TimeZoneId, cancellationToken);
         if (thisWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(thisWeekSummaryResult.Error);
         }
 
-        Result<WeekSummaryModel> lastWeekSummaryResult = await LoadWeekSummaryAsync(userId, lastWeekStart, lastWeekEnd, timeZone, query.TimeZoneId, cancellationToken).ConfigureAwait(false);
+        Result<WeekSummaryModel> lastWeekSummaryResult = await LoadWeekSummaryAsync(userId, lastWeekStart, lastWeekEnd, timeZone, query.TimeZoneId, cancellationToken);
         if (lastWeekSummaryResult.IsFailure) {
             return Result.Failure<WeeklyCheckInModel>(lastWeekSummaryResult.Error);
         }
@@ -125,7 +125,7 @@ public sealed class GetWeeklyCheckInQueryHandler(
             mealFrom,
             mealTo,
             QuantizationDays: 1, TimeZoneId: timeZoneId),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (nutritionResult.IsFailure) {
             return Result.Failure<WeekSummaryModel>(nutritionResult.Error);
         }
@@ -133,14 +133,11 @@ public sealed class GetWeeklyCheckInQueryHandler(
         int mealCount = await sender.Send(new ReadMealCountQuery(
             userId,
             new MealQueryFilters(DateFrom: mealFrom, DateTo: mealTo)),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
-        IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)
-            .ConfigureAwait(false);
-        IReadOnlyList<WaistEntryModel> waists = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken)
-            .ConfigureAwait(false);
-        IReadOnlyList<(DateTime Date, int TotalMl)> hydration = await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dateFrom, dateTo), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken);
+        IReadOnlyList<WaistEntryModel> waists = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, Limit: null, Descending: false), cancellationToken);
+        IReadOnlyList<(DateTime Date, int TotalMl)> hydration = await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dateFrom, dateTo), cancellationToken);
 
         return Result.Success(WeeklyCheckInCalculator.BuildSummary(
             nutritionResult.Value,

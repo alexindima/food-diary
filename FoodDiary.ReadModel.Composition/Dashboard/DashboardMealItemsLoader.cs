@@ -9,7 +9,7 @@ namespace FoodDiary.ReadModel.Composition.Dashboard;
 internal sealed class DashboardMealItemsLoader(IMealItemDisplayReadService reader) {
     public async Task<ILookup<MealId, DashboardMealItemReadModel>> LoadAsync(
         UserId userId, IReadOnlyCollection<MealId> mealIds, CancellationToken cancellationToken) {
-        IReadOnlyList<MealItemDisplayReadModel> items = await reader.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealItemDisplayReadModel> items = await reader.GetByMealIdsAsync(userId, mealIds, cancellationToken);
         return items.Select(item => new DashboardMealItemReadModel(
             item.Id,
             item.MealId,

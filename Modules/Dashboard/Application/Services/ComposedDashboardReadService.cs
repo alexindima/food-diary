@@ -45,8 +45,7 @@ internal sealed class ComposedDashboardReadService(
         if (sections.IncludeStatistics) {
             if (periodDays == 1) {
                 weeklyStatistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone)
-                    .ConfigureAwait(false);
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone);
                 if (weeklyStatistics.IsSuccess) {
                     statistics = Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([
                         .. weeklyStatistics.Value.Where(bucket => bucket.DateFrom >= dayStart && bucket.DateFrom <= dayEnd),
@@ -54,15 +53,13 @@ internal sealed class ComposedDashboardReadService(
                 }
             } else {
                 statistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken, calendar?.TimeZone)
-                    .ConfigureAwait(false);
+                    .GetStatisticsAsync(userId, dayStart, dayEnd, periodDays, cancellationToken, calendar?.TimeZone);
                 if (statistics.IsFailure) {
                     return Result.Failure<DashboardReadModel>(statistics.Error);
                 }
 
                 weeklyStatistics = await statisticsReadService
-                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone)
-                    .ConfigureAwait(false);
+                    .GetStatisticsAsync(userId, weeklyFrom, dayEnd, 1, cancellationToken, calendar?.TimeZone);
             }
         }
 
@@ -71,7 +68,7 @@ internal sealed class ComposedDashboardReadService(
         }
 
         Result<DashboardMealsReadModel> meals = sections.IncludeMeals
-            ? await mealsReadService.GetMealsAsync(userId, page, pageSize, dayStart, dayEnd, cancellationToken).ConfigureAwait(false)
+            ? await mealsReadService.GetMealsAsync(userId, page, pageSize, dayStart, dayEnd, cancellationToken)
             : Result.Success(new DashboardMealsReadModel([], page, pageSize, 0, 0));
         if (meals.IsFailure) {
             return Result.Failure<DashboardReadModel>(meals.Error);
@@ -86,7 +83,7 @@ internal sealed class ComposedDashboardReadService(
             sections.IncludeWeight,
             sections.IncludeWaist,
             sections.IncludeHydration,
-            cancellationToken, calendar).ConfigureAwait(false);
+            cancellationToken, calendar);
 
         return Result.Success(new DashboardReadModel(statistics.Value, weeklyStatistics.Value, body, meals.Value));
     }

@@ -19,7 +19,7 @@ public sealed class DietologistEmailSender(
         string locale = NormalizeLanguage(message.Language);
         string clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
         string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
-        EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
+        EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken);
         (string fallbackSubject, string fallbackHtml, string fallbackText) = CreateFallbackContent(locale, clientName, link, brand);
 
         string subject = template is null
@@ -32,7 +32,7 @@ public sealed class DietologistEmailSender(
             ? fallbackText
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
-        await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+        await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken);
     }
 
     private string BuildInvitationLink(Guid invitationId) {
@@ -155,6 +155,6 @@ public sealed class DietologistEmailSender(
             htmlBody,
             string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: "dietologist_invitation");
 
-        await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailOutbox.EnqueueAsync(message, cancellationToken);
     }
 }

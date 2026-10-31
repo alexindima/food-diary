@@ -22,29 +22,29 @@ public sealed class ToggleRecipeLikeCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeLikeStatusModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
         RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
-            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken);
 
         if (recipe is null) {
             return Result.Failure<RecipeLikeStatusModel>(RecipeErrors.NotFound(command.RecipeId));
         }
 
         RecipeLike? existingLike = await likeRepository.GetByUserAndRecipeAsync(
-            userIdResult.Value, recipeId, cancellationToken).ConfigureAwait(false);
-        int currentTotalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, recipeId, cancellationToken);
+        int currentTotalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken);
 
         if (existingLike is not null && !command.IsLiked) {
-            await likeRepository.DeleteAsync(existingLike, cancellationToken).ConfigureAwait(false);
+            await likeRepository.DeleteAsync(existingLike, cancellationToken);
             currentTotalLikes = Math.Max(0, currentTotalLikes - 1);
         } else if (existingLike is null && command.IsLiked) {
             var like = RecipeLike.Create(userIdResult.Value, recipeId);
-            await likeRepository.AddAsync(like, cancellationToken).ConfigureAwait(false);
+            await likeRepository.AddAsync(like, cancellationToken);
             currentTotalLikes++;
         }
 

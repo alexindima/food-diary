@@ -10,12 +10,12 @@ public sealed class ReadCurrentFastingQueryHandler(IFastingOccurrenceReadModelRe
     IFastingCheckInReadModelRepository fastingCheckInRepository) : IQueryHandler<ReadCurrentFastingQuery, FastingSessionModel?> {
     public async Task<FastingSessionModel?> Handle(ReadCurrentFastingQuery request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
-        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken);
         if (current is null) {
             return null;
         }
 
-        IReadOnlyList<FastingCheckInReadModel> checkIns = await GetCheckInsAsync(current, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingCheckInReadModel> checkIns = await GetCheckInsAsync(current, cancellationToken);
         return current.ToModel(current.Plan, checkIns);
     }
 

@@ -44,7 +44,7 @@ public sealed class UpdateUserCommandHandler(
         string? Image);
 
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
-        Result<UpdateUserValues> valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UpdateUserValues> valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<UserModel>(valuesResult.Error);
         }
@@ -53,8 +53,8 @@ public sealed class UpdateUserCommandHandler(
         ImageAssetId? oldAssetId = values.User.ProfileImageAssetId;
         ApplyUpdates(values.User, command, values);
 
-        await userContextService.UpdateUserAsync(values.User, cancellationToken).ConfigureAwait(false);
-        await CleanupOldProfileImageAssetAsync(oldAssetId, values.User.ProfileImageAssetId, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(values.User, cancellationToken);
+        await CleanupOldProfileImageAssetAsync(oldAssetId, values.User.ProfileImageAssetId, cancellationToken);
 
         return Result.Success(values.User.ToModel());
     }
@@ -65,13 +65,13 @@ public sealed class UpdateUserCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<UpdateUserValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(userResult.Error);
         }
@@ -82,7 +82,7 @@ public sealed class UpdateUserCommandHandler(
             return Result.Failure<UpdateUserValues>(preferencesResult.Error);
         }
 
-        Result<ProfileImageValues> profileImageResult = await ResolveProfileImageAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        Result<ProfileImageValues> profileImageResult = await ResolveProfileImageAsync(command, userId, cancellationToken);
         if (profileImageResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(profileImageResult.Error);
         }
@@ -164,7 +164,7 @@ public sealed class UpdateUserCommandHandler(
         Result<string?> profileImageAssetResult = await profileImageService.ResolveOptionalUrlAsync(
             newAssetId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (profileImageAssetResult.IsFailure) {
             return Result.Failure<ProfileImageValues>(profileImageAssetResult.Error);
         }
@@ -230,7 +230,7 @@ public sealed class UpdateUserCommandHandler(
         ImageAssetId? newAssetId,
         CancellationToken cancellationToken) {
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
-            await profileImageService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
+            await profileImageService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
     }
 

@@ -12,7 +12,7 @@ public sealed class AdminImpersonationHandoffService(IAdminSsoCodeStore codeStor
     public async Task<string> CreateCodeAsync(string accessToken, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
         string code = GenerateCode();
-        await codeStore.StoreAsync(code, ValuePrefix + accessToken, CodeTtl, cancellationToken).ConfigureAwait(false);
+        await codeStore.StoreAsync(code, ValuePrefix + accessToken, CodeTtl, cancellationToken);
         return code;
     }
 
@@ -26,7 +26,7 @@ public sealed class AdminImpersonationHandoffService(IAdminSsoCodeStore codeStor
             return null;
         }
 
-        string? value = await codeStore.ConsumeAsync(normalizedCode, cancellationToken).ConfigureAwait(false);
+        string? value = await codeStore.ConsumeAsync(normalizedCode, cancellationToken);
         return value?.StartsWith(ValuePrefix, StringComparison.Ordinal) == true
             ? value[ValuePrefix.Length..]
             : null;

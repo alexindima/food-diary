@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 
 public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntryReadModelRepository, IWaistEntryWriteRepository {
     public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(entry, cancellationToken);
         return entry;
     }
 
@@ -34,7 +34,7 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<WaistEntry?> GetByDateAsync(
@@ -46,7 +46,7 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<IReadOnlyList<WaistEntryReadModel>> GetEntryReadModelsAsync(
@@ -80,7 +80,7 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
 
         return await query
             .Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -97,6 +97,6 @@ public sealed class WaistEntryRepository(DbSet<WaistEntry> entries) : IWaistEntr
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
             .Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

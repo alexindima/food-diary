@@ -34,13 +34,13 @@ public sealed class NodeTaskToolExecutor : ITaskToolExecutor {
         try {
             Task<string> output = ReadBoundedAsync(process.StandardOutput, linked.Token);
             Task<string> error = ReadBoundedAsync(process.StandardError, linked.Token);
-            await process.StandardInput.WriteAsync(JsonSerializer.Serialize(request, JsonOptions).AsMemory(), linked.Token).ConfigureAwait(false);
+            await process.StandardInput.WriteAsync(JsonSerializer.Serialize(request, JsonOptions).AsMemory(), linked.Token);
             process.StandardInput.Close();
-            await Task.WhenAll(process.WaitForExitAsync(linked.Token), output, error).ConfigureAwait(false);
+            await Task.WhenAll(process.WaitForExitAsync(linked.Token), output, error);
             if (process.ExitCode != 0) {
-                throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.TaskUnavailable, (await error.ConfigureAwait(false)).Trim());
+                throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.TaskUnavailable, (await error).Trim());
             }
-            using var document = JsonDocument.Parse(await output.ConfigureAwait(false));
+            using var document = JsonDocument.Parse(await output);
             return document.RootElement.Clone();
         } catch (OperationCanceledException) {
             if (timeout.IsCancellationRequested && !cancellationToken.IsCancellationRequested) {
@@ -58,7 +58,7 @@ public sealed class NodeTaskToolExecutor : ITaskToolExecutor {
         char[] buffer = new char[4096];
         StringBuilder output = new();
         while (true) {
-            int read = await reader.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+            int read = await reader.ReadAsync(buffer, cancellationToken);
             if (read == 0) { return output.ToString(); }
             if (output.Length + read > MaximumOutputCharacters) {
                 throw new DevelopmentMcpException(DevelopmentMcpErrorCodes.TaskUnavailable, "Task diagnostics exceeded the output bound.");

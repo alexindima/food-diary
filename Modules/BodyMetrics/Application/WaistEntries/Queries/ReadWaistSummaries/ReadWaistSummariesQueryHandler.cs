@@ -18,7 +18,7 @@ public sealed class ReadWaistSummariesQueryHandler(IWaistEntryReadModelRepositor
             userId,
             dateFrom,
             dateTo,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. TemporalRangePolicy.BuildDateBuckets(dateFrom, dateTo, quantizationDays)
             .Select(bucket => BuildResponse(bucket.Start, bucket.End, entries))];

@@ -18,7 +18,7 @@ public sealed class SearchRecommendationTemplatesQueryHandler(
         SearchRecommendationTemplatesQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            query.UserId, userContextService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationTemplateModel>>(userIdResult);
         }
@@ -31,7 +31,7 @@ public sealed class SearchRecommendationTemplatesQueryHandler(
             query.IncludeArchived,
             page,
             limit,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success<IReadOnlyList<RecommendationTemplateModel>>([.. templates.Select(template => template.ToModel())]);
     }
 }

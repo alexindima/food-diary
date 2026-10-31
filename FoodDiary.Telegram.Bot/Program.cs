@@ -35,7 +35,7 @@ builder.Services.AddHostedService<TelegramOperationWorker>();
 
 IHost app = builder.Build();
 
-await app.RunAsync().ConfigureAwait(false);
+await app.RunAsync();
 
 [ExcludeFromCodeCoverage]
 public partial class Program;

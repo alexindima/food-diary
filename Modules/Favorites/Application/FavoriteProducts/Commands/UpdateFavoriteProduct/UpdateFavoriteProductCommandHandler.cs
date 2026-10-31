@@ -22,8 +22,7 @@ public sealed class UpdateFavoriteProductCommandHandler(
         UpdateFavoriteProductCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<FavoriteProductModel>(userIdResult);
         }
@@ -43,14 +42,14 @@ public sealed class UpdateFavoriteProductCommandHandler(
             favoriteProductId,
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (favorite is null) {
             return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.NotFound(command.FavoriteProductId));
         }
 
         Result<FavoriteProductSourceModel> sourceResult = await sourceReadService
-            .GetAccessibleAsync(favorite.ProductId, userId, cancellationToken).ConfigureAwait(false);
+            .GetAccessibleAsync(favorite.ProductId, userId, cancellationToken);
         if (sourceResult.IsFailure) {
             return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.NotFound(command.FavoriteProductId));
         }
@@ -58,7 +57,7 @@ public sealed class UpdateFavoriteProductCommandHandler(
         favorite.UpdateName(command.Name);
         favorite.UpdatePreferredQuantity(command.PreferredPortionAmount is { } amount ? PreferredProductQuantity.FromAmount(amount) : null);
 
-        await favoriteProductRepository.UpdateAsync(favorite, cancellationToken).ConfigureAwait(false);
+        await favoriteProductRepository.UpdateAsync(favorite, cancellationToken);
         return Result.Success(favorite.ToModel(sourceResult.Value));
     }
 }

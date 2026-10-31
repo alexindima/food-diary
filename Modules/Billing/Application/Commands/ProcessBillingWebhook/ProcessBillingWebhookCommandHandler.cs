@@ -23,7 +23,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         Result<BillingWebhookEventModel?> webhookResult = await billingProvider.ParseWebhookEventAsync(
             request.Payload,
             request.SignatureHeader,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (webhookResult.IsFailure) {
             return Result.Failure(webhookResult.Error);
         }
@@ -41,7 +41,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         if (await billingWebhookEventRepository.ExistsAsync(
             billingProvider.Provider,
             webhookEvent.EventId,
-            cancellationToken).ConfigureAwait(false)) {
+            cancellationToken)) {
             return Result.Success();
         }
 
@@ -51,7 +51,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
                 request.Payload,
                 webhookEvent,
                 inboxEvent: null,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         }
 
         var inboxEvent = BillingWebhookEvent.CreateReceived(
@@ -65,7 +65,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         try {
             await billingTransactionRunner.ExecuteAsync(
                 ct => billingWebhookEventRepository.AddAsync(inboxEvent, ct),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         } catch (BillingWebhookEventAlreadyProcessedException) {
             return Result.Success();
         }

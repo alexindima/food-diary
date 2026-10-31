@@ -56,7 +56,7 @@ internal sealed class DashboardSectionDataLoader(
                 return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.DateTo), "Calendar dates are outside the supported range."));
             }
             Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-                .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken, goalsFrom, goalsTo).ConfigureAwait(false);
+                .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken, goalsFrom, goalsTo);
             if (userResult.IsFailure) {
                 return Result.Failure<DashboardBuildContext>(userResult.Error);
             }
@@ -66,7 +66,7 @@ internal sealed class DashboardSectionDataLoader(
         if (!LocalCalendar.TryResolve(request.TimeZoneId, request.TimeZoneOffsetMinutes, out TimeZoneInfo timeZone)) {
             return Result.Failure<DashboardBuildContext>(Errors.Validation.Invalid(nameof(request.TimeZoneId), "Unknown time zone."));
         }
-        return await CreateBuildContextAsync(request, userIdResult.Value, timeZone, cancellationToken).ConfigureAwait(false);
+        return await CreateBuildContextAsync(request, userIdResult.Value, timeZone, cancellationToken);
     }
 
     internal async Task<Result<DashboardBuildContext>> CreateBuildContextAsync(
@@ -113,8 +113,7 @@ internal sealed class DashboardSectionDataLoader(
         } else {
             (DateOnly goalsFrom, DateOnly goalsTo) = GetGoalRange(request);
             Result<DashboardUserContextModel> userResult = await dashboardUserContextService
-                .GetAccessibleDashboardUserAsync(userId, cancellationToken, goalsFrom, goalsTo)
-                .ConfigureAwait(false);
+                .GetAccessibleDashboardUserAsync(userId, cancellationToken, goalsFrom, goalsTo);
             if (userResult.IsFailure) {
                 return Result.Failure<DashboardBuildContext>(userResult.Error);
             }
@@ -171,7 +170,7 @@ internal sealed class DashboardSectionDataLoader(
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
         return context.Sections.IncludeAdvice
-            ? await sender.Send(new GetDailyAdviceQuery(context.UserId, context.Calendar.Date, context.Locale), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new GetDailyAdviceQuery(context.UserId, context.Calendar.Date, context.Locale), cancellationToken)
             : null;
     }
 
@@ -194,7 +193,7 @@ internal sealed class DashboardSectionDataLoader(
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
         return context.Sections.IncludeTdee
-            ? await sender.Send(new GetTdeeInsightQuery(request.UserId, DateOnly.FromDateTime(context.Calendar.Date), request.TimeZoneId, request.TimeZoneOffsetMinutes), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new GetTdeeInsightQuery(request.UserId, DateOnly.FromDateTime(context.Calendar.Date), request.TimeZoneId, request.TimeZoneOffsetMinutes), cancellationToken)
             : null;
     }
 
@@ -207,8 +206,7 @@ internal sealed class DashboardSectionDataLoader(
         }
 
         return await sender
-            .Send(new GetCurrentCycleQuery(request.UserId, DateOnly.FromDateTime(context.Calendar.Date)), cancellationToken)
-            .ConfigureAwait(false);
+            .Send(new GetCurrentCycleQuery(request.UserId, DateOnly.FromDateTime(context.Calendar.Date)), cancellationToken);
     }
 
 }

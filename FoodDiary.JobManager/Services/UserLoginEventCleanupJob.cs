@@ -29,8 +29,7 @@ public sealed class UserLoginEventCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await sender.Send(new CleanupLoginEventsCommand(cutoffUtc, settings.BatchSize), cancellationToken)
-                .ConfigureAwait(false);
+            totalDeletedCount = await sender.Send(new CleanupLoginEventsCommand(cutoffUtc, settings.BatchSize), cancellationToken);
 
             if (totalDeletedCount > 0) {
                 logger.LogInformation(

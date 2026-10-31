@@ -30,22 +30,22 @@ internal sealed class RepositoryDashboardBodyReadService(
         DashboardCalendarRange? calendar = null) {
         int normalizedTrendQuantizationDays = Math.Max(1, trendQuantizationDays);
         IReadOnlyList<WeightEntryModel> latestWeightEntries = includeWeight
-            ? await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: calendar?.DateTo ?? dayEndStart, Limit: 2, Descending: true), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: calendar?.DateTo ?? dayEndStart, Limit: 2, Descending: true), cancellationToken)
             : [];
         IReadOnlyList<WaistEntryModel> latestWaistEntries = includeWaist
-            ? await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: calendar?.DateTo ?? dayEndStart, Limit: 2, Descending: true), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: calendar?.DateTo ?? dayEndStart, Limit: 2, Descending: true), cancellationToken)
             : [];
         IReadOnlyList<WeightEntrySummaryModel> weightTrend = includeWeight
-            ? await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: calendar?.TrendDateFrom ?? trendStart, DateTo: calendar?.Date ?? dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: calendar?.TrendDateFrom ?? trendStart, DateTo: calendar?.Date ?? dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken)
             : [];
         IReadOnlyList<WaistEntrySummaryModel> waistTrend = includeWaist
-            ? await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: calendar?.TrendDateFrom ?? trendStart, DateTo: calendar?.Date ?? dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: calendar?.TrendDateFrom ?? trendStart, DateTo: calendar?.Date ?? dayStart, QuantizationDays: normalizedTrendQuantizationDays), cancellationToken)
             : [];
         IReadOnlyList<(DateTime Date, int TotalMl)> hydrationTotals = includeHydration
-            ? await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dayStart, dayEndStart, UseExactBounds: true), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadHydrationDailyTotalsQuery(userId, dayStart, dayEndStart, UseExactBounds: true), cancellationToken)
             : [];
         IReadOnlyList<HydrationEntryModel> hydrationEntries = includeHydration
-            ? await sender.Send(new ReadRecentHydrationEntriesQuery(userId, dayStart, dayEndStart, DashboardHydrationHistoryModel.EntryLimit + 1), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(new ReadRecentHydrationEntriesQuery(userId, dayStart, dayEndStart, DashboardHydrationHistoryModel.EntryLimit + 1), cancellationToken)
             : [];
 
         return new DashboardBodyReadModel(

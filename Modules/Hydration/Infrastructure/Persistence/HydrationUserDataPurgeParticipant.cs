@@ -11,7 +11,7 @@ internal sealed class HydrationUserDataPurgeParticipant(
     public int Order => 80;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.HydrationEntries.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.HydrationEntries.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

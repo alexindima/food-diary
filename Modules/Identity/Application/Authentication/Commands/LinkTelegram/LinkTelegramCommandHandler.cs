@@ -30,14 +30,12 @@ public sealed class LinkTelegramCommandHandler(
 
         TelegramInitData initData = initDataResult.Value;
         bool consumed = await replayGuard
-            .TryConsumeAsync(initData.ReplayIdentity, initData.ExpiresAtUtc, initData.AuthDateUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .TryConsumeAsync(initData.ReplayIdentity, initData.ExpiresAtUtc, initData.AuthDateUtc, cancellationToken);
         if (!consumed) {
             return Result.Failure<UserModel>(IdentityErrors.TelegramAssertionAlreadyUsed);
         }
 
         return await userIdentityService
-            .LinkTelegramAsync(userIdResult.Value, initData.UserId, cancellationToken)
-            .ConfigureAwait(false);
+            .LinkTelegramAsync(userIdResult.Value, initData.UserId, cancellationToken);
     }
 }

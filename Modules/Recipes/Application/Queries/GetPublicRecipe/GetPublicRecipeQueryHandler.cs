@@ -20,7 +20,7 @@ public sealed class GetPublicRecipeQueryHandler(IRecipeOverviewReadService recip
             return Result.Failure<PublicRecipeModel>(RecipeErrors.NotFound(query.RecipeId));
         }
         RecipeId id = idResult.Value;
-        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> items = await recipes.GetByIdsWithUsageAsync([id], UserId.Empty, includePublic: true, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> items = await recipes.GetByIdsWithUsageAsync([id], UserId.Empty, includePublic: true, cancellationToken);
         return items.TryGetValue(id, out RecipeOverviewReadItem? recipe) && recipe.Visibility == Visibility.Public
             ? Result.Success(recipe.ToPublicModel())
             : Result.Failure<PublicRecipeModel>(RecipeErrors.NotFound(query.RecipeId));

@@ -11,7 +11,7 @@ public sealed class ImportAdminDailyAdvicesCommandHandler(ISender sender)
     : ICommandHandler<ImportAdminDailyAdvicesCommand, Result<AdminDailyAdvicesImportModel>> {
     public async Task<Result<AdminDailyAdvicesImportModel>> Handle(ImportAdminDailyAdvicesCommand command, CancellationToken cancellationToken) {
         DailyAdviceImportItem[] items = [.. command.Advices.Select(item => new DailyAdviceImportItem(item.Value, item.Locale, item.Weight, item.Tag))];
-        Result<DailyAdviceImportModel> result = await sender.Send(new ImportDailyAdvicesCommand(items), cancellationToken).ConfigureAwait(false);
+        Result<DailyAdviceImportModel> result = await sender.Send(new ImportDailyAdvicesCommand(items), cancellationToken);
         return result.IsFailure
             ? Result.Failure<AdminDailyAdvicesImportModel>(result.Error)
             : Result.Success(new AdminDailyAdvicesImportModel(result.Value.ImportedCount, result.Value.SkippedCount));

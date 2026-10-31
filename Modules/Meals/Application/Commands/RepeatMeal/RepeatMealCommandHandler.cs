@@ -44,7 +44,7 @@ public sealed class RepeatMealCommandHandler(
     public async Task<Result<MealModel>> Handle(
         RepeatMealCommand command,
         CancellationToken cancellationToken) {
-        Result<RepeatMealValues> valuesResult = await PrepareRepeatValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<RepeatMealValues> valuesResult = await PrepareRepeatValuesAsync(command, cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<MealModel>(valuesResult.Error);
         }
@@ -53,13 +53,13 @@ public sealed class RepeatMealCommandHandler(
         Meal newMeal = CreateRepeatedMeal(command, values);
         CopyItems(values.SourceMeal, newMeal);
         CopyAiSessions(values.SourceMeal, newMeal, command.TargetDate);
-        Result nutritionResult = await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result nutritionResult = await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken);
         if (nutritionResult.IsFailure) {
             return Result.Failure<MealModel>(nutritionResult.Error);
         }
 
-        await mealWriteRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
-        await achievementEvaluationOutbox.EnqueueAsync(values.UserId, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.AddAsync(newMeal, cancellationToken);
+        await achievementEvaluationOutbox.EnqueueAsync(values.UserId, cancellationToken);
         return Result.Success(newMeal.ToModel());
     }
 
@@ -69,7 +69,7 @@ public sealed class RepeatMealCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<RepeatMealValues>(userIdResult);
         }
@@ -89,7 +89,7 @@ public sealed class RepeatMealCommandHandler(
             sourceMealId,
             userId,
             includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (sourceMeal is null) {
             return Result.Failure<RepeatMealValues>(MealErrors.NotFound(command.MealId));
         }
@@ -161,7 +161,7 @@ public sealed class RepeatMealCommandHandler(
         Meal newMeal,
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
+        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken);
         if (nutritionResult.IsFailure) {
             return Result.Failure(nutritionResult.Error);
         }

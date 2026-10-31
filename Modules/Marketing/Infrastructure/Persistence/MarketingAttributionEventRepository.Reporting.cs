@@ -9,21 +9,21 @@ public sealed partial class MarketingAttributionEventRepository {
         IQueryable<MarketingAttributionEvent> events = attributionEvents.AsNoTracking()
             .Where(item => item.OccurredAtUtc >= filter.FromUtc && item.OccurredAtUtc < filter.ToUtc);
         DateTime previousFrom = filter.FromUtc - (filter.ToUtc - filter.FromUtc);
-        MarketingAttributionSummaryRecord current = await LoadSummaryAsync(events, cancellationToken).ConfigureAwait(false);
+        MarketingAttributionSummaryRecord current = await LoadSummaryAsync(events, cancellationToken);
         MarketingAttributionSummaryRecord previous = await LoadSummaryAsync(attributionEvents.AsNoTracking()
-            .Where(item => item.OccurredAtUtc >= previousFrom && item.OccurredAtUtc < filter.FromUtc), cancellationToken).ConfigureAwait(false);
+            .Where(item => item.OccurredAtUtc >= previousFrom && item.OccurredAtUtc < filter.FromUtc), cancellationToken);
         List<MarketingAttributionDayRecord> byDay = await events.GroupBy(item => item.OccurredAtUtc.Date).OrderBy(group => group.Key)
             .Select(group => new MarketingAttributionDayRecord(group.Key, group.Count(item => item.EventType == "page_landing"),
                 group.Count(item => item.EventType == "signup_completed"), group.Count(item => item.EventType == "premium_started")))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         IQueryable<MarketingAttributionEvent> journal = FilterJournal(events, filter);
-        int count = await journal.CountAsync(cancellationToken).ConfigureAwait(false);
+        int count = await journal.CountAsync(cancellationToken);
         List<MarketingAttributionEventRecord> items = await journal.OrderByDescending(item => item.OccurredAtUtc).ThenByDescending(item => item.Id)
             .Skip((filter.Page - 1) * filter.Limit).Take(filter.Limit)
             .Select(item => new MarketingAttributionEventRecord(item.EventType, item.OccurredAtUtc, item.UserId, item.AnonymousId,
                 item.SessionId, item.LandingPath, item.ReferrerHost, item.UtmSource, item.UtmMedium, item.UtmCampaign,
                 item.UtmContent, item.UtmTerm, item.BuildVersion, item.Id.Value))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return new MarketingAttributionRangeRecord(current with { RecentEvents = items }, previous, byDay, count);
     }
 

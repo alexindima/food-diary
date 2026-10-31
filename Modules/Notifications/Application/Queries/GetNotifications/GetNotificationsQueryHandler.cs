@@ -21,20 +21,19 @@ public sealed class GetNotificationsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             notificationUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<NotificationModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken);
         if (contextResult.IsFailure) {
             return Result.Failure<IReadOnlyList<NotificationModel>>(contextResult.Error);
         }
 
         NotificationUserContext context = contextResult.Value;
-        IReadOnlyList<NotificationModel> models = await GetVisibleNotificationsAsync(userId, context, cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<NotificationModel> models = await GetVisibleNotificationsAsync(userId, context, cancellationToken);
         return Result.Success<IReadOnlyList<NotificationModel>>(models);
     }
     private async Task<IReadOnlyList<NotificationModel>> GetVisibleNotificationsAsync(
@@ -42,8 +41,7 @@ public sealed class GetNotificationsQueryHandler(
         NotificationUserContext context,
         CancellationToken cancellationToken) {
         IReadOnlyList<NotificationReadModel> notifications = await notificationReadModelRepository
-            .GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserReadModelsAsync(userId, cancellationToken: cancellationToken);
 
         IEnumerable<NotificationReadModel> visibleNotifications = context.HasPassword
             ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))

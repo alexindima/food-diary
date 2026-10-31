@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Integrations.MailInbox;
 
 internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailInboxClient) : IAdminMailInboxReader {
     public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
-        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken, fromUtc, toUtc, search, fromAddress, id).ConfigureAwait(false);
+        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken, fromUtc, toUtc, search, fromAddress, id);
         return new AdminMailInboxMessagePageModel(result.Items.Select(static message => message.ToModel()).ToList(), result.TotalItems, result.UnreadCount, result.ReadCount);
     }
 
@@ -17,15 +17,15 @@ internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailI
     public async Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetFilteredMessagesAsync(
         int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
         IReadOnlyList<InboundMailMessageSummaryResponse> messages = recipient is null && category is null && unread is null
-            ? await mailInboxClient.GetMessagesAsync(limit, cancellationToken).ConfigureAwait(false)
-            : await mailInboxClient.GetFilteredMessagesAsync(limit, recipient, category, unread, cancellationToken).ConfigureAwait(false);
+            ? await mailInboxClient.GetMessagesAsync(limit, cancellationToken)
+            : await mailInboxClient.GetFilteredMessagesAsync(limit, recipient, category, unread, cancellationToken);
         return messages.Select(static message => message.ToModel()).ToList();
     }
 
     public async Task<AdminMailInboxMessageDetailsModel?> GetMessageAsync(
         Guid id,
         CancellationToken cancellationToken) {
-        InboundMailMessageDetailsResponse? message = await mailInboxClient.GetMessageAsync(id, cancellationToken).ConfigureAwait(false);
+        InboundMailMessageDetailsResponse? message = await mailInboxClient.GetMessageAsync(id, cancellationToken);
         return message?.ToModel();
     }
 

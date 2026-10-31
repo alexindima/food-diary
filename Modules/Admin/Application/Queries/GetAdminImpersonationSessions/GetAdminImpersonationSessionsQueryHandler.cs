@@ -13,7 +13,7 @@ public sealed class GetAdminImpersonationSessionsQueryHandler(IAdminImpersonatio
         int normalizedPage = PaginationPolicy.NormalizePage(query.Page);
         int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
         (IReadOnlyList<AdminImpersonationSessionReadModel> items, int totalItems) =
-            await impersonationSessionRepository.GetPagedAsync(normalizedPage, normalizedLimit, query.Search, cancellationToken, query.FromUtc, query.ToUtc, query.ActorId, query.TargetId).ConfigureAwait(false);
+            await impersonationSessionRepository.GetPagedAsync(normalizedPage, normalizedLimit, query.Search, cancellationToken, query.FromUtc, query.ToUtc, query.ActorId, query.TargetId);
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);
 
         return Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>(

@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 511,
+    "components": 512,
     "componentsWithoutDirectSpecs": 128,
     "inputs": 1663,
     "outputs": 560,
-    "apiCalls": 319,
-    "templatesWithTranslations": 370,
-    "translationKeys": 2206,
-    "consumerEdges": 1304,
+    "apiCalls": 320,
+    "templatesWithTranslations": 371,
+    "translationKeys": 2216,
+    "consumerEdges": 1307,
     "consumedComponents": 324,
-    "unconsumedComponents": 186
+    "unconsumedComponents": 187
   },
   "components": [
     {
@@ -890,6 +890,16 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.spec.ts"
+    },
+    {
+      "class": "AdminUserNotificationDialogComponent",
+      "selector": "fd-admin-user-notification-dialog",
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.spec.ts"
     },
     {
       "class": "AdminUserPageComponent",
@@ -16960,7 +16970,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 42,
+      "line": 45,
       "publicMethod": "createUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -16972,7 +16982,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 67,
+      "line": 70,
       "publicMethod": "getUsers",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -16984,7 +16994,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 82,
+      "line": 85,
       "publicMethod": "updateUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -16996,7 +17006,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/password",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 88,
+      "line": 91,
       "publicMethod": "setPassword",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17008,7 +17018,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 96,
+      "line": 99,
       "publicMethod": "getUser",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17016,11 +17026,23 @@
     },
     {
       "feature": "admin-users",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/admin/users/{id}/notifications/test",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
+      "line": 107,
+      "publicMethod": "scheduleTestNotification",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
+      "resolvedUrlExpression": "/api/v{version}/admin/users/{id}/notifications/test"
+    },
+    {
+      "feature": "admin-users",
       "method": "GET",
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/role-audit",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 101,
+      "line": 119,
       "publicMethod": "getUserRoleAudit",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17032,7 +17054,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/{id}/impersonation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 107,
+      "line": 125,
       "publicMethod": "startImpersonation",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17044,7 +17066,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/impersonation-sessions",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 124,
+      "line": 142,
       "publicMethod": "getImpersonationSessions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17056,7 +17078,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-events",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 150,
+      "line": 168,
       "publicMethod": "getLoginEvents",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -17068,7 +17090,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/users/login-summary",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/api/admin-users.service.ts",
-      "line": 165,
+      "line": 183,
       "publicMethod": "getLoginSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/users`",
@@ -20698,6 +20720,21 @@
     },
     {
       "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
+      "keys": [
+        "ADMIN_NOTIFICATION.CLOSE",
+        "ADMIN_NOTIFICATION.DELAY",
+        "ADMIN_NOTIFICATION.DESCRIPTION",
+        "ADMIN_NOTIFICATION.ERROR",
+        "ADMIN_NOTIFICATION.RECIPIENT",
+        "ADMIN_NOTIFICATION.SENDING",
+        "ADMIN_NOTIFICATION.SUCCESS",
+        "ADMIN_NOTIFICATION.TITLE",
+        "ADMIN_NOTIFICATION.TYPE"
+      ]
+    },
+    {
+      "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-impersonation-sessions-page.html",
       "keys": [
         "ADMIN_COMMON.APPLY"
@@ -20721,6 +20758,8 @@
         "ADMIN_NAV.BILLING",
         "ADMIN_NAV.LOGINS",
         "ADMIN_NAV.SESSIONS",
+        "ADMIN_NOTIFICATION.TITLE",
+        "ADMIN_NOTIFICATION.UNAVAILABLE",
         "ADMIN_OUTGOING.OUTGOING",
         "ADMIN_USER.EDIT",
         "ADMIN_USER.IMPERSONATE",
@@ -28414,6 +28453,22 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "disabled",
+        "disabledReason",
+        "loading",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-set-password-dialog.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -28450,7 +28505,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [
         "disabled",
         "disabledReason",
@@ -33561,6 +33616,20 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
       "consumerFeature": "admin-users",
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "disableClose",
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
         "disableClose",
@@ -39249,6 +39318,19 @@
       "occurrences": 1,
       "inputsUsed": [
         "id",
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "admin-users",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-notification-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
         "label",
         "options"
       ],

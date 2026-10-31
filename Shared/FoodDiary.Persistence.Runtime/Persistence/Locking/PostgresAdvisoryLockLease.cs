@@ -42,10 +42,10 @@ internal sealed class PostgresAdvisoryLockLease : IAsyncDisposable {
         }
 
         try {
-            _ = await _unlockCommand.ExecuteScalarAsync(CancellationToken.None).ConfigureAwait(false);
+            _ = await _unlockCommand.ExecuteScalarAsync(CancellationToken.None);
         } finally {
-            await _unlockCommand.DisposeAsync().ConfigureAwait(false);
-            await _connection.DisposeAsync().ConfigureAwait(false);
+            await _unlockCommand.DisposeAsync();
+            await _connection.DisposeAsync();
         }
     }
 
@@ -64,11 +64,11 @@ internal sealed class PostgresAdvisoryLockLease : IAsyncDisposable {
             var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
             bool leaseCreated = false;
             try {
-                await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                await connection.OpenAsync(cancellationToken);
                 var tryLockCommand = new NpgsqlCommand(tryLockCommandText, connection);
-                await using (tryLockCommand.ConfigureAwait(false)) {
+                await using (tryLockCommand) {
                     addParameter(tryLockCommand);
-                    bool acquired = (bool?)await tryLockCommand.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) == true;
+                    bool acquired = (bool?)await tryLockCommand.ExecuteScalarAsync(cancellationToken) == true;
                     if (acquired) {
                         var unlockCommand = new NpgsqlCommand(unlockCommandText, connection);
                         addParameter(unlockCommand);
@@ -78,11 +78,11 @@ internal sealed class PostgresAdvisoryLockLease : IAsyncDisposable {
                 }
             } finally {
                 if (!leaseCreated) {
-                    await connection.DisposeAsync().ConfigureAwait(false);
+                    await connection.DisposeAsync();
                 }
             }
 
-            await Task.Delay(RetryDelay, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(RetryDelay, cancellationToken);
         }
     }
 }

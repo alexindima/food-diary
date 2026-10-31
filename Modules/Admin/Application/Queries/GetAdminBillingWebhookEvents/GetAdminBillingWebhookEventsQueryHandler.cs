@@ -20,7 +20,7 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingQuery 
             query.FromUtc,
             query.ToUtc);
         (IReadOnlyList<AdminBillingWebhookEventReadModel> items, int totalItems) =
-            await billingRepository.GetWebhookEventsAsync(filter, cancellationToken).ConfigureAwait(false);
+            await billingRepository.GetWebhookEventsAsync(filter, cancellationToken);
 
         return Result.Success(AdminBillingQueryFilters.ToPagedResponse(items, filter.Page, filter.Limit, totalItems));
     }

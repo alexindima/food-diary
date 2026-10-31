@@ -20,7 +20,7 @@ internal static class MealReadSupport {
             .Select(static meal => (MealId)meal.Id)
             .Distinct()];
 
-        return await sender.Send(new ReadMealFavoriteIdsQuery(userId, mealIds), cancellationToken).ConfigureAwait(false);
+        return await sender.Send(new ReadMealFavoriteIdsQuery(userId, mealIds), cancellationToken);
     }
     internal static PagedResponse<MealModel> ToPagedResponse(
         IReadOnlyList<MealProjectionReadModel> meals,

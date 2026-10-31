@@ -30,10 +30,10 @@ public sealed class DeliverTestNotificationCommandHandler(
         };
 
         var request = new NotificationRequest(userId, intent);
-        await notificationWriter.AddAsync(request, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        await clientRefreshService.RefreshAsync(userId, pushChanged: true, cancellationToken).ConfigureAwait(false);
-        await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(request, sendWebPush: true, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await clientRefreshService.RefreshAsync(userId, pushChanged: true, cancellationToken);
+        await postCommitActionQueue.FlushAsync(cancellationToken);
         return Result.Success();
     }
 }

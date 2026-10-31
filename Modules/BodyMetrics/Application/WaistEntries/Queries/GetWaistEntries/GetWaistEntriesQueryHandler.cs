@@ -20,7 +20,7 @@ public sealed class GetWaistEntriesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WaistEntryModel>>(userIdResult);
         }
@@ -33,7 +33,7 @@ public sealed class GetWaistEntriesQueryHandler(
             ? UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        IReadOnlyList<WaistEntryModel> response = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> response = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, Limit: PaginationPolicy.NormalizeCollectionLimit(query.Limit), Descending: query.Descending), cancellationToken);
 
         return Result.Success<IReadOnlyList<WaistEntryModel>>(response);
     }

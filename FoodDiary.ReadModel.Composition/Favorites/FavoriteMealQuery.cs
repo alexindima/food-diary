@@ -10,7 +10,7 @@ namespace FoodDiary.ReadModel.Composition.Favorites;
 public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavoriteMealQuery {
     public async Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default) =>
-        await ReadItemsAsync(userId, PaginationPolicy.MaxCollectionSize, cancellationToken).ConfigureAwait(false);
+        await ReadItemsAsync(userId, PaginationPolicy.MaxCollectionSize, cancellationToken);
 
     public async Task<(IReadOnlyList<FavoriteMealReadModel> Items, int TotalItems)> GetOverviewReadModelsAsync(
         UserId userId, int limit, CancellationToken cancellationToken = default) {
@@ -18,9 +18,9 @@ public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavori
             .Where(f => f.UserId == userId)
             .Join(context.Meals.AsNoTracking(), favorite => favorite.MealId, source => source.Id,
                 (favorite, source) => favorite.Id)
-            .CountAsync(cancellationToken).ConfigureAwait(false);
+            .CountAsync(cancellationToken);
         IReadOnlyList<FavoriteMealReadModel> items = await ReadItemsAsync(
-            userId, Math.Clamp(limit, 0, PaginationPolicy.MaxCollectionSize), cancellationToken).ConfigureAwait(false);
+            userId, Math.Clamp(limit, 0, PaginationPolicy.MaxCollectionSize), cancellationToken);
         return (items, totalItems);
     }
 
@@ -39,7 +39,7 @@ public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavori
                     ?? string.Empty), term, "\\"))
                 || row.Meal.AiSessions.Any(session => session.Items.Any(item => EF.Functions.ILike(item.NameLocal ?? item.NameEn, term, "\\"))));
         }
-        int total = await rows.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await rows.CountAsync(cancellationToken);
         List<FavoriteMealReadModel> items = await rows.OrderByDescending(row => row.Favorite.CreatedAtUtc).ThenByDescending(row => row.Favorite.Id)
             .Skip((page - 1) * limit).Take(limit)
             .Select(row => new FavoriteMealReadModel(row.Favorite.Id.Value, row.Favorite.MealId.Value, row.Favorite.Name,
@@ -64,7 +64,7 @@ public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavori
                     ?? context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.Name).FirstOrDefault()
                     ?? context.Recipes.AsNoTracking().Where(recipe => recipe.Id == item.RecipeId).Select(recipe => recipe.Name).FirstOrDefault()
                     ?? string.Empty)).Where(name => name != string.Empty).Take(4).ToList(),
-            }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            }).ToListAsync(cancellationToken);
         return (items, total);
     }
 
@@ -92,6 +92,6 @@ public sealed class FavoriteMealQuery(ICompositionReadContext context) : IFavori
                 row.Source.TotalFats,
                 row.Source.TotalCarbs,
                 row.Source.Items.Count) { TotalFiber = row.Source.TotalFiber, ImageUrl = row.Source.ImageUrl })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

@@ -34,7 +34,7 @@ public sealed class UpdateShoppingListCommandHandler(
             return RequiredIdParser.ToFailure<ShoppingListModel, ShoppingListId>(shoppingListIdResult);
         }
 
-        Result<UserId> validationResult = await ValidateCommandAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UserId> validationResult = await ValidateCommandAsync(command, cancellationToken);
         if (validationResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(validationResult.Error);
         }
@@ -46,7 +46,7 @@ public sealed class UpdateShoppingListCommandHandler(
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (list is null) {
             return Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(command.ShoppingListId));
@@ -60,12 +60,12 @@ public sealed class UpdateShoppingListCommandHandler(
             list.UpdateName(command.Name);
         }
 
-        Result itemsResult = await ApplyItemsAsync(command, userId, list, cancellationToken).ConfigureAwait(false);
+        Result itemsResult = await ApplyItemsAsync(command, userId, list, cancellationToken);
         if (itemsResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(itemsResult.Error);
         }
 
-        await shoppingListRepository.UpdateAsync(list, cancellationToken).ConfigureAwait(false);
+        await shoppingListRepository.UpdateAsync(list, cancellationToken);
         return Result.Success(list.ToModel());
     }
 
@@ -99,7 +99,7 @@ public sealed class UpdateShoppingListCommandHandler(
         return await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<Result> ApplyItemsAsync(
@@ -115,7 +115,7 @@ public sealed class UpdateShoppingListCommandHandler(
             command.Items,
             userId,
             productLookupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (itemsResult.IsFailure) {
             return Result.Failure(itemsResult.Error);

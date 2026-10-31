@@ -33,14 +33,14 @@ public sealed class ConfirmImageUploadCommandHandler(
         }
 
         return await transactionRunner.ExecuteSerializedAsync(assetIdResult.Value,
-            token => ConfirmAsync(assetIdResult.Value, userIdResult.Value, token), cancellationToken).ConfigureAwait(false);
+            token => ConfirmAsync(assetIdResult.Value, userIdResult.Value, token), cancellationToken);
     }
 
     private async Task<Result<ConfirmImageUploadResult>> ConfirmAsync(ImageAssetId assetId, UserId userId, CancellationToken cancellationToken) {
         ImageAsset? asset = await imageAssetRepository.GetOwnedForUpdateAsync(
             assetId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (asset is null) {
             return Result.Failure<ConfirmImageUploadResult>(ImageErrors.NotFound(assetId.Value));
         }
@@ -49,8 +49,7 @@ public sealed class ConfirmImageUploadCommandHandler(
             ImageObjectValidationResult validation;
             try {
                 validation = await imageStorageService
-                    .ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), cancellationToken)
-                    .ConfigureAwait(false);
+                    .ConfirmUploadedObjectAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), cancellationToken);
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
             } catch (Exception) {
@@ -63,8 +62,8 @@ public sealed class ConfirmImageUploadCommandHandler(
             }
 
             asset.Confirm();
-            await deletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: false, cancellationToken).ConfigureAwait(false);
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await deletionOutbox.EnqueueAsync(ObjectStorageKey.FromStoredValue(asset.ObjectKey), isConfirmed: false, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             // Never delete the published object on persistence failure: commit may have succeeded.
             // Pending assets are reclaimed by orphan cleanup, which handles both buckets.
         }

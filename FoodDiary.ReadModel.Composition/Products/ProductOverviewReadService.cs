@@ -28,12 +28,12 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
 
         IQueryable<Product> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
-        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken);
         List<ProductOverviewReadRow> rows = await ProjectRows(query.AsNoTracking()
                 .OrderByDescending(p => p.CreatedOnUtc)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (rows.ConvertAll(row => ToReadItem(row, userId)), totalItems);
     }
@@ -50,7 +50,7 @@ public sealed class ProductOverviewReadService(ICompositionReadContext context) 
 
         List<ProductOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic).AsNoTracking()
                 .Where(p => productIds.Contains(p.Id)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return rows.ToDictionary(row => row.Id, row => ToReadItem(row, userId));
     }

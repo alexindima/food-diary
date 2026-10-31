@@ -13,7 +13,6 @@ public sealed class UserCurrentWeightProvider(ICompositionReadContext context) :
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Select(entry => (double?)entry.WeightKg)
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

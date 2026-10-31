@@ -20,7 +20,7 @@ public interface IRecommendationCommentReadModelRepository {
 
     async Task<(IReadOnlyList<RecommendationCommentReadModel> Items, int Total)> GetPageByRecommendationAsync(
         RecommendationId recommendationId, int page, int limit, CancellationToken cancellationToken = default) {
-        IReadOnlyList<RecommendationCommentReadModel> all = await GetByRecommendationAsync(recommendationId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecommendationCommentReadModel> all = await GetByRecommendationAsync(recommendationId, cancellationToken);
         return (all.Skip((page - 1) * limit).Take(limit).ToArray(), all.Count);
     }
 }

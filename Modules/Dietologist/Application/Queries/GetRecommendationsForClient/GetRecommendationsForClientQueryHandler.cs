@@ -23,7 +23,7 @@ public sealed class GetRecommendationsForClientQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<RecommendationModel>>(userIdResult);
         }
@@ -39,7 +39,7 @@ public sealed class GetRecommendationsForClientQueryHandler(
 
         UserId client = clientResult.Value;
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
-            invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
+            invitationRepository, dietologistUserId, client, cancellationToken);
 
         if (accessResult.IsFailure) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessResult.Error);
@@ -48,7 +48,7 @@ public sealed class GetRecommendationsForClientQueryHandler(
         IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByDietologistAndClientReadModelsAsync(
             dietologistUserId, client, limit: PaginationPolicy.NormalizePageSize(query.Limit, 50),
             page: PaginationPolicy.NormalizePage(query.Page),
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         var models = recommendations.Select(recommendation => recommendation.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
 

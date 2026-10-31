@@ -17,7 +17,7 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
         UserId userId = request.UserId;
         DateTime startedAtUtc = request.StartedAtUtc;
         TimeSpan duration = request.Duration;
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
             return Result.Failure<UserBillingProfileModel>(error);
@@ -28,7 +28,7 @@ public sealed class StartUserPremiumTrialCommandHandler(IUserLookupRepository us
         }
 
         user.StartPremiumTrial(startedAtUtc, duration);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToModel(user));
 
     }

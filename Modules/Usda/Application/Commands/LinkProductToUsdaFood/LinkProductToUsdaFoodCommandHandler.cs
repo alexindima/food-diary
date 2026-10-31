@@ -22,22 +22,22 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var productId = (ProductId)command.ProductId;
         Result isAccessible = await productLinkService.IsAccessibleForUpdateAsync(
-            productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
+            productId, userIdResult.Value, cancellationToken);
 
         if (isAccessible.IsFailure) {
             return isAccessible;
         }
 
-        UsdaFood? usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFood? usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken);
         if (usdaFood is null) {
-            UsdaFoodDetailModel? detail = await provider.GetFoodDetailAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
+            UsdaFoodDetailModel? detail = await provider.GetFoodDetailAsync(command.FdcId, cancellationToken);
             if (detail is null || detail.FdcId != command.FdcId) {
                 return Result.Failure(UsdaErrors.FoodNotFound(command.FdcId));
             }
@@ -47,7 +47,7 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
             productId,
             userIdResult.Value,
             command.FdcId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (linked.IsFailure) {
             return linked;
         }

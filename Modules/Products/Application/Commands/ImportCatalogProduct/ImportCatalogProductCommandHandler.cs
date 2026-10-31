@@ -22,7 +22,7 @@ public sealed class ImportCatalogProductCommandHandler(
         if (item.Id == Guid.Empty) {
             return Report(item.Id, "invalid", ["Id must not be empty."]);
         }
-        bool? isPublic = await repository.CatalogIdIsPublicAsync(item.Id, cancellationToken).ConfigureAwait(false);
+        bool? isPublic = await repository.CatalogIdIsPublicAsync(item.Id, cancellationToken);
         if (isPublic is false) {
             return Report(item.Id, "invalid", ["This ID cannot be imported."]);
         }
@@ -33,14 +33,14 @@ public sealed class ImportCatalogProductCommandHandler(
             item.Category, item.Description, Comment: null, item.ImageUrl, ImageAssetId: null, item.BaseUnit, item.BaseAmount,
             item.DefaultPortionAmount, item.CaloriesPerBase, item.ProteinsPerBase, item.FatsPerBase,
             item.CarbsPerBase, item.FiberPerBase, item.AlcoholPerBase, "Public") { CatalogImportId = item.Id };
-        ValidationResult validation = await validator.ValidateAsync(create, cancellationToken).ConfigureAwait(false);
+        ValidationResult validation = await validator.ValidateAsync(create, cancellationToken);
         if (!validation.IsValid) {
             return Report(item.Id, "invalid", validation.Errors.Select(error => $"{error.PropertyName}: {error.ErrorMessage}").ToArray());
         }
         if (request.Preview) {
             return Report(item.Id, "ready", []);
         }
-        Result<ProductModel> created = await sender.Send(create, cancellationToken).ConfigureAwait(false);
+        Result<ProductModel> created = await sender.Send(create, cancellationToken);
         return created.IsSuccess ? Report(item.Id, "imported", []) : Result.Failure<CatalogProductImportResult>(created.Error);
     }
 

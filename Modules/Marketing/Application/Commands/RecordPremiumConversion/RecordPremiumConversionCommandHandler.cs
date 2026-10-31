@@ -20,14 +20,14 @@ public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionE
         bool premiumStartedAlreadyRecorded = await marketingAttributionEventReadRepository.ExistsForUserAsync(
             userId,
             MarketingAttributionEventTypes.PremiumStarted,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (premiumStartedAlreadyRecorded) {
             return Unit.Value;
         }
 
         MarketingAttributionEventRecord? sourceEvent = await marketingAttributionEventReadRepository.GetLatestForUserAsync(
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (sourceEvent is null) {
             return Unit.Value;
         }
@@ -40,7 +40,7 @@ public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionE
                 LandingPath = MarketingLandingPath.Sanitize(sourceEvent.LandingPath),
                 EventId = CreateStableEventId(userId, MarketingAttributionEventTypes.PremiumStarted),
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Unit.Value;
     }

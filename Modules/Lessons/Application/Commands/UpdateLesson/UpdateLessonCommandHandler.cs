@@ -23,17 +23,16 @@ public sealed class UpdateLessonCommandHandler(
         int estimatedReadMinutes = request.EstimatedReadMinutes;
         int sortOrder = request.SortOrder;
         bool isPublished = request.IsPublished;
-        NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken);
         if (lesson is null) {
             return Result.Failure<LessonAdminReadModel>(LessonErrors.NotFound(lessonId.Value));
         }
 
         IReadOnlyDictionary<NutritionLessonId, int> completionCounts = await readRepository
-            .GetCompletionCountsAsync([lessonId], cancellationToken)
-            .ConfigureAwait(false);
+            .GetCompletionCountsAsync([lessonId], cancellationToken);
         lesson.Update(title, content, summary, locale, category, difficulty, estimatedReadMinutes, sortOrder);
         lesson.SetPublication(isPublished);
-        await repository.UpdateAsync(lesson, cancellationToken).ConfigureAwait(false);
+        await repository.UpdateAsync(lesson, cancellationToken);
         return Result.Success(ToAdminReadModel(lesson, completionCounts.GetValueOrDefault(lessonId)));
 
     }

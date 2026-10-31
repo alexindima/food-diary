@@ -25,7 +25,7 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
                 subject,
                 htmlBody,
                 textBody, Purpose: "template_test"),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         ApplicationEmailTelemetry.RecordEmailDispatch($"admin_template_test:{NormalizeKey(command.Key)}", "test", "success");
 
         return Result.Success();

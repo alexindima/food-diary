@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Development.Mcp.Diagnostics;
@@ -55,26 +54,26 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         ChangeSetSnapshot? cached = _cached;
         if (cached is not null &&
             (generation == Interlocked.Read(ref _cachedGeneration) || !HasRelevantPendingChange(relevantPaths)) &&
-            await MatchesCurrentHeadAsync(cached, cancellationToken).ConfigureAwait(false)) {
-            return await ProjectToScopeAsync(cached, relevantPaths, cancellationToken).ConfigureAwait(false);
+            await MatchesCurrentHeadAsync(cached, cancellationToken)) {
+            return await ProjectToScopeAsync(cached, relevantPaths, cancellationToken);
         }
 
-        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await _gate.WaitAsync(cancellationToken);
         try {
             generation = Interlocked.Read(ref _generation);
             if (_cached is not null &&
                 (generation == Interlocked.Read(ref _cachedGeneration) || !HasRelevantPendingChange(relevantPaths)) &&
-                await MatchesCurrentHeadAsync(_cached, cancellationToken).ConfigureAwait(false)) {
-                return await ProjectToScopeAsync(_cached, relevantPaths, cancellationToken).ConfigureAwait(false);
+                await MatchesCurrentHeadAsync(_cached, cancellationToken)) {
+                return await ProjectToScopeAsync(_cached, relevantPaths, cancellationToken);
             }
 
             _ = Interlocked.Exchange(
                 ref _pendingChangedPaths,
                 new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase));
-            ChangeSetSnapshot snapshot = await CreateAsync(cancellationToken).ConfigureAwait(false);
+            ChangeSetSnapshot snapshot = await CreateAsync(cancellationToken);
             _cached = snapshot;
             Interlocked.Exchange(ref _cachedGeneration, generation);
-            return await ProjectToScopeAsync(snapshot, relevantPaths, cancellationToken).ConfigureAwait(false);
+            return await ProjectToScopeAsync(snapshot, relevantPaths, cancellationToken);
         } finally {
             _gate.Release();
         }
@@ -86,21 +85,21 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     public async Task<ChangeSetSnapshot> RefreshAsync(
         IReadOnlyList<string>? relevantPaths,
         CancellationToken cancellationToken) {
-        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await _gate.WaitAsync(cancellationToken);
         try {
             long generation = Interlocked.Read(ref _generation);
             if (_cached is not null && relevantPaths is { Count: > 0 } &&
                 !HasRelevantPendingChange(relevantPaths) &&
-                await MatchesCurrentHeadAsync(_cached, cancellationToken).ConfigureAwait(false)) {
-                return await ProjectToScopeAsync(_cached, relevantPaths, cancellationToken).ConfigureAwait(false);
+                await MatchesCurrentHeadAsync(_cached, cancellationToken)) {
+                return await ProjectToScopeAsync(_cached, relevantPaths, cancellationToken);
             }
             _ = Interlocked.Exchange(
                 ref _pendingChangedPaths,
                 new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase));
-            ChangeSetSnapshot snapshot = await CreateAsync(cancellationToken).ConfigureAwait(false);
+            ChangeSetSnapshot snapshot = await CreateAsync(cancellationToken);
             _cached = snapshot;
             Interlocked.Exchange(ref _cachedGeneration, generation);
-            return await ProjectToScopeAsync(snapshot, relevantPaths, cancellationToken).ConfigureAwait(false);
+            return await ProjectToScopeAsync(snapshot, relevantPaths, cancellationToken);
         } finally {
             _gate.Release();
         }
@@ -112,11 +111,10 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     }
 
     private async Task<ChangeSetSnapshot> CreateAsync(CancellationToken cancellationToken) {
-        string head = await ServerStatusService.ReadGitHeadAsync(_repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+        string head = await ServerStatusService.ReadGitHeadAsync(_repositoryRoot, cancellationToken);
         string status = await RunGitAsync(
             ["status", "--porcelain=v1", "-z", "--untracked-files=all"],
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         string[] changedPaths = ParseChangedPaths(status);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         Append(hash, head);
@@ -129,9 +127,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
                 path.Replace('/', Path.DirectorySeparatorChar));
             if (File.Exists(absolutePath)) {
                 FileStream stream = File.OpenRead(absolutePath);
-                await using ConfiguredAsyncDisposable configuredStream = stream.ConfigureAwait(false);
-                byte[] contentHash = await SHA256.HashDataAsync(stream, cancellationToken)
-                    .ConfigureAwait(false);
+                await using IAsyncDisposable configuredStream = stream;
+                byte[] contentHash = await SHA256.HashDataAsync(stream, cancellationToken);
                 hash.AppendData(contentHash);
             } else {
                 Append(hash, "<missing>");
@@ -164,9 +161,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
                 path.Replace('/', Path.DirectorySeparatorChar));
             if (File.Exists(absolutePath)) {
                 FileStream stream = File.OpenRead(absolutePath);
-                await using ConfiguredAsyncDisposable configuredStream = stream.ConfigureAwait(false);
-                byte[] contentHash = await SHA256.HashDataAsync(stream, cancellationToken)
-                    .ConfigureAwait(false);
+                await using IAsyncDisposable configuredStream = stream;
+                byte[] contentHash = await SHA256.HashDataAsync(stream, cancellationToken);
                 hash.AppendData(contentHash);
             } else {
                 Append(hash, "<missing>");
@@ -211,7 +207,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         using var linkedCancellation =
             CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
         try {
-            await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
+            await process.WaitForExitAsync(linkedCancellation.Token);
         } catch (OperationCanceledException) {
             TryKill(process);
             if (timeout.IsCancellationRequested) {
@@ -222,8 +218,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             throw;
         }
 
-        string output = await standardOutput.ConfigureAwait(false);
-        string error = await standardError.ConfigureAwait(false);
+        string output = await standardOutput;
+        string error = await standardError;
         if (process.ExitCode != 0) {
             throw new DevelopmentMcpException(
                 DevelopmentMcpErrorCodes.RepositoryNotFound,
@@ -269,7 +265,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         CancellationToken cancellationToken) =>
         string.Equals(
             snapshot.GitHead,
-            await ServerStatusService.ReadGitHeadAsync(_repositoryRoot, cancellationToken).ConfigureAwait(false),
+            await ServerStatusService.ReadGitHeadAsync(_repositoryRoot, cancellationToken),
             StringComparison.Ordinal);
 
     internal static bool IsSourcePath(string path) =>

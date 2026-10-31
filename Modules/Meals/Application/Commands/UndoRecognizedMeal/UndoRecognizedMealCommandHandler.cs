@@ -15,7 +15,7 @@ public sealed class UndoRecognizedMealCommandHandler(
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider timeProvider) : ICommandHandler<UndoRecognizedMealCommand, Result<RecognizedMealUndoModel>> {
     public async Task<Result<RecognizedMealUndoModel>> Handle(UndoRecognizedMealCommand command, CancellationToken cancellationToken) {
-        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (owner.IsFailure) {
             return Result.Failure<RecognizedMealUndoModel>(owner.Error);
         }
@@ -24,18 +24,18 @@ public sealed class UndoRecognizedMealCommandHandler(
         }
         return await transactions.ExecuteSerializedAsync(owner.Value, async token => {
             // Recheck after acquiring the transaction lock and on every retried attempt.
-            Result<UserId> access = await CurrentUserAccessResolver.ResolveAsync(owner.Value, currentUserAccessService, token).ConfigureAwait(false);
+            Result<UserId> access = await CurrentUserAccessResolver.ResolveAsync(owner.Value, currentUserAccessService, token);
             if (access.IsFailure) {
                 return Result.Failure<RecognizedMealUndoModel>(access.Error);
             }
-            MealRecognitionReceipt? receipt = await receipts.FindAsync(owner.Value, command.OperationId, token).ConfigureAwait(false);
+            MealRecognitionReceipt? receipt = await receipts.FindAsync(owner.Value, command.OperationId, token);
             if (receipt is null || receipt.UserId != owner.Value || receipt.OperationId != command.OperationId) {
                 return NotFound();
             }
             if (receipt.UndoneAtUtc.HasValue) {
                 return Result.Success(new RecognizedMealUndoModel("AlreadyUndone"));
             }
-            (Meal Meal, uint Version)? locked = await receipts.LockMealForUndoAsync(owner.Value, receipt.MealId, token).ConfigureAwait(false);
+            (Meal Meal, uint Version)? locked = await receipts.LockMealForUndoAsync(owner.Value, receipt.MealId, token);
             if (locked.HasValue && (locked.Value.Meal.UserId != owner.Value || locked.Value.Meal.Id != receipt.MealId)) {
                 return NotFound();
             }
@@ -47,10 +47,10 @@ public sealed class UndoRecognizedMealCommandHandler(
                 return Result.Failure<RecognizedMealUndoModel>(new Error("Meal.RecognitionUndoExpired", "The undo period has expired.", ErrorKind.Conflict));
             }
             if (outcome == MealRecognitionUndoResult.Undone) {
-                await meals.DeleteAsync(locked!.Value.Meal, token).ConfigureAwait(false);
+                await meals.DeleteAsync(locked!.Value.Meal, token);
             }
             return Result.Success(new RecognizedMealUndoModel(outcome.ToString()));
-        }, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken);
     }
 
     private static Result<RecognizedMealUndoModel> NotFound() => Result.Failure<RecognizedMealUndoModel>(

@@ -38,18 +38,18 @@ public sealed class CreateRecipeCommandHandler(
             command,
             currentUserAccessService,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<RecipeModel>(valuesResult.Error);
         }
 
         CreateRecipeValues values = valuesResult.Value;
-        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken);
         if (gallery.IsFailure) { return Result.Failure<RecipeModel>(gallery.Error); }
         Recipe recipe = RecipeCreateFactory.Create(command, values);
         string language = command.Language ?? "en";
         if (command.Language is null) {
-            Result<UserModel> profile = await userProfileReadService.GetUserAsync(values.UserId, cancellationToken).ConfigureAwait(false);
+            Result<UserModel> profile = await userProfileReadService.GetUserAsync(values.UserId, cancellationToken);
             if (profile.IsFailure) { return Result.Failure<RecipeModel>(profile.Error); }
             language = LanguageCode.FromPreferred(profile.Value.Language).Value;
         }
@@ -61,12 +61,12 @@ public sealed class CreateRecipeCommandHandler(
             command.Steps,
             values.UserId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (stepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(stepsResult.Error);
         }
 
-        Result ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken);
         if (ingredientsResult.IsFailure) {
             return Result.Failure<RecipeModel>(ingredientsResult.Error);
         }
@@ -84,14 +84,14 @@ public sealed class CreateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(nutritionResult.Error);
         }
 
-        return await SaveAsync(recipe, cancellationToken).ConfigureAwait(false);
+        return await SaveAsync(recipe, cancellationToken);
     }
 
     private async Task<Result<RecipeModel>> SaveAsync(
         Recipe recipe,
         CancellationToken cancellationToken) {
-        await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
-        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
+        await recipeRepository.AddAsync(recipe, cancellationToken);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeNutritionWriter, cancellationToken);
 
         return Result.Success(recipe.ToModel(0, isOwnedByCurrentUser: true));
     }

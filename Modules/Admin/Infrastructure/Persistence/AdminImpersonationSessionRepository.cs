@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Persistence;
 public sealed class AdminImpersonationSessionRepository(
     DbSet<AdminImpersonationSession> sessions) : IAdminImpersonationSessionWriteRepository {
     public async Task AddAsync(AdminImpersonationSession session, CancellationToken cancellationToken = default) {
-        await sessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        await sessions.AddAsync(session, cancellationToken);
     }
 
 }

@@ -17,8 +17,7 @@ internal static class BillingCurrentUserAccessResolver {
 
         var parsedUserId = new UserId(userId.Value);
         Error? accessError = await sender
-            .Send(new CheckUserAccessQuery(parsedUserId), cancellationToken)
-            .ConfigureAwait(false);
+            .Send(new CheckUserAccessQuery(parsedUserId), cancellationToken);
         return accessError is null
             ? Result.Success(parsedUserId)
             : Result.Failure<UserId>(accessError);

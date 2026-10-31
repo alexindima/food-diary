@@ -33,8 +33,7 @@ public sealed class RefreshTokenCommandHandler(
         }
 
         UserRefreshTokenSession? session = await refreshTokenSessionRepository
-            .GetByIdAsync(refreshSessionId.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdAsync(refreshSessionId.Value, cancellationToken);
         if (session is null || session.UserId != userId || !session.IsActive || session.BrowserSecurityVersion.HasValue) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
@@ -47,8 +46,7 @@ public sealed class RefreshTokenCommandHandler(
             .RecordAuthenticationAsync(
                 userId,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (authenticationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }
@@ -60,8 +58,7 @@ public sealed class RefreshTokenCommandHandler(
                 refreshSessionId.Value,
                 session.RefreshTokenHash,
                 rememberMe,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (tokens is null) {
             return Result.Failure<AuthenticationModel>(AuthenticationErrors.InvalidToken);
         }

@@ -21,7 +21,7 @@ public sealed class ReadWeightEntriesQueryHandler(IWeightEntryReadModelRepositor
             dateTo,
             limit,
             descending,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. entries.Select(entry => entry.ToModel())];
 

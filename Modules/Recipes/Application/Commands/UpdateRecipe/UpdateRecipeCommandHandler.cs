@@ -40,13 +40,13 @@ public sealed class UpdateRecipeCommandHandler(
             imageAssetAccessService,
             productLookupService,
             recipeLookupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<RecipeModel>(valuesResult.Error);
         }
 
         UpdateRecipeValues values = valuesResult.Value;
-        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, values.UserId, imageAssetAccessService, cancellationToken);
         if (gallery.IsFailure) { return Result.Failure<RecipeModel>(gallery.Error); }
         var previousGallery = values.Recipe.Images.Select(image => image.ImageAssetId).ToList();
         RecipeUpdateApplier.Apply(values.Recipe, command, values);
@@ -57,7 +57,7 @@ public sealed class UpdateRecipeCommandHandler(
             values.Steps,
             values.UserId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (stepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(stepsResult.Error);
         }
@@ -75,7 +75,7 @@ public sealed class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(nutritionResult.Error);
         }
 
-        Result<Recipe> updatedResult = await SaveAndReloadAsync(values.Recipe, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result<Recipe> updatedResult = await SaveAndReloadAsync(values.Recipe, values.UserId, cancellationToken);
         if (updatedResult.IsFailure) {
             return Result.Failure<RecipeModel>(updatedResult.Error);
         }
@@ -84,9 +84,9 @@ public sealed class UpdateRecipeCommandHandler(
             command,
             values,
             imageAssetCleanupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         foreach (ImageAssetId assetId in previousGallery.Where(id => !values.Recipe.Images.Any(image => image.ImageAssetId == id))) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken);
         }
         Recipe updated = updatedResult.Value;
         return Result.Success(updated.ToModel(usageCount: 0, isOwnedByCurrentUser: true));
@@ -96,7 +96,7 @@ public sealed class UpdateRecipeCommandHandler(
         Recipe recipe,
         UserId userId,
         CancellationToken cancellationToken) {
-        await recipeWriteRepository.UpdateAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.UpdateAsync(recipe, cancellationToken);
 
         Recipe? updated = await recipeReadRepository.GetByIdAsync(
             recipe.Id,
@@ -104,13 +104,13 @@ public sealed class UpdateRecipeCommandHandler(
             includePublic: false,
             includeSteps: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (updated is null) {
             return Result.Failure<Recipe>(RecipeErrors.InvalidData("Failed to load updated recipe."));
         }
 
-        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeNutritionWriter, cancellationToken);
         return Result.Success(updated);
     }
 

@@ -15,7 +15,7 @@ public static class ToolExecution {
     public static async Task<string> RunJsonAsync<T>(
         Func<Task<T>> operation,
         CancellationToken cancellationToken) {
-        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken).ConfigureAwait(false);
+        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken);
         return JsonSerializer.Serialize(result, JsonOptions);
     }
 
@@ -26,7 +26,7 @@ public static class ToolExecution {
         try {
             return new DevelopmentMcpResult<T>(
                 Success: true,
-                Data: await operation().ConfigureAwait(false),
+                Data: await operation(),
                 ErrorCode: null,
                 ErrorMessage: null,
                 ReadOnly: readOnly);
@@ -47,7 +47,7 @@ public static class ToolExecution {
         Func<Task<T>> operation,
         CancellationToken cancellationToken,
         bool readOnly = true) {
-        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken, readOnly).ConfigureAwait(false);
+        DevelopmentMcpResult<T> result = await RunAsync(operation, cancellationToken, readOnly);
         return new CallToolResult {
             StructuredContent = JsonSerializer.SerializeToElement(result, JsonOptions),
             IsError = !result.Success,

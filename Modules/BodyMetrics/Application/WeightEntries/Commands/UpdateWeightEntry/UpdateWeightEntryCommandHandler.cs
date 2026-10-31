@@ -33,7 +33,7 @@ public sealed class UpdateWeightEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<WeightEntryModel>(userIdResult);
         }
@@ -44,7 +44,7 @@ public sealed class UpdateWeightEntryCommandHandler(
             weightEntryId,
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (existingEntry is null) {
             return Result.Failure<WeightEntryModel>(WeightEntryErrors.NotAccessible(command.WeightEntryId));
@@ -55,7 +55,7 @@ public sealed class UpdateWeightEntryCommandHandler(
         WeightEntry? duplicate = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (duplicate is not null && duplicate.Id != existingEntry.Id) {
             return Result.Failure<WeightEntryModel>(
@@ -63,7 +63,7 @@ public sealed class UpdateWeightEntryCommandHandler(
         }
 
         existingEntry.UpdateMeasurement(MeasuredWeightKg.Create(command.WeightKg), day);
-        await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken).ConfigureAwait(false);
+        await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken);
 
         return Result.Success(existingEntry.ToModel());
     }

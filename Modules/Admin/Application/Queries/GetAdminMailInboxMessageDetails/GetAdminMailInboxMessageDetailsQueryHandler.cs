@@ -10,7 +10,7 @@ public sealed class GetAdminMailInboxMessageDetailsQueryHandler(IAdminMailInboxR
     public async Task<Result<AdminMailInboxMessageDetailsModel>> Handle(
         GetAdminMailInboxMessageDetailsQuery query,
         CancellationToken cancellationToken) {
-        AdminMailInboxMessageDetailsModel? message = await reader.GetMessageAsync(query.Id, cancellationToken).ConfigureAwait(false);
+        AdminMailInboxMessageDetailsModel? message = await reader.GetMessageAsync(query.Id, cancellationToken);
         return message is null
             ? Result.Failure<AdminMailInboxMessageDetailsModel>(AdminMailInboxErrors.MessageNotFound(query.Id))
             : Result.Success(message);

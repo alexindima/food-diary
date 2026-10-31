@@ -24,7 +24,7 @@ public sealed class MarkLessonReadCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
@@ -37,25 +37,25 @@ public sealed class MarkLessonReadCommandHandler(
 
         var lessonId = (NutritionLessonId)command.LessonId;
         return await transactionRunner.ExecuteSerializedAsync(userIdResult.Value, lessonId,
-            token => MarkReadAsync(userIdResult.Value, lessonId, token), cancellationToken).ConfigureAwait(false);
+            token => MarkReadAsync(userIdResult.Value, lessonId, token), cancellationToken);
     }
 
     private async Task<Result> MarkReadAsync(UserId userId, NutritionLessonId lessonId, CancellationToken cancellationToken) {
-        NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken);
         if (lesson is null) {
             return Result.Failure(LessonErrors.NotFound(lessonId.Value));
         }
 
         UserLessonProgress? existing = await readRepository.GetUserProgressForLessonAsync(
-            userId, lessonId, cancellationToken).ConfigureAwait(false);
+            userId, lessonId, cancellationToken);
         if (existing is not null) {
             return Result.Success();
         }
 
         DateTime readAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         var progress = UserLessonProgress.Create(userId, lessonId, readAtUtc);
-        await writeRepository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
-        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken).ConfigureAwait(false);
+        await writeRepository.AddProgressAsync(progress, cancellationToken);
+        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken);
 
         return Result.Success();
     }

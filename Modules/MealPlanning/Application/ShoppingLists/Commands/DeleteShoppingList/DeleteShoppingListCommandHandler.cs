@@ -29,7 +29,7 @@ public sealed class DeleteShoppingListCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -42,13 +42,13 @@ public sealed class DeleteShoppingListCommandHandler(
             userId,
             includeItems: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (list is null) {
             return Result.Failure(ShoppingListErrors.NotFound(command.ShoppingListId));
         }
 
-        await shoppingListRepository.DeleteAsync(list, cancellationToken).ConfigureAwait(false);
+        await shoppingListRepository.DeleteAsync(list, cancellationToken);
         return Result.Success();
     }
 }

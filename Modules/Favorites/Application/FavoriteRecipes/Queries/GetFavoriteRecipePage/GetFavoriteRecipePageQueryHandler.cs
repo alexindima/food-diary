@@ -13,11 +13,11 @@ namespace FoodDiary.Modules.Favorites.Application.FavoriteRecipes.Queries.GetFav
 public sealed class GetFavoriteRecipePageQueryHandler(IFavoriteRecipeQuery queries, ICurrentUserAccessService access)
     : IQueryHandler<GetFavoriteRecipePageQuery, Result<PagedResponse<FavoriteRecipeModel>>> {
     public async Task<Result<PagedResponse<FavoriteRecipeModel>>> Handle(GetFavoriteRecipePageQuery request, CancellationToken cancellationToken) {
-        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(request.UserId, access, cancellationToken).ConfigureAwait(false);
+        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(request.UserId, access, cancellationToken);
         if (user.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<FavoriteRecipeModel>>(user);
         }
-        (IReadOnlyList<FavoriteRecipeReadModel> items, int total) = await queries.GetPageReadModelsAsync(user.Value, request.Page, request.Limit, request.Search?.Trim(), cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<FavoriteRecipeReadModel> items, int total) = await queries.GetPageReadModelsAsync(user.Value, request.Page, request.Limit, request.Search?.Trim(), cancellationToken);
         return Result.Success(new PagedResponse<FavoriteRecipeModel>(items.Select(item => item.ToModel()).ToArray(), request.Page, request.Limit,
             (int)Math.Ceiling((double)total / request.Limit), total));
     }

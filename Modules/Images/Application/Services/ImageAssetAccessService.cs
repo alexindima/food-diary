@@ -18,7 +18,7 @@ public sealed class ImageAssetAccessService(
             return Result.Success<ImageAssetReadModel?>(value: null);
         }
 
-        ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId.Value, userId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId.Value, userId, cancellationToken);
         if (asset is null) {
             return Result.Failure<ImageAssetReadModel?>(ImageErrors.NotFound(assetId.Value.Value));
         }

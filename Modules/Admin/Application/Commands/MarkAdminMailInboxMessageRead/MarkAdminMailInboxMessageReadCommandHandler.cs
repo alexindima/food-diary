@@ -7,7 +7,7 @@ namespace FoodDiary.Modules.Admin.Application.Commands.MarkAdminMailInboxMessage
 public sealed class MarkAdminMailInboxMessageReadCommandHandler(IAdminMailInboxReader reader)
     : ICommandHandler<MarkAdminMailInboxMessageReadCommand, Result> {
     public async Task<Result> Handle(MarkAdminMailInboxMessageReadCommand command, CancellationToken cancellationToken) {
-        bool marked = await reader.MarkMessageReadAsync(command.Id, cancellationToken).ConfigureAwait(false);
+        bool marked = await reader.MarkMessageReadAsync(command.Id, cancellationToken);
         return marked
             ? Result.Success()
             : Result.Failure(AdminMailInboxErrors.MessageNotFound(command.Id));

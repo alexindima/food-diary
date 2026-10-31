@@ -19,16 +19,16 @@ public sealed class MailRelayQueueProcessorHostedService(
 
         do {
             try {
-                IReadOnlyList<QueuedEmailMessage> claimedMessages = await queueStore.ClaimDueBatchAsync(stoppingToken).ConfigureAwait(false);
+                IReadOnlyList<QueuedEmailMessage> claimedMessages = await queueStore.ClaimDueBatchAsync(stoppingToken);
                 await Parallel.ForEachAsync(claimedMessages, new ParallelOptions {
                     MaxDegreeOfParallelism = queueOptions.Value.MaxConcurrentDeliveries,
                     CancellationToken = stoppingToken,
-                }, async (message, token) => await messageProcessor.ProcessAsync(message, token).ConfigureAwait(false)).ConfigureAwait(false);
+                }, async (message, token) => await messageProcessor.ProcessAsync(message, token));
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 break;
             } catch (Exception ex) {
                 logger.LogError(ex, "Mail relay queue processor iteration failed.");
             }
-        } while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false));
+        } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 }

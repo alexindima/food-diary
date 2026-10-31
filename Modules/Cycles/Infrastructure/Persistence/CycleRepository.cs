@@ -62,13 +62,13 @@ public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleWriteR
             profile.DayNotes.Select(note => new CycleDayNoteReadModel(note.Id.Value, note.CycleProfileId.Value, note.Date, note.Notes)).ToList());
 
     public async Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
-        await profiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
+        await profiles.AddAsync(profile, cancellationToken);
         return profile;
     }
 
     public async Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
         profiles.Update(profile);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
@@ -85,7 +85,7 @@ public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleWriteR
         IQueryable<CycleProfile> query = BuildQuery(includeDetails, asTracking)
             .Where(profile => profile.Id == id && profile.UserId == userId);
 
-        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<CycleProfile?> GetCurrentAsync(
@@ -96,7 +96,7 @@ public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleWriteR
             .Where(profile => profile.UserId == userId)
             .OrderByDescending(profile => profile.CreatedOnUtc);
 
-        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<CycleProfileReadModel?> GetCurrentReadModelAsync(
@@ -107,7 +107,7 @@ public sealed class CycleRepository(DbSet<CycleProfile> profiles) : ICycleWriteR
             .Where(profile => profile.UserId == userId)
             .OrderByDescending(profile => profile.CreatedOnUtc).ThenByDescending(profile => profile.Id)
             .Select(ReadModelProjection)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     private IQueryable<CycleProfile> BuildQuery(bool includeDetails, bool asTracking) {

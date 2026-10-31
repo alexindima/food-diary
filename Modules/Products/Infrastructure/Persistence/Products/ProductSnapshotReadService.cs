@@ -12,7 +12,7 @@ public sealed class ProductSnapshotReadService(DbSet<Product> records, Func<Canc
         cancellationToken.ThrowIfCancellationRequested();
         if (productIds.Count == 0) { return new Dictionary<ProductId, ProductSnapshotReadModel>(); }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         ProductId[] ids = [.. productIds.Distinct()];
         return await records.AsNoTracking().Where(product => Enumerable.Contains(ids, product.Id))
@@ -20,6 +20,6 @@ public sealed class ProductSnapshotReadService(DbSet<Product> records, Func<Canc
                 product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase,
                 product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase,
                 product.ProductType, product.Visibility, product.Category) { OwnerUserId = product.UserId.Value })
-            .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(product => product.Id, cancellationToken);
     }
 }

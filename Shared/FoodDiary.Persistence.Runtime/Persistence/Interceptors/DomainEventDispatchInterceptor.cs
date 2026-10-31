@@ -16,13 +16,13 @@ internal sealed class DomainEventDispatchInterceptor(
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default) {
         if (eventData.Context is not null) {
-            await DomainEventDispatcher.DispatchAsync(eventData.Context, publisher, logger, cancellationToken).ConfigureAwait(false);
+            await DomainEventDispatcher.DispatchAsync(eventData.Context, publisher, logger, cancellationToken);
             if (eventData.Context is SharedPersistenceDbContext context) {
                 context.EnsureModuleSaveIsCoordinated();
             }
         }
 
-        return await base.SavingChangesAsync(eventData, result, cancellationToken).ConfigureAwait(false);
+        return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     public override ValueTask<int> SavedChangesAsync(

@@ -19,7 +19,7 @@ public sealed class ModuleTelemetryBehavior<TRequest, TResponse> : IPipelineBeha
         ModuleOperationTelemetry.RecordActive(Module, Operation, 1);
 
         try {
-            TResponse response = await next(cancellationToken).ConfigureAwait(false);
+            TResponse response = await next(cancellationToken);
             outcome = response is Result { IsFailure: true } ? "failure" : "success";
             return response;
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

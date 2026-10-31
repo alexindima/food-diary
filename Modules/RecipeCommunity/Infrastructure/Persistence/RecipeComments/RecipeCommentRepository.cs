@@ -13,14 +13,14 @@ namespace FoodDiary.Modules.RecipeCommunity.Infrastructure.Persistence.RecipeCom
 
 internal sealed class RecipeCommentRepository(DbSet<RecipeComment> entries, IUserCommentAuthorReadService users) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(comment, cancellationToken);
         return comment;
     }
 
     public async Task<RecipeComment?> GetByIdAsync(
         RecipeCommentId id, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<RecipeComment> query = asTracking ? entries.AsTracking() : entries.AsNoTracking();
-        return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
     public Task UpdateAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
@@ -41,13 +41,13 @@ internal sealed class RecipeCommentRepository(DbSet<RecipeComment> entries, IUse
             .AsNoTracking()
             .Where(c => c.RecipeId == recipeId);
 
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken);
 
         List<RecipeComment> items = await query
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }
@@ -63,21 +63,21 @@ internal sealed class RecipeCommentRepository(DbSet<RecipeComment> entries, IUse
             .AsNoTracking()
             .Where(c => c.RecipeId == recipeId);
 
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken);
 
         var pageItems = await query
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(c => new { c.Id, c.RecipeId, c.UserId, c.Text, c.CreatedOnUtc, c.ModifiedOnUtc })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         if (pageItems.Count == 0) {
             return ([], total);
         }
 
         IReadOnlyDictionary<UserId, UserCommentAuthorModel> authors = await users.GetAuthorsAsync(
-            pageItems.Select(c => c.UserId).Distinct().ToArray(), cancellationToken).ConfigureAwait(false);
+            pageItems.Select(c => c.UserId).Distinct().ToArray(), cancellationToken);
         RecipeCommentReadModel[] items = [.. pageItems.Where(c => authors.ContainsKey(c.UserId))
             .Select(c => new RecipeCommentReadModel(c.Id.Value, c.RecipeId.Value, c.UserId.Value,
                 authors[c.UserId].Username, authors[c.UserId].FirstName, c.Text, c.CreatedOnUtc, c.ModifiedOnUtc))];

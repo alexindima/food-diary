@@ -20,7 +20,7 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingQuery billi
             query.FromUtc,
             query.ToUtc);
         (IReadOnlyList<AdminBillingPaymentReadModel> items, int totalItems) =
-            await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
+            await billingRepository.GetPaymentsAsync(filter, cancellationToken);
 
         return Result.Success(AdminBillingQueryFilters.ToPagedResponse(items, filter.Page, filter.Limit, totalItems));
     }

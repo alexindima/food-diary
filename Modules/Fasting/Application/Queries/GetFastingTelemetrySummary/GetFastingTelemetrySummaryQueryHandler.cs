@@ -14,8 +14,7 @@ public sealed class GetFastingTelemetrySummaryQueryHandler(
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         DateTime windowStartUtc = nowUtc.AddHours(-normalizedWindowHours);
         IReadOnlyList<FastingTelemetryEventRecord> events = await repository
-            .GetRangeAsync(windowStartUtc, nowUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .GetRangeAsync(windowStartUtc, nowUtc, cancellationToken);
 
         FastingTelemetryEventRecord[] startedEvents = [.. events.Where(static x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal))];
         FastingTelemetryEventRecord[] completedEvents = [.. events.Where(static x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal))];

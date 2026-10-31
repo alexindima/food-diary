@@ -21,16 +21,16 @@ internal sealed class EfUnitOfWork(
             context,
             domainEventPublisher,
             logger,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         for (int index = 0; index < context.ModuleContexts.Count; index++) {
             DbContext module = context.ModuleContexts[index];
-            await DomainEventDispatcher.DispatchAsync(module, domainEventPublisher, logger, cancellationToken).ConfigureAwait(false);
+            await DomainEventDispatcher.DispatchAsync(module, domainEventPublisher, logger, cancellationToken);
         }
         if (context.ModuleContexts.Any(module => module.ChangeTracker.HasChanges())) {
-            await ModuleContextSaveCoordinator.SaveAsync(context.Session, logger, cancellationToken).ConfigureAwait(false);
+            await ModuleContextSaveCoordinator.SaveAsync(context.Session, logger, cancellationToken);
             return;
         }
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken);
         DomainEventDispatcher.ClearDomainEvents(context);
     }
 }

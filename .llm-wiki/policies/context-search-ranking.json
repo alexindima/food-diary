@@ -1240,13 +1240,6 @@
       "score": 300
     },
     {
-      "id": "ai-prompt-provider",
-      "queryTerms": ["ai", "prompt", "provider"],
-      "minimumMatches": 2,
-      "identityTerms": ["aipromptprovider"],
-      "score": 250
-    },
-    {
       "id": "cleanup-job-role",
       "queryTerms": ["cleanup", "job"],
       "minimumMatches": 2,
@@ -2056,6 +2049,17 @@
     }
   ],
   "structuralRoleBoosts": [
+    {
+      "id": "ai-prompt-provider",
+      "queryTerms": ["ai", "prompt", "provider"],
+      "minimumMatches": 2,
+      "candidateTerms": ["prompt", "provider"],
+      "minimumCandidateMatches": 2,
+      "score": 250,
+      "identityScope": "file",
+      "recordTypes": ["code"],
+      "excludeTests": true
+    },
     {"id": "administration-mutation-role", "directOnly": true, "affinityDirectOnly": false, "excludedQueryTerms": ["read", "get", "list", "audit", "history"], "queryTerms": ["administrator", "administer", "change", "changes", "update"], "minimumMatches": 2, "candidateTerms": ["administrationservice", "commandhandler"], "minimumCandidateMatches": 1, "minimumQueryIdentityMatches": 2, "score": 500, "identityScope": "file", "changeTypes": ["Backend", "Any"], "excludeTests": true},
     {"id": "application-collection-reader", "queryTerms": ["summaries", "feed", "paged", "collection"], "minimumMatches": 1, "candidateTerms": ["collection", "read"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 70, "identityScope": "file", "changeTypes": ["Backend", "Any"], "excludeTests": true},
     {"id": "auth-refresh-coordination", "changeTypes": ["Frontend", "Any"], "queryTerms": ["token", "refresh", "401", "parallel", "concurrent"], "minimumMatches": 2, "candidateTerms": ["auth", "service", "interceptor"], "minimumCandidateMatches": 2, "minimumQueryIdentityMatches": 1, "score": 650, "pathPrefixes": ["FoodDiary.Web.Client/"], "identityScope": "file", "recordTypes": ["code"], "excludeTests": true, "affinityDirectOnly": false},

@@ -12,8 +12,8 @@ public sealed class ReadFastingInsightsQueryHandler(IFastingOccurrenceReadModelR
     public async Task<FastingInsightsModel> Handle(ReadFastingInsightsQuery request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
-        return await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken);
+        return await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken);
     }
 
     private Task<FastingOccurrenceReadModel?> GetCurrentOccurrenceAsync(

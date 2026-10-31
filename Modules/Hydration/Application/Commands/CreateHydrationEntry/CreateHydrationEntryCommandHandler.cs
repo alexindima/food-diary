@@ -23,7 +23,7 @@ public sealed class CreateHydrationEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<HydrationEntryModel>(userIdResult);
         }
@@ -36,7 +36,7 @@ public sealed class CreateHydrationEntryCommandHandler(
 
         DateTime timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
         var entry = HydrationEntry.CreateWithAmount(userId, timestampUtc, HydrationAmount.FromMilliliters(command.AmountMl));
-        await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());
     }

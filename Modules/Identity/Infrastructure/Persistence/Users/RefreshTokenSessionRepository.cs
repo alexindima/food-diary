@@ -19,13 +19,13 @@ public sealed class RefreshTokenSessionRepository(
     Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
     public async Task<BrowserSessionProof?> ReadBrowserSessionProofAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await sessions.AsNoTracking().Where(session => session.Id == id)
             .Select(session => new BrowserSessionProof(session.Id, session.UserId, session.RefreshTokenHash,
                 session.BrowserSecurityVersion, session.ExpiresAtUtc, session.RevokedAtUtc, session.LastRotatedAtUtc,
                 session.CreatedAtUtc, session.BrowserSlidingExpirationEnabled, session.RememberMe))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> TryRecordBrowserActivityAsync(BrowserSessionProof proof, DateTime nowUtc, DateTime lastActiveBeforeUtc, CancellationToken cancellationToken = default) {
@@ -33,13 +33,13 @@ public sealed class RefreshTokenSessionRepository(
             return false;
         }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
                 session.RevokedAtUtc == null && session.ExpiresAtUtc > nowUtc && session.BrowserSecurityVersion == version &&
                 session.RefreshTokenHash == proof.CredentialHash && session.LastRotatedAtUtc <= lastActiveBeforeUtc)
             .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.LastRotatedAtUtc, nowUtc)
-                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken);
         return affected == 1;
     }
 
@@ -48,13 +48,13 @@ public sealed class RefreshTokenSessionRepository(
             return false;
         }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
                 session.BrowserSlidingExpirationEnabled && session.RevokedAtUtc == null && session.ExpiresAtUtc == previous &&
                 session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash && session.RememberMe == proof.RememberMe)
             .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.ExpiresAtUtc, expiresAtUtc)
-                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken);
         return affected == 1;
     }
 
@@ -63,13 +63,13 @@ public sealed class RefreshTokenSessionRepository(
             return false;
         }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int affected = await sessions.Where(session => session.Id == proof.Id && session.UserId == proof.UserId &&
                 session.BrowserSlidingExpirationEnabled && session.RevokedAtUtc == null && session.ExpiresAtUtc > nowUtc &&
                 session.BrowserSecurityVersion == version && session.RefreshTokenHash == proof.CredentialHash)
             .ExecuteUpdateAsync(setters => setters.SetProperty(session => session.RememberMe, valueExpression: true)
-                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken).ConfigureAwait(false);
+                .SetProperty(session => session.ModifiedOnUtc, nowUtc), cancellationToken);
         return affected == 1;
     }
 
@@ -80,7 +80,7 @@ public sealed class RefreshTokenSessionRepository(
             throw new ArgumentOutOfRangeException(nameof(olderThanUtc), "Session retention requires a past UTC cutoff.");
         }
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         JwtOptions options = jwtOptions.Value;
         DateTime regularCutoff = olderThanUtc.AddDays(-(options.RefreshTokenExpirationDays > 0 ? options.RefreshTokenExpirationDays : 7));
@@ -90,7 +90,7 @@ public sealed class RefreshTokenSessionRepository(
                     ((session.RememberMe && session.LastRotatedAtUtc <= rememberedCutoff) ||
                      (!session.RememberMe && session.LastRotatedAtUtc <= regularCutoff))))
             .OrderBy(session => session.CreatedAtUtc).ThenBy(session => session.Id).Take(batchSize)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     private IQueryable<UserRefreshTokenSession> GetUnexpiredSessions(UserId userId) {
@@ -107,14 +107,14 @@ public sealed class RefreshTokenSessionRepository(
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await GetUnexpiredSessions(userId)
             .AsNoTracking()
             .OrderByDescending(session => session.LastRotatedAtUtc)
             .Select(session => new RefreshTokenSessionReadModel(
                 session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActivePageReadModelsAsync(
@@ -123,7 +123,7 @@ public sealed class RefreshTokenSessionRepository(
         int limit,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await GetUnexpiredSessions(userId)
             .AsNoTracking()
@@ -133,7 +133,7 @@ public sealed class RefreshTokenSessionRepository(
             .Take(limit)
             .Select(session => new RefreshTokenSessionReadModel(
                 session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> IsActiveAsync(
@@ -141,46 +141,45 @@ public sealed class RefreshTokenSessionRepository(
         RefreshTokenSessionId sessionId,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await GetUnexpiredSessions(userId).AsNoTracking().AnyAsync(
             session => session.Id == sessionId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<UserRefreshTokenSession?> GetByIdAsync(RefreshTokenSessionId id, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await sessions
-            .FirstOrDefaultAsync(session => session.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(session => session.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<UserRefreshTokenSession>> GetActiveByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await GetUnexpiredSessions(userId)
             .OrderByDescending(session => session.LastRotatedAtUtc)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        await sessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        await sessions.AddAsync(session, cancellationToken);
     }
 
     public async Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         sessions.Update(session);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public async Task<bool> TryRevalidateBrowserSessionAsync(
@@ -191,10 +190,10 @@ public sealed class RefreshTokenSessionRepository(
         DateTime nowUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (!database.IsRelational()) {
-            UserRefreshTokenSession? session = await sessions.FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken).ConfigureAwait(false);
+            UserRefreshTokenSession? session = await sessions.FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken);
             if (session is null || session.UserId != userId || !session.IsActive ||
                 session.BrowserSecurityVersion is not { } version || version > securityVersion ||
                 session.ExpiresAtUtc is not { } expires || expires <= nowUtc ||
@@ -212,7 +211,7 @@ public sealed class RefreshTokenSessionRepository(
                 .SetProperty(session => session.BrowserSecurityVersion, securityVersion)
                 .SetProperty(session => session.LastRotatedAtUtc, session => session.LastRotatedAtUtc < nowUtc ? nowUtc : session.LastRotatedAtUtc)
                 .SetProperty(session => session.ModifiedOnUtc, session => session.LastRotatedAtUtc < nowUtc ? nowUtc : session.LastRotatedAtUtc),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         return affected == 1;
     }
 
@@ -226,11 +225,11 @@ public sealed class RefreshTokenSessionRepository(
         DateTime? expiresAtUtc = null,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (!database.IsRelational()) {
             UserRefreshTokenSession? session = await sessions
-                .FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken).ConfigureAwait(false);
+                .FirstOrDefaultAsync(candidate => candidate.Id == id, cancellationToken);
             if (session is null || session.UserId != userId || !session.IsActive ||
                 !string.Equals(session.RefreshTokenHash, expectedRefreshTokenHash, StringComparison.Ordinal)) {
                 return false;
@@ -254,8 +253,7 @@ public sealed class RefreshTokenSessionRepository(
                     .SetProperty(session => session.RememberMe, rememberMe)
                     .SetProperty(session => session.ExpiresAtUtc, expiresAtUtc)
                     .SetProperty(session => session.LastRotatedAtUtc, rotatedAtUtc),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         return affected == 1;
     }
 
@@ -264,12 +262,11 @@ public sealed class RefreshTokenSessionRepository(
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         List<UserRefreshTokenSession> activeSessions = await sessions
             .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         foreach (UserRefreshTokenSession session in activeSessions) {
             session.Revoke(revokedAtUtc);
         }
@@ -281,12 +278,11 @@ public sealed class RefreshTokenSessionRepository(
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (!database.IsRelational()) {
             UserRefreshTokenSession? session = await sessions
-                .FirstOrDefaultAsync(candidate => candidate.Id == id && candidate.UserId == userId, cancellationToken)
-                .ConfigureAwait(false);
+                .FirstOrDefaultAsync(candidate => candidate.Id == id && candidate.UserId == userId, cancellationToken);
             session?.Revoke(revokedAtUtc);
             return;
         }
@@ -301,8 +297,7 @@ public sealed class RefreshTokenSessionRepository(
                     .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
                     .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
                     .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task RevokeOtherByIdAsync(
@@ -312,12 +307,12 @@ public sealed class RefreshTokenSessionRepository(
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (!database.IsRelational()) {
             bool currentSessionIsActive = await sessions.AnyAsync(
                 session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!currentSessionIsActive) {
                 return;
             }
@@ -325,8 +320,7 @@ public sealed class RefreshTokenSessionRepository(
             UserRefreshTokenSession? targetSession = await sessions
                 .FirstOrDefaultAsync(
                     session => session.Id == id && session.Id != currentSessionId && session.UserId == userId,
-                    cancellationToken)
-                .ConfigureAwait(false);
+                    cancellationToken);
             targetSession?.Revoke(revokedAtUtc);
             return;
         }
@@ -346,8 +340,7 @@ public sealed class RefreshTokenSessionRepository(
                     .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
                     .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
                     .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task RevokeAllOtherAsync(
@@ -356,12 +349,12 @@ public sealed class RefreshTokenSessionRepository(
         DateTime revokedAtUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (!database.IsRelational()) {
             bool currentSessionIsActive = await sessions.AnyAsync(
                 session => session.Id == currentSessionId && session.UserId == userId && session.RevokedAtUtc == null,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!currentSessionIsActive) {
                 return;
             }
@@ -371,8 +364,7 @@ public sealed class RefreshTokenSessionRepository(
                     session.UserId == userId &&
                     session.Id != currentSessionId &&
                     session.RevokedAtUtc == null)
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                .ToListAsync(cancellationToken);
             foreach (UserRefreshTokenSession session in otherSessions) {
                 session.Revoke(revokedAtUtc);
             }
@@ -393,7 +385,6 @@ public sealed class RefreshTokenSessionRepository(
                     .SetProperty(session => session.RevokedAtUtc, revokedAtUtc)
                     .SetProperty(session => session.PreviousRefreshTokenHash, (string?)null)
                     .SetProperty(session => session.PreviousRefreshTokenValidUntilUtc, (DateTime?)null),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
     }
 }

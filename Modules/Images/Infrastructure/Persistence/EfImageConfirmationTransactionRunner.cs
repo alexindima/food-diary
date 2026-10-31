@@ -14,9 +14,9 @@ public sealed class EfImageConfirmationTransactionRunner(IModuleTransactionCoord
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
         return await coordinator.ExecuteAsync(async (transaction, token) => {
-            await AcquireLockAsync(assetId, transaction, token).ConfigureAwait(false);
-            return await operation(token).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
+            await AcquireLockAsync(assetId, transaction, token);
+            return await operation(token);
+        }, cancellationToken);
     }
 
     private static async Task AcquireLockAsync(
@@ -28,12 +28,12 @@ public sealed class EfImageConfirmationTransactionRunner(IModuleTransactionCoord
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             postgresTransaction.Connection,
             postgresTransaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue(
                 "serialization_key",
                 NpgsqlDbType.Text,
                 $"image-confirmation:{assetId.Value:N}");
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

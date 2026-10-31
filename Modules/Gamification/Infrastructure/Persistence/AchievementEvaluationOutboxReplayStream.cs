@@ -13,7 +13,7 @@ internal sealed class AchievementEvaluationOutboxReplayStream(GamificationDbCont
         AchievementEvaluationOutboxMessage? message = await (forUpdate
             ? context.AchievementEvaluationOutbox.FromSqlInterpolated($"SELECT * FROM \"AchievementEvaluationOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
             : context.AchievementEvaluationOutbox.Where(message => message.Id == messageId))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.UserId.Value.ToString());
     }
 
@@ -33,6 +33,5 @@ internal sealed class AchievementEvaluationOutboxReplayStream(GamificationDbCont
                 message.AttemptCount,
                 message.LastError,
                 message.UserId.Value.ToString()))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 }

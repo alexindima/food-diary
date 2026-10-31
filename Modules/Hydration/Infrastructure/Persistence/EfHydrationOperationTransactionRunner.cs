@@ -15,9 +15,9 @@ public sealed class EfHydrationOperationTransactionRunner(IModuleTransactionCoor
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
         return await coordinator.ExecuteAsync(async (transaction, token) => {
-            await AcquireLockAsync(userId, operationId, transaction, token).ConfigureAwait(false);
-            return await operation(token).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
+            await AcquireLockAsync(userId, operationId, transaction, token);
+            return await operation(token);
+        }, cancellationToken);
     }
 
     private static async Task AcquireLockAsync(
@@ -30,12 +30,12 @@ public sealed class EfHydrationOperationTransactionRunner(IModuleTransactionCoor
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             postgresTransaction.Connection,
             postgresTransaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue(
                 "serialization_key",
                 NpgsqlDbType.Text,
                 $"hydration-operation:{userId.Value:N}:{operationId:N}");
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

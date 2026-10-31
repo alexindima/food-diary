@@ -15,7 +15,7 @@ internal static class SharedTransactionBoundary {
         cancellationToken.ThrowIfCancellationRequested();
         Reset(context, postCommitActionQueue);
         try {
-            T result = await operation().ConfigureAwait(false);
+            T result = await operation();
             if (result is Result { IsFailure: true }) {
                 Reset(context, postCommitActionQueue);
             }

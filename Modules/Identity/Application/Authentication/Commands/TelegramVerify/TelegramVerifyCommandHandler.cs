@@ -24,8 +24,7 @@ public sealed class TelegramVerifyCommandHandler(
 
         TelegramInitData initData = initDataResult.Value;
         bool consumed = await replayGuard
-            .TryConsumeAsync(initData.ReplayIdentity, initData.ExpiresAtUtc, initData.AuthDateUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .TryConsumeAsync(initData.ReplayIdentity, initData.ExpiresAtUtc, initData.AuthDateUtc, cancellationToken);
         if (!consumed) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.TelegramAssertionAlreadyUsed);
         }
@@ -34,16 +33,14 @@ public sealed class TelegramVerifyCommandHandler(
             .AuthenticateTelegramAsync(
                 initData.UserId,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (authenticationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
 
         UserAuthenticationPrincipalModel principal = authenticationResult.Value;
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

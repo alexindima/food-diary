@@ -15,7 +15,7 @@ public sealed class UsdaProductSearchSuggestionProvider(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        Result<IReadOnlyList<UsdaFoodModel>> result = await sender.Send(new SearchUsdaFoodsQuery(search, limit), cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<UsdaFoodModel>> result = await sender.Send(new SearchUsdaFoodsQuery(search, limit), cancellationToken);
         return result.IsSuccess ? result.Value.Select(ToSuggestion).ToArray() : [];
     }
 

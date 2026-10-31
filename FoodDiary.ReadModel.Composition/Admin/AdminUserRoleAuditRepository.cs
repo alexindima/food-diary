@@ -30,6 +30,6 @@ public sealed class AdminUserRoleAuditRepository(ICompositionReadContext context
                     auditEvent.Source,
                     auditEvent.OccurredAtUtc))
             .Take(pageSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

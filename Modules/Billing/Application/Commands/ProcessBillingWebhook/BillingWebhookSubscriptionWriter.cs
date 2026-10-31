@@ -61,9 +61,9 @@ public sealed class BillingWebhookSubscriptionWriter(
         }
 
         if (subscription is null) {
-            await billingSubscriptionRepository.AddAsync(currentSubscription, cancellationToken).ConfigureAwait(false);
+            await billingSubscriptionRepository.AddAsync(currentSubscription, cancellationToken);
         } else {
-            await billingSubscriptionRepository.UpdateAsync(currentSubscription, cancellationToken).ConfigureAwait(false);
+            await billingSubscriptionRepository.UpdateAsync(currentSubscription, cancellationToken);
         }
 
         return currentSubscription;

@@ -27,7 +27,7 @@ public sealed class FastingNotificationJob(
                 return;
             }
 
-            int processed = await sender.Send(new SendFastingNotificationsCommand(), cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendFastingNotificationsCommand(), cancellationToken);
             if (processed > 0) {
                 logger.LogInformation("Created {NotificationCount} fasting notifications.", processed);
             }

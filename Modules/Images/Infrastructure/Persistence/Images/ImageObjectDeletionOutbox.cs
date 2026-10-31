@@ -14,7 +14,7 @@ internal sealed class ImageObjectDeletionOutbox(
             isConfirmed,
             timeProvider.GetUtcNow().UtcDateTime);
 
-        await messages.AddAsync(message, cancellationToken).ConfigureAwait(false);
+        await messages.AddAsync(message, cancellationToken);
     }
 
     public Task EnqueueAsync(ObjectStorageKey key, CancellationToken cancellationToken = default) =>

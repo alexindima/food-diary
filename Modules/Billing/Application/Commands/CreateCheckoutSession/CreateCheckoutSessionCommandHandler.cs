@@ -10,7 +10,6 @@ using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -28,17 +27,15 @@ public sealed class CreateCheckoutSessionCommandHandler(
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand request,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = await ResolveUserIdAsync(request, cancellationToken).ConfigureAwait(false);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(request, cancellationToken);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingCheckoutSessionModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        IAsyncDisposable lockHandle = await billingCheckoutLock
-            .AcquireAsync(userId.Value, cancellationToken)
-            .ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        await using IAsyncDisposable checkoutLock = await billingCheckoutLock
+            .AcquireAsync(userId.Value, cancellationToken);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
         }
@@ -47,7 +44,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         if (string.IsNullOrWhiteSpace(user.Email) || !user.IsEmailConfirmed) {
             return Result.Failure<BillingCheckoutSessionModel>(UserErrors.EmailRequired);
         }
-        BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken);
         if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
         }
@@ -73,7 +70,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
                     ? existingSubscription?.ExternalCustomerId
                     : null,
                 ResolveIdempotencyKey(request.IdempotencyKey, userId, plan)),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (sessionResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
         }
@@ -83,12 +80,12 @@ public sealed class CreateCheckoutSessionCommandHandler(
         var result = Result.Success(session);
         await transactionRunner.ExecuteSerializedAsync(BillingOperationLockKeys.ForUser(userId.Value), async token => {
             // The transaction resets tracking; never save the entity read before provider HTTP.
-            Result<UserBillingProfileModel> currentUser = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), token).ConfigureAwait(false);
+            Result<UserBillingProfileModel> currentUser = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), token);
             if (currentUser.IsFailure) {
                 result = Result.Failure<BillingCheckoutSessionModel>(currentUser.Error);
                 return;
             }
-            BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, token).ConfigureAwait(false);
+            BillingSubscription? current = await billingSubscriptionRepository.GetByUserIdAsync(userId, token);
             if (currentUser.Value.HasPaidPremium || IsPaidPremiumActive(current, dateTimeProvider.GetUtcNow().UtcDateTime)) {
                 result = Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
                 return;
@@ -98,7 +95,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
                 return;
             }
             BillingPayment? savedCheckout = await billingPaymentRepository.GetByExternalPaymentIdAsync(
-                billingProvider.Provider, session.SessionId, token).ConfigureAwait(false);
+                billingProvider.Provider, session.SessionId, token);
             if (savedCheckout is not null) {
                 bool matches = current is not null && savedCheckout.UserId == userId &&
                     savedCheckout.BillingSubscriptionId == current.Id &&
@@ -121,18 +118,18 @@ public sealed class CreateCheckoutSessionCommandHandler(
                     session.CustomerId,
                     session.PriceId,
                     session.Plan);
-                await billingSubscriptionRepository.AddAsync(pendingSubscription, token).ConfigureAwait(false);
-                await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, token).ConfigureAwait(false);
+                await billingSubscriptionRepository.AddAsync(pendingSubscription, token);
+                await AddCheckoutPaymentAsync(pendingSubscription, billingProvider.Provider, session, token);
             } else {
                 current.UpdateCheckoutContext(
                     billingProvider.Provider,
                     session.CustomerId,
                     session.PriceId,
                     session.Plan);
-                await billingSubscriptionRepository.UpdateAsync(current, token).ConfigureAwait(false);
-                await AddCheckoutPaymentAsync(current, billingProvider.Provider, session, token).ConfigureAwait(false);
+                await billingSubscriptionRepository.UpdateAsync(current, token);
+                await AddCheckoutPaymentAsync(current, billingProvider.Provider, session, token);
             }
-        }, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken);
         return result;
     }
 
@@ -207,6 +204,6 @@ public sealed class CreateCheckoutSessionCommandHandler(
             webhookEventId: null,
             providerMetadataJson: null,
             occurredAtUtc: null);
-        await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
+        await billingPaymentRepository.AddAsync(payment, cancellationToken);
     }
 }

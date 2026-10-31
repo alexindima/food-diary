@@ -27,6 +27,14 @@
         <fd-ui-button variant="secondary" (click)="setPassword(account)">{{ 'ADMIN_USER.SET_PASSWORD' | translate }}</fd-ui-button>
         <fd-ui-button
             variant="secondary"
+            [disabled]="!canNotify()"
+            [disabledReason]="!canNotify() ? ('ADMIN_NOTIFICATION.UNAVAILABLE' | translate) : null"
+            (click)="sendNotification(account)"
+        >
+            {{ 'ADMIN_NOTIFICATION.TITLE' | translate }}
+        </fd-ui-button>
+        <fd-ui-button
+            variant="secondary"
             [disabled]="!canImpersonate()"
             [disabledReason]="!canImpersonate() ? ('ADMIN_USER.IMPERSONATE_UNAVAILABLE' | translate) : null"
             (click)="impersonate(account)"

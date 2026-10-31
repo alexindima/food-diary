@@ -14,8 +14,7 @@ public sealed class GetAdminAiPromptsQueryHandler(ISender aiReadService)
     public async Task<Result<IReadOnlyList<AdminAiPromptModel>>> Handle(GetAdminAiPromptsQuery query, CancellationToken cancellationToken) {
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
-        IReadOnlyList<AiPromptTemplateReadModel> templates = await aiReadService.Send(new GetAiPromptTemplatesQuery(page, limit), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<AiPromptTemplateReadModel> templates = await aiReadService.Send(new GetAiPromptTemplatesQuery(page, limit), cancellationToken);
         return Result.Success<IReadOnlyList<AdminAiPromptModel>>(templates.Select(static template => template.ToAdminModel()).ToList());
     }
 }

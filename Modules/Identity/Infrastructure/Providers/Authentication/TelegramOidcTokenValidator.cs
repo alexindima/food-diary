@@ -55,7 +55,7 @@ public sealed class TelegramOidcTokenValidator : ITelegramOidcTokenValidator {
         string stage = "metadata";
         try {
             OpenIdConnectConfiguration configuration = await _configurationManager
-                .GetConfigurationAsync(cancellationToken).ConfigureAwait(false);
+                .GetConfigurationAsync(cancellationToken);
             stage = "token_validation";
             var handler = new JwtSecurityTokenHandler { MapInboundClaims = false, MaximumTokenSizeInBytes = MaxTokenLength };
             ClaimsPrincipal principal = handler.ValidateToken(idToken, new TokenValidationParameters {

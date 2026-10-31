@@ -10,7 +10,7 @@ public sealed class MailInboxMessageMetadataConcurrencyFilter(MailInboxMessageMe
     public async Task OnResourceExecutionAsync(
         ResourceExecutingContext context,
         ResourceExecutionDelegate next) {
-        using IDisposable? lease = await gate.TryEnterAsync(context.HttpContext.RequestAborted).ConfigureAwait(false);
+        using IDisposable? lease = await gate.TryEnterAsync(context.HttpContext.RequestAborted);
         if (lease is null) {
             context.HttpContext.Response.Headers.RetryAfter = "1";
             context.Result = new ObjectResult(new MailInboxApiErrorHttpResponse(
@@ -22,6 +22,6 @@ public sealed class MailInboxMessageMetadataConcurrencyFilter(MailInboxMessageMe
             return;
         }
 
-        await next().ConfigureAwait(false);
+        await next();
     }
 }

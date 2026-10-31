@@ -45,7 +45,7 @@ public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUser
         if (toUtc.HasValue) { DateTime end = toUtc.Value.UtcDateTime; query = query.AsNoTracking().Where(item => item.loginEvent.LoggedInAtUtc < end); }
         if (!string.IsNullOrWhiteSpace(provider)) { query = query.AsNoTracking().Where(item => item.loginEvent.AuthProvider == provider); }
         if (!string.IsNullOrWhiteSpace(device)) { query = query.AsNoTracking().Where(item => item.loginEvent.DeviceType == device); }
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
         List<UserLoginEventReadModel> items = await query.AsNoTracking()
             .OrderByDescending(item => item.loginEvent.LoggedInAtUtc)
             .ThenBy(item => item.loginEvent.Id)
@@ -63,7 +63,7 @@ public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUser
                 item.loginEvent.OperatingSystem,
                 item.loginEvent.DeviceType,
                 item.loginEvent.LoggedInAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }
@@ -88,7 +88,7 @@ public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUser
                 $"device:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<UserLoginDeviceSummaryModel> byBrowser = await query.AsNoTracking()
             .GroupBy(item => item.BrowserName ?? "Unknown")
@@ -96,7 +96,7 @@ public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUser
                 $"browser:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<UserLoginDeviceSummaryModel> byOperatingSystem = await query.AsNoTracking()
             .GroupBy(item => item.OperatingSystem ?? "Unknown")
@@ -104,7 +104,7 @@ public sealed class UserLoginEventQuery(ICompositionReadContext context) : IUser
                 $"os:{group.Key}",
                 group.Count(),
                 group.Max(item => item.LoggedInAtUtc)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return byDeviceType
             .Concat(byBrowser)

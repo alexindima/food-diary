@@ -17,14 +17,13 @@ public sealed class GetFastingStatsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FastingStatsModel>(userIdResult);
         }
 
         FastingStatsModel stats = await fastingAnalyticsService
-            .GetStatsAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .GetStatsAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         return Result.Success(stats);
     }
 }

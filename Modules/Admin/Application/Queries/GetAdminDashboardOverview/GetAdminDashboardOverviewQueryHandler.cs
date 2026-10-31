@@ -22,10 +22,10 @@ public sealed class GetAdminDashboardOverviewQueryHandler(IAdminDashboardMetrics
         }
         DateTime to = last.AddDays(1);
         bool monthly = (to - from).TotalDays > 90;
-        AdminDashboardPeriodModel period = await ReadPeriodAsync(from, to, monthly, cancellationToken).ConfigureAwait(false);
+        AdminDashboardPeriodModel period = await ReadPeriodAsync(from, to, monthly, cancellationToken);
         AdminDashboardPeriodModel? previous = query.AllTime ? null :
-            await ReadPeriodAsync(from - (to - from), from, monthly, cancellationToken).ConfigureAwait(false);
-        Result<AdminDashboardSummaryModel> current = await dashboard.GetSummaryAsync(1, cancellationToken).ConfigureAwait(false);
+            await ReadPeriodAsync(from - (to - from), from, monthly, cancellationToken);
+        Result<AdminDashboardSummaryModel> current = await dashboard.GetSummaryAsync(1, cancellationToken);
         if (current.IsFailure) {
             return Result.Failure<AdminDashboardOverviewModel>(current.Error);
         }
@@ -33,8 +33,8 @@ public sealed class GetAdminDashboardOverviewQueryHandler(IAdminDashboardMetrics
             current.Value.TotalUsers, current.Value.PremiumUsers, current.Value.PendingReportsCount));
     }
     private async Task<AdminDashboardPeriodModel> ReadPeriodAsync(DateTime from, DateTime to, bool monthly, CancellationToken cancellationToken) {
-        AdminDashboardMetrics counts = await metrics.GetAsync(from, to, monthly, cancellationToken).ConfigureAwait(false);
-        AdminBillingRevenueSummaryReadModel revenue = await billing.GetRevenueSummaryAsync(from, to, cancellationToken).ConfigureAwait(false);
+        AdminDashboardMetrics counts = await metrics.GetAsync(from, to, monthly, cancellationToken);
+        AdminBillingRevenueSummaryReadModel revenue = await billing.GetRevenueSummaryAsync(from, to, cancellationToken);
         return new AdminDashboardPeriodModel(from, to, counts, revenue.Currencies);
     }
 }

@@ -16,7 +16,7 @@ public sealed class GetDashboardSnapshotQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             dashboardUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DashboardSnapshotModel>(userIdResult);
         }
@@ -32,6 +32,6 @@ public sealed class GetDashboardSnapshotQueryHandler(
                 query.PageSize,
                 TimeZoneOffsetMinutes: query.TimeZoneOffsetMinutes,
                 TimeZoneId: query.TimeZoneId),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

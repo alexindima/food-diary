@@ -13,7 +13,6 @@ public sealed class UserCurrentWaistProvider(ICompositionReadContext context) : 
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Select(entry => (double?)entry.CircumferenceCm)
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

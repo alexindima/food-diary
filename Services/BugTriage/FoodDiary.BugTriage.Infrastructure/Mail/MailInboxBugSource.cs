@@ -18,13 +18,13 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
         Guid? beforeId = null;
         int imported = 0;
         while (true) {
-            IReadOnlyList<MailInboxExportEntryResponse> page = await client.GetPageAsync(options.Value.Recipient, before, beforeId, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<MailInboxExportEntryResponse> page = await client.GetPageAsync(options.Value.Recipient, before, beforeId, cancellationToken);
             if (page.Count == 0) {
                 yield break;
             }
             foreach (MailInboxExportEntryResponse entry in page) {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (await store.ContainsAsync((SourceMessageId)entry.Id, cancellationToken).ConfigureAwait(false)) {
+                if (await store.ContainsAsync((SourceMessageId)entry.Id, cancellationToken)) {
                     continue;
                 }
                 if (imported >= options.Value.MaxImportsPerPoll) {
@@ -32,7 +32,7 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                 }
                 imported++;
                 byte[]? mime = entry.ContentAvailable
-                    ? await client.GetMimeAsync(entry.Id, options.Value.Recipient, cancellationToken).ConfigureAwait(false)
+                    ? await client.GetMimeAsync(entry.Id, options.Value.Recipient, cancellationToken)
                     : null;
                 if (mime is null) {
                     yield return new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, "Content unavailable", string.Empty, RawMime: null);
@@ -41,8 +41,8 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                 ImportedReport report;
                 try {
                     var stream = new MemoryStream(mime, writable: false);
-                    await using ConfiguredAsyncDisposable streamScope = stream.ConfigureAwait(false);
-                    using MimeMessage message = await MimeMessage.LoadAsync(stream, cancellationToken).ConfigureAwait(false);
+                    await using IAsyncDisposable streamScope = stream;
+                    using MimeMessage message = await MimeMessage.LoadAsync(stream, cancellationToken);
                     string body = message.TextBody ?? message.HtmlBody ?? string.Empty;
                     report = new ImportedReport((SourceMessageId)entry.Id, entry.ReceivedAtUtc, Bound(message.Subject ?? "(no subject)", 1000), Bound(body, 100_000), mime);
                 } catch (FormatException) {

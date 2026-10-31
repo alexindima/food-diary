@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Users.Application.Queries.GetUserBillingProfile;
 
 public sealed class GetUserBillingProfileQueryHandler(IUserBillingProfileReadModelRepository repository) : IRequestHandler<GetUserBillingProfileQuery, Result<UserBillingProfileModel>> {
     public async Task<Result<UserBillingProfileModel>> Handle(GetUserBillingProfileQuery request, CancellationToken cancellationToken) {
-        UserBillingProfileModel? profile = await repository.GetBillingProfileIncludingDeletedAsync(request.UserId, cancellationToken).ConfigureAwait(false);
+        UserBillingProfileModel? profile = await repository.GetBillingProfileIncludingDeletedAsync(request.UserId, cancellationToken);
         // Match the persisted access predicate of the former tracked lookup.
         return profile is { IsActive: true, IsDeleted: false }
             ? Result.Success(profile)

@@ -20,13 +20,13 @@ public sealed class StartFastingCommandHandler(
         Result<UserId> userIdResult = await FastingCurrentUserResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return FastingCurrentUserResolver.ToSessionFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        FastingPlan? currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        FastingPlan? currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken);
         if (currentPlan is not null) {
             return Result.Failure<FastingSessionModel>(FastingErrors.AlreadyActive);
         }
@@ -39,8 +39,8 @@ public sealed class StartFastingCommandHandler(
 
         (FastingPlan plan, FastingOccurrence? occurrence) = creation.Value;
 
-        await fastingPlanRepository.AddAsync(plan, cancellationToken).ConfigureAwait(false);
-        await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
+        await fastingPlanRepository.AddAsync(plan, cancellationToken);
+        await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken);
 
         return Result.Success(occurrence.ToModel(plan));
     }

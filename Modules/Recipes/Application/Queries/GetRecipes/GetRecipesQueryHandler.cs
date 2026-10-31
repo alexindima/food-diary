@@ -22,7 +22,7 @@ public sealed class GetRecipesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<RecipeModel>>(userIdResult);
         }
@@ -40,7 +40,7 @@ public sealed class GetRecipesQueryHandler(
                 query.CaloriesFrom,
                 query.CaloriesTo,
                 query.HasImage),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<RecipeModel>(

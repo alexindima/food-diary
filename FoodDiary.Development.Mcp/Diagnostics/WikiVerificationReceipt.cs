@@ -17,8 +17,7 @@ internal sealed record WikiVerificationReceipt(
         CancellationToken cancellationToken,
         bool generation = false) {
         string gitDirectory = await ServerStatusService
-            .ResolveGitDirectoryForStatusAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveGitDirectoryForStatusAsync(repositoryRoot, cancellationToken);
         string path = Path.Combine(gitDirectory, "llm-wiki",
             generation ? "index-generation.json" : "index-verification.json");
         if (!File.Exists(path)) {
@@ -26,10 +25,9 @@ internal sealed record WikiVerificationReceipt(
         }
         try {
             FileStream stream = File.OpenRead(path);
-            await using (stream.ConfigureAwait(false)) {
+            await using (stream) {
                 WikiVerificationReceipt? receipt = await JsonSerializer
-                    .DeserializeAsync<WikiVerificationReceipt>(stream, JsonOptions, cancellationToken)
-                    .ConfigureAwait(false);
+                    .DeserializeAsync<WikiVerificationReceipt>(stream, JsonOptions, cancellationToken);
                 return receipt?.SchemaVersion == 1 ? receipt : null;
             }
         } catch (JsonException) {

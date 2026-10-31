@@ -11,7 +11,7 @@ internal sealed class RecipeLikeRepository(DbSet<RecipeLike> entries) : IRecipeL
         UserId userId, RecipeId recipeId, CancellationToken cancellationToken = default) {
         return await entries
             .AsTracking()
-            .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken);
     }
 
     public async Task<bool> ExistsByUserAndRecipeAsync(
@@ -20,11 +20,11 @@ internal sealed class RecipeLikeRepository(DbSet<RecipeLike> entries) : IRecipeL
         CancellationToken cancellationToken = default) {
         return await entries
             .AsNoTracking()
-            .AnyAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
+            .AnyAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken);
     }
 
     public async Task<RecipeLike> AddAsync(RecipeLike like, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(like, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(like, cancellationToken);
         return like;
     }
 
@@ -36,6 +36,6 @@ internal sealed class RecipeLikeRepository(DbSet<RecipeLike> entries) : IRecipeL
     public async Task<int> CountByRecipeAsync(RecipeId recipeId, CancellationToken cancellationToken = default) {
         return await entries
             .AsNoTracking()
-            .CountAsync(l => l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
+            .CountAsync(l => l.RecipeId == recipeId, cancellationToken);
     }
 }

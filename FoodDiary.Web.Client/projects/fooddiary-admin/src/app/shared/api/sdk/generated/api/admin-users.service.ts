@@ -40,6 +40,10 @@ import { AdminUserSetPasswordHttpRequest } from '../model/admin-user-set-passwor
 
 import { AdminUserUpdateHttpRequest } from '../model/admin-user-update-http-request';
 
+import { ScheduleTestNotificationHttpRequest } from '../model/schedule-test-notification-http-request';
+
+import { ScheduledNotificationHttpResponse } from '../model/scheduled-notification-http-response';
+
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
@@ -126,6 +130,14 @@ export interface PostAdminUsersByIdImpersonationRequestParams {
     id: string;
     version: string;
     adminImpersonationStartHttpRequest?: AdminImpersonationStartHttpRequest;
+}
+
+export interface PostAdminUsersByIdNotificationsTestRequestParams {
+    id: string;
+    version: string;
+    /** Deduplicates retries of this POST request for 24 hours. */
+    idempotencyKey?: string;
+    scheduleTestNotificationHttpRequest?: ScheduleTestNotificationHttpRequest;
 }
 
 @Injectable()
@@ -1173,6 +1185,100 @@ export class AdminUsersSdk extends BaseService {
         return this.httpClient.request<AdminImpersonationStartHttpResponse>('post', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: adminImpersonationStartHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/admin/users/{id}/notifications/test
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postAdminUsersByIdNotificationsTest(
+        requestParameters: PostAdminUsersByIdNotificationsTestRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<ScheduledNotificationHttpResponse>;
+    public postAdminUsersByIdNotificationsTest(
+        requestParameters: PostAdminUsersByIdNotificationsTestRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<ScheduledNotificationHttpResponse>>;
+    public postAdminUsersByIdNotificationsTest(
+        requestParameters: PostAdminUsersByIdNotificationsTestRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<ScheduledNotificationHttpResponse>>;
+    public postAdminUsersByIdNotificationsTest(
+        requestParameters: PostAdminUsersByIdNotificationsTestRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const id = requestParameters?.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling postAdminUsersByIdNotificationsTest.');
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postAdminUsersByIdNotificationsTest.');
+        }
+        const idempotencyKey = requestParameters?.idempotencyKey;
+        const scheduleTestNotificationHttpRequest = requestParameters?.scheduleTestNotificationHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+        if (idempotencyKey !== undefined && idempotencyKey !== null) {
+            localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
+        }
+
+        // authentication (AdminSession) required
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/users/${this.configuration.encodeParam({ name: 'id', value: id, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/notifications/test`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<ScheduledNotificationHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: scheduleTestNotificationHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

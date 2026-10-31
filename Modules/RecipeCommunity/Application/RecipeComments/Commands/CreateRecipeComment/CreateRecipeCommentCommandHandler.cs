@@ -24,21 +24,21 @@ public sealed class CreateRecipeCommentCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeCommentModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
         RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
-            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken);
 
         if (recipe is null) {
             return Result.Failure<RecipeCommentModel>(RecipeErrors.NotFound(command.RecipeId));
         }
 
         var comment = RecipeComment.Create(userIdResult.Value, recipeId, command.Text);
-        await commentRepository.AddAsync(comment, cancellationToken).ConfigureAwait(false);
+        await commentRepository.AddAsync(comment, cancellationToken);
 
         // Notify recipe owner (unless commenting on own recipe)
         if (recipe.UserId == userIdResult.Value) {
@@ -57,7 +57,7 @@ public sealed class CreateRecipeCommentCommandHandler(
         var notification = new NotificationRequest(
             recipe.UserId,
             NotificationIntent.NewComment(recipe.Id.Value.ToString()));
-        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken);
 
         return Result.Success(new RecipeCommentModel(
             comment.Id.Value,

@@ -18,7 +18,7 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
 
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                await _declareTopologyAsync(stoppingToken).ConfigureAwait(false);
+                await _declareTopologyAsync(stoppingToken);
                 logger.LogInformation("RabbitMQ topology bootstrap completed for MailRelay.");
                 return;
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
@@ -29,7 +29,7 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
                     "RabbitMQ topology bootstrap failed. Retrying in {RetryDelaySeconds} seconds.",
                     _brokerOptions.ConnectionRetryDelaySeconds);
 
-                if (!await DelayBeforeRetryAsync(stoppingToken).ConfigureAwait(false)) {
+                if (!await DelayBeforeRetryAsync(stoppingToken)) {
                     return;
                 }
             }
@@ -38,8 +38,7 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
 
     private async Task<bool> DelayBeforeRetryAsync(CancellationToken cancellationToken) {
         try {
-            await Task.Delay(TimeSpan.FromSeconds(_brokerOptions.ConnectionRetryDelaySeconds), cancellationToken)
-                .ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(_brokerOptions.ConnectionRetryDelaySeconds), cancellationToken);
             return true;
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             return false;

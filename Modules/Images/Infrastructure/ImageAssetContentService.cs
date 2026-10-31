@@ -18,7 +18,7 @@ public sealed class ImageAssetContentService(
     public async Task<Result<string>> GetDataUrlAsync(
         ImageAssetId assetId, UserId userId, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        ImageAsset? asset = await images.GetOwnedByIdAsync(assetId, userId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await images.GetOwnedByIdAsync(assetId, userId, cancellationToken);
         if (asset is null) {
             return Result.Failure<string>(ImageErrors.NotFound(assetId.Value));
         }
@@ -32,7 +32,7 @@ public sealed class ImageAssetContentService(
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(TimeSpan.FromSeconds(30));
         try {
-            return await ReadDataUrlAsync(asset.ObjectKey, deadline.Token).ConfigureAwait(false);
+            return await ReadDataUrlAsync(asset.ObjectKey, deadline.Token);
         } catch (InvalidDataException) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image exceeds the allowed size."));
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
@@ -45,14 +45,14 @@ public sealed class ImageAssetContentService(
     private async Task<Result<string>> ReadDataUrlAsync(string objectKey, CancellationToken cancellationToken) {
         S3Options settings = options.Value;
         long maximumBytes = Math.Min(settings.MaxUploadSizeBytes, S3Options.MaximumUploadSizeBytes);
-        StoredObjectInfo? info = await storage.GetObjectInfoAsync(settings.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
+        StoredObjectInfo? info = await storage.GetObjectInfoAsync(settings.Bucket, objectKey, cancellationToken);
         string? contentType = info?.ContentType?.ToLowerInvariant();
         if (info is null || info.SizeBytes <= 0 || info.SizeBytes > maximumBytes
             || contentType is not ("image/jpeg" or "image/png" or "image/webp" or "image/gif")) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image is missing or has an unsupported size or content type."));
         }
 
-        byte[]? content = await storage.GetObjectBytesAsync(settings.Bucket, objectKey, maximumBytes, cancellationToken).ConfigureAwait(false);
+        byte[]? content = await storage.GetObjectBytesAsync(settings.Bucket, objectKey, maximumBytes, cancellationToken);
         if (content is null || content.LongLength != info.SizeBytes || content.LongLength > maximumBytes) {
             return Result.Failure<string>(ImageErrors.InvalidData("Stored image content is missing or incomplete."));
         }

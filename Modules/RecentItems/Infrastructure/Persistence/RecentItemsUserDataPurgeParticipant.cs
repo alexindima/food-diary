@@ -9,7 +9,7 @@ internal sealed class RecentItemsUserDataPurgeParticipant(RecentItemsDbContext c
     public int Order => 70;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
-        await context.RecentItems.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
+        await context.RecentItems.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

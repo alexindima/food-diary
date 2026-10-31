@@ -20,7 +20,7 @@ public static class ImageAssetResolver {
         Result<ImageAssetReadModel?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return imageAssetResult.IsFailure
             ? Result.Failure<ImageAssetResolution>(imageAssetResult.Error)
             : Result.Success(new ImageAssetResolution(imageAssetIdResult.Value, imageAssetResult.Value));

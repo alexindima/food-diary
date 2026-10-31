@@ -21,7 +21,7 @@ public sealed class GetLessonByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<LessonDetailModel>(userIdResult);
         }
@@ -33,7 +33,7 @@ public sealed class GetLessonByIdQueryHandler(
         }
 
         var lessonId = (NutritionLessonId)query.LessonId;
-        LessonDetailModel? lesson = await GetByIdAsync(userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
+        LessonDetailModel? lesson = await GetByIdAsync(userIdResult.Value, lessonId, cancellationToken);
         if (lesson is null) {
             return Result.Failure<LessonDetailModel>(LessonErrors.NotFound(query.LessonId));
         }
@@ -44,14 +44,13 @@ public sealed class GetLessonByIdQueryHandler(
         UserId userId,
         NutritionLessonId lessonId,
         CancellationToken cancellationToken) {
-        LessonDetailReadModel? lesson = await readModelRepository.GetDetailReadModelByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        LessonDetailReadModel? lesson = await readModelRepository.GetDetailReadModelByIdAsync(lessonId, cancellationToken);
         if (lesson is null) {
             return null;
         }
 
         bool isRead = await readModelRepository
-            .IsLessonReadAsync(userId, lessonId, cancellationToken)
-            .ConfigureAwait(false);
+            .IsLessonReadAsync(userId, lessonId, cancellationToken);
 
         return lesson.ToDetailModel(isRead);
     }

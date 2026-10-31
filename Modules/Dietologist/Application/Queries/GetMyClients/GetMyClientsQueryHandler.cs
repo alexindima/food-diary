@@ -16,7 +16,7 @@ public sealed class GetMyClientsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientSummaryModel>>(userIdResult);
         }
@@ -24,6 +24,6 @@ public sealed class GetMyClientsQueryHandler(
         UserId userId = userIdResult.Value;
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
-        return await readService.GetMyClientsPageAsync(userId, page, limit, cancellationToken).ConfigureAwait(false);
+        return await readService.GetMyClientsPageAsync(userId, page, limit, cancellationToken);
     }
 }

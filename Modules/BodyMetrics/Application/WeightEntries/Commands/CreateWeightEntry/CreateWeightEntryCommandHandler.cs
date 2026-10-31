@@ -25,7 +25,7 @@ public sealed class CreateWeightEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<WeightEntryModel>(userIdResult);
         }
@@ -36,16 +36,16 @@ public sealed class CreateWeightEntryCommandHandler(
         WeightEntry? existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (existing is not null) {
             return Result.Failure<WeightEntryModel>(
                 WeightEntryErrors.AlreadyExists(normalizedDate));
         }
 
         var entry = WeightEntry.CreateWithMeasurement(userId, day, MeasuredWeightKg.Create(command.WeightKg));
-        entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        entry = await weightEntryRepository.AddAsync(entry, cancellationToken);
 
-        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Weight: MeasuredWeightKg.Create(command.WeightKg)), cancellationToken).ConfigureAwait(false);
+        await sender.Send(new InitializePendingBodyGoalsCommand(userId, Weight: MeasuredWeightKg.Create(command.WeightKg)), cancellationToken);
         return Result.Success(entry.ToModel());
     }
 }

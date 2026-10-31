@@ -25,7 +25,7 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DietologistInvitationForCurrentUserModel>(userIdResult);
         }
@@ -33,8 +33,7 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
         UserId userId = userIdResult.Value;
         Guid invitationId = query.InvitationId;
         Result<UserDietologistProfileModel> userResult = await dietologistUserContextService
-            .GetAccessibleProfileAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAccessibleProfileAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<DietologistInvitationForCurrentUserModel>(userResult.Error);
         }
@@ -49,7 +48,7 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
 
         DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(
             invitationIdResult.Value,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (invitation is null) {
             return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.InvitationNotFound);
         }

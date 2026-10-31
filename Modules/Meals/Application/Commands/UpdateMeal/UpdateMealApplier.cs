@@ -47,7 +47,7 @@ internal static class UpdateMealApplier {
             values.UserId,
             imageAssetAccessService,
             dateTimeProvider,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (aiSessionsResult.IsFailure) {
             return aiSessionsResult;
         }
@@ -57,7 +57,7 @@ internal static class UpdateMealApplier {
             values.UserId,
             mealNutritionService,
             CreateNutritionInput(command),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private static MealNutritionInput CreateNutritionInput(UpdateMealCommand command) =>

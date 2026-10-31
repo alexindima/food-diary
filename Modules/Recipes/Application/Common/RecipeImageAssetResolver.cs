@@ -15,7 +15,7 @@ internal static class RecipeImageAssetResolver {
         }
         List<RecipeImage> images = [];
         foreach (Guid id in ids) {
-            Result<ImageAssetResolution> resolved = await ImageAssetResolver.ResolveOptionalAsync(id, "ImageAssetIds", userId, service, cancellationToken).ConfigureAwait(false);
+            Result<ImageAssetResolution> resolved = await ImageAssetResolver.ResolveOptionalAsync(id, "ImageAssetIds", userId, service, cancellationToken);
             if (resolved.IsFailure) { return Result.Failure<IReadOnlyList<RecipeImage>?>(resolved.Error); }
             images.Add(new RecipeImage(resolved.Value.ImageAssetId!.Value, resolved.Value.ImageAsset!.Url, images.Count));
         }

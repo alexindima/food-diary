@@ -25,7 +25,7 @@ public sealed class GetAttentionSignalsQueryHandler(
         Result<UserId> dietologistIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (dietologistIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<AttentionSignalModel>>(dietologistIdResult);
         }
@@ -33,7 +33,7 @@ public sealed class GetAttentionSignalsQueryHandler(
         UserId dietologistId = dietologistIdResult.Value;
         Result<IReadOnlyList<ClientSummaryModel>> clientsResult = await invitationReadService.GetMyClientsAsync(
             dietologistId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (clientsResult.IsFailure) {
             return Result.Failure<IReadOnlyList<AttentionSignalModel>>(clientsResult.Error);
         }
@@ -44,7 +44,7 @@ public sealed class GetAttentionSignalsQueryHandler(
             [.. clientsResult.Value.Select(client => new UserId(client.UserId))],
             nowUtc.Date.AddDays(-(lookbackDays - 1)),
             nowUtc.Date,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         IReadOnlyDictionary<Guid, AttentionSignalMetricsReadModel> metricsByClient =
             metrics.ToDictionary(item => item.ClientUserId);
         var signals = new List<AttentionSignalModel>();
@@ -58,7 +58,7 @@ public sealed class GetAttentionSignalsQueryHandler(
             dietologistId.Value,
             "AttentionSignal",
             signals.Select(signal => signal.Id).ToArray(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         IReadOnlyList<AttentionSignalModel> visible = [
             .. signals
                 .Where(signal => IsVisible(signal, dietologistId, states, nowUtc))

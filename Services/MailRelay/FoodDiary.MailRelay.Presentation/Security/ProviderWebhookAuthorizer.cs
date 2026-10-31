@@ -61,7 +61,7 @@ public sealed class ProviderWebhookAuthorizer(
 
         string certificatePem;
         try {
-            certificatePem = await httpClient.GetStringAsync(certificateUri, cancellationToken).ConfigureAwait(false);
+            certificatePem = await httpClient.GetStringAsync(certificateUri, cancellationToken);
         } catch (HttpRequestException) {
             return false;
         }

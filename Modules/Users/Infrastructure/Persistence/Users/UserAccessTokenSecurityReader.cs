@@ -12,14 +12,14 @@ public sealed class UserAccessTokenSecurityReader(DbSet<User> users, Func<Cancel
         long securityVersion,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await users.AsNoTracking().AnyAsync(
             user => user.Id == new UserId(userId) &&
                     user.IsActive &&
                     user.DeletedAt == null &&
                     user.SecurityVersion == securityVersion,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<bool> IsCurrentAdministratorAsync(
@@ -27,7 +27,7 @@ public sealed class UserAccessTokenSecurityReader(DbSet<User> users, Func<Cancel
         long securityVersion,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
 
         return await users.AsNoTracking().AnyAsync(
@@ -36,6 +36,6 @@ public sealed class UserAccessTokenSecurityReader(DbSet<User> users, Func<Cancel
                     user.DeletedAt == null &&
                     user.SecurityVersion == securityVersion &&
                     user.UserRoles.Any(userRole => userRole.Role.Name == RoleNames.Admin),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

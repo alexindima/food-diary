@@ -11,7 +11,7 @@ public sealed class GetInboundMailMessageDetailsQueryHandler(IInboundMailStore s
     public async Task<Result<InboundMailMessageDetails>> Handle(
         GetInboundMailMessageDetailsQuery request,
         CancellationToken cancellationToken) {
-        InboundMailMessageDetails? message = await store.GetMessageDetailsAsync(request.Id, cancellationToken).ConfigureAwait(false);
+        InboundMailMessageDetails? message = await store.GetMessageDetailsAsync(request.Id, cancellationToken);
         return message is null
             ? Result.Failure<InboundMailMessageDetails>(MailInboxErrors.MessageNotFound(request.Id))
             : Result.Success(message);

@@ -21,7 +21,7 @@ public sealed class DisconnectWearableCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -36,17 +36,17 @@ public sealed class DisconnectWearableCommandHandler(
         return await transactionRunner.ExecuteSerializedAsync(
             WearableConnectionLock.Key(userIdResult.Value, provider),
             token => DisconnectAsync(userIdResult.Value, provider, token),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<Result> DisconnectAsync(UserId userId, WearableProvider provider, CancellationToken cancellationToken) {
-        WearableConnection? connection = await connectionRepository.GetAsync(userId, provider, cancellationToken).ConfigureAwait(false);
+        WearableConnection? connection = await connectionRepository.GetAsync(userId, provider, cancellationToken);
         if (connection is null) {
             return Result.Failure(WearableErrors.NotConnected(provider.ToString()));
         }
 
         connection.Deactivate();
-        await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
+        await connectionRepository.UpdateAsync(connection, cancellationToken);
         return Result.Success();
     }
 }

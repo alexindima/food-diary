@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 
 public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightEntryReadModelRepository, IWeightEntryWriteRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(entry, cancellationToken);
         return entry;
     }
 
@@ -34,7 +34,7 @@ public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightE
 
         return await query.FirstOrDefaultAsync(
             entry => entry.Id == id && entry.UserId == userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<WeightEntry?> GetByDateAsync(
@@ -46,7 +46,7 @@ public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightE
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 entry => entry.UserId == userId && entry.Date == normalizedDate,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<IReadOnlyList<WeightEntryReadModel>> GetEntryReadModelsAsync(
@@ -80,7 +80,7 @@ public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightE
 
         return await query
             .Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -97,6 +97,6 @@ public sealed class WeightEntryRepository(DbSet<WeightEntry> entries) : IWeightE
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
             .Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

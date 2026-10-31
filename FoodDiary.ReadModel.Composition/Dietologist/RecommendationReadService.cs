@@ -25,7 +25,7 @@ internal sealed class RecommendationReadService(ICompositionReadContext context)
                 r.IsRead,
                 r.CreatedOnUtc,
                 r.ReadAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
@@ -46,6 +46,6 @@ internal sealed class RecommendationReadService(ICompositionReadContext context)
                 r.IsRead,
                 r.CreatedOnUtc,
                 r.ReadAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

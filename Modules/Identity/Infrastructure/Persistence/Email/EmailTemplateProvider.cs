@@ -19,21 +19,21 @@ public sealed class EmailTemplateProvider(
         }
 
         AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false)) {
+        await using (scope) {
             IdentityDbContext db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
 
             EmailTemplateContent? template = await db.EmailTemplates
                 .AsNoTracking()
                 .Where(t => t.Key == normalizedKey && t.Locale == normalizedLocale && t.IsActive)
                 .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
-                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (template is null && !string.Equals(normalizedLocale, "en", StringComparison.Ordinal)) {
                 template = await db.EmailTemplates
                     .AsNoTracking()
                     .Where(t => t.Key == normalizedKey && t.Locale == "en" && t.IsActive)
                     .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
-                    .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+                    .FirstOrDefaultAsync(cancellationToken);
             }
 
             cache.Set(cacheKey, template, CacheDuration);

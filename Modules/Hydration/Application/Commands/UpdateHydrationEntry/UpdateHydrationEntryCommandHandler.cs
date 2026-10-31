@@ -33,7 +33,7 @@ public sealed class UpdateHydrationEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<HydrationEntryModel>(userIdResult);
         }
@@ -43,7 +43,7 @@ public sealed class UpdateHydrationEntryCommandHandler(
 
         HydrationEntry? entry = await repository.GetByIdForUpdateAsync(
             hydrationEntryId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (entry is null || entry.UserId != userId) {
             return Result.Failure<HydrationEntryModel>(HydrationEntryErrors.NotAccessible(command.HydrationEntryId));
         }
@@ -60,7 +60,7 @@ public sealed class UpdateHydrationEntryCommandHandler(
             : null;
         HydrationAmount? amount = command.AmountMl.HasValue ? HydrationAmount.FromMilliliters(command.AmountMl.Value) : null;
         entry.UpdateDetails(amount, timestampUtc);
-        await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.UpdateAsync(entry, cancellationToken);
 
         return Result.Success(entry.ToModel());
     }

@@ -17,14 +17,13 @@ if (args.Length == 2 && string.Equals(
     SqliteWikiContextSearch evaluationSearch = new(evaluationTelemetry);
     using ChangeSetSnapshotService evaluationSnapshots = new();
     ChangeSetSnapshot evaluationSnapshot = await evaluationSnapshots
-        .GetAsync(CancellationToken.None)
-        .ConfigureAwait(false);
+        .GetAsync(CancellationToken.None);
     await WikiContextSearchEvaluationRunner.RunAsync(
         evaluationSearch,
         args[1],
         Console.Out,
         CancellationToken.None,
-        evaluationSnapshot.Fingerprint).ConfigureAwait(false);
+        evaluationSnapshot.Fingerprint);
     return;
 }
 
@@ -47,7 +46,7 @@ if (args.Length == 2 && string.Equals(
         evaluationQueries,
         args[1],
         Console.Out,
-        CancellationToken.None).ConfigureAwait(false);
+        CancellationToken.None);
     return;
 }
 
@@ -60,8 +59,7 @@ if (args.Length is 2 or 3 && string.Equals(
         : null;
     string evaluationRepositoryRoot = RepositoryRootResolver.Resolve();
     string evaluationGitDirectory = await ServerStatusService
-        .ResolveGitDirectoryForStatusAsync(evaluationRepositoryRoot, CancellationToken.None)
-        .ConfigureAwait(false);
+        .ResolveGitDirectoryForStatusAsync(evaluationRepositoryRoot, CancellationToken.None);
     var evaluationRoutingStore = new ContextRoutingTelemetryStore(Path.Combine(
         evaluationGitDirectory,
         "llm-wiki",
@@ -83,7 +81,7 @@ if (args.Length is 2 or 3 && string.Equals(
         args[1],
         Console.Out,
         CancellationToken.None,
-        maximumCases).ConfigureAwait(false);
+        maximumCases);
     return;
 }
 
@@ -94,11 +92,9 @@ FileStream? sessionLock = string.IsNullOrWhiteSpace(sessionLockPath)
     : File.Open(sessionLockPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
 string repositoryRoot = RepositoryRootResolver.Resolve();
 string repositoryHeadAtStartup = await ServerStatusService
-    .ReadGitHeadAsync(repositoryRoot, CancellationToken.None)
-    .ConfigureAwait(false);
+    .ReadGitHeadAsync(repositoryRoot, CancellationToken.None);
 string gitDirectory = await ServerStatusService
-    .ResolveGitDirectoryForStatusAsync(repositoryRoot, CancellationToken.None)
-    .ConfigureAwait(false);
+    .ResolveGitDirectoryForStatusAsync(repositoryRoot, CancellationToken.None);
 string contextRoutingTelemetryPath = Path.Combine(
     gitDirectory,
     "llm-wiki",
@@ -128,9 +124,9 @@ builder.Services
     .WithTools<TaskTools>();
 
 try {
-    await builder.Build().RunAsync().ConfigureAwait(false);
+    await builder.Build().RunAsync();
 } finally {
     if (sessionLock is not null) {
-        await sessionLock.DisposeAsync().ConfigureAwait(false);
+        await sessionLock.DisposeAsync();
     }
 }

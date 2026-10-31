@@ -36,7 +36,7 @@ public sealed class ImportDailyAdvicePairsCommandHandler(IDailyAdviceWriteReposi
             return Invalid(exception.Message);
         }
 
-        IReadOnlyList<DailyAdvice> existing = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdvice> existing = await repository.GetAllAsync(cancellationToken);
         var groups = existing.GroupBy(item => item.GroupId).ToDictionary(group => group.Key, group => group.ToArray());
         var additions = new List<DailyAdvice>();
         var links = new List<(DailyAdvice Item, Guid GroupId)>();
@@ -72,7 +72,7 @@ public sealed class ImportDailyAdvicePairsCommandHandler(IDailyAdviceWriteReposi
             item.AssignGroup(groupId);
         }
         if (additions.Count > 0) {
-            await repository.AddRangeAsync(additions, cancellationToken).ConfigureAwait(false);
+            await repository.AddRangeAsync(additions, cancellationToken);
         }
         return Result.Success(new DailyAdviceImportModel(imported, pairs.Count - imported));
     }

@@ -56,7 +56,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
 
         MarketingAttributionEventRecord? trustedLanding = null;
         if (string.Equals(request.EventType, MarketingAttributionEventTypes.SignupCompleted, StringComparison.Ordinal)) {
-            if (await repository.ExistsForUserAsync(request.UserId!.Value, MarketingAttributionEventTypes.SignupCompleted, cancellationToken).ConfigureAwait(false)) {
+            if (await repository.ExistsForUserAsync(request.UserId!.Value, MarketingAttributionEventTypes.SignupCompleted, cancellationToken)) {
                 return Result.Success();
             }
 
@@ -64,7 +64,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
                 new AnonymousVisitorId(NormalizeRequired(request.AnonymousId.Value, AnonymousIdMaxLength, "unknown")),
                 new MarketingSessionId(NormalizeRequired(request.SessionId.Value, SessionIdMaxLength, "unknown")),
                 timeProvider.GetUtcNow().UtcDateTime - MaximumPastTimestampAge,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (trustedLanding is null) {
                 return Result.Success();
             }
@@ -86,7 +86,7 @@ public sealed class RecordMarketingAttributionCommandHandler(
             trustedLanding?.BuildVersion ?? NormalizeOptional(request.BuildVersion, BuildVersionMaxLength),
             eventId);
 
-        await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(record, cancellationToken);
         return Result.Success();
     }
 

@@ -11,7 +11,7 @@ namespace FoodDiary.Modules.Favorites.Application.FavoriteMeals.Queries.ReadFavo
 public sealed class ReadFavoriteMealsQueryHandler(IFavoriteMealReadModelRepository favoriteMealReadModelRepository) : IQueryHandler<ReadFavoriteMealsQuery, IReadOnlyList<FavoriteMealModel>> {
     public async Task<IReadOnlyList<FavoriteMealModel>> Handle(ReadFavoriteMealsQuery request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
-        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealReadModelRepository.GetAllReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteMealReadModel> favorites = await favoriteMealReadModelRepository.GetAllReadModelsAsync(userId, cancellationToken);
         return [.. favorites.Select(favorite => favorite.ToModel())];
     }
 

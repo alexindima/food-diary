@@ -15,7 +15,7 @@ public sealed class ClientTelemetryHttpProcessor(ISender sender, ILogger<LogsCon
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         Result result = hasAuthenticatedUser && IsFastingTelemetry(request)
-            ? await sender.Send(request.ToFastingTelemetryCommand(), cancellationToken).ConfigureAwait(false)
+            ? await sender.Send(request.ToFastingTelemetryCommand(), cancellationToken)
             : Result.Success();
         LogLevel logLevel = request.Level.ToLowerInvariant() switch {
             "error" => LogLevel.Warning,

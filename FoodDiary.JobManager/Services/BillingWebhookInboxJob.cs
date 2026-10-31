@@ -19,8 +19,7 @@ public sealed class BillingWebhookInboxJob(
         Stopwatch stopwatch = observer.Start(JobName);
         try {
             BillingWebhookInboxRunResult result = await sender
-                .Send(new ProcessBillingWebhookInboxCommand(BatchSize), cancellationToken)
-                .ConfigureAwait(false);
+                .Send(new ProcessBillingWebhookInboxCommand(BatchSize), cancellationToken);
 
             if (result.Processed > 0 || result.Failed > 0) {
                 logger.LogInformation(

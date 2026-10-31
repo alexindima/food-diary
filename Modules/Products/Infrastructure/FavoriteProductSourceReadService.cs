@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Products.Infrastructure;
 
 internal sealed class FavoriteProductSourceReadService(IProductLookupService source) : IFavoriteProductSourceReadService {
     public async Task<Result<FavoriteProductSourceModel>> GetAccessibleAsync(ProductId id, UserId userId, CancellationToken cancellationToken = default) {
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await source.GetAccessibleByIdsAsync([id], userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await source.GetAccessibleByIdsAsync([id], userId, cancellationToken);
         ProductOverviewReadItem? item = products.GetValueOrDefault(id);
         return item is null
             ? Result.Failure<FavoriteProductSourceModel>(ProductErrors.NotFound(id.Value))

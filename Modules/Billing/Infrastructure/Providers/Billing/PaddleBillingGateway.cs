@@ -39,7 +39,7 @@ public sealed class PaddleBillingGateway(
         try {
             string? customerId = request.ExistingCustomerId;
             if (string.IsNullOrWhiteSpace(customerId)) {
-                Result<string?> existingCustomerResult = await FindExistingCustomerIdAsync(request, cancellationToken).ConfigureAwait(false);
+                Result<string?> existingCustomerResult = await FindExistingCustomerIdAsync(request, cancellationToken);
                 if (existingCustomerResult.IsFailure) {
                     return Result.Failure<BillingCheckoutSessionModel>(existingCustomerResult.Error);
                 }
@@ -47,7 +47,7 @@ public sealed class PaddleBillingGateway(
                 customerId = existingCustomerResult.Value;
             }
             if (string.IsNullOrWhiteSpace(customerId)) {
-                Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
+                Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken);
                 if (customerResult.IsFailure) {
                     return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
                 }
@@ -60,7 +60,7 @@ public sealed class PaddleBillingGateway(
                 request,
                 customerId,
                 priceId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (transactionResponse.IsFailure) {
                 return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
             }
@@ -96,7 +96,7 @@ public sealed class PaddleBillingGateway(
             customerId,
             priceId,
             checkoutReference,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (recoveryResult.IsFailure) {
             return Result.Failure<CreateTransactionResponse>(recoveryResult.Error);
         }
@@ -122,14 +122,14 @@ public sealed class PaddleBillingGateway(
                             ["checkout_reference"] = checkoutReference,
                         },
                         new TransactionCheckoutRequest(_options.CheckoutUrl)),
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
             } catch (Exception ex) when (IsAmbiguousNetworkFailure(ex, cancellationToken)) {
                 recoveryResult = await FindRecoverableTransactionAsync(
                     request,
                     customerId,
                     priceId,
                     checkoutReference,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 recoveredTransaction = recoveryResult.IsSuccess ? recoveryResult.Value : null;
                 transactionResponse = recoveryResult.IsFailure || recoveredTransaction is null
                     ? Result.Failure<CreateTransactionResponse>(BillingErrors.ProviderOperationFailed(
@@ -153,7 +153,7 @@ public sealed class PaddleBillingGateway(
                 HttpMethod.Post,
                 $"customers/{Uri.EscapeDataString(request.CustomerId)}/portal-sessions",
                 new { },
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (sessionResponse.IsFailure) {
                 return Result.Failure<BillingPortalSessionModel>(sessionResponse.Error);
             }
@@ -408,7 +408,7 @@ public sealed class PaddleBillingGateway(
                 new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                 }),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (customerResponse.IsFailure) {
             return Result.Failure<string>(customerResponse.Error);
         }
@@ -425,8 +425,7 @@ public sealed class PaddleBillingGateway(
         string userId = request.UserId.ToString();
         for (int pageNumber = 0; pageNumber < MaximumRecoveryPages && next is not null; pageNumber++) {
             Result<PaddlePage<CreateCustomerResponse>> pageResult = await _apiClient
-                .GetPageAsync<CreateCustomerResponse>(next, cancellationToken)
-                .ConfigureAwait(false);
+                .GetPageAsync<CreateCustomerResponse>(next, cancellationToken);
             if (pageResult.IsFailure) {
                 return Result.Failure<string?>(pageResult.Error);
             }
@@ -462,8 +461,7 @@ public sealed class PaddleBillingGateway(
         CreateTransactionResponse? recentFallback = null;
         for (int pageNumber = 0; pageNumber < MaximumRecoveryPages && next is not null; pageNumber++) {
             Result<PaddlePage<CreateTransactionResponse>> pageResult = await _apiClient
-                .GetPageAsync<CreateTransactionResponse>(next, cancellationToken)
-                .ConfigureAwait(false);
+                .GetPageAsync<CreateTransactionResponse>(next, cancellationToken);
             if (pageResult.IsFailure) {
                 return Result.Failure<CreateTransactionResponse?>(pageResult.Error);
             }

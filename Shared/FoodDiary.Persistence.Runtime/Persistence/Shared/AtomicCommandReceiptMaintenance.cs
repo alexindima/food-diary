@@ -7,7 +7,7 @@ internal sealed class AtomicCommandReceiptMaintenance(SharedPersistenceDbContext
     : IAtomicCommandReceiptMaintenance {
     public async Task DeleteOwnerAsync(Guid userId, CancellationToken cancellationToken = default) =>
         await context.Set<AtomicCommandReceipt>().Where(receipt => receipt.UserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
 
     public Task<int> DeleteExpiredBatchAsync(int batchSize, CancellationToken cancellationToken = default) {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(batchSize);

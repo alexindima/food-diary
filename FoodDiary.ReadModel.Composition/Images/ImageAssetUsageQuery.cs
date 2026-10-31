@@ -19,7 +19,7 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
                 context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
                 context.FoodRecognitionImageAssets.AsNoTracking().Any(asset => asset.Id == assetId) ||
                 context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == assetId))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ImageCleanupCandidate>> GetUnusedCandidatesOlderThanAsync(
@@ -47,6 +47,6 @@ public sealed class ImageAssetUsageQuery(ICompositionReadContext context) : IIma
             .ThenBy(asset => asset.Id)
             .Take(batchSize)
             .Select(asset => new ImageCleanupCandidate(asset.Id, asset.CreatedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

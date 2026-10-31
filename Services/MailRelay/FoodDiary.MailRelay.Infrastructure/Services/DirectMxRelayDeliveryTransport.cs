@@ -31,7 +31,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         }
 
         foreach (IGrouping<string, MailboxAddress> recipientGroup in recipientsByDomain) {
-            await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken).ConfigureAwait(false);
+            await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken);
         }
     }
 
@@ -40,12 +40,12 @@ public sealed class DirectMxRelayDeliveryTransport(
         string domain,
         IReadOnlyList<MailboxAddress> recipients,
         CancellationToken cancellationToken) {
-        IReadOnlyList<MxRecord> mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MxRecord> mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken);
         Exception? lastError = null;
 
         foreach (MxRecord mxRecord in mxRecords) {
             try {
-                await SendToMxAsync(request, recipients, mxRecord.Host, cancellationToken).ConfigureAwait(false);
+                await SendToMxAsync(request, recipients, mxRecord.Host, cancellationToken);
                 return;
             } catch (Exception ex) when (ex is not OperationCanceledException) {
                 lastError = ex;
@@ -77,10 +77,10 @@ public sealed class DirectMxRelayDeliveryTransport(
             client.LocalDomain = _options.LocalDomain;
         }
 
-        Socket socket = await _endpointConnector.ConnectAsync(mxHost, _options.Port, linkedToken.Token).ConfigureAwait(false);
-        await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token).ConfigureAwait(false);
-        await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token).ConfigureAwait(false);
-        await client.DisconnectAsync(quit: true, linkedToken.Token).ConfigureAwait(false);
+        Socket socket = await _endpointConnector.ConnectAsync(mxHost, _options.Port, linkedToken.Token);
+        await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token);
+        await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token);
+        await client.DisconnectAsync(quit: true, linkedToken.Token);
     }
 
     private MimeMessage CreateMessage(RelayEmailMessageRequest request, IReadOnlyList<MailboxAddress> recipients) {

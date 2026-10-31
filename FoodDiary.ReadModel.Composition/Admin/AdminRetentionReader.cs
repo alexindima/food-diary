@@ -25,12 +25,12 @@ public sealed class AdminRetentionReader(ICompositionReadContext context) : IAdm
                 Day1 = group.Count(user => meals.AsNoTracking().Any(meal => meal.UserId == user.Id && meal.CreatedOnUtc >= user.CreatedOnUtc.Date.AddDays(1) && meal.CreatedOnUtc < user.CreatedOnUtc.Date.AddDays(2))),
                 Day7 = group.Count(user => meals.AsNoTracking().Any(meal => meal.UserId == user.Id && meal.CreatedOnUtc >= user.CreatedOnUtc.Date.AddDays(7) && meal.CreatedOnUtc < user.CreatedOnUtc.Date.AddDays(8))),
                 Day30 = group.Count(user => meals.AsNoTracking().Any(meal => meal.UserId == user.Id && meal.CreatedOnUtc >= user.CreatedOnUtc.Date.AddDays(30) && meal.CreatedOnUtc < user.CreatedOnUtc.Date.AddDays(31))),
-            }).ToListAsync(cancellationToken).ConfigureAwait(false);
+            }).ToListAsync(cancellationToken);
         IQueryable<Meal> activity = meals.AsNoTracking().Where(meal => meal.CreatedOnUtc >= fromUtc && meal.CreatedOnUtc < observedEnd);
-        int active = await activity.AsNoTracking().Select(meal => meal.UserId).Distinct().CountAsync(cancellationToken).ConfigureAwait(false);
+        int active = await activity.AsNoTracking().Select(meal => meal.UserId).Distinct().CountAsync(cancellationToken);
         List<AdminRetentionDay> days = await activity.AsNoTracking().GroupBy(meal => meal.CreatedOnUtc.Date).OrderBy(group => group.Key)
             .Select(group => new AdminRetentionDay(group.Key, group.Select(meal => meal.UserId).Distinct().Count(), group.Count()))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         int mealEntries = days.Sum(day => day.MealEntries);
         DateTime activityStart = fromUtc == DateTime.UnixEpoch ? days.FirstOrDefault()?.Date ?? observedEnd : fromUtc;
         var activityDays = days.ToDictionary(day => day.Date);

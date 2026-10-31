@@ -11,7 +11,7 @@ namespace FoodDiary.Modules.Users.Application.Commands.InitializePendingBodyGoal
 public sealed class InitializePendingBodyGoalsCommandHandler(IUserContextService users, TimeProvider timeProvider)
     : IRequestHandler<InitializePendingBodyGoalsCommand, bool> {
     public async Task<bool> Handle(InitializePendingBodyGoalsCommand request, CancellationToken cancellationToken) {
-        Result<User> result = await users.GetAccessibleUserAsync(request.UserId, cancellationToken).ConfigureAwait(false);
+        Result<User> result = await users.GetAccessibleUserAsync(request.UserId, cancellationToken);
         if (result.IsFailure) {
             return false;
         }
@@ -29,7 +29,7 @@ public sealed class InitializePendingBodyGoalsCommandHandler(IUserContextService
             changed = true;
         }
         if (changed) {
-            await users.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
+            await users.UpdateUserAsync(user, cancellationToken);
         }
         return changed;
     }

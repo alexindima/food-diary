@@ -1212,7 +1212,7 @@
       "name": "Transaction",
       "type": "SqliteTransaction",
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-      "line": 135
+      "line": 134
     },
     {
       "category": "financial",
@@ -1926,35 +1926,35 @@
       "name": "CustomerId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 768
+      "line": 766
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 771
+      "line": 769
     },
     {
       "category": "financial",
       "name": "PriceId",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 774
+      "line": 772
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 782
+      "line": 780
     },
     {
       "category": "financial",
       "name": "Price",
       "type": "TransactionPriceResponse?",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 789
+      "line": 787
     },
     {
       "category": "financial",
@@ -2115,14 +2115,14 @@
       "name": "DeliveredSubscriptions",
       "type": "List<Guid>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 85
+      "line": 84
     },
     {
       "category": "financial",
       "name": "InvalidSubscriptions",
       "type": "List<WebPushDeliverySubscription>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 85
+      "line": 84
     },
     {
       "category": "financial",
@@ -2248,14 +2248,14 @@
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 93
+      "line": 89
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double",
       "path": "FoodDiary.ReadModel.Composition/Dietologist/AttentionSignalMetricsReadService.cs",
-      "line": 95
+      "line": 91
     },
     {
       "category": "health",
@@ -8247,7 +8247,7 @@
       "name": "Email",
       "type": "string",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
-      "line": 758
+      "line": 756
     },
     {
       "category": "identity",
@@ -13748,7 +13748,7 @@
   "potentialLogging": [
     {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
-      "line": 63,
+      "line": 62,
       "fieldNames": [
         "DeliveredSubscriptions",
         "InvalidSubscriptions"

@@ -23,13 +23,13 @@ public sealed class CreateRecommendationCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             dietologistUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecommendationModel>(userIdResult);
         }
 
         UserId dietologistUserId = userIdResult.Value;
-        Result<UserDietologistProfileModel> dietologistResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> dietologistResult = await dietologistUserContextService.GetAccessibleProfileAsync(dietologistUserId, cancellationToken);
         if (dietologistResult.IsFailure) {
             return Result.Failure<RecommendationModel>(dietologistResult.Error);
         }
@@ -44,7 +44,7 @@ public sealed class CreateRecommendationCommandHandler(
         UserId clientUserId = clientUserIdResult.Value;
 
         Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
-            invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
+            invitationRepository, dietologistUserId, clientUserId, cancellationToken);
 
         if (accessResult.IsFailure) {
             return Result.Failure<RecommendationModel>(accessResult.Error);
@@ -56,7 +56,7 @@ public sealed class CreateRecommendationCommandHandler(
         }
 
         var recommendation = Recommendation.Create(dietologistUserId, clientUserId, command.Text);
-        await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await recommendationRepository.AddAsync(recommendation, cancellationToken);
 
         return Result.Success(recommendation.ToModel());
     }

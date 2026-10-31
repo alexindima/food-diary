@@ -16,10 +16,10 @@ public sealed class AdminDashboardReadService(
     public async Task<Result<AdminDashboardSummaryModel>> GetSummaryAsync(
         int recentLimit,
         CancellationToken cancellationToken) {
-        int pendingReportsCount = await sender.Send(new CountContentReportsQuery(Status: ReportStatus.Pending), cancellationToken).ConfigureAwait(false);
+        int pendingReportsCount = await sender.Send(new CountContentReportsQuery(Status: ReportStatus.Pending), cancellationToken);
 
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<UserAdminReadModel> recentUsers) =
-            await sender.Send(new GetUserAdministrationSummaryQuery(RecentLimit: recentLimit), cancellationToken).ConfigureAwait(false);
+            await sender.Send(new GetUserAdministrationSummaryQuery(RecentLimit: recentLimit), cancellationToken);
         var response = new AdminDashboardSummaryModel(totalUsers, activeUsers, premiumUsers, deletedUsers,
             pendingReportsCount, [.. recentUsers.Select(AdminUserMappings.ToAdminModel)]);
 

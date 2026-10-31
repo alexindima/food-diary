@@ -29,11 +29,10 @@ public sealed class VerifyEmailCommandHandler(
         if (command.Token.StartsWith(TelegramBackupEmailService.TokenPrefix, StringComparison.Ordinal)) {
             return backupEmails is null
                 ? Result.Failure(new Error("Authentication.TelegramProofRequired", "Request a new confirmation.", ErrorKind.Unauthorized))
-                : await backupEmails.ConfirmAsync(userId.Value, command.Token, cancellationToken).ConfigureAwait(false);
+                : await backupEmails.ConfirmAsync(userId.Value, command.Token, cancellationToken);
         }
         Result<bool> verificationResult = await userIdentityService
-            .VerifyEmailAsync(userId, command.Token, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .VerifyEmailAsync(userId, command.Token, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (verificationResult.IsFailure) {
             return Result.Failure(verificationResult.Error);
         }
@@ -44,7 +43,7 @@ public sealed class VerifyEmailCommandHandler(
 
         postCommitActionQueue.Enqueue("auth.email-verification.hub-notify", async ct => {
             try {
-                await emailVerificationNotifier.NotifyEmailVerifiedAsync(userId.Value, ct).ConfigureAwait(false);
+                await emailVerificationNotifier.NotifyEmailVerifiedAsync(userId.Value, ct);
             } catch {
                 // Notification failures shouldn't block verification.
             }

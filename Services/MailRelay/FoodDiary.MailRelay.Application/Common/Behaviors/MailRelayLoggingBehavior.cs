@@ -19,7 +19,7 @@ public sealed class MailRelayLoggingBehavior<TRequest, TResponse>(
 
         var stopwatch = Stopwatch.StartNew();
         try {
-            TResponse response = await next(cancellationToken).ConfigureAwait(false);
+            TResponse response = await next(cancellationToken);
             stopwatch.Stop();
 
             if (response.IsFailure) {

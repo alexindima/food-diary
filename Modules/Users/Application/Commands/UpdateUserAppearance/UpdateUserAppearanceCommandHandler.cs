@@ -17,12 +17,12 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<UserModel>(userIdResult);
         }
 
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userIdResult.Value, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserModel>(userResult.Error);
         }
@@ -43,7 +43,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userC
             UiStyle: preferences.UiStyle,
             SurfaceStyle: preferences.SurfaceStyle));
 
-        await userContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(user, cancellationToken);
 
         return Result.Success(user.ToModel());
     }

@@ -10,7 +10,7 @@ public sealed class ContentReportsDbContext(DbContextOptions<ContentReportsDbCon
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default) {
         try {
-            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(false);
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         } catch (DbUpdateException exception) when (exception.InnerException is PostgresException {
             SqlState: PostgresErrorCodes.UniqueViolation,
             SchemaName: "public",

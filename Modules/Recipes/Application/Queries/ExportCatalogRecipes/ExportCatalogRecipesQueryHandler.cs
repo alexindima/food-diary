@@ -15,7 +15,7 @@ public sealed class ExportCatalogRecipesQueryHandler(IRecipeOverviewReadService 
         var result = new List<CatalogRecipeModel>();
         for (int page = 1; ; page++) {
             (IReadOnlyList<RecipeOverviewReadItem> items, int total) = await reader.GetPagedAsync(
-                UserId.Empty, includePublic: true, page, limit: 100, new RecipeQueryFilters(Search: null), cancellationToken).ConfigureAwait(false);
+                UserId.Empty, includePublic: true, page, limit: 100, new RecipeQueryFilters(Search: null), cancellationToken);
             if (total > 5000) {
                 return Result.Failure<IReadOnlyList<CatalogRecipeModel>>(Errors.Validation.Invalid("Catalog", "Export supports at most 5000 recipes."));
             }

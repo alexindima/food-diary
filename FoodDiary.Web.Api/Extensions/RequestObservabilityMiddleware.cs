@@ -23,7 +23,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         using IDisposable? scope = BeginRequestScope(context, observation);
 
         try {
-            await next(context).ConfigureAwait(false);
+            await next(context);
         } catch (Exception exception) {
             Exception observedException = TryTakeHandledException(context, out Exception handledException)
                 ? handledException

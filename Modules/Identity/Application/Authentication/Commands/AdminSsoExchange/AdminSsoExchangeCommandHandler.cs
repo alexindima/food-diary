@@ -20,7 +20,7 @@ public sealed class AdminSsoExchangeCommandHandler(
     public async Task<Result<AuthenticationModel>> Handle(
         AdminSsoExchangeCommand command,
         CancellationToken cancellationToken) {
-        UserId? userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
+        UserId? userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken);
         if (userId is null) {
             return Result.Failure<AuthenticationModel>(IdentityErrors.AdminSsoInvalidCode);
         }
@@ -29,8 +29,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             .RecordAuthenticationAsync(
                 userId.Value,
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (principalResult.IsFailure) {
             Error error = string.Equals(principalResult.Error.Code, "Authentication.InvalidCredentials", StringComparison.Ordinal)
                 ? UserErrors.NotFound()
@@ -44,8 +43,7 @@ public sealed class AdminSsoExchangeCommandHandler(
         }
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

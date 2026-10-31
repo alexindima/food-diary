@@ -19,7 +19,7 @@ public sealed class GetMyClientTasksQueryHandler(
         GetMyClientTasksQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, currentUserAccessService, cancellationToken: cancellationToken).ConfigureAwait(false);
+            query.UserId, currentUserAccessService, cancellationToken: cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientTaskModel>>(userIdResult);
         }
@@ -27,7 +27,7 @@ public sealed class GetMyClientTasksQueryHandler(
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         IReadOnlyList<ClientTaskReadModel> tasks = await taskRepository.GetByClientAsync(
-            userIdResult.Value, page, limit, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, page, limit, cancellationToken);
         DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
         return Result.Success<IReadOnlyList<ClientTaskModel>>(
             tasks.Select(task => task.ToModel(utcNow)).ToList());

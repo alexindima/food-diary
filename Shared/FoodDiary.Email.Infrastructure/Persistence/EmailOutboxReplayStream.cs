@@ -15,7 +15,7 @@ internal sealed class EmailOutboxReplayStream(SharedPersistenceDbContext context
         EmailOutboxMessage? message = await (forUpdate
             ? context.EmailOutbox.FromSqlInterpolated($"SELECT * FROM \"EmailOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
             : context.EmailOutbox.Where(message => message.Id == messageId))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.Subject);
     }
 
@@ -35,6 +35,5 @@ internal sealed class EmailOutboxReplayStream(SharedPersistenceDbContext context
                 message.AttemptCount,
                 message.LastError,
                 message.Subject))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 }

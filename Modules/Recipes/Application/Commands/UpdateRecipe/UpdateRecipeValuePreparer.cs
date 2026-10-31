@@ -34,14 +34,14 @@ internal static class UpdateRecipeValuePreparer {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<UpdateRecipeValues>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, recipeRepository, cancellationToken).ConfigureAwait(false);
+        Result<Recipe> recipeResult = await ResolveEditableRecipeAsync(command, recipeId, userId, recipeRepository, cancellationToken);
         if (recipeResult.IsFailure) {
             return Result.Failure<UpdateRecipeValues>(recipeResult.Error);
         }
@@ -58,7 +58,7 @@ internal static class UpdateRecipeValuePreparer {
             userId,
             productLookupService,
             recipeLookupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (ingredientAccessResult.IsFailure) {
             return Result.Failure<UpdateRecipeValues>(ingredientAccessResult.Error);
         }
@@ -68,7 +68,7 @@ internal static class UpdateRecipeValuePreparer {
             nameof(command.ImageAssetId),
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<UpdateRecipeValues>(imageAssetResult.Error);
         }
@@ -113,7 +113,7 @@ internal static class UpdateRecipeValuePreparer {
             userId,
             includePublic: false,
             includeSteps: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (recipe is null) {
             return Result.Failure<Recipe>(RecipeErrors.NotAccessible(command.RecipeId));
         }
@@ -122,7 +122,7 @@ internal static class UpdateRecipeValuePreparer {
             recipe.Id,
             recipe.UserId,
             includePublic: false,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return usageCount > 0
             ? Result.Failure<Recipe>(
                 Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"))

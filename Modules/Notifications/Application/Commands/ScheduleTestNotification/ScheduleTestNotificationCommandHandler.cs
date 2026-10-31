@@ -20,7 +20,7 @@ public sealed class ScheduleTestNotificationCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ScheduledNotificationModel>(userIdResult);
         }
@@ -30,7 +30,7 @@ public sealed class ScheduleTestNotificationCommandHandler(
             userId.Value,
             command.DelaySeconds,
             command.Type,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (scheduledResult.IsFailure) {
             return Result.Failure<ScheduledNotificationModel>(scheduledResult.Error);
         }

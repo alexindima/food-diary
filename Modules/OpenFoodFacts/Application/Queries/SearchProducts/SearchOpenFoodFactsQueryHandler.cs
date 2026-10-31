@@ -16,22 +16,22 @@ public sealed class SearchOpenFoodFactsQueryHandler(
     public async Task<Result<IReadOnlyList<OpenFoodFactsProductModel>>> Handle(
         SearchOpenFoodFactsQuery request,
         CancellationToken cancellationToken) {
-        IReadOnlyList<OpenFoodFactsProductModel> products = await SearchAsync(request.Search, request.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> products = await SearchAsync(request.Search, request.Limit, cancellationToken);
         return Result.Success(products);
     }
     private async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken = default) {
-        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheReadRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheReadRepository.SearchAsync(search, limit, cancellationToken);
         if (cachedProducts.Count >= limit) {
             return cachedProducts;
         }
 
-        IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken);
         if (externalProducts.Count > 0) {
-            await productCacheWriteRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await productCacheWriteRepository.UpsertAsync(externalProducts, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         return externalProducts

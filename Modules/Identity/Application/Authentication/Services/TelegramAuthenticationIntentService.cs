@@ -16,7 +16,7 @@ public sealed class TelegramAuthenticationIntentService(
         long telegramUserId, string? firstName, string? lastName, string? language,
         string browserBinding, Guid? linkUserId, CancellationToken cancellationToken,
         string? oidcIssuer = null, string? oidcSubject = null) {
-        Result<bool> registered = await accounts.IsRegisteredAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
+        Result<bool> registered = await accounts.IsRegisteredAsync(telegramUserId, cancellationToken);
         if (registered.IsFailure) {
             return Result.Failure<TelegramAuthenticationIntentModel>(registered.Error);
         }
@@ -27,7 +27,7 @@ public sealed class TelegramAuthenticationIntentService(
         };
         var payload = new TelegramIntentPayload(telegramUserId, firstName, lastName, language, linkUserId, oidcIssuer, oidcSubject);
         DateTime expiresAtUtc = timeProvider.GetUtcNow().UtcDateTime.AddMinutes(10);
-        string ticket = await tickets.CreateAsync(purpose, browserBinding, JsonSerializer.Serialize(payload), expiresAtUtc, cancellationToken).ConfigureAwait(false);
+        string ticket = await tickets.CreateAsync(purpose, browserBinding, JsonSerializer.Serialize(payload), expiresAtUtc, cancellationToken);
         return Result.Success(new TelegramAuthenticationIntentModel(ticket, nextAction, expiresAtUtc));
     }
 

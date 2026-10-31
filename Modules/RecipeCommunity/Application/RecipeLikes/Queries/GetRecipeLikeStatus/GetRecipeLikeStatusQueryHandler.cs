@@ -20,19 +20,18 @@ public sealed class GetRecipeLikeStatusQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeLikeStatusModel>(userIdResult);
         }
 
         var recipeId = (RecipeId)query.RecipeId;
         if (await recipeAccessService.GetAccessibleByIdAsync(
-            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false) is null) {
+            recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken) is null) {
             return Result.Failure<RecipeLikeStatusModel>(RecipeErrors.NotFound(query.RecipeId));
         }
 
-        RecipeLikeStatusModel status = await GetStatusAsync(userIdResult.Value, recipeId, cancellationToken)
-            .ConfigureAwait(false);
+        RecipeLikeStatusModel status = await GetStatusAsync(userIdResult.Value, recipeId, cancellationToken);
         return Result.Success(status);
     }
     private async Task<RecipeLikeStatusModel> GetStatusAsync(
@@ -40,9 +39,8 @@ public sealed class GetRecipeLikeStatusQueryHandler(
         RecipeId recipeId,
         CancellationToken cancellationToken) {
         bool isLiked = await likeRepository
-            .ExistsByUserAndRecipeAsync(userId, recipeId, cancellationToken)
-            .ConfigureAwait(false);
-        int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
+            .ExistsByUserAndRecipeAsync(userId, recipeId, cancellationToken);
+        int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken);
 
         return new RecipeLikeStatusModel(isLiked, totalLikes);
     }

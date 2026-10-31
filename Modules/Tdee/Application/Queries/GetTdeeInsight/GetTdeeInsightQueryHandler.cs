@@ -34,7 +34,7 @@ public sealed class GetTdeeInsightQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<TdeeInsightModel>(userIdResult);
         }
@@ -58,29 +58,25 @@ public sealed class GetTdeeInsightQueryHandler(
         }
 
         IReadOnlyList<WeightEntryModel> latestWeights = await sender.Send(
-            new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: today, Limit: 1, Descending: true), cancellationToken)
-            .ConfigureAwait(false);
+            new ReadWeightEntriesQuery(UserId: userId, DateFrom: null, DateTo: today, Limit: 1, Descending: true), cancellationToken);
         double? currentWeightKg = latestWeights.Count > 0 ? latestWeights[0].WeightKg : null;
-        Result<TdeeUserProfile> profileResult = await GetProfileAsync(userId, currentWeightKg, cancellationToken)
-            .ConfigureAwait(false);
+        Result<TdeeUserProfile> profileResult = await GetProfileAsync(userId, currentWeightKg, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(profileResult.Error);
         }
         TdeeUserProfile profile = profileResult.Value;
 
-        IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: periodStart, DateTo: today, Limit: null, Descending: false), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<WeightEntryModel> weights = await sender.Send(new ReadWeightEntriesQuery(UserId: userId, DateFrom: periodStart, DateTo: today, Limit: null, Descending: false), cancellationToken);
         Result<IReadOnlyList<MealDailyCalories>> dailyCaloriesResult = await statisticsReadService.GetDailyCaloriesAsync(
             userId,
             nutritionStart,
             nutritionEnd,
-            cancellationToken, zone).ConfigureAwait(false);
+            cancellationToken, zone);
         if (dailyCaloriesResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(dailyCaloriesResult.Error);
         }
 
-        IReadOnlyList<ExerciseEntryModel> exercises = await sender.Send(new ReadExerciseEntriesQuery(userId, periodStart, today), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<ExerciseEntryModel> exercises = await sender.Send(new ReadExerciseEntriesQuery(userId, periodStart, today), cancellationToken);
 
         double? bmr = profile.Bmr?.Value;
         double? estimatedTdee = profile.EstimatedTdee?.Value;
@@ -119,8 +115,7 @@ public sealed class GetTdeeInsightQueryHandler(
         TdeeCalculator.CalculateAdaptive(weights, ToDailyCalories(dailyCalories), AnalysisPeriodDays, exercises);
     private async Task<Result<TdeeUserProfile>> GetProfileAsync(UserId userId, double? currentWeightKg, CancellationToken cancellationToken = default) {
         Result<UserTdeeProfileModel> profileResult = await userProfileReadService
-            .GetTdeeProfileWithWeightAsync(userId, currentWeightKg, cancellationToken)
-            .ConfigureAwait(false);
+            .GetTdeeProfileWithWeightAsync(userId, currentWeightKg, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<TdeeUserProfile>(profileResult.Error);
         }

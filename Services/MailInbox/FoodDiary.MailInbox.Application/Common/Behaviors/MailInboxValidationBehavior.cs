@@ -17,18 +17,18 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
         CancellationToken cancellationToken) {
         IValidator<TRequest>[] validatorList = [.. validators];
         if (validatorList.Length == 0) {
-            return await next(cancellationToken).ConfigureAwait(false);
+            return await next(cancellationToken);
         }
 
         var context = new ValidationContext<TRequest>(request);
         ValidationResult[] validationResults = await Task.WhenAll(
-            validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
+            validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken)));
         ValidationFailure[] errors = [.. validationResults
             .Where(static result => !result.IsValid)
             .SelectMany(static result => result.Errors)];
 
         if (errors.Length == 0) {
-            return await next(cancellationToken).ConfigureAwait(false);
+            return await next(cancellationToken);
         }
 
         var details = errors

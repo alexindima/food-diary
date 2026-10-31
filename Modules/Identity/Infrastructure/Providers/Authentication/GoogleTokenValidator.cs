@@ -41,7 +41,7 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
         }
 
         try {
-            OpenIdConnectConfiguration configuration = await _configurationManager.GetConfigurationAsync(cancellationToken).ConfigureAwait(false);
+            OpenIdConnectConfiguration configuration = await _configurationManager.GetConfigurationAsync(cancellationToken);
             var tokenHandler = new JwtSecurityTokenHandler();
             ClaimsPrincipal principal = tokenHandler.ValidateToken(credential, new TokenValidationParameters {
                 ValidateIssuerSigningKey = true,

@@ -45,7 +45,7 @@ public static class MailRelayQueueRowMapper {
             reader.GetString(2),
             GetDateTimeOffset(reader, 3),
             GetDateTimeOffset(reader, 4),
-            await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 5));
+            await reader.IsDBNullAsync(5, cancellationToken) ? null : GetDateTimeOffset(reader, 5));
 
     public static async Task<MailRelayDeliveryEventEntry> ReadDeliveryEventEntryAsync(
         NpgsqlDataReader reader,
@@ -55,12 +55,12 @@ public static class MailRelayQueueRowMapper {
             reader.GetString(1),
             reader.GetString(2),
             reader.GetString(3),
-            await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(4),
-            await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(5),
-            await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(7),
+            await reader.IsDBNullAsync(4, cancellationToken) ? null : reader.GetString(4),
+            await reader.IsDBNullAsync(5, cancellationToken) ? null : reader.GetString(5),
+            await reader.IsDBNullAsync(7, cancellationToken) ? null : reader.GetString(7),
             GetDateTimeOffset(reader, 8),
             GetDateTimeOffset(reader, 9),
-            await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6));
+            await reader.IsDBNullAsync(6, cancellationToken) ? null : reader.GetString(6));
 
     public static MailRelayQueueStats ReadQueueStats(NpgsqlDataReader reader) =>
         new(
@@ -79,14 +79,14 @@ public static class MailRelayQueueRowMapper {
             reader.GetGuid(0),
             reader.GetString(1),
             reader.GetString(2),
-            await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(3),
+            await reader.IsDBNullAsync(3, cancellationToken) ? null : reader.GetString(3),
             reader.GetInt32(4),
             reader.GetInt32(5),
             GetDateTimeOffset(reader, 6),
             GetDateTimeOffset(reader, 7),
-            await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 8),
-            await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 9),
-            await reader.IsDBNullAsync(10, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(10),
+            await reader.IsDBNullAsync(8, cancellationToken) ? null : GetDateTimeOffset(reader, 8),
+            await reader.IsDBNullAsync(9, cancellationToken) ? null : GetDateTimeOffset(reader, 9),
+            await reader.IsDBNullAsync(10, cancellationToken) ? null : reader.GetString(10),
             suppressedRecipients);
 
     public static string[] ReadMessageRecipients(NpgsqlDataReader reader) =>

@@ -26,7 +26,7 @@ public sealed class CreateShoppingListCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
@@ -46,7 +46,7 @@ public sealed class CreateShoppingListCommandHandler(
             command.Items,
             userId,
             productLookupService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (itemsResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(itemsResult.Error);
@@ -67,7 +67,7 @@ public sealed class CreateShoppingListCommandHandler(
                 item.Id);
         }
 
-        await shoppingListRepository.AddAsync(list, cancellationToken).ConfigureAwait(false);
+        await shoppingListRepository.AddAsync(list, cancellationToken);
         return Result.Success(list.ToModel());
     }
 }

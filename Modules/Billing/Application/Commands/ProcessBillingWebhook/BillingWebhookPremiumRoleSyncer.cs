@@ -20,16 +20,16 @@ public sealed class BillingWebhookPremiumRoleSyncer(
             subscription.CurrentPeriodEndUtc);
         bool canAccess = user.IsActive && !user.IsDeleted;
         if (canAccess) {
-            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken).ConfigureAwait(false);
+            await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken);
             if (shouldHavePremium) {
-                await marketingConversionRecorder.Send(new RecordPremiumConversionCommand(UserId: user.UserId.Value), cancellationToken).ConfigureAwait(false);
+                await marketingConversionRecorder.Send(new RecordPremiumConversionCommand(UserId: user.UserId.Value), cancellationToken);
             }
 
             return;
         }
 
         if (!shouldHavePremium) {
-            await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, cancellationToken).ConfigureAwait(false);
+            await billingAccessService.RevokeManagedPremiumRoleAsync(subscription, cancellationToken);
         }
     }
 }

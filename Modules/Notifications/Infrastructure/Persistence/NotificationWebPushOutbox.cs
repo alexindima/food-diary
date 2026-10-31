@@ -13,6 +13,6 @@ internal sealed class NotificationWebPushOutbox(
             notificationId,
             timeProvider.GetUtcNow().UtcDateTime);
 
-        await messages.AddAsync(message, cancellationToken).ConfigureAwait(false);
+        await messages.AddAsync(message, cancellationToken);
     }
 }

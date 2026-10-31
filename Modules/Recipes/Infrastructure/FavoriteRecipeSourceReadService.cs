@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Recipes.Infrastructure;
 
 internal sealed class FavoriteRecipeSourceReadService(IRecipeAccessService source) : IFavoriteRecipeSourceReadService {
     public async Task<Result<FavoriteRecipeSourceModel>> GetAccessibleAsync(RecipeId id, UserId userId, CancellationToken cancellationToken = default) {
-        RecipeOverviewReadItem? item = await source.GetAccessibleByIdAsync(id, userId, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        RecipeOverviewReadItem? item = await source.GetAccessibleByIdAsync(id, userId, includePublic: true, cancellationToken: cancellationToken);
         return item is null
             ? Result.Failure<FavoriteRecipeSourceModel>(RecipeErrors.NotFound(id.Value))
             : Result.Success(new FavoriteRecipeSourceModel(

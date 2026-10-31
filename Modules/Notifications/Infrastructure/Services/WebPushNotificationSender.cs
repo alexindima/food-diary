@@ -30,7 +30,7 @@ public sealed class WebPushNotificationSender(
     }
 
     public async Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
-        WebPushDeliveryOutcome outcome = await SendBatchAsync(notification, new HashSet<Guid>(), cancellationToken).ConfigureAwait(false);
+        WebPushDeliveryOutcome outcome = await SendBatchAsync(notification, new HashSet<Guid>(), cancellationToken);
         if (outcome.RequiresRetry) {
             throw new HttpRequestException("Web push delivery has unfinished subscriptions.");
         }
@@ -43,8 +43,7 @@ public sealed class WebPushNotificationSender(
         }
 
         IReadOnlyList<WebPushDeliverySubscription> subscriptions = await deliveryAudienceService
-            .GetActiveAudienceAsync(notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .GetActiveAudienceAsync(notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         subscriptions = [.. subscriptions.Take(WebPushDeliveryLimits.MaximumSubscriptionsPerUser)
             .Where(subscription => !completedSubscriptionIds.Contains(subscription.Id))];
         if (subscriptions.Count == 0) {
@@ -52,12 +51,12 @@ public sealed class WebPushNotificationSender(
         }
 
         (List<Guid> deliveredSubscriptions, List<WebPushDeliverySubscription> invalidSubscriptions) =
-            await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+            await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken);
         if (invalidSubscriptions.Count > 0) {
             await deliveryAudienceService.RemoveInvalidSubscriptionsAsync(
                 notification.UserId,
                 [.. invalidSubscriptions.Select(static subscription => subscription.Id)],
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         }
 
         logger.LogDebug(
@@ -112,7 +111,7 @@ public sealed class WebPushNotificationSender(
                             pushSubscription,
                             payload,
                             vapidDetails,
-                            deliveryCancellationToken).ConfigureAwait(false);
+                            deliveryCancellationToken);
                         deliveredSubscriptions.Add(subscription.Id);
                     } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                         throw;
@@ -136,7 +135,7 @@ public sealed class WebPushNotificationSender(
                             ex.GetType().Name,
                             httpStatusCode);
                     }
-                }).ConfigureAwait(false);
+                });
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             logger.LogWarning(
                 "Web push delivery deadline expired for notification {NotificationId} and user {UserId}.",

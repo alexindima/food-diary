@@ -35,20 +35,20 @@ public sealed class StartAdminImpersonationCommandHandler(
         string reason = command.Reason.Trim();
         UserId actorUserId = userIdsResult.Value.ActorUserId;
         UserId targetUserId = userIdsResult.Value.TargetUserId;
-        Result<UserAuthenticationPrincipalModel> actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> actorResult = await LoadActorAsync(actorUserId, cancellationToken);
         if (actorResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(actorResult.Error);
         }
 
-        Result<UserAuthenticationPrincipalModel> targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken);
         if (targetResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(targetResult.Error);
         }
 
         UserAuthenticationPrincipalModel target = targetResult.Value;
         string token = GenerateToken(target, actorResult.Value, command.ActorSessionId, reason);
-        string code = await handoffService.CreateCodeAsync(token, cancellationToken).ConfigureAwait(false);
-        await StartSessionAsync(command, actorUserId, target.UserId, reason, cancellationToken).ConfigureAwait(false);
+        string code = await handoffService.CreateCodeAsync(token, cancellationToken);
+        await StartSessionAsync(command, actorUserId, target.UserId, reason, cancellationToken);
         LogStart(actorUserId, target, reason);
 
         return Result.Success(new AdminImpersonationStartModel(
@@ -91,8 +91,7 @@ public sealed class StartAdminImpersonationCommandHandler(
 
     private async Task<Result<UserAuthenticationPrincipalModel>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
         Result<UserAuthenticationPrincipalModel> result = await userIdentityService
-            .GetAuthenticationPrincipalAsync(actorUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAuthenticationPrincipalAsync(actorUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (result.IsFailure || !result.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(ImpersonationErrors.ImpersonationForbidden);
         }
@@ -105,8 +104,7 @@ public sealed class StartAdminImpersonationCommandHandler(
         Guid targetId,
         CancellationToken cancellationToken) {
         Result<UserAuthenticationPrincipalModel> result = await userIdentityService
-            .GetAuthenticationPrincipalAsync(targetUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAuthenticationPrincipalAsync(targetUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (result.IsFailure) {
             return string.Equals(result.Error.Code, "User.NotFound", StringComparison.Ordinal)
                 ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound(targetId))
@@ -143,7 +141,7 @@ public sealed class StartAdminImpersonationCommandHandler(
             command.ActorIpAddress,
             command.ActorUserAgent,
             dateTimeProvider.GetUtcNow().UtcDateTime);
-        await sessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        await sessionRepository.AddAsync(session, cancellationToken);
     }
 
     private void LogStart(UserId actorUserId, UserAuthenticationPrincipalModel target, string reason) {

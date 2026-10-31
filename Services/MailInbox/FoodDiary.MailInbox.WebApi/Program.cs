@@ -10,7 +10,6 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 if (args is ["--healthcheck"]) {
     Environment.ExitCode = await MailInboxLocalTlsHealthCheck
         .IsReadyAsync(builder.Configuration["MailInboxSmtp:ServerName"], CancellationToken.None)
-        .ConfigureAwait(false)
         ? 0
         : 1;
     return;
@@ -36,12 +35,11 @@ await MailInboxHostConfiguration.ValidateRuntimeDatabaseRoleAsync(
         app.Services,
         app.Configuration,
         app.Environment,
-        app.Lifetime.ApplicationStopping)
-    .ConfigureAwait(false);
+        app.Lifetime.ApplicationStopping);
 
 app.MapMailInboxPresentation();
 
-await app.RunAsync().ConfigureAwait(false);
+await app.RunAsync();
 
 [ExcludeFromCodeCoverage]
 public partial class Program;

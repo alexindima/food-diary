@@ -28,13 +28,13 @@ public sealed partial class MailRelayQueueStore {
             command => command.Parameters.AddWithValue("batchSize", _queueOptions.BatchSize),
             async (reader, token) => {
                 var result = new List<MailRelayOutboxMessage>();
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) {
+                while (await reader.ReadAsync(token)) {
                     result.Add(MailRelayQueueRowMapper.ReadOutboxMessage(reader));
                 }
 
                 return result;
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task MarkOutboxPublishedAsync(MailRelayOutboxId id, CancellationToken cancellationToken) {
@@ -47,7 +47,7 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        await ExecuteStatusCommandAsync(sql, id.Value, cancellationToken).ConfigureAwait(false);
+        await ExecuteStatusCommandAsync(sql, id.Value, cancellationToken);
         MailRelayTelemetry.RecordOutboxEvent("published");
     }
 
@@ -66,15 +66,15 @@ public sealed partial class MailRelayQueueStore {
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("id", id.Value);
                 command.Parameters.AddWithValue("status", shouldRetry ? "retry" : "failed");
                 command.Parameters.AddWithValue("availableAtUtc", (object?)nextAvailableAt ?? DBNull.Value);
                 command.Parameters.AddWithValue("lastError", Truncate(error, 4000));
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await command.ExecuteNonQueryAsync(cancellationToken);
                 MailRelayTelemetry.RecordOutboxEvent(shouldRetry ? "retry" : "failed");
             }
         }

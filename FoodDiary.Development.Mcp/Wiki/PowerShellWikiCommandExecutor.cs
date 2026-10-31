@@ -58,7 +58,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
 
         var requestStopwatch = Stopwatch.StartNew();
-        string requestPath = await WriteRequestAsync(arguments, cancellationToken).ConfigureAwait(false);
+        string requestPath = await WriteRequestAsync(arguments, cancellationToken);
         requestStopwatch.Stop();
         _telemetry.RecordCommandStage(command, "request-serialization", requestStopwatch.Elapsed);
 
@@ -66,7 +66,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
             _telemetry.CommandQueued();
             var queueStopwatch = Stopwatch.StartNew();
             try {
-                await _commandGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                await _commandGate.WaitAsync(cancellationToken);
             } catch (OperationCanceledException) {
                 queueStopwatch.Stop();
                 _telemetry.RecordCommandStage(command, "queue-wait", queueStopwatch.Elapsed);
@@ -85,7 +85,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                     repositoryRoot,
                     wikiPath,
                     bridgePath,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 stopwatch.Stop();
                 _telemetry.CommandCompleted(command, stopwatch.Elapsed);
                 return result;
@@ -179,7 +179,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
 
             try {
                 await Task.WhenAll(processExit, standardOutput, standardError)
-                    .WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
+                    .WaitAsync(linkedCancellation.Token);
             } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
                 TryKill(process);
                 throw new DevelopmentMcpException(
@@ -194,8 +194,8 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
             _telemetry.RecordCommandStage(command, "process-round-trip", processStopwatch.Elapsed);
         }
 
-        string output = await standardOutput.ConfigureAwait(false);
-        string error = await standardError.ConfigureAwait(false);
+        string output = await standardOutput;
+        string error = await standardError;
         if (process.ExitCode != 0) {
             throw new DevelopmentMcpException(
                 DevelopmentMcpErrorCodes.WikiCommandFailed,
@@ -206,8 +206,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         var resultStopwatch = Stopwatch.StartNew();
         try {
             string gitHead = await ServerStatusService
-                .ReadGitHeadAsync(repositoryRoot, cancellationToken)
-                .ConfigureAwait(false);
+                .ReadGitHeadAsync(repositoryRoot, cancellationToken);
             return WikiOutputParser.Parse(command, output.Trim(), repositoryRoot, gitHead);
         } finally {
             resultStopwatch.Stop();
@@ -242,7 +241,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         await File.WriteAllTextAsync(
             requestPath,
             JsonSerializer.Serialize(request, RequestJsonOptions),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return requestPath;
     }
 
@@ -253,7 +252,7 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         char[] buffer = new char[8192];
         StringBuilder output = new();
         while (true) {
-            int read = await reader.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+            int read = await reader.ReadAsync(buffer, cancellationToken);
             if (read == 0) {
                 return output.ToString();
             }

@@ -10,6 +10,6 @@ public sealed class GetAdminDashboardSummaryQueryHandler(IAdminDashboardReadServ
     public async Task<Result<AdminDashboardSummaryModel>> Handle(
         GetAdminDashboardSummaryQuery query,
         CancellationToken cancellationToken) {
-        return await readService.GetSummaryAsync(query.RecentLimit, cancellationToken).ConfigureAwait(false);
+        return await readService.GetSummaryAsync(query.RecentLimit, cancellationToken);
     }
 }

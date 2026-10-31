@@ -32,7 +32,7 @@ public sealed class ClearCycleDayCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -44,7 +44,7 @@ public sealed class ClearCycleDayCommandHandler(
             userId,
             includeDetails: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (profile is null) {
             return Result.Failure(CycleErrors.NotFound(command.CycleProfileId));
@@ -53,7 +53,7 @@ public sealed class ClearCycleDayCommandHandler(
         if (profile.ClearDay(command.Date)) {
             CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
             CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
-            await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
+            await cycleRepository.UpdateAsync(profile, cancellationToken);
         }
 
         return Result.Success();

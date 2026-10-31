@@ -25,7 +25,7 @@ public sealed class ImageCleanupJob(
 
         try {
             cancellationToken.ThrowIfCancellationRequested();
-            totalDeleted = await sender.Send(new CleanupOrphanImagesCommand(olderThanUtc, batchSize), cancellationToken).ConfigureAwait(false);
+            totalDeleted = await sender.Send(new CleanupOrphanImagesCommand(olderThanUtc, batchSize), cancellationToken);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} orphaned image assets older than {OlderThan}", totalDeleted, olderThanUtc);

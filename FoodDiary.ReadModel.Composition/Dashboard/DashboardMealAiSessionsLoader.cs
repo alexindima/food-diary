@@ -49,7 +49,7 @@ internal sealed class DashboardMealAiSessionsLoader(ICompositionReadContext cont
                     .ToList(),
             })
             .AsSingleQuery()
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return sessions
             .OrderBy(row => row.Session.RecognizedAtUtc)

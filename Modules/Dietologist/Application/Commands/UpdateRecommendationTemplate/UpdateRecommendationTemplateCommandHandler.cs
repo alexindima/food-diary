@@ -19,7 +19,7 @@ public sealed class UpdateRecommendationTemplateCommandHandler(
         UpdateRecommendationTemplateCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            command.UserId, userContextService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecommendationTemplateModel>(userIdResult);
         }
@@ -34,7 +34,7 @@ public sealed class UpdateRecommendationTemplateCommandHandler(
         }
 
         RecommendationTemplate? template = await repository.GetByIdAsync(
-            templateIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+            templateIdResult.Value, asTracking: true, cancellationToken);
         if (template is null || template.DietologistUserId != userIdResult.Value) {
             return Result.Failure<RecommendationTemplateModel>(DietologistErrors.InvitationNotFound);
         }

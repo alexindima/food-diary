@@ -24,7 +24,7 @@ public sealed class GetRecipeCommentsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<RecipeCommentModel>>(userIdResult);
         }
@@ -36,13 +36,12 @@ public sealed class GetRecipeCommentsQueryHandler(
             recipeId,
             userIdResult.Value,
             includePublic: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (recipe is null) {
             return Result.Failure<PagedResponse<RecipeCommentModel>>(RecipeErrors.NotFound(query.RecipeId));
         }
 
-        PagedResponse<RecipeCommentModel> comments = await GetPagedByRecipeAsync(recipeId, userIdResult.Value, pageNumber, pageSize, cancellationToken)
-            .ConfigureAwait(false);
+        PagedResponse<RecipeCommentModel> comments = await GetPagedByRecipeAsync(recipeId, userIdResult.Value, pageNumber, pageSize, cancellationToken);
 
         return Result.Success(comments);
     }
@@ -53,8 +52,7 @@ public sealed class GetRecipeCommentsQueryHandler(
         int limit,
         CancellationToken cancellationToken) {
         (IReadOnlyList<RecipeCommentReadModel> items, int total) = await commentRepository
-            .GetPagedReadModelsByRecipeAsync(recipeId, page, limit, cancellationToken)
-            .ConfigureAwait(false);
+            .GetPagedReadModelsByRecipeAsync(recipeId, page, limit, cancellationToken);
 
         IReadOnlyList<RecipeCommentModel> models = [
             .. items

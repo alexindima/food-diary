@@ -11,7 +11,7 @@ public sealed class ReadLatestWaistEntryQueryHandler(IWaistEntryReadModelReposit
     : IRequestHandler<ReadLatestWaistEntryQuery, WaistEntryModel?> {
     public async Task<WaistEntryModel?> Handle(ReadLatestWaistEntryQuery request, CancellationToken cancellationToken) {
         IReadOnlyList<WaistEntryReadModel> entries = await repository.GetEntryReadModelsAsync(
-            request.UserId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken).ConfigureAwait(false);
+            request.UserId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken);
         return entries.Count > 0 ? entries[0].ToModel() : null;
     }
 }

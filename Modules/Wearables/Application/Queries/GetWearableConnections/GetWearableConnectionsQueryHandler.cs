@@ -17,14 +17,13 @@ internal sealed class GetWearableConnectionsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WearableConnectionModel>>(userIdResult);
         }
 
         IReadOnlyList<WearableConnectionModel> models = await connectionRepository
-            .GetConnectionModelsAsync(userIdResult.Value, cancellationToken)
-            .ConfigureAwait(false);
+            .GetConnectionModelsAsync(userIdResult.Value, cancellationToken);
         return Result.Success<IReadOnlyList<WearableConnectionModel>>(models);
     }
 }

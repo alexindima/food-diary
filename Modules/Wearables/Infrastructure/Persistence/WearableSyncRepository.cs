@@ -15,7 +15,7 @@ internal sealed class WearableSyncRepository(DbSet<WearableSyncEntry> records) :
             .FirstOrDefaultAsync(e =>
                 e.UserId == userId && e.Provider == provider &&
                 e.DataType == dataType && e.Date == date.Date,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<IReadOnlyList<WearableSyncEntry>> GetDailySummaryAsync(
@@ -23,7 +23,7 @@ internal sealed class WearableSyncRepository(DbSet<WearableSyncEntry> records) :
         return await records
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
@@ -34,18 +34,18 @@ internal sealed class WearableSyncRepository(DbSet<WearableSyncEntry> records) :
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
             .Select(e => new WearableSyncEntryReadModel(e.DataType, e.Value))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<WearableSyncEntry> AddAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
-        await records.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(entry, cancellationToken);
         return entry;
     }
 
     public async Task UpdateAsync(
         WearableSyncEntry entry, CancellationToken cancellationToken = default) {
         records.Update(entry);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 }

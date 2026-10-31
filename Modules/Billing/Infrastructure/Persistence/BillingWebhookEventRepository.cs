@@ -11,11 +11,11 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
         string provider,
         string eventId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await webhookEvents
             .AnyAsync(
                 webhookEvent => webhookEvent.Provider == provider && webhookEvent.EventId == eventId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public Task<BillingWebhookEvent> AddAsync(
@@ -26,15 +26,15 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
     }
 
     public async Task<BillingWebhookEvent?> GetByIdAsync(BillingWebhookEventId id, CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         Guid storedId = id.Value;
-        return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == storedId, cancellationToken).ConfigureAwait(false);
+        return await webhookEvents.SingleOrDefaultAsync(webhookEvent => webhookEvent.Id == storedId, cancellationToken);
     }
 
     public async Task<IReadOnlyList<BillingWebhookEvent>> GetPendingAsync(
         int limit,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await webhookEvents
             .Where(webhookEvent =>
                 (webhookEvent.Status == BillingWebhookEvent.ReceivedStatus || webhookEvent.Status == BillingWebhookEvent.FailedStatus) &&
@@ -42,8 +42,7 @@ public sealed class BillingWebhookEventRepository(DbSet<BillingWebhookEvent> web
                 (webhookEvent.NextAttemptAtUtc == null || webhookEvent.NextAttemptAtUtc <= _timeProvider.GetUtcNow().UtcDateTime))
             .OrderBy(webhookEvent => webhookEvent.ReceivedAtUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task UpdateAsync(BillingWebhookEvent webhookEvent, CancellationToken cancellationToken = default) {

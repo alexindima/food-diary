@@ -13,7 +13,7 @@ internal static class UpdateMealImageCleanup {
                                 (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value);
 
         if (oldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken);
         }
     }
 }

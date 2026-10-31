@@ -29,7 +29,7 @@ public sealed class GetRecipeByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeModel>(userIdResult);
         }
@@ -41,7 +41,7 @@ public sealed class GetRecipeByIdQueryHandler(
             [recipeId],
             userId,
             includePublic: query.IncludePublic,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         RecipeOverviewReadItem? recipe = recipesById.GetValueOrDefault(recipeId);
 
         if (recipe is null) {

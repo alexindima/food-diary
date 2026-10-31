@@ -16,8 +16,7 @@ public sealed class MarkRecommendationReadCommandHandler(
     : ICommandHandler<MarkRecommendationReadCommand, Result> {
     public async Task<Result> Handle(MarkRecommendationReadCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -35,14 +34,14 @@ public sealed class MarkRecommendationReadCommandHandler(
         RecommendationId recommendationId = recommendationIdResult.Value;
 
         Recommendation? recommendation = await recommendationRepository.GetByIdAsync(
-            recommendationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            recommendationId, asTracking: true, cancellationToken: cancellationToken);
 
         if (recommendation is null || recommendation.ClientUserId != userId) {
             return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
         recommendation.MarkAsRead();
-        await recommendationRepository.UpdateAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await recommendationRepository.UpdateAsync(recommendation, cancellationToken);
         return Result.Success();
     }
 }

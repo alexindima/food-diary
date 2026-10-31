@@ -19,14 +19,14 @@ public sealed class RabbitMqMailRelayBroker(
         }
 
         ConnectionFactory factory = CreateFactory();
-        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            await using (channel.ConfigureAwait(false)) {
-                await DeclareExchangesAsync(channel, cancellationToken).ConfigureAwait(false);
-                await DeclareOutboundQueueAsync(channel, cancellationToken).ConfigureAwait(false);
-                await DeclareRetryQueueAsync(channel, cancellationToken).ConfigureAwait(false);
-                await DeclareDeadLetterQueueAsync(channel, cancellationToken).ConfigureAwait(false);
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken);
+        await using (connection) {
+            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+            await using (channel) {
+                await DeclareExchangesAsync(channel, cancellationToken);
+                await DeclareOutboundQueueAsync(channel, cancellationToken);
+                await DeclareRetryQueueAsync(channel, cancellationToken);
+                await DeclareDeadLetterQueueAsync(channel, cancellationToken);
 
                 logger.LogInformation(
                     "RabbitMQ MailRelay topology is ready. MainQueue={MainQueue}, RetryQueue={RetryQueue}, DeadLetterQueue={DeadLetterQueue}",
@@ -43,19 +43,19 @@ public sealed class RabbitMqMailRelayBroker(
         }
 
         ConnectionFactory factory = CreateFactory();
-        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            await using (channel.ConfigureAwait(false)) {
-                await channel.QueueDeclarePassiveAsync(_brokerOptions.QueueName, cancellationToken).ConfigureAwait(false);
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken);
+        await using (connection) {
+            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+            await using (channel) {
+                await channel.QueueDeclarePassiveAsync(_brokerOptions.QueueName, cancellationToken);
             }
         }
     }
 
     private async Task DeclareExchangesAsync(IChannel channel, CancellationToken cancellationToken) {
-        await channel.ExchangeDeclareAsync(_brokerOptions.OutboundExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-        await channel.ExchangeDeclareAsync(_brokerOptions.RetryExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-        await channel.ExchangeDeclareAsync(_brokerOptions.DeadLetterExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await channel.ExchangeDeclareAsync(_brokerOptions.OutboundExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken);
+        await channel.ExchangeDeclareAsync(_brokerOptions.RetryExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken);
+        await channel.ExchangeDeclareAsync(_brokerOptions.DeadLetterExchangeName, ExchangeType.Direct, durable: true, cancellationToken: cancellationToken);
     }
 
     private async Task DeclareOutboundQueueAsync(IChannel channel, CancellationToken cancellationToken) {
@@ -65,12 +65,12 @@ public sealed class RabbitMqMailRelayBroker(
             exclusive: false,
             autoDelete: false,
             arguments: null,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         await channel.QueueBindAsync(
             queue: _brokerOptions.QueueName,
             exchange: _brokerOptions.OutboundExchangeName,
             routingKey: _brokerOptions.OutboundRoutingKey,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
     }
 
     private async Task DeclareRetryQueueAsync(IChannel channel, CancellationToken cancellationToken) {
@@ -86,12 +86,12 @@ public sealed class RabbitMqMailRelayBroker(
             exclusive: false,
             autoDelete: false,
             arguments: retryArguments,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         await channel.QueueBindAsync(
             queue: _brokerOptions.RetryQueueName,
             exchange: _brokerOptions.RetryExchangeName,
             routingKey: _brokerOptions.RetryRoutingKey,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
     }
 
     private async Task DeclareDeadLetterQueueAsync(IChannel channel, CancellationToken cancellationToken) {
@@ -101,12 +101,12 @@ public sealed class RabbitMqMailRelayBroker(
             exclusive: false,
             autoDelete: false,
             arguments: null,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         await channel.QueueBindAsync(
             queue: _brokerOptions.DeadLetterQueueName,
             exchange: _brokerOptions.DeadLetterExchangeName,
             routingKey: _brokerOptions.DeadLetterRoutingKey,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
     }
 
     public Task PublishOutboundAsync(QueuedEmailId emailId, CancellationToken cancellationToken) {
@@ -138,16 +138,16 @@ public sealed class RabbitMqMailRelayBroker(
         }
 
         ConnectionFactory factory = CreateFactory();
-        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken);
+        await using (connection) {
             IChannel channel = await connection.CreateChannelAsync(
                 new CreateChannelOptions(
                     publisherConfirmationsEnabled: true,
                     publisherConfirmationTrackingEnabled: true,
                     outstandingPublisherConfirmationsRateLimiter: null,
                     consumerDispatchConcurrency: null),
-                cancellationToken).ConfigureAwait(false);
-            await using (channel.ConfigureAwait(false)) {
+                cancellationToken);
+            await using (channel) {
 
                 byte[] body = Encoding.UTF8.GetBytes(emailId.Value.ToString("D"));
                 var properties = new BasicProperties {
@@ -165,7 +165,7 @@ public sealed class RabbitMqMailRelayBroker(
                     mandatory: true,
                     basicProperties: properties,
                     body: body,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                    cancellationToken: cancellationToken);
             }
         }
     }

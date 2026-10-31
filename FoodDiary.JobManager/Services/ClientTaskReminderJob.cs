@@ -23,7 +23,7 @@ public sealed class ClientTaskReminderJob(
                 return;
             }
 
-            int processed = await sender.Send(new SendClientTaskRemindersCommand(), cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendClientTaskRemindersCommand(), cancellationToken);
             observer.RecordSuccess(JobName, processed: processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Client task reminder job was canceled.");

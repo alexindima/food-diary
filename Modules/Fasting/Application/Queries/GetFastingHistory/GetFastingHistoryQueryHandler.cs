@@ -18,7 +18,7 @@ public sealed class GetFastingHistoryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<FastingSessionModel>>(userIdResult);
         }
@@ -30,7 +30,7 @@ public sealed class GetFastingHistoryQueryHandler(
             PaginationPolicy.NormalizePageSize(query.Limit, defaultPageSize: 1, maxPageSize: 50),
             NormalizeUtc(query.From),
             NormalizeUtc(query.To),
-            cancellationToken).ConfigureAwait(false));
+            cancellationToken));
     }
 
     private static DateTime NormalizeUtc(DateTime value) =>

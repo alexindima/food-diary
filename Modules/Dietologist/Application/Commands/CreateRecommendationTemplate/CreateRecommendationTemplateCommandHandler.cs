@@ -17,13 +17,13 @@ public sealed class CreateRecommendationTemplateCommandHandler(
         CreateRecommendationTemplateCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            command.UserId, userContextService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecommendationTemplateModel>(userIdResult);
         }
 
         var template = RecommendationTemplate.Create(userIdResult.Value, command.Name, command.Text);
-        await repository.AddAsync(template, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(template, cancellationToken);
         return Result.Success(template.ToModel());
     }
 }

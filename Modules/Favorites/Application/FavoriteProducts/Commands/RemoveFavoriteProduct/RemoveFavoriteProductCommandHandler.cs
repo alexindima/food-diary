@@ -17,8 +17,7 @@ public sealed class RemoveFavoriteProductCommandHandler(
         RemoveFavoriteProductCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -35,13 +34,13 @@ public sealed class RemoveFavoriteProductCommandHandler(
 
         FavoriteProductId favoriteProductId = favoriteProductIdResult.Value;
         FavoriteProduct? favorite = await favoriteProductRepository.GetOwnedByIdAsync(
-            favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken);
 
         if (favorite is null) {
             return Result.Failure(FavoriteProductErrors.NotFound(command.FavoriteProductId));
         }
 
-        await favoriteProductRepository.DeleteAsync(favorite, cancellationToken).ConfigureAwait(false);
+        await favoriteProductRepository.DeleteAsync(favorite, cancellationToken);
         return Result.Success();
     }
 }

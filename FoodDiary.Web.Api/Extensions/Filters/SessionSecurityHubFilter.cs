@@ -14,31 +14,31 @@ public sealed class SessionSecurityHubFilter(
     private static readonly TimeSpan CheckTimeout = TimeSpan.FromSeconds(5);
 
     public async Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next) {
-        await next(context).ConfigureAwait(false);
+        await next(context);
         var cancellation = CancellationTokenSource.CreateLinkedTokenSource(context.Context.ConnectionAborted);
         context.Context.Items[MonitorKey] = new ConnectionMonitor(cancellation, MonitorAsync(context.Context, cancellation.Token));
     }
 
     public async Task OnDisconnectedAsync(HubLifetimeContext context, Exception? exception, Func<HubLifetimeContext, Exception?, Task> next) {
         if (context.Context.Items.Remove(MonitorKey, out object? value) && value is ConnectionMonitor monitor) {
-            await monitor.Cancellation.CancelAsync().ConfigureAwait(false);
-            await monitor.Completion.ConfigureAwait(false);
+            await monitor.Cancellation.CancelAsync();
+            await monitor.Completion;
             monitor.Cancellation.Dispose();
         }
-        await next(context, exception).ConfigureAwait(false);
+        await next(context, exception);
     }
 
     private async Task MonitorAsync(HubCallerContext caller, CancellationToken cancellationToken) {
         try {
             using var timer = new PeriodicTimer(CheckInterval, clock);
-            while (await timer.WaitForNextTickAsync(cancellationToken).ConfigureAwait(false)) {
+            while (await timer.WaitForNextTickAsync(cancellationToken)) {
                 using var timeout = new CancellationTokenSource(CheckTimeout, clock);
                 using var check = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
                 AsyncServiceScope scope = scopes.CreateAsyncScope();
-                await using (scope.ConfigureAwait(false)) {
+                await using (scope) {
                     bool valid = await AccessTokenSecurityStateValidator.IsCurrentAsync(caller.User,
                         scope.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>(),
-                        scope.ServiceProvider.GetRequiredService<IUserAccessTokenSessionReader>(), check.Token).ConfigureAwait(false);
+                        scope.ServiceProvider.GetRequiredService<IUserAccessTokenSessionReader>(), check.Token);
                     if (!valid) {
                         caller.Abort();
                         return;

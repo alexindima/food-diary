@@ -16,7 +16,7 @@ public static class DietologistAccessPolicy {
         UserId clientUserId,
         CancellationToken cancellationToken) {
         DietologistInvitation? invitation = await repository.GetActiveByClientAndDietologistAsync(
-            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
+            clientUserId, dietologistUserId, cancellationToken);
 
         if (invitation is null) {
             return Result.Failure<DietologistPermissionsModel>(DietologistErrors.AccessDenied);
@@ -40,7 +40,7 @@ public static class DietologistAccessPolicy {
         UserId clientUserId,
         CancellationToken cancellationToken) {
         DietologistInvitationReadModel? invitation = await repository.GetActiveByClientAndDietologistReadModelAsync(
-            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
+            clientUserId, dietologistUserId, cancellationToken);
 
         return invitation is null
             ? Result.Failure<DietologistPermissionsModel>(DietologistErrors.AccessDenied)

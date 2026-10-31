@@ -29,13 +29,13 @@ public sealed class InviteDietologistCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             dietologistUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -47,13 +47,13 @@ public sealed class InviteDietologistCommandHandler(
             return Result.Failure(DietologistErrors.CannotInviteSelf);
         }
 
-        DietologistInvitation? activeInvitation = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? activeInvitation = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken);
         if (activeInvitation is not null) {
             return Result.Failure(DietologistErrors.AlreadyHasDietologist);
         }
 
         DietologistInvitation? pendingInvitation = await invitationRepository.GetByClientAndStatusAsync(
-            userId, DietologistInvitationStatus.Pending, cancellationToken: cancellationToken).ConfigureAwait(false);
+            userId, DietologistInvitationStatus.Pending, cancellationToken: cancellationToken);
         if (pendingInvitation is not null) {
             return Result.Failure(DietologistErrors.PendingInvitationExists);
         }
@@ -64,12 +64,12 @@ public sealed class InviteDietologistCommandHandler(
         DietologistPermissions permissions = command.Permissions.ToPermissions();
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
-        UserDietologistProfileModel? registeredDietologist = await dietologistUserContextService.FindByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
-        await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
-        await EnqueueInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? registeredDietologist = await dietologistUserContextService.FindByEmailAsync(normalizedEmail, cancellationToken);
+        await invitationRepository.AddAsync(invitation, cancellationToken);
+        await EnqueueInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken);
 
         if (registeredDietologist is { IsEmailConfirmed: true }) {
-            await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken).ConfigureAwait(false);
+            await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken);
         }
 
         return Result.Success();
@@ -89,7 +89,7 @@ public sealed class InviteDietologistCommandHandler(
             user.LastName,
             user.Language);
 
-        await emailSender.SendDietologistInvitationAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailSender.SendDietologistInvitationAsync(message, cancellationToken);
     }
 
     private async Task NotifyRegisteredDietologistAsync(
@@ -102,7 +102,7 @@ public sealed class InviteDietologistCommandHandler(
             ResolveClientName(client),
             invitation.Id.Value.ToString());
 
-        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken);
         DietologistNotificationPostCommitActions.EnqueueUnreadCountPush(
             postCommitActionQueue,
             notificationClientRefreshService,

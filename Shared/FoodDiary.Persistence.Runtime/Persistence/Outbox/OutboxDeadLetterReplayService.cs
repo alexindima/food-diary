@@ -30,7 +30,7 @@ internal sealed class OutboxDeadLetterReplayService(
 
         foreach (IOutboxReplayStream stream in _streams.Values.OrderBy(static stream => stream.Order)) {
             if (normalizedName is null || string.Equals(normalizedName, stream.Name, StringComparison.Ordinal)) {
-                result.AddRange(await stream.ListAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
+                result.AddRange(await stream.ListAsync(boundedLimit, cancellationToken));
             }
         }
 
@@ -48,7 +48,7 @@ internal sealed class OutboxDeadLetterReplayService(
             NormalizeOutboxName(outboxName),
             messageId,
             forUpdate: false,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return message?.Message.DeadLetteredOnUtc is null ? null : ToModel(NormalizeOutboxName(outboxName), message);
     }
 
@@ -80,8 +80,7 @@ internal sealed class OutboxDeadLetterReplayService(
                 entry.RequestedOnUtc,
                 entry.PreviousAttemptCount,
                 entry.PreviousError))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<OutboxReplayAuditModel> ReplayAsync(
@@ -106,15 +105,15 @@ internal sealed class OutboxDeadLetterReplayService(
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
             IDbContextTransaction? transaction = context.Database.IsRelational()
-                ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
+                ? await context.Database.BeginTransactionAsync(cancellationToken)
                 : null;
             try {
-                await BindOwnerTransactionAsync(transaction, cancellationToken).ConfigureAwait(false);
+                await BindOwnerTransactionAsync(transaction, cancellationToken);
                 OutboxReplayEntry entry = await FindAsync(
                     normalizedName,
                     messageId,
                     forUpdate: transaction is not null,
-                    cancellationToken).ConfigureAwait(false)
+                    cancellationToken)
                     ?? throw new InvalidOperationException("Outbox message was not found.");
                 IOutboxMessage message = entry.Message;
                 if (message.DeadLetteredOnUtc is null || message.ProcessedOnUtc is not null) {
@@ -138,17 +137,17 @@ internal sealed class OutboxDeadLetterReplayService(
                     entry.LastError);
                 context.OutboxReplayAudits.Add(audit);
                 message.MarkReplayed(nowUtc);
-                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken);
                 if (transaction is not null) {
-                    await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+                    await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken);
                 }
                 return ToModel(audit);
             } finally {
                 if (transaction is not null) {
-                    await ReleaseOwnerTransactionAsync(transaction).ConfigureAwait(false);
+                    await ReleaseOwnerTransactionAsync(transaction);
                 }
             }
-        }, cancellationToken)).ConfigureAwait(false);
+        }, cancellationToken));
     }
 
     private async Task BindOwnerTransactionAsync(IDbContextTransaction? transaction, CancellationToken cancellationToken) {
@@ -156,17 +155,17 @@ internal sealed class OutboxDeadLetterReplayService(
             return;
         }
         foreach (DbContext module in context.ModuleContexts) {
-            await module.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken).ConfigureAwait(false);
+            await module.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken);
         }
     }
 
     private async Task ReleaseOwnerTransactionAsync(IDbContextTransaction transaction, CancellationToken cancellationToken = default) {
         try {
             foreach (DbContext module in context.ModuleContexts) {
-                await module.Database.UseTransactionAsync(transaction: null, cancellationToken).ConfigureAwait(false);
+                await module.Database.UseTransactionAsync(transaction: null, cancellationToken);
             }
         } finally {
-            await transaction.DisposeAsync().ConfigureAwait(false);
+            await transaction.DisposeAsync();
         }
     }
 

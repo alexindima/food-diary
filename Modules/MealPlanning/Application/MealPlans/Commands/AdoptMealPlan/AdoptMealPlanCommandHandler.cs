@@ -22,7 +22,7 @@ public sealed class AdoptMealPlanCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<MealPlanModel>(userIdResult);
         }
@@ -40,13 +40,13 @@ public sealed class AdoptMealPlanCommandHandler(
         MealPlan? sourcePlan = await mealPlanRepository.GetCuratedByIdAsync(
             planId,
             includeDays: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (sourcePlan is null) {
             return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(command.PlanId));
         }
 
         MealPlan adoptedPlan = sourcePlan.Adopt(userIdResult.Value);
-        await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken).ConfigureAwait(false);
+        await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken);
 
         return Result.Success(adoptedPlan.ToModel());
     }

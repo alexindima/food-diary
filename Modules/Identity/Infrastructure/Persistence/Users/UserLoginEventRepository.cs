@@ -8,9 +8,9 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Persistence.Users;
 public sealed class UserLoginEventRepository(DbSet<UserLoginEvent> events, IUserLoginEventQuery query, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IUserLoginEventRepository {
     public async Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        await events.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
+        await events.AddAsync(loginEvent, cancellationToken);
     }
 
     public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
@@ -27,7 +27,7 @@ public sealed class UserLoginEventRepository(DbSet<UserLoginEvent> events, IUser
         int batchSize,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         Guid[] ids = await events
             .AsNoTracking()
@@ -35,7 +35,7 @@ public sealed class UserLoginEventRepository(DbSet<UserLoginEvent> events, IUser
             .OrderBy(item => item.LoggedInAtUtc)
             .Select(item => item.Id)
             .Take(Math.Max(batchSize, 1))
-            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .ToArrayAsync(cancellationToken);
 
         if (ids.Length == 0) {
             return 0;
@@ -43,7 +43,7 @@ public sealed class UserLoginEventRepository(DbSet<UserLoginEvent> events, IUser
 
         return await events
             .Where(item => Enumerable.Contains(ids, item.Id))
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
 }

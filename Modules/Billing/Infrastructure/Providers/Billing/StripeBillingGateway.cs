@@ -39,7 +39,7 @@ public sealed class StripeBillingGateway(
         }
 
         try {
-            return await CreateCheckoutSessionCoreAsync(request, cancellationToken).ConfigureAwait(false);
+            return await CreateCheckoutSessionCoreAsync(request, cancellationToken);
         } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
             return Result.Failure<BillingCheckoutSessionModel>(
                 BillingErrors.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
@@ -50,7 +50,7 @@ public sealed class StripeBillingGateway(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
         string idempotencyKey = ResolveIdempotencyKey(request.IdempotencyKey);
-        Result<string> customerResult = await ResolveCustomerIdAsync(request, idempotencyKey, cancellationToken).ConfigureAwait(false);
+        Result<string> customerResult = await ResolveCustomerIdAsync(request, idempotencyKey, cancellationToken);
         if (customerResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
         }
@@ -61,7 +61,7 @@ public sealed class StripeBillingGateway(
         CheckoutSession session = await sessionService.CreateAsync(
             CreateCheckoutOptions(request, customerId, priceId),
             new RequestOptions { IdempotencyKey = $"{idempotencyKey}:session" },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (string.IsNullOrWhiteSpace(session.Id) || !BillingUrlValidator.IsAbsoluteHttps(session.Url)) {
             return Result.Failure<BillingCheckoutSessionModel>(
                 BillingErrors.ProviderOperationFailed(Provider, "Stripe checkout session identifier or URL is invalid."));
@@ -85,7 +85,7 @@ public sealed class StripeBillingGateway(
                 Metadata = new Dictionary<string, string>(StringComparer.Ordinal) { ["user_id"] = request.UserId.ToString() },
             },
             new RequestOptions { IdempotencyKey = $"{idempotencyKey}:customer" },
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         return string.IsNullOrWhiteSpace(customer.Id)
             ? Result.Failure<string>(BillingErrors.ProviderOperationFailed(Provider, "Stripe customer identifier is missing."))
             : Result.Success(customer.Id);
@@ -127,7 +127,7 @@ public sealed class StripeBillingGateway(
                     Customer = request.CustomerId,
                     ReturnUrl = _options.PortalReturnUrl,
                 },
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken);
 
             if (!BillingUrlValidator.IsAbsoluteHttps(portalSession.Url)) {
                 return Result.Failure<BillingPortalSessionModel>(
@@ -173,9 +173,9 @@ public sealed class StripeBillingGateway(
                     await MapAuthoritativeSubscriptionEventAsync(
                         (Subscription)stripeEvent.Data.Object!,
                         stripeEvent,
-                        cancellationToken).ConfigureAwait(false)),
+                        cancellationToken)),
                 "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
-                    await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
+                    await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken)),
                 "invoice.paid" or "invoice.payment_succeeded" => Result.Success<BillingWebhookEventModel?>(
                     MapPaidInvoiceEvent((Invoice)stripeEvent.Data.Object!, stripeEvent)),
                 _ => Result.Success<BillingWebhookEventModel?>(value: null),
@@ -196,7 +196,7 @@ public sealed class StripeBillingGateway(
         var subscriptionService = new SubscriptionService(stripeClient);
         Subscription currentSubscription = await subscriptionService.GetAsync(
             eventSubscription.Id,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         return MapSubscriptionEvent(currentSubscription, stripeEvent) with { IsAuthoritativeSnapshot = true };
     }
 
@@ -244,7 +244,7 @@ public sealed class StripeBillingGateway(
         }
 
         var subscriptionService = new SubscriptionService(stripeClient);
-        Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken);
         return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata) with { IsAuthoritativeSnapshot = true };
     }
 

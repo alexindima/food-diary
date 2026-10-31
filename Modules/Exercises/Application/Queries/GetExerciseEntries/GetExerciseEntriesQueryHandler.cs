@@ -18,12 +18,12 @@ public sealed class GetExerciseEntriesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ExerciseEntryModel>>(userIdResult);
         }
 
-        IReadOnlyList<ExerciseEntryModel> models = await sender.Send(new ReadExerciseEntriesQuery(userIdResult.Value, query.DateFrom, query.DateTo), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ExerciseEntryModel> models = await sender.Send(new ReadExerciseEntriesQuery(userIdResult.Value, query.DateFrom, query.DateTo), cancellationToken);
         return Result.Success<IReadOnlyList<ExerciseEntryModel>>(models);
     }
 }

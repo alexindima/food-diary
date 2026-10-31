@@ -18,8 +18,7 @@ public sealed class PaddleNotificationRecoveryJob(
         Stopwatch stopwatch = observer.Start(JobName);
         try {
             PaddleNotificationRecoveryResult result = await sender
-                .Send(new ReplayFailedPaddleNotificationsCommand(), cancellationToken)
-                .ConfigureAwait(false);
+                .Send(new ReplayFailedPaddleNotificationsCommand(), cancellationToken);
             if (result.Replayed > 0) {
                 logger.LogWarning(
                     "Replayed failed Paddle notifications: inspected={Inspected}, replayed={Replayed}.",

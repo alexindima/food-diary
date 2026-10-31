@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Dietologist.Infrastructure.Persistence.Recommendatio
 
 internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientTaskRepository {
     public async Task<ClientTask> AddAsync(ClientTask task, CancellationToken cancellationToken = default) {
-        await records.AddAsync(task, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(task, cancellationToken);
         return task;
     }
 
@@ -34,8 +34,7 @@ internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientT
         await Project(records.Where(task => task.ClientUserId == clientUserId))
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<ClientTaskReadModel>> GetByDietologistAndClientAsync(
         UserId dietologistUserId,
@@ -48,8 +47,7 @@ internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientT
                 task.ClientUserId == clientUserId))
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<ClientTask>> GetDueForReminderAsync(
         DateTime utcNow,
@@ -64,8 +62,7 @@ internal sealed class ClientTaskRepository(DbSet<ClientTask> records) : IClientT
                 task.DueReminderSentAtUtc == null)
             .OrderBy(task => task.DueAtUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     private static IQueryable<ClientTaskReadModel> Project(IQueryable<ClientTask> query) =>
         query

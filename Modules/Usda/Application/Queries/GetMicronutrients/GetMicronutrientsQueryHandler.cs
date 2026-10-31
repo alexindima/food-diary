@@ -13,27 +13,27 @@ public sealed class GetMicronutrientsQueryHandler(IUsdaFoodReadModelRepository r
     public async Task<Result<UsdaFoodDetailModel>> Handle(
         GetMicronutrientsQuery query,
         CancellationToken cancellationToken) {
-        return await GetDetailAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        return await GetDetailAsync(query.FdcId, cancellationToken);
     }
     private async Task<Result<UsdaFoodDetailModel>> GetDetailAsync(int fdcId, CancellationToken cancellationToken) {
-        UsdaFoodReadModel? food = await repository.GetByFdcIdReadModelAsync(fdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFoodReadModel? food = await repository.GetByFdcIdReadModelAsync(fdcId, cancellationToken);
         if (food is null) {
-            return await BuildBrandedDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+            return await BuildBrandedDetailAsync(fdcId, cancellationToken);
         }
 
-        IReadOnlyList<UsdaNutrientReadModel> nutrients = await repository.GetNutrientReadModelsAsync(fdcId, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<UsdaFoodPortionModel> portions = await repository.GetPortionReadModelsAsync(fdcId, cancellationToken).ConfigureAwait(false);
-        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaNutrientReadModel> nutrients = await repository.GetNutrientReadModelsAsync(fdcId, cancellationToken);
+        IReadOnlyList<UsdaFoodPortionModel> portions = await repository.GetPortionReadModelsAsync(fdcId, cancellationToken);
+        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken);
         return Result.Success(BuildLocalDetail(food, nutrients, portions, dailyValues));
     }
 
     private async Task<Result<UsdaFoodDetailModel>> BuildBrandedDetailAsync(int fdcId, CancellationToken cancellationToken) {
-        UsdaFoodDetailModel? brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFoodDetailModel? brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken);
         if (brandedDetail is null) {
             return Result.Failure<UsdaFoodDetailModel>(UsdaErrors.FoodNotFound(fdcId));
         }
 
-        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken);
         IReadOnlyList<MicronutrientModel> nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues)
             .GroupBy(static nutrient => nutrient.NutrientId)
             .Select(static group => group.First())

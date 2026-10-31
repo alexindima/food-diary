@@ -18,7 +18,7 @@ public sealed class WeeklyGoalProgressReader(ISender mealActivityReadService) {
             userId,
             from,
             weekEndUtc, timeZone),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return dates.Count;
     }
 }

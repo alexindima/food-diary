@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Protocol;
 
@@ -24,11 +23,11 @@ internal static class DevelopmentContextEvaluationRunner {
 
         string resolvedCorpusPath = Path.GetFullPath(corpusPath);
         FileStream corpusStream = File.OpenRead(resolvedCorpusPath);
-        await using ConfiguredAsyncDisposable corpusStreamDisposal = corpusStream.ConfigureAwait(false);
+        await using IAsyncDisposable corpusStreamDisposal = corpusStream;
         EvaluationCorpus? corpus = await JsonSerializer.DeserializeAsync<EvaluationCorpus>(
             corpusStream,
             InputOptions,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         Validate(corpus);
 
         List<EvaluationResult> results = [];
@@ -40,7 +39,7 @@ internal static class DevelopmentContextEvaluationRunner {
                 evaluationCase.PlannedPath,
                 baseRevision: null,
                 headRevision: null,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             stopwatch.Stop();
 
             IReadOnlyList<WikiContextSearchCandidate> sqlCandidates = context.SqlContextSearch?.Candidates ?? [];
@@ -174,8 +173,8 @@ internal static class DevelopmentContextEvaluationRunner {
             results,
         };
         string json = JsonSerializer.Serialize(evaluation, OutputOptions);
-        await output.WriteAsync(json.AsMemory(), cancellationToken).ConfigureAwait(false);
-        await output.WriteLineAsync().ConfigureAwait(false);
+        await output.WriteAsync(json.AsMemory(), cancellationToken);
+        await output.WriteLineAsync();
     }
 
     private static double Rate(int count, int total) => Math.Round(

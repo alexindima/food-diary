@@ -15,7 +15,7 @@ internal sealed class UserNotificationProfileService(
     public async Task<Result<UserNotificationProfileModel>> GetAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure
             ? Result.Failure<UserNotificationProfileModel>(userResult.Error)
             : Result.Success(ToModel(userResult.Value));
@@ -25,19 +25,19 @@ internal sealed class UserNotificationProfileService(
         UserId userId,
         UserPreferenceUpdate update,
         CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserNotificationProfileModel>(userResult.Error);
         }
 
         User user = userResult.Value;
         user.UpdatePreferences(update);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToModel(user));
     }
 
     private async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return error is null ? Result.Success(user!) : Result.Failure<User>(error);
     }

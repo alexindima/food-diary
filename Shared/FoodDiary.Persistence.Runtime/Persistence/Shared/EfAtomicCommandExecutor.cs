@@ -27,10 +27,10 @@ internal sealed class EfAtomicCommandExecutor(IModuleTransactionCoordinator coor
         }
         return coordinator.ExecuteAsync(async (_, token) => {
             long lockKey = BinaryPrimitives.ReadInt64BigEndian(SHA256.HashData(Encoding.UTF8.GetBytes(identity.Key)));
-            await context.Database.ExecuteSqlInterpolatedAsync($"select pg_advisory_xact_lock({lockKey})", token).ConfigureAwait(false);
+            await context.Database.ExecuteSqlInterpolatedAsync($"select pg_advisory_xact_lock({lockKey})", token);
             DateTime now = timeProvider.GetUtcNow().UtcDateTime;
             AtomicCommandReceipt? receipt = await context.Set<AtomicCommandReceipt>().AsNoTracking()
-                .SingleOrDefaultAsync(receipt => receipt.Key == identity.Key, token).ConfigureAwait(false);
+                .SingleOrDefaultAsync(receipt => receipt.Key == identity.Key, token);
             if (receipt is not null && receipt.ExpiresOnUtc > now) {
                 if (receipt.UserId != identity.UserId || !string.Equals(receipt.RequestHash, identity.RequestHash, StringComparison.Ordinal)
                     || !string.Equals(receipt.ResponseType, typeof(T).FullName, StringComparison.Ordinal)) {
@@ -42,9 +42,9 @@ internal sealed class EfAtomicCommandExecutor(IModuleTransactionCoordinator coor
             }
             if (receipt is not null) {
                 await context.Set<AtomicCommandReceipt>().Where(receipt => receipt.Key == identity.Key)
-                    .ExecuteDeleteAsync(token).ConfigureAwait(false);
+                    .ExecuteDeleteAsync(token);
             }
-            T result = await operation(token).ConfigureAwait(false);
+            T result = await operation(token);
             if (result is not Result { IsFailure: true }) {
                 context.Add(new AtomicCommandReceipt {
                     UserId = identity.UserId,

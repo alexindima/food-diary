@@ -13,13 +13,13 @@ public sealed class GetMarketingAttributionSummaryQueryHandler(IMarketingAttribu
     public async Task<Result<MarketingAttributionSummaryModel>> Handle(
         GetMarketingAttributionSummaryQuery request,
         CancellationToken cancellationToken) {
-        return await GetAsync(request.Hours, cancellationToken).ConfigureAwait(false);
+        return await GetAsync(request.Hours, cancellationToken);
     }
     private async Task<Result<MarketingAttributionSummaryModel>> GetAsync(int hours, CancellationToken cancellationToken) {
         int normalizedWindowHours = Math.Clamp(hours, 1, 2160);
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         DateTime windowStartUtc = nowUtc.AddHours(-normalizedWindowHours);
-        MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
+        MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(windowStartUtc, cancellationToken);
 
         return Result.Success(MarketingAttributionMappings.ToSummaryModel(summary, normalizedWindowHours, nowUtc));
     }

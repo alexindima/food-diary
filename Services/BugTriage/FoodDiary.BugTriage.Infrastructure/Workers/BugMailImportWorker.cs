@@ -13,14 +13,14 @@ public sealed class BugMailImportWorker(ImportBugReports importer, IOptions<BugT
             try {
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 timeout.CancelAfter(options.Value.ImportTimeout);
-                await importer.RunAsync(options.Value.ContentRetention, timeout.Token).ConfigureAwait(false);
+                await importer.RunAsync(options.Value.ContentRetention, timeout.Token);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception) {
                 // Provider exception messages may contain addresses, URLs, or credentials.
                 logger.LogWarning("Bug mail import failed; the next polling cycle will retry.");
             }
-            await Task.Delay(options.Value.PollInterval, stoppingToken).ConfigureAwait(false);
+            await Task.Delay(options.Value.PollInterval, stoppingToken);
         }
     }
 }

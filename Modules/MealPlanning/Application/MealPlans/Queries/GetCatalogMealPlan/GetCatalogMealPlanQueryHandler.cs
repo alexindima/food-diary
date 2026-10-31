@@ -14,7 +14,7 @@ public sealed class GetCatalogMealPlanQueryHandler(IMealPlanCompositionReader re
     public async Task<Result<MealPlanModel>> Handle(GetCatalogMealPlanQuery query, CancellationToken cancellationToken) {
         Result<MealPlanId> id = RequiredIdParser.Parse(query.Id, nameof(query.Id), "Meal plan id is required.", value => new MealPlanId(value));
         if (id.IsFailure) { return Result.Failure<MealPlanModel>(id.Error); }
-        MealPlanReadModel? plan = await reader.GetReadModelByIdAsync(id.Value, viewerId: null, cancellationToken).ConfigureAwait(false);
+        MealPlanReadModel? plan = await reader.GetReadModelByIdAsync(id.Value, viewerId: null, cancellationToken);
         return plan?.UserId.HasValue != false
             ? Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(query.Id)) : Result.Success(plan.ToModel());
     }

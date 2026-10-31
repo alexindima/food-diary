@@ -26,7 +26,7 @@ public sealed class UserCleanupJob(
 
         try {
             cancellationToken.ThrowIfCancellationRequested();
-            totalDeleted = await sender.Send(new CleanupDeletedUsersCommand(olderThanUtc, batchSize, reassignUserId), cancellationToken).ConfigureAwait(false);
+            totalDeleted = await sender.Send(new CleanupDeletedUsersCommand(olderThanUtc, batchSize, reassignUserId), cancellationToken);
 
             if (totalDeleted > 0) {
                 logger.LogInformation("Removed {Count} users deleted before {OlderThan}", totalDeleted, olderThanUtc);

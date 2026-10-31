@@ -14,11 +14,11 @@ internal static class TelegramOperationChecks {
 
     internal static async Task<bool> IsCurrentAsync(TelegramOperationLease lease, ITelegramOperationStore store, ITelegramOperationPolicy policy, IUserAuthenticationIdentityService identities, TimeProvider timeProvider, CancellationToken cancellationToken) {
         Result<UserAuthenticationPrincipalModel> principal = await identities.GetAuthenticationPrincipalAsync(lease.UserId,
-            timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (principal.IsSuccess && principal.Value.User.HasTelegramIdentity && principal.Value.SecurityVersion == lease.SecurityVersion) {
             return true;
         }
-        await store.CancelOperationAsync(policy.BotId, lease.OperationId, cancellationToken).ConfigureAwait(false);
+        await store.CancelOperationAsync(policy.BotId, lease.OperationId, cancellationToken);
         return false;
     }
 

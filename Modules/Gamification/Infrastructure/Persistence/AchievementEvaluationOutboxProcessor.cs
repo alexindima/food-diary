@@ -41,7 +41,7 @@ internal sealed class AchievementEvaluationOutboxProcessor(
         context.ChangeTracker.Clear();
         if (!context.Database.IsRelational()) {
             AchievementEvaluationOutboxMessage? current = await messages
-                .SingleOrDefaultAsync(candidate => candidate.Id == message.Id, cancellationToken).ConfigureAwait(false);
+                .SingleOrDefaultAsync(candidate => candidate.Id == message.Id, cancellationToken);
             if (current is null || current.Revision == claimedRevision ||
                 !string.Equals(current.LockedBy, claimedBy, StringComparison.Ordinal)) {
                 return OutboxCompletionResult.ClaimLost;
@@ -57,7 +57,7 @@ internal sealed class AchievementEvaluationOutboxProcessor(
             SET "LockedUntilUtc" = NULL, "LockedBy" = NULL
             WHERE "Id" = {message.Id} AND "LockedBy" = {claimedBy} AND "Revision" <> {claimedRevision}
             """,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 #pragma warning restore MA0076
         return released == 1 ? OutboxCompletionResult.Requeued : OutboxCompletionResult.ClaimLost;
     }

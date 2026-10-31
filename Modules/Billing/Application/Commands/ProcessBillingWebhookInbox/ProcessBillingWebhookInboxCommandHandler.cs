@@ -12,12 +12,12 @@ public sealed class ProcessBillingWebhookInboxCommandHandler(IBillingWebhookEven
     : IRequestHandler<ProcessBillingWebhookInboxCommand, BillingWebhookInboxRunResult> {
     public async Task<BillingWebhookInboxRunResult> Handle(ProcessBillingWebhookInboxCommand request, CancellationToken cancellationToken) {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(request.BatchSize, nameof(request));
-        IReadOnlyList<BillingWebhookEvent> pending = await events.GetPendingAsync(request.BatchSize, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<BillingWebhookEvent> pending = await events.GetPendingAsync(request.BatchSize, cancellationToken);
         int processed = 0;
         int failed = 0;
         foreach (BillingWebhookEvent item in pending) {
             cancellationToken.ThrowIfCancellationRequested();
-            Result result = await sender.Send(new ProcessQueuedBillingWebhookCommand(item.Id), cancellationToken).ConfigureAwait(false);
+            Result result = await sender.Send(new ProcessQueuedBillingWebhookCommand(item.Id), cancellationToken);
             if (result.IsSuccess) {
                 processed++;
             } else {

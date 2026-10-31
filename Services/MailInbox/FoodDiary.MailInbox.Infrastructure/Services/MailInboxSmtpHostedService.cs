@@ -56,7 +56,7 @@ public sealed class MailInboxSmtpHostedService(
             certificate.NotAfter.ToUniversalTime(),
             _options.MaxMessageSizeBytes);
 
-        await server.StartAsync(stoppingToken).ConfigureAwait(false);
+        await server.StartAsync(stoppingToken);
     }
 
     private X509Certificate2 LoadServerCertificate() {

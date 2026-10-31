@@ -21,7 +21,6 @@ public sealed class DeleteAdminLessonCommandHandler(ISender lessonAdministration
             return RequiredIdParser.ToFailure(lessonIdResult);
         }
 
-        return await lessonAdministrationService.Send(new DeleteLessonCommand(LessonId: lessonIdResult.Value), cancellationToken)
-            .ConfigureAwait(false);
+        return await lessonAdministrationService.Send(new DeleteLessonCommand(LessonId: lessonIdResult.Value), cancellationToken);
     }
 }

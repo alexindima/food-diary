@@ -44,7 +44,7 @@ public sealed class ImpersonationCookieService(IDataProtectionProvider protectio
         DateTime expires = new JwtSecurityTokenHandler().ReadJwtToken(accessToken).ValidTo;
         await cache.SetStringAsync(CacheKey(id, credential), _protector.Protect(accessToken), new DistributedCacheEntryOptions {
             AbsoluteExpiration = new DateTimeOffset(expires),
-        }, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken);
         context.Response.Cookies.Append(CookieName(context, id), credential, Options(context, new DateTimeOffset(expires)));
         return new ExchangeImpersonationHttpResponse(AccessToken: null, ContextId: id);
     }
@@ -54,7 +54,7 @@ public sealed class ImpersonationCookieService(IDataProtectionProvider protectio
         if (id is null || !context.Request.Cookies.TryGetValue(CookieName(context, id), out string? credential) || credential.Length != 43) {
             return null;
         }
-        string? value = await cache.GetStringAsync(CacheKey(id, credential), cancellationToken).ConfigureAwait(false);
+        string? value = await cache.GetStringAsync(CacheKey(id, credential), cancellationToken);
         if (value is null) {
             return null;
         }
@@ -67,7 +67,7 @@ public sealed class ImpersonationCookieService(IDataProtectionProvider protectio
 
     public async Task DeleteAsync(HttpContext context, CancellationToken cancellationToken) {
         if (ReadContextId(context) is { } id && context.Request.Cookies.TryGetValue(CookieName(context, id), out string? credential)) {
-            await cache.RemoveAsync(CacheKey(id, credential), cancellationToken).ConfigureAwait(false);
+            await cache.RemoveAsync(CacheKey(id, credential), cancellationToken);
             context.Response.Cookies.Delete(CookieName(context, id), Options(context, expires: null));
         }
     }

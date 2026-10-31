@@ -48,10 +48,10 @@ internal sealed class UsdaFoodSearchService(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             response.EnsureSuccessStatusCode();
 
-            UsdaSearchResponse? result = await ReadJsonAsync<UsdaSearchResponse>(response.Content, cancellationToken).ConfigureAwait(false);
+            UsdaSearchResponse? result = await ReadJsonAsync<UsdaSearchResponse>(response.Content, cancellationToken);
             if (result?.Foods is null) {
                 return [];
             }
@@ -81,7 +81,7 @@ internal sealed class UsdaFoodSearchService(
             config.BaseUrl,
             fdcId,
             sharedCancellationToken => GetFoodDetailCoreAsync(config, fdcId, sharedCancellationToken),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<UsdaFoodDetailLookupResult> GetFoodDetailCoreAsync(
@@ -95,14 +95,14 @@ internal sealed class UsdaFoodSearchService(
             using HttpResponseMessage response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (response.StatusCode == HttpStatusCode.NotFound) {
                 return new UsdaFoodDetailLookupResult(Cacheable: true, Value: null);
             }
 
             response.EnsureSuccessStatusCode();
 
-            UsdaFoodDetailResponse? food = await ReadJsonAsync<UsdaFoodDetailResponse>(response.Content, cancellationToken).ConfigureAwait(false);
+            UsdaFoodDetailResponse? food = await ReadJsonAsync<UsdaFoodDetailResponse>(response.Content, cancellationToken);
             if (food is null) {
                 return new UsdaFoodDetailLookupResult(Cacheable: false, Value: null);
             }

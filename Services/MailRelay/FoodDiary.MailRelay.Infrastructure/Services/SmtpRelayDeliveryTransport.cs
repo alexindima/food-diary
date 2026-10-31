@@ -35,14 +35,14 @@ public sealed class SmtpRelayDeliveryTransport(
 
         using var client = new SmtpClient();
         SecureSocketOptions secureSocketOptions = _options.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None;
-        await client.ConnectAsync(_options.Host, _options.Port, secureSocketOptions, cancellationToken).ConfigureAwait(false);
+        await client.ConnectAsync(_options.Host, _options.Port, secureSocketOptions, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(_options.User)) {
-            await client.AuthenticateAsync(_options.User, _options.Password, cancellationToken).ConfigureAwait(false);
+            await client.AuthenticateAsync(_options.User, _options.Password, cancellationToken);
         }
 
-        await client.SendAsync(message, cancellationToken).ConfigureAwait(false);
-        await client.DisconnectAsync(quit: true, cancellationToken).ConfigureAwait(false);
+        await client.SendAsync(message, cancellationToken);
+        await client.DisconnectAsync(quit: true, cancellationToken);
     }
 
     private static MimeEntity CreateBody(RelayEmailMessageRequest request) {

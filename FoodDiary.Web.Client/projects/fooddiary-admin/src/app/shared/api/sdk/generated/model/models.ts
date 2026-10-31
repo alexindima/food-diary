@@ -108,5 +108,7 @@ export * from './meal-plan-http-response';
 export * from './meal-plan-meal-http-response';
 export * from './meal-plan-summary-http-response';
 export * from './save-catalog-meal-plan-http-request';
+export * from './schedule-test-notification-http-request';
+export * from './scheduled-notification-http-response';
 export * from './update-admin-achievement-definition-http-request';
 export * from './user-http-response';

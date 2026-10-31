@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.Meals.Application.Services;
 
 public sealed class FavoriteMealSourceReadService(IMealProjectionReadRepository mealRepository) : IFavoriteMealSourceReadService {
     public async Task<Result<FavoriteMealSourceModel>> GetAccessibleAsync(UserId userId, MealId mealId, CancellationToken cancellationToken) {
-        FavoriteMealSourceModel? source = await GetAsync(userId, mealId, cancellationToken).ConfigureAwait(false);
+        FavoriteMealSourceModel? source = await GetAsync(userId, mealId, cancellationToken);
         return source is null
             ? Result.Failure<FavoriteMealSourceModel>(MealErrors.NotFound(mealId.Value))
             : Result.Success(source);
@@ -22,7 +22,7 @@ public sealed class FavoriteMealSourceReadService(IMealProjectionReadRepository 
         MealProjectionReadModel? meal = await mealRepository.GetByIdMealProjectionAsync(
             mealId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return meal is null
             ? null

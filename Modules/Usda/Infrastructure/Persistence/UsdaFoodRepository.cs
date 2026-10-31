@@ -17,7 +17,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
             .OrderBy(f => f.Description.Length)
             .ThenBy(f => f.Description)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UsdaFoodReadModel>> SearchReadModelsAsync(
@@ -30,7 +30,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
                 .OrderBy(f => f.Description.Length)
                 .ThenBy(f => f.Description))
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<UsdaFood?> GetByFdcIdAsync(
@@ -38,7 +38,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
         CancellationToken cancellationToken = default) {
         return await foods
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.FdcId == fdcId, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(f => f.FdcId == fdcId, cancellationToken);
     }
 
     public async Task<UsdaFoodReadModel?> GetByFdcIdReadModelAsync(
@@ -47,7 +47,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
         return await ProjectReadModels(foods
                 .AsNoTracking()
                 .Where(f => f.FdcId == fdcId))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(
@@ -58,7 +58,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
             .Include(n => n.Nutrient)
             .Where(n => n.FdcId == fdcId)
             .OrderBy(n => n.Nutrient.Name)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UsdaNutrientReadModel>> GetNutrientReadModelsAsync(
@@ -73,7 +73,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
                 n.Nutrient.Name,
                 n.Nutrient.UnitName,
                 n.Amount))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(
@@ -83,7 +83,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
             .AsNoTracking()
             .Where(p => p.FdcId == fdcId)
             .OrderBy(p => p.PortionDescription)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UsdaFoodPortionModel>> GetPortionReadModelsAsync(
@@ -100,7 +100,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
                 p.GramWeight,
                 p.PortionDescription,
                 p.Modifier))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>> GetNutrientsByFdcIdsAsync(
@@ -115,7 +115,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
             .AsNoTracking()
             .Include(n => n.Nutrient)
             .Where(n => fdcIdList.Contains(n.FdcId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return nutrients
             .GroupBy(n => n.FdcId)
@@ -143,7 +143,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
                     n.Nutrient.Name,
                     n.Nutrient.UnitName,
                     n.Amount)))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return nutrients
             .GroupBy(n => n.FdcId)
@@ -159,7 +159,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
         return await referenceValues
             .AsNoTracking()
             .Where(d => d.AgeGroup == ageGroup && d.Gender == gender)
-            .ToDictionaryAsync(d => d.NutrientId, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(d => d.NutrientId, cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel>> GetDailyReferenceValueReadModelsAsync(
@@ -170,7 +170,7 @@ internal sealed class UsdaFoodRepository(DbSet<UsdaFood> foods, DbSet<UsdaFoodNu
             .AsNoTracking()
             .Where(d => d.AgeGroup == ageGroup && d.Gender == gender)
             .Select(d => new UsdaDailyReferenceValueReadModel(d.NutrientId, d.Value, d.Unit))
-            .ToDictionaryAsync(d => d.NutrientId, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(d => d.NutrientId, cancellationToken);
     }
 
     private static IQueryable<UsdaFoodReadModel> ProjectReadModels(IQueryable<UsdaFood> query) =>

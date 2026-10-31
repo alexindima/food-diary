@@ -19,12 +19,12 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             try {
                 using HttpClient http = clients.CreateClient(BotOperationClient.ClientName);
                 var operations = new BotOperationClient(http, options);
-                IReadOnlyList<BotOperationId> ready = await operations.ListReadyAsync(stoppingToken).ConfigureAwait(false);
+                IReadOnlyList<BotOperationId> ready = await operations.ListReadyAsync(stoppingToken);
                 foreach (BotOperationId id in ready) {
                     try {
                         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                         deadline.CancelAfter(TimeSpan.FromSeconds(90));
-                        await ProcessAsync(operations, id, deadline.Token).ConfigureAwait(false);
+                        await ProcessAsync(operations, id, deadline.Token);
                     } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                         return;
                     } catch (Exception error) {
@@ -36,12 +36,12 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             } catch (Exception error) {
                 logger.LogWarning("Telegram work discovery failed with {ErrorType}.", error.GetType().Name);
             }
-            await Task.Delay(TimeSpan.FromSeconds(5), timeProvider, stoppingToken).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(5), timeProvider, stoppingToken);
         }
     }
 
     internal async Task ProcessAsync(BotOperationClient operations, BotOperationId id, CancellationToken cancellationToken) {
-        BotOperationLease? lease = await operations.AcquireAsync(id, cancellationToken).ConfigureAwait(false);
+        BotOperationLease? lease = await operations.AcquireAsync(id, cancellationToken);
         if (lease is null) {
             return;
         }
@@ -51,7 +51,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         } catch (Exception error) when (error is JsonException or InvalidDataException) {
             logger.LogWarning("Telegram operation {OperationId} rejected due to invalid input state.", id);
             await operations.CheckpointAsync(lease, "{\"ErrorCode\":\"OperationInputInvalid\"}", completed: true,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
             return;
         }
         BotPhotoCheckpoint checkpoint;
@@ -61,28 +61,28 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             checkpoint = new BotPhotoCheckpoint(Stage: "failed", ErrorCode: "OperationStateInvalid");
         }
         if (string.Equals(checkpoint.Stage, "failed", StringComparison.Ordinal)) {
-            await SendFailureAsync(incoming, checkpoint.ErrorCode, cancellationToken).ConfigureAwait(false);
+            await SendFailureAsync(incoming, checkpoint.ErrorCode, cancellationToken);
             await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: true,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
             return;
         }
         if (checkpoint.Stage is "meal-saved" or "undo-complete" or "water-saved" or "statistics-ready") {
-            await SendCompletionAsync(incoming, checkpoint, cancellationToken).ConfigureAwait(false);
+            await SendCompletionAsync(incoming, checkpoint, cancellationToken);
             await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: true,
-                timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+                timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
             return;
         }
         using HttpClient http = clients.CreateClient(BotDiaryClient.ClientName);
         var diary = new BotDiaryClient(http, options);
         try {
-            string token = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken).ConfigureAwait(false);
+            string token = await diary.AuthenticateAsync(incoming.TelegramUserId, lease, cancellationToken);
             if (string.Equals(incoming.Kind, "water", StringComparison.Ordinal)) {
                 if (lease.CreatedAtUtc == default || lease.CreatedAtUtc.Kind != DateTimeKind.Utc) {
                     throw new InvalidDataException("A durable water operation timestamp is required.");
                 }
                 incoming = incoming with { OccurredAtUtc = lease.CreatedAtUtc };
             }
-            checkpoint = await AdvanceOperationAsync(diary, token, lease.OperationId, incoming, checkpoint, cancellationToken).ConfigureAwait(false);
+            checkpoint = await AdvanceOperationAsync(diary, token, lease.OperationId, incoming, checkpoint, cancellationToken);
         } catch (BotRecognitionAccessException error) {
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = error.Code };
         } catch (HttpRequestException error) when (error.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Forbidden or HttpStatusCode.NotFound or HttpStatusCode.Conflict) {
@@ -91,7 +91,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             checkpoint = checkpoint with { Stage = "failed", Upload = null, ErrorCode = "InvalidImageOrIdentity" };
         }
         await operations.CheckpointAsync(lease, JsonSerializer.Serialize(checkpoint), completed: false,
-            timeProvider.GetUtcNow().UtcDateTime.AddSeconds(5), cancellationToken).ConfigureAwait(false);
+            timeProvider.GetUtcNow().UtcDateTime.AddSeconds(5), cancellationToken);
     }
 
     private async Task SendFailureAsync(BotIncomingOperation incoming, string? errorCode, CancellationToken cancellationToken) {
@@ -122,7 +122,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                 : "Processing could not continue. Check your diary before sending again: the entry may already have been saved.";
         }
         try {
-            await bot.SendMessage(incoming.ChatId, message, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await bot.SendMessage(incoming.ChatId, message, cancellationToken: cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // A blocked bot cannot deliver the terminal notice; the operation must still stop.
         }
@@ -132,21 +132,21 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         BotIncomingOperation incoming, BotPhotoCheckpoint checkpoint, CancellationToken cancellationToken) {
         if (string.Equals(incoming.Kind, "statistics", StringComparison.Ordinal)) {
             BotDiaryStatistics statistics = await diary.GetStatisticsAsync(token,
-                incoming.PeriodDays ?? throw new InvalidDataException("Missing statistics period."), cancellationToken).ConfigureAwait(false);
+                incoming.PeriodDays ?? throw new InvalidDataException("Missing statistics period."), cancellationToken);
             return checkpoint with { Stage = "statistics-ready", Statistics = statistics };
         }
         if (string.Equals(incoming.Kind, "water", StringComparison.Ordinal)) {
             BotHydrationReceipt receipt = await diary.SaveWaterAsync(token, operationId,
                 incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing water timestamp."),
-                incoming.AmountMl ?? throw new InvalidDataException("Missing water amount."), cancellationToken).ConfigureAwait(false);
+                incoming.AmountMl ?? throw new InvalidDataException("Missing water amount."), cancellationToken);
             return checkpoint with { Stage = "water-saved", WaterEntryId = receipt.EntryId.Value };
         }
         if (string.Equals(incoming.Kind, "meal-undo", StringComparison.Ordinal)) {
             string result = await diary.UndoRecognizedMealAsync(token,
-                new BotOperationId(incoming.MealOperationId ?? throw new InvalidDataException("Missing meal operation ID.")), cancellationToken).ConfigureAwait(false);
+                new BotOperationId(incoming.MealOperationId ?? throw new InvalidDataException("Missing meal operation ID.")), cancellationToken);
             return checkpoint with { Stage = "undo-complete", ErrorCode = result };
         }
-        return await AdvanceImageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken).ConfigureAwait(false);
+        return await AdvanceImageAsync(diary, token, operationId, incoming, checkpoint, cancellationToken);
     }
 
     private async Task<BotPhotoCheckpoint> AdvanceImageAsync(BotDiaryClient diary, string token, BotOperationId operationId,
@@ -156,13 +156,13 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             case "recognition-ready": {
                     BotRecognizedMeal result = await diary.SaveRecognizedMealAsync(token,
                         new BotRecognitionId(checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition ID.")),
-                        incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing original message time."), cancellationToken).ConfigureAwait(false);
+                        incoming.OccurredAtUtc ?? throw new InvalidDataException("Missing original message time."), cancellationToken);
                     return checkpoint with { Stage = "meal-saved", SavedMeal = result };
                 }
             case "received": {
-                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
+                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken);
                     BotImageUpload upload = await diary.RequestUploadAsync(token, operationId, checkpoint.UploadAttempt,
-                        incoming.ContentType!, content.Length, cancellationToken).ConfigureAwait(false);
+                        incoming.ContentType!, content.Length, cancellationToken);
                     return checkpoint with { Stage = "upload", Upload = upload, ImageAssetId = upload.AssetId.Value };
                 }
             case "upload": {
@@ -170,14 +170,14 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
                     if (upload.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime) {
                         return new BotPhotoCheckpoint(UploadAttempt: checked(checkpoint.UploadAttempt + 1));
                     }
-                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken).ConfigureAwait(false);
-                    await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken).ConfigureAwait(false);
-                    await diary.ConfirmUploadAsync(token, upload.AssetId, cancellationToken).ConfigureAwait(false);
+                    byte[] content = await downloader.DownloadAsync(Image(incoming), cancellationToken);
+                    await diary.UploadAsync(upload, incoming.ContentType!, content, cancellationToken);
+                    await diary.ConfirmUploadAsync(token, upload.AssetId, cancellationToken);
                     return checkpoint with { Stage = "image-ready", Upload = null };
                 }
             case "image-ready": {
                     var imageId = new BotImageAssetId(checkpoint.ImageAssetId ?? throw new InvalidDataException("Missing image checkpoint."));
-                    BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken).ConfigureAwait(false);
+                    BotRecognitionJob job = await diary.StartRecognitionAsync(token, operationId, imageId, incoming.Caption, cancellationToken);
                     if (job.Id.Value != operationId.Value || job.ImageAssetId != imageId) {
                         throw new InvalidDataException("Recognition identity mismatch.");
                     }
@@ -186,7 +186,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
         }
         // The state reader rejects unknown stages before processing; the remaining active photo stage is recognizing.
         var jobId = new BotRecognitionId(checkpoint.RecognitionId ?? throw new InvalidDataException("Missing recognition checkpoint."));
-        BotRecognitionJob recognition = await diary.GetRecognitionAsync(token, jobId, cancellationToken).ConfigureAwait(false);
+        BotRecognitionJob recognition = await diary.GetRecognitionAsync(token, jobId, cancellationToken);
         if (recognition.Id != jobId || recognition.ImageAssetId.Value != checkpoint.ImageAssetId) {
             throw new InvalidDataException("Recognition identity mismatch.");
         }
@@ -225,7 +225,7 @@ internal sealed class TelegramOperationWorker(IHttpClientFactory clients, IOptio
             };
         }
         try {
-            await bot.SendMessage(incoming.ChatId, message, replyMarkup: keyboard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await bot.SendMessage(incoming.ChatId, message, replyMarkup: keyboard, cancellationToken: cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // Business completion remains durable even if Telegram delivery is blocked.
         }

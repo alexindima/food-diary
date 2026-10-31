@@ -14,8 +14,7 @@ public sealed class GetAdminLessonsQueryHandler(ISender lessonReadService)
     public async Task<Result<IReadOnlyList<AdminLessonModel>>> Handle(GetAdminLessonsQuery query, CancellationToken cancellationToken) {
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
-        IReadOnlyList<LessonAdminReadModel> lessons = await lessonReadService.Send(new GetLessonsForAdministrationQuery(page, limit), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<LessonAdminReadModel> lessons = await lessonReadService.Send(new GetLessonsForAdministrationQuery(page, limit), cancellationToken);
         return Result.Success<IReadOnlyList<AdminLessonModel>>(lessons.Select(static lesson => lesson.ToAdminModel()).ToList());
     }
 }

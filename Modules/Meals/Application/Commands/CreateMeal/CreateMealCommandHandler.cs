@@ -40,7 +40,7 @@ public sealed class CreateMealCommandHandler(
             command,
             currentUserAccessService,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<MealModel>(valuesResult.Error);
         }
@@ -66,7 +66,7 @@ public sealed class CreateMealCommandHandler(
             values.UserId,
             imageAssetAccessService,
             dateTimeProvider,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (aiSessionsResult.IsFailure) {
             return Result.Failure<MealModel>(aiSessionsResult.Error);
         }
@@ -76,12 +76,12 @@ public sealed class CreateMealCommandHandler(
             values.UserId,
             mealNutritionService,
             CreateNutritionInput(command),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (nutritionResult.IsFailure) {
             return Result.Failure<MealModel>(nutritionResult.Error);
         }
 
-        return await SaveAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
+        return await SaveAsync(meal, values.UserId, cancellationToken);
     }
 
     private static MealNutritionInput CreateNutritionInput(CreateMealCommand command) =>
@@ -98,13 +98,13 @@ public sealed class CreateMealCommandHandler(
         Meal meal,
         UserId userId,
         CancellationToken cancellationToken) {
-        await mealRepository.AddAsync(meal, cancellationToken).ConfigureAwait(false);
-        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken).ConfigureAwait(false);
+        await mealRepository.AddAsync(meal, cancellationToken);
+        await achievementEvaluationOutbox.EnqueueAsync(userId, cancellationToken);
         await recentItemUsageRecorder.RegisterUsageAsync(
             userId,
             meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(meal.ToModel());
     }

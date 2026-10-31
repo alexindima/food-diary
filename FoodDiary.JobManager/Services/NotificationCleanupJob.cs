@@ -23,7 +23,7 @@ public sealed class NotificationCleanupJob(
         int totalDeleted = 0;
 
         try {
-            totalDeleted = await DeleteNotificationsAsync(policy, settings.BatchSize, cancellationToken).ConfigureAwait(false);
+            totalDeleted = await DeleteNotificationsAsync(policy, settings.BatchSize, cancellationToken);
 
             if (totalDeleted > 0) {
                 logger.LogInformation(
@@ -57,7 +57,7 @@ public sealed class NotificationCleanupJob(
 
         while (true) {
             cancellationToken.ThrowIfCancellationRequested();
-            int deleted = await notificationCleanupService.Send(new CleanupExpiredNotificationsCommand(policy), cancellationToken).ConfigureAwait(false);
+            int deleted = await notificationCleanupService.Send(new CleanupExpiredNotificationsCommand(policy), cancellationToken);
             totalDeleted += deleted;
 
             if (deleted < batchSize) {

@@ -18,7 +18,7 @@ internal sealed class ProductsUserContentRetentionParticipant(
     public int Order => 10;
 
     public async Task LockOwnedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         FormattableString sql = $"""
             SELECT "Id" AS "Value"
             FROM "Products"
@@ -26,30 +26,30 @@ internal sealed class ProductsUserContentRetentionParticipant(
             ORDER BY "Id"
             FOR UPDATE
             """;
-        _ = await context.Database.SqlQuery<Guid>(sql).ToArrayAsync(cancellationToken).ConfigureAwait(false);
+        _ = await context.Database.SqlQuery<Guid>(sql).ToArrayAsync(cancellationToken);
     }
 
     public async Task<bool> HasReferencedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
         IReadOnlyCollection<ProductId> productIds = await retentionReadService
-            .GetRetainedProductIdsAsync(sourceUserId, cancellationToken).ConfigureAwait(false);
+            .GetRetainedProductIdsAsync(sourceUserId, cancellationToken);
         return productIds.Count > 0;
     }
 
     public async Task RetainReferencedContentAsync(UserId sourceUserId, UserId targetUserId, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         IReadOnlyCollection<ProductId> productIds = await retentionReadService
-            .GetRetainedProductIdsAsync(sourceUserId, cancellationToken).ConfigureAwait(false);
+            .GetRetainedProductIdsAsync(sourceUserId, cancellationToken);
         if (productIds.Count == 0) {
             return;
         }
 
         IQueryable<Product> products = context.Products.Where(product => product.UserId == sourceUserId && productIds.Contains(product.Id));
         List<ImageAssetId> imageIds = await products.Where(product => product.ImageAssetId != null)
-            .Select(product => product.ImageAssetId!.Value).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(product => product.ImageAssetId!.Value).ToListAsync(cancellationToken);
         imageIds.AddRange(await products.SelectMany(product => product.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false));
+            .ToListAsync(cancellationToken));
 
-        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken).ConfigureAwait(false);
-        await products.ExecuteUpdateAsync(setters => setters.SetProperty(product => product.UserId, targetUserId), cancellationToken).ConfigureAwait(false);
+        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken);
+        await products.ExecuteUpdateAsync(setters => setters.SetProperty(product => product.UserId, targetUserId), cancellationToken);
     }
 }

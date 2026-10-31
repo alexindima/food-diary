@@ -5,7 +5,6 @@ using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using System.Text.Json;
-using System.Runtime.CompilerServices;
 using FoodDiary.Modules.Ai.Application.Abstractions.Common;
 using FoodDiary.Modules.Ai.Contracts.Models;
 using FoodDiary.Results;
@@ -25,12 +24,12 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         AiDbContext context, FoodRecognitionJobModel job, CancellationToken cancellationToken) {
         // Lock task id before owner admission: concurrent conflicting owners cannot race the unique key.
         await context.Database.ExecuteSqlInterpolatedAsync(
-            $"SELECT pg_advisory_xact_lock(hashtextextended({job.Id.ToString()}, 732))", cancellationToken).ConfigureAwait(false);
+            $"SELECT pg_advisory_xact_lock(hashtextextended({job.Id.ToString()}, 732))", cancellationToken);
         // Serialize admissions per user, including the outstanding-job limit and idempotency check.
         await context.Database.ExecuteSqlInterpolatedAsync(
-            $"SELECT pg_advisory_xact_lock(hashtextextended({job.UserId.ToString()}, 731))", cancellationToken).ConfigureAwait(false);
+            $"SELECT pg_advisory_xact_lock(hashtextextended({job.UserId.ToString()}, 731))", cancellationToken);
         FoodRecognitionJob? existing = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
-            .SingleOrDefaultAsync(x => x.Id == job.Id, cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(x => x.Id == job.Id, cancellationToken);
         if (existing is not null) {
             return existing.UserId.Value == job.UserId && existing.ImageAssetId.Value == job.ImageAssetId && string.Equals(existing.Description, job.Description, StringComparison.Ordinal)
                 && existing.IsProductLabel == job.IsProductLabel
@@ -41,7 +40,7 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         }
         var userId = new UserId(job.UserId);
         int active = await context.Set<FoodRecognitionJob>()
-            .CountAsync(x => x.UserId == userId && (x.Status == FoodRecognitionLifecycle.Queued || x.Status == FoodRecognitionLifecycle.Running), cancellationToken).ConfigureAwait(false);
+            .CountAsync(x => x.UserId == userId && (x.Status == FoodRecognitionLifecycle.Queued || x.Status == FoodRecognitionLifecycle.Running), cancellationToken);
         if (active >= 2) {
             return Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionQueueFull());
         }
@@ -58,22 +57,22 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             CreatedOnUtc = job.CreatedOnUtc,
             UpdatedOnUtc = job.UpdatedOnUtc,
         });
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken);
         return Result.Success(job);
     }
 
     public async Task<FoodRecognitionJobModel?> GetAsync(UserId userId, FoodRecognitionJobId jobId, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         UserId owner = userId;
         FoodRecognitionJob? job = await context.Set<FoodRecognitionJob>().AsNoTracking().Include(x => x.AdditionalImages)
-            .SingleOrDefaultAsync(x => x.Id == jobId.Value && x.UserId == owner, cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(x => x.Id == jobId.Value && x.UserId == owner, cancellationToken);
         return job is null ? null : ToModel(job);
     }
 
     public async Task<(IReadOnlyList<FoodRecognitionJobModel> Items, int TotalItems)> ListAsync(UserId userId, int page, int limit, bool? isProductLabel, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         UserId owner = userId;
         DateTime cutoff = timeProvider.GetUtcNow().UtcDateTime.AddDays(-7);
         IQueryable<FoodRecognitionJob> query = context.Set<FoodRecognitionJob>().AsNoTracking()
@@ -81,10 +80,10 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         if (isProductLabel.HasValue) {
             query = query.Where(x => x.IsProductLabel == isProductLabel.Value);
         }
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.CountAsync(cancellationToken);
         List<FoodRecognitionJob> jobs = await query.Include(x => x.AdditionalImages)
             .OrderByDescending(x => x.CreatedOnUtc).ThenByDescending(x => x.Id)
-            .Skip((page - 1) * limit).Take(limit).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Skip((page - 1) * limit).Take(limit).ToListAsync(cancellationToken);
         return (jobs.Select(ToModel).ToArray(), totalItems);
     }
 
@@ -95,23 +94,23 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         // Persist Running before any provider call. SKIP LOCKED permits independent worker replicas.
         List<FoodRecognitionJob> jobs = await context.Set<FoodRecognitionJob>().FromSqlRaw(
             """SELECT * FROM "FoodRecognitionJobs" WHERE "Status" = 'Queued' ORDER BY "CreatedOnUtc" LIMIT 1 FOR UPDATE SKIP LOCKED""")
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         FoodRecognitionJob? job = jobs.FirstOrDefault();
         if (job is null) {
             return null;
         }
-        await context.Entry(job).Collection(x => x.AdditionalImages).LoadAsync(cancellationToken).ConfigureAwait(false);
+        await context.Entry(job).Collection(x => x.AdditionalImages).LoadAsync(cancellationToken);
         job.Status = FoodRecognitionLifecycle.Encode(FoodRecognitionLifecycle.Next(
             FoodRecognitionLifecycle.Decode(job.Status), FoodRecognitionAction.Claim)
             ?? throw new InvalidOperationException("Only a queued recognition can be claimed."));
         job.UpdatedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.SaveChangesAsync(cancellationToken);
         return ToModel(job);
     }
 
     public async Task<bool> SaveVisionAsync(FoodRecognitionJobId jobId, FoodVisionModel vision, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         string json = JsonSerializer.Serialize(vision, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         const string source = FoodRecognitionLifecycle.Running;
@@ -119,12 +118,12 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             FoodRecognitionStatus.Running, FoodRecognitionAction.CheckpointVision)!.Value);
         return await context.Set<FoodRecognitionJob>().Where(x => x.Id == jobId.Value && x.Status == source)
             .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, target).SetProperty(x => x.VisionJson, json).SetProperty(x => x.UpdatedOnUtc, now),
-                cancellationToken).ConfigureAwait(false) == 1;
+                cancellationToken) == 1;
     }
 
     public async Task CompleteAsync(FoodRecognitionJobId jobId, FoodRecognitionCompletion completion, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         string? json = completion.Nutrition is null ? null : JsonSerializer.Serialize(completion.Nutrition, JsonOptions);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         string status = completion.Status;
@@ -133,27 +132,27 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
             .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, status)
                 .SetProperty(x => x.NutritionJson, json).SetProperty(x => x.ErrorCode, completion.ErrorCode)
                 .SetProperty(x => x.NutritionErrorCode, completion.NutritionErrorCode).SetProperty(x => x.UpdatedOnUtc, now),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<Result> DeleteCompletedAsync(UserId userId, FoodRecognitionJobId jobId, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         UserId owner = userId;
         int deleted = await context.Set<FoodRecognitionJob>()
             .Where(x => x.Id == jobId.Value && x.UserId == owner && (x.Status == FoodRecognitionLifecycle.Succeeded || x.Status == FoodRecognitionLifecycle.Failed))
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
         if (deleted > 0) {
             return Result.Success();
         }
         bool exists = await context.Set<FoodRecognitionJob>()
-            .AnyAsync(x => x.Id == jobId.Value && x.UserId == owner, cancellationToken).ConfigureAwait(false);
+            .AnyAsync(x => x.Id == jobId.Value && x.UserId == owner, cancellationToken);
         return exists ? Result.Failure(AiErrors.RecognitionInProgress()) : Result.Failure(AiErrors.RecognitionNotFound());
     }
 
     public async Task MaintainAsync(CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         DateTime interrupted = now.AddMinutes(-5);
         DateTime queued = now.AddDays(-1);
@@ -163,17 +162,17 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
         await context.Set<FoodRecognitionJob>()
             .Where(x => (x.Status == FoodRecognitionLifecycle.Running && x.UpdatedOnUtc < interrupted) || (x.Status == FoodRecognitionLifecycle.Queued && x.CreatedOnUtc < queued))
             .ExecuteUpdateAsync(set => set.SetProperty(x => x.Status, interruptedStatus)
-                .SetProperty(x => x.ErrorCode, "Ai.RecognitionInterrupted").SetProperty(x => x.UpdatedOnUtc, now), cancellationToken).ConfigureAwait(false);
+                .SetProperty(x => x.ErrorCode, "Ai.RecognitionInterrupted").SetProperty(x => x.UpdatedOnUtc, now), cancellationToken);
         await context.Set<FoodRecognitionJob>()
             .Where(x => x.UpdatedOnUtc < retention && (x.Status == FoodRecognitionLifecycle.Succeeded || x.Status == FoodRecognitionLifecycle.Failed))
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FoodRecognitionJobUpdate>> GetUpdatesAsync(DateTime sinceUtc, CancellationToken cancellationToken) {
         var context = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
+        await using IAsyncDisposable contextDisposal = context;
         return await context.Set<FoodRecognitionJob>().AsNoTracking().Where(x => x.UpdatedOnUtc >= sinceUtc)
-            .Select(x => new FoodRecognitionJobUpdate(x.Id, x.UserId.Value)).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(x => new FoodRecognitionJobUpdate(x.Id, x.UserId.Value)).ToListAsync(cancellationToken);
     }
 
     private static FoodRecognitionJobModel ToModel(FoodRecognitionJob job) => new(
@@ -185,16 +184,16 @@ public sealed class FoodRecognitionJobStore(DbContextOptions<AiDbContext> option
 
     private async Task<T> InTransactionAsync<T>(Func<AiDbContext, CancellationToken, Task<T>> action, CancellationToken cancellationToken) {
         var strategyContext = new AiDbContext(options);
-        await using ConfiguredAsyncDisposable strategyDisposal = strategyContext.ConfigureAwait(false);
+        await using IAsyncDisposable strategyDisposal = strategyContext;
         IExecutionStrategy strategy = strategyContext.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
             var context = new AiDbContext(options);
-            await using ConfiguredAsyncDisposable contextDisposal = context.ConfigureAwait(false);
-            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable transactionDisposal = transaction.ConfigureAwait(false);
-            T result = await action(context, cancellationToken).ConfigureAwait(false);
-            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken).ConfigureAwait(false);
+            await using IAsyncDisposable contextDisposal = context;
+            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+            await using IAsyncDisposable transactionDisposal = transaction;
+            T result = await action(context, cancellationToken);
+            await VerifiedTransactionCommit.CommitAsync(transaction, cancellationToken);
             return result;
-        }).ConfigureAwait(false);
+        });
     }
 }

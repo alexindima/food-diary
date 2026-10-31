@@ -23,12 +23,11 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         UserId id,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         User? user = await UsersWithRoles()
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         return user is null ? null : ToAdminReadModel(user);
     }
 
@@ -39,10 +38,10 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         UserAccountStatusFilter status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
-        return await GetPagedAsync(search, page, limit, status, cancellationToken).ConfigureAwait(false);
+        return await GetPagedAsync(search, page, limit, status, cancellationToken);
     }
 
     public async Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
@@ -52,18 +51,18 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        return await GetFilteredPageAsync(search, page, limit, status, new UserAdministrationFilter(), cancellationToken).ConfigureAwait(false);
+        return await GetFilteredPageAsync(search, page, limit, status, new UserAdministrationFilter(), cancellationToken);
     }
 
     public async Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(
         string? search, int page, int limit, UserAccountStatusFilter status,
         UserAdministrationFilter filter, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        (IReadOnlyList<User> items, int totalItems) = await GetFilteredPageAsync(search, page, limit, status, filter, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<User> items, int totalItems) = await GetFilteredPageAsync(search, page, limit, status, filter, cancellationToken);
         return ([.. items.Select(ToAdminReadModel)], totalItems);
     }
 
@@ -113,14 +112,14 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
                 EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        int total = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await filteredQuery.CountAsync(cancellationToken);
         List<UserId> pageIds = await filteredQuery
             .OrderByDescending(u => u.CreatedOnUtc)
             .ThenBy(u => u.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(u => u.Id)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         if (pageIds.Count == 0) {
             return ([], total);
@@ -129,7 +128,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         Dictionary<UserId, User> usersById = await UsersWithRoles()
             .AsNoTracking()
             .Where(u => pageIds.Contains(u.Id))
-            .ToDictionaryAsync(u => u.Id, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(u => u.Id, cancellationToken);
 
         List<User> items = pageIds.ConvertAll(id => usersById[id]);
 
@@ -143,14 +142,14 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         (IReadOnlyList<User> items, int totalItems) = await GetPagedAsync(
             search,
             page,
             limit,
             status,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return ([.. items.Select(ToAdminReadModel)], totalItems);
     }
@@ -158,7 +157,7 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
         GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         var userCounts = await users
             .Where(user => user.Id != SystemContentOwner.Id)
@@ -168,20 +167,20 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
                 ActiveUsers = group.Count(u => u.IsActive && u.DeletedAt == null),
                 DeletedUsers = group.Count(u => u.DeletedAt != null),
             })
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
 
         int premiumUsers = await userRoles
             .Where(ur => ur.UserId != SystemContentOwner.Id && ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
-            .CountAsync(cancellationToken).ConfigureAwait(false);
+            .CountAsync(cancellationToken);
 
         List<User> recentUsers = await UsersWithRoles()
             .AsNoTracking()
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedOnUtc)
             .Take(recentLimit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (
             userCounts?.TotalUsers ?? 0,
@@ -194,10 +193,10 @@ public sealed class UserAdministrationReadRepository(DbSet<User> users, DbSet<Us
     public async Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<UserAdminReadModel> RecentUsers)>
         GetAdminDashboardSummaryReadModelsAsync(int recentLimit, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
-            await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
+            await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
         return (totalUsers, activeUsers, premiumUsers, deletedUsers, [.. recentUsers.Select(ToAdminReadModel)]);
     }

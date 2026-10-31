@@ -22,7 +22,7 @@ public sealed class CreateContentReportCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ContentReportModel>(userIdResult);
         }
@@ -37,21 +37,20 @@ public sealed class CreateContentReportCommandHandler(
 
         var target = ReportTarget.FromFields(targetTypeResult.Value, command.TargetId);
         bool targetExists = await targetReadService
-            .IsReportableAsync(userIdResult.Value, target, cancellationToken)
-            .ConfigureAwait(false);
+            .IsReportableAsync(userIdResult.Value, target, cancellationToken);
         if (!targetExists) {
             return Result.Failure<ContentReportModel>(ContentReportErrors.TargetNotFound);
         }
 
         bool alreadyReported = await reportRepository.HasUserReportedAsync(
-            userIdResult.Value, target, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, target, cancellationToken);
 
         if (alreadyReported) {
             return Result.Failure<ContentReportModel>(ContentReportErrors.AlreadyReported);
         }
 
         var report = ContentReport.CreateWithTarget(userIdResult.Value, target, command.Reason);
-        await reportRepository.AddAsync(report, cancellationToken).ConfigureAwait(false);
+        await reportRepository.AddAsync(report, cancellationToken);
 
         return Result.Success(new ContentReportModel(
             report.Id.Value,

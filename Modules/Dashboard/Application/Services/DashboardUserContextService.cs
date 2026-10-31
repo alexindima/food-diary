@@ -19,8 +19,7 @@ internal sealed class DashboardUserContextService(
         DateOnly? goalsFrom = null,
         DateOnly? goalsTo = null) {
         Result<UserDashboardProfileModel> profileResult = await userProfileReadService
-            .GetDashboardProfileAsync(userId, cancellationToken, goalsFrom, goalsTo)
-            .ConfigureAwait(false);
+            .GetDashboardProfileAsync(userId, cancellationToken, goalsFrom, goalsTo);
         return profileResult.IsFailure
             ? Result.Failure<DashboardUserContextModel>(profileResult.Error)
             : Result.Success(ToDashboardUserContextModel(profileResult.Value));

@@ -26,7 +26,7 @@ public sealed class AuthenticationTokenService(
         AuthenticationClientContext? clientContext = null,
         bool rememberMe = false) {
         if (clientContext is { CredentialKind: not AuthenticationCredentialKind.Bearer }) {
-            return await IssueBrowserAsync(principal, clientContext, rememberMe, cancellationToken).ConfigureAwait(false);
+            return await IssueBrowserAsync(principal, clientContext, rememberMe, cancellationToken);
         }
         var resolvedRefreshSessionId = RefreshTokenSessionId.New();
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
@@ -44,8 +44,7 @@ public sealed class AuthenticationTokenService(
             resolvedRefreshSessionId);
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        await RevokeExistingBrowserSessionAsync(principal.UserId, clientContext?.ExistingRefreshToken, nowUtc, cancellationToken)
-            .ConfigureAwait(false);
+        await RevokeExistingBrowserSessionAsync(principal.UserId, clientContext?.ExistingRefreshToken, nowUtc, cancellationToken);
         await PersistAuthenticationArtifactsAsync(
             principal.UserId,
             hashedRefreshToken,
@@ -54,7 +53,7 @@ public sealed class AuthenticationTokenService(
             clientContext,
             nowUtc,
             jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
     }
 
@@ -73,12 +72,12 @@ public sealed class AuthenticationTokenService(
         if (client.PreviousBrowserSessionId is { } previousId) {
             // The protected marker selects a previous browser slot only after fresh authentication.
             // Revoke before loading the old proof so a staged entity cannot overwrite this atomic update.
-            await refreshTokenSessionRepository.RevokeByIdAsync(previousId, principal.UserId, now, cancellationToken).ConfigureAwait(false);
+            await refreshTokenSessionRepository.RevokeByIdAsync(previousId, principal.UserId, now, cancellationToken);
         }
-        await RevokeExistingBrowserSessionAsync(principal.UserId, client.ExistingRefreshToken, now, cancellationToken).ConfigureAwait(false);
-        await RevokeExistingOpaqueSessionAsync(client.ExistingBrowserCredential, now, cancellationToken).ConfigureAwait(false);
+        await RevokeExistingBrowserSessionAsync(principal.UserId, client.ExistingRefreshToken, now, cancellationToken);
+        await RevokeExistingOpaqueSessionAsync(client.ExistingBrowserCredential, now, cancellationToken);
         await PersistAuthenticationArtifactsAsync(principal.UserId, SecurityTokenGenerator.HashForStorage(credential),
-            rememberMe, id, client, now, expires, cancellationToken, principal.SecurityVersion).ConfigureAwait(false);
+            rememberMe, id, client, now, expires, cancellationToken, principal.SecurityVersion);
         return new IssuedAuthenticationTokens(string.Empty, string.Empty,
             new IssuedBrowserSession(credential, id.Value, expires, rememberMe, principal.Roles, admin));
     }
@@ -87,11 +86,11 @@ public sealed class AuthenticationTokenService(
         if (!BrowserSessionCredential.TryReadSessionId(credential, out Guid id)) {
             return;
         }
-        UserRefreshTokenSession? previous = await refreshTokenSessionRepository.GetByIdAsync(new RefreshTokenSessionId(id), cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? previous = await refreshTokenSessionRepository.GetByIdAsync(new RefreshTokenSessionId(id), cancellationToken);
         if (previous is { IsActive: true, BrowserSecurityVersion: not null } &&
             SecurityTokenGenerator.VerifyFastStorageHash(credential!, previous.RefreshTokenHash)) {
             previous.Revoke(nowUtc);
-            await refreshTokenSessionRepository.UpdateAsync(previous, cancellationToken).ConfigureAwait(false);
+            await refreshTokenSessionRepository.UpdateAsync(previous, cancellationToken);
         }
     }
 
@@ -123,7 +122,7 @@ public sealed class AuthenticationTokenService(
             rememberMe,
             dateTimeProvider.GetUtcNow().UtcDateTime,
             jwtTokenGenerator.ReadRefreshTokenExpirationUtc(refreshToken),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return rotated ? new IssuedAuthenticationTokens(accessToken, refreshToken) : null;
     }
 
@@ -142,8 +141,7 @@ public sealed class AuthenticationTokenService(
             return;
         }
 
-        UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(sessionId, cancellationToken)
-            .ConfigureAwait(false);
+        UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(sessionId, cancellationToken);
         if (session is null || session.UserId != userId || !session.IsActive) {
             return;
         }
@@ -154,7 +152,7 @@ public sealed class AuthenticationTokenService(
         if (matches) {
             // Stage both replacement and revocation in the same unit-of-work save.
             session.Revoke(nowUtc);
-            await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
+            await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken);
         }
     }
 
@@ -182,7 +180,7 @@ public sealed class AuthenticationTokenService(
             session.ConvertToBrowserSession(hashedRefreshToken, version, nowUtc,
                 allowRenewal: clientContext?.CredentialKind == AuthenticationCredentialKind.Browser);
         }
-        await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        await refreshTokenSessionRepository.AddAsync(session, cancellationToken);
 
         if (clientContext is not null) {
             ParsedUserAgent userAgent = UserAgentParser.Parse(clientContext.UserAgent);
@@ -196,7 +194,7 @@ public sealed class AuthenticationTokenService(
                 userAgent.OperatingSystem,
                 userAgent.DeviceType,
                 nowUtc);
-            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
+            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken);
         }
     }
 }

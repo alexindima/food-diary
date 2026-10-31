@@ -16,7 +16,7 @@ public sealed class FastingPlanRepository(DbSet<FastingPlan> entries) : IFasting
         return await query
             .Where(plan => plan.UserId == userId && plan.Status == FastingPlanStatus.Active)
             .OrderByDescending(plan => plan.StartedAtUtc)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<FastingPlan?> GetByIdAsync(
@@ -25,7 +25,7 @@ public sealed class FastingPlanRepository(DbSet<FastingPlan> entries) : IFasting
             ? entries
             : entries.AsNoTracking();
 
-        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingPlan>> GetByUserAsync(
@@ -47,15 +47,15 @@ public sealed class FastingPlanRepository(DbSet<FastingPlan> entries) : IFasting
 
         return await query
             .OrderByDescending(plan => plan.StartedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(plan, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(plan, cancellationToken);
     }
 
     public async Task UpdateAsync(FastingPlan plan, CancellationToken cancellationToken = default) {
         entries.Update(plan);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 }

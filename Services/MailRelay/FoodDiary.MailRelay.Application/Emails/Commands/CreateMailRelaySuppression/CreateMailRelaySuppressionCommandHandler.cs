@@ -5,7 +5,7 @@ namespace FoodDiary.MailRelay.Application.Emails.Commands.CreateMailRelaySuppres
 public sealed class CreateMailRelaySuppressionCommandHandler(MailRelayEmailUseCases useCases)
     : IRequestHandler<CreateMailRelaySuppressionCommand, Result> {
     public async Task<Result> Handle(CreateMailRelaySuppressionCommand request, CancellationToken cancellationToken) {
-        await useCases.CreateSuppressionAsync(request.Request, cancellationToken).ConfigureAwait(false);
+        await useCases.CreateSuppressionAsync(request.Request, cancellationToken);
         return Result.Success();
     }
 }

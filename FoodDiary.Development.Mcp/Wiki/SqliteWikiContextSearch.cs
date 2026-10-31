@@ -39,7 +39,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
         }
         if (includeTests) { requests.Add((query, 5, "Tests")); }
         IReadOnlyList<WikiContextSearchResult> results = await SearchBatchAsync(requests, cancellationToken,
-            expectedChangeSetFingerprint).ConfigureAwait(false);
+            expectedChangeSetFingerprint);
         if (results.Any(result => !result.Ready || !result.Fresh)) {
             return new DevelopmentFlowScope(Ready: false, seedPaths, [], [], Truncated: false,
                 stopwatch.Elapsed.TotalMilliseconds, UnavailableReason: "anchor-search-unavailable");
@@ -61,7 +61,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
             .Concat(seedPaths.Take(2)).Concat(focusedFrontend.Take(2))
             .Distinct(StringComparer.OrdinalIgnoreCase)];
         DevelopmentFlowScope graph = await _flowReader.ExpandAsync(graphSeeds, includeTests,
-            expectedChangeSetFingerprint, cancellationToken).ConfigureAwait(false);
+            expectedChangeSetFingerprint, cancellationToken);
         if (!graph.Ready) { return graph; }
         string[] relatedPaths = [.. graph.Paths.Where(path => anchors.SelectMany(anchor => anchor.Split(' '))
                 .Any(term => path.Contains(term, StringComparison.OrdinalIgnoreCase)))
@@ -140,7 +140,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
         var stopwatch = Stopwatch.StartNew();
         try {
             return await _reader.SearchAsync(query, limit, changeType, module, scopePaths,
-                cancellationToken, expectedChangeSetFingerprint).ConfigureAwait(false);
+                cancellationToken, expectedChangeSetFingerprint);
         } finally {
             _telemetry.RecordCommandStage("context-search", "in-process-sqlite", stopwatch.Elapsed);
         }
@@ -152,7 +152,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch, IWikiFlowScope
         string? expectedChangeSetFingerprint) {
         var stopwatch = Stopwatch.StartNew();
         try {
-            return await _reader.SearchBatchAsync(requests, cancellationToken, expectedChangeSetFingerprint).ConfigureAwait(false);
+            return await _reader.SearchBatchAsync(requests, cancellationToken, expectedChangeSetFingerprint);
         } finally {
             _telemetry.RecordCommandStage("context-search", "in-process-sqlite-batch", stopwatch.Elapsed);
         }

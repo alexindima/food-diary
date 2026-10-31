@@ -39,7 +39,7 @@ public sealed class DeleteRecipeCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -52,7 +52,7 @@ public sealed class DeleteRecipeCommandHandler(
             userId,
             includePublic: false,
             includeSteps: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (recipe is null) {
             return Result.Failure(RecipeErrors.NotAccessible(command.RecipeId));
@@ -62,7 +62,7 @@ public sealed class DeleteRecipeCommandHandler(
             recipe.Id,
             recipe.UserId,
             includePublic: false,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (usageCount > 0) {
             return Result.Failure(Errors.Validation.Invalid("RecipeId",
                 "Recipe is already used and cannot be deleted"));
@@ -70,14 +70,14 @@ public sealed class DeleteRecipeCommandHandler(
 
         ImageAssetId? recipeAssetId = recipe.ImageAssetId;
         IReadOnlyList<ImageAssetId> stepAssetIds = GetStepAssetIds(recipe);
-        await recipeWriteRepository.DeleteAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.DeleteAsync(recipe, cancellationToken);
 
         if (recipeAssetId.HasValue) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(recipeAssetId.Value, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(recipeAssetId.Value, cancellationToken);
         }
 
         foreach (ImageAssetId stepAssetId in stepAssetIds) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken).ConfigureAwait(false);
+            await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken);
         }
 
         return Result.Success();

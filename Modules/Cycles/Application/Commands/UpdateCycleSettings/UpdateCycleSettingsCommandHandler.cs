@@ -33,7 +33,7 @@ public sealed class UpdateCycleSettingsCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleModel>(userIdResult);
         }
@@ -43,7 +43,7 @@ public sealed class UpdateCycleSettingsCommandHandler(
             userIdResult.Value,
             includeDetails: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (profile is null) {
             return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
@@ -62,7 +62,7 @@ public sealed class UpdateCycleSettingsCommandHandler(
             ReproductiveState: command.ReproductiveState.HasValue ? (CycleReproductiveState)command.ReproductiveState.Value : null,
             HideFromDashboard: command.HideFromDashboard));
 
-        await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
+        await cycleRepository.UpdateAsync(profile, cancellationToken);
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
         return Result.Success(profile.ToModel(predictions, currentDate));

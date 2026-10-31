@@ -18,7 +18,7 @@ public sealed class DeleteMealCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
@@ -40,13 +40,13 @@ public sealed class DeleteMealCommandHandler(
             userId,
             includeItems: false,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (meal is null) {
             return Result.Failure(MealErrors.NotFound(command.MealId));
         }
 
-        await mealWriteRepository.DeleteAsync(meal, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.DeleteAsync(meal, cancellationToken);
         return Result.Success();
     }
 }

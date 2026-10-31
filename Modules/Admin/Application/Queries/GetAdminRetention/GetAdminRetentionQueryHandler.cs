@@ -22,6 +22,6 @@ public sealed class GetAdminRetentionQueryHandler(IAdminRetentionReader reader, 
         return Result.Success(await reader.GetAsync(from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
             to.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), now, cancellationToken,
             hasCohortPeriod ? cohortFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc) : null,
-            hasCohortPeriod ? cohortTo.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc) : null).ConfigureAwait(false));
+            hasCohortPeriod ? cohortTo.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc) : null));
     }
 }

@@ -20,18 +20,18 @@ public sealed class CreatePortalSessionCommandHandler(
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             billingUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingPortalSessionModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(userResult.Error);
         }
 
-        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken);
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
             return Result.Failure<BillingPortalSessionModel>(BillingErrors.CustomerPortalUnavailable);
         }
@@ -43,7 +43,7 @@ public sealed class CreatePortalSessionCommandHandler(
 
         Result<BillingPortalSessionModel> sessionResult = await billingProvider.CreatePortalSessionAsync(
             new BillingPortalSessionRequestModel(subscription.ExternalCustomerId),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return sessionResult.IsFailure ? Result.Failure<BillingPortalSessionModel>(sessionResult.Error) : Result.Success(sessionResult.Value);
     }
 }

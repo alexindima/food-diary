@@ -14,7 +14,7 @@ public sealed class MealPlanCatalogRecipeReader(ICompositionReadContext context)
             .Where(recipe => recipe.Visibility == Visibility.Public && (term == string.Empty || recipe.Name.Contains(term)))
             .OrderBy(recipe => recipe.Name).ThenBy(recipe => recipe.Id).Take(Math.Clamp(limit, 1, 100))
             .Select(recipe => new CatalogRecipeReadModel(recipe.Id.Value, recipe.Name, recipe.Servings))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlySet<Guid>> GetPublicIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) {
@@ -22,7 +22,7 @@ public sealed class MealPlanCatalogRecipeReader(ICompositionReadContext context)
         RecipeId[] typedIds = [.. ids.Select(id => new RecipeId(id))];
         List<Guid> found = await context.Recipes.AsNoTracking()
             .Where(recipe => recipe.Visibility == Visibility.Public && Enumerable.Contains(typedIds, recipe.Id))
-            .Select(recipe => recipe.Id.Value).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(recipe => recipe.Id.Value).ToListAsync(cancellationToken);
         return found.ToHashSet();
     }
 }

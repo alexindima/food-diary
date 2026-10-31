@@ -59,13 +59,13 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
             .Include(occurrence => occurrence.Plan)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderBy(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         if (occurrences.Count == 0) {
             return [];
         }
 
         IReadOnlyDictionary<UserId, UserFastingReminderModel> settings = await users.GetReminderSettingsAsync(
-            occurrences.Select(occurrence => occurrence.UserId).Distinct().ToArray(), cancellationToken).ConfigureAwait(false);
+            occurrences.Select(occurrence => occurrence.UserId).Distinct().ToArray(), cancellationToken);
         return occurrences.Where(occurrence => settings.ContainsKey(occurrence.UserId))
             .Select(occurrence => new FastingActiveOccurrenceModel(occurrence,
                 settings[occurrence.UserId].ReminderDelays))
@@ -81,7 +81,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
         return await query
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<FastingOccurrenceReadModel?> GetCurrentReadModelAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -90,7 +90,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
             .Where(occurrence => occurrence.UserId == userId && occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Select(ReadModelProjection)
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<FastingOccurrence?> GetByIdAsync(
@@ -100,7 +100,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
             : entries.AsNoTracking())
             .Include(occurrence => occurrence.Plan);
 
-        return await query.FirstOrDefaultAsync(occurrence => occurrence.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(occurrence => occurrence.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(
@@ -122,7 +122,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
         return await query
             .OrderBy(occurrence => occurrence.SequenceNumber)
             .ThenBy(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(
@@ -135,7 +135,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
 
         return await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingOccurrenceReadModel>> GetByUserReadModelsAsync(
@@ -147,7 +147,7 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
         return await BuildByUserQuery(userId, from, to, status)
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Select(ReadModelProjection)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<(IReadOnlyList<FastingOccurrence> Items, int TotalItems)> GetPagedByUserAsync(
@@ -161,12 +161,12 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
         int normalizedPage = PaginationPolicy.NormalizePage(page);
         int normalizedLimit = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1, maxPageSize: 50);
         IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.CountAsync(cancellationToken);
         List<FastingOccurrence> items = await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, totalItems);
     }
@@ -182,13 +182,13 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
         int normalizedPage = PaginationPolicy.NormalizePage(page);
         int normalizedLimit = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1, maxPageSize: 50);
         IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.CountAsync(cancellationToken);
         List<FastingOccurrenceReadModel> items = await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
             .Select(ReadModelProjection)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, totalItems);
     }
@@ -219,11 +219,11 @@ public sealed class FastingOccurrenceRepository(DbSet<FastingOccurrence> entries
     }
 
     public async Task AddAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(occurrence, cancellationToken);
     }
 
     public async Task UpdateAsync(FastingOccurrence occurrence, CancellationToken cancellationToken = default) {
         entries.Update(occurrence);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 }

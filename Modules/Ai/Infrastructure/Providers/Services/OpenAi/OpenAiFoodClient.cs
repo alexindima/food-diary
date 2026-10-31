@@ -50,7 +50,7 @@ public sealed partial class OpenAiFoodClient(
         }
 
         object primary = BuildVisionRequest(_options.VisionModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
-        Result<long> primaryCount = await CountInputTokensAsync(primary, cancellationToken).ConfigureAwait(false);
+        Result<long> primaryCount = await CountInputTokensAsync(primary, cancellationToken);
         if (primaryCount.IsFailure) {
             return Result.Failure<AiProviderTokenBudget>(primaryCount.Error);
         }
@@ -58,7 +58,7 @@ public sealed partial class OpenAiFoodClient(
         long inputTokens = primaryCount.Value;
         if (!string.Equals(_options.VisionFallbackModel, _options.VisionModel, StringComparison.Ordinal)) {
             object fallback = BuildVisionRequest(_options.VisionFallbackModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
-            Result<long> fallbackCount = await CountInputTokensAsync(fallback, cancellationToken).ConfigureAwait(false);
+            Result<long> fallbackCount = await CountInputTokensAsync(fallback, cancellationToken);
             if (fallbackCount.IsFailure) {
                 return Result.Failure<AiProviderTokenBudget>(fallbackCount.Error);
             }
@@ -82,7 +82,7 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.VisionModel;
         object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess &&
             response.CanFallback &&
             !string.Equals(_options.VisionFallbackModel, requestModel, StringComparison.Ordinal)) {
@@ -93,7 +93,7 @@ public sealed partial class OpenAiFoodClient(
                 new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
             object fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens, product);
-            response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken).ConfigureAwait(false);
+            response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken);
         }
 
         if (!response.IsSuccess) {
@@ -125,7 +125,7 @@ public sealed partial class OpenAiFoodClient(
         }
 
         object request = BuildTextParseRequest(_options.TextModel, text, userLanguage, promptTemplate, _options.MaxOutputTokens);
-        Result<long> count = await CountInputTokensAsync(request, cancellationToken).ConfigureAwait(false);
+        Result<long> count = await CountInputTokensAsync(request, cancellationToken);
         return count.IsFailure
             ? Result.Failure<AiProviderTokenBudget>(count.Error)
             : Result.Success(new AiProviderTokenBudget(count.Value, _options.MaxOutputTokens));
@@ -143,7 +143,7 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.TextModel;
         object request = BuildTextParseRequest(requestModel, text, userLanguage, promptTemplate, _options.MaxOutputTokens);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
@@ -170,7 +170,7 @@ public sealed partial class OpenAiFoodClient(
         }
 
         object request = BuildNutritionRequest(_options.TextModel, items, promptTemplate, _options.MaxOutputTokens);
-        Result<long> count = await CountInputTokensAsync(request, cancellationToken).ConfigureAwait(false);
+        Result<long> count = await CountInputTokensAsync(request, cancellationToken);
         return count.IsFailure
             ? Result.Failure<AiProviderTokenBudget>(count.Error)
             : Result.Success(new AiProviderTokenBudget(count.Value, _options.MaxOutputTokens));
@@ -187,7 +187,7 @@ public sealed partial class OpenAiFoodClient(
 
         string requestModel = _options.TextModel;
         object request = BuildNutritionRequest(requestModel, items, promptTemplate, _options.MaxOutputTokens);
-        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) response = await SendRequestAsync(request, operation, requestModel, cancellationToken);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(response.Error);
         }
@@ -220,7 +220,7 @@ public sealed partial class OpenAiFoodClient(
             response = await httpClient.SendAsync(
                 request,
                 HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         } catch (Exception ex) when (ex is HttpRequestException or BrokenCircuitException) {
             return HandleInputTokenTransportFailure(ex);
         } catch (TaskCanceledException) when (!cancellationToken.IsCancellationRequested) {
@@ -235,7 +235,7 @@ public sealed partial class OpenAiFoodClient(
                 response.Content,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         } catch (Exception exception) when (exception is InvalidDataException or TimeoutException) {
             logger.LogWarning("OpenAI input token count response body was oversized or exceeded its read deadline.");
             return Result.Failure<long>(AiErrors.InvalidResponse("OpenAI input token count response was invalid."));
@@ -294,7 +294,7 @@ public sealed partial class OpenAiFoodClient(
                 response = await httpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
-                    overallDeadline.Token).ConfigureAwait(false);
+                    overallDeadline.Token);
             } catch (Exception ex) when (ex is HttpRequestException or BrokenCircuitException) {
                 return HandleResponseTransportFailure(ex, operation, model);
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
@@ -308,7 +308,7 @@ public sealed partial class OpenAiFoodClient(
                 response.Content, operation,
                 model,
                 overallDeadline.Token,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (!responseBody.IsSuccess) {
                 return (false, null, responseBody.Error, false);
             }
@@ -322,7 +322,7 @@ public sealed partial class OpenAiFoodClient(
                         attempt,
                         operation,
                         model,
-                        overallDeadline.Token).ConfigureAwait(false);
+                        overallDeadline.Token);
                 } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
                     RecordAiRequest(operation, model, "timeout");
                     return (false, null, AiErrors.OpenAiFailed("OpenAI request deadline expired."), false);
@@ -373,7 +373,7 @@ public sealed partial class OpenAiFoodClient(
                 content,
                 BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
                 BoundedHttpContentReader.DefaultReadTimeout,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             return (true, body, Error.None);
         } catch (InvalidDataException) {
             RecordAiRequest(operation, model, "oversized_response");
@@ -391,7 +391,7 @@ public sealed partial class OpenAiFoodClient(
         CancellationToken deadlineToken,
         CancellationToken callerToken) {
         try {
-            return await ReadResponseBodyAsync(content, operation, model, deadlineToken).ConfigureAwait(false);
+            return await ReadResponseBodyAsync(content, operation, model, deadlineToken);
         } catch (OperationCanceledException) when (!callerToken.IsCancellationRequested) {
             RecordAiRequest(operation, model, "timeout");
             return (false, null, AiErrors.OpenAiFailed("OpenAI request deadline expired."));
@@ -435,7 +435,7 @@ public sealed partial class OpenAiFoodClient(
                     statusCode,
                     requestId ?? "n/a",
                     summary);
-                await Task.Delay(ResolveRetryDelay(response, attempt), _timeProvider, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(ResolveRetryDelay(response, attempt), _timeProvider, cancellationToken);
             } else {
                 logger.LogWarning(
                     "OpenAI transient failure exhausted retries. Status={Status} RequestId={RequestId} Summary={Summary}",

@@ -58,7 +58,7 @@ public sealed class MealItemDisplayReadService(ICompositionReadContext context) 
                 item.SnapshotAlcoholPerBase,
                 item.SourceAiItemId.HasValue ? item.SourceAiItemId.Value.Value : null,
                 item.Origin.ToString()))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return items
             .OrderBy(item => item.ItemId)

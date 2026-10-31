@@ -18,12 +18,12 @@ if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("FOODDIARY_TAS
 }
 
 WebApplication app = builder.Build();
-if (await app.TryRunOwnedFixtureCleanupAsync(args).ConfigureAwait(false)) {
+if (await app.TryRunOwnedFixtureCleanupAsync(args)) {
     return;
 }
 app.UseApiPipeline();
 
-await app.RunAsync().ConfigureAwait(false);
+await app.RunAsync();
 
 [ExcludeFromCodeCoverage]
 public partial class Program;

@@ -31,7 +31,7 @@ public sealed class GetMealsOverviewQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<MealOverviewModel>(userIdResult);
         }
@@ -57,7 +57,7 @@ public sealed class GetMealsOverviewQueryHandler(
             sanitizedLimit,
             favoriteLimit,
             filters, timeZone, request.IncludeFavorites,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(overview);
     }
@@ -89,21 +89,21 @@ public sealed class GetMealsOverviewQueryHandler(
             page,
             limit,
             filters,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         (IReadOnlyList<MealFavoriteMealModel> favoriteItems, int favoriteCount) =
             includeFavorites
-                ? await sender.Send(new ReadMealFavoritesOverviewQuery(userId, favoriteLimit), cancellationToken).ConfigureAwait(false)
+                ? await sender.Send(new ReadMealFavoritesOverviewQuery(userId, favoriteLimit), cancellationToken)
                 : (Array.Empty<MealFavoriteMealModel>(), 0);
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await MealReadSupport.GetFavoritesByMealIdAsync(sender,
             userId,
             items,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         var allMeals = MealReadSupport.ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
 
         DateOnly[] dates = [.. items.Select(item => LocalCalendar.DateAt(item.Date, timeZone)).Distinct()];
-        IReadOnlyList<MealDaySummary> summaries = dates.Length == 0 ? [] : await mealRepository.GetDaySummariesAsync(userId, dates, timeZone, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealDaySummary> summaries = dates.Length == 0 ? [] : await mealRepository.GetDaySummariesAsync(userId, dates, timeZone, cancellationToken);
         return new MealOverviewModel(allMeals, favoriteItems, favoriteCount) { DaySummaries = summaries };
     }
 }

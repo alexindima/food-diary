@@ -18,8 +18,7 @@ internal sealed class UserAuthenticationRegistrationService(
         UserRegistrationModel registration,
         CancellationToken cancellationToken = default) {
         User? existingUser = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(registration.Email, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(registration.Email, cancellationToken);
         if (existingUser is not null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(EmailAlreadyExists);
         }
@@ -38,7 +37,7 @@ internal sealed class UserAuthenticationRegistrationService(
             registration.EmailVerificationExpiresAtUtc,
             registration.RegisteredAtUtc));
         user.RecordAuthenticationActivity(registration.RegisteredAtUtc);
-        await userWriteRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.AddAsync(user, cancellationToken);
         return Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, registration.RegisteredAtUtc));
     }
 
@@ -49,19 +48,17 @@ internal sealed class UserAuthenticationRegistrationService(
         CancellationToken cancellationToken = default) {
         string normalizedEmail = email.Trim();
         User? existingUser = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(normalizedEmail, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(normalizedEmail, cancellationToken);
         if (existingUser is not null) {
             return new UserInitialAdminBootstrapModel(Created: false, normalizedEmail);
         }
 
         IReadOnlyList<Role> roleEntities = await roleCatalogService
-            .EnsureRolesByNamesAsync([.. roles], cancellationToken)
-            .ConfigureAwait(false);
+            .EnsureRolesByNamesAsync([.. roles], cancellationToken);
         var admin = User.Create(normalizedEmail, passwordHasher.Hash(password));
         admin.SetEmailConfirmed(isConfirmed: true);
         admin.ReplaceRoles(roleEntities);
-        await userWriteRepository.AddAsync(admin, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.AddAsync(admin, cancellationToken);
         return new UserInitialAdminBootstrapModel(Created: true, normalizedEmail);
     }
 

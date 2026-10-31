@@ -26,8 +26,8 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(
         var toUtc = periodTo.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
         AiUsageSummary summary = query.UserId.HasValue
-            ? await aiReadService.Send(new GetAiUsageForUserQuery(FromUtc: fromUtc, ToUtc: toUtc, UserId: query.UserId.Value), cancellationToken).ConfigureAwait(false)
-            : await aiReadService.Send(new GetAiUsageSummaryQuery(FromUtc: fromUtc, ToUtc: toUtc), cancellationToken).ConfigureAwait(false);
+            ? await aiReadService.Send(new GetAiUsageForUserQuery(FromUtc: fromUtc, ToUtc: toUtc, UserId: query.UserId.Value), cancellationToken)
+            : await aiReadService.Send(new GetAiUsageSummaryQuery(FromUtc: fromUtc, ToUtc: toUtc), cancellationToken);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

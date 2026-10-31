@@ -17,12 +17,11 @@ public sealed class AchievementAwardService(
         CancellationToken cancellationToken = default,
         DateTime? earnedAtUtc = null) {
         IReadOnlyList<UserAchievement> existing = await achievementStore
-            .GetByUserIdAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserIdAsync(userId, cancellationToken);
         var existingKeys = existing
             .Select(achievement => achievement.AchievementKey)
             .ToHashSet(StringComparer.Ordinal);
-        IReadOnlyList<AchievementDefinition> definitions = await definitionStore.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AchievementDefinition> definitions = await definitionStore.GetAllAsync(cancellationToken);
         IReadOnlyList<AchievementDefinition> visibleDefinitions = definitions
             .Where(definition => definition.IsActive || existingKeys.Contains(definition.Key))
             .ToList();
@@ -45,7 +44,7 @@ public sealed class AchievementAwardService(
 
         IReadOnlyList<UserAchievement> persisted = missingGrants.Length == 0
             ? existing
-            : await achievementStore.GrantMissingAsync(userId, missingGrants, cancellationToken).ConfigureAwait(false);
+            : await achievementStore.GrantMissingAsync(userId, missingGrants, cancellationToken);
         IReadOnlyDictionary<string, UserAchievement> persistedByKey = persisted
             .ToDictionary(achievement => achievement.AchievementKey, StringComparer.Ordinal);
 

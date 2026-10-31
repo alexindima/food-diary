@@ -11,8 +11,7 @@ namespace FoodDiary.Modules.ContentReports.Application.Commands.ReviewContentRep
 public sealed class ReviewContentReportCommandHandler(IContentReportWriteRepository reportRepository) : IRequestHandler<ReviewContentReportCommand, Result> {
     public async Task<Result> Handle(ReviewContentReportCommand request, CancellationToken cancellationToken) {
         ContentReport? report = await reportRepository
-            .GetByIdAsync(request.ReportId, asTracking: true, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdAsync(request.ReportId, asTracking: true, cancellationToken);
         if (report is null) {
             return Result.Failure(ContentReportErrors.NotFound(request.ReportId.Value));
         }
@@ -22,7 +21,7 @@ public sealed class ReviewContentReportCommandHandler(IContentReportWriteReposit
         }
 
         report.MarkReviewed(request.ReviewerUserId, request.AdminNote);
-        await reportRepository.UpdateAsync(report, cancellationToken).ConfigureAwait(false);
+        await reportRepository.UpdateAsync(report, cancellationToken);
         return Result.Success();
     }
 }

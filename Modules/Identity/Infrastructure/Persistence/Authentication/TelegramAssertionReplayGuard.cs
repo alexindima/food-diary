@@ -13,24 +13,22 @@ public sealed class TelegramAssertionReplayGuard(IdentityDbContext context, Time
         DateTime authDateUtc,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
         DateTime notBeforeUtc = await context.TelegramAssertionPolicies
             .AsNoTracking().Where(policy => policy.Id == 1).Select(policy => policy.NotBeforeUtc)
-            .SingleAsync(cancellationToken).ConfigureAwait(false);
+            .SingleAsync(cancellationToken);
         if (authDateUtc < notBeforeUtc) {
             return false;
         }
         await context.Database.ExecuteSqlInterpolatedAsync(
                 $"DELETE FROM \"ConsumedTelegramAssertions\" WHERE \"ExpiresAtUtc\" <= {nowUtc}",
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         string fingerprint = "v2:" + Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(signedAssertion)));
         int inserted = await context.Database.ExecuteSqlInterpolatedAsync(
                 $"INSERT INTO \"ConsumedTelegramAssertions\" (\"Fingerprint\", \"ExpiresAtUtc\") VALUES ({fingerprint}, {expiresAtUtc}) ON CONFLICT (\"Fingerprint\") DO NOTHING",
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         return inserted == 1;
     }
 }

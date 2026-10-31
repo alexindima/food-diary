@@ -27,12 +27,12 @@ public sealed partial class OpenAiFoodClient {
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
         try {
             // No retry: an ambiguous transport failure must not duplicate a paid transcription.
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, deadline.Token).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, deadline.Token);
             if (!response.IsSuccessStatusCode) {
                 RecordAiRequest(operation, _options.TranscriptionModel, "failure");
                 return Result.Failure<OpenAiFoodClientResponse<string>>(AiErrors.OpenAiFailed("Audio transcription failed."));
             }
-            string body = await BoundedHttpContentReader.ReadAsStringAsync(response.Content, 128 * 1024, TimeSpan.FromSeconds(10), deadline.Token).ConfigureAwait(false);
+            string body = await BoundedHttpContentReader.ReadAsStringAsync(response.Content, 128 * 1024, TimeSpan.FromSeconds(10), deadline.Token);
             using var json = JsonDocument.Parse(body, new JsonDocumentOptions { MaxDepth = 16 });
             if (json.RootElement.ValueKind != JsonValueKind.Object || !json.RootElement.TryGetProperty("text", out JsonElement text) ||
                 text.ValueKind != JsonValueKind.String || text.GetString() is not { Length: <= 8000 } transcript) {

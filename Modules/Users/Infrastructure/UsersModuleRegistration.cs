@@ -68,7 +68,7 @@ public static class UsersModuleRegistration {
         UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
             }
         };
     }

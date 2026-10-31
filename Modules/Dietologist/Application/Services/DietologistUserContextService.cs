@@ -14,7 +14,7 @@ internal sealed class DietologistUserContextService(
     public async Task<Result<string>> GetAccessibleUserEmailAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<UserDietologistProfileModel> profileResult = await profileReadService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> profileResult = await profileReadService.GetAccessibleProfileAsync(userId, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<string>(profileResult.Error);
         }
@@ -24,14 +24,14 @@ internal sealed class DietologistUserContextService(
     }
 
     public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
-        UserDietologistProfileModel? profile = await profileReadService.FindByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        UserDietologistProfileModel? profile = await profileReadService.FindByIdAsync(userId, cancellationToken);
         return profile?.Email;
     }
 
     public async Task<Result<GoalsModel>> GetGoalsByIdAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<GoalsModel> goalsResult = await userProfileReadService.GetGoalsAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<GoalsModel> goalsResult = await userProfileReadService.GetGoalsAsync(userId, cancellationToken);
         return goalsResult.IsFailure ? Result.Failure<GoalsModel>(DietologistErrors.AccessDenied) : goalsResult;
     }
 

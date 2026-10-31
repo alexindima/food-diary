@@ -37,7 +37,7 @@ internal sealed class ShoppingListCreationService(IShoppingListWriteRepository s
             }
         }
 
-        await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
+        await shoppingListRepository.AddAsync(shoppingList, cancellationToken);
         return Result.Success(shoppingList.ToModel());
     }
 }

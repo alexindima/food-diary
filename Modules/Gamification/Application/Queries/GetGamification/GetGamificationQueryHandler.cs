@@ -32,14 +32,14 @@ public sealed class GetGamificationQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<GamificationModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
         Result<UserGamificationProfileModel> userProfileResult =
-            await userProfileReadService.GetGamificationProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+            await userProfileReadService.GetGamificationProfileAsync(userId, cancellationToken);
         if (userProfileResult.IsFailure) {
             return Result.Failure<GamificationModel>(userProfileResult.Error);
         }
@@ -51,17 +51,16 @@ public sealed class GetGamificationQueryHandler(
         DateTime dayEnd = LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(today).AddDays(1), timeZone).AddTicks(-1);
         DateTime streakFrom = DateTime.UnixEpoch;
 
-        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, streakFrom, query.TimeZoneId is null ? today : dayEnd, query.TimeZoneId is null ? null : timeZone), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DateTime> mealDates = await mealActivityReadService.Send(new ReadDistinctMealDatesQuery(userId, streakFrom, query.TimeZoneId is null ? today : dayEnd, query.TimeZoneId is null ? null : timeZone), cancellationToken);
         (int currentStreak, int longestStreak) = GamificationCalculator.CalculateStreaks(mealDates, today);
 
-        int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken).ConfigureAwait(false);
+        int totalMeals = await mealActivityReadService.Send(new ReadTotalMealCountQuery(userId), cancellationToken);
         int totalAcademyArticlesRead = await achievementMetricReader
-            .GetCompletedAcademyArticleCountAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetCompletedAcademyArticleCountAsync(userId, cancellationToken);
 
         DateTime weekStart = today.AddDays(-6);
         userProfileResult = await userProfileReadService.GetGamificationProfileAsync(userId, cancellationToken,
-            DateOnly.FromDateTime(weekStart), DateOnly.FromDateTime(today)).ConfigureAwait(false);
+            DateOnly.FromDateTime(weekStart), DateOnly.FromDateTime(today));
         if (userProfileResult.IsFailure) {
             return Result.Failure<GamificationModel>(userProfileResult.Error);
         }
@@ -70,7 +69,7 @@ public sealed class GetGamificationQueryHandler(
             LocalCalendar.StartOfDayUtc(DateOnly.FromDateTime(weekStart), timeZone),
             query.TimeZoneId is null ? today : dayEnd,
             quantizationDays: 1,
-            cancellationToken, query.TimeZoneId is null ? null : timeZone).ConfigureAwait(false);
+            cancellationToken, query.TimeZoneId is null ? null : timeZone);
         if (weeklyCaloriesResult.IsFailure) {
             return Result.Failure<GamificationModel>(weeklyCaloriesResult.Error);
         }
@@ -83,8 +82,7 @@ public sealed class GetGamificationQueryHandler(
             .EvaluateAndGrantAsync(
                 userId,
                 new AchievementMetricSnapshot(longestStreak, totalMeals, totalAcademyArticlesRead),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         int healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);
 
         return Result.Success(new GamificationModel(

@@ -17,13 +17,13 @@ public sealed class GetMyDietologistQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DietologistInfoModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        DietologistInvitationReadModel? invitation = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken);
         return Result.Success(invitation is null ? null : invitation.ToDietologistInfoModel());
 
     }

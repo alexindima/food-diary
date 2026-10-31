@@ -10,7 +10,7 @@ namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.GetCatalo
 public sealed class GetCatalogMealPlansQueryHandler(IMealPlanCatalogRepository repository)
     : IQueryHandler<GetCatalogMealPlansQuery, Result<IReadOnlyList<MealPlanSummaryModel>>> {
     public async Task<Result<IReadOnlyList<MealPlanSummaryModel>>> Handle(GetCatalogMealPlansQuery query, CancellationToken cancellationToken) {
-        IReadOnlyList<MealPlanSummaryReadModel> items = await repository.GetPageAsync(query.Page, query.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealPlanSummaryReadModel> items = await repository.GetPageAsync(query.Page, query.Limit, cancellationToken);
         return Result.Success<IReadOnlyList<MealPlanSummaryModel>>([.. items.Select(item => item.ToSummaryModel())]);
     }
 }

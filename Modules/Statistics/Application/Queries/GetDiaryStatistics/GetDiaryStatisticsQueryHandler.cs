@@ -20,14 +20,14 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
 
     internal async Task<Result<DiaryStatisticsSummaryModel>> HandleAsync(GetDiaryStatisticsQuery query,
         Func<string, TimeZoneInfo> resolveTimeZone, CancellationToken cancellationToken) {
-        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(query.UserId, accessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> owner = await CurrentUserAccessResolver.ResolveAsync(query.UserId, accessService, cancellationToken);
         if (owner.IsFailure) {
             return Result.Failure<DiaryStatisticsSummaryModel>(owner.Error);
         }
         if (query.Days is not (1 or 7)) {
             return Result.Failure<DiaryStatisticsSummaryModel>(new Error("Statistics.InvalidDays", "Choose one or seven calendar days.", ErrorKind.Validation));
         }
-        Result<UserDashboardProfileModel> profileResult = await profiles.GetDashboardProfileAsync(owner.Value, cancellationToken).ConfigureAwait(false);
+        Result<UserDashboardProfileModel> profileResult = await profiles.GetDashboardProfileAsync(owner.Value, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<DiaryStatisticsSummaryModel>(profileResult.Error);
         }
@@ -45,7 +45,7 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
             return InvalidTimeZone();
         }
         Result<UserDashboardProfileModel> datedProfile = await profiles.GetDashboardProfileAsync(owner.Value, cancellationToken,
-            days.Min(day => day.Date), days.Max(day => day.Date)).ConfigureAwait(false);
+            days.Min(day => day.Date), days.Max(day => day.Date));
         if (datedProfile.IsFailure) {
             return Result.Failure<DiaryStatisticsSummaryModel>(datedProfile.Error);
         }
@@ -57,12 +57,12 @@ public sealed class GetDiaryStatisticsQueryHandler(ICurrentUserAccessService acc
             if (day.StartUtc < day.EndExclusiveUtc) {
                 // Two-day quantization keeps even a 25-hour local day in one existing owner bucket.
                 Result<IReadOnlyList<MealNutritionStatisticsBucket>> result = await sender.Send(new ReadMealNutritionStatisticsQuery(owner.Value,
-                    day.StartUtc, day.EndExclusiveUtc.AddTicks(-10), QuantizationDays: 2), cancellationToken).ConfigureAwait(false);
+                    day.StartUtc, day.EndExclusiveUtc.AddTicks(-10), QuantizationDays: 2), cancellationToken);
                 if (result.IsFailure) {
                     return Result.Failure<DiaryStatisticsSummaryModel>(result.Error);
                 }
                 buckets = result.Value;
-                waterMl = await sender.Send(new ReadHydrationIntervalQuery(owner.Value, day.StartUtc, day.EndExclusiveUtc), cancellationToken).ConfigureAwait(false);
+                waterMl = await sender.Send(new ReadHydrationIntervalQuery(owner.Value, day.StartUtc, day.EndExclusiveUtc), cancellationToken);
             }
             summaries.Add(new DiaryStatisticsDayModel(day.Date, buckets.Sum(bucket => bucket.TotalCalories), buckets.Sum(bucket => bucket.TotalProteins),
                 buckets.Sum(bucket => bucket.TotalFats), buckets.Sum(bucket => bucket.TotalCarbs), buckets.Sum(bucket => bucket.TotalFiber),

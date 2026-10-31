@@ -14,7 +14,7 @@ public sealed class CleanupSessionsCommandHandler(IRefreshTokenSessionWriteRepos
         int total = 0;
         for (int batch = 0; batch < request.MaxBatches; batch++) {
             cancellationToken.ThrowIfCancellationRequested();
-            int deleted = await repository.DeleteInactiveBeforeAsync(request.OlderThanUtc, request.BatchSize, cancellationToken).ConfigureAwait(false);
+            int deleted = await repository.DeleteInactiveBeforeAsync(request.OlderThanUtc, request.BatchSize, cancellationToken);
             total += deleted;
             if (deleted < request.BatchSize) {
                 break;

@@ -215,21 +215,21 @@ public sealed class NpgsqlInboundMailStore(
             """),
     ];
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            await AcquireSchemaMigrationLockAsync(connection, cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
+            await AcquireSchemaMigrationLockAsync(connection, cancellationToken);
             try {
-                await EnsureMigrationTableAsync(connection, cancellationToken).ConfigureAwait(false);
+                await EnsureMigrationTableAsync(connection, cancellationToken);
 
                 foreach (MailInboxSchemaMigration migration in SchemaMigrations) {
-                    if (await IsMigrationAppliedAsync(connection, migration.Name, cancellationToken).ConfigureAwait(false)) {
+                    if (await IsMigrationAppliedAsync(connection, migration.Name, cancellationToken)) {
                         continue;
                     }
 
-                    await ApplyMigrationAsync(connection, migration, cancellationToken).ConfigureAwait(false);
+                    await ApplyMigrationAsync(connection, migration, cancellationToken);
                 }
             } finally {
-                await ReleaseSchemaMigrationLockAsync(connection, CancellationToken.None).ConfigureAwait(false);
+                await ReleaseSchemaMigrationLockAsync(connection, CancellationToken.None);
             }
         }
     }
@@ -290,28 +290,28 @@ public sealed class NpgsqlInboundMailStore(
         DateTimeOffset deduplicationBucketUtc = GetDeduplicationBucket(message.ReceivedAtUtc);
         long rawSizeBytes = message.RawMimeBytes.Length;
         long accountedSizeBytes = CalculateAccountedSizeBytes(message, recipientsJson, admission);
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
+            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+            await using (transaction) {
                 await AcquireIngestionLockAsync(
                     connection,
                     transaction,
                     ingestionKey,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 Guid? duplicateId = await FindRecentDuplicateAsync(
                     connection,
                     transaction,
                     ingestionKey,
                     message.ReceivedAtUtc - _options.DeduplicationWindow,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 if (duplicateId is not null) {
-                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    await transaction.CommitAsync(cancellationToken);
                     return new InboundMailSaveResult(duplicateId.Value, WasDuplicate: true);
                 }
 
                 var command = new NpgsqlCommand(sql, connection, transaction);
-                await using (command.ConfigureAwait(false)) {
+                await using (command) {
                     command.Parameters.AddWithValue("id", id);
                     command.Parameters.AddWithNullableValue("message_id", message.MessageId);
                     command.Parameters.AddWithNullableValue("from_address", message.FromAddress);
@@ -329,7 +329,7 @@ public sealed class NpgsqlInboundMailStore(
                     command.Parameters.AddWithValue("is_trusted_relay", admission.IsTrustedRelay);
                     command.Parameters.AddWithValue("status", message.Status.Value);
                     command.Parameters.AddWithValue("received_at_utc", message.ReceivedAtUtc);
-                    id = (Guid)(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)
+                    id = (Guid)(await command.ExecuteScalarAsync(cancellationToken)
                                 ?? throw new InvalidOperationException("MailInbox insert did not return an identifier."));
                 }
 
@@ -340,11 +340,11 @@ public sealed class NpgsqlInboundMailStore(
                         message.ReceivedAtUtc,
                         accountedSizeBytes,
                         admission,
-                        cancellationToken).ConfigureAwait(false)) {
+                        cancellationToken)) {
                     throw new InboundMailStorageQuotaExceededException();
                 }
 
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await transaction.CommitAsync(cancellationToken);
                 return new InboundMailSaveResult(id, wasDuplicate);
             }
         }
@@ -357,9 +357,9 @@ public sealed class NpgsqlInboundMailStore(
         CancellationToken cancellationToken) {
         const string sql = "select pg_advisory_xact_lock(hashtextextended(@ingestion_key, 0));";
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("ingestion_key", ingestionKey);
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -378,10 +378,10 @@ public sealed class NpgsqlInboundMailStore(
                            limit 1;
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("ingestion_key", ingestionKey);
             command.Parameters.AddWithValue("window_start_utc", windowStartUtc.ToUniversalTime());
-            object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            object? result = await command.ExecuteScalarAsync(cancellationToken);
             return result is Guid id ? id : null;
         }
     }
@@ -391,7 +391,7 @@ public sealed class NpgsqlInboundMailStore(
 
     public async Task<IReadOnlyList<InboundMailMessageSummary>> GetFilteredMessagesAsync(
         int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
-        InboundMailMessagePage result = await GetMessagePageAsync(1, limit, recipient, category, unread, cancellationToken).ConfigureAwait(false);
+        InboundMailMessagePage result = await GetMessagePageAsync(1, limit, recipient, category, unread, cancellationToken);
         return result.Items;
     }
 
@@ -428,14 +428,14 @@ public sealed class NpgsqlInboundMailStore(
                            order by page.received_at_utc desc, page.id desc;
                            """;
 
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
         var messages = new List<InboundMailMessageSummary>();
         long totalItems = 0;
         long unreadCount = 0;
         long readCount = 0;
-        await using (connection.ConfigureAwait(false)) {
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, (object?)fromUtc?.ToUniversalTime() ?? DBNull.Value);
                 command.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, (object?)toUtc?.ToUniversalTime() ?? DBNull.Value);
                 command.Parameters.AddWithValue("id", NpgsqlDbType.Uuid, (object?)id ?? DBNull.Value);
@@ -446,13 +446,13 @@ public sealed class NpgsqlInboundMailStore(
                 command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, recipient is null ? DBNull.Value : JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
                 command.Parameters.AddWithValue("category", NpgsqlDbType.Text, (object?)category ?? DBNull.Value);
                 command.Parameters.AddWithValue("unread", NpgsqlDbType.Boolean, (object?)unread ?? DBNull.Value);
-                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                await using (reader.ConfigureAwait(false)) {
-                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+                await using (reader) {
+                    while (await reader.ReadAsync(cancellationToken)) {
                         totalItems = reader.GetInt64(9);
                         unreadCount = reader.GetInt64(10);
                         readCount = reader.GetInt64(11);
-                        if (await reader.IsDBNullAsync(0, cancellationToken).ConfigureAwait(false)) {
+                        if (await reader.IsDBNullAsync(0, cancellationToken)) {
                             continue;
                         }
                         IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(2));
@@ -464,10 +464,10 @@ public sealed class NpgsqlInboundMailStore(
                             subject,
                             GetCategory(recipients, subject),
                              reader.GetString(4),
-                             await reader.GetNullableDateTimeOffsetAsync(5, cancellationToken).ConfigureAwait(false),
-                             await reader.GetFieldValueAsync<DateTimeOffset>(6, cancellationToken).ConfigureAwait(false),
+                             await reader.GetNullableDateTimeOffsetAsync(5, cancellationToken),
+                             await reader.GetFieldValueAsync<DateTimeOffset>(6, cancellationToken),
                              reader.GetNullableString(7),
-                             await reader.GetFieldValueAsync<bool>(8, cancellationToken).ConfigureAwait(false)));
+                             await reader.GetFieldValueAsync<bool>(8, cancellationToken)));
                     }
                 }
             }
@@ -477,9 +477,9 @@ public sealed class NpgsqlInboundMailStore(
     }
 
     public async Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {
-        await _messageDetailReadSlots.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await _messageDetailReadSlots.WaitAsync(cancellationToken);
         try {
-            return await GetMessageDetailsCoreAsync(id, cancellationToken).ConfigureAwait(false);
+            return await GetMessageDetailsCoreAsync(id, cancellationToken);
         } finally {
             _messageDetailReadSlots.Release();
         }
@@ -495,23 +495,23 @@ public sealed class NpgsqlInboundMailStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
         InboundMailMessageDetails? details = null;
-        await using (connection.ConfigureAwait(false)) {
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("id", id);
-                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-                await using (reader.ConfigureAwait(false)) {
-                    if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+                await using (reader) {
+                    if (!await reader.ReadAsync(cancellationToken)) {
                         return null;
                     }
 
                     IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(3));
                     string? subject = reader.GetNullableString(4);
-                    byte[]? rawMimeBytes = await reader.IsDBNullAsync(7, cancellationToken).ConfigureAwait(false)
+                    byte[]? rawMimeBytes = await reader.IsDBNullAsync(7, cancellationToken)
                         ? null
-                        : await reader.GetFieldValueAsync<byte[]>(7, cancellationToken).ConfigureAwait(false);
+                        : await reader.GetFieldValueAsync<byte[]>(7, cancellationToken);
                     string? rawMime = rawMimeBytes is null ? null : Encoding.UTF8.GetString(rawMimeBytes);
                     DmarcReportPreview? dmarcReport = rawMimeBytes is null
                         ? null
@@ -529,11 +529,11 @@ public sealed class NpgsqlInboundMailStore(
                         dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
                         dmarcReport,
                         reader.GetString(8),
-                         await reader.GetNullableDateTimeOffsetAsync(9, cancellationToken).ConfigureAwait(false),
-                         await reader.GetFieldValueAsync<DateTimeOffset>(10, cancellationToken).ConfigureAwait(false),
-                         await reader.GetNullableDateTimeOffsetAsync(11, cancellationToken).ConfigureAwait(false),
+                         await reader.GetNullableDateTimeOffsetAsync(9, cancellationToken),
+                         await reader.GetFieldValueAsync<DateTimeOffset>(10, cancellationToken),
+                         await reader.GetNullableDateTimeOffsetAsync(11, cancellationToken),
                          reader.GetNullableString(12),
-                         await reader.GetFieldValueAsync<bool>(13, cancellationToken).ConfigureAwait(false));
+                         await reader.GetFieldValueAsync<bool>(13, cancellationToken));
                 }
             }
         }
@@ -560,13 +560,13 @@ public sealed class NpgsqlInboundMailStore(
                                or exists(select 1 from updated);
                            """;
 
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("read_at_utc", readAtUtc.ToUniversalTime());
-                object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                object? result = await command.ExecuteScalarAsync(cancellationToken);
                 return result is true;
             }
         }
@@ -583,28 +583,28 @@ public sealed class NpgsqlInboundMailStore(
             throw new ArgumentException("Metadata cutoff must not be newer than the content cutoff.", nameof(metadataCutoffUtc));
         }
 
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
+            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+            await using (transaction) {
                 int metadataDeletedCount = await DeleteExpiredMetadataAsync(
                     connection,
                     transaction,
                     metadataCutoffUtc,
                     batchSize,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 int contentPurgedCount = await PurgeExpiredContentAsync(
                     connection,
                     transaction,
                     contentCutoffUtc,
                     batchSize,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 await DeleteExpiredUsageAsync(
                     connection,
                     transaction,
                     DateOnly.FromDateTime(metadataCutoffUtc.UtcDateTime),
-                    cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
                 return new InboundMailRetentionResult(contentPurgedCount, metadataDeletedCount);
             }
         }
@@ -647,7 +647,7 @@ public sealed class NpgsqlInboundMailStore(
                            returning true;
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("usage_date", DateOnly.FromDateTime(receivedAtUtc.UtcDateTime));
             command.Parameters.AddWithValue("accounted_bytes", accountedSizeBytes);
             command.Parameters.AddWithValue("max_messages", _options.MaxMessagesPerDay);
@@ -657,7 +657,7 @@ public sealed class NpgsqlInboundMailStore(
             command.Parameters.AddWithValue("untrusted_bytes_increment", admission.IsTrustedRelay ? 0L : accountedSizeBytes);
             command.Parameters.AddWithValue("max_untrusted_messages", _options.GetMaxUntrustedMessagesPerDay());
             command.Parameters.AddWithValue("max_untrusted_raw_bytes", _options.GetMaxUntrustedRawBytesPerDay());
-            return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is true;
+            return await command.ExecuteScalarAsync(cancellationToken) is true;
         }
     }
 
@@ -679,10 +679,10 @@ public sealed class NpgsqlInboundMailStore(
                            );
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("cutoff_utc", cutoffUtc.ToUniversalTime());
             command.Parameters.AddWithValue("batch_size", batchSize);
-            return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            return await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -711,11 +711,11 @@ public sealed class NpgsqlInboundMailStore(
                            where message.id = candidates.id;
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("cutoff_utc", cutoffUtc.ToUniversalTime());
             command.Parameters.AddWithValue("batch_size", batchSize);
             command.Parameters.AddWithValue("purged_at_utc", timeProvider.GetUtcNow());
-            return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            return await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -726,9 +726,9 @@ public sealed class NpgsqlInboundMailStore(
         CancellationToken cancellationToken) {
         const string sql = "delete from mailinbox_daily_ingestion_usage where usage_date < @cutoff_date;";
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("cutoff_date", cutoffDate);
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -801,8 +801,8 @@ public sealed class NpgsqlInboundMailStore(
                            """;
 
         var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        await using (command) {
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -811,9 +811,9 @@ public sealed class NpgsqlInboundMailStore(
         CancellationToken cancellationToken) {
         const string sql = "select pg_advisory_lock(@lock_key);";
         var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("lock_key", SchemaMigrationLockKey);
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -827,9 +827,9 @@ public sealed class NpgsqlInboundMailStore(
 
         const string sql = "select pg_advisory_unlock(@lock_key);";
         var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("lock_key", SchemaMigrationLockKey);
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 
@@ -846,9 +846,9 @@ public sealed class NpgsqlInboundMailStore(
                            """;
 
         var command = new NpgsqlCommand(sql, connection);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("name", name);
-            object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            object? result = await command.ExecuteScalarAsync(cancellationToken);
             return result is true;
         }
     }
@@ -857,11 +857,11 @@ public sealed class NpgsqlInboundMailStore(
         NpgsqlConnection connection,
         MailInboxSchemaMigration migration,
         CancellationToken cancellationToken) {
-        NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-        await using (transaction.ConfigureAwait(false)) {
+        NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+        await using (transaction) {
             var migrationCommand = new NpgsqlCommand(migration.Sql, connection, transaction);
-            await using (migrationCommand.ConfigureAwait(false)) {
-                await migrationCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await using (migrationCommand) {
+                await migrationCommand.ExecuteNonQueryAsync(cancellationToken);
             }
 
             const string insertSql = """
@@ -870,13 +870,13 @@ public sealed class NpgsqlInboundMailStore(
                                      on conflict (name) do nothing;
                                      """;
             var insertCommand = new NpgsqlCommand(insertSql, connection, transaction);
-            await using (insertCommand.ConfigureAwait(false)) {
+            await using (insertCommand) {
                 insertCommand.Parameters.AddWithValue("name", migration.Name);
                 insertCommand.Parameters.AddWithValue("applied_at_utc", timeProvider.GetUtcNow());
-                await insertCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await insertCommand.ExecuteNonQueryAsync(cancellationToken);
             }
 
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+            await transaction.CommitAsync(cancellationToken);
         }
     }
 

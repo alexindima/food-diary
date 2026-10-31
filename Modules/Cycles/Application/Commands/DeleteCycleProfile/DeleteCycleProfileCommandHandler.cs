@@ -28,7 +28,7 @@ public sealed class DeleteCycleProfileCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -38,12 +38,12 @@ public sealed class DeleteCycleProfileCommandHandler(
             userIdResult.Value,
             includeDetails: false,
             asTracking: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (profile is null) {
             return Result.Failure(CycleErrors.NotFound(command.CycleProfileId));
         }
 
-        await cycleRepository.DeleteAsync(profile, cancellationToken).ConfigureAwait(false);
+        await cycleRepository.DeleteAsync(profile, cancellationToken);
         return Result.Success();
     }
 }

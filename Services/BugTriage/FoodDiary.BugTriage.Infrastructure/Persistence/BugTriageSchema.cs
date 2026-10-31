@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Npgsql;
 
 namespace FoodDiary.BugTriage.Infrastructure.Persistence;
@@ -71,7 +70,7 @@ public static class BugTriageSchema {
             create index if not exists ix_bugtriage_audit_findings_run on bugtriage_audit_findings (audit_run_id);
             commit;
             """);
-        await using ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
-        await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        await using IAsyncDisposable commandScope = command;
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 }

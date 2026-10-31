@@ -27,7 +27,7 @@ public sealed class GetMealsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<MealModel>>(userIdResult);
         }
@@ -48,7 +48,7 @@ public sealed class GetMealsQueryHandler(
             sanitizedPage,
             sanitizedLimit,
             filters,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(response);
     }
@@ -76,12 +76,12 @@ public sealed class GetMealsQueryHandler(
             page,
             limit,
             filters,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         IReadOnlyDictionary<MealId, FavoriteMealId> favoritesByMealId = await MealReadSupport.GetFavoritesByMealIdAsync(sender,
             userId,
             items,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return MealReadSupport.ToPagedResponse(items, favoritesByMealId, page, limit, totalItems);
     }

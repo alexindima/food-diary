@@ -19,13 +19,13 @@ public sealed partial class UserCleanupService {
 
     private async Task<UserId?> ResolveRetainedContentOwnerAsync(UserId sourceUserId, CancellationToken cancellationToken) {
         foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-            if (!await participant.HasReferencedContentAsync(sourceUserId, cancellationToken).ConfigureAwait(false)) {
+            if (!await participant.HasReferencedContentAsync(sourceUserId, cancellationToken)) {
                 continue;
             }
 
             // Provision the permanent infrastructure principal before content FK updates begin.
             // This independent coordinated transaction may survive a later content purge rollback.
-            await EnsureSystemContentOwnerAsync(cancellationToken).ConfigureAwait(false);
+            await EnsureSystemContentOwnerAsync(cancellationToken);
             return SystemContentOwner.Id;
         }
         return null;
@@ -33,11 +33,11 @@ public sealed partial class UserCleanupService {
 
     private async Task EnsureSystemContentOwnerAsync(CancellationToken cancellationToken) {
         await transactionCoordinator.ExecuteItemAsync(async (transaction, token) => {
-            await dbContext.Database.UseTransactionAsync(transaction, token).ConfigureAwait(false);
+            await dbContext.Database.UseTransactionAsync(transaction, token);
             await dbContext.Database.ExecuteSqlInterpolatedAsync(
-                $"SELECT pg_advisory_xact_lock({SystemContentOwnerProvisioningLock})", token).ConfigureAwait(false);
+                $"SELECT pg_advisory_xact_lock({SystemContentOwnerProvisioningLock})", token);
             User? existing = await dbContext.Users.AsNoTracking().Include(user => user.UserRoles)
-                .SingleOrDefaultAsync(user => user.Id == SystemContentOwner.Id, token).ConfigureAwait(false);
+                .SingleOrDefaultAsync(user => user.Id == SystemContentOwner.Id, token);
             if (existing is not null) {
                 ValidateSystemContentOwner(existing);
                 return false;
@@ -45,7 +45,7 @@ public sealed partial class UserCleanupService {
 
             dbContext.Users.Add(User.CreateSystemContentOwner());
             return true;
-        }, cancellationToken).ConfigureAwait(false);
+        }, cancellationToken);
     }
 
     private static void ValidateSystemContentOwner(User user) {

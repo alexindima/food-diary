@@ -11,7 +11,7 @@ public sealed class ReadLatestWeightEntryQueryHandler(IWeightEntryReadModelRepos
     : IRequestHandler<ReadLatestWeightEntryQuery, WeightEntryModel?> {
     public async Task<WeightEntryModel?> Handle(ReadLatestWeightEntryQuery request, CancellationToken cancellationToken) {
         IReadOnlyList<WeightEntryReadModel> entries = await repository.GetEntryReadModelsAsync(
-            request.UserId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken).ConfigureAwait(false);
+            request.UserId, dateFrom: null, dateTo: null, limit: 1, descending: true, cancellationToken);
         return entries.Count > 0 ? entries[0].ToModel() : null;
     }
 }

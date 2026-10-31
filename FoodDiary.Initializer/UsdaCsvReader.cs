@@ -3,8 +3,8 @@ namespace FoodDiary.Initializer;
 internal static class UsdaCsvReader {
     public static async IAsyncEnumerable<string> ReadLinesAsync(string filePath) {
         using var reader = new StreamReader(filePath);
-        await reader.ReadLineAsync().ConfigureAwait(false);
-        while (await reader.ReadLineAsync().ConfigureAwait(false) is { } line) {
+        await reader.ReadLineAsync();
+        while (await reader.ReadLineAsync() is { } line) {
             if (!string.IsNullOrWhiteSpace(line)) {
                 yield return line;
             }

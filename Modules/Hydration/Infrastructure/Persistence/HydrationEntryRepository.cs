@@ -39,7 +39,7 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
             .OrderBy(x => x.Timestamp)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<HydrationEntryReadModel>> GetByDateReadModelsAsync(
@@ -54,7 +54,7 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
             .OrderBy(x => x.Timestamp)
             .Select(x => new HydrationEntryReadModel(x.Id.Value, x.Timestamp, x.AmountMl))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
@@ -64,7 +64,7 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
         return await entries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
-            .SumAsync(x => x.AmountMl, cancellationToken).ConfigureAwait(false);
+            .SumAsync(x => x.AmountMl, cancellationToken);
     }
 
     public async Task<IReadOnlyList<HydrationEntryReadModel>> GetRecentReadModelsAsync(
@@ -79,7 +79,7 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
             .ThenByDescending(entry => entry.Id)
             .Take(limit)
             .Select(entry => new HydrationEntryReadModel(entry.Id.Value, entry.Timestamp, entry.AmountMl))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
         UserId userId,
@@ -95,7 +95,7 @@ public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
             .GroupBy(x => x.Timestamp.Date)
             .Select(g => new { Date = g.Key, TotalMl = g.Sum(x => x.AmountMl) })
             .OrderBy(x => x.Date)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return results.ConvertAll(r => (r.Date, r.TotalMl));
     }

@@ -22,8 +22,7 @@ internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext 
             .AsNoTracking()
             .Where(user => Enumerable.Contains(ids, user.Id))
             .Select(user => new UserGoalProjection(user.Id, user.NutritionProfile.DailyCalorieTarget ?? 0))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<MealProjection> meals = await context.Meals
             .AsNoTracking()
@@ -35,16 +34,14 @@ internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext 
                 meal.UserId,
                 meal.Date,
                 meal.ManualCalories ?? meal.TotalCalories))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<LastMealProjection> lastMeals = await context.Meals
             .AsNoTracking()
             .Where(meal => Enumerable.Contains(ids, meal.UserId))
             .GroupBy(meal => meal.UserId)
             .Select(group => new LastMealProjection(group.Key, group.Max(meal => meal.Date)))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         List<WeightProjection> weights = await context.WeightEntries
             .AsNoTracking()
@@ -54,8 +51,7 @@ internal sealed class AttentionSignalMetricsReadService(ICompositionReadContext 
                 entry.Date <= dateToUtc)
             .OrderBy(entry => entry.Date)
             .Select(entry => new WeightProjection(entry.UserId, entry.Date, entry.WeightKg))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return BuildReadModels(goals, meals, lastMeals, weights);
     }

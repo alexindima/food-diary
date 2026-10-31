@@ -18,7 +18,7 @@ public sealed class GoogleLoginCommandHandler(
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<GoogleLoginCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(GoogleLoginCommand command, CancellationToken cancellationToken) {
-        Result<GoogleIdentityPayload> payloadResult = await googleTokenValidator.ValidateCredentialAsync(command.Credential, cancellationToken).ConfigureAwait(false);
+        Result<GoogleIdentityPayload> payloadResult = await googleTokenValidator.ValidateCredentialAsync(command.Credential, cancellationToken);
         if (!payloadResult.IsSuccess) {
             return Result.Failure<AuthenticationModel>(payloadResult.Error);
         }
@@ -34,8 +34,7 @@ public sealed class GoogleLoginCommandHandler(
                     payload.LastName,
                     payload.Locale),
                 dateTimeProvider.GetUtcNow().UtcDateTime,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (authenticationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
@@ -45,11 +44,10 @@ public sealed class GoogleLoginCommandHandler(
             principal,
             notificationDeduplicationService,
             notificationWriter,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 
@@ -63,7 +61,7 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         string referenceId = $"password-setup:{principal.UserId.Value}";
-        bool exists = await notificationDeduplicationService.ExistsAsync(principal.UserId, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
+        bool exists = await notificationDeduplicationService.ExistsAsync(principal.UserId, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken);
         if (exists) {
             return;
         }
@@ -71,6 +69,6 @@ public sealed class GoogleLoginCommandHandler(
         var notification = new NotificationRequest(
             principal.UserId,
             NotificationIntent.PasswordSetupSuggested(referenceId));
-        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken);
     }
 }

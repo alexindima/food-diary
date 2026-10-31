@@ -12,6 +12,6 @@ internal sealed class EmailOutbox(
             message,
             timeProvider.GetUtcNow().UtcDateTime);
 
-        await context.EmailOutbox.AddAsync(outboxMessage, cancellationToken).ConfigureAwait(false);
+        await context.EmailOutbox.AddAsync(outboxMessage, cancellationToken);
     }
 }

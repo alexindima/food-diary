@@ -21,8 +21,7 @@ public sealed class LinkGoogleCommandHandler(
         }
 
         Result<GoogleIdentityPayload> payloadResult = await googleTokenValidator
-            .ValidateCredentialAsync(command.Credential, cancellationToken)
-            .ConfigureAwait(false);
+            .ValidateCredentialAsync(command.Credential, cancellationToken);
         if (payloadResult.IsFailure) {
             return Result.Failure<UserModel>(payloadResult.Error);
         }
@@ -33,6 +32,6 @@ public sealed class LinkGoogleCommandHandler(
             payload.Email,
             payload.Issuer,
             payload.Subject,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

@@ -30,7 +30,7 @@ public sealed class CreateLessonCommandHandler(INutritionLessonWriteRepository r
             sortOrder);
 
         lesson.SetPublication(isPublished);
-        await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(lesson, cancellationToken);
         return Result.Success(ToAdminReadModel(lesson));
 
     }

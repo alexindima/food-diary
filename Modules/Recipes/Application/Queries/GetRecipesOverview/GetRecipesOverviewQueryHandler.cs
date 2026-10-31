@@ -37,7 +37,7 @@ public sealed class GetRecipesOverviewQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<RecipeOverviewModel>(userIdResult);
         }
@@ -51,7 +51,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             options.PageNumber,
             options.PageSize,
             options.Filters,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         var allRecipes = items.ToList();
         IReadOnlyList<RecipeOverviewReadItem> recentItems = await GetRecentOverviewItemsAsync(
@@ -59,13 +59,13 @@ public sealed class GetRecipesOverviewQueryHandler(
             options.RecentLimit,
             query.IncludePublic,
             options.Filters,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         RecipeId[] favoriteRecipeIds = [.. allRecipes
             .Select(x => x.Id)
             .Concat(recentItems.Select(x => x.Id))
             .Distinct()];
         FavoriteRecipeOverviewModel favorites = await sender.Send(new ReadFavoriteRecipeOverviewQuery(options.UserId,
-            favoriteRecipeIds, options.FavoriteLimit), cancellationToken).ConfigureAwait(false);
+            favoriteRecipeIds, options.FavoriteLimit), cancellationToken);
         var favoritesByRecipeId = favorites.Items.ToDictionary(ToFavoriteRecipeId);
 
         PagedResponse<RecipeModel> allPaged = CreatePagedRecipes(
@@ -133,7 +133,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             userId,
             limit,
             includePublic,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. items.Where(item => MatchesFilters(item, filters))];
     }

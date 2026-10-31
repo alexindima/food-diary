@@ -33,7 +33,7 @@ public sealed class UpdateWaistEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<WaistEntryModel>(userIdResult);
         }
@@ -44,7 +44,7 @@ public sealed class UpdateWaistEntryCommandHandler(
             waistEntryId,
             userId,
             asTracking: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (entry is null) {
             return Result.Failure<WaistEntryModel>(WaistEntryErrors.NotAccessible(command.WaistEntryId));
@@ -55,7 +55,7 @@ public sealed class UpdateWaistEntryCommandHandler(
         WaistEntry? existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (existing is not null && existing.Id != entry.Id) {
             return Result.Failure<WaistEntryModel>(
@@ -63,7 +63,7 @@ public sealed class UpdateWaistEntryCommandHandler(
         }
 
         entry.UpdateMeasurement(MeasuredWaistCm.Create(command.CircumferenceCm), day);
-        await waistEntryRepository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
+        await waistEntryRepository.UpdateAsync(entry, cancellationToken);
         return Result.Success(entry.ToModel());
     }
 }

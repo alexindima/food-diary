@@ -9,12 +9,12 @@ namespace FoodDiary.Modules.Images.Infrastructure.Persistence.Images;
 internal sealed class ImageAssetCleanupBatch(IServiceScopeFactory scopeFactory) : IImageAssetCleanupBatch {
     public async Task<bool> DeleteUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false)) {
+        await using (scope) {
             IImageAssetCleanupService cleanup = scope.ServiceProvider.GetRequiredService<IImageAssetCleanupService>();
-            DeleteImageAssetResult result = await cleanup.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+            DeleteImageAssetResult result = await cleanup.DeleteIfUnusedAsync(assetId, cancellationToken);
             if (!result.Deleted) { return false; }
             IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }
     }

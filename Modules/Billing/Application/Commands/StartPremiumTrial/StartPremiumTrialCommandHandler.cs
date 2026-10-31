@@ -27,19 +27,19 @@ public sealed class StartPremiumTrialCommandHandler(
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             billingUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingOverviewModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userResult.Error);
         }
 
         UserBillingProfileModel user = userResult.Value;
-        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository.GetOverviewReadModelByUserIdAsync(userId, cancellationToken);
         if (user.HasPaidPremium || IsPaidPremiumActive(subscription)) {
             return Result.Failure<BillingOverviewModel>(BillingErrors.SubscriptionAlreadyActive);
         }
@@ -53,8 +53,7 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: nowUtc, Duration: TrialDuration), cancellationToken)
-            .ConfigureAwait(false);
+        Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService.Send(new StartUserPremiumTrialCommand(UserId: userId, StartedAtUtc: nowUtc, Duration: TrialDuration), cancellationToken);
         if (startedTrialResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(startedTrialResult.Error);
         }

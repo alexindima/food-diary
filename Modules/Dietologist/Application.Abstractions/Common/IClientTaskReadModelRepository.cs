@@ -14,7 +14,7 @@ public interface IClientTaskReadModelRepository {
         int page,
         int limit,
         CancellationToken cancellationToken = default) =>
-        (await GetByClientAsync(clientUserId, cancellationToken).ConfigureAwait(false)).Skip((page - 1) * limit).Take(limit).ToList();
+        (await GetByClientAsync(clientUserId, cancellationToken)).Skip((page - 1) * limit).Take(limit).ToList();
 
     Task<IReadOnlyList<ClientTaskReadModel>> GetByDietologistAndClientAsync(
         UserId dietologistUserId,
@@ -28,6 +28,6 @@ public interface IClientTaskReadModelRepository {
         int page,
         int limit,
         CancellationToken cancellationToken = default) =>
-        (await GetByDietologistAndClientAsync(dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false))
+        (await GetByDietologistAndClientAsync(dietologistUserId, clientUserId, cancellationToken))
             .Skip((page - 1) * limit).Take(limit).ToList();
 }

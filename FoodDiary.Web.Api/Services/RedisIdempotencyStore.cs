@@ -43,7 +43,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                     lockValue,
                     Math.Max(1L, (long)processingTtl.TotalMilliseconds)
                         .ToString(CultureInfo.InvariantCulture),
-                ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+                ]).WaitAsync(cancellationToken);
             IdempotencyReservation? reservation = ParseReservation(
                 result,
                 requestHash,
@@ -57,7 +57,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 database,
                 responseKey,
                 corruptResponse!,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         }
 
         throw new InvalidOperationException("The cached idempotency response could not be read.");
@@ -117,7 +117,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         await database.ScriptEvaluateAsync(
             script,
             [responseKey],
-            [corruptResponse]).WaitAsync(cancellationToken).ConfigureAwait(false);
+            [corruptResponse]).WaitAsync(cancellationToken);
     }
 
     public async Task<bool> RenewAsync(
@@ -138,7 +138,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 BuildLockValue(requestHash, ownerToken),
                 Math.Max(1L, (long)processingTtl.TotalMilliseconds)
                     .ToString(CultureInfo.InvariantCulture),
-            ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+            ]).WaitAsync(cancellationToken);
         return (int)result == 1;
     }
 
@@ -168,7 +168,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
                 BuildLockValue(requestHash, ownerToken),
                 JsonSerializer.Serialize(entry, JsonOptions),
                 ((long)responseTtl.TotalMilliseconds).ToString(CultureInfo.InvariantCulture),
-            ]).WaitAsync(cancellationToken).ConfigureAwait(false);
+            ]).WaitAsync(cancellationToken);
         return (int)result == 1;
     }
 
@@ -185,7 +185,7 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         await connectionMultiplexer.GetDatabase().ScriptEvaluateAsync(
             script,
             [BuildLockKey(key)],
-            [BuildLockValue(requestHash, ownerToken)]).WaitAsync(cancellationToken).ConfigureAwait(false);
+            [BuildLockValue(requestHash, ownerToken)]).WaitAsync(cancellationToken);
     }
 
     private static CompletedEntry? TryDeserialize(string value) {

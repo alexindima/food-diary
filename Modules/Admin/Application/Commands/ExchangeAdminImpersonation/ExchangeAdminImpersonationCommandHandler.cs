@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Admin.Application.Commands.ExchangeAdminImpersonatio
 public sealed class ExchangeAdminImpersonationCommandHandler(IAdminImpersonationHandoffService handoffService)
     : ICommandHandler<ExchangeAdminImpersonationCommand, Result<string>> {
     public async Task<Result<string>> Handle(ExchangeAdminImpersonationCommand command, CancellationToken cancellationToken) {
-        string? accessToken = await handoffService.ConsumeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
+        string? accessToken = await handoffService.ConsumeCodeAsync(command.Code, cancellationToken);
         return string.IsNullOrWhiteSpace(accessToken)
             ? Result.Failure<string>(AuthenticationErrors.InvalidToken)
             : Result.Success(accessToken);

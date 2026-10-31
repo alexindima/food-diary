@@ -19,7 +19,7 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
         CancellationToken cancellationToken = default,
         TimeZoneInfo? timeZone = null) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (dateFrom > dateTo) {
             return Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
@@ -60,7 +60,7 @@ public sealed class MealNutritionStatisticsReadService(DbSet<Meal> records, Func
                 meal.TotalCarbs,
                 meal.TotalFiber,
                 meal.MealType))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         // Calendar buckets may be 23 or 25 hours; locate entries using the actual boundaries.
         // Preserve query order within each bucket so floating-point summation stays unchanged.

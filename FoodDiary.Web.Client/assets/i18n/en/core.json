@@ -1091,6 +1091,32 @@
         "LOGIN_TO": "Last login to",
         "SAVE_ERROR": "Could not save the account. Your edits are preserved. Try again."
     },
+    "ADMIN_NOTIFICATION": {
+        "TITLE": "Test notification",
+        "RECIPIENT": "Recipient: {{recipient}}",
+        "DESCRIPTION": "Creates an in-app notification. Push delivery requires an active browser subscription and enabled push and fasting notifications. Delayed tests are cancelled if the API restarts.",
+        "TYPE": "Notification type",
+        "DELAY": "Send after",
+        "SEND": "Send test",
+        "SENDING": "Scheduling…",
+        "CLOSE": "Close",
+        "ERROR": "Could not schedule the notification. Your selection is preserved. Try again.",
+        "SUCCESS": "Test notification scheduled for this user. Push delivery follows the user's notification settings.",
+        "UNAVAILABLE": "Test notifications are available for active accounts only.",
+        "TYPES": {
+            "FastingCompleted": "Fasting completed",
+            "FastingCheckInReminder": "Fasting check-in reminder",
+            "EatingWindowStarted": "Eating window started",
+            "FastingWindowStarted": "Fasting window started"
+        },
+        "DELAYS": {
+            "1": "1 second",
+            "15": "15 seconds",
+            "30": "30 seconds",
+            "60": "1 minute",
+            "300": "5 minutes"
+        }
+    },
     "ADMIN_PROMPTS": {
         "UNSAVED_TITLE": "Unsaved changes",
         "UNSAVED_MESSAGE": "Discard the changes in this prompt editor?",

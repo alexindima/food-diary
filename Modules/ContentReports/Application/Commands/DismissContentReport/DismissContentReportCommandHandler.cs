@@ -11,8 +11,7 @@ namespace FoodDiary.Modules.ContentReports.Application.Commands.DismissContentRe
 public sealed class DismissContentReportCommandHandler(IContentReportWriteRepository reportRepository) : IRequestHandler<DismissContentReportCommand, Result> {
     public async Task<Result> Handle(DismissContentReportCommand request, CancellationToken cancellationToken) {
         ContentReport? report = await reportRepository
-            .GetByIdAsync(request.ReportId, asTracking: true, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdAsync(request.ReportId, asTracking: true, cancellationToken);
         if (report is null) {
             return Result.Failure(ContentReportErrors.NotFound(request.ReportId.Value));
         }
@@ -22,7 +21,7 @@ public sealed class DismissContentReportCommandHandler(IContentReportWriteReposi
         }
 
         report.MarkDismissed(request.ReviewerUserId, request.AdminNote);
-        await reportRepository.UpdateAsync(report, cancellationToken).ConfigureAwait(false);
+        await reportRepository.UpdateAsync(report, cancellationToken);
         return Result.Success();
     }
 }

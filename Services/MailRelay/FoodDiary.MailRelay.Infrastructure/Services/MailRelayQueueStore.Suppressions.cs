@@ -6,7 +6,7 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 public sealed partial class MailRelayQueueStore {
     public async Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(
         string? email, CancellationToken cancellationToken) =>
-        (await GetSuppressionsPageAsync(email, 1, 100, cancellationToken).ConfigureAwait(false)).Data;
+        (await GetSuppressionsPageAsync(email, 1, 100, cancellationToken)).Data;
 
     public async Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(
         string? email, int page, int limit, CancellationToken cancellationToken) {
@@ -39,18 +39,18 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("offset", offset);
             },
             async (reader, token) => {
-                await RequireReturnedRowAsync(reader, token, "Suppression count query did not return a row.").ConfigureAwait(false);
+                await RequireReturnedRowAsync(reader, token, "Suppression count query did not return a row.");
                 int total = checked((int)reader.GetInt64(0));
-                await reader.NextResultAsync(token).ConfigureAwait(false);
+                await reader.NextResultAsync(token);
                 var entries = new List<MailRelaySuppressionEntry>();
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) {
-                    entries.Add(await MailRelayQueueRowMapper.ReadSuppressionEntryAsync(reader, token).ConfigureAwait(false));
+                while (await reader.ReadAsync(token)) {
+                    entries.Add(await MailRelayQueueRowMapper.ReadSuppressionEntryAsync(reader, token));
                 }
 
                 int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)normalizedLimit);
                 return new MailRelayPage<MailRelaySuppressionEntry>(entries, normalizedPage, normalizedLimit, totalPages, total);
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task UpsertSuppressionAsync(CreateSuppressionRequest request, CancellationToken cancellationToken) {
@@ -82,15 +82,15 @@ public sealed partial class MailRelayQueueStore {
                                expires_at_utc = excluded.expires_at_utc;
                            """;
 
-        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await DataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             var command = new NpgsqlCommand(sql, connection);
-            await using (command.ConfigureAwait(false)) {
+            await using (command) {
                 command.Parameters.AddWithValue("email", normalizedEmail);
                 command.Parameters.AddWithValue("reason", request.Reason);
                 command.Parameters.AddWithValue("source", request.Source);
                 command.Parameters.AddWithValue("expiresAtUtc", (object?)request.ExpiresAtUtc ?? DBNull.Value);
-                await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
     }
@@ -104,7 +104,7 @@ public sealed partial class MailRelayQueueStore {
         int deletedRows = await _executor.ExecuteAsync(
             sql,
             command => command.Parameters.AddWithValue("email", normalizedEmail),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return deletedRows > 0;
     }
@@ -134,13 +134,13 @@ public sealed partial class MailRelayQueueStore {
             command => command.Parameters.AddWithValue("emails", normalizedRecipients),
             async (reader, token) => {
                 var emails = new List<string>();
-                while (await reader.ReadAsync(token).ConfigureAwait(false)) {
+                while (await reader.ReadAsync(token)) {
                     emails.Add(reader.GetString(0));
                 }
 
                 return emails;
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
 }

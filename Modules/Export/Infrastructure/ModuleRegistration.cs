@@ -13,7 +13,7 @@ public static class ModuleRegistration {
         services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
 
     internal static Func<string, CancellationToken, ValueTask<IPAddress[]>> ResolveRemoteImageHostAddressesAsync { get; set; } =
-        static async (host, cancellationToken) => await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
+        static async (host, cancellationToken) => await Dns.GetHostAddressesAsync(host, cancellationToken);
 
     internal static Func<IPAddress, int, CancellationToken, ValueTask<Stream>> ConnectRemoteImageSocketAsync { get; set; } =
         ConnectRemoteImageSocketCoreAsync;
@@ -33,9 +33,9 @@ public static class ModuleRegistration {
     private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {
-        IPAddress[] addresses = await ResolveRemoteImageHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
+        IPAddress[] addresses = await ResolveRemoteImageHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
         IPAddress publicAddress = addresses.FirstOrDefault(RemoteImageAddressPolicy.IsPublicAddress) ?? throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
-        return await ConnectRemoteImageSocketAsync(publicAddress, context.DnsEndPoint.Port, cancellationToken).ConfigureAwait(false);
+        return await ConnectRemoteImageSocketAsync(publicAddress, context.DnsEndPoint.Port, cancellationToken);
     }
 
     private static async ValueTask<Stream> ConnectRemoteImageSocketCoreAsync(
@@ -47,7 +47,7 @@ public static class ModuleRegistration {
         };
 
         try {
-            await socket.ConnectAsync(new IPEndPoint(publicAddress, port), cancellationToken).ConfigureAwait(false);
+            await socket.ConnectAsync(new IPEndPoint(publicAddress, port), cancellationToken);
             return new NetworkStream(socket, ownsSocket: true);
         } catch {
             socket.Dispose();

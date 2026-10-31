@@ -18,13 +18,13 @@ public sealed class GetFavoriteRecipesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<FavoriteRecipeModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        IReadOnlyList<FavoriteRecipeModel> favorites = await sender.Send(new ReadFavoriteRecipesQuery(userId), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteRecipeModel> favorites = await sender.Send(new ReadFavoriteRecipesQuery(userId), cancellationToken);
         return Result.Success(favorites);
     }
 }

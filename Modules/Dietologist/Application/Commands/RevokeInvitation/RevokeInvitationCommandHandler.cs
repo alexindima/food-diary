@@ -15,29 +15,28 @@ public sealed class RevokeInvitationCommandHandler(
     : ICommandHandler<RevokeInvitationCommand, Result> {
     public async Task<Result> Handle(RevokeInvitationCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
         DietologistInvitation? pending = await invitationRepository.GetByClientAndStatusAsync(
-            userId, DietologistInvitationStatus.Pending, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            userId, DietologistInvitationStatus.Pending, asTracking: true, cancellationToken: cancellationToken);
 
         if (pending is not null) {
             pending.Revoke();
-            await invitationRepository.UpdateAsync(pending, cancellationToken).ConfigureAwait(false);
+            await invitationRepository.UpdateAsync(pending, cancellationToken);
             return Result.Success();
         }
 
-        DietologistInvitation? active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken);
         if (active is null) {
             return Result.Failure(DietologistErrors.NoActiveRelationship);
         }
 
         active.Revoke();
-        await invitationRepository.UpdateAsync(active, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(active, cancellationToken);
         return Result.Success();
 
     }

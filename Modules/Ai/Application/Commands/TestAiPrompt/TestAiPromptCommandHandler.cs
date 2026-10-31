@@ -26,20 +26,20 @@ public sealed class TestAiPromptCommandHandler(IOpenAiFoodService foodService, I
         var prompt = new AiPromptOverride(draft.PromptText, draft.Locale);
         if (string.Equals(draft.Key, "nutrition", StringComparison.Ordinal)) {
             Result<FoodNutritionModel> result = await foodService.CalculateNutritionAsync(draft.Items!, userId,
-                request.RequestId, cancellationToken, prompt).ConfigureAwait(false);
+                request.RequestId, cancellationToken, prompt);
             return Serialize(result);
         }
         if (string.Equals(draft.Key, "text-parse", StringComparison.Ordinal)) {
             Result<FoodVisionModel> result = await foodService.ParseFoodTextAsync(draft.Text!, userId,
-                request.RequestId, cancellationToken, prompt).ConfigureAwait(false);
+                request.RequestId, cancellationToken, prompt);
             return Serialize(result);
         }
-        Result<string> image = await images.GetDataUrlAsync((ImageAssetId)draft.ImageAssetId!.Value, userId, cancellationToken).ConfigureAwait(false);
+        Result<string> image = await images.GetDataUrlAsync((ImageAssetId)draft.ImageAssetId!.Value, userId, cancellationToken);
         if (image.IsFailure) {
             return Result.Failure<string>(image.Error);
         }
         return Serialize(await foodService.AnalyzeFoodImageAsync(image.Value, userId, draft.Text,
-            request.RequestId, cancellationToken, prompt, product: string.Equals(draft.Key, "product-label", StringComparison.Ordinal) ? new ProductImageAnalysis([]) : null).ConfigureAwait(false));
+            request.RequestId, cancellationToken, prompt, product: string.Equals(draft.Key, "product-label", StringComparison.Ordinal) ? new ProductImageAnalysis([]) : null));
     }
 
     private static Result<string> Serialize<T>(Result<T> result) => result.IsSuccess

@@ -51,8 +51,7 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
                             .ToList()))
                     .ToList()))
             .AsSplitQuery()
-            .FirstOrDefaultAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot>> GetRecipeSnapshotsAsync(
@@ -61,7 +60,7 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
         var recipes = await context.Recipes.AsNoTracking()
             .Where(recipe => Enumerable.Contains(ids, recipe.Id) && (recipe.Visibility == Visibility.Public || recipe.UserId == viewerId))
             .Select(recipe => new { recipe.Id, recipe.Name, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         var ingredients = await context.Recipes.AsNoTracking()
             .Where(recipe => Enumerable.Contains(ids, recipe.Id) && (recipe.Visibility == Visibility.Public || recipe.UserId == viewerId))
             .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
@@ -81,7 +80,7 @@ public sealed class MealPlanCompositionReader(ICompositionReadContext context) :
                 IsText = !row.Ingredient.ProductId.HasValue && row.Ingredient.TextName != null,
                 row.Ingredient.AmountText,
             })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients
             .Where(item => !string.IsNullOrWhiteSpace(item.Name))
             .ToLookup(item => item.RecipeId, item => new MealPlanRecipeIngredientSnapshot(item.ProductId,

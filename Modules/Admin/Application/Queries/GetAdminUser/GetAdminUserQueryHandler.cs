@@ -27,11 +27,11 @@ public sealed class GetAdminUserQueryHandler(ISender userReadService)
         }
 
         UserId userId = userIdResult.Value;
-        UserAdminReadModel? user = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        UserAdminReadModel? user = await userReadService.Send(new GetUserForAdministrationQuery(UserId: userId), cancellationToken);
         if (user is null) {
             return Result.Failure<AdminUserModel>(UserErrors.NotFound(userId));
         }
-        WeightEntryModel? latestWeight = await userReadService.Send(new ReadLatestWeightEntryQuery(userId), cancellationToken).ConfigureAwait(false);
+        WeightEntryModel? latestWeight = await userReadService.Send(new ReadLatestWeightEntryQuery(userId), cancellationToken);
         return Result.Success(user.ToAdminModel() with {
             LatestWeightKg = latestWeight?.WeightKg,
             LatestWeightDate = latestWeight?.Date,

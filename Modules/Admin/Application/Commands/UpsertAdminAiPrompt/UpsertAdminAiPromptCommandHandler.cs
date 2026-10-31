@@ -13,7 +13,7 @@ public sealed class UpsertAdminAiPromptCommandHandler(ISender administrationServ
     public async Task<Result<AdminAiPromptModel>> Handle(
         UpsertAdminAiPromptCommand command,
         CancellationToken cancellationToken) {
-        Result<AiPromptTemplateReadModel> templateResult = await administrationService.Send(new UpsertAiPromptCommand(Key: command.Key, Locale: command.Locale, PromptText: command.PromptText, IsActive: command.IsActive), cancellationToken).ConfigureAwait(false);
+        Result<AiPromptTemplateReadModel> templateResult = await administrationService.Send(new UpsertAiPromptCommand(Key: command.Key, Locale: command.Locale, PromptText: command.PromptText, IsActive: command.IsActive), cancellationToken);
 
         return templateResult.IsSuccess
             ? Result.Success(templateResult.Value.ToAdminModel())

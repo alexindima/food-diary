@@ -18,12 +18,12 @@ internal sealed class AuditEntryService(SharedPersistenceDbContext context, Time
         if (!string.IsNullOrWhiteSpace(filter.Action)) { query = query.Where(entry => entry.Action == filter.Action); }
         if (!string.IsNullOrWhiteSpace(filter.TargetType)) { query = query.Where(entry => entry.TargetType == filter.TargetType); }
         if (!string.IsNullOrWhiteSpace(filter.TargetId)) { query = query.Where(entry => entry.TargetId == filter.TargetId); }
-        int count = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int count = await query.CountAsync(cancellationToken);
         List<AuditEntryReadModel> items = await query.OrderByDescending(entry => entry.CreatedAtUtc).ThenByDescending(entry => entry.Id)
             .Skip((filter.Page - 1) * filter.Limit).Take(filter.Limit)
             .Select(entry => new AuditEntryReadModel(entry.Id, entry.ActorUserId, entry.SubjectClientUserId,
                 entry.Action, entry.TargetType, entry.TargetId, entry.Metadata, entry.CreatedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return new AuditEntryPage(items, count);
     }
 
@@ -46,7 +46,7 @@ internal sealed class AuditEntryService(SharedPersistenceDbContext context, Time
                 Metadata = metadata,
                 CreatedAtUtc = timeProvider.GetUtcNow().UtcDateTime,
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<IReadOnlyList<AuditEntryReadModel>> GetRecentAsync(
@@ -70,8 +70,7 @@ internal sealed class AuditEntryService(SharedPersistenceDbContext context, Time
                 entry.TargetId,
                 entry.Metadata,
                 entry.CreatedAtUtc))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<AuditEntryReadModel>> GetLatestForTargetsAsync(
@@ -92,8 +91,7 @@ internal sealed class AuditEntryService(SharedPersistenceDbContext context, Time
                             entry.TargetId != null && Enumerable.Contains(ids, entry.TargetId))
             .GroupBy(entry => entry.TargetId)
             .Select(group => group.OrderByDescending(entry => entry.CreatedAtUtc).ThenByDescending(entry => entry.Id).First())
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return entries.ConvertAll(entry => new AuditEntryReadModel(
                 entry.Id,
                 entry.ActorUserId,

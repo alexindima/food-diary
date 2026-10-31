@@ -16,16 +16,16 @@ public sealed class NotificationWriter(
         CancellationToken cancellationToken = default) {
         NotificationIntent intent = request.Intent;
         var notification = Notification.Create(request.UserId, intent.Type, intent.PayloadJson, intent.ReferenceId);
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationRepository.AddAsync(notification, cancellationToken);
 
         if (!sendWebPush) {
             return;
         }
 
         IReadOnlyList<WebPushDeliverySubscription> audience = await deliveryAudienceService.GetActiveAudienceAsync(
-            notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            notification.UserId, notification.Type, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (audience.Count > 0) {
-            await webPushOutbox.EnqueueAsync(notification.Id, cancellationToken).ConfigureAwait(false);
+            await webPushOutbox.EnqueueAsync(notification.Id, cancellationToken);
         }
     }
 }

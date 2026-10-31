@@ -14,8 +14,7 @@ public sealed class ReadExerciseEntriesQueryHandler(IExerciseEntryReadModelRepos
         DateTime dateFrom = request.DateFrom;
         DateTime dateTo = request.DateTo;
         IReadOnlyList<ExerciseEntryReadModel> entries = await exerciseEntryReadModelRepository
-            .GetByDateRangeReadModelsAsync(userId, dateFrom, dateTo, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByDateRangeReadModelsAsync(userId, dateFrom, dateTo, cancellationToken);
 
         return [.. entries.Select(entry => entry.ToModel())];
     }

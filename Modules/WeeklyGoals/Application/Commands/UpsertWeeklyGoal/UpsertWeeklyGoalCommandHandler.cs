@@ -24,7 +24,7 @@ public sealed class UpsertWeeklyGoalCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WeeklyGoalModel>(userIdResult);
         }
@@ -48,7 +48,7 @@ public sealed class UpsertWeeklyGoalCommandHandler(
             userId,
             weekStartUtc,
             async token => {
-                WeeklyGoal? goal = await goalRepository.GetAsync(userId, weekStartUtc, asTracking: true, token).ConfigureAwait(false);
+                WeeklyGoal? goal = await goalRepository.GetAsync(userId, weekStartUtc, asTracking: true, token);
                 var reminder = WeeklyGoalReminderSettings.FromMinutes(
                     command.ReminderEnabled, reminderMinutes, command.TimeZoneOffsetMinutes);
                 if (goal is null) {
@@ -58,7 +58,7 @@ public sealed class UpsertWeeklyGoalCommandHandler(
                         WeeklyGoalType.DiaryLogging,
                         command.TargetDays,
                         reminder);
-                    await goalRepository.AddAsync(goal, token).ConfigureAwait(false);
+                    await goalRepository.AddAsync(goal, token);
                 } else {
                     goal.UpdateWithReminder(
                         command.TargetDays,
@@ -66,9 +66,9 @@ public sealed class UpsertWeeklyGoalCommandHandler(
                         utcNow);
                 }
 
-                int progressDays = await progressReader.GetProgressDaysAsync(goal, token, command.TimeZoneId is null ? null : timeZone).ConfigureAwait(false);
+                int progressDays = await progressReader.GetProgressDaysAsync(goal, token, command.TimeZoneId is null ? null : timeZone);
                 return Result.Success(goal.ToModel(progressDays));
             },
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 }

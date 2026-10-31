@@ -29,8 +29,7 @@ public sealed class MarketingAttributionCleanupJob(
             }
 
             DateTime cutoffUtc = observer.UtcNow.AddDays(-settings.RetentionDays);
-            totalDeletedCount = await cleanupService.Send(new CleanupMarketingAttributionCommand(cutoffUtc, settings.BatchSize), cancellationToken)
-                .ConfigureAwait(false);
+            totalDeletedCount = await cleanupService.Send(new CleanupMarketingAttributionCommand(cutoffUtc, settings.BatchSize), cancellationToken);
 
             if (totalDeletedCount > 0) {
                 logger.LogInformation(

@@ -31,7 +31,7 @@ public sealed class GetProductByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ProductModel>(userIdResult);
         }
@@ -42,7 +42,7 @@ public sealed class GetProductByIdQueryHandler(
             [productId],
             userId,
             includePublic: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         ProductOverviewReadItem? product = productsById.GetValueOrDefault(productId);
         if (product is null) {
             return Result.Failure<ProductModel>(ProductErrors.NotAccessible(query.ProductId));

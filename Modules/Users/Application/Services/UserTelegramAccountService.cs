@@ -20,7 +20,7 @@ internal sealed class UserTelegramAccountService(
     IPasswordHasher passwordHasher,
     TimeProvider timeProvider) : IUserTelegramAccountService {
     public async Task<Result<bool>> IsRegisteredAsync(long telegramUserId, CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
         if (user is null) {
             return Result.Success(value: false);
         }
@@ -32,8 +32,7 @@ internal sealed class UserTelegramAccountService(
         UserTelegramRegistrationModel registration,
         CancellationToken cancellationToken = default) {
         User? existing = await userLookupRepository
-            .GetByTelegramUserIdIncludingDeletedAsync(registration.TelegramUserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByTelegramUserIdIncludingDeletedAsync(registration.TelegramUserId, cancellationToken);
         if (existing is not null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.TelegramAlreadyLinked);
         }
@@ -54,13 +53,13 @@ internal sealed class UserTelegramAccountService(
             FiberTarget: 28,
             WaterGoal: 2000));
         user.RecordAuthenticationActivity(registration.RegisteredAtUtc);
-        await userWriteRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.AddAsync(user, cancellationToken);
         return Result.Success(UserAuthenticationIdentityService.ToAuthenticationPrincipal(user, registration.RegisteredAtUtc));
     }
 
     public async Task<Result> BindOidcIdentityAsync(UserId userId, long telegramUserId, string issuer, string subject,
         CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
             return Result.Failure(error);
@@ -71,12 +70,12 @@ internal sealed class UserTelegramAccountService(
             return Result.Failure(UserErrors.TelegramAlreadyLinked);
         }
         user.BindTelegramOidcIdentity(issuer, subject);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success();
     }
 
     public async Task<Result> UnlinkAsync(UserId userId, long telegramUserId, long securityVersion, CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
             return Result.Failure(error);
@@ -94,15 +93,15 @@ internal sealed class UserTelegramAccountService(
         }
 
         user.UnlinkTelegram();
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         await sessionRevocationService.RevokeAllAsync(
-            userId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            userId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         return Result.Success();
     }
 
     public async Task<Result> AddVerifiedEmailAsync(
         UserId userId, string email, long securityVersion, CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
             return Result.Failure(error);
@@ -113,15 +112,15 @@ internal sealed class UserTelegramAccountService(
         if (user.Email is not null) {
             return Result.Failure(UserErrors.EmailAlreadyExists);
         }
-        User? owner = await userLookupRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
+        User? owner = await userLookupRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
         if (owner is not null) {
             return Result.Failure(UserErrors.EmailAlreadyExists);
         }
 
         user.AddVerifiedEmail(email);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         await sessionRevocationService.RevokeAllAsync(
-            userId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            userId, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         return Result.Success();
     }
 }

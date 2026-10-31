@@ -8,15 +8,15 @@ namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IBillingSubscriptionReadModelRepository, IBillingSubscriptionWriteRepository {
     public async Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
-            .FirstOrDefaultAsync(subscription => subscription.UserId == userId, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(subscription => subscription.UserId == userId, cancellationToken);
     }
 
     public async Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
             .AsNoTracking()
             .Where(subscription => subscription.UserId == userId)
@@ -31,40 +31,40 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
                 subscription.CurrentPeriodEndUtc,
                 subscription.CancelAtPeriodEnd,
                 subscription.NextBillingAttemptUtc))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<BillingSubscription?> GetByExternalCustomerIdAsync(
         string provider,
         string externalCustomerId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalCustomerId == externalCustomerId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<BillingSubscription?> GetByExternalSubscriptionIdAsync(
         string provider,
         string externalSubscriptionId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalSubscriptionId == externalSubscriptionId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<BillingSubscription?> GetByExternalPaymentMethodIdAsync(
         string provider,
         string externalPaymentMethodId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalPaymentMethodId == externalPaymentMethodId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<IReadOnlyList<BillingSubscription>> GetDueForRenewalAsync(
@@ -72,7 +72,7 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
         DateTime dueAtUtc,
         int limit,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await subscriptions
             .Where(subscription =>
                 subscription.Provider == provider &&
@@ -85,7 +85,7 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
                     subscription.Status == "past_due"))
             .OrderBy(subscription => subscription.NextBillingAttemptUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task<BillingSubscription> AddAsync(

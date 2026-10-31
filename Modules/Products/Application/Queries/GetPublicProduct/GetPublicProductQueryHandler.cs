@@ -13,7 +13,7 @@ public sealed class GetPublicProductQueryHandler(IProductOverviewReadService pro
     : IQueryHandler<GetPublicProductQuery, Result<PublicProductModel>> {
     public async Task<Result<PublicProductModel>> Handle(GetPublicProductQuery query, CancellationToken cancellationToken) {
         ProductId id = query.ProductId;
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> rows = await products.GetByIdsWithUsageAsync([id], UserId.Empty, includePublic: true, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> rows = await products.GetByIdsWithUsageAsync([id], UserId.Empty, includePublic: true, cancellationToken);
         if (!rows.TryGetValue(id, out ProductOverviewReadItem? product) || product.Visibility != Visibility.Public) {
             return Result.Failure<PublicProductModel>(ProductErrors.NotAccessible(query.ProductId.Value));
         }

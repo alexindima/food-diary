@@ -18,7 +18,7 @@ public sealed class GetDailyAdviceQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DailyAdviceModel>(userIdResult);
         }
@@ -26,11 +26,11 @@ public sealed class GetDailyAdviceQueryHandler(
         DateTime date = query.Date;
         string? locale = query.Locale;
         string normalizedLocale = DailyAdviceSelector.NormalizeLocale(locale ?? "en");
-        IReadOnlyList<DailyAdviceReadModel> advices = await adviceRepository.GetByLocaleReadModelsAsync(normalizedLocale, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdviceReadModel> advices = await adviceRepository.GetByLocaleReadModelsAsync(normalizedLocale, cancellationToken);
 
         if (advices.Count == 0 && !string.Equals(normalizedLocale, "en", StringComparison.OrdinalIgnoreCase)) {
             normalizedLocale = "en";
-            advices = await adviceRepository.GetByLocaleReadModelsAsync(normalizedLocale, cancellationToken).ConfigureAwait(false);
+            advices = await adviceRepository.GetByLocaleReadModelsAsync(normalizedLocale, cancellationToken);
         }
 
         if (advices.Count == 0) {

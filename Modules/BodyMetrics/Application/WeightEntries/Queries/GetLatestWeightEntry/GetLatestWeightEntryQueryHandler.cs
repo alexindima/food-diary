@@ -18,13 +18,13 @@ public sealed class GetLatestWeightEntryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WeightEntryModel?>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        WeightEntryModel? latest = await sender.Send(new ReadLatestWeightEntryQuery(UserId: userId), cancellationToken).ConfigureAwait(false);
+        WeightEntryModel? latest = await sender.Send(new ReadLatestWeightEntryQuery(UserId: userId), cancellationToken);
         return Result.Success(latest);
     }
 }

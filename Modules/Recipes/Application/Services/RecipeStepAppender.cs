@@ -54,7 +54,7 @@ internal static class RecipeStepAppender {
             Result<ImageAssetReadModel?> stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 stepImageAssetIdResult.Value,
                 userId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (stepImageAssetResult.IsFailure) {
                 return stepImageAssetResult;
             }
@@ -67,7 +67,7 @@ internal static class RecipeStepAppender {
                 stepImageAssetIdResult.Value);
 
             Result<IReadOnlyList<RecipeImage>?> gallery = await RecipeImageAssetResolver.ResolveGalleryAsync(
-                entry.Step.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+                entry.Step.ImageAssetIds, userId, imageAssetAccessService, cancellationToken);
             if (gallery.IsFailure) {
                 return Result.Failure(gallery.Error);
             }

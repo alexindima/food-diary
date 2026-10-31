@@ -12,6 +12,7 @@ import { adminId } from '../../../shared/models/semantics/admin-meaning';
 import { AdminUserDetailsBodyComponent } from '../components/admin-user-details-body';
 import { AdminUserEditDialogComponent } from '../dialogs/admin-user-edit-dialog';
 import { AdminUserImpersonationDialogComponent } from '../dialogs/admin-user-impersonation-dialog';
+import { AdminUserNotificationDialogComponent } from '../dialogs/admin-user-notification-dialog';
 import { AdminUserSetPasswordDialogComponent } from '../dialogs/admin-user-set-password-dialog';
 import { resolveAdminAvatarUrl } from '../lib/admin-avatar-url';
 import { buildAdminUserSections } from '../lib/admin-user-sections';
@@ -70,6 +71,10 @@ export class AdminUserPageComponent {
     protected readonly canImpersonate = computed(() => {
         const user = this.user();
         return user !== null && (user.deletedAt === null || user.deletedAt === undefined) && !user.roles.includes('Admin');
+    });
+    protected readonly canNotify = computed(() => {
+        const user = this.user();
+        return user !== null && user.isActive && (user.deletedAt === null || user.deletedAt === undefined);
     });
 
     public constructor() {
@@ -135,6 +140,12 @@ export class AdminUserPageComponent {
                     this.reload();
                 }
             });
+    }
+
+    protected sendNotification(user: AdminUser): void {
+        if (this.canNotify()) {
+            this.dialogs.open(AdminUserNotificationDialogComponent, { size: 'sm', data: user });
+        }
     }
 
     private buildInitials(user: AdminUser): string {

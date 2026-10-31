@@ -26,14 +26,14 @@ internal sealed class EfReadSnapshotExecutor(SharedPersistenceDbContext context,
             return await context.Database.CreateExecutionStrategy().ExecuteAsync(async () => {
                 budgetInterceptor.MaximumQueries = null;
                 budgetInterceptor.QueryCount = 0;
-                IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.RepeatableRead, bounded.Token).ConfigureAwait(false);
-                await using (transaction.ConfigureAwait(false)) {
-                    await context.Database.ExecuteSqlRawAsync("SET TRANSACTION READ ONLY", bounded.Token).ConfigureAwait(false);
+                IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(IsolationLevel.RepeatableRead, bounded.Token);
+                await using (transaction) {
+                    await context.Database.ExecuteSqlRawAsync("SET TRANSACTION READ ONLY", bounded.Token);
                     budgetInterceptor.QueryCount = 0;
                     budgetInterceptor.MaximumQueries = budget.MaximumQueries;
-                    return await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), () => operation(bounded.Token), bounded.Token).ConfigureAwait(false);
+                    return await context.Session.WithTransactionAsync(transaction.GetDbTransaction(), () => operation(bounded.Token), bounded.Token);
                 }
-            }).ConfigureAwait(false);
+            });
         } finally {
             budgetInterceptor.MaximumQueries = null;
             QueryCount.Record(budgetInterceptor.QueryCount);

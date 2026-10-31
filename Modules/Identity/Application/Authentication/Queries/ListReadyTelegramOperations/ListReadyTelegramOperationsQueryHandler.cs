@@ -9,6 +9,6 @@ public sealed class ListReadyTelegramOperationsQueryHandler(ITelegramOperationSt
     : IQueryHandler<ListReadyTelegramOperationsQuery, Result<IReadOnlyList<TelegramOperationId>>> {
     public async Task<Result<IReadOnlyList<TelegramOperationId>>> Handle(ListReadyTelegramOperationsQuery query, CancellationToken cancellationToken) =>
         TelegramOperationChecks.IsEnabled(policy)
-            ? Result.Success(await store.ListReadyAsync(policy.BotId, cancellationToken).ConfigureAwait(false))
+            ? Result.Success(await store.ListReadyAsync(policy.BotId, cancellationToken))
             : Result.Failure<IReadOnlyList<TelegramOperationId>>(TelegramOperationChecks.Unavailable);
 }

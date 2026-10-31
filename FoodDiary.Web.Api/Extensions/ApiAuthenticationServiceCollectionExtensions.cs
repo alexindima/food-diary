@@ -60,7 +60,7 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions)
                 .PostConfigure(options => options.Events.OnMessageReceived = async context => {
                     context.Token = await context.HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>()
-                        .ReadTokenAsync(context.HttpContext, context.HttpContext.RequestAborted).ConfigureAwait(false);
+                        .ReadTokenAsync(context.HttpContext, context.HttpContext.RequestAborted);
                     if (context.Token is null) {
                         context.Fail("The impersonation context is invalid or expired.");
                     }
@@ -97,8 +97,7 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 bool isCurrent = await AccessTokenSecurityStateValidator
                     .IsCurrentAsync(context.Principal, securityReader,
                         context.HttpContext.RequestServices.GetRequiredService<IUserAccessTokenSessionReader>(),
-                        context.HttpContext.RequestAborted)
-                    .ConfigureAwait(false);
+                        context.HttpContext.RequestAborted);
                 if (!isCurrent) {
                     context.Fail("The token is no longer valid for the current account security state.");
                 }

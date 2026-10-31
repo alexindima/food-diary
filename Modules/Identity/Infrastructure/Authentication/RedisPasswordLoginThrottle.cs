@@ -35,7 +35,7 @@ public sealed class RedisPasswordLoginThrottle(
             """;
         RedisResult result = await connectionMultiplexer.GetDatabase().ScriptEvaluateAsync(
             script, [KeyPrefix + key], [ownerToken, options.Value.AttemptLeaseSeconds * 1000L])
-            .WaitAsync(cancellationToken).ConfigureAwait(false);
+            .WaitAsync(cancellationToken);
         int retryAfter = (int)result;
         return new PasswordLoginAttempt(key, retryAfter == 0 ? ownerToken : null, retryAfter);
     }
@@ -77,7 +77,7 @@ public sealed class RedisPasswordLoginThrottle(
             [KeyPrefix + attempt.Key],
             [attempt.OwnerToken, outcome.ToString(), settings.FailureThreshold, settings.FailureWindowSeconds * 1000L,
                 settings.InitialCooldownSeconds * 1000L, settings.MaximumCooldownSeconds * 1000L])
-            .WaitAsync(cancellationToken).ConfigureAwait(false);
+            .WaitAsync(cancellationToken);
         return (int)result == 1;
     }
 }

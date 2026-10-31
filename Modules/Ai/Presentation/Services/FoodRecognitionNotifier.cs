@@ -15,16 +15,16 @@ public sealed class FoodRecognitionNotifier(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         DateTime since = timeProvider.GetUtcNow().UtcDateTime.AddSeconds(-5);
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2), timeProvider);
-        while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false)) {
+        while (await timer.WaitForNextTickAsync(stoppingToken)) {
             try {
                 DateTime next = timeProvider.GetUtcNow().UtcDateTime;
                 using IServiceScope scope = scopes.CreateScope();
                 IReadOnlyList<FoodRecognitionJobUpdate> updates = await scope.ServiceProvider.GetRequiredService<IFoodRecognitionJobReader>()
-                    .GetUpdatesAsync(since, stoppingToken).ConfigureAwait(false);
+                    .GetUpdatesAsync(since, stoppingToken);
                 foreach (FoodRecognitionJobUpdate update in updates) {
                     // Send only an invalidation hint. The owner-scoped HTTP endpoint is authoritative.
                     await hub.Clients.User(update.UserId.ToString())
-                        .SendAsync("RecognitionChanged", update.Id, stoppingToken).ConfigureAwait(false);
+                        .SendAsync("RecognitionChanged", update.Id, stoppingToken);
                 }
                 since = next.AddSeconds(-2);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {

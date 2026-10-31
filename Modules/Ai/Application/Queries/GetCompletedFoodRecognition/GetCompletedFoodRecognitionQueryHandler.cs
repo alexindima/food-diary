@@ -14,7 +14,7 @@ public sealed class GetCompletedFoodRecognitionQueryHandler(IFoodRecognitionJobR
         Guid recognitionId = request.JobId;
         var userId = new UserId(ownerId);
         var jobId = new FoodRecognitionJobId(recognitionId);
-        FoodRecognitionJobModel? job = await jobs.GetAsync(userId, jobId, cancellationToken).ConfigureAwait(false);
+        FoodRecognitionJobModel? job = await jobs.GetAsync(userId, jobId, cancellationToken);
         if (job is null || job.UserId != userId.Value || job.Id != jobId.Value) {
             return Result.Failure<FoodRecognitionJobModel>(new Error("Ai.RecognitionNotFound", "Recognition result was not found.", ErrorKind.NotFound));
         }

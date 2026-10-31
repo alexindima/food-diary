@@ -33,7 +33,7 @@ public sealed class ImportDailyAdvicesCommandHandler(
             }
         }
 
-        IReadOnlyList<DailyAdviceReadModel> existing = await readRepository.GetAllReadModelsAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdviceReadModel> existing = await readRepository.GetAllReadModelsAsync(cancellationToken);
         HashSet<(string Value, string Locale, int Weight, string? Tag)> identities = [.. existing.Select(item => (item.Value, item.Locale, item.Weight, item.Tag))];
         var additions = new List<DailyAdvice>();
         foreach (DailyAdvice advice in parsed) {
@@ -42,7 +42,7 @@ public sealed class ImportDailyAdvicesCommandHandler(
             }
         }
         if (additions.Count > 0) {
-            await writeRepository.AddRangeAsync(additions, cancellationToken).ConfigureAwait(false);
+            await writeRepository.AddRangeAsync(additions, cancellationToken);
         }
         return Result.Success(new DailyAdviceImportModel(additions.Count, parsed.Count - additions.Count));
     }

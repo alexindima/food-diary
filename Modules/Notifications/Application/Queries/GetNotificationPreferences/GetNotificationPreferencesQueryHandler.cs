@@ -18,15 +18,15 @@ public sealed class GetNotificationPreferencesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             notificationUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<NotificationPreferencesModel>(userIdResult);
         }
 
-        return await GetAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        return await GetAsync(userIdResult.Value, cancellationToken);
     }
     private async Task<Result<NotificationPreferencesModel>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<NotificationPreferencesModel>(result.Error);
         }

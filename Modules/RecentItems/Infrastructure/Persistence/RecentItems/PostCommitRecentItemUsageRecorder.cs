@@ -25,9 +25,9 @@ public sealed class PostCommitRecentItemUsageRecorder(
         postCommitActionQueue.Enqueue(
             "recent-items.register-usage",
             async token => {
-                await repository.RegisterUsageAsync(userId, capturedProductIds, capturedRecipeIds, token).ConfigureAwait(false);
+                await repository.RegisterUsageAsync(userId, capturedProductIds, capturedRecipeIds, token);
                 if (unitOfWork.HasPendingChanges) {
-                    await unitOfWork.SaveChangesAsync(token).ConfigureAwait(false);
+                    await unitOfWork.SaveChangesAsync(token);
                 }
             });
         return Task.CompletedTask;

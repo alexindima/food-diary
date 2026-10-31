@@ -79,7 +79,7 @@ internal static class WebPushSocketsHttpHandlerFactory {
         CancellationToken cancellationToken) {
         IPAddress[] addresses = await Dns.GetHostAddressesAsync(
             context.DnsEndPoint.Host,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (addresses.Length == 0 || addresses.Any(static address => !IsPubliclyRoutable(address))) {
             throw new HttpRequestException("Web push endpoint resolved to a non-public network address.");
         }
@@ -88,7 +88,7 @@ internal static class WebPushSocketsHttpHandlerFactory {
             addresses,
             context.DnsEndPoint.Port,
             ConnectSocketAsync,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     internal static async ValueTask<Stream> ConnectToAddressesAsync(
@@ -102,7 +102,7 @@ internal static class WebPushSocketsHttpHandlerFactory {
             try {
                 return await connectAsync(
                     new IPEndPoint(address, port),
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
             } catch (OperationCanceledException) {
                 throw;
             } catch (Exception ex) when (ex is SocketException or IOException) {
@@ -118,7 +118,7 @@ internal static class WebPushSocketsHttpHandlerFactory {
         CancellationToken cancellationToken) {
         var socket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         try {
-            await socket.ConnectAsync(endpoint, cancellationToken).ConfigureAwait(false);
+            await socket.ConnectAsync(endpoint, cancellationToken);
             return new NetworkStream(socket, ownsSocket: true);
         } catch {
             socket.Dispose();

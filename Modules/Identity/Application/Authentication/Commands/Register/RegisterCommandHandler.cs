@@ -27,16 +27,14 @@ public sealed class RegisterCommandHandler(
                     emailToken,
                     nowUtc.AddHours(24),
                     nowUtc),
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (registrationResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(registrationResult.Error);
         }
 
         UserAuthenticationPrincipalModel principal = registrationResult.Value;
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
 
         EmailVerificationMessage message = new(
             command.Email.Trim(),
@@ -44,7 +42,7 @@ public sealed class RegisterCommandHandler(
             emailToken,
             principal.User.Language,
             command.ClientOrigin);
-        await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailSender.SendEmailVerificationAsync(message, cancellationToken);
 
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }

@@ -31,7 +31,7 @@ public interface INutritionLessonReadModelRepository {
         int page,
         int limit,
         CancellationToken cancellationToken = default) =>
-        (await GetAdminReadModelsAsync(cancellationToken).ConfigureAwait(false)).Skip((page - 1) * limit).Take(limit).ToList();
+        (await GetAdminReadModelsAsync(cancellationToken)).Skip((page - 1) * limit).Take(limit).ToList();
 
     Task<IReadOnlyList<LessonAdminReadModel>> GetAdminReadModelsAsync(
         CancellationToken cancellationToken = default) =>

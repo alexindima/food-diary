@@ -37,9 +37,9 @@ public sealed class RecipeVideoImportController(ISender mediator) : AuthorizedCo
     private async Task<IActionResult> HandleVideoImportAsync(Guid userId, IFormFile? video, RecipeVideoImportHttpRequest request, CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         Stream stream = video?.OpenReadStream() ?? Stream.Null;
-        await using (stream.ConfigureAwait(false)) {
+        await using (stream) {
             string requestId = IdempotencyRequestContext.GetRequestId(HttpContext) ?? throw new InvalidOperationException("Required idempotency context is unavailable.");
-            return await HandleOk(request.ToCommand(userId, video is null ? null : stream, requestId), static draft => draft.ToHttpResponse()).ConfigureAwait(false);
+            return await HandleOk(request.ToCommand(userId, video is null ? null : stream, requestId), static draft => draft.ToHttpResponse());
         }
     }
 }

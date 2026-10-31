@@ -7,5 +7,5 @@ namespace FoodDiary.Modules.Admin.Application.Queries.GetAdminBugReports;
 
 public sealed class GetAdminBugReportsQueryHandler(IAdminBugReportReader reader) : IQueryHandler<GetAdminBugReportsQuery, Result<AdminBugReportPage>> {
     public async Task<Result<AdminBugReportPage>> Handle(GetAdminBugReportsQuery query, CancellationToken cancellationToken) =>
-        Result.Success(await reader.GetPageAsync(query.Filter, cancellationToken).ConfigureAwait(false));
+        Result.Success(await reader.GetPageAsync(query.Filter, cancellationToken));
 }

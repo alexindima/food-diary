@@ -20,7 +20,7 @@ public sealed class GetWeeklyGoalQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WeeklyGoalModel?>(userIdResult);
         }
@@ -29,8 +29,7 @@ public sealed class GetWeeklyGoalQueryHandler(
             return Result.Failure<WeeklyGoalModel?>(Errors.Validation.Invalid(nameof(query.TimeZoneId), "Provide a valid calendar time zone."));
         }
         var weekStartUtc = DateTime.SpecifyKind(query.WeekStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
-        WeeklyGoalModel? goal = await GetGoalAsync(userIdResult.Value, weekStartUtc, query.TimeZoneId is null ? null : timeZone, cancellationToken)
-            .ConfigureAwait(false);
+        WeeklyGoalModel? goal = await GetGoalAsync(userIdResult.Value, weekStartUtc, query.TimeZoneId is null ? null : timeZone, cancellationToken);
         return Result.Success(goal);
     }
     private async Task<WeeklyGoalModel?> GetGoalAsync(
@@ -39,13 +38,12 @@ public sealed class GetWeeklyGoalQueryHandler(
         TimeZoneInfo? timeZone,
         CancellationToken cancellationToken) {
         WeeklyGoalReadModel? goal = await goalRepository
-            .GetReadModelAsync(userId, weekStartUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .GetReadModelAsync(userId, weekStartUtc, cancellationToken);
         if (goal is null) {
             return null;
         }
 
-        int progressDays = await progressReader.GetProgressDaysAsync(userId, goal.WeekStartUtc, cancellationToken, timeZone).ConfigureAwait(false);
+        int progressDays = await progressReader.GetProgressDaysAsync(userId, goal.WeekStartUtc, cancellationToken, timeZone);
         return goal.ToModel(progressDays);
     }
 }

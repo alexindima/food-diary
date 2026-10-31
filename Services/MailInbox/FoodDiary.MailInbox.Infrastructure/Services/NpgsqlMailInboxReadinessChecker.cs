@@ -5,8 +5,8 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class NpgsqlMailInboxReadinessChecker(NpgsqlDataSource dataSource) : IMailInboxReadinessChecker {
     public async Task CheckReadyAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
             const string sql = """
                                select to_regclass('public.mailinbox_messages') is not null
                                   and to_regclass('public.mailinbox_schema_migrations') is not null
@@ -240,8 +240,8 @@ public sealed class NpgsqlMailInboxReadinessChecker(NpgsqlDataSource dataSource)
                                """;
             try {
                 var command = new NpgsqlCommand(sql, connection);
-                await using (command.ConfigureAwait(false)) {
-                    object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                await using (command) {
+                    object? result = await command.ExecuteScalarAsync(cancellationToken);
                     if (result is not true) {
                         throw new InvalidOperationException("MailInbox schema is not ready: required schema objects are missing or invalid.");
                     }

@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Ai.Application.Queries.GetAiPromptScenarios;
 public sealed class GetAiPromptScenariosQueryHandler(IAiPromptTemplateReadModelRepository repository, IAiPromptPreviewRenderer renderer)
     : IRequestHandler<GetAiPromptScenariosQuery, IReadOnlyList<AiPromptScenarioModel>> {
     public async Task<IReadOnlyList<AiPromptScenarioModel>> Handle(GetAiPromptScenariosQuery request, CancellationToken cancellationToken) {
-        IReadOnlyList<AiPromptTemplateReadModel> templates = await repository.GetAllReadModelsAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiPromptTemplateReadModel> templates = await repository.GetAllReadModelsAsync(cancellationToken);
         return AiPromptCatalog.Keys.SelectMany(key => new[] { "en", "ru" }.Select(locale => {
             AiPromptTemplateReadModel? template = templates.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal) && string.Equals(item.Locale, locale, StringComparison.Ordinal));
             AiPromptTemplateReadModel? english = string.Equals(locale, "en", StringComparison.Ordinal) ? null

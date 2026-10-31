@@ -16,7 +16,7 @@ public sealed class ExportCatalogProductsQueryHandler(IProductOverviewReadServic
         var result = new List<CatalogProductModel>();
         for (int page = 1; ; page++) {
             (IReadOnlyList<ProductOverviewReadItem> items, int total) = await reader.GetPagedAsync(
-                UserId.Empty, includePublic: true, page, limit: 100, new ProductQueryFilters(Search: null), cancellationToken).ConfigureAwait(false);
+                UserId.Empty, includePublic: true, page, limit: 100, new ProductQueryFilters(Search: null), cancellationToken);
             if (total > MaximumItems) {
                 return Result.Failure<IReadOnlyList<CatalogProductModel>>(Errors.Validation.Invalid("Catalog", "Export supports at most 5000 products."));
             }

@@ -13,7 +13,7 @@ public sealed class ProductUsdaLinkService(IProductWriteRepository productReposi
         ProductId productId,
         UserId userId,
         CancellationToken cancellationToken = default) =>
-        await GetProductAsync(productId, userId, cancellationToken).ConfigureAwait(false) is not null
+        await GetProductAsync(productId, userId, cancellationToken) is not null
             ? Result.Success() : Result.Failure(ProductErrors.NotAccessible(productId.Value));
 
     public async Task<Result> LinkAsync(
@@ -21,13 +21,13 @@ public sealed class ProductUsdaLinkService(IProductWriteRepository productReposi
         UserId userId,
         int fdcId,
         CancellationToken cancellationToken = default) {
-        Product? product = await GetProductAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        Product? product = await GetProductAsync(productId, userId, cancellationToken);
         if (product is null) {
             return Result.Failure(ProductErrors.NotAccessible(productId.Value));
         }
 
         product.LinkToUsdaFood(fdcId);
-        await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        await productRepository.UpdateAsync(product, cancellationToken);
         return Result.Success();
     }
 
@@ -35,13 +35,13 @@ public sealed class ProductUsdaLinkService(IProductWriteRepository productReposi
         ProductId productId,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        Product? product = await GetProductAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        Product? product = await GetProductAsync(productId, userId, cancellationToken);
         if (product is null) {
             return Result.Failure(ProductErrors.NotAccessible(productId.Value));
         }
 
         product.UnlinkUsdaFood();
-        await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        await productRepository.UpdateAsync(product, cancellationToken);
         return Result.Success();
     }
 

@@ -27,7 +27,7 @@ public static class RecipeIngredientAccessValidator {
         IReadOnlyList<ProductId> productIds = productIdsResult.Value;
 
         if (productIds.Count > 0) {
-            IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+            IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken);
             if (products.Count != productIds.Count) {
                 return Result.Failure(Errors.Validation.Invalid(
                     nameof(RecipeIngredientInput.ProductId),
@@ -52,7 +52,7 @@ public static class RecipeIngredientAccessValidator {
             return Result.Success();
         }
 
-        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken);
         if (recipes.Count != nestedRecipeIds.Count) {
             return Result.Failure(Errors.Validation.Invalid(
                 nameof(RecipeIngredientInput.NestedRecipeId),
@@ -60,7 +60,7 @@ public static class RecipeIngredientAccessValidator {
         }
 
         return recipeId.HasValue
-            ? await EnsureNoIndirectCycleAsync(recipeId.Value, recipes.Values, userId, recipeLookupService, cancellationToken).ConfigureAwait(false)
+            ? await EnsureNoIndirectCycleAsync(recipeId.Value, recipes.Values, userId, recipeLookupService, cancellationToken)
             : Result.Success();
     }
 
@@ -106,8 +106,7 @@ public static class RecipeIngredientAccessValidator {
             }
 
             IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> nextRecipes = await recipeLookupService
-                .GetAccessibleByIdsAsync(nextIds, userId, cancellationToken)
-                .ConfigureAwait(false);
+                .GetAccessibleByIdsAsync(nextIds, userId, cancellationToken);
             if (nextRecipes.Count != nextIds.Count) {
                 return Result.Failure(Errors.Validation.Invalid(
                     nameof(RecipeIngredientInput.NestedRecipeId),

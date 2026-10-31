@@ -10,8 +10,8 @@ internal sealed class IdentityUserDataPurgeParticipant(IdentityDbContext context
     public int Order => 130;
 
     public async Task PurgeAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+        await context.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
         await context.Set<TelegramOperation>().Where(item => item.UserId == userId.Value)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

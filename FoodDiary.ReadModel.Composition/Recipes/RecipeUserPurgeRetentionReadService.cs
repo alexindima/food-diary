@@ -18,7 +18,7 @@ public sealed class RecipeUserPurgeRetentionReadService(ICompositionReadContext 
                 context.FavoriteRecipes.AsNoTracking().Any(favorite => favorite.RecipeId == recipe.Id && favorite.UserId != sourceUserId) ||
                 context.RecipeLikes.AsNoTracking().Any(like => like.RecipeId == recipe.Id && like.UserId != sourceUserId) ||
                 context.RecipeComments.AsNoTracking().Any(comment => comment.RecipeId == recipe.Id && comment.UserId != sourceUserId))
-            .Select(recipe => recipe.Id).ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .Select(recipe => recipe.Id).ToArrayAsync(cancellationToken);
 
         HashSet<RecipeId> retained = [.. roots];
         RecipeId[] frontier = roots;
@@ -27,7 +27,7 @@ public sealed class RecipeUserPurgeRetentionReadService(ICompositionReadContext 
                 .Where(ingredient => Enumerable.Contains(frontier, ingredient.RecipeStep.RecipeId) && ingredient.NestedRecipeId != null)
                 .Join(context.Recipes.AsNoTracking().Where(recipe => recipe.UserId == sourceUserId),
                     ingredient => ingredient.NestedRecipeId!.Value, recipe => recipe.Id, (_, recipe) => recipe.Id)
-                .Distinct().ToArrayAsync(cancellationToken).ConfigureAwait(false);
+                .Distinct().ToArrayAsync(cancellationToken);
             frontier = [.. children.Where(retained.Add)];
         }
         return [.. retained.OrderBy(id => id.Value)];

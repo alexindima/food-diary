@@ -16,11 +16,11 @@ public sealed class GetFastingOverviewQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<FastingOverviewModel>(userIdResult);
         }
 
-        return Result.Success(await sender.Send(new ReadFastingOverviewQuery(userIdResult.Value), cancellationToken).ConfigureAwait(false));
+        return Result.Success(await sender.Send(new ReadFastingOverviewQuery(userIdResult.Value), cancellationToken));
     }
 }

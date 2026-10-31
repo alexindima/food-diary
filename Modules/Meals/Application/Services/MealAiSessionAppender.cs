@@ -26,7 +26,7 @@ internal static class MealAiSessionAppender {
                 userId,
                 imageAssetAccessService,
                 dateTimeProvider,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (sessionResult.IsFailure) {
                 return sessionResult;
             }
@@ -50,7 +50,7 @@ internal static class MealAiSessionAppender {
         Result<ImageAssetReadModel?> sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             sessionImageAssetIdResult.Value,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (sessionImageAssetResult.IsFailure) {
             return sessionImageAssetResult;
         }

@@ -25,7 +25,7 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WaistHistoryPageSummaryModel>(userIdResult);
         }
@@ -39,14 +39,13 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
         DateTime dateFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime dateTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
         Result<WaistHistoryProfileModel> profileResult = await userProfileReadService
-            .GetWaistHistoryProfileAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetWaistHistoryProfileAsync(userId, cancellationToken);
         if (profileResult.IsFailure) {
             return Result.Failure<WaistHistoryPageSummaryModel>(profileResult.Error);
         }
 
-        IReadOnlyList<WaistEntryModel> entries = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<WaistEntrySummaryModel> summary = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntryModel> entries = await sender.Send(new ReadWaistEntriesQuery(UserId: userId, DateFrom: null, DateTo: null, Limit: query.EntriesLimit, Descending: true), cancellationToken);
+        IReadOnlyList<WaistEntrySummaryModel> summary = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: dateFrom, DateTo: dateTo, QuantizationDays: query.QuantizationDays), cancellationToken);
         WaistHistoryProfileModel profile = profileResult.Value;
         return Result.Success(new WaistHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }

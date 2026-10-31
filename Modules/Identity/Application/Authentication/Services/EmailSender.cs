@@ -56,8 +56,7 @@ public sealed class EmailSender(
 
         try {
             EmailTemplateContent? template = await templateProvider
-                .GetActiveTemplateAsync(templateKey, locale, cancellationToken)
-                .ConfigureAwait(false);
+                .GetActiveTemplateAsync(templateKey, locale, cancellationToken);
             string subject = ApplyAccountCreatedTokens(template?.Subject ?? subjectFallback, message, loginLink, brand);
             string htmlBody = ApplyAccountCreatedTokens(
                 string.IsNullOrWhiteSpace(template?.HtmlBody) ? htmlFallback : template.HtmlBody,
@@ -70,7 +69,7 @@ public sealed class EmailSender(
                 loginLink,
                 brand);
 
-            await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, templateKey, cancellationToken).ConfigureAwait(false);
+            await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, templateKey, cancellationToken);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -179,7 +178,7 @@ public sealed class EmailSender(
                 subject,
                 BuildTemplate(subject, intro, "FoodDiary", options.FrontendBaseUrl, footer, locale),
                 intro + Environment.NewLine + footer,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch("dashboard_test_email", locale, "failure", ex.GetType().Name);
@@ -262,7 +261,7 @@ public sealed class EmailSender(
         CancellationToken cancellationToken) {
         try {
             string link = buildLink();
-            EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
+            EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken);
             string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
             (string fallbackSubject, string fallbackHtml, string fallbackText) = createFallbackContent(link);
 
@@ -276,7 +275,7 @@ public sealed class EmailSender(
                 ? fallbackText
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
-            await DispatchAsync(toEmail, subject, htmlBody, textBody, templateKey, cancellationToken).ConfigureAwait(false);
+            await DispatchAsync(toEmail, subject, htmlBody, textBody, templateKey, cancellationToken);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -405,7 +404,7 @@ public sealed class EmailSender(
             htmlBody,
             string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: "template_test");
 
-        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailTransport.SendAsync(message, cancellationToken);
     }
 
     private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, string purpose, CancellationToken cancellationToken) {
@@ -417,6 +416,6 @@ public sealed class EmailSender(
             htmlBody,
             string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: purpose);
 
-        await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailOutbox.EnqueueAsync(message, cancellationToken);
     }
 }

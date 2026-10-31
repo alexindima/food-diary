@@ -29,8 +29,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(email, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(email, cancellationToken);
         if (user?.HasPassword != true || !passwordHasher.Verify(password, user.Password)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
@@ -45,7 +44,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         UpgradePasswordHashIfNeeded(user, password);
         user.RecordAuthenticationActivity(authenticatedAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
     }
 
@@ -54,20 +53,18 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await googleIdentityUserDirectoryService
-            .GetByGoogleIdentityIncludingDeletedAsync(identity.Issuer, identity.Subject, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByGoogleIdentityIncludingDeletedAsync(identity.Issuer, identity.Subject, cancellationToken);
 
         if (user is null) {
             User? emailOwner = await userLookupRepository
-                .GetByEmailIncludingDeletedAsync(identity.Email, cancellationToken)
-                .ConfigureAwait(false);
+                .GetByEmailIncludingDeletedAsync(identity.Email, cancellationToken);
             if (emailOwner is not null) {
                 return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.GoogleAccountLinkRequired);
             }
 
             user = CreateGoogleUser(identity);
             user.RecordAuthenticationActivity(authenticatedAtUtc);
-            await userWriteRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+            await userWriteRepository.AddAsync(user, cancellationToken);
             return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
         }
 
@@ -81,7 +78,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         ApplyGoogleProfile(user, identity);
         user.RecordAuthenticationActivity(authenticatedAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
     }
 
@@ -90,8 +87,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(UserAuthenticationErrors.TelegramNotLinked);
         }
@@ -102,7 +98,7 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         user.RecordAuthenticationActivity(authenticatedAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
     }
 
@@ -112,7 +108,7 @@ internal sealed class UserAuthenticationIdentityService(
         string newPassword,
         DateTime completedAtUtc,
         CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound(userId));
         }
@@ -126,7 +122,7 @@ internal sealed class UserAuthenticationIdentityService(
 
         user.CompletePasswordReset(passwordHasher.Hash(newPassword));
         user.RecordAuthenticationActivity(completedAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, completedAtUtc));
     }
 
@@ -138,8 +134,7 @@ internal sealed class UserAuthenticationIdentityService(
         TimeSpan resendCooldown,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(email, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(email, cancellationToken);
         if (user is not { IsActive: true, DeletedAt: null, Email: not null }) {
             return new UserPasswordResetIssueModel(UserPasswordResetIssueStatus.NotEligible);
         }
@@ -153,7 +148,7 @@ internal sealed class UserAuthenticationIdentityService(
             TokenHash: passwordHasher.Hash(token),
             ExpiresAtUtc: expiresAtUtc,
             IssuedAtUtc: issuedAtUtc));
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return new UserPasswordResetIssueModel(
             UserPasswordResetIssueStatus.Issued,
             new UserPasswordResetDeliveryModel(user.Id.Value, user.Email, user.Language));
@@ -164,7 +159,7 @@ internal sealed class UserAuthenticationIdentityService(
         string token,
         DateTime verifiedAtUtc,
         CancellationToken cancellationToken = default) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<bool>(UserErrors.NotFound(userId));
         }
@@ -181,7 +176,7 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         user.CompleteEmailVerification();
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(value: true);
     }
 
@@ -191,7 +186,7 @@ internal sealed class UserAuthenticationIdentityService(
         string issuer,
         string subject,
         CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserModel>(userResult.Error);
         }
@@ -214,23 +209,21 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         User? identityOwner = await googleIdentityUserDirectoryService
-            .GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByGoogleIdentityIncludingDeletedAsync(issuer, subject, cancellationToken);
         if (identityOwner is not null && identityOwner.Id != user.Id) {
             return Result.Failure<UserModel>(UserAuthenticationErrors.GoogleIdentityAlreadyLinked);
         }
 
         if (user.Email is null) {
             User? emailOwner = await userLookupRepository
-                .GetByEmailIncludingDeletedAsync(email, cancellationToken)
-                .ConfigureAwait(false);
+                .GetByEmailIncludingDeletedAsync(email, cancellationToken);
             if (emailOwner is not null && emailOwner.Id != user.Id) {
                 return Result.Failure<UserModel>(UserErrors.EmailAlreadyExists);
             }
             user.AddVerifiedEmail(email);
         }
         user.LinkGoogleIdentity(issuer, subject);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToModel());
     }
 
@@ -238,7 +231,7 @@ internal sealed class UserAuthenticationIdentityService(
         UserId userId,
         long telegramUserId,
         CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserModel>(userResult.Error);
         }
@@ -250,7 +243,7 @@ internal sealed class UserAuthenticationIdentityService(
         if (user.TelegramUserId == telegramUserId) {
             if (!user.TelegramLinkVerifiedForRecovery) {
                 user.LinkTelegram(telegramUserId);
-                await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+                await userWriteRepository.UpdateAsync(user, cancellationToken);
             }
             return Result.Success(user.ToModel());
         }
@@ -259,14 +252,13 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         User? identityOwner = await userLookupRepository
-            .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
         if (identityOwner is not null && identityOwner.Id != user.Id) {
             return Result.Failure<UserModel>(UserAuthenticationErrors.TelegramAlreadyLinked);
         }
 
         user.LinkTelegram(telegramUserId);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(user.ToModel());
     }
 
@@ -275,8 +267,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime authenticatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByIdIncludingDeletedAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdIncludingDeletedAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
@@ -290,7 +281,7 @@ internal sealed class UserAuthenticationIdentityService(
         }
 
         user.RecordAuthenticationActivity(authenticatedAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, authenticatedAtUtc));
     }
 
@@ -299,8 +290,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime evaluatedAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByIdIncludingDeletedAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdIncludingDeletedAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound());
         }
@@ -322,8 +312,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime restoredAtUtc,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByEmailIncludingDeletedAsync(email, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByEmailIncludingDeletedAsync(email, cancellationToken);
         if (user is null || !passwordHasher.Verify(password, user.Password)) {
             return Result.Failure<UserAuthenticationPrincipalModel>(AuthenticationErrors.InvalidCredentials);
         }
@@ -335,7 +324,7 @@ internal sealed class UserAuthenticationIdentityService(
         user.Restore(restoredAtUtc);
         UpgradePasswordHashIfNeeded(user, password);
         user.RecordAuthenticationActivity(restoredAtUtc);
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success(ToAuthenticationPrincipal(user, restoredAtUtc));
     }
 
@@ -346,7 +335,7 @@ internal sealed class UserAuthenticationIdentityService(
         DateTime issuedAtUtc,
         TimeSpan resendCooldown,
         CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserEmailVerificationDeliveryModel?>(userResult.Error);
         }
@@ -370,7 +359,7 @@ internal sealed class UserAuthenticationIdentityService(
             TokenHash: tokenHash,
             ExpiresAtUtc: expiresAtUtc,
             IssuedAtUtc: issuedAtUtc));
-        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userWriteRepository.UpdateAsync(user, cancellationToken);
         return Result.Success<UserEmailVerificationDeliveryModel?>(new UserEmailVerificationDeliveryModel(
             user.Id.Value,
             user.Email,
@@ -378,7 +367,7 @@ internal sealed class UserAuthenticationIdentityService(
     }
 
     private async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return error is not null ? Result.Failure<User>(error) : Result.Success(user!);
     }

@@ -17,7 +17,7 @@ public sealed class UserSessionCleanupJob(ISender sender, IOptions<UserSessionCl
             cancellationToken.ThrowIfCancellationRequested();
             UserSessionCleanupOptions settings = options.Value;
             int deleted = settings.Enabled
-                ? await sender.Send(new CleanupSessionsCommand(observer.UtcNow.AddDays(-settings.RetentionDays), settings.BatchSize, settings.MaxBatches), cancellationToken).ConfigureAwait(false)
+                ? await sender.Send(new CleanupSessionsCommand(observer.UtcNow.AddDays(-settings.RetentionDays), settings.BatchSize, settings.MaxBatches), cancellationToken)
                 : 0;
             observer.RecordSuccess(JobName, deleted: deleted);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

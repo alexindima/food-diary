@@ -29,7 +29,7 @@ internal static class AccessTokenSecurityStateValidator {
             return false;
         }
 
-        if (!await securityReader.IsCurrentAsync(userId, securityVersion, cancellationToken).ConfigureAwait(false)) {
+        if (!await securityReader.IsCurrentAsync(userId, securityVersion, cancellationToken)) {
             return false;
         }
 
@@ -45,12 +45,12 @@ internal static class AccessTokenSecurityStateValidator {
                 return false;
             }
 
-            return await securityReader.IsCurrentAdministratorAsync(actorId, actorSecurityVersion, cancellationToken).ConfigureAwait(false) &&
-                   await sessionReader.IsActiveAsync(actorId, actorSessionId, cancellationToken).ConfigureAwait(false);
+            return await securityReader.IsCurrentAdministratorAsync(actorId, actorSecurityVersion, cancellationToken) &&
+                   await sessionReader.IsActiveAsync(actorId, actorSessionId, cancellationToken);
         }
 
         return Guid.TryParse(principal?.FindFirstValue(JwtSecurityClaimNames.RefreshSessionId), out Guid sessionId) &&
                sessionId != Guid.Empty &&
-               await sessionReader.IsActiveAsync(userId, sessionId, cancellationToken).ConfigureAwait(false);
+               await sessionReader.IsActiveAsync(userId, sessionId, cancellationToken);
     }
 }

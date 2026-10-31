@@ -37,7 +37,7 @@ public sealed class RecordFastingTelemetryCommandHandler(
             ReadInt(details, "symptomsCount"),
             ReadBool(details, "hadNotes"));
 
-        await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(record, cancellationToken);
         return Result.Success();
     }
 

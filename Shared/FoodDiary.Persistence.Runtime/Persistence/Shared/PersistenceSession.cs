@@ -61,13 +61,13 @@ internal sealed class PersistenceSession(DbContext rootContext) : IModuleContext
         ActiveTransaction = transaction;
         try {
             foreach (DbContext context in _contexts) {
-                await context.Database.UseTransactionAsync(transaction, cancellationToken).ConfigureAwait(false);
+                await context.Database.UseTransactionAsync(transaction, cancellationToken);
             }
-            return await operation().ConfigureAwait(false);
+            return await operation();
         } finally {
             ActiveTransaction = null;
             foreach (DbContext context in _contexts) {
-                await context.Database.UseTransactionAsync(transaction: null, CancellationToken.None).ConfigureAwait(false);
+                await context.Database.UseTransactionAsync(transaction: null, CancellationToken.None);
             }
         }
     }

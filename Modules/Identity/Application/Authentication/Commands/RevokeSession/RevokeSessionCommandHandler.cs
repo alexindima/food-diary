@@ -13,7 +13,7 @@ public sealed class RevokeSessionCommandHandler(
             command.UserId,
             command.CurrentSessionId,
             timeProvider.GetUtcNow().UtcDateTime,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 }

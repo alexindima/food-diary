@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Protocol;
 
@@ -22,17 +21,17 @@ internal static class WikiContextSearchEvaluationRunner {
 
         string resolvedCorpusPath = Path.GetFullPath(corpusPath);
         FileStream corpusStream = File.OpenRead(resolvedCorpusPath);
-        await using ConfiguredAsyncDisposable corpusStreamDisposal = corpusStream.ConfigureAwait(false);
+        await using IAsyncDisposable corpusStreamDisposal = corpusStream;
         EvaluationCorpus? corpus = await JsonSerializer.DeserializeAsync<EvaluationCorpus>(
             corpusStream,
             InputOptions,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         Validate(corpus);
 
         IReadOnlyList<WikiContextSearchResult>? batch = search is SqliteWikiContextSearch sqliteSearch
             ? await sqliteSearch.SearchBatchAsync(
                 [.. corpus!.Cases.Select(item => (item.Query, corpus.DiagnosticLimit, item.ChangeType ?? "Any"))],
-                cancellationToken, expectedChangeSetFingerprint).ConfigureAwait(false)
+                cancellationToken, expectedChangeSetFingerprint)
             : null;
         List<EvaluationResult> results = [];
         foreach (EvaluationCase evaluationCase in corpus!.Cases) {
@@ -43,7 +42,7 @@ internal static class WikiContextSearchEvaluationRunner {
                 module: null,
                 scopePaths: null,
                 cancellationToken,
-                expectedChangeSetFingerprint).ConfigureAwait(false) : batch[results.Count];
+                expectedChangeSetFingerprint) : batch[results.Count];
             string[] relevantPaths = [.. evaluationCase.ExpectedPaths
                 .Concat(evaluationCase.AcceptedPaths ?? [])
                 .Distinct(StringComparer.OrdinalIgnoreCase)];
@@ -114,8 +113,8 @@ internal static class WikiContextSearchEvaluationRunner {
             results,
         };
         string json = JsonSerializer.Serialize(evaluation, OutputOptions);
-        await output.WriteAsync(json.AsMemory(), cancellationToken).ConfigureAwait(false);
-        await output.WriteLineAsync().ConfigureAwait(false);
+        await output.WriteAsync(json.AsMemory(), cancellationToken);
+        await output.WriteLineAsync();
     }
 
     private static void Validate(EvaluationCorpus? corpus) {

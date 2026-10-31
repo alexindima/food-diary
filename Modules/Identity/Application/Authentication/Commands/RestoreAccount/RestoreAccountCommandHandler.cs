@@ -21,19 +21,16 @@ public sealed class RestoreAccountCommandHandler(
                 command.Email,
                 command.Password,
                 restoredAtUtc,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (restoreResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(restoreResult.Error);
         }
 
         UserAuthenticationPrincipalModel principal = restoreResult.Value;
         await refreshTokenSessionRepository
-            .RevokeAllAsync(principal.UserId, restoredAtUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .RevokeAllAsync(principal.UserId, restoredAtUtc, cancellationToken);
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe);
         return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User, tokens.BrowserSession));
     }
 }

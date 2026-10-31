@@ -14,7 +14,7 @@ public sealed class ImportAdminDailyAdvicePairsCommandHandler(ISender sender) : 
             return Result.Failure<AdminDailyAdvicesImportModel>(Errors.Validation.Invalid("version", "Expected format version 2."));
         }
         Result<DailyAdviceImportModel> result = await sender.Send(new ImportDailyAdvicePairsCommand(
-            command.Advices?.Select(item => item is null ? null! : new DailyAdvicePairImportItem(item.Id, item.Ru, item.En, item.Weight, item.Tag)).ToArray()!), cancellationToken).ConfigureAwait(false);
+            command.Advices?.Select(item => item is null ? null! : new DailyAdvicePairImportItem(item.Id, item.Ru, item.En, item.Weight, item.Tag)).ToArray()!), cancellationToken);
         return result.IsFailure ? Result.Failure<AdminDailyAdvicesImportModel>(result.Error)
             : Result.Success(new AdminDailyAdvicesImportModel(result.Value.ImportedCount, result.Value.SkippedCount));
     }

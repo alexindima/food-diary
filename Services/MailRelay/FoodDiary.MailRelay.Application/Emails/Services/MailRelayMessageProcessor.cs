@@ -7,7 +7,7 @@ public sealed class MailRelayMessageProcessor(
     SmtpSubmissionService smtpSubmissionService,
     ILogger<MailRelayMessageProcessor> logger) {
     public async Task<MailRelayProcessResult> ProcessAsync(QueuedEmailMessage message, CancellationToken cancellationToken) {
-        if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, cancellationToken).ConfigureAwait(false)) {
+        if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, cancellationToken)) {
             return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
         }
         using var deadline = new CancellationTokenSource(TimeSpan.FromMinutes(10));
@@ -15,7 +15,7 @@ public sealed class MailRelayMessageProcessor(
         using var renewalStop = new CancellationTokenSource();
         Task renewal = RenewClaimAsync(message, delivery, renewalStop.Token);
         try {
-            return await ProcessClaimAsync(message, delivery.Token).ConfigureAwait(false);
+            return await ProcessClaimAsync(message, delivery.Token);
         } catch (MailRelayClaimLostException) {
             logger.LogInformation("Relay email {QueuedEmailId} is now owned by another delivery attempt.", message.Id);
             return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
@@ -23,8 +23,8 @@ public sealed class MailRelayMessageProcessor(
             // Leave an expired/lost claim for recovery. No stale attempt may schedule a retry.
             return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: false);
         } finally {
-            await renewalStop.CancelAsync().ConfigureAwait(false);
-            await renewal.ConfigureAwait(false);
+            await renewalStop.CancelAsync();
+            await renewal;
         }
     }
 
@@ -32,18 +32,18 @@ public sealed class MailRelayMessageProcessor(
         using var timer = new PeriodicTimer(queueStore.ClaimRenewalInterval);
         try {
             while (true) {
-                await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false);
+                await timer.WaitForNextTickAsync(stoppingToken);
                 using var renewalTimeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 renewalTimeout.CancelAfter(queueStore.ClaimRenewalInterval);
-                if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, renewalTimeout.Token).ConfigureAwait(false)) {
-                    await delivery.CancelAsync().ConfigureAwait(false);
+                if (!await queueStore.RenewClaimAsync(message.Id, message.AttemptCount, renewalTimeout.Token)) {
+                    await delivery.CancelAsync();
                     return;
                 }
             }
         } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
         } catch (Exception exception) {
             logger.LogWarning("Relay email {QueuedEmailId} claim renewal failed ({ErrorType}).", message.Id, exception.GetType().Name);
-            await delivery.CancelAsync().ConfigureAwait(false);
+            await delivery.CancelAsync();
         }
     }
 
@@ -51,10 +51,10 @@ public sealed class MailRelayMessageProcessor(
         var queuedEmail = QueuedEmail.FromPersistence(message);
 
         try {
-            IReadOnlyList<string> suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<string> suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken);
             if (suppressedRecipients.Count > 0) {
                 queuedEmail.MarkSuppressed();
-                await queueStore.MarkSuppressedAsync(queuedEmail.Id, message.AttemptCount, suppressedRecipients, cancellationToken).ConfigureAwait(false);
+                await queueStore.MarkSuppressedAsync(queuedEmail.Id, message.AttemptCount, suppressedRecipients, cancellationToken);
                 logger.LogInformation(
                     "Relay email {QueuedEmailId} suppressed because {SuppressedRecipientCount} recipient(s) are on the suppression list.",
                     queuedEmail.Id,
@@ -63,7 +63,7 @@ public sealed class MailRelayMessageProcessor(
                 return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: true);
             }
 
-            await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken).ConfigureAwait(false);
+            await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken);
             queuedEmail.MarkSent();
             // SMTP cannot atomically commit remote acceptance together with our
             // PostgreSQL state. Complete the local acknowledgement even when a
@@ -71,7 +71,7 @@ public sealed class MailRelayMessageProcessor(
             // crash can still cause an at-least-once retry with the same stable
             // Message-Id, which is preferable to silently losing the email.
             using var acknowledgementTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            await queueStore.MarkSentAsync(queuedEmail.Id, message.AttemptCount, acknowledgementTimeout.Token).ConfigureAwait(false);
+            await queueStore.MarkSentAsync(queuedEmail.Id, message.AttemptCount, acknowledgementTimeout.Token);
             logger.LogInformation(
                 "Relay email {QueuedEmailId} sent successfully on attempt {AttemptCount}.",
                 queuedEmail.Id,
@@ -85,7 +85,7 @@ public sealed class MailRelayMessageProcessor(
         } catch (Exception ex) {
             string errorType = ex.GetType().Name;
             QueuedEmailFailureDecision failureDecision = queuedEmail.MarkFailedAttempt($"Delivery failed ({errorType}).");
-            DateTimeOffset? retryAvailableAtUtc = await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
+            DateTimeOffset? retryAvailableAtUtc = await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken);
 
             logger.LogWarning(
                 "Relay email {QueuedEmailId} failed on attempt {AttemptCount}/{MaxAttempts}. ErrorType={ErrorType}",

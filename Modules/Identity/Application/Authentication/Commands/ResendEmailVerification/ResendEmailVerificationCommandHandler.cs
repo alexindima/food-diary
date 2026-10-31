@@ -35,8 +35,7 @@ public sealed class ResendEmailVerificationCommandHandler(
                 issuedAtUtc.AddHours(24),
                 issuedAtUtc,
                 ResendCooldown,
-                cancellationToken)
-            .ConfigureAwait(false);
+                cancellationToken);
         if (issueResult.IsFailure) {
             return Result.Failure(issueResult.Error);
         }
@@ -47,7 +46,7 @@ public sealed class ResendEmailVerificationCommandHandler(
         }
 
         EmailVerificationMessage message = new(delivery.Email, delivery.UserId.ToString(), emailToken, delivery.Language, command.ClientOrigin);
-        await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailSender.SendEmailVerificationAsync(message, cancellationToken);
 
         return Result.Success();
     }

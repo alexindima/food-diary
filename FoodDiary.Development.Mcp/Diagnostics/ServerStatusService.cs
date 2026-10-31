@@ -23,14 +23,13 @@ public sealed class ServerStatusService(
                 $"Wiki entrypoint was not found at {wikiPath}.");
         }
 
-        string gitHead = await ReadGitHeadAsync(repositoryRoot, cancellationToken).ConfigureAwait(false);
-        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        string gitHead = await ReadGitHeadAsync(repositoryRoot, cancellationToken);
+        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken);
         string[] derivedWikiPaths = [.. snapshot.ChangedPaths.Where(IsDerivedWikiPath)];
         string[] reviewMetadataPaths = [.. snapshot.ChangedPaths.Where(IsReviewMetadataPath)];
         string[] sourceChangedPaths = [.. snapshot.ChangedPaths.Except(derivedWikiPaths, StringComparer.OrdinalIgnoreCase)
             .Except(reviewMetadataPaths, StringComparer.OrdinalIgnoreCase)];
-        string[] indexPaths = await WikiIndexManifest.ReadPathsAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+        string[] indexPaths = await WikiIndexManifest.ReadPathsAsync(repositoryRoot, cancellationToken);
         WikiIndexStatus[] indexes = [.. indexPaths.Select(path => {
             string absolutePath = Path.Combine(repositoryRoot, path.Replace('/', Path.DirectorySeparatorChar));
             FileInfo file = new(absolutePath);
@@ -41,25 +40,22 @@ public sealed class ServerStatusService(
         })];
         bool indexFilesPresent = indexes.All(index => index.Exists);
         string? indexFingerprint = indexFilesPresent
-            ? await ComputeIndexFingerprintAsync(repositoryRoot, indexPaths, cancellationToken).ConfigureAwait(false)
+            ? await ComputeIndexFingerprintAsync(repositoryRoot, indexPaths, cancellationToken)
             : null;
         string sourceFingerprint = await RepositorySourceFingerprint
-            .ComputeAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+            .ComputeAsync(repositoryRoot, cancellationToken);
         WikiVerificationReceipt? verificationReceipt = await WikiVerificationReceipt
-            .ReadAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+            .ReadAsync(repositoryRoot, cancellationToken);
         bool indexesMatchWorktree = indexFilesPresent && verificationReceipt is not null &&
             string.Equals(verificationReceipt.SourceFingerprint, sourceFingerprint, StringComparison.Ordinal) &&
             string.Equals(verificationReceipt.IndexFingerprint, indexFingerprint, StringComparison.Ordinal);
         WikiVerificationReceipt? generationReceipt = await WikiVerificationReceipt
-            .ReadAsync(repositoryRoot, cancellationToken, generation: true).ConfigureAwait(false);
+            .ReadAsync(repositoryRoot, cancellationToken, generation: true);
         bool generationMatches = indexFilesPresent && generationReceipt is not null &&
             string.Equals(generationReceipt.SourceFingerprint, sourceFingerprint, StringComparison.Ordinal) &&
             string.Equals(generationReceipt.IndexFingerprint, indexFingerprint, StringComparison.Ordinal);
         string currentMcpSourceFingerprint = await DevelopmentMcpSourceFingerprint
-            .ComputeAsync(repositoryRoot, cancellationToken)
-            .ConfigureAwait(false);
+            .ComputeAsync(repositoryRoot, cancellationToken);
         bool runningCodeIncludesWorktreeChanges = !string.IsNullOrWhiteSpace(runtimeIdentity.BuildSourceFingerprint) &&
             string.Equals(
                 runtimeIdentity.BuildSourceFingerprint,
@@ -141,10 +137,10 @@ public sealed class ServerStatusService(
             FileStream stream = File.OpenRead(Path.Combine(
                 repositoryRoot,
                 path.Replace('/', Path.DirectorySeparatorChar)));
-            await using (stream.ConfigureAwait(false)) {
+            await using (stream) {
                 byte[] buffer = new byte[81920];
                 int read;
-                while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
+                while ((read = await stream.ReadAsync(buffer, cancellationToken)) > 0) {
                     hash.AppendData(buffer.AsSpan(0, read));
                 }
             }
@@ -156,12 +152,11 @@ public sealed class ServerStatusService(
         string repositoryRoot,
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
-        string gitDirectory = await ResolveGitDirectoryAsync(repositoryRoot, cancellationToken).ConfigureAwait(false);
-        string commonGitDirectory = await ResolveCommonGitDirectoryAsync(gitDirectory, cancellationToken)
-            .ConfigureAwait(false);
+        string gitDirectory = await ResolveGitDirectoryAsync(repositoryRoot, cancellationToken);
+        string commonGitDirectory = await ResolveCommonGitDirectoryAsync(gitDirectory, cancellationToken);
         string head = (await File.ReadAllTextAsync(
             Path.Combine(gitDirectory, "HEAD"),
-            cancellationToken).ConfigureAwait(false)).Trim();
+            cancellationToken)).Trim();
         if (!head.StartsWith("ref: ", StringComparison.Ordinal)) {
             return head;
         }
@@ -171,12 +166,12 @@ public sealed class ServerStatusService(
             commonGitDirectory,
             reference.Replace('/', Path.DirectorySeparatorChar));
         if (File.Exists(referencePath)) {
-            return (await File.ReadAllTextAsync(referencePath, cancellationToken).ConfigureAwait(false)).Trim();
+            return (await File.ReadAllTextAsync(referencePath, cancellationToken)).Trim();
         }
 
         return (await File.ReadAllLinesAsync(
             Path.Combine(commonGitDirectory, "packed-refs"),
-            cancellationToken).ConfigureAwait(false))
+            cancellationToken))
             .FirstOrDefault(line => line.EndsWith($" {reference}", StringComparison.Ordinal))
             ?.Split(' ', 2)[0]
             ?? throw new DevelopmentMcpException(
@@ -192,7 +187,7 @@ public sealed class ServerStatusService(
             return dotGitPath;
         }
 
-        string marker = (await File.ReadAllTextAsync(dotGitPath, cancellationToken).ConfigureAwait(false)).Trim();
+        string marker = (await File.ReadAllTextAsync(dotGitPath, cancellationToken)).Trim();
         const string prefix = "gitdir: ";
         if (!marker.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) {
             throw new DevelopmentMcpException(
@@ -218,7 +213,7 @@ public sealed class ServerStatusService(
 
         string commonDirectory = (await File.ReadAllTextAsync(
             commonDirectoryMarker,
-            cancellationToken).ConfigureAwait(false)).Trim();
+            cancellationToken)).Trim();
         return Path.GetFullPath(commonDirectory, gitDirectory);
     }
 }

@@ -14,16 +14,14 @@ public sealed class RecentProductLoader(ISender sender, IProductOverviewReadServ
         int limit,
         bool includePublic,
         CancellationToken cancellationToken) {
-        IReadOnlyList<RecentProductUsage> recents = await sender.Send(new ReadRecentProductsQuery(userId, limit), cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<RecentProductUsage> recents = await sender.Send(new ReadRecentProductsQuery(userId, limit), cancellationToken);
         if (recents.Count == 0) {
             return [];
         }
 
         ProductId[] idsInOrder = [.. recents.Select(recent => recent.ProductId)];
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> itemsById = await productOverviewReadService
-            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken);
 
         return [.. idsInOrder.Where(itemsById.ContainsKey).Select(id => itemsById[id])];
     }

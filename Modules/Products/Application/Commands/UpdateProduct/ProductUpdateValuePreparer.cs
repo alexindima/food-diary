@@ -27,7 +27,7 @@ internal static class ProductUpdateValuePreparer {
             return ProductRequiredIdParser.ToFailure<ProductUpdateValues, ProductId>(productIdResult);
         }
 
-        Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<ProductUpdateValues>(userIdResult);
         }
@@ -61,12 +61,12 @@ internal static class ProductUpdateValuePreparer {
             command.ImageUrl,
             userId,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<ProductUpdateValues>(imageAssetResult.Error);
         }
 
-        Result<IReadOnlyList<ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<ProductImage>?> gallery = await ProductImageAssetResolver.ResolveGalleryAsync(command.ImageAssetIds, userId, imageAssetAccessService, cancellationToken);
         if (gallery.IsFailure) { return Result.Failure<ProductUpdateValues>(gallery.Error); }
 
         return Result.Success(new ProductUpdateValues(
@@ -91,7 +91,7 @@ internal static class ProductUpdateValuePreparer {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return userIdResult;
         }

@@ -26,6 +26,6 @@ public sealed class CalculateFoodNutritionCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, query.RequestId, cancellationToken).ConfigureAwait(false);
+        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, query.RequestId, cancellationToken);
     }
 }

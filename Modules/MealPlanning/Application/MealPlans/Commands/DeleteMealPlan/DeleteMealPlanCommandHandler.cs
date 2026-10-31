@@ -21,13 +21,13 @@ public sealed class DeleteMealPlanCommandHandler(
         }
 
         Result<UserId> access = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            command.UserId, currentUserAccessService, cancellationToken);
         if (access.IsFailure) {
             return Result.Failure(access.Error);
         }
 
         bool removed = await repository.DeletePersonalAsync(
-            planId.Value, access.Value, cancellationToken).ConfigureAwait(false);
+            planId.Value, access.Value, cancellationToken);
         return removed ? Result.Success() : Result.Failure(MealPlanErrors.NotFound(command.PlanId));
     }
 }

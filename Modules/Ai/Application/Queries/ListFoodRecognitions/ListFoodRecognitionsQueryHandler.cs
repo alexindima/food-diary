@@ -14,7 +14,7 @@ public sealed class ListFoodRecognitionsQueryHandler(IFoodRecognitionJobReader s
         int page = PaginationPolicy.NormalizePage(request.Page);
         int limit = PaginationPolicy.NormalizePageSize(request.Limit, defaultPageSize: 20);
         Guid ownerId = request.UserId;
-        (IReadOnlyList<FoodRecognitionJobModel> items, int total) = await store.ListAsync(new UserId(ownerId), page, limit, request.IsProductLabel, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<FoodRecognitionJobModel> items, int total) = await store.ListAsync(new UserId(ownerId), page, limit, request.IsProductLabel, cancellationToken);
         return Result.Success(new PagedResponse<FoodRecognitionJobModel>(items, page, limit, (int)Math.Ceiling(total / (double)limit), total));
     }
 }

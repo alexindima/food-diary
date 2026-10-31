@@ -18,7 +18,7 @@ public sealed class ExchangeTelegramOidcCommandHandler(ITelegramOidcProvider pro
             LogRejection("not_configured");
             return Result.Failure<TelegramAuthenticationIntentModel>(TelegramIdentityErrors.NotConfigured);
         }
-        string? json = await tickets.ConsumeAsync(command.State, StartTelegramOidcCommandHandler.Purpose, command.BrowserBinding, cancellationToken).ConfigureAwait(false);
+        string? json = await tickets.ConsumeAsync(command.State, StartTelegramOidcCommandHandler.Purpose, command.BrowserBinding, cancellationToken);
         if (json is null) {
             return Invalid("attempt_unavailable");
         }
@@ -31,13 +31,13 @@ public sealed class ExchangeTelegramOidcCommandHandler(ITelegramOidcProvider pro
         if (attempt is null) {
             return Invalid("attempt_payload_invalid");
         }
-        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(command.Code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken).ConfigureAwait(false);
+        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(command.Code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken);
         if (identity.IsFailure) {
             return Result.Failure<TelegramAuthenticationIntentModel>(identity.Error);
         }
         return await intents.CreateAsync(identity.Value.TelegramUserId, identity.Value.FirstName, identity.Value.LastName,
             language: null, command.BrowserBinding, attempt.LinkUserId, cancellationToken,
-            identity.Value.Issuer, identity.Value.Subject).ConfigureAwait(false);
+            identity.Value.Issuer, identity.Value.Subject);
     }
     private Result<TelegramAuthenticationIntentModel> Invalid(string reason) {
         LogRejection(reason);

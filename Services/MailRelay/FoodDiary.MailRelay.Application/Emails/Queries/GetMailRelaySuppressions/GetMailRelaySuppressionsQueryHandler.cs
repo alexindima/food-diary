@@ -7,7 +7,7 @@ public sealed class GetMailRelaySuppressionsQueryHandler(MailRelayEmailUseCases 
     public async Task<Result<MailRelayPage<MailRelaySuppressionEntry>>> Handle(
         GetMailRelaySuppressionsQuery request,
         CancellationToken cancellationToken) {
-        MailRelayPage<MailRelaySuppressionEntry> suppressions = await useCases.GetSuppressionsPageAsync(request.Email, request.Page, request.Limit, cancellationToken).ConfigureAwait(false);
+        MailRelayPage<MailRelaySuppressionEntry> suppressions = await useCases.GetSuppressionsPageAsync(request.Email, request.Page, request.Limit, cancellationToken);
         return Result<MailRelayPage<MailRelaySuppressionEntry>>.Success(suppressions);
     }
 }

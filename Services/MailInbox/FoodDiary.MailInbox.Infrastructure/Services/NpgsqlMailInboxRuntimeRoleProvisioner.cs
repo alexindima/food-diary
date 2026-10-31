@@ -31,12 +31,11 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
                 nameof(password));
         }
 
-        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                bool roleExists = await RoleExistsAsync(connection, transaction, roleName, cancellationToken)
-                    .ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using (connection) {
+            NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
+            await using (transaction) {
+                bool roleExists = await RoleExistsAsync(connection, transaction, roleName, cancellationToken);
                 string quotedRole = new NpgsqlCommandBuilder().QuoteIdentifier(roleName);
                 if (!roleExists) {
                     string createRoleSql = await FormatRoleSqlAsync(
@@ -45,30 +44,30 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
                         "create role %I login noinherit nosuperuser nocreatedb nocreaterole noreplication nobypassrls password %L",
                         roleName,
                         password,
-                        cancellationToken).ConfigureAwait(false);
-                    await ExecuteAsync(connection, transaction, createRoleSql, cancellationToken).ConfigureAwait(false);
+                        cancellationToken);
+                    await ExecuteAsync(connection, transaction, createRoleSql, cancellationToken);
                     string markRoleSql = await FormatRoleSqlAsync(
                         connection,
                         transaction,
                         "comment on role %I is %L",
                         roleName,
                         RoleMarker,
-                        cancellationToken).ConfigureAwait(false);
-                    await ExecuteAsync(connection, transaction, markRoleSql, cancellationToken).ConfigureAwait(false);
+                        cancellationToken);
+                    await ExecuteAsync(connection, transaction, markRoleSql, cancellationToken);
                 } else {
                     await EnsureReusableRoleIsRestrictedAsync(
                         connection,
                         transaction,
                         roleName,
-                        cancellationToken).ConfigureAwait(false);
+                        cancellationToken);
                     string alterRoleSql = await FormatRoleSqlAsync(
                         connection,
                         transaction,
                         "alter role %I with login noinherit nosuperuser nocreatedb nocreaterole noreplication nobypassrls password %L",
                         roleName,
                         password,
-                        cancellationToken).ConfigureAwait(false);
-                    await ExecuteAsync(connection, transaction, alterRoleSql, cancellationToken).ConfigureAwait(false);
+                        cancellationToken);
+                    await ExecuteAsync(connection, transaction, alterRoleSql, cancellationToken);
                 }
 
                 string quotedDatabase = new NpgsqlCommandBuilder().QuoteIdentifier(connection.Database);
@@ -93,8 +92,8 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
                                       alter default privileges in schema public
                                           revoke all privileges on sequences from {quotedRole};
                                       """;
-                await ExecuteAsync(connection, transaction, privilegeSql, cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                await ExecuteAsync(connection, transaction, privilegeSql, cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
         }
     }
@@ -106,9 +105,9 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
         CancellationToken cancellationToken) {
         const string sql = "select exists (select 1 from pg_roles where rolname = @role_name);";
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("role_name", roleName);
-            return await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is true;
+            return await command.ExecuteScalarAsync(cancellationToken) is true;
         }
     }
 
@@ -157,10 +156,10 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
                            );
                            """;
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("role_name", roleName);
             command.Parameters.AddWithValue("role_marker", RoleMarker);
-            if (await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is true) {
+            if (await command.ExecuteScalarAsync(cancellationToken) is true) {
                 throw new InvalidOperationException(
                     "Existing MailInbox runtime database role is not provisioner-owned or has unsafe settings, inherited privileges, cross-database grants, or owned objects.");
             }
@@ -176,11 +175,11 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
         CancellationToken cancellationToken) {
         const string sql = "select format(@template, @role_name, @password);";
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue("template", template);
             command.Parameters.AddWithValue("role_name", roleName);
             command.Parameters.AddWithValue("password", password);
-            return (string)(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)
+            return (string)(await command.ExecuteScalarAsync(cancellationToken)
                             ?? throw new InvalidOperationException("PostgreSQL did not format the role command."));
         }
     }
@@ -191,8 +190,8 @@ public sealed partial class NpgsqlMailInboxRuntimeRoleProvisioner(NpgsqlDataSour
         string sql,
         CancellationToken cancellationToken) {
         var command = new NpgsqlCommand(sql, connection, transaction);
-        await using (command.ConfigureAwait(false)) {
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        await using (command) {
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 

@@ -41,7 +41,7 @@ internal sealed partial class DiaryPdfGenerator(
         string? reportOrigin,
         CancellationToken cancellationToken) {
         Settings.License = LicenseType.Community;
-        await PdfRenderGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await PdfRenderGate.WaitAsync(cancellationToken);
         try {
             return await GenerateCoreAsync(
                 meals,
@@ -50,7 +50,7 @@ internal sealed partial class DiaryPdfGenerator(
                 locale,
                 timeZoneOffsetMinutes,
                 reportOrigin,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         } finally {
             PdfRenderGate.Release();
         }
@@ -68,7 +68,7 @@ internal sealed partial class DiaryPdfGenerator(
         bool useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
         IReadOnlyDictionary<Guid, byte[]> mealImages = useCompactMealsMode
             ? new Dictionary<Guid, byte[]>()
-            : await LoadMealImagesAsync(meals, cancellationToken).ConfigureAwait(false);
+            : await LoadMealImagesAsync(meals, cancellationToken);
         var report = DiaryReportData.Create(
             meals,
             dateFrom,

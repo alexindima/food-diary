@@ -38,7 +38,7 @@ public static class ModuleRegistration {
         BillingDbContext owned = provider.GetRequiredService<BillingDbContext>();
         return async cancellationToken => {
             if (owned.Database.IsRelational()) {
-                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+                await owned.Database.UseTransactionAsync(coordinator.CurrentTransaction, cancellationToken);
             }
         };
     }

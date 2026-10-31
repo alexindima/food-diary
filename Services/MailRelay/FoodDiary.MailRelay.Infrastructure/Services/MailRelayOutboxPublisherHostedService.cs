@@ -19,17 +19,17 @@ public sealed class MailRelayOutboxPublisherHostedService(
 
         do {
             try {
-                IReadOnlyList<MailRelayOutboxMessage> batch = await queueStore.ClaimOutboxBatchAsync(stoppingToken).ConfigureAwait(false);
+                IReadOnlyList<MailRelayOutboxMessage> batch = await queueStore.ClaimOutboxBatchAsync(stoppingToken);
                 if (batch.Count == 0) {
                     continue;
                 }
 
                 foreach (MailRelayOutboxMessage message in batch) {
                     try {
-                        await broker.PublishOutboundAsync(message.EmailId, stoppingToken).ConfigureAwait(false);
-                        await queueStore.MarkOutboxPublishedAsync(message.Id, stoppingToken).ConfigureAwait(false);
+                        await broker.PublishOutboundAsync(message.EmailId, stoppingToken);
+                        await queueStore.MarkOutboxPublishedAsync(message.Id, stoppingToken);
                     } catch (Exception ex) {
-                        await queueStore.MarkOutboxFailedAsync(message.Id, message.AttemptCount, ex.ToString(), stoppingToken).ConfigureAwait(false);
+                        await queueStore.MarkOutboxFailedAsync(message.Id, message.AttemptCount, ex.ToString(), stoppingToken);
                         logger.LogWarning(ex, "Mail relay outbox publish failed for outbox message {OutboxMessageId}.", message.Id);
                     }
                 }
@@ -38,6 +38,6 @@ public sealed class MailRelayOutboxPublisherHostedService(
             } catch (Exception ex) {
                 logger.LogError(ex, "Mail relay outbox publisher iteration failed.");
             }
-        } while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false));
+        } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 }

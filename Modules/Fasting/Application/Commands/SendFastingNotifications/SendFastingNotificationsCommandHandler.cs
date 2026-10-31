@@ -22,11 +22,11 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
     ILogger<SendFastingNotificationsCommandHandler> logger) : IRequestHandler<SendFastingNotificationsCommand, int> {
     public async Task<int> Handle(SendFastingNotificationsCommand request, CancellationToken cancellationToken) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        IReadOnlyList<FastingActiveOccurrenceModel> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingActiveOccurrenceModel> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken);
         FastingOccurrenceId[] activeOccurrenceIds = [.. activeOccurrences.Select(static x => x.Occurrence.Id)];
         IReadOnlyList<FastingCheckIn> checkIns = activeOccurrenceIds.Length == 0
             ? []
-            : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
+            : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken);
         IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInLookup =
             FastingCheckInLookup.Create(checkIns);
         var usersToPush = new HashSet<UserId>();
@@ -43,7 +43,7 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
             foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now, active.ReminderDelays)) {
                 bool created = await TryCreateAsync(
                     notification,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
 
                 if (created) {
                     usersToPush.Add(notification.UserId);
@@ -53,7 +53,7 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
         }
 
         if (createdCount > 0) {
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         if (usersToPush.Count > 0) {
@@ -64,7 +64,7 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
         }
 
         if (postCommitActionQueue.HasActions) {
-            await postCommitActionQueue.FlushAsync(CancellationToken.None).ConfigureAwait(false);
+            await postCommitActionQueue.FlushAsync(CancellationToken.None);
         }
 
         if (createdCount > 0) {
@@ -84,12 +84,12 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
                 candidate.UserId,
                 candidate.Type,
                 candidate.ReferenceId,
-                cancellationToken).ConfigureAwait(false)) {
+                cancellationToken)) {
             return false;
         }
 
         NotificationRequest notification = FastingNotificationFactory.Create(candidate);
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken);
         return true;
     }
 
@@ -98,8 +98,7 @@ public sealed class SendFastingNotificationsCommandHandler(IFastingOccurrenceRea
         CancellationToken cancellationToken) {
         foreach (UserId userId in usersToPush) {
             await notificationClientRefreshService
-                .RefreshAsync(userId, pushChanged: true, cancellationToken)
-                .ConfigureAwait(false);
+                .RefreshAsync(userId, pushChanged: true, cancellationToken);
         }
     }
 }

@@ -32,10 +32,10 @@ public sealed class AuthImpersonationController(ISender mediator) : BaseApiContr
     public Task<IActionResult> ExchangeImpersonation([FromBody] ExchangeImpersonationHttpRequest request) => HandleExchangeAsync(request);
 
     private async Task<IActionResult> HandleExchangeAsync(ExchangeImpersonationHttpRequest request) {
-        IActionResult result = await HandleOk(request.ToCommand(), static accessToken => accessToken).ConfigureAwait(false);
+        IActionResult result = await HandleOk(request.ToCommand(), static accessToken => accessToken);
         if (result is OkObjectResult { Value: string accessToken } response) {
             ImpersonationCookieService cookies = HttpContext.RequestServices.GetRequiredService<ImpersonationCookieService>();
-            response.Value = await cookies.SetAsync(HttpContext, accessToken, HttpContext.RequestAborted).ConfigureAwait(false);
+            response.Value = await cookies.SetAsync(HttpContext, accessToken, HttpContext.RequestAborted);
         }
         return result;
     }

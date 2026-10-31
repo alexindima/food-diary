@@ -24,17 +24,17 @@ public sealed class UnlinkTelegramCommandHandler(ITelegramAuthValidator validato
         if (proof.Value.AuthDateUtc.Kind != DateTimeKind.Utc || proof.Value.AuthDateUtc > now || proof.Value.AuthDateUtc <= now.AddMinutes(-5)) {
             return InvalidProof();
         }
-        Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(proof.Value.UserId, now, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(proof.Value.UserId, now, cancellationToken);
         if (principal.IsFailure) {
             return Result.Failure(principal.Error);
         }
         if (principal.Value.UserId.Value != command.UserId) {
             return InvalidProof();
         }
-        if (!await replayGuard.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken).ConfigureAwait(false)) {
+        if (!await replayGuard.TryConsumeAsync(proof.Value.ReplayIdentity, proof.Value.ExpiresAtUtc, proof.Value.AuthDateUtc, cancellationToken)) {
             return InvalidProof();
         }
-        Result result = await accounts.UnlinkAsync(principal.Value.UserId, proof.Value.UserId, principal.Value.SecurityVersion, cancellationToken).ConfigureAwait(false);
+        Result result = await accounts.UnlinkAsync(principal.Value.UserId, proof.Value.UserId, principal.Value.SecurityVersion, cancellationToken);
         if (result.IsSuccess) {
             postCommitActions.Enqueue("auth.telegram.unlink.cancel-operations",
                 ct => operations.CancelUserAsync(principal.Value.UserId, ct));

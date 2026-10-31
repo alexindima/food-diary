@@ -29,13 +29,13 @@ public sealed class TelegramLoginTicketStore(
         string bindingHash = Hash(browserBinding);
         string protectedPayload = _protector.CreateProtector(purpose, bindingHash).Protect(payload);
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         await context.Database.ExecuteSqlInterpolatedAsync(
-            $"DELETE FROM \"TelegramLoginTickets\" WHERE \"ExpiresAtUtc\" <= {now}", cancellationToken).ConfigureAwait(false);
+            $"DELETE FROM \"TelegramLoginTickets\" WHERE \"ExpiresAtUtc\" <= {now}", cancellationToken);
         await context.Database.ExecuteSqlInterpolatedAsync(
             $"INSERT INTO \"TelegramLoginTickets\" (\"Fingerprint\", \"Purpose\", \"BrowserBindingHash\", \"ProtectedPayload\", \"ExpiresAtUtc\") VALUES ({fingerprint}, {purpose}, {bindingHash}, {protectedPayload}, {expiresAtUtc})",
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return ticket;
     }
 
@@ -49,15 +49,15 @@ public sealed class TelegramLoginTicketStore(
         string bindingHash = Hash(browserBinding);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         IQueryable<TelegramLoginTicket> query = context.Set<TelegramLoginTicket>().AsNoTracking().Where(item =>
             item.Fingerprint == fingerprint && item.Purpose == purpose &&
             item.BrowserBindingHash == bindingHash && item.ExpiresAtUtc > now);
-        TelegramLoginTicket? record = await query.AsNoTracking().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        TelegramLoginTicket? record = await query.AsNoTracking().SingleOrDefaultAsync(cancellationToken);
         DateTime consumedAtUtc = timeProvider.GetUtcNow().UtcDateTime;
         if (record is null || await query.Where(item => item.ExpiresAtUtc > consumedAtUtc)
-                .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false) != 1) {
+                .ExecuteDeleteAsync(cancellationToken) != 1) {
             return null;
         }
         try {

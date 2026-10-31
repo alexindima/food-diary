@@ -20,12 +20,12 @@ public sealed class DietologistInvitationReadService(
         UserId userId,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            userId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientSummaryModel>>(userIdResult);
         }
 
-        IReadOnlyList<DietologistInvitationReadModel> invitations = await invitationRepository.GetActiveByDietologistReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DietologistInvitationReadModel> invitations = await invitationRepository.GetActiveByDietologistReadModelsAsync(userId, cancellationToken);
         var clients = invitations.Select(invitation => invitation.ToClientSummaryModel()).ToList();
         return Result.Success<IReadOnlyList<ClientSummaryModel>>(clients);
     }
@@ -36,14 +36,13 @@ public sealed class DietologistInvitationReadService(
         int limit,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            userId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ClientSummaryModel>>(userIdResult);
         }
 
         IReadOnlyList<DietologistInvitationReadModel> invitations =
-            await invitationRepository.GetActiveByDietologistPageReadModelsAsync(userId, page, limit, cancellationToken)
-                .ConfigureAwait(false);
+            await invitationRepository.GetActiveByDietologistPageReadModelsAsync(userId, page, limit, cancellationToken);
         return Result.Success<IReadOnlyList<ClientSummaryModel>>(
             invitations.Select(invitation => invitation.ToClientSummaryModel()).ToList());
     }
@@ -52,12 +51,12 @@ public sealed class DietologistInvitationReadService(
         UserId userId,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            userId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            userId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<DietologistRelationshipModel?>(userIdResult);
         }
 
-        DietologistInvitationReadModel? accepted = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? accepted = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken);
         if (accepted is not null) {
             return Result.Success<DietologistRelationshipModel?>(accepted.ToRelationshipModel());
         }
@@ -65,7 +64,7 @@ public sealed class DietologistInvitationReadService(
         DietologistInvitationReadModel? pending = await invitationRepository.GetByClientAndStatusReadModelAsync(
             userId,
             DietologistInvitationStatus.Pending,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(pending is null ? null : pending.ToRelationshipModel());
     }
@@ -73,7 +72,7 @@ public sealed class DietologistInvitationReadService(
     async Task<Result<ProfileDietologistRelationshipModel?>> IProfileDietologistReadService.GetRelationshipAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<DietologistRelationshipModel?> result = await GetMyRelationshipAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<DietologistRelationshipModel?> result = await GetMyRelationshipAsync(userId, cancellationToken);
         if (result.IsFailure) {
             return Result.Failure<ProfileDietologistRelationshipModel?>(result.Error);
         }

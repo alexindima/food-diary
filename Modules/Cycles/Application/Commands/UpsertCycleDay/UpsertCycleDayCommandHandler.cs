@@ -36,7 +36,7 @@ public sealed class UpsertCycleDayCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleLogDayModel>(userIdResult);
         }
@@ -49,7 +49,7 @@ public sealed class UpsertCycleDayCommandHandler(
             userId,
             includeDetails: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (profile is null) {
             return Result.Failure<CycleLogDayModel>(CycleErrors.NotFound(command.CycleProfileId));
@@ -67,7 +67,7 @@ public sealed class UpsertCycleDayCommandHandler(
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate: currentDate, timeProvider: timeProvider);
         CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
 
-        await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
+        await cycleRepository.UpdateAsync(profile, cancellationToken);
         return Result.Success(profile.ToDayModel(command.Date));
     }
 

@@ -30,7 +30,7 @@ public sealed class DeclineInvitationCommandHandler(
         }
 
         DietologistInvitationId invitationId = invitationIdResult.Value;
-        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure(DietologistErrors.InvitationNotFound);
@@ -41,7 +41,7 @@ public sealed class DeclineInvitationCommandHandler(
         }
 
         invitation.Decline();
-        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken);
         await DietologistInvitationClientNotifier.NotifyDeclinedAsync(
             notificationWriter,
             notificationClientRefreshService,
@@ -49,7 +49,7 @@ public sealed class DeclineInvitationCommandHandler(
             invitation.ClientUserId,
             invitation.DietologistEmail,
             invitation.Id.Value.ToString(),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success();
     }
 }

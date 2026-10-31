@@ -13,12 +13,12 @@ public sealed class GetUserGoalsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<GoalsModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        return await userProfileReadService.GetGoalsAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await userProfileReadService.GetGoalsAsync(userId, cancellationToken);
     }
 }

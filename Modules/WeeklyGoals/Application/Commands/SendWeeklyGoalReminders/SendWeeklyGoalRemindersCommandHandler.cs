@@ -23,7 +23,7 @@ public sealed class SendWeeklyGoalRemindersCommandHandler(
                 StartOfWeek(utcNow.AddHours(14)),
                 offset,
                 BatchSize,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
             if (candidates.Count == 0) {
                 break;
             }
@@ -39,14 +39,14 @@ public sealed class SendWeeklyGoalRemindersCommandHandler(
                         goal.UserId,
                         NotificationIntent.WeeklyGoalReminder(goal.Id.Value.ToString())),
                     sendWebPush: true,
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
                 goal.MarkReminderSent(localDate, utcNow);
                 sent++;
                 sentInBatch++;
             }
 
             if (sentInBatch > 0) {
-                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             if (candidates.Count < BatchSize) {

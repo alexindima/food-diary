@@ -15,8 +15,7 @@ internal sealed class ProfileNotificationReadService(
         CancellationToken cancellationToken) {
         DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<WebPushSubscriptionReadModel> subscriptions = await webPushSubscriptionRepository
-            .GetByUserReadModelsAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserReadModelsAsync(userId, cancellationToken);
 
         return [.. subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc is null || subscription.ExpirationTimeUtc > utcNow)

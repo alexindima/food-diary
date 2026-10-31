@@ -30,7 +30,7 @@ internal static class DevelopmentMcpSourceFingerprint {
             string path = inputs[index];
             cancellationToken.ThrowIfCancellationRequested();
             string relativePath = Path.GetRelativePath(repositoryRoot, path).Replace('\\', '/');
-            byte[] content = await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
+            byte[] content = await File.ReadAllBytesAsync(path, cancellationToken);
             string line = $"{relativePath}:{Convert.ToHexString(SHA256.HashData(content)).ToLowerInvariant()}";
             fingerprint.AppendData(Encoding.UTF8.GetBytes(line));
             if (index < inputs.Length - 1) {

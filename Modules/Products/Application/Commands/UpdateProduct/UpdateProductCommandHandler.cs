@@ -27,14 +27,14 @@ public sealed class UpdateProductCommandHandler(
             command,
             currentUserAccessService,
             imageAssetAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (valuesResult.IsFailure) {
             return Result.Failure<ProductModel>(valuesResult.Error);
         }
 
         return await transactionRunner.ExecuteAsync(
             token => UpdateAsync(command, valuesResult.Value, token),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private async Task<Result<ProductModel>> UpdateAsync(
@@ -45,7 +45,7 @@ public sealed class UpdateProductCommandHandler(
             values.ProductId,
             values.UserId,
             includePublic: false,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (product is null) {
             return Result.Failure<ProductModel>(ProductErrors.NotAccessible(command.ProductId));
         }
@@ -54,7 +54,7 @@ public sealed class UpdateProductCommandHandler(
             product.Id,
             product.UserId,
             includePublic: false,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (usageCount > 0 && !IsVisibilityOnlyUpdate(command)) {
             return Result.Failure<ProductModel>(Errors.Validation.Invalid(
                 nameof(command.ProductId),
@@ -75,9 +75,9 @@ public sealed class UpdateProductCommandHandler(
                 ? [new ProductImage(imageId, imageUrl, 0)] : []);
         }
         if (product.ModifiedOnUtc != modifiedOnBefore) {
-            await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+            await productRepository.UpdateAsync(product, cancellationToken);
             foreach (ImageAssetId removed in previousImages.Where(id => id != product.ImageAssetId && !product.Images.Any(image => image.ImageAssetId == id))) {
-                await imageAssetCleanupService.DeleteIfUnusedAsync(removed, cancellationToken).ConfigureAwait(false);
+                await imageAssetCleanupService.DeleteIfUnusedAsync(removed, cancellationToken);
             }
         }
 

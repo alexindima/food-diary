@@ -24,7 +24,7 @@ public sealed class UpdateExerciseEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ExerciseEntryModel>(userIdResult);
         }
@@ -50,7 +50,7 @@ public sealed class UpdateExerciseEntryCommandHandler(
         }
 
         ExerciseEntryId entryId = entryIdResult.Value;
-        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken);
         if (entry is null) {
             return Result.Failure<ExerciseEntryModel>(ExerciseErrors.NotAccessible(command.EntryId));
         }
@@ -70,7 +70,7 @@ public sealed class UpdateExerciseEntryCommandHandler(
             command.ClearNotes,
             command.Date is { } date ? ExerciseDay.FromDateTimeEncoding(date) : null);
 
-        await repository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.UpdateAsync(entry, cancellationToken);
         return Result.Success(entry.ToModel());
     }
 }

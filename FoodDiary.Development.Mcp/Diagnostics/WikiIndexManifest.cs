@@ -18,11 +18,11 @@ internal static class WikiIndexManifest {
         try {
             FileStream stream = File.OpenRead(manifestPath);
             Manifest? manifest;
-            await using (stream.ConfigureAwait(false)) {
+            await using (stream) {
                 manifest = await JsonSerializer.DeserializeAsync<Manifest>(
                     stream,
                     JsonOptions,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                    cancellationToken: cancellationToken);
             }
             string[] paths = [.. (manifest?.Paths ?? [])
                 .Where(path => !string.IsNullOrWhiteSpace(path))

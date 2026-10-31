@@ -14,14 +14,14 @@ public sealed partial class OpenAiFoodService {
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         deadline.CancelAfter(TimeSpan.FromMinutes(3));
         try {
-            Result<UserAiProfileModel> context = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> context = await GetUserContextAsync(userId, deadline.Token);
             if (context.IsFailure) {
                 return Result.Failure<RecipeImportDraftModel>(context.Error);
             }
             if (recipeVideoProcessor is null) {
                 return Result.Failure<RecipeImportDraftModel>(AiErrors.RecipeVideoUnavailable());
             }
-            Result<RecipeAudio> audio = await recipeVideoProcessor.ExtractAudioAsync(video, sourceUrl, deadline.Token).ConfigureAwait(false);
+            Result<RecipeAudio> audio = await recipeVideoProcessor.ExtractAudioAsync(video, sourceUrl, deadline.Token);
             if (audio.IsFailure) {
                 return Result.Failure<RecipeImportDraftModel>(audio.Error);
             }
@@ -30,15 +30,15 @@ public sealed partial class OpenAiFoodService {
             long estimatedTokens = (long)Math.Ceiling(audio.Value.DurationSeconds * 64);
             var budget = new AiProviderTokenBudget(estimatedTokens, estimatedTokens);
             string transcriptionId = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(requestId + ":recipe-transcription")));
-            Result reservation = await ReserveAsync(transcriptionId, userId, "recipe-transcription", context.Value, budget, deadline.Token).ConfigureAwait(false);
+            Result reservation = await ReserveAsync(transcriptionId, userId, "recipe-transcription", context.Value, budget, deadline.Token);
             if (reservation.IsFailure) {
                 return Result.Failure<RecipeImportDraftModel>(reservation.Error);
             }
-            Result<OpenAiFoodClientResponse<string>> transcript = await openAiFoodClient.TranscribeRecipeAudioAsync(audio.Value, deadline.Token).ConfigureAwait(false);
+            Result<OpenAiFoodClientResponse<string>> transcript = await openAiFoodClient.TranscribeRecipeAudioAsync(audio.Value, deadline.Token);
             if (transcript.IsFailure) {
                 return Result.Failure<RecipeImportDraftModel>(transcript.Error);
             }
-            await ReconcileAsync(transcriptionId, transcript.Value, budget).ConfigureAwait(false);
+            await ReconcileAsync(transcriptionId, transcript.Value, budget);
             if (string.IsNullOrWhiteSpace(transcript.Value.Value) && string.IsNullOrWhiteSpace(text)) {
                 return Result.Failure<RecipeImportDraftModel>(AiErrors.RecipeNotFound());
             }
@@ -46,7 +46,7 @@ public sealed partial class OpenAiFoodService {
             if (sourceText.Length > 16000) {
                 return Result.Failure<RecipeImportDraftModel>(AiErrors.InvalidRecipeVideo());
             }
-            return await ParseRecipeSourceAsync(sourceText, audio.Value.SourceUrl, userId, requestId, context.Value, deadline.Token).ConfigureAwait(false);
+            return await ParseRecipeSourceAsync(sourceText, audio.Value.SourceUrl, userId, requestId, context.Value, deadline.Token);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             return Result.Failure<RecipeImportDraftModel>(AiErrors.RecipeVideoUnavailable());
         }

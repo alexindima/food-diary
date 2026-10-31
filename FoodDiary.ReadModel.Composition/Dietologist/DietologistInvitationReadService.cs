@@ -52,7 +52,7 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
         return await Project(context.DietologistInvitations
             .AsNoTracking()
             .Where(i => i.Id == id))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<DietologistInvitationReadModel?> GetByClientAndStatusReadModelAsync(
@@ -62,7 +62,7 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
         return await Project(context.DietologistInvitations
             .AsNoTracking()
             .Where(i => i.ClientUserId == clientUserId && i.Status == status))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<DietologistInvitationReadModel?> GetActiveByClientReadModelAsync(
@@ -71,7 +71,7 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
         return await GetByClientAndStatusReadModelAsync(
             clientUserId,
             DietologistInvitationStatus.Accepted,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     public async Task<DietologistInvitationReadModel?> GetActiveByClientAndDietologistReadModelAsync(
@@ -84,7 +84,7 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
                 i.ClientUserId == clientUserId
                 && i.DietologistUserId == dietologistUserId
                 && i.Status == DietologistInvitationStatus.Accepted))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
@@ -94,7 +94,7 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
             .AsNoTracking()
             .Where(i => i.DietologistUserId == dietologistUserId && i.Status == DietologistInvitationStatus.Accepted)
             .OrderByDescending(i => i.AcceptedAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistPageReadModelsAsync(
@@ -109,6 +109,6 @@ internal sealed class DietologistInvitationReadService(ICompositionReadContext c
             .ThenBy(i => i.Id)
             .Skip((page - 1) * limit)
             .Take(limit))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

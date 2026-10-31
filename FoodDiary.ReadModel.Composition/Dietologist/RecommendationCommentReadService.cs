@@ -23,7 +23,7 @@ internal sealed class RecommendationCommentReadService(ICompositionReadContext c
         int normalizedLimit = Math.Clamp(limit, 1, 100);
         IQueryable<RecommendationComment> query = context.RecommendationComments.AsNoTracking()
             .Where(comment => comment.RecommendationId == recommendationId);
-        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken);
         List<RecommendationCommentReadModel> items = await query
             .OrderBy(comment => comment.CreatedOnUtc)
             .ThenBy(comment => comment.Id)
@@ -32,7 +32,7 @@ internal sealed class RecommendationCommentReadService(ICompositionReadContext c
             .Join(context.Users.AsNoTracking(), comment => comment.AuthorUserId, user => user.Id, (comment, user) => new RecommendationCommentReadModel(
                 comment.Id.Value, comment.RecommendationId.Value, comment.AuthorUserId.Value,
                 user.FirstName, user.LastName, user.Email, comment.Text, comment.CreatedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return (items, total);
     }
 
@@ -58,7 +58,6 @@ internal sealed class RecommendationCommentReadService(ICompositionReadContext c
                 user.Email,
                 comment.Text,
                 comment.CreatedOnUtc))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

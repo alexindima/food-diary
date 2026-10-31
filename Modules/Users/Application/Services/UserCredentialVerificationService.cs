@@ -15,8 +15,7 @@ internal sealed class UserCredentialVerificationService(
         string password,
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository
-            .GetByIdAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByIdAsync(userId, cancellationToken);
         if (user is null) {
             return Result.Failure(UserErrors.NotFound(userId));
         }

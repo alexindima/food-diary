@@ -46,7 +46,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 EF.Functions.ILike(item.subscription.ExternalPaymentMethodId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
         List<AdminBillingSubscriptionReadModel> items = await query.AsNoTracking()
             .OrderByDescending(item => item.subscription.CreatedOnUtc).ThenByDescending(item => item.subscription.Id)
             .Skip(GetSkipCount(filter))
@@ -70,7 +70,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 item.subscription.LastSyncedAtUtc,
                 item.subscription.CreatedOnUtc,
                 item.subscription.ModifiedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }
@@ -108,7 +108,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));
         }
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
         List<AdminBillingPaymentReadModel> items = await query.AsNoTracking()
             .OrderByDescending(item => item.payment.CreatedOnUtc).ThenByDescending(item => item.payment.Id)
             .Skip(GetSkipCount(filter))
@@ -137,7 +137,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 item.payment.ModifiedOnUtc,
                 item.payment.Tax, item.payment.Fee, item.payment.Earnings,
                 item.payment.PayoutCurrency, item.payment.PayoutEarnings))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         return (items, total);
     }
 
@@ -172,7 +172,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 EF.Functions.ILike(webhookEvent.ExternalObjectId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
         List<AdminBillingWebhookEventReadModel> items = await query.AsNoTracking()
             .OrderByDescending(webhookEvent => webhookEvent.ReceivedAtUtc).ThenByDescending(webhookEvent => webhookEvent.Id)
             .Skip(GetSkipCount(filter))
@@ -192,7 +192,7 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                 webhookEvent.ReceivedAtUtc,
                 webhookEvent.AttemptCount,
                 webhookEvent.NextAttemptAtUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (items, total);
     }
@@ -241,15 +241,14 @@ public sealed class AdminBillingRepository(ICompositionReadContext context) : IA
                     payment.Earnings != null),
             })
             .OrderBy(row => row.Currency)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         int renewalRecords = await context.BillingPayments.AsNoTracking().CountAsync(payment =>
             payment.Kind == BillingPaymentKinds.Renewal && (payment.OccurredAtUtc ?? payment.CreatedOnUtc) >= fromUtc &&
-            (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc, cancellationToken).ConfigureAwait(false);
+            (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc, cancellationToken);
         int cancellations = await context.BillingSubscriptions.AsNoTracking().CountAsync(subscription =>
             subscription.CancelAtPeriodEnd && subscription.CurrentPeriodEndUtc >= fromUtc && subscription.CurrentPeriodEndUtc < toUtc,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return new AdminBillingRevenueSummaryReadModel(
             fromUtc,
             toUtc,

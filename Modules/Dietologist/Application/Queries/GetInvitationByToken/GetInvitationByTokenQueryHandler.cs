@@ -24,7 +24,7 @@ public sealed class GetInvitationByTokenQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<InvitationModel>(userIdResult);
         }
@@ -36,13 +36,13 @@ public sealed class GetInvitationByTokenQueryHandler(
             return DietologistRequiredIdParser.ToFailure<InvitationModel, DietologistInvitationId>(invitationIdResult);
         }
 
-        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(invitationIdResult.Value, cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(invitationIdResult.Value, cancellationToken);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);
         }
 
-        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserDietologistProfileModel> userResult = await dietologistUserContextService.GetAccessibleProfileAsync(userId, cancellationToken);
         if (userResult.IsFailure || !userResult.Value.IsEmailConfirmed ||
             !string.Equals(invitation.DietologistEmail, userResult.Value.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);

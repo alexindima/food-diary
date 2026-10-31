@@ -23,7 +23,7 @@ public sealed class WeeklyGoalReminderJob(
                 return;
             }
 
-            int processed = await sender.Send(new SendWeeklyGoalRemindersCommand(), cancellationToken).ConfigureAwait(false);
+            int processed = await sender.Send(new SendWeeklyGoalRemindersCommand(), cancellationToken);
             observer.RecordSuccess(JobName, processed: processed);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             logger.LogInformation("Weekly goal reminder job was canceled.");

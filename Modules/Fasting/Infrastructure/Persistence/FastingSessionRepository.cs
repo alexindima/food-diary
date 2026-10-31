@@ -9,7 +9,7 @@ namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 public sealed class FastingSessionRepository(DbSet<FastingSession> entries, TimeProvider timeProvider) : IFastingSessionRepository {
     public async Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await entries
-            .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsCompleted, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsCompleted, cancellationToken);
     }
 
     public async Task<FastingSession?> GetByIdAsync(
@@ -20,7 +20,7 @@ public sealed class FastingSessionRepository(DbSet<FastingSession> entries, Time
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(s => s.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingSession>> GetHistoryAsync(
@@ -29,14 +29,14 @@ public sealed class FastingSessionRepository(DbSet<FastingSession> entries, Time
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.StartedAtUtc >= from && s.StartedAtUtc <= to)
             .OrderByDescending(s => s.StartedAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) {
         List<FastingSession> endedSessions = await entries
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return endedSessions.Count(static s => s.IsSuccessfulCompletion);
     }
@@ -47,7 +47,7 @@ public sealed class FastingSessionRepository(DbSet<FastingSession> entries, Time
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .OrderByDescending(s => s.StartedAtUtc)
             .Take(60)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         recentSessions = [.. recentSessions.Where(static s => s.IsSuccessfulCompletion)];
 

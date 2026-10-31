@@ -25,30 +25,30 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
         string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(payload)));
         string encrypted = Protect(id, payload);
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         await context.Database.ExecuteSqlInterpolatedAsync($"""
             INSERT INTO "TelegramOperations" ("Id", "BotId", "UpdateId", "UserId", "SecurityVersion", "PayloadHash", "ProtectedPayload", "CreatedAtUtc", "NextAttemptAtUtc", "Completed")
             VALUES ({id}, {botId}, {updateId}, {storedUserId}, {securityVersion}, {hash}, {encrypted}, {now}, {now}, FALSE)
             ON CONFLICT ("BotId", "UpdateId") DO NOTHING
-            """, cancellationToken).ConfigureAwait(false);
+            """, cancellationToken);
         TelegramOperation record = await context.Set<TelegramOperation>().AsNoTracking()
-            .SingleAsync(item => item.BotId == botId && item.UpdateId == updateId, cancellationToken).ConfigureAwait(false);
+            .SingleAsync(item => item.BotId == botId && item.UpdateId == updateId, cancellationToken);
         return record.UserId == storedUserId && record.SecurityVersion == securityVersion &&
             string.Equals(record.PayloadHash, hash, StringComparison.Ordinal) ? new TelegramOperationId(record.Id) : null;
     }
 
     public async Task<IReadOnlyList<TelegramOperationId>> ListReadyAsync(long botId, CancellationToken cancellationToken) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        await ClearCompletedContentAsync(botId, cancellationToken).ConfigureAwait(false);
+        await ClearCompletedContentAsync(botId, cancellationToken);
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         List<Guid> ids = await context.Set<TelegramOperation>().AsNoTracking()
             .Where(item => item.BotId == botId && !item.Completed && item.NextAttemptAtUtc <= now &&
                 (item.LeaseExpiresAtUtc == null || item.LeaseExpiresAtUtc <= now))
             .OrderBy(item => item.NextAttemptAtUtc).ThenBy(item => item.Id).Take(50)
-            .Select(item => item.Id).ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(item => item.Id).ToListAsync(cancellationToken);
         return ids.Select(id => new TelegramOperationId(id)).ToArray();
     }
 
@@ -58,17 +58,17 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
         DateTime expires = now.AddMinutes(2);
         var leaseId = Guid.NewGuid();
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         int changed = await context.Set<TelegramOperation>()
             .Where(item => item.Id == storedOperationId && item.BotId == botId && !item.Completed && item.NextAttemptAtUtc <= now &&
                 (item.LeaseExpiresAtUtc == null || item.LeaseExpiresAtUtc <= now))
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.LeaseId, leaseId)
-                .SetProperty(item => item.LeaseExpiresAtUtc, expires), cancellationToken).ConfigureAwait(false);
+                .SetProperty(item => item.LeaseExpiresAtUtc, expires), cancellationToken);
         if (changed != 1) {
             return null;
         }
-        return await GetLeaseAsync(botId, operationId, new TelegramLeaseId(leaseId), cancellationToken).ConfigureAwait(false);
+        return await GetLeaseAsync(botId, operationId, new TelegramLeaseId(leaseId), cancellationToken);
     }
 
     public async Task<TelegramOperationLease?> GetLeaseAsync(long botId, TelegramOperationId operationId, TelegramLeaseId leaseId, CancellationToken cancellationToken) {
@@ -76,12 +76,12 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
         Guid storedLeaseId = leaseId.Value;
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         TelegramOperation? record = await context.Set<TelegramOperation>().AsNoTracking()
             .SingleOrDefaultAsync(item => item.Id == storedOperationId && item.BotId == botId && item.LeaseId == storedLeaseId &&
                 !item.Completed && item.LeaseExpiresAtUtc > now,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         if (record is null) {
             return null;
         }
@@ -101,7 +101,7 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
         }
         string? encrypted = completed ? null : Protect(storedOperationId, checkpoint);
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await context.Set<TelegramOperation>()
             .Where(item => item.Id == storedOperationId && item.BotId == botId && !item.Completed && item.LeaseId == storedLeaseId && item.LeaseExpiresAtUtc > now)
@@ -109,18 +109,18 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
                 .SetProperty(item => item.Completed, completed).SetProperty(item => item.NextAttemptAtUtc, nextAttemptAtUtc)
                 .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null)
                 .SetProperty(item => item.ProtectedPayload, item => completed ? string.Empty : item.ProtectedPayload),
-                cancellationToken).ConfigureAwait(false) == 1;
+                cancellationToken) == 1;
     }
 
     public async Task CancelUserAsync(UserId userId, CancellationToken cancellationToken) {
         Guid storedUserId = userId.Value;
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         await context.Set<TelegramOperation>().Where(item => item.UserId == storedUserId)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.Completed, valueExpression: true)
                 .SetProperty(item => item.ProtectedPayload, string.Empty).SetProperty(item => item.ProtectedCheckpoint, (string?)null)
-                .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null), cancellationToken).ConfigureAwait(false);
+                .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null), cancellationToken);
     }
 
     private async Task ClearCompletedContentAsync(long botId, CancellationToken cancellationToken) {
@@ -130,24 +130,24 @@ public sealed class TelegramOperationStore(IdentityDbContext context, IDataProte
             .Where(item => item.BotId == botId && item.Completed &&
                 (item.ProtectedPayload != string.Empty || item.ProtectedCheckpoint != null))
             .OrderBy(item => item.Id).Take(100).Select(item => item.Id)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         if (ids.Count == 0) {
             return;
         }
         await context.Set<TelegramOperation>().Where(item => item.BotId == botId && item.Completed && ids.Contains(item.Id))
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.ProtectedPayload, string.Empty)
-                .SetProperty(item => item.ProtectedCheckpoint, (string?)null), cancellationToken).ConfigureAwait(false);
+                .SetProperty(item => item.ProtectedCheckpoint, (string?)null), cancellationToken);
     }
 
     public async Task CancelOperationAsync(long botId, TelegramOperationId operationId, CancellationToken cancellationToken) {
         Guid storedOperationId = operationId.Value;
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         await context.Set<TelegramOperation>().Where(item => item.BotId == botId && item.Id == storedOperationId && !item.Completed)
             .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.Completed, valueExpression: true)
                 .SetProperty(item => item.ProtectedPayload, string.Empty).SetProperty(item => item.ProtectedCheckpoint, (string?)null)
-                .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null), cancellationToken).ConfigureAwait(false);
+                .SetProperty(item => item.LeaseId, (Guid?)null).SetProperty(item => item.LeaseExpiresAtUtc, (DateTime?)null), cancellationToken);
     }
 
     private string Protect(Guid operationId, string payload) => _protector.CreateProtector(operationId.ToString("N")).Protect(payload);

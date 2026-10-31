@@ -9,7 +9,7 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) =>
         await advices.AsNoTracking().OrderBy(advice => advice.Locale).ThenBy(advice => advice.Value).ThenBy(advice => advice.Id)
             .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight, advice.GroupId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetPageReadModelsAsync(
         int page,
@@ -19,7 +19,7 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
             .Skip((page - 1) * limit)
             .Take(limit)
             .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight, advice.GroupId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetGroupPageReadModelsAsync(
         int page,
@@ -31,14 +31,14 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
             .OrderBy(groupId => groupId)
             .Skip((page - 1) * limit)
             .Take(limit)
-            .ToArrayAsync(cancellationToken).ConfigureAwait(false);
+            .ToArrayAsync(cancellationToken);
 
         return await advices.AsNoTracking()
             .Where(advice => Enumerable.Contains(groupIds, advice.GroupId))
             .OrderBy(advice => advice.GroupId)
             .ThenBy(advice => advice.Locale)
             .Select(advice => new DailyAdviceReadModel(advice.Id.Value, advice.Locale, advice.Value, advice.Tag, advice.Weight, advice.GroupId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
@@ -56,7 +56,7 @@ public sealed class DailyAdviceRepository(DbSet<DailyAdvice> advices) : IDailyAd
                 advice.Value,
                 advice.Tag,
                 advice.Weight, advice.GroupId))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     private static string NormalizeLocale(string locale) {

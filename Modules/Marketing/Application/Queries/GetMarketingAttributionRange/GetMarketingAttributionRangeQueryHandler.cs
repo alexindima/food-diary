@@ -28,7 +28,7 @@ public sealed class GetMarketingAttributionRangeQueryHandler(IMarketingAttributi
         }
         var filter = new MarketingAttributionRangeFilter(request.FromUtc.UtcDateTime, request.ToUtc.UtcDateTime,
             request.Page, request.Limit, request.EventType, request.Channel, request.Search);
-        MarketingAttributionRangeRecord result = await repository.GetRangeAsync(filter, cancellationToken).ConfigureAwait(false);
+        MarketingAttributionRangeRecord result = await repository.GetRangeAsync(filter, cancellationToken);
         int hours = (int)Math.Ceiling((request.ToUtc - request.FromUtc).TotalHours);
         return Result.Success(new MarketingAttributionRangeModel(filter.FromUtc, filter.ToUtc, filter.FromUtc - (filter.ToUtc - filter.FromUtc),
             MarketingAttributionMappings.ToSummaryModel(result.Current, hours, now),

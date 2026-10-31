@@ -19,14 +19,13 @@ public sealed class GetShoppingListsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ShoppingListSummaryModel>>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        IReadOnlyList<ShoppingListSummaryModel> response = await GetAllAsync(userId, query, cancellationToken)
-            .ConfigureAwait(false);
+        IReadOnlyList<ShoppingListSummaryModel> response = await GetAllAsync(userId, query, cancellationToken);
 
         return Result.Success(response);
     }
@@ -36,7 +35,7 @@ public sealed class GetShoppingListsQueryHandler(
         CancellationToken cancellationToken) {
         IReadOnlyList<ShoppingListSummaryReadModel> lists = await shoppingListRepository.GetAllSummaryReadModelsAsync(
             userId,
-            cancellationToken, query.Page, query.PageSize, query.Search).ConfigureAwait(false);
+            cancellationToken, query.Page, query.PageSize, query.Search);
 
         return lists
             .Select(list => list.ToSummaryModel())

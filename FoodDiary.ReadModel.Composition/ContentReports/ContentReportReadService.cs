@@ -51,7 +51,7 @@ public sealed class ContentReportReadService(ICompositionReadContext context)
         if (filter?.TargetId is { } target) { query = query.AsNoTracking().Where(report => report.TargetId == target); }
         if (Enum.TryParse(filter?.TargetType, out ReportTargetType type)) { query = query.AsNoTracking().Where(report => report.TargetType == type); }
 
-        int total = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.AsNoTracking().CountAsync(cancellationToken);
 
         List<ContentReportAdminReadModel> items = await query.AsNoTracking()
             .OrderByDescending(r => r.CreatedOnUtc).ThenByDescending(r => r.Id)
@@ -68,22 +68,22 @@ public sealed class ContentReportReadService(ICompositionReadContext context)
                 r.CreatedOnUtc,
                 r.ReviewedAtUtc,
                 r.ReviewedByUserId.HasValue ? r.ReviewedByUserId.Value.Value : null))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         RecipeId[] recipeIds = [.. items.Where(item => string.Equals(item.TargetType, nameof(ReportTargetType.Recipe), StringComparison.Ordinal)).Select(item => new RecipeId(item.TargetId))];
         RecipeCommentId[] commentIds = [.. items.Where(item => string.Equals(item.TargetType, nameof(ReportTargetType.Comment), StringComparison.Ordinal)).Select(item => new RecipeCommentId(item.TargetId))];
         Dictionary<Guid, string> titles = await context.Recipes.AsNoTracking().Where(recipe => Enumerable.Contains(recipeIds, recipe.Id))
             .Select(recipe => new { Id = recipe.Id.Value, recipe.Name })
-            .ToDictionaryAsync(recipe => recipe.Id, recipe => recipe.Name, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(recipe => recipe.Id, recipe => recipe.Name, cancellationToken);
         Dictionary<Guid, string> excerpts = await context.RecipeComments.AsNoTracking().Where(comment => Enumerable.Contains(commentIds, comment.Id))
             .Select(comment => new { Id = comment.Id.Value, Text = comment.Text.Substring(0, Math.Min(comment.Text.Length, 1000)) })
-            .ToDictionaryAsync(comment => comment.Id, comment => comment.Text, cancellationToken).ConfigureAwait(false);
+            .ToDictionaryAsync(comment => comment.Id, comment => comment.Text, cancellationToken);
         return (items.ConvertAll(item => item with { TargetTitle = titles.GetValueOrDefault(item.TargetId), TargetExcerpt = excerpts.GetValueOrDefault(item.TargetId) }), total);
     }
 
     public async Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default) {
         return await context.ContentReports
             .AsNoTracking()
-            .CountAsync(r => r.Status == status, cancellationToken).ConfigureAwait(false);
+            .CountAsync(r => r.Status == status, cancellationToken);
     }
 }

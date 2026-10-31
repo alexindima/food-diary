@@ -11,7 +11,7 @@ internal sealed class RecommendationTemplateRepository(DbSet<RecommendationTempl
     public async Task<RecommendationTemplate> AddAsync(
         RecommendationTemplate template,
         CancellationToken cancellationToken = default) {
-        await records.AddAsync(template, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(template, cancellationToken);
         return template;
     }
 
@@ -58,7 +58,6 @@ internal sealed class RecommendationTemplateRepository(DbSet<RecommendationTempl
                 template.IsArchived,
                 template.CreatedOnUtc,
                 template.ModifiedOnUtc))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

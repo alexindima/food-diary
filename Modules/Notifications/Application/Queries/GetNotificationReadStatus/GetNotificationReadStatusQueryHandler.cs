@@ -13,13 +13,13 @@ public sealed class GetNotificationReadStatusQueryHandler(
     : IQueryHandler<GetNotificationReadStatusQuery, Result<IReadOnlyList<Guid>>> {
     public async Task<Result<IReadOnlyList<Guid>>> Handle(GetNotificationReadStatusQuery query, CancellationToken cancellationToken) {
         Result<UserId> userId = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            query.UserId, currentUserAccessService, cancellationToken);
         if (userId.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<Guid>>(userId);
         }
 
         NotificationId[] ids = [.. query.NotificationIds.Distinct().Select(id => new NotificationId(id))];
-        IReadOnlyList<Guid> readIds = await repository.GetReadIdsAsync(userId.Value, ids, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Guid> readIds = await repository.GetReadIdsAsync(userId.Value, ids, cancellationToken);
         return Result.Success(readIds);
     }
 }

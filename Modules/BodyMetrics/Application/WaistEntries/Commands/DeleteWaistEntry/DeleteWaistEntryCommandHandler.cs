@@ -27,7 +27,7 @@ public sealed class DeleteWaistEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -38,13 +38,13 @@ public sealed class DeleteWaistEntryCommandHandler(
             waistEntryId,
             userId,
             asTracking: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         if (entry is null) {
             return Result.Failure(WaistEntryErrors.NotAccessible(command.WaistEntryId));
         }
 
-        await waistEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
+        await waistEntryRepository.DeleteAsync(entry, cancellationToken);
         return Result.Success();
     }
 }

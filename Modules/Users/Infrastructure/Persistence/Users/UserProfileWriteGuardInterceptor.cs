@@ -27,7 +27,7 @@ internal sealed class UserProfileWriteGuardInterceptor : SaveChangesInterceptor 
             }
             AccountWriteState? state = await context.Database.SqlQuery<AccountWriteState>(
                 $"SELECT \"SecurityVersion\", \"DeletedAt\" FROM \"Users\" WHERE \"Id\" = {userId} FOR SHARE")
-                .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+                .SingleOrDefaultAsync(cancellationToken);
             if (state is null || state.DeletedAt is not null || (tracked is not null
                 && state.SecurityVersion != tracked.OriginalValues.GetValue<long>(nameof(User.SecurityVersion)))) {
                 throw new DbUpdateConcurrencyException("The account changed before its profile could be saved.");

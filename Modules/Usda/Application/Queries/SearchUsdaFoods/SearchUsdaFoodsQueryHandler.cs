@@ -12,13 +12,13 @@ public sealed class SearchUsdaFoodsQueryHandler(IUsdaFoodReadModelRepository rep
     public async Task<Result<IReadOnlyList<UsdaFoodModel>>> Handle(
         SearchUsdaFoodsQuery request,
         CancellationToken cancellationToken) {
-        return await SearchAsync(request.Search, request.Limit, cancellationToken).ConfigureAwait(false);
+        return await SearchAsync(request.Search, request.Limit, cancellationToken);
     }
     private async Task<Result<IReadOnlyList<UsdaFoodModel>>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<UsdaFoodReadModel> localFoods = await repository.SearchReadModelsAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFoodReadModel> localFoods = await repository.SearchReadModelsAsync(search, limit, cancellationToken);
 
         var models = localFoods
             .Select(static food => new UsdaFoodModel(food.FdcId, food.Description, food.FoodCategory))
@@ -30,7 +30,7 @@ public sealed class SearchUsdaFoodsQueryHandler(IUsdaFoodReadModelRepository rep
 
         int remaining = limit - models.Count;
         IReadOnlyList<UsdaFoodModel> brandedFoods = await brandedSearchService.SearchBrandedAsync(
-            search, remaining, cancellationToken).ConfigureAwait(false);
+            search, remaining, cancellationToken);
 
         var existingIds = models.Select(static model => model.FdcId).ToHashSet();
         IEnumerable<UsdaFoodModel> newBranded = brandedFoods.Where(food => !existingIds.Contains(food.FdcId));

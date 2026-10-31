@@ -21,23 +21,21 @@ public sealed class GetBillingOverviewQueryHandler(
         Result<UserId> userIdResult = await BillingCurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             billingUserContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return BillingCurrentUserAccessResolver.ToFailure<BillingOverviewModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
 
-        Result<UserBillingProfileModel> userProfileResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken)
-            .ConfigureAwait(false);
+        Result<UserBillingProfileModel> userProfileResult = await billingUserContextService.Send(new GetUserBillingProfileQuery(UserId: userId), cancellationToken);
         if (userProfileResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userProfileResult.Error);
         }
 
         UserBillingProfileModel userProfile = userProfileResult.Value;
         BillingSubscriptionOverviewReadModel? subscription = await billingSubscriptionRepository
-            .GetOverviewReadModelByUserIdAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetOverviewReadModelByUserIdAsync(userId, cancellationToken);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         bool isTrialActive = userProfile.PremiumTrialStartedAtUtc <= nowUtc && userProfile.PremiumTrialEndsAtUtc > nowUtc;
         bool hasUsedTrial = userProfile.PremiumTrialStartedAtUtc.HasValue || userProfile.PremiumTrialEndsAtUtc.HasValue;

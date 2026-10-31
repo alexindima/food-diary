@@ -22,8 +22,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .GetChangeContextAsync(intent, plannedPath, !includeDetailedContext, cancellationToken)
-                    .ConfigureAwait(false);
+                    .GetChangeContextAsync(intent, plannedPath, !includeDetailedContext, cancellationToken);
                 if (!includeDetailedContext) {
                     result = result.ToCompactChangeContext(includeRawOutput: includeRawOutput);
                 }
@@ -41,8 +40,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .TraceBackendFlowAsync(query, cancellationToken)
-                    .ConfigureAwait(false);
+                    .TraceBackendFlowAsync(query, cancellationToken);
                 if (!includeDetailedContext) {
                     result = result.ToCompactTrace(includeRawOutput: includeRawOutput);
                 }
@@ -65,8 +63,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, executedChecks, baseRevision, headRevision, cancellationToken)
-                    .ConfigureAwait(false);
+                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, executedChecks, baseRevision, headRevision, cancellationToken);
                 if (!includeDetailedContext) {
                     result = result.ToCompactTestPlan(includeRawOutput: includeRawOutput);
                 }
@@ -88,8 +85,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         ToolExecution.RunToolAsync(
             async () => {
                 DevelopmentContext result = await queries
-                    .GetDevelopmentContextAsync(intent, query, plannedPath, baseRevision, headRevision, cancellationToken)
-                    .ConfigureAwait(false);
+                    .GetDevelopmentContextAsync(intent, query, plannedPath, baseRevision, headRevision, cancellationToken);
                 if (!includeDetailedContext) {
                     result = result.ToCompact(includeRawOutput);
                 }

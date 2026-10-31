@@ -15,7 +15,7 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<NotificationReadModel>> GetByUserReadModelsAsync(
@@ -34,7 +34,7 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
                 n.PayloadJson,
                 n.IsRead,
                 n.CreatedOnUtc))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Notification?> GetByIdAsync(
@@ -45,7 +45,7 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
             query = query.AsNoTracking();
         }
 
-        return await query.FirstOrDefaultAsync(n => n.Id == id, cancellationToken).ConfigureAwait(false);
+        return await query.FirstOrDefaultAsync(n => n.Id == id, cancellationToken);
     }
 
     public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
@@ -69,17 +69,17 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
                 n => n.UserId == userId &&
                     n.Type == type &&
                     n.ReferenceId == referenceId,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await notifications
-            .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken).ConfigureAwait(false);
+            .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) {
         return await notifications
-            .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken).ConfigureAwait(false);
+            .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken);
     }
 
     public async Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) {
@@ -91,7 +91,7 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
                 .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, now)
                 .SetProperty(n => n.ModifiedOnUtc, now),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<int> DeleteExpiredBatchAsync(
@@ -120,7 +120,7 @@ public sealed class NotificationRepository(DbSet<Notification> notifications, Ti
                   (!n.IsRead && n.CreatedOnUtc < standardUnreadOlderThanUtc))))
             .OrderBy(n => n.CreatedOnUtc)
             .Take(batchSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         if (candidates.Count == 0) {
             return 0;

@@ -10,9 +10,9 @@ namespace FoodDiary.Modules.Products.Infrastructure.Persistence.Products;
 public sealed class ProductRepository(ProductsDbContext context, IProductUsageQuery usageQuery, Func<CancellationToken, Task>? synchronizeTransactionAsync = null) : IProductRepository {
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        await context.Products.AddAsync(product, cancellationToken).ConfigureAwait(false);
+        await context.Products.AddAsync(product, cancellationToken);
         return product;
     }
 
@@ -22,7 +22,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         return await context.Products
             .AsNoTracking()
@@ -30,7 +30,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
                 p => p.Id == id && (includePublic
                     ? p.UserId == userId || p.Visibility == Visibility.Public
                     : p.UserId == userId),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
     }
 
     public async Task<Product?> GetByIdForUpdateAsync(
@@ -39,7 +39,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         if (context.Database.CurrentTransaction is null || !context.Database.IsRelational()) {
             return await context.Products
@@ -48,7 +48,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
                     p => p.Id == id && (includePublic
                         ? p.UserId == userId || p.Visibility == Visibility.Public
                         : p.UserId == userId),
-                    cancellationToken).ConfigureAwait(false);
+                    cancellationToken);
         }
 
         IQueryable<Product> lockedProducts = includePublic
@@ -56,7 +56,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
                 $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND ("UserId" = {userId.Value} OR "Visibility" = {(int)Visibility.Public}) FOR UPDATE""")
             : context.Products.FromSqlInterpolated(
                 $"""SELECT *, xmin FROM "Products" WHERE "Id" = {id.Value} AND "UserId" = {userId.Value} FOR UPDATE""");
-        return await lockedProducts.AsSplitQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        return await lockedProducts.AsSplitQuery().SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
@@ -65,7 +65,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         var productIds = ids.Distinct().ToList();
         if (productIds.Count == 0) {
@@ -77,7 +77,7 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
             ? p.UserId == userId || p.Visibility == Visibility.Public
             : p.UserId == userId));
 
-        List<Product> products = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+        List<Product> products = await query.ToListAsync(cancellationToken);
         return products.ToDictionary(p => p.Id);
     }
 
@@ -90,17 +90,17 @@ public sealed class ProductRepository(ProductsDbContext context, IProductUsageQu
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         context.Products.Update(product);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
-        Product? tracked = await context.Products.FindAsync([product.Id], cancellationToken).ConfigureAwait(false);
+        Product? tracked = await context.Products.FindAsync([product.Id], cancellationToken);
         if (tracked is not null) {
             context.Products.Remove(tracked);
         }

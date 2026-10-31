@@ -24,12 +24,12 @@ public static class OwnedFixtureCleanupExtensions {
                 throw new InvalidOperationException("Fixture cleanup requires an owned Development task configuration.");
             }
             string runtimeDirectory = Path.GetDirectoryName(Path.GetFullPath(configuration))!;
-            using var runtime = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(runtimeDirectory, "runtime.json"), cancellationToken).ConfigureAwait(false));
+            using var runtime = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(runtimeDirectory, "runtime.json"), cancellationToken));
             string checkout = runtime.RootElement.GetProperty("checkout").GetString()!;
             string name = Path.GetFileName(runtimeDirectory);
             string expectedDirectory = Path.GetFullPath(Path.Combine(checkout, ".artifacts", "task-runtime", name));
             string manifestPath = Path.GetFullPath(args[flag + 1]);
-            using var manifest = JsonDocument.Parse(await File.ReadAllTextAsync(manifestPath, cancellationToken).ConfigureAwait(false));
+            using var manifest = JsonDocument.Parse(await File.ReadAllTextAsync(manifestPath, cancellationToken));
             Guid runId = manifest.RootElement.GetProperty("runId").GetGuid();
             string expectedManifest = Path.Combine(expectedDirectory, "fixtures", runId.ToString("D"), "manifest.json");
             var database = new DbConnectionStringBuilder { ConnectionString = app.Configuration.GetConnectionString("DefaultConnection") };
@@ -48,11 +48,11 @@ public static class OwnedFixtureCleanupExtensions {
                 throw new InvalidOperationException("Fixture object keys must remain within the owned user scope.");
             }
             AsyncServiceScope scope = app.Services.CreateAsyncScope();
-            await using (scope.ConfigureAwait(false)) {
+            await using (scope) {
                 int removed = await scope.ServiceProvider.GetRequiredService<ISender>().Send(
-                    new PurgeOwnedFixtureUsersCommand(runId, ids, scope.ServiceProvider.GetRequiredService<TimeProvider>().GetUtcNow().UtcDateTime), cancellationToken).ConfigureAwait(false);
+                    new PurgeOwnedFixtureUsersCommand(runId, ids, scope.ServiceProvider.GetRequiredService<TimeProvider>().GetUtcNow().UtcDateTime), cancellationToken);
                 int deletedObjects = await scope.ServiceProvider.GetRequiredService<ISender>().Send(
-                    new ProcessOwnedImageDeletionsCommand(ids, keys), cancellationToken).ConfigureAwait(false);
+                    new ProcessOwnedImageDeletionsCommand(ids, keys), cancellationToken);
                 Console.WriteLine(JsonSerializer.Serialize(new { fixtureRunId = runId, removedUsers = removed, processedImageDeletions = deletedObjects }));
             }
             return true;

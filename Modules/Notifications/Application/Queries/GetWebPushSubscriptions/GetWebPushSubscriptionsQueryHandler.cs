@@ -20,7 +20,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WebPushSubscriptionModel>>(userIdResult);
         }
@@ -28,8 +28,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         UserId userId = userIdResult.Value;
         DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<WebPushSubscriptionReadModel> subscriptions = await webPushSubscriptionRepository
-            .GetByUserReadModelsAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetByUserReadModelsAsync(userId, cancellationToken);
 
         IReadOnlyList<WebPushSubscriptionModel> activeSubscriptions = [.. subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc is null || subscription.ExpirationTimeUtc > utcNow)

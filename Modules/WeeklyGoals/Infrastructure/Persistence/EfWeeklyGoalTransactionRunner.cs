@@ -15,9 +15,9 @@ public sealed class EfWeeklyGoalTransactionRunner(IModuleTransactionCoordinator 
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
         return await coordinator.ExecuteAsync(async (transaction, token) => {
-            await AcquireLockAsync(userId, weekStartUtc, transaction, token).ConfigureAwait(false);
-            return await operation(token).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
+            await AcquireLockAsync(userId, weekStartUtc, transaction, token);
+            return await operation(token);
+        }, cancellationToken);
     }
 
     private static async Task AcquireLockAsync(
@@ -30,12 +30,12 @@ public sealed class EfWeeklyGoalTransactionRunner(IModuleTransactionCoordinator 
             "SELECT pg_advisory_xact_lock(hashtextextended(@serialization_key, 0))",
             postgresTransaction.Connection,
             postgresTransaction);
-        await using (command.ConfigureAwait(false)) {
+        await using (command) {
             command.Parameters.AddWithValue(
                 "serialization_key",
                 NpgsqlDbType.Text,
                 $"weekly-goal:{userId.Value:N}:{weekStartUtc:O}");
-            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

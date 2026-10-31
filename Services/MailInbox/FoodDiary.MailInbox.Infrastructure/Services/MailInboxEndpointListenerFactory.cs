@@ -30,10 +30,10 @@ public sealed class MailInboxEndpointListenerFactory(IOptions<MailInboxSmtpOptio
         public async Task<ISecurableDuplexPipe> GetPipeAsync(
             ISessionContext context,
             CancellationToken cancellationToken) {
-            await limiter.WaitForGlobalSlotAsync(cancellationToken).ConfigureAwait(false);
+            await limiter.WaitForGlobalSlotAsync(cancellationToken);
             ISecurableDuplexPipe? pipe = null;
             try {
-                pipe = await inner.GetPipeAsync(context, cancellationToken).ConfigureAwait(false);
+                pipe = await inner.GetPipeAsync(context, cancellationToken);
                 string sourceKey = GetSourceKey(context);
                 if (!limiter.TryAcquireSource(sourceKey)) {
                     pipe.Dispose();

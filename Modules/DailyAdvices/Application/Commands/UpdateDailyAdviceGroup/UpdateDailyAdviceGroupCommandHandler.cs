@@ -21,7 +21,7 @@ public sealed class UpdateDailyAdviceGroupCommandHandler(IDailyAdviceWriteReposi
         } catch (ArgumentException exception) {
             return Result.Failure<DailyAdviceGroupModel>(Errors.Validation.Invalid("advice", exception.Message));
         }
-        IReadOnlyList<DailyAdvice> items = await repository.GetGroupAsync(request.Id, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<DailyAdvice> items = await repository.GetGroupAsync(request.Id, cancellationToken);
         if (items.Count == 0) {
             return Result.Failure<DailyAdviceGroupModel>(DailyAdviceErrors.NotFound());
         }
@@ -36,7 +36,7 @@ public sealed class UpdateDailyAdviceGroupCommandHandler(IDailyAdviceWriteReposi
             }
         }
         if (additions.Count > 0) {
-            await repository.AddRangeAsync(additions, cancellationToken).ConfigureAwait(false);
+            await repository.AddRangeAsync(additions, cancellationToken);
         }
         return Result.Success(new DailyAdviceGroupModel(request.Id, replacements[0].Value,
             replacements[1].Value, replacements[0].Weight, replacements[0].Tag));

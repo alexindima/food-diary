@@ -26,7 +26,7 @@ public sealed class GenerateShoppingListCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ShoppingListModel>(userIdResult);
         }
@@ -45,14 +45,14 @@ public sealed class GenerateShoppingListCommandHandler(
             planId,
             userIdResult.Value,
             includeDays: true,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (plan is null) {
             return Result.Failure<ShoppingListModel>(MealPlanErrors.NotFound(command.PlanId));
         }
 
         return await shoppingListCreationService.CreateAsync(
             CreateShoppingListRequest(userIdResult.Value, plan),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
     }
 
     private static ShoppingListCreationRequest CreateShoppingListRequest(UserId userId, MealPlan plan) =>

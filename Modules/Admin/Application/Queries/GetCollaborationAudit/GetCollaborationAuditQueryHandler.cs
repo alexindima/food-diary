@@ -15,7 +15,7 @@ public sealed class GetCollaborationAuditQueryHandler(IAuditEntryReadService rea
         IReadOnlyList<AuditEntryReadModel> entries = await readService.GetRecentAsync(
             query.ClientUserId,
             limit,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success<IReadOnlyList<AdminAuditEntryModel>>([
             .. entries.Select(entry => new AdminAuditEntryModel(
                 entry.Id,

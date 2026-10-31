@@ -11,7 +11,7 @@ public sealed class GetAdminUserLoginSummaryQueryHandler(ISender sender)
     : IQueryHandler<GetAdminUserLoginSummaryQuery, Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> Handle(GetAdminUserLoginSummaryQuery query, CancellationToken cancellationToken) {
         IReadOnlyList<UserLoginDeviceSummaryModel> summary =
-            await sender.Send(new GetLoginDeviceSummaryQuery(query.FromUtc, query.ToUtc), cancellationToken).ConfigureAwait(false);
+            await sender.Send(new GetLoginDeviceSummaryQuery(query.FromUtc, query.ToUtc), cancellationToken);
 
         return Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>(summary
             .Select(static item => new AdminUserLoginDeviceSummaryModel(item.Key, item.Count, item.LastSeenAtUtc))

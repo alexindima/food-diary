@@ -7,7 +7,7 @@ public sealed class GetMailRelayMessageDetailsQueryHandler(MailRelayEmailUseCase
     public async Task<Result<MailRelayMessageDetails>> Handle(
         GetMailRelayMessageDetailsQuery request,
         CancellationToken cancellationToken) {
-        MailRelayMessageDetails? message = await useCases.GetMessageDetailsAsync(request.Id, cancellationToken).ConfigureAwait(false);
+        MailRelayMessageDetails? message = await useCases.GetMessageDetailsAsync(request.Id, cancellationToken);
         return message is null
             ? Result.Failure<MailRelayMessageDetails>(MailRelayErrors.MessageNotFound(request.Id))
             : Result.Success(message);

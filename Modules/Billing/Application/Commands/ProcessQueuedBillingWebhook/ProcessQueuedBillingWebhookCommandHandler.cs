@@ -18,7 +18,7 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
     BillingWebhookContextResolver contextResolver) : IRequestHandler<ProcessQueuedBillingWebhookCommand, Result> {
     public async Task<Result> Handle(ProcessQueuedBillingWebhookCommand request, CancellationToken cancellationToken) {
         var eventId = (BillingWebhookEventId)request.WebhookEventId;
-        BillingWebhookEvent? inboxEvent = await events.GetByIdAsync(eventId, cancellationToken).ConfigureAwait(false);
+        BillingWebhookEvent? inboxEvent = await events.GetByIdAsync(eventId, cancellationToken);
         if (inboxEvent is null || inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
             return Result.Success();
         }
@@ -30,8 +30,8 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
             if (webhookEvent is null) {
                 result = Result.Failure(BillingErrors.WebhookValidationFailed("Stored webhook event is empty."));
             } else {
-                serializationKey = await contextResolver.GetSerializationKeyAsync(inboxEvent.Provider, webhookEvent, cancellationToken).ConfigureAwait(false);
-                result = await processor.ProcessAsync(inboxEvent.Provider, inboxEvent.PayloadJson ?? "{}", webhookEvent, inboxEvent, cancellationToken).ConfigureAwait(false);
+                serializationKey = await contextResolver.GetSerializationKeyAsync(inboxEvent.Provider, webhookEvent, cancellationToken);
+                result = await processor.ProcessAsync(inboxEvent.Provider, inboxEvent.PayloadJson ?? "{}", webhookEvent, inboxEvent, cancellationToken);
             }
         } catch (OperationCanceledException) {
             throw;
@@ -45,15 +45,15 @@ public sealed class ProcessQueuedBillingWebhookCommandHandler(
         }
 
         await transactions.ExecuteSerializedAsync(serializationKey, async ct => {
-            inboxEvent = await events.GetByIdAsync(eventId, ct).ConfigureAwait(false)
+            inboxEvent = await events.GetByIdAsync(eventId, ct)
                 ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
             if (inboxEvent.ProcessingState == BillingWebhookProcessingState.Processed) {
                 result = Result.Success();
                 return;
             }
             inboxEvent.MarkFailed(timeProvider.GetUtcNow().UtcDateTime, result.Error.Message);
-            await events.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);
-        }, cancellationToken).ConfigureAwait(false);
+            await events.UpdateAsync(inboxEvent, ct);
+        }, cancellationToken);
         return result;
     }
 }

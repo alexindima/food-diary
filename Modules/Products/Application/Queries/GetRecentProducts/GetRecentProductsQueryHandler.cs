@@ -19,7 +19,7 @@ public sealed class GetRecentProductsQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<ProductModel>>(userIdResult);
         }
@@ -31,7 +31,7 @@ public sealed class GetRecentProductsQueryHandler(
             userId,
             recentLimit,
             query.IncludePublic,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return Result.Success(response);
     }
@@ -44,7 +44,7 @@ public sealed class GetRecentProductsQueryHandler(
             userId,
             limit,
             includePublic,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return [.. items.Select(item => item.ToModel())];
     }

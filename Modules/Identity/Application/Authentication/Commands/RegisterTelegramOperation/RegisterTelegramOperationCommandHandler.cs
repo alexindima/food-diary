@@ -20,12 +20,12 @@ public sealed class RegisterTelegramOperationCommandHandler(ITelegramOperationSt
             return Result.Failure<TelegramOperationId>(TelegramOperationChecks.Invalid);
         }
         Result<UserAuthenticationPrincipalModel> principal = await identities.AuthenticateTelegramAsync(telegramUserId,
-            timeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false);
+            timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
         if (principal.IsFailure) {
             return Result.Failure<TelegramOperationId>(principal.Error);
         }
         TelegramOperationId? id = await store.RegisterAsync(policy.BotId, updateId, principal.Value.UserId,
-            principal.Value.SecurityVersion, payload, cancellationToken).ConfigureAwait(false);
+            principal.Value.SecurityVersion, payload, cancellationToken);
         return id.HasValue ? Result.Success(id.Value) : Result.Failure<TelegramOperationId>(TelegramOperationChecks.Conflict);
     }
 }

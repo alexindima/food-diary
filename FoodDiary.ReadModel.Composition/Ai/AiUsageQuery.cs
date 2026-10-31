@@ -17,16 +17,16 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
         CancellationToken cancellationToken = default) {
         IQueryable<AiUsage> query = CreateSummaryQuery(fromUtc, toUtc).AsNoTracking();
 
-        return await ReadSummaryAsync(query, cancellationToken).ConfigureAwait(false);
+        return await ReadSummaryAsync(query, cancellationToken);
     }
 
     private async Task<AiUsageSummary> ReadSummaryAsync(IQueryable<AiUsage> query, CancellationToken cancellationToken) {
 
-        AiUsageTotalsRow? totals = await GetSummaryTotalsAsync(query, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<AiUsageDailySummary> daily = await GetDailySummaryAsync(query, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<AiUsageBreakdown> byOperation = await GetBreakdownByOperationAsync(query, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<AiUsageBreakdown> byModel = await GetBreakdownByModelAsync(query, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<AiUsageUserSummary> byUser = await GetBreakdownByUserAsync(query, cancellationToken).ConfigureAwait(false);
+        AiUsageTotalsRow? totals = await GetSummaryTotalsAsync(query, cancellationToken);
+        IReadOnlyList<AiUsageDailySummary> daily = await GetDailySummaryAsync(query, cancellationToken);
+        IReadOnlyList<AiUsageBreakdown> byOperation = await GetBreakdownByOperationAsync(query, cancellationToken);
+        IReadOnlyList<AiUsageBreakdown> byModel = await GetBreakdownByModelAsync(query, cancellationToken);
+        IReadOnlyList<AiUsageUserSummary> byUser = await GetBreakdownByUserAsync(query, cancellationToken);
 
         return new AiUsageSummary(
             totals?.TotalTokens ?? 0,
@@ -51,7 +51,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
                 group.Sum(x => x.TotalTokens),
                 group.Sum(x => x.InputTokens),
                 group.Sum(x => x.OutputTokens)))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
     private static async Task<IReadOnlyList<AiUsageDailySummary>> GetDailySummaryAsync(
@@ -66,7 +66,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
                 Output = group.Sum(x => x.OutputTokens),
             })
             .OrderBy(x => x.Date)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return byDay
             .ConvertAll(x => new AiUsageDailySummary(
@@ -88,7 +88,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
                 Output = group.Sum(x => x.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return byOperationRaw
             .ConvertAll(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output));
@@ -106,7 +106,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
                 Output = group.Sum(x => x.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return byModelRaw
             .ConvertAll(x => new AiUsageBreakdown(x.Key, x.Total, x.Input, x.Output));
@@ -130,7 +130,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
                 Output = group.Sum(x => x.usage.OutputTokens),
             })
             .OrderByDescending(x => x.Total)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return byUserRaw
             .ConvertAll(x => new AiUsageUserSummary(new UserId(x.Id), x.Email, x.Total, x.Input, x.Output));
@@ -148,7 +148,7 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
             .Select(group => new AiUsageTotals(
                 group.Sum(x => (long)x.InputTokens),
                 group.Sum(x => (long)x.OutputTokens)))
-            .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(cancellationToken);
 
         return totals ?? new AiUsageTotals(0, 0);
     }

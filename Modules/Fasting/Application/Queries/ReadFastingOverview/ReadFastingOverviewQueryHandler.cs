@@ -15,12 +15,12 @@ public sealed class ReadFastingOverviewQueryHandler(IFastingOccurrenceReadModelR
     public async Task<FastingOverviewModel> Handle(ReadFastingOverviewQuery request, CancellationToken cancellationToken) {
         UserId userId = request.UserId;
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceReadModel? current = await GetCurrentOccurrenceAsync(userId, cancellationToken);
         IReadOnlyList<FastingCheckInReadModel> currentCheckIns = current is null
             ? []
-            : await GetCheckInsAsync(current, cancellationToken).ConfigureAwait(false);
-        FastingStatsModel stats = await fastingAnalyticsService.GetStatsAsync(userId, now, cancellationToken).ConfigureAwait(false);
-        FastingInsightsModel insights = await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken).ConfigureAwait(false);
+            : await GetCheckInsAsync(current, cancellationToken);
+        FastingStatsModel stats = await fastingAnalyticsService.GetStatsAsync(userId, now, cancellationToken);
+        FastingInsightsModel insights = await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken);
         (DateTime fromUtc, DateTime toUtc) = fastingAnalyticsService.GetDefaultHistoryWindow(now);
         PagedResponse<FastingSessionModel> history = await fastingAnalyticsService.GetHistoryAsync(
             userId,
@@ -28,7 +28,7 @@ public sealed class ReadFastingOverviewQueryHandler(IFastingOccurrenceReadModelR
             OverviewHistoryPageSize,
             fromUtc,
             toUtc,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return new FastingOverviewModel(
             current?.ToModel(current.Plan, currentCheckIns),

@@ -25,13 +25,13 @@ public sealed class GetImageUploadUrlCommandHandler(
                 request.FileName,
                 request.ContentType,
                 request.FileSizeBytes,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         } catch (Exception ex) when (ex is ArgumentException or ArgumentOutOfRangeException or InvalidOperationException) {
             return Result.Failure<GetImageUploadUrlResult>(ImageErrors.InvalidData(ex.Message));
         }
 
         var asset = ImageAsset.CreateWithLocation(userId, presign.ObjectKey, presign.FileUrl);
-        asset = await imageAssetRepository.AddAsync(asset, cancellationToken).ConfigureAwait(false);
+        asset = await imageAssetRepository.AddAsync(asset, cancellationToken);
 
         return Result.Success(new GetImageUploadUrlResult(
             presign.UploadUrl.Value,

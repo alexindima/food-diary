@@ -8,7 +8,7 @@ namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 
 public sealed class FastingCheckInRepository(DbSet<FastingCheckIn> entries) : IFastingCheckInRepository {
     public async Task AddAsync(FastingCheckIn checkIn, CancellationToken cancellationToken = default) {
-        await entries.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
+        await entries.AddAsync(checkIn, cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingCheckIn>> GetByOccurrenceIdsAsync(
@@ -22,7 +22,7 @@ public sealed class FastingCheckInRepository(DbSet<FastingCheckIn> entries) : IF
             .AsNoTracking()
             .Where(x => occurrenceIds.Contains(x.OccurrenceId))
             .OrderByDescending(x => x.CheckedInAtUtc)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<FastingCheckInReadModel>> GetByOccurrenceIdReadModelsAsync(
@@ -45,6 +45,6 @@ public sealed class FastingCheckInRepository(DbSet<FastingCheckIn> entries) : IF
                 checkIn.MoodLevel,
                 checkIn.Symptoms,
                 checkIn.Notes))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 }

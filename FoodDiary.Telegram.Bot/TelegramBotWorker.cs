@@ -36,12 +36,12 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        User me = await GetMeWithRetryAsync(stoppingToken).ConfigureAwait(false);
+        User me = await GetMeWithRetryAsync(stoppingToken);
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         if (_options.OperationsEnabled) {
             var receiver = new DurableTelegramReceiver(botClient, PersistOrHandleUpdateAsync, timeProvider, logger);
-            await receiver.RunAsync(stoppingToken).ConfigureAwait(false);
+            await receiver.RunAsync(stoppingToken);
             return;
         }
 
@@ -55,7 +55,7 @@ public sealed class TelegramBotWorker(
             receiverOptions,
             cancellationToken: stoppingToken);
 
-        await WaitForStopAsync(stoppingToken).ConfigureAwait(false);
+        await WaitForStopAsync(stoppingToken);
         logger.LogInformation("Telegram bot stopping.");
     }
 
@@ -63,7 +63,7 @@ public sealed class TelegramBotWorker(
         TimeSpan retryDelay = StartupErrorInitialRetryDelay;
         while (true) {
             try {
-                return await botClient.GetMe(stoppingToken).ConfigureAwait(false);
+                return await botClient.GetMe(stoppingToken);
             } catch (RequestException exception) when (IsTransientStartupFailure(exception)) {
                 object failureCode = exception is ApiRequestException apiRequestException
                     ? apiRequestException.ErrorCode
@@ -72,7 +72,7 @@ public sealed class TelegramBotWorker(
                     "Telegram bot startup request failed ({FailureCode}); retrying in {RetryDelaySeconds} seconds.",
                     failureCode,
                     retryDelay.TotalSeconds);
-                await Task.Delay(retryDelay, timeProvider, stoppingToken).ConfigureAwait(false);
+                await Task.Delay(retryDelay, timeProvider, stoppingToken);
                 retryDelay = TimeSpan.FromSeconds(Math.Min(
                     retryDelay.TotalSeconds * 2,
                     StartupErrorMaxRetryDelay.TotalSeconds));
@@ -93,14 +93,14 @@ public sealed class TelegramBotWorker(
         var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         CancellationTokenRegistration registration = stoppingToken.Register(static state =>
             ((TaskCompletionSource)state!).TrySetResult(), stopped);
-        await using (registration.ConfigureAwait(false)) {
-            await stopped.Task.ConfigureAwait(false);
+        await using (registration) {
+            await stopped.Task;
         }
     }
 
     private async Task PersistOrHandleUpdateAsync(Update update, CancellationToken cancellationToken) {
         try {
-            await PersistOrHandleUpdateCoreAsync(update, cancellationToken).ConfigureAwait(false);
+            await PersistOrHandleUpdateCoreAsync(update, cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 403) {
             // A permanently rejected Telegram reply must not hold the shared intake offset.
             // Backend registration failures use BotOperationApiException and still propagate.
@@ -135,31 +135,31 @@ public sealed class TelegramBotWorker(
             }
         }
         if (operation is null) {
-            await HandleUpdateAsync(botClient, update, cancellationToken).ConfigureAwait(false);
+            await HandleUpdateAsync(botClient, update, cancellationToken);
             return;
         }
         using HttpClient http = httpClientFactory.CreateClient(BotOperationClient.ClientName);
         var client = new BotOperationClient(http, options);
         try {
-            await client.RegisterAsync(update.Id, operation.TelegramUserId, JsonSerializer.Serialize(operation), cancellationToken).ConfigureAwait(false);
+            await client.RegisterAsync(update.Id, operation.TelegramUserId, JsonSerializer.Serialize(operation), cancellationToken);
         } catch (BotOperationApiException error) when (error.ErrorCode is "Authentication.TelegramNotLinked" or
             "Authentication.InvalidToken" or "Authentication.AccountDeleted") {
             string instruction = operation.Language?.StartsWith("ru", StringComparison.OrdinalIgnoreCase) == true
                 ? "Откройте Food Diary, чтобы войти в аккаунт или подключить Telegram."
                 : "Open Food Diary to sign in or connect Telegram.";
             await botClient.SendMessage(operation.ChatId, instruction,
-                replyMarkup: BotMenu.Open(_options, operation.Language, "/auth/telegram"), cancellationToken: cancellationToken).ConfigureAwait(false);
+                replyMarkup: BotMenu.Open(_options, operation.Language, "/auth/telegram"), cancellationToken: cancellationToken);
         } catch (BotOperationApiException error) when (string.Equals(error.ErrorCode, "Telegram.OperationConflict", StringComparison.Ordinal)) {
             // The durable update belongs to a different binding or payload; do not replay it under a new account.
         }
         if (operation.CallbackId is { } callbackId) {
-            await AnswerCallbackAsync(callbackId, message: null, cancellationToken).ConfigureAwait(false);
+            await AnswerCallbackAsync(callbackId, message: null, cancellationToken);
         }
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient tBotClient, Update update, CancellationToken cancellationToken) {
         if (update is { Type: UpdateType.CallbackQuery, CallbackQuery: not null }) {
-            await HandleCallbackAsync(update.CallbackQuery, cancellationToken).ConfigureAwait(false);
+            await HandleCallbackAsync(update.CallbackQuery, cancellationToken);
             return;
         }
 
@@ -182,7 +182,7 @@ public sealed class TelegramBotWorker(
                 (_, true) => "Изображение не подходит для загрузки. Отправьте файл размером до 20 МБ.",
                 _ => "This image cannot be uploaded. Send a file up to 20 MB.",
             };
-            await botClient.SendMessage(message.Chat.Id, explanation, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await botClient.SendMessage(message.Chat.Id, explanation, cancellationToken: cancellationToken);
             return;
         }
         if (string.IsNullOrWhiteSpace(message.Text)) {
@@ -191,24 +191,24 @@ public sealed class TelegramBotWorker(
 
         switch (message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0]) {
             case "/start":
-                await SendStartAsync(message.Chat.Id, message.From?.Id, message.From?.LanguageCode, cancellationToken).ConfigureAwait(false);
+                await SendStartAsync(message.Chat.Id, message.From?.Id, message.From?.LanguageCode, cancellationToken);
                 return;
             case "/water":
-                await SendWaterMenuAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken).ConfigureAwait(false);
+                await SendWaterMenuAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken);
                 return;
             case "/settings":
                 await botClient.SendMessage(message.Chat.Id,
                     BotMenu.IsRussian(message.From?.LanguageCode) ? "Настройки аккаунта:" : "Account settings:",
-                    replyMarkup: BotMenu.Open(_options, message.From?.LanguageCode, "/profile"), cancellationToken: cancellationToken).ConfigureAwait(false);
+                    replyMarkup: BotMenu.Open(_options, message.From?.LanguageCode, "/profile"), cancellationToken: cancellationToken);
                 return;
             default:
-                await SendHelpAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken).ConfigureAwait(false);
+                await SendHelpAsync(message.Chat.Id, message.From?.LanguageCode, cancellationToken);
                 return;
         }
     }
 
     private async Task SendStartAsync(long chatId, long? telegramUserId, string? language, CancellationToken cancellationToken) {
-        bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
+        bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken);
         if (!isLinked) {
             string notLinkedText = BotMenu.IsRussian(language) ? "Откройте FoodDiary, чтобы войти или создать аккаунт через Telegram." : "To use the bot, open the WebApp once and log in or register.";
             InlineKeyboardMarkup? markup = BotMenu.Open(_options, language, "/auth/telegram");
@@ -216,7 +216,7 @@ public sealed class TelegramBotWorker(
                 chatId,
                 notLinkedText,
                 replyMarkup: markup,
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken);
             return;
         }
 
@@ -226,7 +226,7 @@ public sealed class TelegramBotWorker(
             chatId,
             text,
             replyMarkup: keyboard,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
     }
 
     private Task SendHelpAsync(long chatId, string? language, CancellationToken cancellationToken) {
@@ -249,30 +249,30 @@ public sealed class TelegramBotWorker(
         }
 
         if (callbackQuery.Data is "menu:food" or "menu:water" or "menu:help") {
-            await HandleMenuCallbackAsync(callbackQuery, cancellationToken).ConfigureAwait(false);
+            await HandleMenuCallbackAsync(callbackQuery, cancellationToken);
             return;
         }
 
         if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal)) {
             bool russian = BotMenu.IsRussian(callbackQuery.From.LanguageCode);
             if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out int amountMl)) {
-                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Некорректный объём." : "Invalid amount.", cancellationToken).ConfigureAwait(false);
+                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Некорректный объём." : "Invalid amount.", cancellationToken);
                 return;
             }
 
-            string? accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken).ConfigureAwait(false);
+            string? accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken);
             if (accessToken is null) {
-                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Откройте FoodDiary и войдите в аккаунт." : "Please open the WebApp and log in once.", cancellationToken).ConfigureAwait(false);
+                await AnswerCallbackAsync(callbackQuery.Id, russian ? "Откройте FoodDiary и войдите в аккаунт." : "Please open the WebApp and log in once.", cancellationToken);
                 return;
             }
 
-            bool success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken).ConfigureAwait(false);
+            bool success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken);
             string notice = russian ? "Не удалось добавить воду." : "Failed to add water.";
             if (success) {
                 notice = russian ? string.Create(CultureInfo.InvariantCulture, $"Добавлено {amountMl} мл.")
                     : string.Create(CultureInfo.InvariantCulture, $"Added {amountMl} ml.");
             }
-            await AnswerCallbackAsync(callbackQuery.Id, notice, cancellationToken).ConfigureAwait(false);
+            await AnswerCallbackAsync(callbackQuery.Id, notice, cancellationToken);
         }
     }
 
@@ -280,21 +280,21 @@ public sealed class TelegramBotWorker(
         string? language = callback.From.LanguageCode;
         long chatId = callback.Message!.Chat.Id;
         if (string.Equals(callback.Data, "menu:water", StringComparison.Ordinal)) {
-            await SendWaterMenuAsync(chatId, language, cancellationToken).ConfigureAwait(false);
+            await SendWaterMenuAsync(chatId, language, cancellationToken);
         } else if (string.Equals(callback.Data, "menu:food", StringComparison.Ordinal) && _options.OperationsEnabled) {
             await botClient.SendMessage(chatId, BotMenu.IsRussian(language)
                 ? "Отправьте одно фото еды. После распознавания запись сохранится автоматически. При необходимости нажмите «Отменить» в ответе."
                 : "Send one food photo. The entry will be saved automatically after recognition. Use Undo in the reply if needed.",
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken);
         } else {
-            await SendHelpAsync(chatId, language, cancellationToken).ConfigureAwait(false);
+            await SendHelpAsync(chatId, language, cancellationToken);
         }
-        await AnswerCallbackAsync(callback.Id, message: null, cancellationToken).ConfigureAwait(false);
+        await AnswerCallbackAsync(callback.Id, message: null, cancellationToken);
     }
 
     private async Task AnswerCallbackAsync(string callbackId, string? message, CancellationToken cancellationToken) {
         try {
-            await botClient.AnswerCallbackQuery(callbackId, message, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await botClient.AnswerCallbackQuery(callbackId, message, cancellationToken: cancellationToken);
         } catch (ApiRequestException error) when (error.ErrorCode == 400) {
             // Expired callbacks are terminal for every reply path, including menus and invalid input.
         }
@@ -305,7 +305,7 @@ public sealed class TelegramBotWorker(
             return false;
         }
 
-        string? token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken).ConfigureAwait(false);
+        string? token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken);
         return token is not null;
     }
 
@@ -320,14 +320,14 @@ public sealed class TelegramBotWorker(
         var sdk = new BotAuthApi(new BotApiTransport(client, baseUri!));
         using HttpResponseMessage response = await sdk.AuthenticateAsync("1",
             new TelegramBotAuthHttpRequest { TelegramUserId = telegramUserId },
-            new BotApiRequestContext(ApiSecret: _options.ApiSecret), cancellationToken).ConfigureAwait(false);
+            new BotApiRequestContext(ApiSecret: _options.ApiSecret), cancellationToken);
 
         if (!response.IsSuccessStatusCode) {
             return null;
         }
 
-        await response.Content.LoadIntoBufferAsync(262144, cancellationToken).ConfigureAwait(false);
-        AuthenticationHttpResponse? authResponse = await response.Content.ReadFromJsonAsync<AuthenticationHttpResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        await response.Content.LoadIntoBufferAsync(262144, cancellationToken);
+        AuthenticationHttpResponse? authResponse = await response.Content.ReadFromJsonAsync<AuthenticationHttpResponse>(cancellationToken: cancellationToken);
         return authResponse?.AccessToken;
     }
 
@@ -343,7 +343,7 @@ public sealed class TelegramBotWorker(
         };
         var sdk = new BotHydrationApi(new BotApiTransport(client, baseUri!));
         using HttpResponseMessage response = await sdk.AddWaterAsync("1", Guid.NewGuid().ToString("D"), request,
-            new BotApiRequestContext(accessToken), cancellationToken).ConfigureAwait(false);
+            new BotApiRequestContext(accessToken), cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
@@ -354,7 +354,7 @@ public sealed class TelegramBotWorker(
             logger.LogError("Telegram bot error: {ErrorType}", exception.GetType().Name);
         }
 
-        await Task.Delay(PollingErrorRetryDelay, timeProvider, cancellationToken).ConfigureAwait(false);
+        await Task.Delay(PollingErrorRetryDelay, timeProvider, cancellationToken);
     }
 
 }

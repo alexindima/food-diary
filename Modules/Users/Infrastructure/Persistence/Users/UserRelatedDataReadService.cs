@@ -12,7 +12,7 @@ public sealed class UserRelatedDataReadService(DbSet<User> users, Func<Cancellat
     public async Task<IReadOnlyDictionary<UserId, UserFastingReminderModel>> GetReminderSettingsAsync(
         IReadOnlyCollection<UserId> userIds, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         cancellationToken.ThrowIfCancellationRequested();
         if (userIds.Count == 0) {
@@ -23,14 +23,13 @@ public sealed class UserRelatedDataReadService(DbSet<User> users, Func<Cancellat
         return await users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
             .Select(user => new { user.Id, user.Preferences.FastingCheckInReminderHours, user.Preferences.FastingCheckInFollowUpReminderHours })
             .ToDictionaryAsync(user => user.Id, user => new UserFastingReminderModel(
-                FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours)), cancellationToken)
-            .ConfigureAwait(false);
+                FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours)), cancellationToken);
     }
 
     public async Task<IReadOnlyDictionary<UserId, UserCommentAuthorModel>> GetAuthorsAsync(
         IReadOnlyCollection<UserId> userIds, CancellationToken cancellationToken = default) {
         if (synchronizeTransactionAsync is not null) {
-            await synchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+            await synchronizeTransactionAsync(cancellationToken);
         }
         cancellationToken.ThrowIfCancellationRequested();
         if (userIds.Count == 0) {
@@ -40,7 +39,6 @@ public sealed class UserRelatedDataReadService(DbSet<User> users, Func<Cancellat
         UserId[] ids = [.. userIds.Distinct()];
         return await users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
             .Select(user => new { user.Id, user.Username, user.FirstName })
-            .ToDictionaryAsync(user => user.Id, user => new UserCommentAuthorModel(user.Username, user.FirstName), cancellationToken)
-            .ConfigureAwait(false);
+            .ToDictionaryAsync(user => user.Id, user => new UserCommentAuthorModel(user.Username, user.FirstName), cancellationToken);
     }
 }

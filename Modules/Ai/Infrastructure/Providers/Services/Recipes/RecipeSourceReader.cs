@@ -19,7 +19,7 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
                 request.Headers.UserAgent.ParseAdd("FoodDiary-RecipeImport/1.0");
                 request.Headers.Accept.ParseAdd("text/html,application/ld+json,application/json,text/plain");
                 using HttpResponseMessage response = await httpClient.SendAsync(
-                    request, HttpCompletionOption.ResponseHeadersRead, deadline.Token).ConfigureAwait(false);
+                    request, HttpCompletionOption.ResponseHeadersRead, deadline.Token);
                 if ((int)response.StatusCode is >= 300 and <= 399) {
                     Uri? target = response.Headers.Location;
                     if (target is null || !TryNormalizeUrl(new Uri(url!, target).AbsoluteUri, out url)) {
@@ -32,7 +32,7 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
                     return Result.Failure<RecipeSource>(AiErrors.RecipeSourceUnavailable());
                 }
                 string body = await BoundedHttpContentReader.ReadAsStringAsync(
-                    response.Content, 1024 * 1024, TimeSpan.FromSeconds(10), deadline.Token).ConfigureAwait(false);
+                    response.Content, 1024 * 1024, TimeSpan.FromSeconds(10), deadline.Token);
                 string extracted = string.Equals(mediaType, "text/plain", StringComparison.Ordinal) ? body.Trim() : RecipeSourceTextExtractor.Extract(body);
                 if (string.IsNullOrWhiteSpace(extracted)) {
                     return Result.Failure<RecipeSource>(AiErrors.RecipeSourceUnavailable());
@@ -71,14 +71,14 @@ public sealed class RecipeSourceReader(HttpClient httpClient) : IRecipeSourceRea
     // DNS is checked at connection time and the validated address is used for the actual socket,
     // preventing redirects or DNS rebinding from reaching private infrastructure.
     public static async ValueTask<Stream> ConnectPublicAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken) {
-        IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
+        IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken);
         if (addresses.Length == 0 || addresses.Any(x => !IsPublicAddress(x))) {
             throw new HttpRequestException("Recipe source is not a public network destination.");
         }
         foreach (IPAddress address in addresses) {
             var socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try {
-                await socket.ConnectAsync(new IPEndPoint(address, context.DnsEndPoint.Port), cancellationToken).ConfigureAwait(false);
+                await socket.ConnectAsync(new IPEndPoint(address, context.DnsEndPoint.Port), cancellationToken);
                 return new NetworkStream(socket, ownsSocket: true);
             } catch (SocketException) {
                 socket.Dispose();

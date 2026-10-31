@@ -27,7 +27,7 @@ internal sealed class AiPromptProvider(
                 .AsNoTracking()
                 .Where(t => t.Key == key && t.IsActive && (t.Locale == locale || t.Locale == "en"))
                 .OrderByDescending(t => t.Locale == locale)
-                .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+                .FirstOrDefaultAsync(cancellationToken);
 
             promptText = template?.PromptText;
         }

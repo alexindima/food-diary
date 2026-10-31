@@ -36,23 +36,23 @@ public sealed partial class OpenAiFoodService(
         const string operation = "vision";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(product is null ? operation : "product-label", contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(product is null ? operation : "product-label", contextResult.Value.Language, deadline.Token);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
                 imageUrl,
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
-                deadline.Token, product).ConfigureAwait(false);
+                deadline.Token, product);
             if (budgetResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(budgetResult.Error);
             }
 
-            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token).ConfigureAwait(false);
+            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token);
             if (reservation.IsFailure) {
                 return Result.Failure<FoodVisionModel>(reservation.Error);
             }
@@ -62,13 +62,13 @@ public sealed partial class OpenAiFoodService(
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 description,
                 promptTemplate,
-                deadline.Token, product).ConfigureAwait(false);
+                deadline.Token, product);
             if (response.IsFailure) {
                 // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
                 return Result.Failure<FoodVisionModel>(response.Error);
             }
 
-            await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
+            await ReconcileAsync(requestId, response.Value, budgetResult.Value);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             return Result.Failure<FoodVisionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
@@ -84,22 +84,22 @@ public sealed partial class OpenAiFoodService(
         const string operation = "text-parse";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(contextResult.Error);
             }
 
-            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetParseFoodTextTokenBudgetAsync(
                 text,
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token);
             if (budgetResult.IsFailure) {
                 return Result.Failure<FoodVisionModel>(budgetResult.Error);
             }
 
-            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token).ConfigureAwait(false);
+            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token);
             if (reservation.IsFailure) {
                 return Result.Failure<FoodVisionModel>(reservation.Error);
             }
@@ -108,13 +108,13 @@ public sealed partial class OpenAiFoodService(
                 text,
                 promptOverride?.Locale ?? contextResult.Value.Language,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token);
             if (response.IsFailure) {
                 // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
                 return Result.Failure<FoodVisionModel>(response.Error);
             }
 
-            await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
+            await ReconcileAsync(requestId, response.Value, budgetResult.Value);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             return Result.Failure<FoodVisionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
@@ -130,21 +130,21 @@ public sealed partial class OpenAiFoodService(
         const string operation = "nutrition";
         using CancellationTokenSource deadline = CreateOperationDeadline(cancellationToken);
         try {
-            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token).ConfigureAwait(false);
+            Result<UserAiProfileModel> contextResult = await GetUserContextAsync(userId, deadline.Token);
             if (contextResult.IsFailure) {
                 return Result.Failure<FoodNutritionModel>(contextResult.Error);
             }
 
-            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token).ConfigureAwait(false);
+            string promptTemplate = promptOverride?.PromptText ?? await aiPromptProvider.GetPromptAsync(operation, contextResult.Value.Language, deadline.Token);
             Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetCalculateNutritionTokenBudgetAsync(
                 items,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token);
             if (budgetResult.IsFailure) {
                 return Result.Failure<FoodNutritionModel>(budgetResult.Error);
             }
 
-            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token).ConfigureAwait(false);
+            Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, deadline.Token);
             if (reservation.IsFailure) {
                 return Result.Failure<FoodNutritionModel>(reservation.Error);
             }
@@ -152,13 +152,13 @@ public sealed partial class OpenAiFoodService(
             Result<OpenAiFoodClientResponse<FoodNutritionModel>> response = await openAiFoodClient.CalculateNutritionAsync(
                 items,
                 promptTemplate,
-                deadline.Token).ConfigureAwait(false);
+                deadline.Token);
             if (response.IsFailure) {
                 // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
                 return Result.Failure<FoodNutritionModel>(response.Error);
             }
 
-            await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
+            await ReconcileAsync(requestId, response.Value, budgetResult.Value);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             return Result.Failure<FoodNutritionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
@@ -175,8 +175,7 @@ public sealed partial class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken) {
         Result<UserAiProfileModel> contextResult = await userProfileReadService
-            .GetAiProfileAsync(userId, cancellationToken)
-            .ConfigureAwait(false);
+            .GetAiProfileAsync(userId, cancellationToken);
         if (contextResult.IsFailure) {
             return contextResult;
         }
@@ -206,7 +205,7 @@ public sealed partial class OpenAiFoodService(
                 context.InputTokenLimit,
                 context.OutputTokenLimit,
                 nowUtc.Add(ReservationLifetime)),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         ApplicationAiTelemetry.RecordQuotaReservation(operation, status);
 
         if (status == AiQuotaReservationStatus.Acquired) {
@@ -232,7 +231,7 @@ public sealed partial class OpenAiFoodService(
                 response.Operation,
                 response.Model,
                 usage),
-            timeout.Token).ConfigureAwait(false);
+            timeout.Token);
         ApplicationAiTelemetry.RecordQuotaReconciliation(response.Operation, response.Usage is null ? "estimated" : "actual");
     }
 

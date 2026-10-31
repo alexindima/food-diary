@@ -21,7 +21,7 @@ public sealed class GetWaistSummariesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WaistEntrySummaryModel>>(userIdResult);
         }
@@ -49,7 +49,7 @@ public sealed class GetWaistSummariesQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        IReadOnlyList<WaistEntrySummaryModel> response = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WaistEntrySummaryModel> response = await sender.Send(new ReadWaistSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken);
 
         return Result.Success<IReadOnlyList<WaistEntrySummaryModel>>(response);
     }

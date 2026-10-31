@@ -31,15 +31,13 @@ public sealed class SetAdminUserPasswordCommandHandler(
             return Result.Failure(actorUserIdResult.Error);
         }
 
-        Result passwordResult = await userManagementService.Send(new SetUserPasswordByAdministratorCommand(UserId: userIdResult.Value, ActorUserId: actorUserIdResult.Value, NewPassword: command.NewPassword), cancellationToken)
-            .ConfigureAwait(false);
+        Result passwordResult = await userManagementService.Send(new SetUserPasswordByAdministratorCommand(UserId: userIdResult.Value, ActorUserId: actorUserIdResult.Value, NewPassword: command.NewPassword), cancellationToken);
         if (passwordResult.IsFailure) {
             return passwordResult;
         }
 
         await sessionRevocationService
-            .RevokeAllAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
-            .ConfigureAwait(false);
+            .RevokeAllAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken);
 
         auditLogger.Log(
             "admin.user.password-reset",

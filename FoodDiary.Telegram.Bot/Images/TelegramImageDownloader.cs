@@ -6,14 +6,14 @@ namespace FoodDiary.Telegram.Bot.Images;
 
 internal sealed class TelegramImageDownloader(ITelegramBotClient botClient) {
     internal async Task<byte[]> DownloadAsync(TelegramImageSelection image, CancellationToken cancellationToken) {
-        TGFile file = await botClient.GetFile(image.FileId, cancellationToken).ConfigureAwait(false);
+        TGFile file = await botClient.GetFile(image.FileId, cancellationToken);
         if (file.FileSize is <= 0 or > TelegramImageSelector.MaximumFileBytes || string.IsNullOrWhiteSpace(file.FilePath)) {
             throw new InvalidDataException("Telegram image metadata is invalid.");
         }
         var stream = new BoundedImageStream((int)TelegramImageSelector.MaximumFileBytes);
-        await using (stream.ConfigureAwait(false)) {
+        await using (stream) {
             try {
-                await botClient.DownloadFile(file.FilePath, stream, cancellationToken).ConfigureAwait(false);
+                await botClient.DownloadFile(file.FilePath, stream, cancellationToken);
             } catch (RequestException error) when (error.InnerException is InvalidDataException) {
                 throw new InvalidDataException("Telegram image exceeds the download limit.", error);
             }

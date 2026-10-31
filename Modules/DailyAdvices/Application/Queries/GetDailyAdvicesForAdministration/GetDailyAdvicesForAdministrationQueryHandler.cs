@@ -14,7 +14,7 @@ public sealed class GetDailyAdvicesForAdministrationQueryHandler(IDailyAdviceRea
         IReadOnlyList<DailyAdviceReadModel> items = await repository.GetPageReadModelsAsync(
             PaginationPolicy.NormalizePage(request.Page),
             PaginationPolicy.NormalizePageSize(request.Limit),
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         return Result.Success<IReadOnlyList<DailyAdviceModel>>(items.Select(item =>
             new DailyAdviceModel(item.Id, item.Locale, item.Value, item.Tag, item.Weight)).ToArray());
     }

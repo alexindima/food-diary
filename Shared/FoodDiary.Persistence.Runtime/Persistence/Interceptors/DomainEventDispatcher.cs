@@ -1,8 +1,8 @@
+using System.Runtime.CompilerServices;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using FoodDiary.Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
 
 namespace FoodDiary.Persistence.Runtime.Persistence.Interceptors;
 
@@ -34,7 +34,7 @@ internal static class DomainEventDispatcher {
                     "Dispatching domain event: {EventType} at {OccurredOnUtc}",
                     domainEvent.EventType,
                     domainEvent.OccurredOnUtc.ToString("O"));
-                await publisher.PublishAsync(domainEvent, cancellationToken).ConfigureAwait(false);
+                await publisher.PublishAsync(domainEvent, cancellationToken);
             }
         }
     }

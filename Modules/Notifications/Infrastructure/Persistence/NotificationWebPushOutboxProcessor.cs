@@ -27,7 +27,7 @@ internal sealed class NotificationWebPushOutboxProcessor(
             timeProvider,
             async (message, token) => {
                 WebPushDeliveryOutcome outcome = await webPushNotificationSender.SendBatchAsync(message.Notification,
-                    message.GetCompletedSubscriptionIds(), token).ConfigureAwait(false);
+                    message.GetCompletedSubscriptionIds(), token);
                 message.RecordCompletedSubscriptions(outcome.CompletedSubscriptionIds);
                 if (outcome.RequiresRetry) {
                     throw new HttpRequestException("Web push delivery has unfinished subscriptions.");

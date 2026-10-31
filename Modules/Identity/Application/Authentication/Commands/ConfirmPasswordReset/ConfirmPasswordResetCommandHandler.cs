@@ -30,20 +30,17 @@ public sealed class ConfirmPasswordResetCommandHandler(
         UserId userId = userIdResult.Value;
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         Result<UserAuthenticationPrincipalModel> resetResult = await userIdentityService
-            .CompletePasswordResetAsync(userId, command.Token, command.NewPassword, nowUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .CompletePasswordResetAsync(userId, command.Token, command.NewPassword, nowUtc, cancellationToken);
         if (resetResult.IsFailure) {
             return Result.Failure<AuthenticationModel>(resetResult.Error);
         }
 
         await refreshTokenSessionRepository
-            .RevokeAllAsync(userId, nowUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .RevokeAllAsync(userId, nowUtc, cancellationToken);
 
         UserAuthenticationPrincipalModel principal = resetResult.Value;
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
-            .ConfigureAwait(false);
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext);
 
         auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
 

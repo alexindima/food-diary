@@ -14,8 +14,8 @@ public sealed class MailRelayEmailUseCases(
             return Result.Failure<Guid>(policyResult.Error!);
         }
 
-        QueuedEmailId queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
-        await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        QueuedEmailId queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken);
+        await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken);
         return Result.Success(queuedEmailId.Value);
     }
 

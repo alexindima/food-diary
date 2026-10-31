@@ -38,8 +38,7 @@ public sealed class ImportLessonsCommandHandler(INutritionLessonReadRepository r
         }
 
         IReadOnlyList<NutritionLesson> existingLessons = await readRepository
-            .GetAllAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .GetAllAsync(cancellationToken);
         var lessonsByContent = new Dictionary<LessonContentIdentity, NutritionLesson>();
         foreach (NutritionLesson existingLesson in existingLessons) {
             lessonsByContent.TryAdd(ToContentIdentity(existingLesson), existingLesson);
@@ -60,13 +59,12 @@ public sealed class ImportLessonsCommandHandler(INutritionLessonReadRepository r
         }
 
         if (newLessons.Count > 0) {
-            await repository.AddRangeAsync(newLessons, cancellationToken).ConfigureAwait(false);
+            await repository.AddRangeAsync(newLessons, cancellationToken);
         }
 
         NutritionLessonId[] importedIds = [.. importedLessons.Select(lesson => lesson.Id).Distinct()];
         IReadOnlyDictionary<NutritionLessonId, int> completionCounts = await readRepository
-            .GetCompletionCountsAsync(importedIds, cancellationToken)
-            .ConfigureAwait(false);
+            .GetCompletionCountsAsync(importedIds, cancellationToken);
         return Result.Success<IReadOnlyList<LessonAdminReadModel>>(importedLessons
             .Select(lesson => ToAdminReadModel(lesson, completionCounts.GetValueOrDefault(lesson.Id)))
             .ToArray());

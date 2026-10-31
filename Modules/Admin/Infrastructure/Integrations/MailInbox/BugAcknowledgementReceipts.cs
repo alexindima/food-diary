@@ -15,10 +15,10 @@ internal sealed class BugAcknowledgementReceipts(AdminDbContext context, IUnitOf
         var receipt = new BugAcknowledgementReceipt { InboxId = inboxId };
         context.BugAcknowledgementReceipts.Add(receipt);
         try {
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         } catch (DbUpdateException exception) {
             context.Entry(receipt).State = EntityState.Detached;
-            ExceptionDispatchInfo? unexpectedFailure = await ContainsAsync(inboxId, cancellationToken).ConfigureAwait(false)
+            ExceptionDispatchInfo? unexpectedFailure = await ContainsAsync(inboxId, cancellationToken)
                 ? null
                 : ExceptionDispatchInfo.Capture(exception);
             unexpectedFailure?.Throw();

@@ -24,15 +24,15 @@ public sealed class UpsertAiPromptCommandHandler(IAiPromptTemplateWriteRepositor
         string locale = language.Value;
         string promptText = request.PromptText;
         bool isActive = request.IsActive;
-        AiPromptTemplate? existing = await repository.GetByKeyAsync(key, locale, cancellationToken).ConfigureAwait(false);
+        AiPromptTemplate? existing = await repository.GetByKeyAsync(key, locale, cancellationToken);
         if (existing is null) {
             var created = AiPromptTemplate.Create(key, locale, promptText, isActive);
-            await repository.AddAsync(created, cancellationToken).ConfigureAwait(false);
+            await repository.AddAsync(created, cancellationToken);
             return Result.Success(ToReadModel(created));
         }
 
         existing.Update(promptText, isActive);
-        await repository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+        await repository.UpdateAsync(existing, cancellationToken);
         return Result.Success(ToReadModel(existing));
 
     }

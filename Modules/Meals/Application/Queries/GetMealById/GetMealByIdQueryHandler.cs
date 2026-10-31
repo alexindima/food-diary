@@ -19,7 +19,7 @@ public sealed class GetMealByIdQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             request.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<MealModel>(userIdResult);
         }
@@ -39,7 +39,7 @@ public sealed class GetMealByIdQueryHandler(
         MealModel? meal = await GetByIdAsync(
             userId,
             mealId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return meal is null
             ? Result.Failure<MealModel>(MealErrors.NotFound(request.MealId))
@@ -52,7 +52,7 @@ public sealed class GetMealByIdQueryHandler(
         MealProjectionReadModel? meal = await mealRepository.GetByIdMealProjectionAsync(
             mealId,
             userId,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return meal?.ToModel();
     }

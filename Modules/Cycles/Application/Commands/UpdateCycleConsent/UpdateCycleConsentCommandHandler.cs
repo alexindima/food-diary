@@ -35,7 +35,7 @@ public sealed class UpdateCycleConsentCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<CycleModel>(userIdResult);
         }
@@ -45,7 +45,7 @@ public sealed class UpdateCycleConsentCommandHandler(
             userIdResult.Value,
             includeDetails: true,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         if (profile is null) {
             return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
@@ -58,7 +58,7 @@ public sealed class UpdateCycleConsentCommandHandler(
             profile.RevokeConsent(purpose, nowUtc);
         }
 
-        await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
+        await cycleRepository.UpdateAsync(profile, cancellationToken);
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(
             profile,
             currentDate: currentDate, timeProvider: timeProvider);

@@ -16,7 +16,7 @@ internal sealed class UserContextService(
     IUserWriteRepository userWriteRepository) :
     IUserContextService, IUserProfileReadService {
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<User>(accessError)
@@ -24,7 +24,7 @@ internal sealed class UserContextService(
     }
 
     public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure ? userResult.Error : null;
     }
 
@@ -32,21 +32,21 @@ internal sealed class UserContextService(
         userWriteRepository.UpdateAsync(user, cancellationToken);
 
     public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure
             ? Result.Failure<UserModel>(userResult.Error)
             : Result.Success(userResult.Value.ToModel());
     }
 
     public async Task<Result<GoalsModel>> GetGoalsAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure
             ? Result.Failure<GoalsModel>(userResult.Error)
             : Result.Success(userResult.Value.ToGoalsModel());
     }
 
     public async Task<Result<UserDesiredWeightModel>> GetDesiredWeightAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure
             ? Result.Failure<UserDesiredWeightModel>(userResult.Error)
             : Result.Success(ToDesiredWeightModel(userResult.Value));
@@ -61,7 +61,7 @@ internal sealed class UserContextService(
     public async Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WeightGoalHistoryModel>>(userResult.Error);
         }
@@ -70,7 +70,7 @@ internal sealed class UserContextService(
     }
 
     public async Task<Result<UserDesiredWaistModel>> GetDesiredWaistAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         return userResult.IsFailure
             ? Result.Failure<UserDesiredWaistModel>(userResult.Error)
             : Result.Success(ToDesiredWaistModel(userResult.Value));
@@ -85,7 +85,7 @@ internal sealed class UserContextService(
     public async Task<Result<IReadOnlyList<WaistGoalHistoryModel>>> GetWaistGoalHistoryAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WaistGoalHistoryModel>>(userResult.Error);
         }
@@ -96,7 +96,7 @@ internal sealed class UserContextService(
     public async Task<Result<WeightHistoryProfileModel>> GetWeightHistoryProfileAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<WeightHistoryProfileModel>(userResult.Error);
         }
@@ -111,7 +111,7 @@ internal sealed class UserContextService(
     public async Task<Result<WaistHistoryProfileModel>> GetWaistHistoryProfileAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<WaistHistoryProfileModel>(userResult.Error);
         }
@@ -148,7 +148,7 @@ internal sealed class UserContextService(
                 goal.Status.ToString()))];
 
     public async Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<UserNotificationPreferencesModel>(userResult.Error);
         }

@@ -18,13 +18,13 @@ public sealed class DeleteUserCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);
         }
@@ -33,10 +33,9 @@ public sealed class DeleteUserCommandHandler(
 
         DateTime deletedAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         currentUser.DeleteAccount(deletedAtUtc);
-        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken);
         await refreshTokenSessionRepository
-            .RevokeAllAsync(userId, deletedAtUtc, cancellationToken)
-            .ConfigureAwait(false);
+            .RevokeAllAsync(userId, deletedAtUtc, cancellationToken);
 
         auditLogger.Log("user.delete", userId, "User", userId.Value.ToString());
 

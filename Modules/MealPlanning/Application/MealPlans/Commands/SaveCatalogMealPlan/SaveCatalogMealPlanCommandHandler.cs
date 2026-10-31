@@ -22,14 +22,14 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
         transactionRunner.ExecuteAsync(token => HandleCoreAsync(command, token), cancellationToken);
 
     private async Task<Result<MealPlanModel>> HandleCoreAsync(SaveCatalogMealPlanCommand command, CancellationToken cancellationToken) {
-        ValidationResult validation = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command, cancellationToken).ConfigureAwait(false);
+        ValidationResult validation = await new SaveCatalogMealPlanCommandValidator().ValidateAsync(command, cancellationToken);
         if (!validation.IsValid) {
             return Result.Failure<MealPlanModel>(new Error("MealPlan.InvalidCatalogPlan",
                 string.Join(' ', validation.Errors.Select(error => error.ErrorMessage).Distinct(StringComparer.Ordinal)), Kind: ErrorKind.Validation));
         }
 
         Guid[] recipeIds = [.. command.Days.SelectMany(day => day.Meals).Select(meal => meal.RecipeId).Distinct()];
-        IReadOnlySet<Guid> publicIds = await recipes.GetPublicIdsAsync(recipeIds, cancellationToken).ConfigureAwait(false);
+        IReadOnlySet<Guid> publicIds = await recipes.GetPublicIdsAsync(recipeIds, cancellationToken);
         if (recipeIds.Any(id => !publicIds.Contains(id))) {
             return Result.Failure<MealPlanModel>(new Error("MealPlan.RecipeUnavailable",
                 "Select existing public recipes. Private or missing recipes cannot be used in catalog plans.", Kind: ErrorKind.Validation));
@@ -41,13 +41,13 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
             : MealPlanId.Empty;
         DietType dietType = SharedEnumValueParser.ParseRequired<DietType>(command.DietType, nameof(command.DietType), "Invalid diet type.").Value;
         MealPlan? plan = command.Id.HasValue
-            ? await catalog.GetForUpdateAsync(planId, cancellationToken).ConfigureAwait(false)
+            ? await catalog.GetForUpdateAsync(planId, cancellationToken)
             : MealPlan.CreateCuratedWithDuration(command.Name, command.Description, dietType, PlanDurationDays.FromDays(command.DurationDays), command.TargetCaloriesPerDay);
         if (plan is null) { return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(command.Id!.Value)); }
 
         plan.UpdateCatalogWithDuration(command.Name, command.Description, dietType,
             PlanDurationDays.FromDays(command.DurationDays), command.TargetCaloriesPerDay, command.IsPublished);
-        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition.GetRecipeSnapshotsAsync([.. recipeIds.Select(id => new RecipeId(id))], viewerId: null, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, MealPlanRecipeSnapshot> snapshots = await composition.GetRecipeSnapshotsAsync([.. recipeIds.Select(id => new RecipeId(id))], viewerId: null, cancellationToken);
         foreach (CatalogDayInput input in command.Days.OrderBy(day => day.DayNumber)) {
             MealPlanDay day = plan.AddTypedDay(PlanDayNumber.FromIndex(input.DayNumber));
             foreach (CatalogMealInput meal in input.Meals) {
@@ -56,7 +56,7 @@ public sealed class SaveCatalogMealPlanCommandHandler(IMealPlanCatalogRepository
             }
         }
 
-        if (!command.Id.HasValue) { await repository.AddAsync(plan, cancellationToken).ConfigureAwait(false); }
+        if (!command.Id.HasValue) { await repository.AddAsync(plan, cancellationToken); }
         return Result.Success(plan.ToModel());
     }
 }

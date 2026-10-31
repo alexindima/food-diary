@@ -19,7 +19,7 @@ public sealed class RecommendationRepository(DbSet<Recommendation> records, IRec
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
@@ -33,7 +33,7 @@ public sealed class RecommendationRepository(DbSet<Recommendation> records, IRec
             .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Recommendation?> GetByIdAsync(
@@ -45,22 +45,22 @@ public sealed class RecommendationRepository(DbSet<Recommendation> records, IRec
         }
 
         return await query
-            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
     public async Task<Recommendation> AddAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
-        await records.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await records.AddAsync(recommendation, cancellationToken);
         return recommendation;
     }
 
     public async Task UpdateAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
         records.Update(recommendation);
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
     }
 
     public async Task<int> GetUnreadCountAsync(UserId clientUserId, CancellationToken cancellationToken = default) {
         return await records
-            .CountAsync(r => r.ClientUserId == clientUserId && !r.IsRead, cancellationToken).ConfigureAwait(false);
+            .CountAsync(r => r.ClientUserId == clientUserId && !r.IsRead, cancellationToken);
     }
 
 }

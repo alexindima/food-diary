@@ -10,12 +10,12 @@ namespace FoodDiary.Modules.Lessons.Application.Commands.DeleteLesson;
 public sealed class DeleteLessonCommandHandler(INutritionLessonWriteRepository repository) : IRequestHandler<DeleteLessonCommand, Result> {
     public async Task<Result> Handle(DeleteLessonCommand request, CancellationToken cancellationToken) {
         NutritionLessonId lessonId = request.LessonId;
-        NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken);
         if (lesson is null) {
             return Result.Failure(LessonErrors.NotFound(lessonId.Value));
         }
 
-        await repository.DeleteAsync(lesson, cancellationToken).ConfigureAwait(false);
+        await repository.DeleteAsync(lesson, cancellationToken);
         return Result.Success();
 
     }

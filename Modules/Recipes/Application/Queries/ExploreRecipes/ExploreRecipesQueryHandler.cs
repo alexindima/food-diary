@@ -28,7 +28,7 @@ public sealed class ExploreRecipesQueryHandler(IRecipeOverviewReadService recipe
 
         (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetExplorePagedAsync(
             currentUserIdResult.Value, pageNumber, pageSize, query.Search, query.Category,
-            query.MaxPrepTime, query.SortBy, cancellationToken).ConfigureAwait(false);
+            query.MaxPrepTime, query.SortBy, cancellationToken);
 
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<RecipeModel>(

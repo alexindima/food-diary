@@ -20,8 +20,7 @@ internal static class InitialAdminBootstrapper {
         Result<BootstrapInitialAdminModel> result;
         try {
             result = await bootstrapService
-                .Send(new BootstrapInitialAdminCommand(options.Email, options.Password), timeoutSource.Token)
-                .ConfigureAwait(false);
+                .Send(new BootstrapInitialAdminCommand(options.Email, options.Password), timeoutSource.Token);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
             throw new TimeoutException(
                 string.Create(

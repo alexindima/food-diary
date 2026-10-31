@@ -15,7 +15,7 @@ public sealed class BillingWebhookHttpProcessor {
         string provider,
         CancellationToken cancellationToken) {
         EnsureTrustedYooKassaSource(request.HttpContext, provider);
-        string payload = await ReadBoundedPayloadAsync(request, cancellationToken).ConfigureAwait(false);
+        string payload = await ReadBoundedPayloadAsync(request, cancellationToken);
 
         string signatureHeader = provider.ToUpperInvariant() switch {
             "PADDLE" => request.Headers["Paddle-Signature"].ToString(),
@@ -65,10 +65,10 @@ public sealed class BillingWebhookHttpProcessor {
             var payload = new MemoryStream(
                 request.ContentLength is > 0 ? (int)request.ContentLength.Value : 0);
             string payloadText;
-            await using (payload.ConfigureAwait(false)) {
+            await using (payload) {
                 int totalBytes = 0;
                 while (true) {
-                    int bytesRead = await request.Body.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false);
+                    int bytesRead = await request.Body.ReadAsync(buffer.AsMemory(), cancellationToken);
                     if (bytesRead == 0) {
                         payloadText = Encoding.UTF8.GetString(payload.GetBuffer(), 0, totalBytes);
                         break;
@@ -81,7 +81,7 @@ public sealed class BillingWebhookHttpProcessor {
                             StatusCodes.Status413PayloadTooLarge);
                     }
 
-                    await payload.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+                    await payload.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken);
                 }
             }
 

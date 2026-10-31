@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using FoodDiary.Development.Mcp.Protocol;
@@ -97,36 +96,36 @@ public sealed class SqliteContextSearchReader {
             Pooling = false,
             DefaultTimeout = 2,
         }.ToString());
-        await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
+        await using IAsyncDisposable connectionDisposal = connection;
         SqliteTransaction? transaction = null;
         try {
             try {
                 if (File.Exists(_databasePath)) {
-                    await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                    await connection.OpenAsync(cancellationToken);
                     SqliteCommand cache = connection.CreateCommand();
-                    await using ConfiguredAsyncDisposable cacheDisposal = cache.ConfigureAwait(false);
+                    await using IAsyncDisposable cacheDisposal = cache;
                     cache.CommandText = "PRAGMA cache_size = -65536;";
-                    await cache.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+                    await cache.ExecuteNonQueryAsync(cancellationToken);
                     transaction = connection.BeginTransaction(deferred: true);
                     (string? Fingerprint, string? UpdatedAtUtc, int IndexedDocuments, string? ChangeSetFingerprint, string? GitHead, bool HasCompactFeatures) metadata =
-                        await ReadMetadataAsync(connection, cancellationToken, transaction).ConfigureAwait(false);
+                        await ReadMetadataAsync(connection, cancellationToken, transaction);
                     batch = new BatchContext(connection, transaction, metadata);
                 }
             } catch (SqliteException) {
                 // Let the ordinary reader preserve its exact per-query unavailable
                 // states when a batch snapshot cannot be prepared.
-                if (transaction is not null) { await transaction.DisposeAsync().ConfigureAwait(false); }
+                if (transaction is not null) { await transaction.DisposeAsync(); }
                 transaction = null;
-                await connection.CloseAsync().ConfigureAwait(false);
+                await connection.CloseAsync();
             }
             foreach ((string query, int limit, string changeType) in requests) {
                 cancellationToken.ThrowIfCancellationRequested();
                 results.Add(await SearchCoreAsync(query, limit, changeType, module: null, scopePaths: null,
-                    cancellationToken, expectedChangeSetFingerprint, batch).ConfigureAwait(false));
+                    cancellationToken, expectedChangeSetFingerprint, batch));
             }
             return results;
         } finally {
-            if (transaction is not null) { await transaction.DisposeAsync().ConfigureAwait(false); }
+            if (transaction is not null) { await transaction.DisposeAsync(); }
         }
     }
 
@@ -177,10 +176,10 @@ public sealed class SqliteContextSearchReader {
             }.ToString();
             ownedConnection = batch is null ? new(connectionString) : null;
             SqliteConnection connection = batch?.Connection ?? ownedConnection!;
-            if (batch is null) { await connection.OpenAsync(cancellationToken).ConfigureAwait(false); }
+            if (batch is null) { await connection.OpenAsync(cancellationToken); }
 
             (string? fingerprint, string? updatedAtUtc, int indexedDocuments, string? changeSetFingerprint, string? gitHead, bool hasCompactFeatures) =
-                batch?.Metadata ?? await ReadMetadataAsync(connection, cancellationToken).ConfigureAwait(false);
+                batch?.Metadata ?? await ReadMetadataAsync(connection, cancellationToken);
             if (string.IsNullOrWhiteSpace(fingerprint) ||
                 indexedDocuments == 0 ||
                 string.IsNullOrWhiteSpace(changeSetFingerprint) ||
@@ -220,7 +219,7 @@ public sealed class SqliteContextSearchReader {
                 rankingTerms,
                 candidateLimit,
                 policy.IdentityCandidatePoolLimit,
-                cancellationToken, hasCompactFeatures, batch?.Transaction).ConfigureAwait(false);
+                cancellationToken, hasCompactFeatures, batch?.Transaction);
             WikiContextSearchCandidate[] candidates = Rank(
                 rawCandidates,
                 query,
@@ -256,7 +255,7 @@ public sealed class SqliteContextSearchReader {
         } catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException or InvalidDataException) {
             return Unavailable("context-search-configuration-unavailable", stopwatch);
         } finally {
-            if (ownedConnection is not null) { await ownedConnection.DisposeAsync().ConfigureAwait(false); }
+            if (ownedConnection is not null) { await ownedConnection.DisposeAsync(); }
             stopwatch.Stop();
 
         }
@@ -275,7 +274,7 @@ public sealed class SqliteContextSearchReader {
         SqliteTransaction? transaction = null) {
         SqliteCommand command = connection.CreateCommand();
         command.Transaction = transaction;
-        await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+        await using IAsyncDisposable commandDisposal = command;
         command.CommandTimeout = 2;
         command.CommandText = """
             SELECT
@@ -287,10 +286,9 @@ public sealed class SqliteContextSearchReader {
                 EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'context_search_features');
             """;
         SqliteDataReader reader = await command
-            .ExecuteReaderAsync(cancellationToken)
-            .ConfigureAwait(false);
-        await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
-        if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            .ExecuteReaderAsync(cancellationToken);
+        await using IAsyncDisposable readerDisposal = reader;
+        if (!await reader.ReadAsync(cancellationToken)) {
             return (null, null, 0, null, null, false);
         }
         return (
@@ -330,7 +328,7 @@ public sealed class SqliteContextSearchReader {
         {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            await using IAsyncDisposable commandDisposal = command;
             command.CommandTimeout = 2;
             command.CommandText = $"""
                 WITH lexical_matches AS MATERIALIZED (
@@ -363,10 +361,9 @@ public sealed class SqliteContextSearchReader {
             command.Parameters.AddWithValue("$match", match);
             command.Parameters.AddWithValue("$limit", candidateLimit);
             SqliteDataReader reader = await command
-                .ExecuteReaderAsync(cancellationToken)
-                .ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                .ExecuteReaderAsync(cancellationToken);
+            await using IAsyncDisposable readerDisposal = reader;
+            while (await reader.ReadAsync(cancellationToken)) {
                 candidates.Add(new RawCandidate(
                     reader.GetString(0),
                     reader.GetString(1),
@@ -389,7 +386,7 @@ public sealed class SqliteContextSearchReader {
         {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            await using IAsyncDisposable commandDisposal = command;
             command.CommandTimeout = 2;
             command.CommandText = $"""
                 WITH recalled AS MATERIALIZED (
@@ -409,13 +406,12 @@ public sealed class SqliteContextSearchReader {
             command.Parameters.AddWithValue("$match", identityMatch);
             command.Parameters.AddWithValue("$limit", identityCandidateLimit);
             SqliteDataReader reader = await command
-                .ExecuteReaderAsync(cancellationToken)
-                .ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+                .ExecuteReaderAsync(cancellationToken);
+            await using IAsyncDisposable readerDisposal = reader;
             var candidateIndexes = candidates
                 .Select((candidate, index) => new { Key = CandidateKey(candidate), Index = index })
                 .ToDictionary(item => item.Key, item => item.Index, StringComparer.Ordinal);
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            while (await reader.ReadAsync(cancellationToken)) {
                 RawCandidate candidate = new(
                     reader.GetString(0),
                     reader.GetString(1),
@@ -433,7 +429,7 @@ public sealed class SqliteContextSearchReader {
         {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            await using IAsyncDisposable commandDisposal = command;
             command.CommandTimeout = 2;
             command.CommandText = """
                 SELECT search.record_type, search.record_key, search.path, search.source_path,
@@ -447,10 +443,10 @@ public sealed class SqliteContextSearchReader {
                 """;
             command.Parameters.AddWithValue("$match", identityMatch);
             command.Parameters.AddWithValue("$limit", identityCandidateLimit);
-            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using IAsyncDisposable readerDisposal = reader;
             var candidateKeys = candidates.Select(CandidateKey).ToHashSet(StringComparer.Ordinal);
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            while (await reader.ReadAsync(cancellationToken)) {
                 RawCandidate candidate = new(
                     reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3),
                     reader.GetString(4), reader.GetString(5), reader.GetDouble(6));
@@ -467,7 +463,7 @@ public sealed class SqliteContextSearchReader {
         if (compoundPairs.Length > 0) {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            await using IAsyncDisposable commandDisposal = command;
             command.CommandTimeout = 2;
             command.CommandText = """
                 WITH matches AS MATERIALIZED (
@@ -485,10 +481,10 @@ public sealed class SqliteContextSearchReader {
                 """;
             command.Parameters.AddWithValue("$match", string.Join(" OR ", compoundPairs));
             command.Parameters.AddWithValue("$limit", identityCandidateLimit);
-            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using IAsyncDisposable readerDisposal = reader;
             List<RawCandidate> compounds = [];
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            while (await reader.ReadAsync(cancellationToken)) {
                 compounds.Add(new RawCandidate(reader.GetString(0), reader.GetString(1), reader.GetString(2),
                     reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetDouble(6)));
             }
@@ -509,7 +505,7 @@ public sealed class SqliteContextSearchReader {
         if (guidanceSubjects.Length > 0) {
             SqliteCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            await using IAsyncDisposable commandDisposal = command;
             command.CommandTimeout = 2;
             command.CommandText = """
                 SELECT record_type, record_key, path, source_path,
@@ -522,10 +518,10 @@ public sealed class SqliteContextSearchReader {
                 """;
             command.Parameters.AddWithValue("$match", string.Join(" AND ", guidanceSubjects.Select(term => $"body : \"{term}\"*")));
             command.Parameters.AddWithValue("$limit", identityCandidateLimit);
-            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            await using IAsyncDisposable readerDisposal = reader;
             List<RawCandidate> guides = [];
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+            while (await reader.ReadAsync(cancellationToken)) {
                 guides.Add(new RawCandidate(reader.GetString(0), reader.GetString(1), reader.GetString(2),
                     reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetDouble(6), GuidanceSubjectMatch: true));
             }
@@ -546,7 +542,7 @@ public sealed class SqliteContextSearchReader {
             foreach (string suffix in runtimeSuffixes) {
                 SqliteCommand command = connection.CreateCommand();
                 command.Transaction = transaction;
-                await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+                await using IAsyncDisposable commandDisposal = command;
                 command.CommandTimeout = 2;
                 command.CommandText = """
                     SELECT record_type, record_key, path, source_path,
@@ -557,10 +553,9 @@ public sealed class SqliteContextSearchReader {
                     """;
                 command.Parameters.AddWithValue("$suffix", $"*{suffix}");
                 SqliteDataReader reader = await command
-                    .ExecuteReaderAsync(cancellationToken)
-                    .ConfigureAwait(false);
-                await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
-                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                    .ExecuteReaderAsync(cancellationToken);
+                await using IAsyncDisposable readerDisposal = reader;
+                while (await reader.ReadAsync(cancellationToken)) {
                     RawCandidate candidate = new(
                         reader.GetString(0),
                         reader.GetString(1),

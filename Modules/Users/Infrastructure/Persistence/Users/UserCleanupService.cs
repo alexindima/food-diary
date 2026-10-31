@@ -30,7 +30,7 @@ public sealed partial class UserCleanupService(
         UserId[] ids = [.. userIds.Select(id => new UserId(id))];
         var candidates = await dbContext.Users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id)).OrderBy(user => user.Id)
             .Select(user => new { user.Id, user.Email, user.DeletedAt, user.IsActive })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
         string[] allowedEmails = [$"webmcp-fixture-{runId:D}-client@example.test", $"webmcp-fixture-{runId:D}-dietologist@example.test"];
         DateTime threshold = NormalizeUtc(olderThanUtc);
         // Validate the entire set before the first independently committed deletion.
@@ -42,7 +42,7 @@ public sealed partial class UserCleanupService(
         for (int pass = 0; pass < candidates.Count && remaining.Count > 0; pass++) {
             bool progress = false;
             foreach (var candidate in remaining.ToArray()) {
-                if (await CleanupUserAsync(candidate.Id, reassignTarget: null, threshold, cancellationToken).ConfigureAwait(false)) {
+                if (await CleanupUserAsync(candidate.Id, reassignTarget: null, threshold, cancellationToken)) {
                     remaining.Remove(candidate);
                     removed++;
                     progress = true;
@@ -76,11 +76,11 @@ public sealed partial class UserCleanupService(
         cancellationToken.ThrowIfCancellationRequested();
         scopeGuard.EnsureCleanEntry();
         if (dbContext.Database.IsRelational()) {
-            await dbContext.Database.UseTransactionAsync(transactionCoordinator.CurrentTransaction, cancellationToken).ConfigureAwait(false);
+            await dbContext.Database.UseTransactionAsync(transactionCoordinator.CurrentTransaction, cancellationToken);
         }
-        UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
+        UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken);
         DateTime thresholdUtc = NormalizeUtc(olderThanUtc);
-        IReadOnlyList<UserCleanupCursor> candidates = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, after, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UserCleanupCursor> candidates = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, after, cancellationToken);
         int removed = 0;
 
         foreach (UserCleanupCursor candidate in candidates) {
@@ -88,9 +88,9 @@ public sealed partial class UserCleanupService(
             UserId userId = candidate.UserId;
             try {
                 UserId? retainedContentOwner = reassignTarget is null
-                    ? await ResolveRetainedContentOwnerAsync(userId, cancellationToken).ConfigureAwait(false)
+                    ? await ResolveRetainedContentOwnerAsync(userId, cancellationToken)
                     : null;
-                if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken, retainedContentOwner).ConfigureAwait(false)) {
+                if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken, retainedContentOwner)) {
                     removed++;
                 }
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
@@ -113,7 +113,7 @@ public sealed partial class UserCleanupService(
             .AsNoTracking()
             .AnyAsync(
                 u => u.Id == targetId && u.DeletedAt == null && u.IsActive,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         if (candidate) {
             return targetId;
         }
@@ -145,7 +145,7 @@ public sealed partial class UserCleanupService(
             .ThenBy(user => user.Id)
             .Select(user => new UserCleanupCursor(user.DeletedAt!.Value, user.Id))
             .Take(batchSize)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     internal Task<bool> CleanupUserAsync(
@@ -155,7 +155,7 @@ public sealed partial class UserCleanupService(
         CancellationToken cancellationToken,
         UserId? retainedContentOwner = null) {
         return transactionCoordinator.ExecuteItemAsync(async (transaction, token) => {
-            await dbContext.Database.UseTransactionAsync(transaction, token).ConfigureAwait(false);
+            await dbContext.Database.UseTransactionAsync(transaction, token);
             FormattableString eligibilitySql = $"""
                 SELECT 1 AS "Value"
                 FROM "Users"
@@ -167,23 +167,22 @@ public sealed partial class UserCleanupService(
                 """;
             int? eligible = await dbContext.Database
                 .SqlQuery<int>(eligibilitySql)
-                .SingleOrDefaultAsync(token)
-                .ConfigureAwait(false);
+                .SingleOrDefaultAsync(token);
             if (eligible != 1) {
                 return false;
             }
 
             if (reassignTarget is null) {
                 foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                    await participant.LockOwnedContentAsync(userId, token).ConfigureAwait(false);
+                    await participant.LockOwnedContentAsync(userId, token);
                 }
                 if (retainedContentOwner is { } contentOwner) {
                     foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                        await participant.RetainReferencedContentAsync(userId, contentOwner, token).ConfigureAwait(false);
+                        await participant.RetainReferencedContentAsync(userId, contentOwner, token);
                     }
                 } else {
                     foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                        if (await participant.HasReferencedContentAsync(userId, token).ConfigureAwait(false)) {
+                        if (await participant.HasReferencedContentAsync(userId, token)) {
                             // Scheduled cleanup retries in the next full pass; strict fixture cleanup refuses transfer.
                             return false;
                         }
@@ -192,19 +191,18 @@ public sealed partial class UserCleanupService(
             }
 
             await dbContext.Users.Where(user => user.Id == userId)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), token)
-                .ConfigureAwait(false);
+                .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), token);
 
             foreach (IUserDataPurgeParticipant participant in _participants) {
-                await participant.PurgeAsync(userId, reassignTarget, token).ConfigureAwait(false);
+                await participant.PurgeAsync(userId, reassignTarget, token);
             }
-            await DeleteUserRowsAsync(userId, token).ConfigureAwait(false);
+            await DeleteUserRowsAsync(userId, token);
             return true;
         }, cancellationToken);
     }
 
     private async Task DeleteUserRowsAsync(UserId userId, CancellationToken cancellationToken) {
-        await dbContext.UserRoles.Where(role => role.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.UserRoles.Where(role => role.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await dbContext.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(cancellationToken);
     }
 }

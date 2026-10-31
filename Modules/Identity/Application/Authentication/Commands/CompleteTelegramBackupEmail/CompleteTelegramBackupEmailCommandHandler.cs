@@ -19,7 +19,7 @@ public sealed class CompleteTelegramBackupEmailCommandHandler(ITelegramOidcProvi
         if (userId == Guid.Empty || browserBinding.Length != 43 || !provider.IsEnabled) {
             return Result.Failure(TelegramIdentityErrors.InvalidProof);
         }
-        string? json = await tickets.ConsumeAsync(state, TelegramBackupEmailOidcAttempt.Purpose, TelegramBackupEmailOidcAttempt.Binding(browserBinding, userId), cancellationToken).ConfigureAwait(false);
+        string? json = await tickets.ConsumeAsync(state, TelegramBackupEmailOidcAttempt.Purpose, TelegramBackupEmailOidcAttempt.Binding(browserBinding, userId), cancellationToken);
         if (json is null) {
             return Result.Failure(TelegramIdentityErrors.InvalidProof);
         }
@@ -32,11 +32,11 @@ public sealed class CompleteTelegramBackupEmailCommandHandler(ITelegramOidcProvi
         if (attempt is null || attempt.UserId != userId) {
             return Result.Failure(TelegramIdentityErrors.InvalidProof);
         }
-        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken).ConfigureAwait(false);
+        Result<TelegramOidcIdentity> identity = await provider.ExchangeAsync(new TelegramOidcTokenExchange(new TelegramAuthorizationCode(code), new TelegramPkceVerifier(attempt.CodeVerifier), new TelegramOidcNonce(attempt.Nonce)), cancellationToken);
         if (identity.IsFailure) {
             return Result.Failure(identity.Error);
         }
         return await backupEmail.RequestOidcAsync(userId, attempt.Email, identity.Value.TelegramUserId,
-            attempt.SecurityVersion, cancellationToken).ConfigureAwait(false);
+            attempt.SecurityVersion, cancellationToken);
     }
 }

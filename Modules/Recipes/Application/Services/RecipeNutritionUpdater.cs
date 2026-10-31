@@ -27,7 +27,7 @@ public static class RecipeNutritionUpdater {
             summary.TotalCarbs,
             summary.TotalFiber,
             summary.TotalAlcohol);
-        await nutritionWriter.UpdateNutritionAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await nutritionWriter.UpdateNutritionAsync(recipe, cancellationToken);
     }
 
     private static bool NeedsUpdate(Recipe recipe, RecipeNutritionSummary summary) =>

@@ -14,7 +14,7 @@ internal sealed class WebPushOutboxReplayStream(NotificationsDbContext context) 
         NotificationWebPushOutboxMessage? message = await (forUpdate
             ? context.NotificationWebPushOutbox.FromSqlInterpolated($"SELECT * FROM \"NotificationWebPushOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
             : context.NotificationWebPushOutbox.Where(message => message.Id == messageId))
-            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            .SingleOrDefaultAsync(cancellationToken);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.NotificationId.Value.ToString());
     }
 
@@ -34,6 +34,5 @@ internal sealed class WebPushOutboxReplayStream(NotificationsDbContext context) 
                 message.AttemptCount,
                 message.LastError,
                 message.NotificationId.Value.ToString()))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 }

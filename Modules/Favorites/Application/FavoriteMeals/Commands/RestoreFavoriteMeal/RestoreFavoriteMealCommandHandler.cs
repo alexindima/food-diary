@@ -18,7 +18,7 @@ public sealed class RestoreFavoriteMealCommandHandler(
     ICurrentUserAccessService access)
     : ICommandHandler<RestoreFavoriteMealCommand, Result<FavoriteMealModel>> {
     public async Task<Result<FavoriteMealModel>> Handle(RestoreFavoriteMealCommand command, CancellationToken cancellationToken) {
-        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(command.UserId, access, cancellationToken).ConfigureAwait(false);
+        Result<UserId> user = await CurrentUserAccessResolver.ResolveAsync(command.UserId, access, cancellationToken);
         if (user.IsFailure) {
             return UserIdParser.ToFailure<FavoriteMealModel>(user);
         }
@@ -27,15 +27,15 @@ public sealed class RestoreFavoriteMealCommandHandler(
         if (id.IsFailure) {
             return RequiredIdParser.ToFailure<FavoriteMealModel, FavoriteMealId>(id);
         }
-        FavoriteMeal? favorite = await repository.GetForRestoreAsync(id.Value, user.Value, cancellationToken).ConfigureAwait(false);
+        FavoriteMeal? favorite = await repository.GetForRestoreAsync(id.Value, user.Value, cancellationToken);
         if (favorite is null) {
             return Result.Failure<FavoriteMealModel>(FavoriteMealErrors.NotFound(command.FavoriteMealId));
         }
-        Result<FavoriteMealSourceModel> source = await sourceReader.GetAccessibleAsync(user.Value, favorite.MealId, cancellationToken).ConfigureAwait(false);
+        Result<FavoriteMealSourceModel> source = await sourceReader.GetAccessibleAsync(user.Value, favorite.MealId, cancellationToken);
         if (source.IsFailure) {
             return Result.Failure<FavoriteMealModel>(source.Error);
         }
-        FavoriteMeal? active = await repository.GetByMealIdAsync(favorite.MealId, user.Value, cancellationToken).ConfigureAwait(false);
+        FavoriteMeal? active = await repository.GetByMealIdAsync(favorite.MealId, user.Value, cancellationToken);
         if (active is not null && active.Id != favorite.Id) {
             return Result.Failure<FavoriteMealModel>(FavoriteMealErrors.AlreadyExists);
         }

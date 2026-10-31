@@ -18,7 +18,7 @@ public sealed class MailInboxRetentionHostedService(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                await DrainExpiredAsync(stoppingToken).ConfigureAwait(false);
+                await DrainExpiredAsync(stoppingToken);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             } catch (Exception exception) {
@@ -29,7 +29,7 @@ public sealed class MailInboxRetentionHostedService(
             }
 
             try {
-                await Task.Delay(_options.CleanupInterval, timeProvider, stoppingToken).ConfigureAwait(false);
+                await Task.Delay(_options.CleanupInterval, timeProvider, stoppingToken);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 return;
             }
@@ -42,7 +42,7 @@ public sealed class MailInboxRetentionHostedService(
             now - _options.ContentRetention,
             now - _options.MetadataRetention,
             _options.CleanupBatchSize,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         MailInboxTelemetry.RecordRetention(MailInboxRetentionOutcome.ContentPurged, result.ContentPurgedCount);
         MailInboxTelemetry.RecordRetention(MailInboxRetentionOutcome.MetadataDeleted, result.MetadataDeletedCount);
@@ -61,7 +61,7 @@ public sealed class MailInboxRetentionHostedService(
         int totalMetadataDeleted = 0;
         InboundMailRetentionResult batch;
         do {
-            batch = await PurgeAsync(cancellationToken).ConfigureAwait(false);
+            batch = await PurgeAsync(cancellationToken);
             totalContentPurged = checked(totalContentPurged + batch.ContentPurgedCount);
             totalMetadataDeleted = checked(totalMetadataDeleted + batch.MetadataDeletedCount);
             if (batch.ContentPurgedCount == _options.CleanupBatchSize ||

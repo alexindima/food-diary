@@ -16,7 +16,7 @@ public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider d
             code,
             userId.Value.ToString(),
             CodeTtl,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
 
         return new AdminSsoCode(code, expiresAt);
     }
@@ -26,7 +26,7 @@ public sealed class AdminSsoService(IAdminSsoCodeStore codeStore, TimeProvider d
             return null;
         }
 
-        string? value = await codeStore.ConsumeAsync(code, cancellationToken).ConfigureAwait(false);
+        string? value = await codeStore.ConsumeAsync(code, cancellationToken);
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }

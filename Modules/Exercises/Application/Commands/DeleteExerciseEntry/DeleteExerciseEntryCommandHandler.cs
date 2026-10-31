@@ -20,7 +20,7 @@ public sealed class DeleteExerciseEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -35,12 +35,12 @@ public sealed class DeleteExerciseEntryCommandHandler(
         }
 
         ExerciseEntryId entryId = entryIdResult.Value;
-        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken);
         if (entry is null) {
             return Result.Failure(ExerciseErrors.NotAccessible(command.EntryId));
         }
 
-        await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.DeleteAsync(entry, cancellationToken);
         return Result.Success();
     }
 }

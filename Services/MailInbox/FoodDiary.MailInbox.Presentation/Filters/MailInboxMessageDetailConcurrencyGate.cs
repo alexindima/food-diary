@@ -10,7 +10,7 @@ public sealed class MailInboxMessageDetailConcurrencyGate(IOptions<MailInboxHttp
     private readonly TimeSpan _queueTimeout = options.Value.MessageDetailQueueTimeout;
 
     public async ValueTask<IDisposable?> TryEnterAsync(CancellationToken cancellationToken) {
-        bool entered = await _slots.WaitAsync(_queueTimeout, cancellationToken).ConfigureAwait(false);
+        bool entered = await _slots.WaitAsync(_queueTimeout, cancellationToken);
         return entered ? new Lease(_slots) : null;
     }
 

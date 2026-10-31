@@ -16,8 +16,7 @@ public sealed class UpdateDietologistPermissionsCommandHandler(
     : ICommandHandler<UpdateDietologistPermissionsCommand, Result> {
     public async Task<Result> Handle(UpdateDietologistPermissionsCommand command, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -27,19 +26,19 @@ public sealed class UpdateDietologistPermissionsCommandHandler(
             userId,
             DietologistInvitationStatus.Pending,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         invitation ??= await invitationRepository.GetActiveByClientAsync(
             userId,
             asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
 
         if (invitation is null) {
             return Result.Failure(DietologistErrors.NoActiveRelationship);
         }
 
         invitation.UpdatePermissions(command.Permissions.ToPermissions());
-        await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
+        await invitationRepository.UpdateAsync(invitation, cancellationToken);
         return Result.Success();
     }
 }

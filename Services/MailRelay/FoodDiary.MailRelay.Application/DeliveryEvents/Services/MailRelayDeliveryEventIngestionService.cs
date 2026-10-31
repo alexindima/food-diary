@@ -9,7 +9,7 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
         }
 
         IngestMailEventRequest normalizedRequest = request with { EventType = eventType };
-        MailRelayDeliveryEventEntry deliveryEvent = await queueStore.RecordDeliveryEventAsync(normalizedRequest, cancellationToken).ConfigureAwait(false);
+        MailRelayDeliveryEventEntry deliveryEvent = await queueStore.RecordDeliveryEventAsync(normalizedRequest, cancellationToken);
 
         if (MailRelaySuppressionPolicy.ShouldSuppress(eventType, request.Classification)) {
             await queueStore.UpsertSuppressionAsync(
@@ -17,7 +17,7 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
                     request.Email,
                     request.Reason ?? MailRelaySuppressionPolicy.GetDefaultReason(eventType),
                     request.Source),
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken);
         }
 
         return Result.Success(deliveryEvent);
@@ -28,7 +28,7 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
         CancellationToken cancellationToken) {
         var result = new List<MailRelayDeliveryEventEntry>();
         foreach (IngestMailEventRequest request in requests) {
-            Result<MailRelayDeliveryEventEntry> deliveryEvent = await IngestAsync(request, cancellationToken).ConfigureAwait(false);
+            Result<MailRelayDeliveryEventEntry> deliveryEvent = await IngestAsync(request, cancellationToken);
             if (deliveryEvent.IsFailure) {
                 return Result.Failure<IReadOnlyList<MailRelayDeliveryEventEntry>>(deliveryEvent.Error!);
             }

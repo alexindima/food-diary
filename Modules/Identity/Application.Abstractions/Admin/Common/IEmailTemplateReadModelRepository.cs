@@ -9,5 +9,5 @@ public interface IEmailTemplateReadModelRepository {
         int page,
         int limit,
         CancellationToken cancellationToken = default) =>
-        (await GetAllReadModelsAsync(cancellationToken).ConfigureAwait(false)).Skip((page - 1) * limit).Take(limit).ToList();
+        (await GetAllReadModelsAsync(cancellationToken)).Skip((page - 1) * limit).Take(limit).ToList();
 }

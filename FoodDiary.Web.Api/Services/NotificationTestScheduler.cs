@@ -47,16 +47,16 @@ public sealed class NotificationTestScheduler(
         while (!stoppingToken.IsCancellationRequested) {
             ScheduledItem? dueItem = TryTakeDueItem();
             if (dueItem is not null) {
-                await DispatchAsync(dueItem, stoppingToken).ConfigureAwait(false);
+                await DispatchAsync(dueItem, stoppingToken);
                 continue;
             }
 
             TimeSpan? delay = GetDelayUntilNextItem();
             try {
                 if (delay is null) {
-                    await _changed.WaitAsync(stoppingToken).ConfigureAwait(false);
+                    await _changed.WaitAsync(stoppingToken);
                 } else {
-                    await WaitForDelayOrChangeAsync(delay.Value, stoppingToken).ConfigureAwait(false);
+                    await WaitForDelayOrChangeAsync(delay.Value, stoppingToken);
                 }
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 break;
@@ -91,10 +91,10 @@ public sealed class NotificationTestScheduler(
         using var waitCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var delayTask = Task.Delay(delay, timeProvider, waitCancellation.Token);
         Task changeTask = _changed.WaitAsync(waitCancellation.Token);
-        await Task.WhenAny(delayTask, changeTask).ConfigureAwait(false);
-        await waitCancellation.CancelAsync().ConfigureAwait(false);
+        await Task.WhenAny(delayTask, changeTask);
+        await waitCancellation.CancelAsync();
         try {
-            await Task.WhenAll(delayTask, changeTask).ConfigureAwait(false);
+            await Task.WhenAll(delayTask, changeTask);
         } catch (OperationCanceledException) when (waitCancellation.IsCancellationRequested) {
         }
     }
@@ -110,7 +110,7 @@ public sealed class NotificationTestScheduler(
         try {
             using IServiceScope scope = serviceScopeFactory.CreateScope();
             ITestNotificationDeliveryDispatcher dispatcher = scope.ServiceProvider.GetRequiredService<ITestNotificationDeliveryDispatcher>();
-            await dispatcher.DispatchAsync(item.UserId, item.Type, cancellationToken).ConfigureAwait(false);
+            await dispatcher.DispatchAsync(item.UserId, item.Type, cancellationToken);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
         } catch (Exception ex) {
             logger.LogError(ex, "Failed to deliver scheduled test notification for user {UserId}.", item.UserId);

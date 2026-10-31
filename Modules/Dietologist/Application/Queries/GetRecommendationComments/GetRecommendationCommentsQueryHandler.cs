@@ -22,7 +22,7 @@ public sealed class GetRecommendationCommentsQueryHandler(
         GetRecommendationCommentsQuery query,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            query.UserId, currentUserAccessService, cancellationToken).ConfigureAwait(false);
+            query.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<PagedResponse<RecommendationCommentModel>>(userIdResult);
         }
@@ -39,7 +39,7 @@ public sealed class GetRecommendationCommentsQueryHandler(
         }
 
         RecommendationParticipantsReadModel? recommendation = await commentRepository.GetParticipantsAsync(
-            recommendationIdResult.Value, cancellationToken).ConfigureAwait(false);
+            recommendationIdResult.Value, cancellationToken);
         if (recommendation is null ||
             (recommendation.ClientUserId != userId && recommendation.DietologistUserId != userId)) {
             return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
@@ -47,7 +47,7 @@ public sealed class GetRecommendationCommentsQueryHandler(
 
         if (recommendation.ClientUserId != userId) {
             Result<DietologistPermissionsModel> access = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
-                invitationRepository, userId, recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
+                invitationRepository, userId, recommendation.ClientUserId, cancellationToken);
             if (access.IsFailure) {
                 return Result.Failure<PagedResponse<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
             }
@@ -56,7 +56,7 @@ public sealed class GetRecommendationCommentsQueryHandler(
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSize(query.Limit);
         (IReadOnlyList<RecommendationCommentReadModel> comments, int total) =
-            await commentRepository.GetPageByRecommendationAsync(recommendationIdResult.Value, page, limit, cancellationToken).ConfigureAwait(false);
+            await commentRepository.GetPageByRecommendationAsync(recommendationIdResult.Value, page, limit, cancellationToken);
         int totalPages = total == 0 ? 0 : (int)Math.Ceiling(total / (double)limit);
         return Result.Success(new PagedResponse<RecommendationCommentModel>(
             comments.Select(ToModel).ToArray(), page, limit, totalPages, total));

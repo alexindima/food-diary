@@ -47,7 +47,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         try {
-            IPAddress[] addresses = await RemoteImageHostResolver(host, cancellationToken).ConfigureAwait(false);
+            IPAddress[] addresses = await RemoteImageHostResolver(host, cancellationToken);
             return addresses.Length > 0 && addresses.All(IsPublicAddress);
         } catch (SocketException) {
             return false;

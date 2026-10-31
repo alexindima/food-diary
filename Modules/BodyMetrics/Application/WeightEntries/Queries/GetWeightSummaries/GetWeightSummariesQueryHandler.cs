@@ -21,7 +21,7 @@ public sealed class GetWeightSummariesQueryHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             query.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<IReadOnlyList<WeightEntrySummaryModel>>(userIdResult);
         }
@@ -49,7 +49,7 @@ public sealed class GetWeightSummariesQueryHandler(
         DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
         DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        IReadOnlyList<WeightEntrySummaryModel> response = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntrySummaryModel> response = await sender.Send(new ReadWeightSummariesQuery(UserId: userId, DateFrom: normalizedFrom, DateTo: normalizedTo, QuantizationDays: query.QuantizationDays), cancellationToken);
 
         return Result.Success<IReadOnlyList<WeightEntrySummaryModel>>(response);
     }

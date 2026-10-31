@@ -12,7 +12,7 @@ public sealed class GetFoodRecognitionQueryHandler(IFoodRecognitionJobReader sto
     public async Task<Result<FoodRecognitionJobModel>> Handle(GetFoodRecognitionQuery request, CancellationToken cancellationToken) {
         Guid ownerId = request.UserId;
         Guid recognitionId = request.Id;
-        FoodRecognitionJobModel? job = await store.GetAsync(new UserId(ownerId), new FoodRecognitionJobId(recognitionId), cancellationToken).ConfigureAwait(false);
+        FoodRecognitionJobModel? job = await store.GetAsync(new UserId(ownerId), new FoodRecognitionJobId(recognitionId), cancellationToken);
         return job is null
             ? Result.Failure<FoodRecognitionJobModel>(AiErrors.RecognitionNotFound())
             : Result.Success(job);

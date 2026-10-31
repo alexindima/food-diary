@@ -54,7 +54,7 @@
         "context:ExecuteAsync"
       ],
       "reason": "Serializes the owner operation with a transaction-scoped PostgreSQL advisory lock before reading state. Shared coordinator owns commit, rollback and retries; no foreign aggregate writes.",
-      "technicalSourceSha256": "2cb83038585e21b0bdcd7cca686b5ba4a90381ba24d9252ab9edebc415bf12e1"
+      "technicalSourceSha256": "cc81f39da2565c3998a913d67aa036db108f78d5a641086f6f2994440ffd2c90"
     },
     "Modules/Images/Infrastructure/Persistence/EfImageConfirmationTransactionRunner.cs": {
       "module": "Images",
@@ -62,7 +62,7 @@
         "context:ExecuteAsync"
       ],
       "reason": "Serializes the owner operation with a transaction-scoped PostgreSQL advisory lock before reading state. Shared coordinator owns commit, rollback and retries; no foreign aggregate writes.",
-      "technicalSourceSha256": "46148699118a068ec6569d4b00996d58d11c5b20816505aecf00093df23ffd23"
+      "technicalSourceSha256": "3b7254aaf8f0d0f25e940d0bc8a43d81467b09b56722d965a59f8fb8e22512d2"
     },
     "Modules/Ai/Infrastructure/Persistence/AiDbContext.cs": {
       "module": "Ai",
@@ -70,7 +70,7 @@
         "context:SaveChangesAsync"
       ],
       "reason": "Owner context delegates saving to EF and translates only the public AiPromptTemplates key/locale unique constraint into a concurrency conflict. No retry or additional writes; shared unit of work retains rollback ownership.",
-      "technicalSourceSha256": "6e1a94b9fefd482dae54f84796989318e570fc6d8e2687f91c7750368e9b4cf4"
+      "technicalSourceSha256": "66205382ec189f2ed6174852fb0c06acfc0da386f2154cf7f87fa78b45aafcc0"
     },
     "Modules/Gamification/Infrastructure/ModuleRegistration.cs": {
       "module": "Gamification",
@@ -253,7 +253,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "4703d33608ad1c36a207accf4762648d27466cfd0d869d6887d11bfe2a5be45d"
+      "technicalSourceSha256": "ac109d58756a6a9973e4e8cc5958ed43c80542d758b2f13afbb4e8edbb3dec68"
     },
     "Modules/Hydration/Infrastructure/Persistence/HydrationIntervalReadService.cs": {
       "module": "Hydration",
@@ -283,7 +283,7 @@
         "write:MealRecognitionReceipt"
       ],
       "reason": "Meals-owned receipts and owner-filtered row lock for undo. Parameterized SQL locks only the selected owned Meal. No foreign aggregate access; caller transaction owns SaveChanges and commit.",
-      "technicalSourceSha256": "5bfec541dc4cdccdd9f8c57e2d8aa8f32b5eed3de50d355b423b7dd0b0dcf548"
+      "technicalSourceSha256": "76fef76bb3850b89feb9ffad7ab532081542f9db0bd1fa7786a2e87102ef1b76"
     },
     "Modules/Meals/Infrastructure/Persistence/Meals/EfMealRecognitionTransactionRunner.cs": {
       "module": "Meals",
@@ -294,7 +294,7 @@
         "entity:Meal"
       ],
       "reason": "Meals owns the unchanged user advisory lock and intermediate shared unit-of-work flush for the new Meal xmin. Host IModuleTransactionCoordinator owns clean entry, retry/reset, save and commit including the receipt; no external provider or foreign aggregate writes.",
-      "technicalSourceSha256": "08bc017b8b68fdd2075c817eed1e3f0985858ba58e1920ce31800f67042bb29f"
+      "technicalSourceSha256": "c2adf5fe416645c196ff17964464235f2ae3e48ba1e03e5a2562cb1c02d3b285"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs": {
       "module": "Identity",
@@ -305,7 +305,7 @@
         "write:TelegramOperation"
       ],
       "reason": "Identity-owned Telegram operation journal. Parameterized insert deduplicates bot/update pairs; conditional bulk updates enforce leases and cancellation. Pending payloads and checkpoints are protected per operation. Terminal content is erased immediately; bounded bot-scoped cleanup removes legacy completed content while retaining deduplication identities. User cancellation clears terminal content too. No foreign aggregate access or shared SaveChanges.",
-      "technicalSourceSha256": "2a313890103914df30b04b8cdb55317cd27adbcdb2f147fbcc57edb87f08efbe"
+      "technicalSourceSha256": "564cbb7493b8d56b88f0a36f1ad42fd6afad89125af5879cc651082c81b3f6ed"
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramLoginTicketStore.cs": {
       "module": "Identity",
@@ -315,7 +315,7 @@
         "write:TelegramLoginTicket"
       ],
       "reason": "Identity-owned single-use login tickets only. Parameterized SQL inserts encrypted payloads and deletes expired tickets; conditional owner-table deletion gates one consumer by fingerprint, browser binding, purpose and expiry. No foreign table access or shared SaveChanges.",
-      "technicalSourceSha256": "3e5cd9f2ce75d5b1aa9928f0d2fb94829995b40f2e1972dfeef5622f7f1be95a"
+      "technicalSourceSha256": "1ab065ee1a0913f52176acd52aaa0b6730a5dc552987e5299bd0239b0268d700"
     },
     "Modules/Admin/Infrastructure/AdminModuleRegistration.cs": {
       "module": "Admin",
@@ -346,7 +346,7 @@
         "write:AdminImpersonationSession"
       ],
       "reason": "Admin purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "002ba324a8bf8af6e07279fdd7af5436b8ca42b4ed55e4cf70ce0aebb9ba568a"
+      "technicalSourceSha256": "fe84a4caaba412963c39f9b534744532eda4ce441c54b368405ded99e5871511"
     },
     "Modules/Ai/Infrastructure/Persistence/AiPromptProvider.cs": {
       "module": "Ai",
@@ -380,7 +380,6 @@
         "call:AiQuotaReservation.Reacquire",
         "call:AiQuotaReservation.Release",
         "call:AiUsage.CreateWithTokens",
-        "context:ConfigureAwait",
         "context:Database",
         "context:SaveChangesAsync",
         "entity:AiQuotaPeriod",
@@ -393,7 +392,7 @@
         "write:AiUsage"
       ],
       "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. The provider-only verified COMMIT helper preserves the original Reserve result on confirmed commit and forbids replay on unknown outcome. SQL, validated usage counts, reservation checks, lock order, reconciliation/save/rollback, orphan and compensation semantics are unchanged. ADR 0054.",
-      "technicalSourceSha256": "30134d9575e47f545d939fb7491a67a82f2a8363f31d37e6dc3ab61b59acea09"
+      "technicalSourceSha256": "891b12a077e5d3723e33b42b9b232df2a2590384e2ad6d0af0d60ae4fc202c3e"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",
@@ -408,7 +407,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "3d4a705f9810e1c392d56150104fd043c8b600f69fb92c5c6c7a5416ca18eb30"
+      "technicalSourceSha256": "e149eda772983e996ea8551387b2a06de75ca4c8a84e2974f98aced565281fd7"
     },
     "Modules/Billing/Infrastructure/ModuleRegistration.cs": {
       "module": "Billing",
@@ -424,7 +423,7 @@
         "tracked:BillingWebhookEvent"
       ],
       "reason": "Creates Billing owner context and synchronizes repository reads with the live coordinator transaction; no concrete shared-context dependency.",
-      "technicalSourceSha256": "ae09efe9ed2b0f7fd711d5df4236a888116077d820bd671a27eeb371e1eb7826"
+      "technicalSourceSha256": "47b3576bc584ef3c97da6371b3139933a65b6d94b002a65a4b0487fc0a86be2f"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -459,7 +458,7 @@
         "context:ExecuteAsync"
       ],
       "reason": "Delegates save, retry, commit and reset to the scoped coordinator; owns advisory-lock SQL and duplicate payment/webhook translation before tracker cleanup.",
-      "technicalSourceSha256": "72c26a1a8c274e126a1f7d75c1c0241d0279e75fc8d89752f34a1856197741bd"
+      "technicalSourceSha256": "cbb644dba5664bc5fa63e73825cf2ece59f6282b5730a405c02cf3cec38294c4"
     },
     "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs": {
       "module": "BodyMetrics",
@@ -486,7 +485,7 @@
         "write:WeightEntry"
       ],
       "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "56195c291e36a1c2cb521850829834b6901deed1d304f35bd3154c7054e5245e"
+      "technicalSourceSha256": "caf5cfc2aa511f4aebf55c7682f0f2e8fa6d77994c413506ce6741bef0dbfa12"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -556,7 +555,7 @@
         "write:FertilitySignal"
       ],
       "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "7a71b46779c970bb2e06b59949a1656d33f7bd0629b8867a2937a6b42c4def20"
+      "technicalSourceSha256": "da38528c150c8fec89e9f4661fdc8f721db28e023189a96a1bdd185cc27df340"
     },
     "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs": {
       "module": "DailyAdvices",
@@ -592,7 +591,7 @@
         "write:DietologistInvitation"
       ],
       "reason": "Owner repository retains writes and delegates joined DTO reads to composition.",
-      "technicalSourceSha256": "48545f0ac7106b4f714b90bdea4083b9d7f67a07030c675450a7c5c6f37944a5"
+      "technicalSourceSha256": "17fba197209bba3ddfc20b62405877c3ddaa2f8aef1356ac9dcc5e7f33eb5b29"
     },
     "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
       "module": "Dietologist",
@@ -604,7 +603,7 @@
         "write:ClientTask"
       ],
       "reason": "Dietologist purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "3246ec00fbddb2ddebdca4e9dd62f27563d1c59eee7e6c922c96bf5c0805122b"
+      "technicalSourceSha256": "bacbbbf179109b81ca50adb08def7a1395e71db838f79860914b52074b38a148"
     },
     "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs": {
       "module": "Dietologist",
@@ -768,7 +767,7 @@
         "write:AchievementDefinition"
       ],
       "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
-      "technicalSourceSha256": "bb4322cfa0473ac95c6aae3c8ff2fcf776dc71b169680f05e82679ba3aa636be"
+      "technicalSourceSha256": "3a70adceab6a5ea48ea0940d2a3535fbd74b0b7362997c3f3b40e896c8ac0d40"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -781,7 +780,7 @@
         "write:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Gamification owns evaluation outbox rows; conflict upsert coalesces requests and preserves revisions.",
-      "technicalSourceSha256": "eb633cb786df6883ae3c81e1fa949250697b9e6b024cef8ae671c77e9061a027"
+      "technicalSourceSha256": "49cf59d1123e3b82f7ad5e8578c9081503fd849f35c128ff3bead3f0a0d1d7fb"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
       "module": "Gamification",
@@ -794,7 +793,7 @@
         "tracked:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Shared EF finalization fences success and failure by Revision and LockedBy. On conflict Gamification discards stale tracking and releases only a changed revision held by the original owner, preserving new request state.",
-      "technicalSourceSha256": "dd19af1272eb519da8c959f10e439be71b95abc143b183f204c29872525120ba"
+      "technicalSourceSha256": "3d64e3cd202f20fffb492f4ddb6558769b68d7175d539610b9a0639fbc1a681f"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
       "module": "Gamification",
@@ -812,7 +811,7 @@
         "entity:UserAchievement"
       ],
       "reason": "Gamification grants user achievements with conflict-safe SQL; no Users aggregate access.",
-      "technicalSourceSha256": "e55ec3d3722ab3f5924d05c9b7f6d09e6c77e73100543f81665034fc3bb2ceb2"
+      "technicalSourceSha256": "f8da3b8e351640fd3de8c1f32be44f239128c0836f434883003e5ae08fa44463"
     },
     "Modules/Hydration/Infrastructure/ModuleRegistration.cs": {
       "module": "Hydration",
@@ -845,7 +844,7 @@
         "write:HydrationEntry"
       ],
       "reason": "Owner context bulk purge joins the live shared transaction before every invocation. Preserve user predicates, delete ordering and caller rollback; no independent save or commit.",
-      "technicalSourceSha256": "6ef932eeba37153fd234f74e8acc26b50ea90e91bdaccec21e250b64c89dabc5"
+      "technicalSourceSha256": "808bd52bb84b48bc4a23e096efeac1107da07f1c9b850358331472e46d3f5d4e"
     },
     "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
       "module": "Identity",
@@ -861,7 +860,7 @@
         "tracked:UserRefreshTokenSession"
       ],
       "reason": "Owner context and narrow DbSet adapter registration with live shared transaction synchronization; preserves aliases and singleton template provider.",
-      "technicalSourceSha256": "cfd4313c920b38922d7a14b30f952892099bde491ef36209559990860ca1784e"
+      "technicalSourceSha256": "a347f40e311dfeb111900371d25a22c7ed3f62e55f61ded33d5c604e4f70876d"
     },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
@@ -882,7 +881,7 @@
         "context:TelegramAssertionPolicies"
       ],
       "reason": "Identity reads the migration-established assertion cutover, rejects pre-cutover proofs, then atomically cleans expired markers and inserts versioned canonical fingerprints. SQL writes remain limited to its own ConsumedTelegramAssertions table; shared caller transaction remains authoritative.",
-      "technicalSourceSha256": "6f865302bd2f67d8aeda850ba14b9b231da72822364c8128c94dade9b225a4b1"
+      "technicalSourceSha256": "270de021c9d46776b5cd83decaf3fa88b62da09904b7b338c1b1cb1a6019071e"
     },
     "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs": {
       "module": "Identity",
@@ -902,7 +901,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, atomic browser revalidation, explicitly eligible browser renewal and bounded retention deletes. Retention deletes only terminal records before the validated past UTC cutoff. Revalidation updates security version and monotonic activity. Separate renewal compares owner, credential hash, exact security version, previous expiry and revocation, requires persisted eligibility and compares remembered state and changes only expiry plus modification time. Proved persistence promotion requires the same owner, hash, version, active expiry and eligibility, and only sets remember-me plus modification time. Application policy supplies the renewal deadline and absolute cap. No proof rotation, User aggregate writes or context escapes; transaction synchronization remains; ADR 0058.",
-      "technicalSourceSha256": "a64474be19840413a8e390cc61ea5942161dc1a3f3c4fa07ec89d7b69c1a1968"
+      "technicalSourceSha256": "e4eb87ed29045ae5cee049feb0af1416b5e3f7a04ae43dbaf22c293721e462b9"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
@@ -959,7 +958,7 @@
         "write:ImageAsset"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity. Reviewed storage-key port grouping: enqueue now takes ObjectStorageKey.FromStoredValue for the same scalar persisted key. User filters, two-phase image cleanup, transaction synchronization and enqueue persistence are unchanged.",
-      "technicalSourceSha256": "2350f180d3fa9834c32aa21a0b3d62ebc7dadce206496712e9b1b7c93f71b6af"
+      "technicalSourceSha256": "bbac944cc6a46effe7b355f0f7bab14a8b1752a7826c6250cb1d278c0194f6b4"
     },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
@@ -993,7 +992,7 @@
         "write:MarketingAttributionEvent"
       ],
       "reason": "Marketing removes only attribution linked to the purged UserId, including when public content is reassigned. Anonymous and other users records remain under normal retention. Binds the live Users coordinator transaction; no shared SaveChanges, commit, raw SQL or foreign aggregate writes.",
-      "technicalSourceSha256": "692c8641b67f1617226eb3af5e321dfdb624911813b9d64bac6e64732cbdb278"
+      "technicalSourceSha256": "dd873c17a37523e516775db074b8bc2c7dcff4270a3bf367018872b67a7b2439"
     },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs": {
       "module": "MealPlanning",
@@ -1008,7 +1007,7 @@
         "write:ShoppingList"
       ],
       "reason": "MealPlanning deletes only the purged owner shopping lists and meal plans before Recipes removes referenced recipes. Curated and other users plans remain. Binds the live Users transaction without saving or committing; covered by linked-reference PostgreSQL cleanup regression.",
-      "technicalSourceSha256": "b64f7edc59dcf3083e66dbc2f70aa493cffe3686a2bd88837fc9a8871a7c6825"
+      "technicalSourceSha256": "1ba4d3a88aac0e4892009d1a28ca2f4496a89fa48ca7e72f289526cc9f20a31d"
     },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/EfMealPlanCatalogTransactionRunner.cs": {
       "module": "MealPlanning",
@@ -1066,7 +1065,7 @@
         "write:MealItem"
       ],
       "reason": "Meals purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "71c1006b1765ffaea84490cb3c27ee7ace3dea022707eae15ee42553317b4ea4"
+      "technicalSourceSha256": "956e6b2a2b94913c88d1c92cefa632b89f3d5d73e09c172e47edc36edf65224b"
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -1144,7 +1143,7 @@
         "entity:OpenFoodFactsProduct"
       ],
       "reason": "OpenFoodFacts owns its cache; PostgreSQL upsert refreshes only OpenFoodFactsProducts.",
-      "technicalSourceSha256": "45e7e1991be0a3897843c40241c468b5bca65621a110bbf8cc671f750cf04ceb"
+      "technicalSourceSha256": "66301fce8355c2f39106c5be77835b9c3d902e2dcf79bb25646425eb1ed37988"
     },
     "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs": {
       "module": "Products",
@@ -1163,7 +1162,7 @@
         "write:Product"
       ],
       "reason": "Owner product persistence and parameterized row locking. Cross-module usage count is delegated to the host-composed query in the same scoped transaction.",
-      "technicalSourceSha256": "8d610fcb9b9809efd38c36759bc384e07b319fd986d2a869631350ae430c59c7"
+      "technicalSourceSha256": "db8ceb245b4c034ac161c2ea05f5ac172ba8c6d1f91772332316b08aeebc371a"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
       "module": "Products",
@@ -1177,7 +1176,7 @@
         "write:Product"
       ],
       "reason": "Owner-context purge binds the live coordinated transaction on each invocation. Existing predicates and reassignment semantics remain. Users owns saving and completion; Images runs after Ai jobs to preserve restrictive image FKs. PostgreSQL coverage verifies rollback, reuse, cancellation and outbox atomicity.",
-      "technicalSourceSha256": "3b27bf38eeca97b8d6edf5659a9edbb966e4f82ea084df7044fc2d693b1d2353"
+      "technicalSourceSha256": "ebb2c1f34d587dedabcc1c18a2aec234bbc8556323fbb484ac9a0ceff8d838ae"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -1191,7 +1190,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems owns recency upsert/pruning. Typed owner references feed the existing tracked creation path. Reviewed: SQL, transaction synchronization, tracker inspection, conflict-safe usage and bounded retention remain unchanged; no foreign writes or new technical capabilities.",
-      "technicalSourceSha256": "198fdc7c37d2794847aae7f4b74d5ed2cd1a700e090af237ed7b08dadda208de"
+      "technicalSourceSha256": "09beb78232a9fb999e698e6cf4bd9743dbc17b63675fdf1d41e298a3826a8f1e"
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
       "module": "RecentItems",
@@ -1203,7 +1202,7 @@
         "write:RecentItem"
       ],
       "reason": "RecentItems purge uses only owner tables and binds the live shared transaction on every invocation. Users retains save, rollback and commit ownership; preserve bulk predicates, child-first ordering and cancellation, verified with PostgreSQL scope-reuse and failed-user continuation tests.",
-      "technicalSourceSha256": "d7328411ba70507958a6e27cc9dcbf3a4d77972a1d0666dfe12ced9999e71ddc"
+      "technicalSourceSha256": "7b493fc7ca1a63a4948bf61cd1b2f36016a12688ade0c1e28c881991970ac1ff"
     },
     "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs": {
       "module": "RecipeCommunity",
@@ -1243,7 +1242,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation. DetectChanges registers replacement owned steps/ingredients before nested recipe hydration and nutrition calculation. Usage counts delegate to IRecipeUsageQuery in host composition. Product snapshots remain transient immutable projections; no foreign aggregate tracking or writes.",
-      "technicalSourceSha256": "01c97d7b6634378712d55e3133efbbc47ed590b21bcab8a028ba0a65e7d02070"
+      "technicalSourceSha256": "2c2fdda18f07eaff104ef2e0c51ad9620c5cba3874c510bd24b7cdb036a98d6a"
     },
     "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
       "module": "Recipes",
@@ -1262,7 +1261,7 @@
         "write:RecipeIngredient"
       ],
       "reason": "Binds the live owner transaction. Explicit successor transfers legacy and recipe/step gallery assets with source filtering before owned recipes. Otherwise selective retention preserves referenced closure and ordinary purge deletes remaining own outgoing ingredient edges and recipes. Strict fixture cleanup still rejects foreign references. Users owns save/commit and all-owner rollback. ADR 0054.",
-      "technicalSourceSha256": "823523886cbfabd309ea195d48dfc6a18a724c3ea00921dd6500db1c357d2650"
+      "technicalSourceSha256": "aa03c5619e0d81209530a72f6eda3adca1dff87260c63996a5ccc258a3346696"
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -1320,7 +1319,7 @@
         "write:UserRole"
       ],
       "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. Ordered owner participants lock all source-owned content before fresh reference selection; a late reference after negative preflight defers deletion without side effects. Strict fixture cleanup refuses transfer and retries only remaining validated fixtures for bounded progress. The shared item coordinator owns retries, UoW save, verified commit and tracker reset. Participants never save or commit; no foreign aggregate writes. ADR 0054.",
-      "technicalSourceSha256": "7498e11bac942c93d7c2aa769ce1a38d935e3d081ab4fadb53cb288c882c9942"
+      "technicalSourceSha256": "a54459da81cea5ba717367c7df77b38c242f62f19e15b5ec7b1da80310c77aa6"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
@@ -1366,7 +1365,7 @@
         "write:UserRoleAuditEvent"
       ],
       "reason": "Users owns tracked account/profile/role-audit attachment. Detached goal updates read the persisted profile revision, insert only new history and retain immutable snapshots via owner navigation entries. No context escape, SaveChanges or commit; original profile xmin checks and caller unit of work remain authoritative.",
-      "technicalSourceSha256": "bbc9103855684970d70bb2eaa17956020e55d086b0041be7ce3cf7d8e9577e36"
+      "technicalSourceSha256": "29724e61c13563d3bd7d2b0b14afa0fab21f969cc9b7006951074bf06e7124bf"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
       "module": "Users",
@@ -1390,7 +1389,7 @@
         "write:UserRole"
       ],
       "reason": "Users owns atomic role changes and security-version updates; SQL is restricted to UserRoles/Roles/Users.",
-      "technicalSourceSha256": "2343ad246d8a9e649e6d75596518f9b08b214d3782815b082cdf20953dd9a112"
+      "technicalSourceSha256": "6fec8690b3cc946dc5a4bb54a61d4d9f610d9a70b225b6272e99639b57e0966a"
     },
     "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
       "module": "Wearables",
@@ -1424,7 +1423,7 @@
         "context:ExecuteAsync"
       ],
       "reason": "WeeklyGoals owns the unchanged user/week advisory lock; the scoped coordinator owns clean entry, retries/reset, shared save and commit.",
-      "technicalSourceSha256": "6ff1d39d09684c7175d17f3fd42307fc3f411a4b41097960d1c0334214c68af7"
+      "technicalSourceSha256": "eafc4b8d549500cf24ac241c868c6c12ad27a95a131576831de3c75ec54e0ca3"
     },
     "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs": {
       "module": "WeeklyGoals",
@@ -1435,7 +1434,7 @@
         "write:WeeklyGoal"
       ],
       "reason": "Reads and stages only WeeklyGoal records through the owner context; joins the current shared transaction before reads without committing.",
-      "technicalSourceSha256": "fdbf9899a810817dd918a2d7f8edf51cd67a90477410f6b8cbb3b41283763b8e"
+      "technicalSourceSha256": "8d450f999dea0e4271fc00032181a5b70d000f628dd07e469ef2e8104ff8b999"
     },
     "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs": {
       "module": "Admin",
@@ -1446,7 +1445,7 @@
         "write:BugAcknowledgementReceipt"
       ],
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
-      "technicalSourceSha256": "ed59ff49a364fafefc860d92fa54c241252982ac7ba423b7fcc9eb8a26570c26"
+      "technicalSourceSha256": "1838a0ebbd17d9c30d395ea423e4933ba086637b6e60d28f1e84dbb4599980df"
     },
     "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
       "module": "Marketing",
@@ -1459,7 +1458,6 @@
     "Modules/Ai/Infrastructure/Persistence/FoodRecognitionJobStore.cs": {
       "module": "Ai",
       "capabilities": [
-        "context:ConfigureAwait",
         "context:Database",
         "context:Entry",
         "context:SaveChangesAsync",
@@ -1468,7 +1466,7 @@
         "write:FoodRecognitionJob"
       ],
       "reason": "Ai-owned durable recognition queue. Fresh contexts and retry strategy wrap short admission and SKIP LOCKED claim transactions; user-scoped admission lock bounds outstanding tasks. Provider-only verified COMMIT preserves the original claimed job on confirmed commit and forbids replay on unknown outcome. External AI calls occur after committed claim. Running-state fences protect checkpoints and completion; maintenance expires ambiguous work without replay and removes retained results after seven days. Explicit collection loading reads only Ai-owned job images after the row lock, avoiding nullable joins in FOR UPDATE. History pagination counts and reads the same owner-scoped, seven-day no-tracking query with optional label filtering and deterministic CreatedOnUtc/Id ordering. No foreign aggregate writes.",
-      "technicalSourceSha256": "bd37345b38973b67ce790fd8a599ff4ffd03da3d17870ec6c8cb46688055604e"
+      "technicalSourceSha256": "1c6418f058a98267a0730660622b73ece2fcdb98ae0efcaaad4d74a61242f51a"
     },
     "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs": {
       "module": "ReadModelComposition",
@@ -1585,7 +1583,7 @@
         "context:ExecuteAsync"
       ],
       "reason": "Serialize progress mutation by user/lesson with a transaction-scoped advisory lock. The shared coordinator owns clean entry, retries, reset and atomic progress/outbox save and commit.",
-      "technicalSourceSha256": "f2c33dcc88d6f2d007ce2166c0653d8c168ad3d4015ed05858f7e488fbf0e089"
+      "technicalSourceSha256": "0c149b7db923b0d45ba849d99ab7a52b86774cc3d2625bf503e435b81aa75c3d"
     },
     "Modules/Lessons/Infrastructure/ModuleRegistration.cs": {
       "module": "Lessons",
@@ -1723,7 +1721,7 @@
         "tracked:Meal"
       ],
       "reason": "Compose the owner context and narrow repositories; synchronize owner queries with the live IModuleTransactionCoordinator transaction, including after intermediate recognition flush.",
-      "technicalSourceSha256": "54c9d01ede5663363308a90ca6abb592574c48bc905bb365d040701d63fa31e7"
+      "technicalSourceSha256": "0b9ca3d04ea01ad544f009db7a124f44849b270112ff7d5a3d192b85f502d049"
     },
     "FoodDiary.ReadModel.Composition/Products/ProductOverviewReadService.cs": {
       "module": "ReadModelComposition",
@@ -1753,7 +1751,7 @@
         "tracked:Product"
       ],
       "reason": "Compose scoped Products owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "133c79613468b70aba2657c2970b3f4df330b671be136e2df629a2b78e4fd5e8"
+      "technicalSourceSha256": "567c36187f03ffb51401b3809ed70d55c77a73bbc9214097444f2cc4bea54c79"
     },
     "FoodDiary.ReadModel.Composition/Recipes/RecipeUsageQuery.cs": {
       "module": "Recipes",
@@ -1774,7 +1772,7 @@
         "context:Database"
       ],
       "reason": "Compose scoped Recipes owner repositories and factory context; synchronize reads with the live IModuleTransactionCoordinator transaction, including after intermediate saves. Purge remains a separate reviewed bridge.",
-      "technicalSourceSha256": "e7341f002e9e43f0127abef833a5f332d3cf1497bb19da25cfbc315e343c00bb"
+      "technicalSourceSha256": "983febebbf1205b9d976d1273caac885c93ad62317c8830519f93b6c126d2c2f"
     },
     "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs": {
       "module": "Identity",
@@ -1802,7 +1800,7 @@
         "tracked:AiPromptTemplate"
       ],
       "reason": "Registers scoped owner context for coordinated writes and separate typed options for independent quota/job transactions. The singleton prompt preview renderer uses only the request factory and adds no persistence access.",
-      "technicalSourceSha256": "16c5feeb47f009377869e2817944adde8c88f70b596141d502e04e12d17dcb4b"
+      "technicalSourceSha256": "857d2a2b6c107d447b11a9b5f12947f3bace1ecfaaf6e35aab9c001b8c1dad28"
     },
     "FoodDiary.ReadModel.Composition/Users/UserCurrentWeightProvider.cs": {
       "module": "Users",
@@ -1838,7 +1836,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "5c17608f994f44990878266fda8e233c8e134f1fa545734e028c0e7e33bc45b8"
+      "technicalSourceSha256": "6b77bda5b6fe6b460ae3750098913124a949fbd332d3ac179cf3db70822628f3"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1846,7 +1844,7 @@
         "context:SaveChangesAsync"
       ],
       "reason": "Owner context delegates saving to EF and translates only the public ContentReports UserId/TargetType/TargetId unique constraint into a concurrency conflict. No retry or independent commit; caller unit of work retains rollback ownership.",
-      "technicalSourceSha256": "2f7d77fbe79715f49f029ee58244307ff895e07a03403b2998f5daf7c7827635"
+      "technicalSourceSha256": "9dd30e6a62e86f23867f16d0f9a5d30656aa2d66734eaf1eaffd95ca0eff1355"
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsDbContext.cs": {
       "module": "BodyMetrics",
@@ -1854,7 +1852,7 @@
         "context:SaveChangesAsync"
       ],
       "reason": "Owner context delegates saving to EF and translates only public WeightEntries and WaistEntries UserId/Date unique constraints into concurrency conflicts. No retry or independent save; the shared unit of work retains rollback ownership.",
-      "technicalSourceSha256": "168cf07ac64b6be161216e58728bd9bddc4b040d66b8f2c151f31a87e4069e07"
+      "technicalSourceSha256": "4ad949d7a2c00da18cbffc0dc0eab65d961139cd42116ab914dea21cf5d3ad3f"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserBodyMetricHistoryReadService.cs": {
       "module": "Users",
@@ -1881,7 +1879,7 @@
         "entity:User"
       ],
       "reason": "Owner save interceptor locks only the account principal for pending preferences/nutrition writes, checks persisted lifecycle and original security version, and holds the read lock until the coordinated transaction ends. No save, commit, retry, foreign write or credentials materialization.",
-      "technicalSourceSha256": "b7ce7e60070553a83050895cdb229908c1ee34759c5eb331d262d5e9871f9195"
+      "technicalSourceSha256": "e5411bbf44f9761fe6a94170cc1d3430a781258687d149ea89a5e5c5ca9d3858"
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs": {
       "reason": "Reads exact owned object-key deletion IDs and passes only those IDs into the shared fenced outbox claim engine. No foreign queue message is claimed or processed.",
@@ -1904,7 +1902,7 @@
         "write:Recipe"
       ],
       "reason": "Recipes owner locks all source-owned Recipe rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. Re-reads the owned closure, transfers legacy/gallery images through source-filtered Images ownership, then changes only selected own recipes. No foreign aggregate writes, save or commit. ADR 0054.",
-      "technicalSourceSha256": "9cdf1f42b2fa3f687018595c57ca52c0585635f245335dd53c61564dc07c845b"
+      "technicalSourceSha256": "1ded5a9fd92881bfdc398373cb63be8a7a51b07a0840d0c3131ebfb57e436573"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs": {
       "module": "Products",
@@ -1918,7 +1916,7 @@
         "write:Product"
       ],
       "reason": "Products owner locks all source-owned Product rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. After recipe retention, re-reads surviving foreign references, transfers source-owned legacy/gallery assets through Images and changes only selected own products. No foreign aggregate writes, save or commit. ADR 0054.",
-      "technicalSourceSha256": "ec2ec2f1ada6730bb8ab25876165933de0f444f93f2a140953c6a95aff4707da"
+      "technicalSourceSha256": "7e299a45e70053f262ef82bdc9c0b929536f6c6389ef3bfb573521a18334a2df"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs": {
       "module": "Users",
@@ -1931,7 +1929,7 @@
         "write:User"
       ],
       "reason": "Read-only preflight determines whether a successor is needed. Separate coordinated provisioning serializes the fixed infrastructure principal by advisory lock, validates non-auth state and stages the Users factory result. The coordinator saves and verifies COMMIT. The permanent empty principal can survive a later content-item rollback; content transfer and deletion remain atomic. ADR 0054.",
-      "technicalSourceSha256": "98382972aa38bf3617025136949b51f818345caa138b9ca5be1ef90d565a52a0"
+      "technicalSourceSha256": "24983f8d882ca1a288ca7bbc014009b0c5926d8bc2a5b9167aab07696cbf172e"
     }
   }
 }

@@ -17,8 +17,7 @@ public sealed class RemoveFavoriteMealCommandHandler(
         RemoveFavoriteMealCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver
-            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken)
-            .ConfigureAwait(false);
+            .ResolveAsync(command.UserId, currentUserAccessService, cancellationToken);
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure(userIdResult);
         }
@@ -35,13 +34,13 @@ public sealed class RemoveFavoriteMealCommandHandler(
 
         FavoriteMealId favoriteMealId = favoriteMealIdResult.Value;
         FavoriteMeal? favorite = await favoriteMealRepository.GetByIdAsync(
-            favoriteMealId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+            favoriteMealId, userId, asTracking: true, cancellationToken: cancellationToken);
 
         if (favorite is null) {
             return Result.Failure(FavoriteMealErrors.NotFound(command.FavoriteMealId));
         }
 
-        await favoriteMealRepository.DeleteAsync(favorite, cancellationToken).ConfigureAwait(false);
+        await favoriteMealRepository.DeleteAsync(favorite, cancellationToken);
         return Result.Success();
     }
 }

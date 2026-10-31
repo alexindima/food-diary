@@ -29,11 +29,11 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
         IQueryable<Recipe> query = ApplyFilters(CreateBaseQuery(userId, includePublic), filters);
 
-        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken);
         List<RecipeOverviewReadRow> rows = await ProjectRows(ApplyOrdering(query.AsNoTracking(), filters.SortBy).AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), userId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (rows.ConvertAll(row => ToReadItem(row, userId)), totalItems);
     }
@@ -50,7 +50,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(CreateBaseQuery(userId, includePublic).AsNoTracking()
                 .Where(r => recipeIds.Contains(r.Id)), userId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return rows.ToDictionary(row => row.Id, row => ToReadItem(row, userId));
     }
@@ -76,7 +76,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
             category,
             maxPrepTime);
 
-        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.AsNoTracking().CountAsync(cancellationToken);
         IQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
             ? query.AsNoTracking().OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count +
                 context.MealPlans.AsNoTracking().SelectMany(plan => plan.Days).SelectMany(day => day.Meals)
@@ -86,7 +86,7 @@ internal sealed class RecipeOverviewReadService(ICompositionReadContext context)
         List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery.AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize), currentUserId)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
 
         return (rows.ConvertAll(row => ToReadItem(row, currentUserId)), totalItems);
     }

@@ -23,7 +23,7 @@ public sealed class CreateExerciseEntryCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             currentUserAccessService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ExerciseEntryModel>(userIdResult);
         }
@@ -52,7 +52,7 @@ public sealed class CreateExerciseEntryCommandHandler(
             command.Name,
             command.Notes);
 
-        await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
+        await repository.AddAsync(entry, cancellationToken);
         return Result.Success(entry.ToModel());
     }
 }

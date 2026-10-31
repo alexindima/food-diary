@@ -11,20 +11,19 @@ public sealed class UserAchievementStore(DbContext context, DbSet<UserAchievemen
     public async Task<IReadOnlyList<UserAchievement>> GetByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         return await achievements
             .AsNoTracking()
             .Where(achievement => achievement.UserId == userId)
             .OrderBy(achievement => achievement.EarnedAtUtc)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<UserAchievement>> GrantMissingAsync(
         UserId userId,
         IReadOnlyCollection<AchievementGrantModel> grants,
         CancellationToken cancellationToken = default) {
-        await SynchronizeTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await SynchronizeTransactionAsync(cancellationToken);
         foreach (AchievementGrantModel grant in grants) {
             var achievement = UserAchievement.Create(
                 userId,
@@ -39,14 +38,14 @@ public sealed class UserAchievementStore(DbContext context, DbSet<UserAchievemen
                 VALUES
                     ({{achievement.Id.Value}}, {{achievement.UserId.Value}}, {{achievement.AchievementKey}}, {{achievement.EarnedAtUtc}}, {{achievement.EarnedValue}}, {{achievement.DefinitionVersion}}, {{achievement.CreatedOnUtc}})
                 ON CONFLICT ("UserId", "AchievementKey") DO NOTHING
-                """, cancellationToken).ConfigureAwait(false);
+                """, cancellationToken);
         }
 
-        return await GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        return await GetByUserIdAsync(userId, cancellationToken);
     }
     private async Task SynchronizeTransactionAsync(CancellationToken cancellationToken) {
         if (currentTransaction is not null && context.Database.IsRelational()) {
-            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken).ConfigureAwait(false);
+            await context.Database.UseTransactionAsync(currentTransaction(), cancellationToken);
         }
     }
 }

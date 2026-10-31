@@ -22,7 +22,7 @@ public interface IMailRelayQueueStore {
     async Task<MailRelayPage<MailRelaySuppressionEntry>> GetSuppressionsPageAsync(string? email, int page, int limit, CancellationToken cancellationToken) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);
         int normalizedLimit = Math.Clamp(limit, 1, 100);
-        IReadOnlyList<MailRelaySuppressionEntry> all = await GetSuppressionsAsync(email, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MailRelaySuppressionEntry> all = await GetSuppressionsAsync(email, cancellationToken);
         IReadOnlyList<MailRelaySuppressionEntry> data = all.Skip((normalizedPage - 1) * normalizedLimit).Take(normalizedLimit).ToArray();
         int totalPages = all.Count == 0 ? 0 : (int)Math.Ceiling(all.Count / (double)normalizedLimit);
         return new MailRelayPage<MailRelaySuppressionEntry>(data, normalizedPage, normalizedLimit, totalPages, all.Count);
@@ -36,7 +36,7 @@ public interface IMailRelayQueueStore {
         string? email, int page, int limit, CancellationToken cancellationToken) {
         int normalizedPage = Math.Clamp(page, 1, 10_000);
         int normalizedLimit = Math.Clamp(limit, 1, 100);
-        IReadOnlyList<MailRelayDeliveryEventEntry> all = await GetDeliveryEventsAsync(email, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MailRelayDeliveryEventEntry> all = await GetDeliveryEventsAsync(email, cancellationToken);
         IReadOnlyList<MailRelayDeliveryEventEntry> data = all.Skip((normalizedPage - 1) * normalizedLimit).Take(normalizedLimit).ToArray();
         int totalPages = all.Count == 0 ? 0 : (int)Math.Ceiling(all.Count / (double)normalizedLimit);
         return new MailRelayPage<MailRelayDeliveryEventEntry>(data, normalizedPage, normalizedLimit, totalPages, all.Count);

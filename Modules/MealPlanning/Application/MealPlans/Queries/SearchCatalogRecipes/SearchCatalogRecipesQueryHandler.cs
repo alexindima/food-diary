@@ -8,5 +8,5 @@ namespace FoodDiary.Modules.MealPlanning.Application.MealPlans.Queries.SearchCat
 public sealed class SearchCatalogRecipesQueryHandler(IMealPlanCatalogRecipeReader reader)
     : IQueryHandler<SearchCatalogRecipesQuery, Result<IReadOnlyList<CatalogRecipeReadModel>>> {
     public async Task<Result<IReadOnlyList<CatalogRecipeReadModel>>> Handle(SearchCatalogRecipesQuery query, CancellationToken cancellationToken) =>
-        Result.Success(await reader.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false));
+        Result.Success(await reader.SearchAsync(query.Search, query.Limit, cancellationToken));
 }

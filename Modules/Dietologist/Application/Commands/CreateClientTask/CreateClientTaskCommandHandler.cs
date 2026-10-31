@@ -22,7 +22,7 @@ public sealed class CreateClientTaskCommandHandler(
         CreateClientTaskCommand command,
         CancellationToken cancellationToken) {
         Result<UserId> dietologistIdResult = await CurrentUserAccessResolver.ResolveAsync(
-            command.UserId, userContextService, cancellationToken).ConfigureAwait(false);
+            command.UserId, userContextService, cancellationToken);
         if (dietologistIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<ClientTaskModel>(dietologistIdResult);
         }
@@ -40,7 +40,7 @@ public sealed class CreateClientTaskCommandHandler(
             invitationRepository,
             dietologistIdResult.Value,
             clientIdResult.Value,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (accessResult.IsFailure) {
             return Result.Failure<ClientTaskModel>(accessResult.Error);
         }
@@ -51,13 +51,13 @@ public sealed class CreateClientTaskCommandHandler(
             command.Title,
             command.Details,
             command.DueAtUtc);
-        await taskRepository.AddAsync(task, cancellationToken).ConfigureAwait(false);
+        await taskRepository.AddAsync(task, cancellationToken);
         await notificationWriter.AddAsync(
             DietologistNotificationFactory.CreateClientTaskChanged(
                 task.ClientUserId,
                 task.ClientUserId.Value.ToString(),
                 forDietologist: false),
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken);
         return Result.Success(task.ToModel(timeProvider.GetUtcNow().UtcDateTime));
     }
 }

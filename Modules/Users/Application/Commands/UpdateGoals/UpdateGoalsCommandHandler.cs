@@ -28,13 +28,13 @@ public sealed class UpdateGoalsCommandHandler(
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
             command.UserId,
             userContextService,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<GoalsModel>(userIdResult);
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken);
         if (userResult.IsFailure) {
             return Result.Failure<GoalsModel>(userResult.Error);
         }
@@ -61,8 +61,7 @@ public sealed class UpdateGoalsCommandHandler(
 
             if (command.DesiredWeightKg.HasValue && command.DesiredWeightKg != currentUser.DesiredWeightKg) {
                 double? trackedWeight = await currentWeightProvider
-                    .GetCurrentWeightAsync(userId, cancellationToken)
-                    .ConfigureAwait(false);
+                    .GetCurrentWeightAsync(userId, cancellationToken);
                 double? startWeight = trackedWeight ?? currentUser.WeightKg ?? currentUser.WeightGoals.SingleOrDefault(goal => goal.Status == WeightGoalStatus.Active)?.StartWeightKg;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
                 if (startWeight.HasValue) {
@@ -74,8 +73,7 @@ public sealed class UpdateGoalsCommandHandler(
 
             if (command.DesiredWaistCm.HasValue && command.DesiredWaistCm != currentUser.DesiredWaistCm) {
                 double? startWaist = await currentWaistProvider
-                    .GetCurrentWaistAsync(userId, cancellationToken)
-                    .ConfigureAwait(false);
+                    .GetCurrentWaistAsync(userId, cancellationToken);
                 startWaist ??= currentUser.WaistGoals.SingleOrDefault(goal => goal.Status == WaistGoalStatus.Active)?.StartWaistCm;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
                 if (startWaist.HasValue) {
@@ -89,7 +87,7 @@ public sealed class UpdateGoalsCommandHandler(
                 Errors.Validation.Invalid(ex.ParamName ?? nameof(UpdateGoalsCommand), ex.Message));
         }
 
-        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken);
 
         return Result.Success(currentUser.ToGoalsModel());
     }
