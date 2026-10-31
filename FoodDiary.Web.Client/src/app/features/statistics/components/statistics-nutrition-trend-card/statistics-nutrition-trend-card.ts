@@ -12,10 +12,8 @@ import {
     type FdUiLineChartPoint,
     type FdUiLineChartReferenceLine,
     type FdUiLineChartSeries,
-    FdUiSelectComponent,
-    type FdUiSelectOption,
 } from 'fd-ui-kit';
-import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
@@ -60,7 +58,6 @@ type StatisticsTrendChartMode = 'bars' | 'line';
         FdUiCardComponent,
         FdUiIconComponent,
         FdUiLineChartComponent,
-        FdUiSelectComponent,
         FdUiSegmentedToggleComponent,
     ],
     templateUrl: './statistics-nutrition-trend-card.html',
@@ -82,13 +79,10 @@ export class StatisticsNutritionTrendCardComponent {
     public readonly insights = input.required<readonly StatisticsTrendInsight[]>();
 
     protected readonly chartMode = signal<StatisticsTrendChartMode>('bars');
-    protected readonly chartModeOptions = computed<Array<FdUiSelectOption<StatisticsTrendChartMode>>>(() => {
-        this.translationChange();
-        return [
-            { value: 'bars', label: this.translateService.instant('STATISTICS.DASHBOARD.TREND.CHART_BARS') },
-            { value: 'line', label: this.translateService.instant('STATISTICS.DASHBOARD.TREND.CHART_LINE') },
-        ];
-    });
+    protected readonly chartModeOptions: FdUiSegmentedToggleOption[] = [
+        { value: 'bars', labelKey: 'STATISTICS.DASHBOARD.TREND.CHART_BARS' },
+        { value: 'line', labelKey: 'STATISTICS.DASHBOARD.TREND.CHART_LINE' },
+    ];
     private readonly chartNumberFormatter = computed(() => {
         this.translationChange();
         return new Intl.NumberFormat(resolveAppLocale(this.translateService.getCurrentLang()), { maximumFractionDigits: 0 });
@@ -273,8 +267,8 @@ export class StatisticsNutritionTrendCardComponent {
         this.selectedTab.set(value);
     }
 
-    protected changeChartMode(value: StatisticsTrendChartMode | null): void {
-        if (value !== null) {
+    protected changeChartMode(value: string): void {
+        if (value === 'bars' || value === 'line') {
             this.chartMode.set(value);
         }
     }

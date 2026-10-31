@@ -723,6 +723,8 @@ Segmented toggle control.
 - `fitContent?: boolean` (sizes the host to its segments for compact inline compositions)
 - `shrinkItems?: boolean`
 
+`compact` with `fullWidth` uses caption text and tighter horizontal spacing for dense chart metric rows. Choices share the available width and can wrap their labels when text is enlarged.
+
 #### `fd-ui-chip-select`
 
 Compact multi-select chip group for filters, tags, and symptom pickers.

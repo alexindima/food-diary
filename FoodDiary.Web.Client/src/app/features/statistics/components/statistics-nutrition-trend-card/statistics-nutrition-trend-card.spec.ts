@@ -37,7 +37,15 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         const root = fixture.nativeElement as HTMLElement;
         expect(root.querySelectorAll('.fd-ui-bar-chart__categorical-bar[role="img"]')).toHaveLength(1);
         expect(root.querySelector('.statistics-nutrition-trend-card__missing')).toBeNull();
-        expect(root.querySelector('.statistics-nutrition-trend-card__chart-header fd-ui-select')).not.toBeNull();
+        const chartModeButtons = root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__chart-mode button');
+        expect(chartModeButtons).toHaveLength(2);
+        expect(chartModeButtons[0].getAttribute('aria-checked')).toBe('true');
+        expect(root.querySelector('.statistics-nutrition-trend-card__chart-mode [role="radiogroup"]')?.getAttribute('aria-label')).toBe(
+            'STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL',
+        );
+        expect(root.querySelector('.statistics-nutrition-trend-card__data-toggle [role="radiogroup"]')?.getAttribute('aria-label')).toBe(
+            'STATISTICS.NUTRITION_TABS_LABEL',
+        );
         expect(root.querySelectorAll('.fd-ui-bar-chart__categorical-segment')).toHaveLength(1);
         expect(root.querySelector('.statistics-nutrition-trend-card__legend')).toBeNull();
 
@@ -60,9 +68,10 @@ describe('StatisticsNutritionTrendCardComponent', () => {
             root.querySelector('.fd-ui-bar-chart__categorical-bar')?.querySelectorAll('.fd-ui-bar-chart__categorical-segment'),
         ).toHaveLength(NUTRIENT_COUNT);
 
-        fixture.componentInstance['changeChartMode']('line');
+        chartModeButtons[1].click();
         fixture.detectChanges();
         expect(root.querySelector('fd-ui-line-chart')).not.toBeNull();
+        expect(chartModeButtons[1].getAttribute('aria-checked')).toBe('true');
         expect(fixture.componentInstance['distributionLineSeries']()).toHaveLength(NUTRIENT_COUNT);
         expect(fixture.componentInstance['calorieLinePoints']()[0]?.label).toBe('2 Aug');
 
@@ -70,7 +79,7 @@ describe('StatisticsNutritionTrendCardComponent', () => {
         fixture.detectChanges();
         expect(fixture.componentInstance['calorieReferenceLines']()).toHaveLength(1);
 
-        fixture.componentInstance['onTabChange']('macros');
+        root.querySelectorAll<HTMLButtonElement>('.statistics-nutrition-trend-card__data-toggle button')[1].click();
         expect(tabChange).toHaveBeenCalledWith('macros');
     });
 });

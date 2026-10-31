@@ -122,6 +122,20 @@
     white-space: nowrap;
 }
 
+.fd-ui-segmented-toggle--size-compact.fd-ui-segmented-toggle--full-width {
+    gap: var(--fd-space-micro);
+}
+
+.fd-ui-segmented-toggle--size-compact.fd-ui-segmented-toggle--full-width .fd-ui-segmented-toggle__item {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: var(--fd-space-micro);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
 @container fd-ui-segmented-toggle (max-width: 34rem) {
     .fd-ui-segmented-toggle--stack-on-narrow {
         flex-direction: column;

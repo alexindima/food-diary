@@ -189,6 +189,7 @@
         "EXPORT_CSV": "CSV",
         "EXPORT_PDF": "PDF",
         "EXPORT_FAILED": "Не удалось скачать файл. Попробуйте ещё раз.",
+        "NUTRITION_TABS_LABEL": "Метрика графика",
         "NUTRITION_TABS": {
             "CALORIES": "Калории",
             "MACROS": "Нутриенты",
@@ -217,7 +218,7 @@
                 "BASE_GOAL_HINT": "Сравнения используют базовую дневную цель. Отдельные цели по дням недели здесь не учитываются."
             },
             "TREND": {
-                "TITLE": "Динамика питания",
+                "TITLE": "Динамика",
                 "CHART_TYPE_LABEL": "Тип графика",
                 "CHART_BARS": "Столбцы",
                 "CHART_LINE": "Линия",

@@ -27,6 +27,7 @@
 
     &__chart-header {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: var(--fd-space-md);
@@ -38,7 +39,7 @@
     }
 
     &__chart-mode {
-        min-width: 130px;
+        flex-shrink: 0;
     }
 
     &__bar-chart {

@@ -225,6 +225,7 @@
         "EXPORT_CSV": "CSV",
         "EXPORT_PDF": "PDF",
         "EXPORT_FAILED": "Could not download the file. Please try again.",
+        "NUTRITION_TABS_LABEL": "Chart metric",
         "NUTRITION_TABS": {
             "CALORIES": "Calories",
             "MACROS": "Macros",
@@ -253,7 +254,7 @@
                 "BASE_GOAL_HINT": "Comparisons use the base daily goal. Weekday-specific targets are not included here."
             },
             "TREND": {
-                "TITLE": "Nutrition trend",
+                "TITLE": "Trends",
                 "CHART_TYPE_LABEL": "Chart type",
                 "CHART_BARS": "Bars",
                 "CHART_LINE": "Line",

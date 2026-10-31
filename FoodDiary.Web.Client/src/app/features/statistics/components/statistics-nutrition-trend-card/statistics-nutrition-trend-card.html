@@ -8,25 +8,27 @@
                 <h2 class="statistics-nutrition-trend-card__title fd-ui-card-title">
                     {{ 'STATISTICS.DASHBOARD.TREND.TITLE' | translate }}
                 </h2>
-                <fd-ui-select
+                <fd-ui-segmented-toggle
                     class="statistics-nutrition-trend-card__chart-mode"
-                    id="statistics-trend-chart-mode"
-                    size="sm"
+                    appearance="soft"
+                    size="compact"
+                    [fitContent]="true"
+                    [stackOnNarrow]="false"
                     [ariaLabel]="'STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL' | translate"
-                    [options]="chartModeOptions()"
-                    [value]="chartMode()"
-                    (valueChange)="changeChartMode($event)"
+                    [options]="chartModeOptions"
+                    [selectedValue]="chartMode()"
+                    (selectedValueChange)="changeChartMode($event)"
                 />
             </div>
             <fd-ui-segmented-toggle
                 class="statistics-nutrition-trend-card__data-toggle"
                 appearance="soft"
-                size="sm"
+                size="compact"
+                [ariaLabel]="'STATISTICS.NUTRITION_TABS_LABEL' | translate"
                 [options]="tabs()"
                 [selectedValue]="selectedTab()"
                 [fullWidth]="true"
                 [stackOnNarrow]="false"
-                [wrapOnNarrow]="true"
                 (selectedValueChange)="onTabChange($event)"
             />
 

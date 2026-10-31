@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { NavigationStart, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { describe, expect, it } from 'vitest';
 
@@ -18,6 +18,34 @@ class StatisticsRoute {
 }
 
 describe('Statistics route state ownership', () => {
+    it('preserves scrolling when report metrics change through the URL', async () => {
+        TestBed.configureTestingModule({
+            providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }])],
+        });
+        const harness = await RouterTestingHarness.create();
+        const page = await harness.navigateByUrl('/statistics?campaign=qa', StatisticsRoute);
+        const router = TestBed.inject(Router);
+        const scrollBehaviors: Array<'manual' | 'after-transition' | undefined> = [];
+        router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                scrollBehaviors.push(router.currentNavigation()?.extras.scroll);
+            }
+        });
+
+        for (const tab of ['macros', 'distribution', 'calories'] as const) {
+            scrollBehaviors.length = 0;
+            page.selectedNutritionTab.set(tab);
+            TestBed.tick();
+            await harness.fixture.whenStable();
+            expect(scrollBehaviors).toHaveLength(1);
+            expect(scrollBehaviors[0], 'Report metric changes must preserve the current scroll position').toBe('manual');
+            expect(router.parseUrl(router.url).queryParams).toEqual({
+                campaign: 'qa',
+                ...(tab === 'calories' ? {} : { nutritionTab: tab }),
+            });
+        }
+    });
+
     it('restores a report from its URL, writes changed selections, and restores query navigation', async () => {
         TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'statistics', component: StatisticsRoute }])] });
         const harness = await RouterTestingHarness.create();

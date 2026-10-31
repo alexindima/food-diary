@@ -115,3 +115,30 @@ export const CompactChartRange: Story = {
         };
     },
 };
+
+export const CompactChartMetrics: Story = {
+    render: () => {
+        const selected = signal('calories');
+        return {
+            props: {
+                options: [
+                    { label: 'Калории', value: 'calories' },
+                    { label: 'Нутриенты', value: 'macros' },
+                    { label: 'Соотношение', value: 'distribution' },
+                ],
+                selected,
+            },
+            template: `
+                <fd-ui-segmented-toggle
+                    size="compact"
+                    appearance="soft"
+                    [fullWidth]="true"
+                    [stackOnNarrow]="false"
+                    [options]="options"
+                    [(selectedValue)]="selected"
+                    ariaLabel="Chart metric"
+                />
+            `,
+        };
+    },
+};

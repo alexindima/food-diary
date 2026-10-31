@@ -34,11 +34,13 @@ export function connectStatisticsRouteState(facade: StatisticsRouteOwner): void 
             return;
         }
         pendingKey = key;
-        void router.navigate([], { relativeTo: route, queryParams: serialized, queryParamsHandling: 'merge', replaceUrl }).finally(() => {
-            if (pendingKey === key) {
-                pendingKey = null;
-            }
-        });
+        void router
+            .navigate([], { relativeTo: route, queryParams: serialized, queryParamsHandling: 'merge', replaceUrl, scroll: 'manual' })
+            .finally(() => {
+                if (pendingKey === key) {
+                    pendingKey = null;
+                }
+            });
     };
     const apply = (value: ParamMap): void => {
         params = value;
