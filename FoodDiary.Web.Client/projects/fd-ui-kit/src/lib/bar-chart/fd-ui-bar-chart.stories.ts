@@ -118,3 +118,11 @@ export const NutritionWeek: Story = {
 export const NutritionThreeDays: Story = {
     args: { ...NutritionWeek.args, categories: nutritionWeek.slice(-SHORT_NUTRITION_PERIOD) },
 };
+
+export const Large: Story = {
+    args: {
+        ...NutritionWeek.args,
+        size: 'large',
+        categories: nutritionWeek.map(category => ({ ...category, label: category.label.replace('\n', ' ') })),
+    },
+};

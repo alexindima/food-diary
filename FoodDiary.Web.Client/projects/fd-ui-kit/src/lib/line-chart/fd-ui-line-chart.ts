@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, LOCALE_ID } from '@angular/core';
 
+import type { FdUiChartSize } from '../chart/fd-ui-chart.types';
 import type { FdUiLineChartReferenceLine, FdUiLineChartXAxisLabelLayout } from './fd-ui-line-chart.types';
 import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
 import { FdUiLineChartXAxisComponent } from './fd-ui-line-chart-x-axis';
@@ -152,9 +153,12 @@ const DEFAULT_REFERENCE_LINE_EDGE_PADDING_RATIO = 0.15;
     templateUrl: './fd-ui-line-chart.html',
     styleUrl: './fd-ui-line-chart.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[class.fd-ui-chart--large]': 'size() === "large"' },
 })
 export class FdUiLineChartComponent {
     public readonly title = input<string>();
+    public readonly size = input<FdUiChartSize>('default');
+    public readonly showLegend = input(true);
     public readonly points = input<readonly FdUiLineChartPoint[]>([]);
     public readonly series = input<readonly FdUiLineChartSeries[]>([]);
     public readonly emptyLabel = input('No data');
@@ -548,7 +552,7 @@ export class FdUiLineChartComponent {
         return this.seriesViews()[0]?.areaPath ?? '';
     });
 
-    protected readonly shouldShowSeriesLegend = computed(() => this.seriesViews().length > 1);
+    protected readonly shouldShowSeriesLegend = computed(() => this.showLegend() && this.seriesViews().length > 1);
 
     protected readonly ariaLabel = computed(() => {
         const title = this.title();

@@ -1,3 +1,5 @@
+@use '../chart/chart-size';
+
 :host {
     --fd-line-chart-point-size: 10px;
     --fd-line-chart-angled-axis-height: 40px;
@@ -7,11 +9,14 @@
     --fd-line-chart-y-axis-label-right: 0;
     --fd-line-chart-y-axis-width: fit-content(112px);
     --fd-line-chart-height: 180px;
+    --fd-chart-label-white-space: pre-line;
     container-type: inline-size;
     display: block;
     flex: 0 0 auto;
     min-width: 0;
 }
+
+@include chart-size.large;
 
 .fd-ui-line-chart {
     width: 100%;
@@ -126,4 +131,8 @@
     place-items: center;
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-body-sm-size);
+}
+
+:host(.fd-ui-chart--large) .fd-ui-line-chart__empty {
+    min-height: var(--fd-chart-height);
 }

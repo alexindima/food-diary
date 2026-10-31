@@ -5,6 +5,8 @@ export * from './button/fd-ui-button';
 export * from './calendar/fd-ui-calendar';
 export * from './card/fd-ui-card';
 export * from './card/fd-ui-card-actions.directive';
+export * from './chart/fd-ui-chart.types';
+export * from './chart-legend/fd-ui-chart-legend';
 export * from './checkbox/fd-ui-checkbox';
 export * from './chip-select/fd-ui-chip-select';
 export * from './date-input/fd-ui-date-input';

@@ -12,6 +12,28 @@ const NUTRIENT_HALF_TICK = 20;
 const NUTRIENT_QUARTER_TICK = 10;
 const NUTRIENT_TICKS = [NUTRIENT_SCALE_MAXIMUM, NUTRIENT_THREE_QUARTER_TICK, NUTRIENT_HALF_TICK, NUTRIENT_QUARTER_TICK, 0] as const;
 
+describe('StatisticsNutritionTrendCardComponent colors', () => {
+    it('preserves nutrient colors when switching from bars to lines', async () => {
+        await TestBed.configureTestingModule({
+            imports: [StatisticsNutritionTrendCardComponent],
+            providers: [provideTranslateTesting()],
+        }).compileComponents();
+        const fixture = TestBed.createComponent(StatisticsNutritionTrendCardComponent);
+        fixture.componentRef.setInput('tabs', []);
+        fixture.componentRef.setInput('selectedTab', 'macros');
+        fixture.componentRef.setInput('calorieGoal', CALORIE_GOAL);
+        fixture.componentRef.setInput('days', [
+            { date: '2026-08-02', label: '2 Aug', calories: 1800, protein: 100, fat: 60, carbs: 180, fiber: 20 },
+        ]);
+        fixture.componentRef.setInput('insights', []);
+        fixture.detectChanges();
+
+        const barColors = fixture.componentInstance['barChartCategories']()[0].values.map(value => value.color);
+        const lineColors = fixture.componentInstance['nutrientLineSeries']().map(series => series.color);
+        expect(lineColors, 'Nutrient colors must stay the same between chart modes').toEqual(barColors);
+    });
+});
+
 describe('StatisticsNutritionTrendCardComponent', () => {
     it('distinguishes missing entries, switches chart mode, and emits tab changes', async () => {
         await TestBed.configureTestingModule({

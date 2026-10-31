@@ -7,6 +7,7 @@ import {
     type FdUiBarChartLayout,
     type FdUiBarChartReferenceLine,
     FdUiCardComponent,
+    FdUiChartLegendComponent,
     FdUiIconComponent,
     FdUiLineChartComponent,
     type FdUiLineChartPoint,
@@ -56,6 +57,7 @@ type StatisticsTrendChartMode = 'bars' | 'line';
         TranslatePipe,
         FdUiBarChartComponent,
         FdUiCardComponent,
+        FdUiChartLegendComponent,
         FdUiIconComponent,
         FdUiLineChartComponent,
         FdUiSegmentedToggleComponent,
@@ -145,21 +147,33 @@ export class StatisticsNutritionTrendCardComponent {
         }
         return 'single';
     });
-    protected readonly barChartCategories = computed<readonly FdUiBarChartCategory[]>(() => {
+    protected readonly nutrientDefinitions = computed(() => {
         this.translationChange();
-        const nutrientLabels = {
-            protein: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN'),
-            fat: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.FAT'),
-            carbs: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.CARBS'),
-            fiber: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.FIBER'),
-        };
-        const colors = {
-            calories: 'var(--fd-color-primary-500)',
-            protein: 'var(--fd-color-nutrition-proteins)',
-            fat: 'var(--fd-color-orange-500)',
-            carbs: 'var(--fd-color-nutrition-carbs)',
-            fiber: 'var(--fd-color-rose-500)',
-        };
+        return [
+            {
+                key: 'protein' as const,
+                label: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN'),
+                color: 'var(--fd-color-nutrition-proteins)',
+            },
+            {
+                key: 'fat' as const,
+                label: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.FAT'),
+                color: 'var(--fd-color-orange-500)',
+            },
+            {
+                key: 'carbs' as const,
+                label: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.CARBS'),
+                color: 'var(--fd-color-nutrition-carbs)',
+            },
+            {
+                key: 'fiber' as const,
+                label: this.translateService.instant('STATISTICS.DASHBOARD.NUTRIENTS.FIBER'),
+                color: 'var(--fd-color-rose-500)',
+            },
+        ];
+    });
+    protected readonly barChartCategories = computed<readonly FdUiBarChartCategory[]>(() => {
+        const definitions = this.nutrientDefinitions();
 
         return this.dayViews().map(day => {
             if (this.selectedTab() === 'calories') {
@@ -170,7 +184,7 @@ export class StatisticsNutritionTrendCardComponent {
                         {
                             label: this.translateService.instant('GENERAL.NUTRIENTS.CALORIES'),
                             value: day.calories,
-                            color: colors.calories,
+                            color: 'var(--fd-color-primary-500)',
                         },
                     ],
                 };
@@ -180,10 +194,10 @@ export class StatisticsNutritionTrendCardComponent {
             return {
                 label: day.label,
                 ariaLabel: day.label,
-                values: nutrients.map(item => ({
-                    label: nutrientLabels[item.key],
+                values: nutrients.map((item, index) => ({
+                    label: definitions[index].label,
                     value: day.calories === null ? null : this.selectedTab() === 'distribution' ? item.height : item.value,
-                    color: colors[item.key],
+                    color: definitions[index].color,
                 })),
             };
         });
@@ -215,15 +229,8 @@ export class StatisticsNutritionTrendCardComponent {
         ];
     });
     protected readonly nutrientLineSeries = computed<readonly FdUiLineChartSeries[]>(() => {
-        this.translationChange();
-        const definitions = [
-            { key: 'protein' as const, labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN', color: 'var(--fd-color-primary-500)' },
-            { key: 'fat' as const, labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.FAT', color: 'var(--fd-color-orange-500)' },
-            { key: 'carbs' as const, labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.CARBS', color: 'var(--fd-color-sky-500)' },
-            { key: 'fiber' as const, labelKey: 'STATISTICS.DASHBOARD.NUTRIENTS.FIBER', color: 'var(--fd-color-rose-500)' },
-        ];
-        return definitions.map(definition => ({
-            label: this.translateService.instant(definition.labelKey),
+        return this.nutrientDefinitions().map(definition => ({
+            label: definition.label,
             color: definition.color,
             fillColor: 'transparent',
             points: this.days().map(day => ({ label: day.label, value: day[definition.key] })),

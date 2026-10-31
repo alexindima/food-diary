@@ -1,0 +1,33 @@
+:host {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+    gap: var(--fd-space-xs) var(--fd-space-md);
+    min-width: 0;
+    padding-top: var(--fd-space-xs);
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+}
+
+:host(.fd-ui-chart-legend--hidden) {
+    visibility: hidden;
+}
+
+.fd-ui-chart-legend__item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: var(--fd-space-xs);
+}
+
+.fd-ui-chart-legend__item i {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--fd-radius-pill);
+    flex: 0 0 auto;
+}
+
+.fd-ui-chart-legend__item span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}

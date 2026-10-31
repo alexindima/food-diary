@@ -305,7 +305,7 @@ describe('FdUiLineChartComponent', () => {
 
         expect(host().querySelectorAll('.fd-ui-line-chart__line')).toHaveLength(MULTI_SERIES_COUNT);
         expect(host().querySelectorAll('.fd-ui-line-chart__point')).toHaveLength(MULTI_SERIES_POINT_COUNT);
-        expect(host().querySelectorAll('.fd-ui-line-chart__legend span')).toHaveLength(MULTI_SERIES_COUNT);
+        expect(host().querySelectorAll('.fd-ui-line-chart__legend .fd-ui-chart-legend__item')).toHaveLength(MULTI_SERIES_COUNT);
         expect(host().querySelector('.fd-ui-line-chart__legend')?.textContent).toContain('Proteins');
         expect(component['ariaLabel']()).toContain('Proteins Mon 10');
     });

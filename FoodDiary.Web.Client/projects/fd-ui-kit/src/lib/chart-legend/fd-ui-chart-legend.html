@@ -1,0 +1,6 @@
+@for (item of items(); track $index) {
+    <span class="fd-ui-chart-legend__item">
+        <i aria-hidden="true" [style.background]="item.color"></i>
+        <span>{{ item.label }}</span>
+    </span>
+}

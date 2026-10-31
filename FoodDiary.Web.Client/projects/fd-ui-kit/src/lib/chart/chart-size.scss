@@ -1,0 +1,25 @@
+@use 'variables' as variables;
+
+// Large cartesian charts share the same plot + date-axis budget and unit clearance.
+// Include the date label's measured clearance and its pixel rounding.
+@mixin large {
+    :host(.fd-ui-chart--large) {
+        --fd-chart-height: 300px;
+        --fd-chart-label-white-space: pre;
+        --fd-chart-date-height: max(
+            calc(var(--fd-space-xl) + var(--fd-space-xs)),
+            calc(var(--fd-text-caption-size) * var(--fd-text-caption-line-height) + var(--fd-space-xs) + var(--fd-space-xxs) + 1px)
+        );
+        --fd-bar-chart-height: var(--fd-chart-height);
+        --fd-bar-chart-label-height: var(--fd-chart-date-height);
+        --fd-line-chart-height: calc(var(--fd-chart-height) - var(--fd-chart-date-height));
+        --fd-line-chart-stacked-axis-height: var(--fd-chart-date-height);
+        --fd-line-chart-x-axis-label-offset: var(--fd-space-xs);
+        --fd-line-chart-y-axis-width: minmax(var(--fd-space-xl), max-content);
+        margin-top: calc(var(--fd-space-lg) + var(--fd-space-sm));
+
+        @media #{variables.$media-mobile} {
+            --fd-chart-height: 240px;
+        }
+    }
+}

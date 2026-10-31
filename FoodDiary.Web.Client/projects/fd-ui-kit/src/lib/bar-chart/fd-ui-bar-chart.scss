@@ -1,3 +1,5 @@
+@use '../chart/chart-size';
+
 :host {
     --fd-bar-chart-height: 180px;
     --fd-bar-chart-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
@@ -9,9 +11,12 @@
     --fd-bar-chart-unit-style: italic;
     --fd-bar-chart-unit-weight: var(--fd-text-caption-weight);
     --fd-bar-chart-unit-opacity: 1;
+    --fd-chart-label-white-space: pre-line;
     display: block;
     min-width: 0;
 }
+
+@include chart-size.large;
 
 .fd-ui-bar-chart {
     display: grid;
@@ -230,6 +235,7 @@
 
 .fd-ui-bar-chart__categorical-label-cell {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     justify-self: center;
     justify-items: center;
     align-items: start;
@@ -246,10 +252,10 @@
     padding-top: var(--fd-space-xs);
     color: var(--fd-color-text-muted);
     font-size: var(--fd-text-caption-size);
-    line-height: 1.15;
+    line-height: var(--fd-text-caption-line-height);
     text-align: center;
     text-overflow: ellipsis;
-    white-space: pre-line;
+    white-space: var(--fd-chart-label-white-space);
 }
 
 .fd-ui-bar-chart__categorical-labels .fd-ui-bar-chart__categorical-label--highlighted {
@@ -314,6 +320,16 @@
 
 .fd-ui-bar-chart--edge-inset-none .fd-ui-bar-chart__categorical-label-cell:last-child {
     justify-self: end;
+}
+
+:where(.fd-ui-bar-chart--edge-inset-none) .fd-ui-bar-chart__categorical-label-cell:first-child span {
+    justify-self: start;
+    text-align: left;
+}
+
+:where(.fd-ui-bar-chart--edge-inset-none) .fd-ui-bar-chart__categorical-label-cell:last-child span {
+    justify-self: end;
+    text-align: right;
 }
 
 .fd-ui-bar-chart__categorical-bar[role='button'] {

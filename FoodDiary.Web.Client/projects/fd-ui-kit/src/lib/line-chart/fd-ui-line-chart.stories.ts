@@ -98,6 +98,10 @@ export const WithReferenceLine: Story = {
     },
 };
 
+export const Large: Story = {
+    args: { ...WithReferenceLine.args, size: 'large', xAxisLabelLayout: 'stacked', verticalEdgeInset: 'none' },
+};
+
 export const MultiSeries: Story = {
     args: {
         title: 'Nutrients',

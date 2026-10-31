@@ -10,6 +10,7 @@ import {
     viewChild,
 } from '@angular/core';
 
+import type { FdUiChartSize } from '../chart/fd-ui-chart.types';
 import { findOverlappingXAxisLabels } from '../line-chart/fd-ui-line-chart-x-axis-layout';
 
 export type FdUiBarChartItem = {
@@ -85,6 +86,7 @@ const LABEL_CLEARANCE_PX = 4;
     templateUrl: './fd-ui-bar-chart.html',
     styleUrl: './fd-ui-bar-chart.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[class.fd-ui-chart--large]': 'size() === "large"' },
 })
 export class FdUiBarChartComponent {
     private readonly labelAxis = viewChild<ElementRef<HTMLElement>>('labelAxis');
@@ -93,6 +95,7 @@ export class FdUiBarChartComponent {
     public readonly selectable = input(false);
     public readonly categorySelected = output<number>();
     public readonly title = input<string>();
+    public readonly size = input<FdUiChartSize>('default');
     public readonly items = input<readonly FdUiBarChartItem[]>([]);
     public readonly emptyLabel = input('No data');
     public readonly showLabels = input(true);

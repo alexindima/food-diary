@@ -225,6 +225,14 @@ Responsive line chart for compact trends and sparklines. With axes enabled, the 
 - `--fd-line-chart-y-axis-label-right` (defaults to `0`; positive values inset labels inside the axis column)
 - `--fd-line-chart-y-axis-width` (defaults to `fit-content(112px)`)
 
+#### Shared cartesian chart sizing and legends
+
+Both bar and line charts accept `size?: 'default' | 'large'`. The default preserves compact chart sizing. `large` reserves the same plot and single-line date-axis height (300px, or 240px on mobile), unit clearance and label spacing for categorical bars and lines with `xAxisLabelLayout="stacked"`. Use it when switching between chart types instead of overriding their individual height variables. Empty large line charts retain that height too.
+
+`fd-ui-chart-legend` renders `items: readonly FdUiChartLegendItem[]` (`label` and `color`) with the same markers, typography and responsive grid for every chart type. Long labels wrap inside their cells. `[visible]="false"` hides the legend from sight and assistive technology while reserving its space, so switching to a metric without a legend preserves the card height.
+
+Line charts use this legend automatically for multiple series. Set `[showLegend]="false"` to compose one shared legend below interchangeable charts; derive both the legend and series from the same labels and colors.
+
 ### Inputs
 
 #### `fd-ui-input`

@@ -69,8 +69,8 @@
     --fd-line-chart-stacked-label-max-width: 64px;
     top: var(--fd-line-chart-x-axis-label-offset);
     width: max-content;
-    max-width: var(--fd-line-chart-stacked-label-max-width);
-    white-space: pre-line;
+    max-width: min(100%, var(--fd-line-chart-stacked-label-max-width));
+    white-space: var(--fd-chart-label-white-space);
     text-overflow: clip;
     transform: translateX(-50%);
 }

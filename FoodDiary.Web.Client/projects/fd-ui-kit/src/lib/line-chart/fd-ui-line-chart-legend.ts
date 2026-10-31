@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type FdUiLineChartLegendSeries = {
-    label: string;
-    color: string;
-};
+import { FdUiChartLegendComponent, type FdUiChartLegendItem } from '../chart-legend/fd-ui-chart-legend';
+
+export type FdUiLineChartLegendSeries = FdUiChartLegendItem;
 
 @Component({
     selector: 'fd-ui-line-chart-legend',
-    imports: [],
+    imports: [FdUiChartLegendComponent],
     templateUrl: './fd-ui-line-chart-legend.html',
     styleUrl: './fd-ui-line-chart-legend.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

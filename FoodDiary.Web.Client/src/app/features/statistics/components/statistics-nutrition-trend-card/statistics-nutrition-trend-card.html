@@ -34,7 +34,7 @@
 
             @if (chartMode() === 'bars') {
                 <fd-ui-bar-chart
-                    class="statistics-nutrition-trend-card__bar-chart"
+                    size="large"
                     [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
                     [categories]="barChartCategories()"
                     [layout]="barChartLayout()"
@@ -44,51 +44,34 @@
                     [scaleMaximum]="chartMaximum()"
                     [referenceLines]="barChartReferenceLines()"
                 />
-
-                @if (selectedTab() !== 'calories') {
-                    <div class="statistics-nutrition-trend-card__legend fd-row fd-wrap fd-gap-md fd-ui-caption fd-ui-text-muted">
-                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--protein">{{
-                            'STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN' | translate
-                        }}</span>
-                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--fat">{{
-                            'STATISTICS.DASHBOARD.NUTRIENTS.FAT' | translate
-                        }}</span>
-                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--carbs">{{
-                            'STATISTICS.DASHBOARD.NUTRIENTS.CARBS' | translate
-                        }}</span>
-                        <span class="statistics-nutrition-trend-card__legend-item statistics-nutrition-trend-card__legend-item--fiber">{{
-                            'STATISTICS.DASHBOARD.NUTRIENTS.FIBER' | translate
-                        }}</span>
-                    </div>
-                }
             } @else {
-                <div class="statistics-nutrition-trend-card__line-chart-shell">
-                    <fd-ui-line-chart
-                        class="statistics-nutrition-trend-card__line-chart"
-                        lineColor="var(--fd-color-primary-600)"
-                        fillColor="var(--fd-color-chart-primary-fill)"
-                        xAxisLabelLayout="stacked"
-                        verticalEdgeInset="none"
-                        axisValueSuffix=""
-                        [axisUnit]="chartUnitKey() | translate"
-                        [locale]="locale()"
-                        [axisValueFormatter]="formatChartNumber"
-                        [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
-                        [points]="selectedTab() === 'calories' ? calorieLinePoints() : []"
-                        [series]="selectedLineSeries()"
-                        [showArea]="selectedTab() === 'calories'"
-                        [showPoints]="true"
-                        [minValue]="0"
-                        [showAxisLabels]="true"
-                        [showGrid]="true"
-                        [axisDecimalPlaces]="0"
-                        [maxValue]="chartMaximum()"
-                        [defaultMaxValue]="chartMaximum()"
-                        [referenceLines]="calorieReferenceLines()"
-                        [valueSuffix]="chartUnitKey() | translate"
-                    />
-                </div>
+                <fd-ui-line-chart
+                    size="large"
+                    lineColor="var(--fd-color-primary-500)"
+                    fillColor="var(--fd-color-chart-primary-fill)"
+                    xAxisLabelLayout="stacked"
+                    verticalEdgeInset="none"
+                    axisValueSuffix=""
+                    [axisUnit]="chartUnitKey() | translate"
+                    [locale]="locale()"
+                    [axisValueFormatter]="formatChartNumber"
+                    [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
+                    [points]="selectedTab() === 'calories' ? calorieLinePoints() : []"
+                    [series]="selectedLineSeries()"
+                    [showArea]="selectedTab() === 'calories'"
+                    [showPoints]="true"
+                    [showLegend]="false"
+                    [minValue]="0"
+                    [showAxisLabels]="true"
+                    [showGrid]="true"
+                    [axisDecimalPlaces]="0"
+                    [maxValue]="chartMaximum()"
+                    [defaultMaxValue]="chartMaximum()"
+                    [referenceLines]="calorieReferenceLines()"
+                    [valueSuffix]="chartUnitKey() | translate"
+                />
             }
+            <fd-ui-chart-legend [items]="nutrientDefinitions()" [visible]="selectedTab() !== 'calories'" />
         </section>
 
         @if (insights().length > 0) {
