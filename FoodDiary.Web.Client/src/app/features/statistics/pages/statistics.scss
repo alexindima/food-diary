@@ -73,6 +73,10 @@
         background: color-mix(in srgb, var(--fd-bg-surface-raised) 18%, transparent);
         border-radius: var(--fd-radius-md);
         pointer-events: none;
+
+        &[hidden] {
+            display: none;
+        }
     }
 
     &__skeleton-grid {

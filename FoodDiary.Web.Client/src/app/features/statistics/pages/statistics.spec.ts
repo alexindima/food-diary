@@ -15,7 +15,7 @@ const RANGE: DateRange = {
     start: new Date('2026-05-01T00:00:00Z'),
     end: new Date('2026-05-07T00:00:00Z'),
 };
-const REFRESHING_CARD_COUNT = 5;
+const REFRESHING_CARD_COUNT = 6;
 
 type StatisticsFacadeMock = {
     changeNutritionTab: ReturnType<typeof vi.fn>;
@@ -198,6 +198,7 @@ describe('StatisticsComponent', () => {
 
         const root = fixture.nativeElement as HTMLElement;
         expect(root.querySelector('fd-statistics-overview-card')).not.toBeNull();
+        expect(root.querySelector('fd-statistics-nutrient-balance-card')).not.toBeNull();
         expect(root.querySelector('fd-statistics-body-trend-card')).not.toBeNull();
         expect(root.querySelectorAll('.statistics__card-loading')).toHaveLength(REFRESHING_CARD_COUNT);
         expect(root.querySelector('.statistics__skeleton-grid')).toBeNull();

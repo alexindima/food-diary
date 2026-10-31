@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 512,
-    "componentsWithoutDirectSpecs": 128,
-    "inputs": 1663,
+    "components": 513,
+    "componentsWithoutDirectSpecs": 129,
+    "inputs": 1668,
     "outputs": 560,
     "apiCalls": 320,
     "templatesWithTranslations": 371,
-    "translationKeys": 2216,
-    "consumerEdges": 1307,
-    "consumedComponents": 324,
-    "unconsumedComponents": 187
+    "translationKeys": 2206,
+    "consumerEdges": 1308,
+    "consumedComponents": 326,
+    "unconsumedComponents": 186
   },
   "components": [
     {
@@ -4607,6 +4607,11 @@
           "required": false
         },
         {
+          "name": "size",
+          "type": "FdUiChartSize",
+          "required": false
+        },
+        {
           "name": "items",
           "type": "readonly FdUiBarChartItem[]",
           "required": false
@@ -4906,6 +4911,27 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.spec.ts"
+    },
+    {
+      "class": "FdUiChartLegendComponent",
+      "selector": "fd-ui-chart-legend",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.html",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "readonly FdUiChartLegendItem[]",
+          "required": false
+        },
+        {
+          "name": "visible",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "FdUiCheckboxComponent",
@@ -5995,6 +6021,16 @@
         {
           "name": "title",
           "type": "string",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "FdUiChartSize",
+          "required": false
+        },
+        {
+          "name": "showLegend",
+          "type": "",
           "required": false
         },
         {
@@ -15482,8 +15518,8 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
       "inputs": [
         {
-          "name": "items",
-          "type": "readonly StatisticsNutrientBalanceItem[]",
+          "name": "data",
+          "type": "StatisticsOverviewData",
           "required": true
         }
       ],
@@ -24429,7 +24465,6 @@
         "GENERAL.UNITS.KCAL",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.AVERAGE",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION",
-        "STATISTICS.DASHBOARD.MEAL_STRUCTURE.DOMINANT",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.EMPTY",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL",
         "STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY",
@@ -24441,10 +24476,10 @@
       "feature": "statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
       "keys": [
-        "GENERAL.UNITS.G",
         "STATISTICS.DASHBOARD.BALANCE.AVERAGE",
-        "STATISTICS.DASHBOARD.BALANCE.COMPLETION",
+        "STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT",
         "STATISTICS.DASHBOARD.BALANCE.GOAL",
+        "STATISTICS.DASHBOARD.BALANCE.NO_GOAL",
         "STATISTICS.DASHBOARD.BALANCE.NUTRIENT",
         "STATISTICS.DASHBOARD.BALANCE.SUBTITLE",
         "STATISTICS.DASHBOARD.BALANCE.TITLE"
@@ -24454,10 +24489,6 @@
       "feature": "statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
       "keys": [
-        "STATISTICS.DASHBOARD.NUTRIENTS.CARBS",
-        "STATISTICS.DASHBOARD.NUTRIENTS.FAT",
-        "STATISTICS.DASHBOARD.NUTRIENTS.FIBER",
-        "STATISTICS.DASHBOARD.NUTRIENTS.PROTEIN",
         "STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL",
         "STATISTICS.DASHBOARD.TREND.INSIGHTS_TITLE",
         "STATISTICS.DASHBOARD.TREND.TITLE",
@@ -24470,16 +24501,10 @@
       "keys": [
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
-        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_CALORIES",
-        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_RECORDED_DAYS",
-        "STATISTICS.DASHBOARD.OVERVIEW.BASE_GOAL_HINT",
+        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY",
         "STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT",
-        "STATISTICS.DASHBOARD.OVERVIEW.DAYS",
-        "STATISTICS.DASHBOARD.OVERVIEW.DIARY_COMPLETENESS",
-        "STATISTICS.DASHBOARD.OVERVIEW.NUTRIENTS",
         "STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS",
-        "STATISTICS.DASHBOARD.OVERVIEW.TITLE",
-        "STATISTICS.DASHBOARD.OVERVIEW.VS_GOAL"
+        "STATISTICS.DASHBOARD.OVERVIEW.TITLE"
       ]
     },
     {
@@ -27850,6 +27875,7 @@
         "layout",
         "referenceLines",
         "scaleMaximum",
+        "size",
         "title"
       ],
       "outputsHandled": []
@@ -32792,9 +32818,7 @@
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
       "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
+      "inputsUsed": [],
       "outputsHandled": []
     },
     {
@@ -32965,6 +32989,31 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
       "occurrences": 4,
       "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiChartLegendComponent",
+      "selector": "fd-ui-chart-legend",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
+      "consumerFeature": "fd-ui-kit",
+      "consumerPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-legend.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "items"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiChartLegendComponent",
+      "selector": "fd-ui-chart-legend",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "items",
+        "visible"
+      ],
       "outputsHandled": []
     },
     {
@@ -36019,18 +36068,6 @@
       "selector": "fd-ui-icon",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "statistics",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "name"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiIconComponent",
-      "selector": "fd-ui-icon",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
-      "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -37676,7 +37713,9 @@
         "showArea",
         "showAxisLabels",
         "showGrid",
+        "showLegend",
         "showPoints",
+        "size",
         "title",
         "valueSuffix",
         "verticalEdgeInset",
@@ -38649,19 +38688,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
       "consumerFeature": "gamification",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "ariaLabel",
-        "value"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiProgressRingComponent",
-      "selector": "fd-ui-progress-ring",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/progress-ring/fd-ui-progress-ring.ts",
-      "consumerFeature": "statistics",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
       "occurrences": 1,
       "inputsUsed": [
         "ariaLabel",
@@ -43853,6 +43879,18 @@
       "component": "StatisticsMealStructureCardComponent",
       "selector": "fd-statistics-meal-structure-card",
       "componentPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "data"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "StatisticsNutrientBalanceCardComponent",
+      "selector": "fd-statistics-nutrient-balance-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 1,

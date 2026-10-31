@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 119,
+    "selectorUnreferencedComponents": 118,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 128,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -1588,14 +1588,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
       "specPath": null
-    },
-    {
-      "class": "StatisticsNutrientBalanceCardComponent",
-      "selector": "fd-statistics-nutrient-balance-card",
-      "feature": "statistics",
-      "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
-      "specPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.spec.ts"
     },
     {
       "class": "DailyMicronutrientCardComponent",
@@ -3866,6 +3858,27 @@
           "type": "FdUiAutocompleteOption<T>"
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "FdUiChartLegendComponent",
+      "selector": "fd-ui-chart-legend",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.html",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "readonly FdUiChartLegendItem[]",
+          "required": false
+        },
+        {
+          "name": "visible",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
       "specPath": null
     },
     {

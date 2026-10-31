@@ -4756,7 +4756,7 @@
     "STATISTICS": {
         "PERIOD_TOO_LONG": "Choose a period of no more than 366 days, including the start and end dates.",
         "TITLE": "Statistics",
-        "SUBTITLE": "Trends overview",
+        "SUBTITLE": "Nutrition and body metrics for the selected period",
         "EXPORT_MENU_LABEL": "Export",
         "EXPORT_CSV": "CSV",
         "EXPORT_PDF": "PDF",
@@ -4768,7 +4768,7 @@
             "DISTRIBUTION": "Distribution"
         },
         "DASHBOARD": {
-            "PREVIEW_TITLE": "New statistics cards",
+            "PREVIEW_TITLE": "Report for the selected period",
             "NUTRIENTS": {
                 "PROTEIN": "Protein",
                 "FAT": "Fat",
@@ -4776,43 +4776,44 @@
                 "FIBER": "Fiber"
             },
             "OVERVIEW": {
-                "TITLE": "This period",
+                "TITLE": "Nutrition summary",
                 "DAYS_WITHIN_GOAL": "{{current}} of {{total}} days within goal",
                 "AVERAGE_CALORIES": "Average calorie goal completion",
-                "AVERAGE_PER_DAY": "Average per day",
+                "AVERAGE_PER_DAY": "Average per recorded day",
                 "VS_GOAL": "Against the base daily goal",
                 "NUTRIENTS": "Average nutrient progress",
                 "DIARY_COMPLETENESS": "Diary completed",
                 "DAYS": "days",
-                "COMPLETENESS_HINT": "Days without entries are excluded from averages. Recorded days may still be incomplete; these totals describe your diary, not your diet quality.",
-                "RECORDED_DAYS": "Days with entries: {{current}} of {{total}}",
+                "COMPLETENESS_HINT": "Days without entries are excluded. Entries for individual days may be incomplete.",
+                "RECORDED_DAYS": "Entries on {{current}} of {{total}} days",
                 "AVERAGE_RECORDED_DAYS": "Average over days with entries ({{count}})",
                 "BASE_GOAL_HINT": "Comparisons use the base daily goal. Weekday-specific targets are not included here."
             },
             "TREND": {
-                "TITLE": "Trends",
+                "TITLE": "Nutrition trends",
                 "CHART_TYPE_LABEL": "Chart type",
                 "CHART_BARS": "Bars",
                 "CHART_LINE": "Line",
                 "GOAL": "Base daily goal: {{value}} kcal",
                 "NO_ENTRY": "No diary entry",
-                "INSIGHTS_TITLE": "What changed",
+                "INSIGHTS_TITLE": "Difference from the base goal",
                 "PERCENT_UNIT": "%",
                 "GRAM_UNIT": " g",
-                "VS_GOAL": "Compared with your goal",
+                "VS_GOAL": "Compared with the base daily goal",
                 "INCOMPLETE_DATA": "Entries may be incomplete",
                 "INCOMPLETE_DATA_HINT": "Days with entries may still be incomplete; averages describe your diary."
             },
             "BALANCE": {
-                "TITLE": "Nutrient balance",
-                "SUBTITLE": "Daily average",
-                "NUTRIENT": "Nutrient",
+                "TITLE": "Goal comparison",
+                "SUBTITLE": "Recorded-day averages and daily goals from your profile.",
+                "NUTRIENT": "Metric",
                 "AVERAGE": "Average",
-                "GOAL": "Goal",
-                "COMPLETION": "Completion"
+                "GOAL": "Base goal",
+                "NO_GOAL": "Not set",
+                "BASE_GOAL_HINT": "Current base goals are shown; weekday-specific targets are excluded."
             },
             "MEAL_STRUCTURE": {
-                "TITLE": "Average day structure",
+                "TITLE": "Calories by meal type",
                 "DISTRIBUTION": "Calorie distribution by meal",
                 "MEAL": "Meal",
                 "SHARE": "Share",
@@ -4830,23 +4831,23 @@
                 }
             },
             "STABILITY": {
-                "TITLE": "Diet stability",
+                "TITLE": "Calories against the goal",
                 "STABLE_DAYS": "{{current}} of {{total}} days",
                 "STABLE_INTERVALS": "{{current}} of {{total}} intervals",
-                "WITHOUT_SHARP_DEVIATIONS": "without sharp deviations",
-                "AVERAGE_DEVIATION": "Average deviation",
+                "WITHOUT_SHARP_DEVIATIONS": "within ±20% of the base goal",
+                "AVERAGE_DEVIATION": "Average deviation from goal",
                 "LOGGING_STREAK": "Logging streak",
                 "STREAK_DAYS": "{{count}} days",
                 "STREAK_INTERVALS": "{{count}} intervals",
-                "TIMELINE": "Diet stability timeline",
+                "TIMELINE": "Recorded calories against the base goal",
                 "STATUS": {
-                    "STABLE": "Within range",
-                    "DEVIATION": "Deviation",
+                    "STABLE": "Within ±20%",
+                    "DEVIATION": "Deviation over 20%",
                     "MISSING": "No data"
                 },
                 "NO_GOAL_TITLE": "Set a calorie goal",
-                "NO_GOAL_HINT": "A daily calorie goal is needed to evaluate diet stability.",
-                "INSUFFICIENT_DATA": "Not enough recorded days to compare the period with your goal. Missing or partial entries are not a failure to meet your goal. Keep recording meals; even days with entries may be incomplete."
+                "NO_GOAL_HINT": "Set a base daily calorie goal to compare recorded calories.",
+                "INSUFFICIENT_DATA": "Comparison needs entries in every interval of the period, at least three intervals, and a calorie goal. Entries for individual days may be incomplete."
             },
             "BODY": {
                 "TITLE": "Body metrics",

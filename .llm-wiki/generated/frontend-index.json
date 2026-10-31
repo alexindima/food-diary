@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2776,
-    "symbols": 872,
+    "typescriptFiles": 2779,
+    "symbols": 873,
     "routes": 108,
     "features": 46,
     "specs": 847,
     "localeFiles": 5,
     "roles": {
-      "Component": 503,
+      "Component": 504,
       "Directive": 20,
       "Facade": 90,
       "Other": 41,
@@ -1705,7 +1705,7 @@
       "role": "Component",
       "selector": "fd-ui-bar-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/bar-chart/fd-ui-bar-chart.ts",
-      "line": 89
+      "line": 91
     },
     {
       "name": "FdUiButtonComponent",
@@ -1733,6 +1733,13 @@
       "role": "Component",
       "selector": "fd-ui-card",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "line": 18
+    },
+    {
+      "name": "FdUiChartLegendComponent",
+      "role": "Component",
+      "selector": "fd-ui-chart-legend",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
       "line": 18
     },
     {
@@ -1985,7 +1992,7 @@
       "role": "Component",
       "selector": "fd-ui-line-chart-legend",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-legend.ts",
-      "line": 15
+      "line": 14
     },
     {
       "name": "FdUiLineChartXAxisComponent",
@@ -2006,7 +2013,7 @@
       "role": "Component",
       "selector": "fd-ui-line-chart",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
-      "line": 156
+      "line": 158
     },
     {
       "name": "FdUiLoaderComponent",
@@ -6402,21 +6409,21 @@
       "role": "Component",
       "selector": "fd-statistics-nutrient-balance-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "line": 18
+      "line": 16
     },
     {
       "name": "StatisticsNutritionTrendCardComponent",
       "role": "Component",
       "selector": "fd-statistics-nutrition-trend-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
-      "line": 67
+      "line": 69
     },
     {
       "name": "StatisticsOverviewCardComponent",
       "role": "Component",
       "selector": "fd-statistics-overview-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-      "line": 20
+      "line": 16
     },
     {
       "name": "StatisticsFacade",
@@ -6430,7 +6437,7 @@
       "role": "Component",
       "selector": "fd-statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-      "line": 66
+      "line": 68
     },
     {
       "name": "UsdaService",
@@ -8296,8 +8303,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4188,
-      "russianProperties": 4188,
+      "englishProperties": 4189,
+      "russianProperties": 4189,
       "countsMatch": true
     },
     {

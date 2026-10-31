@@ -1,49 +1,35 @@
-<fd-ui-card class="statistics-nutrient-balance-card" [title]="'STATISTICS.DASHBOARD.BALANCE.TITLE' | translate">
+<fd-ui-card class="statistics-nutrient-balance-card">
+    <h2 class="statistics-nutrient-balance-card__title fd-ui-card-title">{{ 'STATISTICS.DASHBOARD.BALANCE.TITLE' | translate }}</h2>
     <p class="statistics-nutrient-balance-card__subtitle fd-ui-body-sm fd-ui-text-muted">
         {{ 'STATISTICS.DASHBOARD.BALANCE.SUBTITLE' | translate }}
     </p>
-    <div class="statistics-nutrient-balance-card__table" role="table" [attr.aria-label]="'STATISTICS.DASHBOARD.BALANCE.TITLE' | translate">
-        <div
-            class="statistics-nutrient-balance-card__row statistics-nutrient-balance-card__row--header fd-ui-caption fd-ui-text-muted"
-            role="row"
-        >
-            <span role="columnheader">{{ 'STATISTICS.DASHBOARD.BALANCE.NUTRIENT' | translate }}</span>
-            <span role="columnheader">{{ 'STATISTICS.DASHBOARD.BALANCE.AVERAGE' | translate }}</span>
-            <span role="columnheader">{{ 'STATISTICS.DASHBOARD.BALANCE.GOAL' | translate }}</span>
-            <span role="columnheader">{{ 'STATISTICS.DASHBOARD.BALANCE.COMPLETION' | translate }}</span>
-        </div>
-        @for (item of items(); track item.key) {
-            <div
-                class="statistics-nutrient-balance-card__row"
-                role="row"
-                [class.statistics-nutrient-balance-card__row--protein]="item.key === 'protein'"
-                [class.statistics-nutrient-balance-card__row--fat]="item.key === 'fat'"
-                [class.statistics-nutrient-balance-card__row--carbs]="item.key === 'carbs'"
-                [class.statistics-nutrient-balance-card__row--fiber]="item.key === 'fiber'"
-            >
-                <strong class="statistics-nutrient-balance-card__label fd-ui-action-text" role="cell">
-                    <i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}
-                </strong>
-                <span class="fd-ui-body-sm" role="cell"
-                    >{{ item.current | localizedNumber: locale() : 0 : 1 }} {{ 'GENERAL.UNITS.G' | translate }}</span
-                >
-                <span class="fd-ui-body-sm" role="cell"
-                    >{{ item.goal | localizedNumber: locale() : 0 : 1 }} {{ 'GENERAL.UNITS.G' | translate }}</span
-                >
-                <span class="statistics-nutrient-balance-card__completion" role="cell">
-                    <span
-                        class="statistics-nutrient-balance-card__progress fd-ui-progress-track"
-                        role="progressbar"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        [attr.aria-label]="getLabelKey(item) | translate"
-                        [attr.aria-valuenow]="getProgress(item)"
-                    >
-                        <span [style.width.%]="getProgress(item)"></span>
-                    </span>
-                    <strong class="fd-ui-stat-value">{{ getProgress(item) }}%</strong>
-                </span>
-            </div>
-        }
-    </div>
+    <table class="statistics-nutrient-balance-card__table" [attr.aria-label]="'STATISTICS.DASHBOARD.BALANCE.TITLE' | translate">
+        <thead>
+            <tr class="fd-ui-caption fd-ui-text-muted">
+                <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.NUTRIENT' | translate }}</th>
+                <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.AVERAGE' | translate }}</th>
+                <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.GOAL' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (row of rows(); track row.key) {
+                <tr [attr.data-nutrient]="row.key">
+                    <th class="fd-ui-action-text" scope="row">{{ row.labelKey | translate }}</th>
+                    <td class="fd-ui-body-sm">
+                        {{ row.current | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
+                    </td>
+                    <td class="fd-ui-body-sm fd-ui-text-muted">
+                        @if (row.goal > 0) {
+                            {{ row.goal | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
+                        } @else {
+                            {{ 'STATISTICS.DASHBOARD.BALANCE.NO_GOAL' | translate }}
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p class="statistics-nutrient-balance-card__hint fd-ui-caption fd-ui-text-muted">
+        {{ 'STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT' | translate }}
+    </p>
 </fd-ui-card>

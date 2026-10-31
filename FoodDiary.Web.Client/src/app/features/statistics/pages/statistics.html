@@ -102,6 +102,14 @@
                         }
                     </div>
                 </div>
+                <div class="statistics__nutrition-group" [hidden]="newCards.overview.trackedDays === 0 && !isLoading()">
+                    <div class="statistics__card-shell" [attr.aria-busy]="isLoading()">
+                        <fd-statistics-nutrient-balance-card [data]="newCards.overview" />
+                        <div class="statistics__card-loading fd-ui-body-sm" role="status" [hidden]="!isLoading()">
+                            {{ 'STATISTICS.LOADING' | translate }}
+                        </div>
+                    </div>
+                </div>
                 <div
                     class="statistics__card-shell"
                     [hidden]="!hasBodyData() && !isBodyLoading() && !hasBodyLoadError()"

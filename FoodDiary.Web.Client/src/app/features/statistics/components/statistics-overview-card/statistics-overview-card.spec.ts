@@ -5,46 +5,59 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { StatisticsOverviewCardComponent } from './statistics-overview-card';
 
-const PROGRESS_BAR_COUNT = 5;
+/* eslint-disable @typescript-eslint/no-magic-numbers -- Recorded-day scenarios reproduce sparse and fully recorded periods. */
 
 describe('StatisticsOverviewCardComponent', () => {
-    it('renders calorie, diary, and established nutrient progress', async () => {
+    it.each([1, 2, 7])('keeps units and the averaging basis visible with %s recorded days', async trackedDays => {
         await TestBed.configureTestingModule({
             imports: [StatisticsOverviewCardComponent],
             providers: [provideTranslateTesting()],
         }).compileComponents();
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('en', {
+            GENERAL: { UNITS: { KCAL: 'kcal', G: 'g' } },
+            STATISTICS: {
+                DASHBOARD: {
+                    OVERVIEW: {
+                        AVERAGE_PER_DAY: 'Average per recorded day',
+                        RECORDED_DAYS: 'Entries on {{current}} of {{total}} days',
+                    },
+                },
+            },
+        });
+        translate.use('en');
         const fixture = TestBed.createComponent(StatisticsOverviewCardComponent);
         fixture.componentRef.setInput('data', {
-            daysWithinGoal: 3,
-            trackedDays: 4,
+            daysWithinGoal: 0,
+            trackedDays,
             periodDays: 7,
-            averageCalories: 1840,
-            calorieGoal: 2258,
-            calorieChangePercent: -6,
+            averageCalories: 485,
+            calorieGoal: 2000,
+            calorieChangePercent: -76,
             nutrients: [
-                { key: 'protein', current: 109.5, goal: 140 },
-                { key: 'fat', current: 62, goal: 80 },
-                { key: 'carbs', current: 214, goal: 280 },
-                { key: 'fiber', current: 16, goal: 25 },
+                { key: 'protein', current: 10.4, goal: 150 },
+                { key: 'fat', current: 2.8, goal: 65 },
+                { key: 'carbs', current: 111.5, goal: 200 },
+                { key: 'fiber', current: 14, goal: 28 },
             ],
         });
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
 
-        expect(root.querySelectorAll('[role="progressbar"]')).toHaveLength(PROGRESS_BAR_COUNT);
-        expect(root.querySelector('.statistics-overview-card__nutrient--protein')).not.toBeNull();
-        expect(root.textContent).toContain('1,840');
-        expect(root.textContent).toContain('4 / 7');
+        const visibleUnits = Array.from(root.querySelectorAll('span')).filter(
+            element => element.textContent.includes('kcal') && element.closest('[hidden]') === null,
+        );
 
-        const translate = TestBed.inject(TranslateService);
+        expect(visibleUnits, 'calorie units remain visible for sparse diary entries').not.toHaveLength(0);
+        expect(root.textContent).toContain('485');
+        expect(root.textContent).toContain('Average per recorded day');
+        expect(root.textContent.split(`Entries on ${trackedDays} of 7 days`)).toHaveLength(2);
+        expect(root.querySelector('[role="progressbar"]')).toBeNull();
+        expect(root.textContent).not.toContain('150');
+        expect(root.textContent).toContain('10.4');
+
         translate.use('ru');
         fixture.detectChanges();
-        expect(root.textContent).toContain('1\u00A0840');
-        expect(root.textContent).toContain('109,5 / 140');
-
-        translate.use('en');
-        fixture.detectChanges();
-        expect(root.textContent).toContain('1,840');
-        expect(root.textContent).toContain('109.5 / 140');
+        expect(root.textContent).toContain('10,4');
     });
 });
