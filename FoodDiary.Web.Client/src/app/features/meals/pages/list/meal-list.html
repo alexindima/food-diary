@@ -89,26 +89,7 @@
         }
 
         @if (hasActiveFilters()) {
-            <section class="meal-list__active-filters" [attr.aria-label]="'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate">
-                <span class="meal-list__active-filters-label"
-                    >{{ 'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate }} · {{ activeFilterChips().length }}</span
-                >
-                <div class="meal-list__active-filter-chips">
-                    @for (chip of activeFilterChips(); track chip.id) {
-                        <button
-                            type="button"
-                            class="meal-list__active-filter-chip"
-                            [attr.aria-label]="`${('MEAL_LIST.REMOVE_FILTER' | translate)}: ${chip.label}`"
-                            (click)="removeFilter(chip.id)"
-                        >
-                            {{ chip.label }} <span aria-hidden="true">&#215;</span>
-                        </button>
-                    }
-                </div>
-                <fd-ui-button variant="secondary" fill="text" (click)="resetFilters()">{{
-                    'MEAL_LIST.RESET_ALL' | translate
-                }}</fd-ui-button>
-            </section>
+            <fd-active-filters [chips]="activeFilterChips()" (filterRemoved)="removeFilter($event)" (filtersReset)="resetFilters()" />
         }
 
         <fd-meal-list-content

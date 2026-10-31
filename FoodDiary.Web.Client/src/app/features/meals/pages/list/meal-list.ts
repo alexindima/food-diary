@@ -9,6 +9,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { filter, type Observable, switchMap, tap } from 'rxjs';
 
+import { ActiveFiltersComponent } from '../../../../components/shared/active-filters/active-filters';
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -49,6 +50,7 @@ import { MEAL_LIST_TOUR } from './meal-list-tour';
         PageBodyComponent,
         FdPageContainerDirective,
         AiInputActionBarComponent,
+        ActiveFiltersComponent,
         MealListContentComponent,
     ],
     providers: [AiMealCreateFacade, MealListFacade, MealListRouteStateFacade],

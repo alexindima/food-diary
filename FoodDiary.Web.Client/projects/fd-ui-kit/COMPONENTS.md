@@ -505,7 +505,7 @@ Primary solid fill pairs the theme's primary 700–900 gradient shades with its 
 - `type?: 'button' | 'submit' | 'reset'`
 - `variant?: 'primary' | 'secondary' | 'danger' | 'info' | 'ghost' | 'outline'`
 - `fill?: 'solid' | 'outline' | 'text' | 'ghost'`
-- `appearance?: 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon' | 'brand-action' | 'chip'`
+- `appearance?: 'default' | 'toolbar' | 'card-action' | 'dashed' | 'plain-icon' | 'brand-action' | 'chip' | 'filter-chip'`
 - `size?: 'xs' | 'sm' | 'md' | 'lg'`
 - `icon?: string` (icon name)
 - `iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'`
@@ -522,6 +522,8 @@ Primary solid fill pairs the theme's primary 700–900 gradient shades with its 
 - `ariaDescribedBy?: string | null` (description IDs, combined with a visible `fdUiHint`)
 
 Use these inputs for native button semantics. Host `[attr.aria-*]` bindings describe the component wrapper.
+
+Use `appearance="filter-chip"` with `size="xs"` for removable active filters: accent pills with caption text and a 32px minimum touch target. Compact filter-summary reset actions use `size="sm"` and `--fd-button-touch-min-size: var(--fd-size-control-sm)` beside the heading. These dense secondary rows opt into compact targets; standard actions retain the default touch minimum.
 
 **Methods**
 

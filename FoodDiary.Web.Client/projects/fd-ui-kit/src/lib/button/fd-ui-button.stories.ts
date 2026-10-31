@@ -254,3 +254,14 @@ export const CompactTextActions: Story = {
         `,
     }),
 };
+
+export const ActiveFilterChips: Story = {
+    render: () => ({
+        template: `
+            <div style="display: flex; flex-wrap: wrap; gap: var(--fd-space-xxs);">
+                <fd-ui-button appearance="filter-chip" variant="secondary" fill="outline" size="xs" icon="close" iconSize="xs" ariaLabel="Remove filter: Breakfast">Breakfast</fd-ui-button>
+                <fd-ui-button appearance="filter-chip" variant="secondary" fill="outline" size="xs" icon="close" iconSize="xs" ariaLabel="Remove filter: Calories from 50">Calories from: 50</fd-ui-button>
+            </div>
+        `,
+    }),
+};

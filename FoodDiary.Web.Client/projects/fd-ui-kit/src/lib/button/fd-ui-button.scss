@@ -404,6 +404,23 @@
     --fd-button-text-padding-x: var(--fd-space-xs);
 }
 
+.fd-ui-button.fd-ui-button--appearance-filter-chip {
+    --fd-button-border-radius: var(--fd-radius-pill);
+    --fd-button-font-size: var(--fd-text-caption-size);
+    --fd-button-font-weight: var(--fd-font-weight-semibold);
+    --fd-button-line-height: var(--fd-text-caption-line-height);
+    --fd-button-background-default: var(--fd-bg-accent-soft);
+    --fd-button-background-hover: var(--fd-bg-accent-medium);
+    --fd-button-background-active: var(--fd-bg-accent-medium);
+    --fd-button-border-default: var(--fd-color-border-dark-muted);
+    --fd-button-border-hover: var(--fd-color-primary-500);
+    --fd-button-border-active: var(--fd-color-primary-500);
+    --fd-button-text-default: var(--fd-color-primary-700);
+    --fd-button-text-hover: var(--fd-color-primary-800);
+    --fd-button-text-active: var(--fd-color-primary-800);
+    --fd-button-touch-min-size: var(--fd-size-control-sm);
+}
+
 .fd-ui-button--icon-sm {
     --fd-button-icon-size: var(--fd-size-button-icon-sm);
 }
