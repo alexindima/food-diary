@@ -75,8 +75,10 @@ public sealed class GetBillingOverviewQueryHandler(
             publicConfig.AvailableProviders,
             publicConfig.PaddleMonthlyPriceId,
             publicConfig.PaddleYearlyPriceId,
-            subscription is { Provider: BillingProviderNames.Paddle, CancelAtPeriodEnd: false,
-                ExternalSubscriptionId: not null, Status: "active" or "trialing" or "past_due" or "paused", }));
+            subscription is {
+                Provider: BillingProviderNames.Paddle, CancelAtPeriodEnd: false,
+                ExternalSubscriptionId: not null, Status: "active" or "trialing" or "past_due" or "paused",
+            }));
     }
 
     private static bool IsPaidPremiumActive(BillingSubscriptionOverviewReadModel? subscription, DateTime nowUtc) =>

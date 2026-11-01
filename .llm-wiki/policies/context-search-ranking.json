@@ -2055,7 +2055,7 @@
       "minimumMatches": 2,
       "candidateTerms": ["prompt", "provider"],
       "minimumCandidateMatches": 2,
-      "score": 250,
+      "score": 450,
       "identityScope": "file",
       "recordTypes": ["code"],
       "excludeTests": true

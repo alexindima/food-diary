@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FoodDiary.Infrastructure.Migrations {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [Migration("20261101010719_AddCancellationConfirmationDelivery")]
-    partial class AddCancellationConfirmationDelivery {
+    [Migration("20261101010719_AddBillingCancellationEmailDelivery")]
+    partial class AddBillingCancellationEmailDelivery {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618

@@ -26258,11 +26258,11 @@
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "nonBlankLines": 113,
+      "nonBlankLines": 115,
       "decisionPoints": 23,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.76
+      "structuralRiskScore": 38.8
     },
     {
       "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
@@ -37498,11 +37498,11 @@
     },
     {
       "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/SubscriptionCancellationEmailContent.cs",
-      "nonBlankLines": 82,
+      "nonBlankLines": 85,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.14
+      "structuralRiskScore": 12.2
     },
     {
       "path": "Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs",

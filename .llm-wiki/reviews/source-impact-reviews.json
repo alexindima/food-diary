@@ -449,8 +449,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
+          "reviewReason": "Reviewed CI648ed5ca6 retrieval failures and the minimal existing AI prompt-provider role affinity correction250to450. Complete unchanged SQL/.NET parity retrieval corpora pass, as do the original image migration expectations after giving the unshipped Billing email migration its explicit owned purpose name. Queries, expected paths, thresholds, indexes and writer/reader boundaries are unchanged; discovery guidance remains accurate."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
@@ -478,10 +478,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
+      "reason": "Reviewed CI648ed5ca6 retrieval failures and the minimal existing AI prompt-provider role affinity correction250to450. Complete unchanged SQL/.NET parity retrieval corpora pass, as do the original image migration expectations after giving the unshipped Billing email migration its explicit owned purpose name. Queries, expected paths, thresholds, indexes and writer/reader boundaries are unchanged; discovery guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
-      "reviewedAtUtc": "2026-10-31T19:38:23.5959716Z"
+      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
+      "reviewedAtUtc": "2026-11-01T03:09:23.5451794Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1329,8 +1329,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fa2cdb8c0490b6eca8f6bd7e65bd4f24ce23c50c48e2f3a456971a115b808887",
-          "reviewReason": "Reviewed the combined native cancellation and existing Paddle pagination completion fix. Provider recovery now honors has_more=false; the scheduled email job, transaction/outbox boundaries and transport ownership are preserved. All221 Billing infrastructure tests pass and the regenerated topology reflects the combined committed sources."
+          "sha256": "754297ba52d00ddfe94d063db55e19658c3ed826f8500339ab6275918331076b",
+          "reviewReason": "Regenerated topology reflects mechanical formatting and the renamed, not-yet-deployed Billing cancellation email migration. SQL/model and runtime job/transport behavior are unchanged. Real PostgreSQL upgrade/backfill, current model and outbox rollback/retry checks pass again; existing runtime guidance remains correct."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1343,10 +1343,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the combined native cancellation and existing Paddle pagination completion fix. Provider recovery now honors has_more=false; the scheduled email job, transaction/outbox boundaries and transport ownership are preserved. All221 Billing infrastructure tests pass and the regenerated topology reflects the combined committed sources.",
+      "reason": "Regenerated topology reflects mechanical formatting and the renamed, not-yet-deployed Billing cancellation email migration. SQL/model and runtime job/transport behavior are unchanged. Real PostgreSQL upgrade/backfill, current model and outbox rollback/retry checks pass again; existing runtime guidance remains correct.",
       "baseRef": "HEAD",
-      "gitHead": "20a58974c648ac43c93553aa60655202d12be170",
-      "reviewedAtUtc": "2026-11-01T02:50:21.5651749Z"
+      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
+      "reviewedAtUtc": "2026-11-01T03:09:25.5794214Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1355,14 +1355,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
+          "reviewReason": "The existing AI prompt-provider role weight changed within the read-only discovery ranker. No security control, query scope, trust threshold, privacy classification or authorization changed. Complete retrieval/parity regressions pass; this workflow still correctly treats navigation results as leads rather than security verdicts."
         }
       ],
-      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
+      "reason": "The existing AI prompt-provider role weight changed within the read-only discovery ranker. No security control, query scope, trust threshold, privacy classification or authorization changed. Complete retrieval/parity regressions pass; this workflow still correctly treats navigation results as leads rather than security verdicts.",
       "baseRef": "HEAD",
-      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
-      "reviewedAtUtc": "2026-10-31T19:38:24.3153558Z"
+      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
+      "reviewedAtUtc": "2026-11-01T03:09:26.5986969Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1669,8 +1669,8 @@
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
+          "reviewReason": "The existing AI provider role signal now outranks an incidental schema configuration match. All unchanged retrieval corpora and runtime parity checks pass. No exact fixture path, query, acceptance threshold or abstention safeguard was changed; ranked context remains navigation evidence as documented."
         },
         {
           "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
@@ -1688,10 +1688,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Catalog and symbol inputs now include the new slices/job and admin feedback route; source discovery may return these current owners. No query ranking, retrieval policy, provider or acceptance threshold changed. Existing distinction between navigation evidence and verified runtime flow remains correct.",
+      "reason": "The existing AI provider role signal now outranks an incidental schema configuration match. All unchanged retrieval corpora and runtime parity checks pass. No exact fixture path, query, acceptance threshold or abstention safeguard was changed; ranked context remains navigation evidence as documented.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:44.3956227Z"
+      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
+      "reviewedAtUtc": "2026-11-01T03:09:24.5761189Z"
     },
     {
       "pageId": "workflow.review-diff",

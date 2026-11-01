@@ -99,13 +99,17 @@ public partial class BillingGatewayTests {
         }));
 
     private static HttpResponseMessage CancellationResponse(string status, bool scheduled = false) =>
-        new(HttpStatusCode.OK) { Content = JsonContent(JsonSerializer.Serialize(new {
-            data = new {
-                id = "sub_owned", customer_id = "ctm_owned", status,
-                current_billing_period = new { starts_at = "2026-11-01T10:00:00Z", ends_at = "2026-12-01T10:00:00Z" },
-                scheduled_change = scheduled ? new { action = "cancel", effective_at = "2026-12-01T10:00:00Z" } : null,
-                canceled_at = string.Equals(status, "canceled", StringComparison.Ordinal) ? "2026-12-01T10:00:00Z" : null,
-                updated_at = "2026-11-01T10:01:00Z",
-            },
-        })), };
+        new(HttpStatusCode.OK) {
+            Content = JsonContent(JsonSerializer.Serialize(new {
+                data = new {
+                    id = "sub_owned",
+                    customer_id = "ctm_owned",
+                    status,
+                    current_billing_period = new { starts_at = "2026-11-01T10:00:00Z", ends_at = "2026-12-01T10:00:00Z" },
+                    scheduled_change = scheduled ? new { action = "cancel", effective_at = "2026-12-01T10:00:00Z" } : null,
+                    canceled_at = string.Equals(status, "canceled", StringComparison.Ordinal) ? "2026-12-01T10:00:00Z" : null,
+                    updated_at = "2026-11-01T10:01:00Z",
+                },
+            })),
+        };
 }

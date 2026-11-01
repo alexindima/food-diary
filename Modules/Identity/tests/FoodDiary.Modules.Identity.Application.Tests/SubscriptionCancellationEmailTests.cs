@@ -95,7 +95,9 @@ public sealed class SubscriptionCancellationEmailTests {
                 return Task.CompletedTask;
             });
             Handler = new QueueSubscriptionCancellationEmailCommandHandler(new EmailOptions {
-                FromAddress = "noreply@example.test", FromName = brand, FrontendBaseUrl = "https://fooddiary.example.test",
+                FromAddress = "noreply@example.test",
+                FromName = brand,
+                FrontendBaseUrl = "https://fooddiary.example.test",
             }, Templates, Outbox);
         }
     }

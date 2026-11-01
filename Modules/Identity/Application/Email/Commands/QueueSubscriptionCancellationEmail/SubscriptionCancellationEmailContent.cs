@@ -21,9 +21,12 @@ internal static partial class SubscriptionCancellationEmailContent {
         string subscriptionLink = options.FrontendBaseUrl.TrimEnd('/') + "/premium";
         string accessMessage = BuildAccessMessage(request, locale);
         var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
-            ["brand"] = brand, ["accessMessage"] = accessMessage,
-            ["feedbackEmail"] = FeedbackAddress, ["feedbackLink"] = "mailto:" + FeedbackAddress,
-            ["subscriptionLink"] = subscriptionLink, ["link"] = subscriptionLink,
+            ["brand"] = brand,
+            ["accessMessage"] = accessMessage,
+            ["feedbackEmail"] = FeedbackAddress,
+            ["feedbackLink"] = "mailto:" + FeedbackAddress,
+            ["subscriptionLink"] = subscriptionLink,
+            ["link"] = subscriptionLink,
         };
         string subject = russian ? "Автопродление Premium отключено" : "Premium auto-renewal is off";
         string thanks = russian ? "Спасибо, что пользовались Premium в FoodDiary."

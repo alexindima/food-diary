@@ -203,7 +203,7 @@ an account identity. MailInbox already allows this recipient in repository
 configuration; live MX/SMTP routing and actual delivery still require the normal
 operational verification after deployment.
 
-Apply `AddCancellationConfirmationDelivery` before starting the new API and
+Apply `AddBillingCancellationEmailDelivery` before starting the new API and
 JobManager. It marks preexisting cancellations handled to avoid retrospective
 messages. Rolling back code can retain the nullable column and index. No live
 Paddle or SMTP operation is required to verify the migration and queue behavior.
