@@ -6,11 +6,13 @@
 
     <fd-ui-tabs
         mode="selection"
+        appearance="wrap-compact"
         [ariaLabel]="'ADMIN_NAV.BILLING' | translate"
         [tabs]="[
             { value: 'subscriptions', label: 'Subscriptions' },
             { value: 'payments', label: 'Payments' },
             { value: 'webhook-events', label: 'Webhooks' },
+            { value: 'cancellations', label: 'ADMIN_BILLING.CANCELLATIONS.TITLE' | translate },
         ]"
         [selectedValue]="billing.activeTab()"
         (selectedValueChange)="onTabChange($event)"
@@ -101,15 +103,7 @@
 
         <div class="admin-billing__summary fd-ui-action-text">Total records: {{ billing.totalItems() }}</div>
 
-        @if (billing.activeTab() === 'subscriptions') {
-            <fd-admin-billing-subscriptions-table [items]="billing.subscriptionItems()" />
-        }
-        @if (billing.activeTab() === 'payments') {
-            <fd-admin-billing-payments-table [items]="billing.paymentItems()" (metadataOpen)="billing.showMetadata($event)" />
-        }
-        @if (billing.activeTab() === 'webhook-events') {
-            <fd-admin-billing-webhooks-table [items]="billing.webhookEventItems()" (metadataOpen)="billing.showMetadata($event)" />
-        }
+        <fd-admin-billing-records />
 
         <fd-ui-pagination
             class="admin-billing__pagination"

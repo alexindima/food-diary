@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Billing.Application.Abstractions.Common;
 using FoodDiary.Modules.Billing.Application.Abstractions.Models;
 using FoodDiary.Results;
+using FoodDiary.Modules.Billing.Application.Services;
 using FoodDiary.Modules.Billing.Domain.Entities;
 using FoodDiary.Modules.Billing.Domain.Enums;
 
@@ -13,7 +14,8 @@ public sealed class BillingWebhookEventProcessor(
     BillingWebhookSubscriptionWriter billingWebhookSubscriptionWriter,
     BillingWebhookPaymentRecorder billingWebhookPaymentRecorder,
     BillingWebhookPremiumRoleSyncer billingWebhookPremiumRoleSyncer,
-    TimeProvider timeProvider) {
+    TimeProvider timeProvider,
+    BillingCancellationRecorder cancellationRecorder) {
     public async Task<Result> ProcessAsync(
         string provider,
         string payload,
@@ -91,6 +93,8 @@ public sealed class BillingWebhookEventProcessor(
                 context.Subscription,
                 context.User,
                 cancellationToken);
+
+            await cancellationRecorder.SynchronizeAsync(updatedSubscription, "paddle", cancellationToken);
 
             await billingWebhookPremiumRoleSyncer.SyncAsync(
                 context.User,

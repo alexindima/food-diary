@@ -91,11 +91,17 @@ export class PremiumAccessPageComponent {
         return overview?.availableProviders.filter(provider => provider.trim().length > 0) ?? [];
     });
     protected readonly checkoutAvailable = computed(() => this.availableProviders().length > 0);
+    private readonly hasOngoingSubscription = computed(() => {
+        const overview = this.overview();
+        return (
+            overview?.manageBillingAvailable === true && overview.subscriptionStatus !== null && overview.subscriptionStatus !== 'canceled'
+        );
+    });
     protected readonly showPlans = computed(
         () =>
             !this.isLoading() &&
             this.overview() !== null &&
-            this.overview()?.manageBillingAvailable !== true &&
+            !this.hasOngoingSubscription() &&
             (!this.isPremium() || this.overview()?.premiumTrialActive === true) &&
             this.checkoutAvailable(),
     );

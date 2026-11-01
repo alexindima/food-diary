@@ -3,6 +3,8 @@ using FoodDiary.Modules.Admin.Application.Abstractions.Models;
 namespace FoodDiary.Modules.Admin.Application.Abstractions.Common;
 
 public interface IAdminBillingQuery {
+    Task<AdminBillingCancellationReportReadModel> GetCancellationsAsync(AdminBillingListFilter filter, CancellationToken cancellationToken = default);
+
     Task<(IReadOnlyList<AdminBillingSubscriptionReadModel> Items, int TotalItems)> GetSubscriptionsAsync(
         AdminBillingListFilter filter,
         CancellationToken cancellationToken = default);

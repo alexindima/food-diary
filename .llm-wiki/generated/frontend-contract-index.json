@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 512,
-    "componentsWithoutDirectSpecs": 129,
-    "inputs": 1662,
-    "outputs": 555,
-    "apiCalls": 320,
-    "templatesWithTranslations": 370,
-    "translationKeys": 2199,
-    "consumerEdges": 1305,
-    "consumedComponents": 325,
-    "unconsumedComponents": 186
+    "components": 516,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1667,
+    "outputs": 557,
+    "apiCalls": 323,
+    "templatesWithTranslations": 373,
+    "translationKeys": 2221,
+    "consumerEdges": 1313,
+    "consumedComponents": 328,
+    "unconsumedComponents": 187
   },
   "components": [
     {
@@ -169,6 +169,37 @@
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.spec.ts"
     },
     {
+      "class": "AdminBillingCancellationsTableComponent",
+      "selector": "fd-admin-billing-cancellations-table",
+      "feature": "admin-billing",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.html",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "AdminBillingCancellation[]",
+          "required": true
+        },
+        {
+          "name": "reasons",
+          "type": "AdminBillingCancellationReason[]",
+          "required": true
+        },
+        {
+          "name": "feedbackCount",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "totalItems",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminBillingComponent",
       "selector": "fd-admin-billing",
       "feature": "admin-billing",
@@ -280,6 +311,16 @@
         }
       ],
       "specPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.spec.ts"
+    },
+    {
+      "class": "AdminBillingRecordsComponent",
+      "selector": "fd-admin-billing-records",
+      "feature": "admin-billing",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "AdminBillingSubscriptionsTableComponent",
@@ -9428,6 +9469,37 @@
       "specPath": null
     },
     {
+      "class": "PremiumCancelDialogComponent",
+      "selector": "fd-premium-cancel-dialog",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "PremiumCancellationActionsComponent",
+      "selector": "fd-premium-cancellation-actions",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.html",
+      "inputs": [
+        {
+          "name": "overview",
+          "type": "BillingOverview | null",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "overviewChanged",
+          "type": "BillingOverview"
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.spec.ts"
+    },
+    {
       "class": "PremiumOverviewCardComponent",
       "selector": "fd-premium-overview-card",
       "feature": "premium",
@@ -9461,6 +9533,10 @@
         }
       ],
       "outputs": [
+        {
+          "name": "overviewChanged",
+          "type": "BillingOverview"
+        },
         {
           "name": "manageBilling",
           "type": ""
@@ -16424,9 +16500,21 @@
       "feature": "admin-billing",
       "method": "GET",
       "responseType": null,
+      "urlExpression": "/api/v{version}/admin/billing/cancellations",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
+      "line": 33,
+      "publicMethod": "getCancellations",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/billing`",
+      "resolvedUrlExpression": "/api/v{version}/admin/billing/cancellations"
+    },
+    {
+      "feature": "admin-billing",
+      "method": "GET",
+      "responseType": null,
       "urlExpression": "/api/v{version}/admin/billing/subscriptions",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "line": 35,
+      "line": 60,
       "publicMethod": "getSubscriptions",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/billing`",
@@ -16438,7 +16526,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/billing/payments",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "line": 46,
+      "line": 71,
       "publicMethod": "getPayments",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/billing`",
@@ -16450,7 +16538,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/billing/revenue-summary",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "line": 57,
+      "line": 82,
       "publicMethod": "getRevenueSummary",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/billing`",
@@ -16462,7 +16550,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/admin/billing/webhook-events",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "line": 72,
+      "line": 97,
       "publicMethod": "getWebhookEvents",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "`${environment.apiUrls.auth.replace(/\\/auth$/, '')}/admin/billing`",
@@ -18150,11 +18238,35 @@
     },
     {
       "feature": "premium",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/billing/cancel",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+      "line": 27,
+      "publicMethod": "cancelSubscription",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.billing",
+      "resolvedUrlExpression": "/api/v{version}/billing/cancel"
+    },
+    {
+      "feature": "premium",
+      "method": "POST",
+      "responseType": null,
+      "urlExpression": "/api/v{version}/billing/cancellations/{cancellationId}/feedback",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
+      "line": 39,
+      "publicMethod": "submitCancellationFeedback",
+      "transport": "GeneratedApiClient",
+      "baseUrlExpression": "environment.apiUrls.billing",
+      "resolvedUrlExpression": "/api/v{version}/billing/cancellations/{cancellationId}/feedback"
+    },
+    {
+      "feature": "premium",
       "method": "GET",
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/overview",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 25,
+      "line": 47,
       "publicMethod": "getOverview",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -18166,7 +18278,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/trial",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 32,
+      "line": 54,
       "publicMethod": "startPremiumTrial",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -18178,7 +18290,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/checkout-session",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 40,
+      "line": 62,
       "publicMethod": "createCheckoutSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -18190,7 +18302,7 @@
       "responseType": null,
       "urlExpression": "/api/v{version}/billing/portal-session",
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 56,
+      "line": 78,
       "publicMethod": "createPortalSession",
       "transport": "GeneratedApiClient",
       "baseUrlExpression": "environment.apiUrls.billing",
@@ -20228,6 +20340,24 @@
     },
     {
       "feature": "admin-billing",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.html",
+      "keys": [
+        "ADMIN_BILLING.CANCELLATIONS.COMMENT",
+        "ADMIN_BILLING.CANCELLATIONS.EFFECTIVE",
+        "ADMIN_BILLING.CANCELLATIONS.EMPTY",
+        "ADMIN_BILLING.CANCELLATIONS.OUTCOME",
+        "ADMIN_BILLING.CANCELLATIONS.PLAN",
+        "ADMIN_BILLING.CANCELLATIONS.REASON",
+        "ADMIN_BILLING.CANCELLATIONS.REQUESTED",
+        "ADMIN_BILLING.CANCELLATIONS.RESPONSES",
+        "ADMIN_BILLING.CANCELLATIONS.SOURCE",
+        "ADMIN_BILLING.CANCELLATIONS.SUMMARY_HINT",
+        "ADMIN_BILLING.CANCELLATIONS.TITLE",
+        "ADMIN_BILLING.CANCELLATIONS.USER"
+      ]
+    },
+    {
+      "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.html",
       "keys": [
         "ADMIN_BILLING.PAYMENT_BREAKDOWN.EARNINGS",
@@ -20261,6 +20391,7 @@
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
       "keys": [
+        "ADMIN_BILLING.CANCELLATIONS.TITLE",
         "ADMIN_BILLING.OPERATIONS_DEFINITION",
         "ADMIN_BILLING.RENEWAL_RECORDS",
         "ADMIN_BILLING.REVENUE.CHARGEBACKS",
@@ -20493,6 +20624,7 @@
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "keys": [
         "ADMIN_COMMON.APPLY",
+        "ADMIN_FEEDBACK.ADDRESS_HINT",
         "ADMIN_MAIL_INBOX.ALL",
         "ADMIN_MAIL_INBOX.ALL_MESSAGES",
         "ADMIN_MAIL_INBOX.HEADER_FROM",
@@ -22554,6 +22686,28 @@
     },
     {
       "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.html",
+      "keys": [
+        "PREMIUM_PAGE.CANCELLATION.ACTION"
+      ]
+    },
+    {
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "keys": [
+        "PREMIUM_PAGE.CANCELLATION.COMMENT",
+        "PREMIUM_PAGE.CANCELLATION.CONFIRM",
+        "PREMIUM_PAGE.CANCELLATION.IMMEDIATE_MESSAGE",
+        "PREMIUM_PAGE.CANCELLATION.KEEP",
+        "PREMIUM_PAGE.CANCELLATION.OPTIONAL_HINT",
+        "PREMIUM_PAGE.CANCELLATION.PAID_MESSAGE",
+        "PREMIUM_PAGE.CANCELLATION.PERIOD_MESSAGE",
+        "PREMIUM_PAGE.CANCELLATION.REASON",
+        "PREMIUM_PAGE.CANCELLATION.TITLE"
+      ]
+    },
+    {
+      "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/access-banners/premium-access-banners.html",
       "keys": [
         "PREMIUM_PAGE.BANNERS.CANCEL_AT_PERIOD_END_MESSAGE",
@@ -22584,7 +22738,6 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
       "keys": [
-        "PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION",
         "PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION",
         "PREMIUM_PAGE.OVERVIEW.TITLE",
         "PREMIUM_PAGE.STATUS_LOADING"
@@ -24981,6 +25134,21 @@
       "outputsHandled": []
     },
     {
+      "component": "AdminBillingCancellationsTableComponent",
+      "selector": "fd-admin-billing-cancellations-table",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
+      "consumerFeature": "admin-billing",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "feedbackCount",
+        "items",
+        "reasons",
+        "totalItems"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "AdminBillingFiltersComponent",
       "selector": "fd-admin-billing-filters",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.ts",
@@ -25022,7 +25190,7 @@
       "selector": "fd-admin-billing-payments-table",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-payments-table.ts",
       "consumerFeature": "admin-billing",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
       "occurrences": 1,
       "inputsUsed": [
         "items"
@@ -25032,11 +25200,21 @@
       ]
     },
     {
+      "component": "AdminBillingRecordsComponent",
+      "selector": "fd-admin-billing-records",
+      "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
+      "consumerFeature": "admin-billing",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
       "component": "AdminBillingSubscriptionsTableComponent",
       "selector": "fd-admin-billing-subscriptions-table",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-subscriptions-table.ts",
       "consumerFeature": "admin-billing",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
       "occurrences": 1,
       "inputsUsed": [
         "items"
@@ -25048,7 +25226,7 @@
       "selector": "fd-admin-billing-webhooks-table",
       "componentPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-webhooks-table.ts",
       "consumerFeature": "admin-billing",
-      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
+      "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
       "occurrences": 1,
       "inputsUsed": [
         "items"
@@ -30423,6 +30601,33 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "premium",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -34378,6 +34583,19 @@
       "inputsUsed": [
         "disableClose",
         "dismissible",
+        "size",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogShellComponent",
+      "selector": "fd-ui-dialog-shell",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog-shell/fd-ui-dialog-shell.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "size",
         "title"
       ],
@@ -39461,6 +39679,19 @@
       "component": "FdUiSelectComponent",
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "options"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSelectComponent",
+      "selector": "fd-ui-select",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "products",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/products/components/manage/product-basic-info/product-basic-info.html",
       "occurrences": 3,
@@ -39829,6 +40060,7 @@
       "consumerPath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.html",
       "occurrences": 1,
       "inputsUsed": [
+        "appearance",
         "ariaLabel",
         "mode",
         "selectedValue",
@@ -40160,6 +40392,20 @@
         "placeholder",
         "rows",
         "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiTextareaComponent",
+      "selector": "fd-ui-textarea",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/textarea/fd-ui-textarea.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "maximumLength",
+        "rows"
       ],
       "outputsHandled": []
     },
@@ -42507,6 +42753,20 @@
       "outputsHandled": []
     },
     {
+      "component": "PremiumCancellationActionsComponent",
+      "selector": "fd-premium-cancellation-actions",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.ts",
+      "consumerFeature": "premium",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "overview"
+      ],
+      "outputsHandled": [
+        "overviewChanged"
+      ]
+    },
+    {
       "component": "PremiumOverviewCardComponent",
       "selector": "fd-premium-overview-card",
       "componentPath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.ts",
@@ -42522,6 +42782,7 @@
       ],
       "outputsHandled": [
         "manageBilling",
+        "overviewChanged",
         "startTrial"
       ]
     },

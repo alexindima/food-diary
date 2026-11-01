@@ -15,11 +15,33 @@ import type {
     CheckoutSessionResponse,
     PortalSessionResponse,
 } from '../../../shared/models/billing.models';
+import { entityId } from '../../../shared/models/semantics/entity-id';
+import type { CancellationConfirmation, CancellationFeedback, CancellationId } from '../models/cancellation.models';
 
 @Service()
 export class PremiumBillingService {
     protected readonly baseUrl = environment.apiUrls.billing;
     private readonly sdk = createSdkConnection(BillingSdk, this.baseUrl, inject(HttpClient));
+
+    public cancelSubscription(): Observable<CancellationConfirmation> {
+        return this.sdk.client.postBillingCancel({ version: this.sdk.version }).pipe(
+            map(response => {
+                const value = requireSdkFields(response, ['cancellationId', 'overview']);
+                return {
+                    cancellationId: entityId<'billing-cancellation'>(value.cancellationId),
+                    overview: billingOverviewFromSdk(value.overview),
+                };
+            }),
+        );
+    }
+
+    public submitCancellationFeedback(cancellationId: CancellationId, feedback: CancellationFeedback): Observable<unknown> {
+        return this.sdk.client.postBillingCancellationsByCancellationIdFeedback({
+            version: this.sdk.version,
+            cancellationId,
+            submitCancellationFeedbackHttpRequest: feedback,
+        });
+    }
 
     public getOverview(): Observable<BillingOverview> {
         return this.sdk.client.getBillingOverview({ version: this.sdk.version }).pipe(
@@ -74,6 +96,7 @@ function billingOverviewFromSdk(response: BillingOverviewHttpResponse): BillingO
     ]);
     return {
         ...value,
+        cancellationAvailable: value.cancellationAvailable ?? false,
         plan: billingPlanFromSdk(value.plan),
         subscriptionStatus: value.subscriptionStatus ?? null,
         subscriptionProvider: value.subscriptionProvider ?? null,

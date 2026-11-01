@@ -5,7 +5,8 @@ import { map, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { AdminBillingSdk } from '../../../shared/api/sdk/generated/api/admin-billing.service';
 import { createSdkConnection, sdkRequestOptions } from '../../../shared/api/sdk/sdk-connection';
-import { sdkItemsPage } from '../../../shared/api/sdk/sdk-response';
+import { requireSdkFields, sdkItemsPage } from '../../../shared/api/sdk/sdk-response';
+import type { AdminBillingCancellationReport } from '../models/admin-billing.models';
 import type {
     AdminBillingFilters,
     AdminBillingPayment,
@@ -14,6 +15,7 @@ import type {
     AdminBillingWebhookEvent,
     PagedResponse,
 } from '../models/admin-billing.models';
+import { adminBillingCancellationFromSdk } from './admin-billing-sdk.mapper';
 import {
     adminBillingPaymentFromSdk,
     adminBillingRevenueSummaryFromSdk,
@@ -26,6 +28,29 @@ export class AdminBillingService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/billing`;
     private readonly sdk = createSdkConnection(AdminBillingSdk, this.baseUrl, this.http);
+
+    public getCancellations(page: number, limit: number, filters: AdminBillingFilters): Observable<AdminBillingCancellationReport> {
+        return this.sdk.client
+            .getAdminBillingCancellations(
+                { version: this.sdk.version, page, limit },
+                'body',
+                false,
+                sdkRequestOptions(undefined, this.buildFilterParams(filters)),
+            )
+            .pipe(
+                map(response => {
+                    const value = requireSdkFields(response, ['feedbackCount', 'reasons']);
+                    return {
+                        ...sdkItemsPage(response, adminBillingCancellationFromSdk),
+                        feedbackCount: value.feedbackCount,
+                        reasons: value.reasons.map(reason => ({
+                            reasonCode: reason.reasonCode ?? null,
+                            count: requireSdkFields(reason, ['count']).count,
+                        })),
+                    };
+                }),
+            );
+    }
 
     public getSubscriptions(
         page: number,

@@ -1,3 +1,5 @@
+const CANCELLATION_TOTAL = 41;
+const CANCELLATION_FEEDBACK_COUNT = 7;
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -176,3 +178,37 @@ function createPaymentsResponse(): {
         totalItems: TOTAL_ITEMS,
     };
 }
+
+describe('Admin cancellation adapter', () => {
+    it('preserves filtering, pagination and summary totals from the API', () => {
+        service
+            .getCancellations(2, LIMIT, {
+                status: 'scheduled',
+                search: 'owned',
+                fromUtc: '2026-11-01T00:00:00Z',
+                toUtc: '2026-12-01T00:00:00Z',
+            })
+            .subscribe(report => {
+                expect(report.totalItems).toBe(CANCELLATION_TOTAL);
+                expect(report.feedbackCount).toBe(CANCELLATION_FEEDBACK_COUNT);
+                expect(report.reasons).toEqual([{ reasonCode: null, count: 34 }]);
+                expect(report.items).toEqual([]);
+            });
+        const request = httpMock.expectOne(
+            value =>
+                value.url === `${BASE_URL}/cancellations` &&
+                value.params.get('page') === '2' &&
+                value.params.get('status') === 'scheduled' &&
+                value.params.get('toUtc') === '2026-12-01T00:00:00Z',
+        );
+        request.flush({
+            data: [],
+            page: 2,
+            limit: LIMIT,
+            totalPages: 3,
+            totalItems: 41,
+            feedbackCount: 7,
+            reasons: [{ reasonCode: null, count: 34 }],
+        });
+    });
+});

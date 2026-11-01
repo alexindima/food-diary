@@ -67,6 +67,7 @@ public sealed class UserDataLifecycleGuardrailTests {
             "AiQuotaPeriod(UserId):Cascade",
             "AiUsage(UserId):Cascade",
             "FoodRecognitionJob(UserId):Cascade",
+            "BillingCancellation(UserId):Cascade",
             "BillingPayment(UserId):Cascade",
             "BillingSubscription(UserId):Cascade",
             "ContentReport(UserId):Cascade",

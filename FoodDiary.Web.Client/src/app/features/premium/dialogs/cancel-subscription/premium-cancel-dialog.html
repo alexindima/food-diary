@@ -1,0 +1,23 @@
+<fd-ui-dialog-shell size="sm" [title]="'PREMIUM_PAGE.CANCELLATION.TITLE' | translate">
+    <div class="fd-stack fd-gap-md">
+        @if (data.immediate) {
+            <p>{{ 'PREMIUM_PAGE.CANCELLATION.IMMEDIATE_MESSAGE' | translate }}</p>
+        } @else if (data.periodEnd) {
+            <p>{{ 'PREMIUM_PAGE.CANCELLATION.PAID_MESSAGE' | translate: { date: data.periodEnd } }}</p>
+        } @else {
+            <p>{{ 'PREMIUM_PAGE.CANCELLATION.PERIOD_MESSAGE' | translate }}</p>
+        }
+        <p class="fd-ui-text-muted fd-ui-body-sm">{{ 'PREMIUM_PAGE.CANCELLATION.OPTIONAL_HINT' | translate }}</p>
+        <fd-ui-select [label]="'PREMIUM_PAGE.CANCELLATION.REASON' | translate" [options]="reasons()" [formField]="survey.reasonCode" />
+        <fd-ui-textarea
+            [label]="'PREMIUM_PAGE.CANCELLATION.COMMENT' | translate"
+            [maximumLength]="2000"
+            [rows]="3"
+            [formField]="survey.comment"
+        />
+    </div>
+    <div fdUiDialogFooter class="fd-ui-actions fd-ui-actions--end">
+        <fd-ui-button variant="secondary" fill="text" (click)="close()">{{ 'PREMIUM_PAGE.CANCELLATION.KEEP' | translate }}</fd-ui-button>
+        <fd-ui-button variant="danger" (click)="confirm()">{{ 'PREMIUM_PAGE.CANCELLATION.CONFIRM' | translate }}</fd-ui-button>
+    </div>
+</fd-ui-dialog-shell>

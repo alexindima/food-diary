@@ -27,6 +27,7 @@ type AdminMailInboxMessageSummaryViewModel = {
 } & AdminMailInboxMessageSummary;
 
 const DEFAULT_MAIL_INBOX_LIMIT = 50;
+const FEEDBACK_MAILBOX = 'feedback@fooddiary.club';
 
 @Component({
     selector: 'fd-admin-mail-inbox',
@@ -53,6 +54,8 @@ export class AdminMailInboxComponent {
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    protected readonly feedbackView = this.route.snapshot.data['feedbackMailbox'] === true;
+    protected readonly inboxPath = this.feedbackView ? '/feedback' : '/mail-inbox';
     protected readonly subjectFilter = signal('');
     protected readonly senderFilter = signal('');
     protected readonly recordId = signal<string | null>(null);
@@ -85,7 +88,10 @@ export class AdminMailInboxComponent {
             kind: 'admin-mail-inbox',
             filterFields: fields,
             read: () => ({
-                filters: Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
+                filters: {
+                    ...Object.fromEntries(fields.map(field => [field, this.route.snapshot.queryParamMap.get(field)])),
+                    ...(this.feedbackView ? { recipient: FEEDBACK_MAILBOX } : {}),
+                },
                 page: this.page(),
                 totalItems: this.totalItems(),
                 loading: this.isLoading(),
@@ -105,7 +111,7 @@ export class AdminMailInboxComponent {
         });
         this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
             this.page.set(adminPage(params.get('page')));
-            this.recipientFilter.set(params.get('recipient') ?? '');
+            this.recipientFilter.set(this.feedbackView ? FEEDBACK_MAILBOX : (params.get('recipient') ?? ''));
             const category = params.get('category');
             this.categoryFilter.set(category === 'general' || category === 'dmarc-report' ? category : 'all');
             const unread = params.get('unread');
@@ -140,7 +146,7 @@ export class AdminMailInboxComponent {
                 search: this.subjectFilter(),
                 fromAddress: this.senderFilter(),
                 id: this.recordId() ?? '',
-                recipient: this.recipientFilter(),
+                recipient: this.feedbackView ? FEEDBACK_MAILBOX : this.recipientFilter(),
                 category: this.categoryFilter() === 'all' ? '' : this.categoryFilter(),
                 unread: this.unreadFilter() === 'all' ? undefined : this.unreadFilter() === 'unread',
             })

@@ -1,5 +1,4 @@
 using FoodDiary.Mediator;
-using FoodDiary.Modules.Notifications.Application.Commands.ScheduleAdminTestNotification;
 using FoodDiary.Modules.Notifications.Presentation.Mappings;
 using FoodDiary.Modules.Notifications.Presentation.Requests;
 using FoodDiary.Modules.Notifications.Presentation.Responses;
@@ -33,6 +32,6 @@ public sealed class AdminNotificationsController(ISender mediator) : BaseApiCont
         [FromCurrentUser] Guid actorUserId,
         [FromBody] ScheduleTestNotificationHttpRequest request) =>
         HandleAccepted(
-            new ScheduleAdminTestNotificationCommand(actorUserId, id, request.DelaySeconds, request.Type),
+            request.ToAdminCommand(actorUserId, id),
             static value => value.ToHttpResponse());
 }

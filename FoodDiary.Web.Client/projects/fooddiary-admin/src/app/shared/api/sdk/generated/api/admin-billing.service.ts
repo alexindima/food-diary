@@ -14,6 +14,8 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
+import { AdminBillingCancellationReportHttpResponse } from '../model/admin-billing-cancellation-report-http-response';
+
 import { AdminBillingPaymentHttpResponsePagedHttpResponse } from '../model/admin-billing-payment-http-response-paged-http-response';
 
 import { AdminBillingRevenueSummaryHttpResponse } from '../model/admin-billing-revenue-summary-http-response';
@@ -25,6 +27,18 @@ import { AdminBillingWebhookEventHttpResponsePagedHttpResponse } from '../model/
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
 import { BASE_PATH } from '../variables';
+
+export interface GetAdminBillingCancellationsRequestParams {
+    version: string;
+    page?: number;
+    limit?: number;
+    provider?: string;
+    status?: string;
+    kind?: string;
+    search?: string;
+    fromUtc?: string;
+    toUtc?: string;
+}
 
 export interface GetAdminBillingPaymentsRequestParams {
     version: string;
@@ -82,6 +96,110 @@ export class AdminBillingSdk extends BaseService {
         @Optional() configuration?: Configuration,
     ) {
         super(basePath, configuration);
+    }
+
+    /**
+     * @endpoint get /api/v{version}/admin/billing/cancellations
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getAdminBillingCancellations(
+        requestParameters: GetAdminBillingCancellationsRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<AdminBillingCancellationReportHttpResponse>;
+    public getAdminBillingCancellations(
+        requestParameters: GetAdminBillingCancellationsRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<AdminBillingCancellationReportHttpResponse>>;
+    public getAdminBillingCancellations(
+        requestParameters: GetAdminBillingCancellationsRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<AdminBillingCancellationReportHttpResponse>>;
+    public getAdminBillingCancellations(
+        requestParameters: GetAdminBillingCancellationsRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getAdminBillingCancellations.');
+        }
+        const page = requestParameters?.page;
+        const limit = requestParameters?.limit;
+        const provider = requestParameters?.provider;
+        const status = requestParameters?.status;
+        const kind = requestParameters?.kind;
+        const search = requestParameters?.search;
+        const fromUtc = requestParameters?.fromUtc;
+        const toUtc = requestParameters?.toUtc;
+
+        let localVarQueryParameters = new OpenApiHttpParams(this.encoder);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Page', <any>page, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Limit', <any>limit, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Provider', <any>provider, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Status', <any>status, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Kind', <any>kind, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'Search', <any>search, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'FromUtc', <any>fromUtc, QueryParamStyle.Form, true);
+
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters, 'ToUtc', <any>toUtc, QueryParamStyle.Form, true);
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (AdminSession) required
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/admin/billing/cancellations`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<AdminBillingCancellationReportHttpResponse>('get', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            params: localVarQueryParameters.toHttpParams(),
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
     }
 
     /**

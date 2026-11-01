@@ -1,5 +1,5 @@
 import type { AdminId, AdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
-export type AdminBillingTab = 'subscriptions' | 'payments' | 'webhook-events';
+export type AdminBillingTab = 'subscriptions' | 'payments' | 'webhook-events' | 'cancellations';
 
 export type AdminBillingFilters = {
     provider?: string | null;
@@ -105,4 +105,25 @@ export type PagedResponse<T> = {
     limit: number;
     totalPages: number;
     totalItems: number;
+};
+
+export type AdminBillingCancellation = {
+    id: AdminId<'billing-cancellation'>;
+    userId: AdminId<'user'>;
+    userEmail: string | null;
+    provider: string;
+    externalSubscriptionId: string;
+    plan: string | null;
+    source: string;
+    outcome: string;
+    requestedAtUtc: AdminUtcInstant;
+    effectiveAtUtc: AdminUtcInstant;
+    reasonCode: string | null;
+    comment: string | null;
+    feedbackSubmittedAtUtc: AdminUtcInstant | null;
+};
+export type AdminBillingCancellationReason = { reasonCode: string | null; count: number };
+export type AdminBillingCancellationReport = PagedResponse<AdminBillingCancellation> & {
+    feedbackCount: number;
+    reasons: AdminBillingCancellationReason[];
 };

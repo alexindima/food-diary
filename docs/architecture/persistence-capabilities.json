@@ -415,15 +415,17 @@
         "context:CreateModuleContext",
         "context:CurrentTransaction",
         "context:Database",
+        "entity:BillingCancellation",
         "entity:BillingPayment",
         "entity:BillingSubscription",
         "entity:BillingWebhookEvent",
+        "tracked:BillingCancellation",
         "tracked:BillingPayment",
         "tracked:BillingSubscription",
         "tracked:BillingWebhookEvent"
       ],
-      "reason": "Creates Billing owner context and synchronizes repository reads with the live coordinator transaction; no concrete shared-context dependency.",
-      "technicalSourceSha256": "47b3576bc584ef3c97da6371b3139933a65b6d94b002a65a4b0487fc0a86be2f"
+      "reason": "Billing owns cancellation history writes. The owner repository synchronizes the shared transaction before reads; the caller retains per-user serialization and final commit. Registration supplies only the Billing owner entity set.",
+      "technicalSourceSha256": "f895f370f3d1db3e2289a6aaee14df40002ae4408dd07a92143fa84518aae591"
     },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
@@ -1930,6 +1932,23 @@
       ],
       "reason": "Read-only preflight determines whether a successor is needed. Separate coordinated provisioning serializes the fixed infrastructure principal by advisory lock, validates non-auth state and stages the Users factory result. The coordinator saves and verifies COMMIT. The permanent empty principal can survive a later content-item rollback; content transfer and deletion remain atomic. ADR 0054.",
       "technicalSourceSha256": "24983f8d882ca1a288ca7bbc014009b0c5926d8bc2a5b9167aab07696cbf172e"
+    },
+    "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingCancellation",
+        "tracked:BillingCancellation",
+        "write:BillingCancellation"
+      ],
+      "reason": "Billing owns cancellation history writes. The owner repository synchronizes the shared transaction before reads; the caller retains per-user serialization and final commit. Registration supplies only the Billing owner entity set."
+    },
+    "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.Cancellations.cs": {
+      "module": "ReadModelComposition",
+      "capabilities": [
+        "entity:BillingCancellation",
+        "entity:User"
+      ],
+      "reason": "Read-only cancellation report joins Users with Billing cancellation history, applies filters and count/summary before SQL paging; context is the no-tracking facade. No writes or tracking."
     }
   }
 }

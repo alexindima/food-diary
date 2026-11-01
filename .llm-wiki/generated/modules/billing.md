@@ -16,8 +16,8 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Billing/Application/FoodDiary.Modules.Billing.Application.csproj`
-- Business-module dependencies: Marketing, Users
-- Abstraction-contract dependencies: Marketing, Users
+- Business-module dependencies: Identity, Marketing, Users
+- Abstraction-contract dependencies: Identity, Marketing, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -37,23 +37,24 @@ No literal attribute-routed controller was associated with this module.
 - Role: aggregate-owner
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
-- Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 26
+- Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent, BillingCancellation
+- Public contract files: 30
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 26
-- Interfaces: 13
-- DTO/read-model/projection types: 9
+- Public contract types: 30
+- Interfaces: 14
+- DTO/read-model/projection types: 12
 - Enums: 0
-- Exported repository-shaped contracts: 6
+- Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
 - `class BillingErrors`
 - `class BillingInputLimits`
 - `class BillingPaymentAlreadyExistsException`
 - `class BillingWebhookEventAlreadyProcessedException`
+- `interface IBillingCancellationRepository`
 - `interface IBillingCheckoutLock`
 - `interface IBillingPaymentReadRepository`
 - `interface IBillingPaymentWriteRepository`
@@ -67,6 +68,9 @@ No literal attribute-routed controller was associated with this module.
 - `interface IBillingWebhookEventReadRepository`
 - `interface IBillingWebhookEventWriteRepository`
 - `interface IPaddleNotificationRecoveryGateway`
+- `record BillingCancellationEmailCandidateModel`
+- `record BillingCancellationRequestModel`
+- `record BillingCancellationSnapshotModel`
 - `record BillingCheckoutSessionModel`
 - `record BillingCheckoutSessionRequestModel`
 - `record BillingPortalSessionModel`
@@ -81,10 +85,14 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingCancellationEmailJobTests.cs`
 - [behavioral-or-text-match] `Hosts/tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
+- [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BillingCancellationTransportTests.cs`
 - [integration] `Hosts/tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.AccessRevocationSecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.BaselineRegressionTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CheckoutWebhookConsistencyTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.InboxResilienceTests.cs`
@@ -102,15 +110,11 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/WebhookDeduplicationMetadataTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/BillingPaymentAlreadyExistsExceptionTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingCancellationTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingIdContractTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingMetadataJsonBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingPaymentAmountBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingProviderSnapshotAtomicityTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingSemanticValueTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookChronologyTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookPersistenceShapeTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookProcessingStateTests.cs`
-- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/BillingWebhookRetryBoundaryTests.cs`
 
 ## Working Rule
 

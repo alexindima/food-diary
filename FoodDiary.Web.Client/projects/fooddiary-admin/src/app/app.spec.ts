@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app';
 
-const ADMIN_ROUTE_COUNT = 20;
+const ADMIN_ROUTE_COUNT = 21;
 
 describe('AppComponent', () => {
     let component: AppComponent;
@@ -40,6 +40,8 @@ describe('AppComponent', () => {
         expect(routeSelector?.textContent).toContain('ADMIN_NAV.DASHBOARD');
         routeSelector?.click();
         fixture.detectChanges();
-        expect(TestBed.inject(DOCUMENT).querySelectorAll('[role=option]')).toHaveLength(ADMIN_ROUTE_COUNT);
+        const options = TestBed.inject(DOCUMENT).querySelectorAll('[role=option]');
+        expect(options).toHaveLength(ADMIN_ROUTE_COUNT);
+        expect(Array.from(options).some(option => option.textContent.includes('ADMIN_FEEDBACK.TITLE'))).toBe(true);
     });
 });

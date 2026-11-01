@@ -27,6 +27,7 @@ public interface ICompositionReadContext {
     IQueryable<AdminImpersonationSession> AdminImpersonationSessions { get; }
     IQueryable<AiUsage> AiUsages { get; }
     IQueryable<ImageAsset> FoodRecognitionImageAssets { get; }
+    IQueryable<BillingCancellation> BillingCancellations { get; }
     IQueryable<BillingPayment> BillingPayments { get; }
     IQueryable<BillingSubscription> BillingSubscriptions { get; }
     IQueryable<BillingWebhookEvent> BillingWebhookEvents { get; }

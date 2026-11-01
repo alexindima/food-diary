@@ -6,6 +6,7 @@ namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
 public sealed class BillingDbContext(DbContextOptions<BillingDbContext> options) : DbContext(options) {
     public DbSet<BillingSubscription> BillingSubscriptions => Set<BillingSubscription>();
+    public DbSet<BillingCancellation> BillingCancellations => Set<BillingCancellation>();
     public DbSet<BillingPayment> BillingPayments => Set<BillingPayment>();
     public DbSet<BillingWebhookEvent> BillingWebhookEvents => Set<BillingWebhookEvent>();
 

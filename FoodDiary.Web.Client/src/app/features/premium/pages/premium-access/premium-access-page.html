@@ -27,6 +27,7 @@
             [trialLoading]="trialLoading()"
             [isLoading]="isLoading()"
             [overview]="overview()"
+            (overviewChanged)="overview.set($event)"
             (manageBilling)="openPortalAsync()"
             (startTrial)="startTrialAsync()"
         />

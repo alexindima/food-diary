@@ -12,6 +12,7 @@ export interface BillingOverviewHttpResponse {
     availableProviders?: Array<string>;
     canStartPremiumTrial?: boolean;
     cancelAtPeriodEnd?: boolean;
+    cancellationAvailable?: boolean;
     currentPeriodEndUtc?: string | null;
     currentPeriodStartUtc?: string | null;
     isPremium?: boolean;

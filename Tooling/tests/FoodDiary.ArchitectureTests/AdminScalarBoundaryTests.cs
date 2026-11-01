@@ -53,7 +53,7 @@ public sealed class AdminScalarBoundaryTests {
             $"Modules/{owner}/Domain/{folder}/{type.Name}.cs")));
 
         string[] expectedTypes = owner switch {
-            "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingPaymentId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingWebhookEventId"],
+            "Billing" => ["FoodDiary.Modules.Billing.Domain.Contracts.BillingPremiumAccessPolicy", "FoodDiary.Modules.Billing.Domain.Contracts.BillingProviderNames", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingCancellationId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingPaymentId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingSubscriptionId", "FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids.BillingWebhookEventId"],
             "ContentReports" => ["FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportStatus", "FoodDiary.Modules.ContentReports.Domain.Contracts.Enums.ReportTargetType", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.Ids.ContentReportId", "FoodDiary.Modules.ContentReports.Domain.Contracts.ValueObjects.ReportTarget"],
             "Gamification" => ["FoodDiary.Modules.Gamification.Domain.Contracts.Entities.Achievements.AchievementDefinitionLimits", "FoodDiary.Modules.Gamification.Domain.Contracts.Enums.AchievementMetric"],
             _ => throw new ArgumentOutOfRangeException(nameof(owner)),

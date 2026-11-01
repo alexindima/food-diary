@@ -20,4 +20,5 @@ public sealed record BillingOverviewModel(
     string? PaddleClientToken,
     IReadOnlyList<string> AvailableProviders,
     string? PaddleMonthlyPriceId = null,
-    string? PaddleYearlyPriceId = null);
+    string? PaddleYearlyPriceId = null,
+    bool CancellationAvailable = false);

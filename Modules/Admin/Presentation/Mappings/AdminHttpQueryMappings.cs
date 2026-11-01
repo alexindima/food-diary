@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingPayments;
+using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingCancellations;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingRevenueSummary;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Modules.Admin.Application.Queries.GetAdminBillingWebhookEvents;
@@ -33,6 +34,9 @@ public static class AdminHttpQueryMappings {
     }
 
     extension(GetAdminBillingHttpQuery query) {
+        public GetAdminBillingCancellationsQuery ToCancellationsQuery() =>
+            new(query.Page, query.Limit, query.Provider, query.Status, query.Search, query.FromUtc, query.ToUtc);
+
         public GetAdminBillingRevenueSummaryQuery ToRevenueSummaryQuery() =>
                 new(query.FromUtc, query.ToUtc);
 

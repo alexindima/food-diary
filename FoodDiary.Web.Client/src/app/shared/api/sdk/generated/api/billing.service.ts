@@ -15,11 +15,15 @@ import { Observable } from 'rxjs';
 
 import { BillingOverviewHttpResponse } from '../model/billing-overview-http-response';
 
+import { CancelSubscriptionHttpResponse } from '../model/cancel-subscription-http-response';
+
 import { CheckoutSessionHttpResponse } from '../model/checkout-session-http-response';
 
 import { CreateCheckoutSessionHttpRequest } from '../model/create-checkout-session-http-request';
 
 import { PortalSessionHttpResponse } from '../model/portal-session-http-response';
+
+import { SubmitCancellationFeedbackHttpRequest } from '../model/submit-cancellation-feedback-http-request';
 
 import { BaseService } from '../api.base.service';
 import { Configuration } from '../configuration';
@@ -27,6 +31,20 @@ import { BASE_PATH } from '../variables';
 
 export interface GetBillingOverviewRequestParams {
     version: string;
+}
+
+export interface PostBillingCancelRequestParams {
+    version: string;
+    /** Deduplicates retries of this POST request for 24 hours. */
+    idempotencyKey?: string;
+}
+
+export interface PostBillingCancellationsByCancellationIdFeedbackRequestParams {
+    cancellationId: string;
+    version: string;
+    /** Deduplicates retries of this POST request for 24 hours. */
+    idempotencyKey?: string;
+    submitCancellationFeedbackHttpRequest?: SubmitCancellationFeedbackHttpRequest;
 }
 
 export interface PostBillingCheckoutSessionRequestParams {
@@ -131,6 +149,185 @@ export class BillingSdk extends BaseService {
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<BillingOverviewHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/billing/cancel
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postBillingCancel(
+        requestParameters: PostBillingCancelRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<CancelSubscriptionHttpResponse>;
+    public postBillingCancel(
+        requestParameters: PostBillingCancelRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<CancelSubscriptionHttpResponse>>;
+    public postBillingCancel(
+        requestParameters: PostBillingCancelRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<CancelSubscriptionHttpResponse>>;
+    public postBillingCancel(
+        requestParameters: PostBillingCancelRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling postBillingCancel.');
+        }
+        const idempotencyKey = requestParameters?.idempotencyKey;
+
+        let localVarHeaders = this.defaultHeaders;
+        if (idempotencyKey !== undefined && idempotencyKey !== null) {
+            localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
+        }
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/billing/cancel`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<CancelSubscriptionHttpResponse>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint post /api/v{version}/billing/cancellations/{cancellationId}/feedback
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public postBillingCancellationsByCancellationIdFeedback(
+        requestParameters: PostBillingCancellationsByCancellationIdFeedbackRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<void>;
+    public postBillingCancellationsByCancellationIdFeedback(
+        requestParameters: PostBillingCancellationsByCancellationIdFeedbackRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<void>>;
+    public postBillingCancellationsByCancellationIdFeedback(
+        requestParameters: PostBillingCancellationsByCancellationIdFeedbackRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<void>>;
+    public postBillingCancellationsByCancellationIdFeedback(
+        requestParameters: PostBillingCancellationsByCancellationIdFeedbackRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const cancellationId = requestParameters?.cancellationId;
+        if (cancellationId === null || cancellationId === undefined) {
+            throw new Error(
+                'Required parameter cancellationId was null or undefined when calling postBillingCancellationsByCancellationIdFeedback.',
+            );
+        }
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error(
+                'Required parameter version was null or undefined when calling postBillingCancellationsByCancellationIdFeedback.',
+            );
+        }
+        const idempotencyKey = requestParameters?.idempotencyKey;
+        const submitCancellationFeedbackHttpRequest = requestParameters?.submitCancellationFeedbackHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+        if (idempotencyKey !== undefined && idempotencyKey !== null) {
+            localVarHeaders = localVarHeaders.set('Idempotency-Key', String(idempotencyKey));
+        }
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/billing/cancellations/${this.configuration.encodeParam({ name: 'cancellationId', value: cancellationId, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: 'uuid' })}/feedback`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: submitCancellationFeedbackHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

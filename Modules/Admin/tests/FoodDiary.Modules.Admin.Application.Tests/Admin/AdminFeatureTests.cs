@@ -921,6 +921,9 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingAdminBillingRepository : IAdminBillingRepository {
+        public Task<AdminBillingCancellationReportReadModel> GetCancellationsAsync(AdminBillingListFilter filter, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new AdminBillingCancellationReportReadModel([], filter.Page, filter.Limit, 0, 0, 0, []));
+
         public AdminBillingListFilter? LastSubscriptionsFilter { get; private set; }
         public AdminBillingListFilter? LastPaymentsFilter { get; private set; }
         public AdminBillingListFilter? LastWebhookEventsFilter { get; private set; }

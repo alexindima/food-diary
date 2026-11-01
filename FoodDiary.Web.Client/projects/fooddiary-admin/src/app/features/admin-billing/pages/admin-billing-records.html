@@ -1,0 +1,19 @@
+@switch (billing.activeTab()) {
+    @case ('cancellations') {
+        <fd-admin-billing-cancellations-table
+            [items]="billing.cancellations()"
+            [reasons]="billing.cancellationReasons()"
+            [feedbackCount]="billing.cancellationFeedbackCount()"
+            [totalItems]="billing.totalItems()"
+        />
+    }
+    @case ('subscriptions') {
+        <fd-admin-billing-subscriptions-table [items]="billing.subscriptionItems()" />
+    }
+    @case ('payments') {
+        <fd-admin-billing-payments-table [items]="billing.paymentItems()" (metadataOpen)="billing.showMetadata($event)" />
+    }
+    @case ('webhook-events') {
+        <fd-admin-billing-webhooks-table [items]="billing.webhookEventItems()" (metadataOpen)="billing.showMetadata($event)" />
+    }
+}

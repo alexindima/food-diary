@@ -29,7 +29,8 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
         return await users.AsNoTracking().Where(user => user.Id == userId)
             .Select(user => new UserBillingProfileModel(user.Id, user.Email, user.IsActive,
                 user.DeletedAt != null, user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
-                user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed))
+                user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc, user.IsEmailConfirmed,
+                user.Preferences.Language, user.Preferences.TimeZoneId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

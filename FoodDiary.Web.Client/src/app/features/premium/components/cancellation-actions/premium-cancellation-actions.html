@@ -1,0 +1,5 @@
+@if (overview()?.cancellationAvailable) {
+    <fd-ui-button variant="danger" fill="text" [loading]="loading()" (click)="cancelAsync()">
+        {{ 'PREMIUM_PAGE.CANCELLATION.ACTION' | translate }}
+    </fd-ui-button>
+}

@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1727,
+    "candidateFields": 1742,
     "credential": 170,
-    "identity": 184,
-    "health": 815,
-    "financial": 138,
-    "privateContent": 420,
-    "boundaryFiles": 226,
+    "identity": 187,
+    "health": 813,
+    "financial": 147,
+    "privateContent": 425,
+    "boundaryFiles": 228,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -1216,31 +1216,38 @@
     },
     {
       "category": "financial",
+      "name": "BillingCancellations",
+      "type": "IQueryable<BillingCancellation>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 30
+    },
+    {
+      "category": "financial",
       "name": "BillingPayments",
       "type": "IQueryable<BillingPayment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 30
+      "line": 31
     },
     {
       "category": "financial",
       "name": "BillingSubscriptions",
       "type": "IQueryable<BillingSubscription>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 31
+      "line": 32
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvents",
       "type": "IQueryable<BillingWebhookEvent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 32
+      "line": 33
     },
     {
       "category": "financial",
       "name": "BillingWebhookInbox",
       "type": "BillingRenewal,",
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "financial",
@@ -1248,6 +1255,13 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 78
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReadModel.cs",
+      "line": 4
     },
     {
       "category": "financial",
@@ -1387,6 +1401,13 @@
       "name": "Revenue",
       "type": "IReadOnlyList<AdminDashboardRevenuePoint>",
       "path": "Modules/Admin/Application.Abstractions/Models/AdminDashboardTrend.cs",
+      "line": 4
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
       "line": 4
     },
     {
@@ -1535,6 +1556,20 @@
       "type": "string",
       "path": "Modules/Billing/Application.Abstractions/Common/BillingPaymentAlreadyExistsException.cs",
       "line": 6
+    },
+    {
+      "category": "financial",
+      "name": "ExternalCustomerId",
+      "type": "string",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationRequestModel.cs",
+      "line": 3
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationRequestModel.cs",
+      "line": 3
     },
     {
       "category": "financial",
@@ -1748,6 +1783,20 @@
     },
     {
       "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "subscription.ExternalSubscriptionId,",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 49
+    },
+    {
+      "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
       "path": "Modules/Billing/Domain/Entities/BillingPayment.cs",
@@ -1920,6 +1969,20 @@
       "type": "BillingMoneyObservation",
       "path": "Modules/Billing/Domain/ValueObjects/BillingPaymentFinancials.cs",
       "line": 8
+    },
+    {
+      "category": "financial",
+      "name": "CustomerId",
+      "type": "string?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
+      "line": 84
+    },
+    {
+      "category": "financial",
+      "name": "CurrentBillingPeriod",
+      "type": "CancellationPeriod?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
+      "line": 86
     },
     {
       "category": "financial",
@@ -2178,35 +2241,21 @@
       "name": "HydrationEntries",
       "type": "IQueryable<HydrationEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 38
+      "line": 39
     },
     {
       "category": "health",
       "name": "WaistEntries",
       "type": "IQueryable<WaistEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 58
+      "line": 59
     },
     {
       "category": "health",
       "name": "WeightEntries",
       "type": "IQueryable<WeightEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 59
-    },
-    {
-      "category": "health",
-      "name": "FastingNotifications",
-      "type": "PaddleNotificationRecovery,",
-      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "FastingTelemetryCleanup",
-      "type": "MarketingAttributionCleanup,",
-      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 38
+      "line": 60
     },
     {
       "category": "health",
@@ -7887,13 +7936,6 @@
     },
     {
       "category": "identity",
-      "name": "EmailOutbox",
-      "type": "ImageObjectDeletionOutbox,",
-      "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "line": 32
-    },
-    {
-      "category": "identity",
       "name": "TelegramUserId",
       "type": "long",
       "path": "FoodDiary.Telegram.Bot/Api/Generated/Model/RegisterTelegramOperationHttpRequest.cs",
@@ -7940,6 +7982,13 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 23
+    },
+    {
+      "category": "identity",
+      "name": "UserEmail",
+      "type": "string?",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReadModel.cs",
+      "line": 4
     },
     {
       "category": "identity",
@@ -8134,6 +8183,13 @@
       "category": "identity",
       "name": "UserEmail",
       "type": "string?",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "UserEmail",
+      "type": "string?",
       "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "line": 6
     },
@@ -8241,6 +8297,13 @@
       "type": "string",
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "ConfirmationEmailHandledAtUtc",
+      "type": "DateTime?",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 20
     },
     {
       "category": "identity",
@@ -8591,6 +8654,13 @@
       "type": "string?",
       "path": "Modules/Identity/Contracts/Authentication/Models/UserLoginEventReadModel.cs",
       "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Identity/Contracts/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommand.cs",
+      "line": 8
     },
     {
       "category": "identity",
@@ -9178,21 +9248,21 @@
       "name": "ImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 39
+      "line": 40
     },
     {
       "category": "privateContent",
       "name": "RecipeComments",
       "type": "IQueryable<RecipeComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 46
+      "line": 47
     },
     {
       "category": "privateContent",
       "name": "RecommendationComments",
       "type": "IQueryable<RecommendationComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 52
+      "line": 53
     },
     {
       "category": "privateContent",
@@ -9378,6 +9448,13 @@
     },
     {
       "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
       "name": "PromptText",
       "type": "string",
       "path": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
@@ -9473,6 +9550,13 @@
       "type": "string",
       "path": "Modules/Admin/Presentation/Responses/AdminAiPromptScenarioHttpResponse.cs",
       "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
+      "line": 6
     },
     {
       "category": "privateContent",
@@ -9697,6 +9781,27 @@
       "type": "string?",
       "path": "Modules/Ai/Presentation/Responses/ProductLabelHttpResponse.cs",
       "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 18
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Billing/Presentation/Requests/SubmitCancellationFeedbackHttpRequest.cs",
+      "line": 10
     },
     {
       "category": "privateContent",
@@ -12334,6 +12439,15 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
+      "categories": [
+        "financial",
+        "identity",
+        "privateContent"
+      ],
+      "fieldCount": 3
+    },
+    {
       "path": "Modules/Admin/Presentation/Responses/AdminBillingPaymentHttpResponse.cs",
       "categories": [
         "financial",
@@ -12491,6 +12605,13 @@
       "path": "Modules/Ai/Presentation/Responses/RecipeImportNutritionHttpResponse.cs",
       "categories": [
         "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Billing/Presentation/Requests/SubmitCancellationFeedbackHttpRequest.cs",
+      "categories": [
+        "privateContent"
       ],
       "fieldCount": 1
     },

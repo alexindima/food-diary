@@ -132,7 +132,8 @@
       "ownedEntities": [
         "BillingSubscription",
         "BillingPayment",
-        "BillingWebhookEvent"
+        "BillingWebhookEvent",
+        "BillingCancellation"
       ],
       "sourceMappings": {
         "applicationProjects": [

@@ -62,6 +62,7 @@ Paddle estimates the buyer's location from their IP when no address is supplied.
    - `adjustment.updated`
 6. Give the API key only the customer, transaction, subscription, portal, and notification permissions used by the integration.
    Both customer and transaction read permissions are required for safe checkout recovery after an ambiguous network timeout.
+   Native cancellation also requires `subscription.write` (including subscription reads). Confirm this permission before enabling the native action with live credentials.
    `notification.read` and `notification.write` are required by the hourly failed-notification replay job.
 
 ## Pre-deployment verification
@@ -150,3 +151,59 @@ If checkout or entitlement behavior is unsafe:
 - [ ] Admin collected, fee, earnings, and payout figures verified against Paddle.
 - [ ] Monitoring owner and first-week review schedule assigned.
 - [ ] Terms, privacy, refund, support, and cancellation paths verified on the production site.
+
+## Native cancellation and optional feedback
+
+The Subscription page calls FoodDiary `POST /billing/cancel`; it does not send survey answers to Paddle.
+Billing resolves the current user’s stored subscription and customer, verifies them against Paddle, and
+calls [Paddle cancellation](https://developer.paddle.com/api-reference/subscriptions/cancel-subscription/).
+Active/trialing subscriptions cancel at the next billing period; paused/past-due subscriptions cancel
+immediately to stop retrying collection. Confirmed provider state is saved under the existing user lock,
+with provider HTTP outside database retries. Ambiguous responses are checked with a fresh provider GET.
+
+Only after confirmation may the client submit `POST /billing/cancellations/{id}/feedback`.
+Reason and comment are optional; feedback validation or persistence failure does not undo cancellation.
+The server restricts feedback to the owning user, and blocks impersonated cancellation/feedback actions.
+Paddle portal access remains available for invoices, payment methods and provider-managed fallback.
+
+Admin Billing → Cancellations reports outcomes and optional feedback. Summary counts use the complete
+filtered set before paging, with an exclusive upper UTC instant. Source identifies where the record was
+first observed (FoodDiary or a signed Paddle event); a Paddle event alone does not establish a voluntary
+cancellation or its reason. Accepted webhooks complete or remove scheduled cancellations without erasing
+feedback. Account deletion cascades cancellation history and comments through the user foreign key.
+
+Apply the additive cancellation-history migration before the new API, then publish the client/admin.
+Older clients ignore the added overview capability. A code rollback can retain the new table; prefer
+leaving it in place to preserve collected feedback. Historical survey answers are not imported:
+records start when FoodDiary observes a cancellation after the feature is enabled.
+
+## Cancellation confirmations and email feedback
+
+Each newly recorded cancellation is a durable confirmation intent. JobManager's
+`billing-cancellation-email` job checks up to 100 pending records every minute.
+It reloads the cancellation under the existing user lock and atomically queues an
+email and marks the intent handled. Template or queue failures leave it retryable;
+email delivery uses the existing EmailOutbox/MailRelay retries and cannot undo a
+cancellation or prevent the optional survey. Only active, nondeleted accounts with
+a confirmed email receive confirmations. Removed cancellations are skipped.
+
+The RU/EN message confirms that auto-renewal is off and gives the access-end instant
+in the user's timezone with an explicit UTC offset. If access has already ended,
+it says so. Invalid or missing timezone IDs fall back to explicit UTC. Replies go to
+`feedback@fooddiary.club`; a mailto link also invites optional feedback. The email
+template key is `subscription_cancellation`, with built-in RU/EN fallbacks and
+editable variables `brand`, `accessMessage`, `feedbackEmail`, `feedbackLink`,
+`subscriptionLink` and `link`. Outgoing Emails identifies this purpose separately.
+
+Admin → Feedback (`/feedback`) reuses the existing MailInbox paging, search,
+read/unread filters and safe message viewer, with the recipient fixed to
+`feedback@fooddiary.club` on every server request. General Mail Inbox remains
+available separately. Incoming From addresses are untrusted and do not establish
+an account identity. MailInbox already allows this recipient in repository
+configuration; live MX/SMTP routing and actual delivery still require the normal
+operational verification after deployment.
+
+Apply `AddCancellationConfirmationDelivery` before starting the new API and
+JobManager. It marks preexisting cancellations handled to avoid retrospective
+messages. Rolling back code can retain the nullable column and index. No live
+Paddle or SMTP operation is required to verify the migration and queue behavior.

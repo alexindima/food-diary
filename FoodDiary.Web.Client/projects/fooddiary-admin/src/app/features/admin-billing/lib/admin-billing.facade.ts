@@ -8,6 +8,7 @@ import { restoreAdminPage } from '../../../shared/period/admin-pagination';
 import { adminExclusiveDatePeriod, type AdminPeriod } from '../../../shared/period/admin-period';
 import { adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminBillingService } from '../api/admin-billing.service';
+import type { AdminBillingCancellation, AdminBillingCancellationReason } from '../models/admin-billing.models';
 import type {
     AdminBillingFilters,
     AdminBillingPayment,
@@ -41,6 +42,9 @@ export class AdminBillingFacade {
     private periodRange = { from: '', to: '' };
     public readonly revenueFailed = signal(false);
 
+    public readonly cancellations = signal<AdminBillingCancellation[]>([]);
+    public readonly cancellationReasons = signal<AdminBillingCancellationReason[]>([]);
+    public readonly cancellationFeedbackCount = signal(0);
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
     public readonly payments = signal<AdminBillingPayment[]>([]);
@@ -91,6 +95,9 @@ export class AdminBillingFacade {
     public readonly toDate = signal('');
 
     public setTab(tab: AdminBillingTab): void {
+        if (tab !== this.activeTab() && (tab === 'cancellations' || this.activeTab() === 'cancellations')) {
+            this.status.set('');
+        }
         this.activeTab.set(tab);
         this.page.set(1);
         this.selectedMetadata.set(null);
@@ -163,6 +170,30 @@ export class AdminBillingFacade {
         this.isLoading.set(true);
         this.errorMessage.set(null);
         const filters = this.buildFilters();
+        if (tab === 'cancellations') {
+            this.revenueRequest?.unsubscribe();
+            this.revenueSummary.set(null);
+            this.revenueFailed.set(false);
+            this.billingService
+                .getCancellations(this.page(), this.limit, filters)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: response => {
+                        if (!this.isCurrentLoad(requestId, tab)) {
+                            return;
+                        }
+                        this.cancellations.set(response.items);
+                        this.cancellationReasons.set(response.reasons);
+                        this.cancellationFeedbackCount.set(response.feedbackCount);
+                        this.applyPageData(response);
+                    },
+                    error: (error: unknown) => {
+                        this.applyLoadError(requestId, tab, error);
+                    },
+                });
+            return;
+        }
+
         this.loadRevenueSummary();
 
         if (tab === 'subscriptions') {
@@ -245,6 +276,9 @@ export class AdminBillingFacade {
         this.subscriptions.set([]);
         this.payments.set([]);
         this.webhookEvents.set([]);
+        this.cancellations.set([]);
+        this.cancellationReasons.set([]);
+        this.cancellationFeedbackCount.set(0);
         this.totalItems.set(0);
         this.totalPages.set(1);
         this.errorMessage.set(null);
@@ -289,6 +323,10 @@ export class AdminBillingFacade {
             this.subscriptions.set([]);
         } else if (tab === 'payments') {
             this.payments.set([]);
+        } else if (tab === 'cancellations') {
+            this.cancellations.set([]);
+            this.cancellationReasons.set([]);
+            this.cancellationFeedbackCount.set(0);
         } else {
             this.webhookEvents.set([]);
         }
@@ -314,7 +352,10 @@ export class AdminBillingFacade {
             kind: this.activeTab() === 'payments' ? optional(this.kind()) : null,
             search: optional(this.search()),
             fromUtc: this.toUtcStart(this.fromDate()),
-            toUtc: this.toUtcEnd(this.toDate()),
+            toUtc:
+                this.toDate().length > 0 && this.activeTab() === 'cancellations'
+                    ? `${adminExclusiveDatePeriod({ to: this.toDate() }).to}T00:00:00Z`
+                    : this.toUtcEnd(this.toDate()),
         };
     }
 

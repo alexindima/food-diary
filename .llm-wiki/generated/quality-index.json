@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6836,
+    "productionFiles": 6879,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
-    "criticalSymbols": 1030,
-    "criticalSymbolsWithTestReferences": 987,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "criticalSymbols": 1035,
+    "criticalSymbolsWithTestReferences": 991,
+    "criticalSymbolsWithoutTestReferences": 44,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -365,6 +365,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 141.84
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
+      "nonBlankLines": 591,
+      "decisionPoints": 86,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 140.82
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
@@ -805,14 +813,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 98.94
-    },
-    {
-      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 366,
-      "decisionPoints": 61,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 98.82
     }
   ],
   "files": [
@@ -3194,11 +3194,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/BillingCrossModuleRelationships.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Composition/BodyMetricsCrossModuleRelationships.cs",
@@ -3394,11 +3394,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Billing.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Catalog.cs",
@@ -3442,11 +3442,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
+      "structuralRiskScore": 2.7
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Recipes.cs",
@@ -3498,11 +3498,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 59,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.66
+      "structuralRiskScore": 2.68
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -3615,6 +3615,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 6.62
+    },
+    {
+      "path": "FoodDiary.JobManager/Services/BillingCancellationEmailJob.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.64
     },
     {
       "path": "FoodDiary.JobManager/Services/BillingRenewalJob.cs",
@@ -3794,11 +3802,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "nonBlankLines": 128,
+      "nonBlankLines": 129,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.58
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetry.cs",
@@ -3898,19 +3906,19 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobIds.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 43,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 0.86
     },
     {
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
-      "nonBlankLines": 155,
+      "nonBlankLines": 159,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.1
+      "structuralRiskScore": 12.18
     },
     {
       "path": "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
@@ -4375,6 +4383,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.06
+    },
+    {
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.Cancellations.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16
     },
     {
       "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
@@ -7066,19 +7082,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
-      "nonBlankLines": 85,
+      "nonBlankLines": 89,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.7
+      "structuralRiskScore": 1.78
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "nonBlankLines": 176,
+      "nonBlankLines": 178,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.02
+      "structuralRiskScore": 20.06
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/admin-achievements.routes.ts",
@@ -7426,27 +7442,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing-sdk.mapper.ts",
-      "nonBlankLines": 85,
-      "decisionPoints": 2,
+      "nonBlankLines": 111,
+      "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.7
+      "structuralRiskScore": 12.72
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "nonBlankLines": 84,
-      "decisionPoints": 3,
+      "nonBlankLines": 108,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.18
+      "structuralRiskScore": 8.16
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/lib/admin-billing.facade.ts",
-      "nonBlankLines": 323,
-      "decisionPoints": 34,
+      "nonBlankLines": 363,
+      "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.46
+      "structuralRiskScore": 68.76
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/models/admin-billing-view.models.ts",
@@ -7458,11 +7474,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/models/admin-billing.models.ts",
-      "nonBlankLines": 101,
+      "nonBlankLines": 121,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.02
+      "structuralRiskScore": 2.42
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.ts",
@@ -7489,6 +7513,14 @@
       "structuralRiskScore": 0.32
     },
     {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-subscriptions-table.ts",
       "nonBlankLines": 14,
       "decisionPoints": 0,
@@ -7506,11 +7538,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-      "nonBlankLines": 63,
-      "decisionPoints": 9,
+      "nonBlankLines": 59,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.76
+      "structuralRiskScore": 17.68
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/admin-bugs.routes.ts",
@@ -7834,11 +7866,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/dialogs/admin-email-template-edit-dialog.ts",
-      "nonBlankLines": 215,
-      "decisionPoints": 13,
+      "nonBlankLines": 222,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.8
+      "structuralRiskScore": 25.44
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/lib/admin-email-templates.facade.ts",
@@ -7850,11 +7882,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/lib/email-template-variables.ts",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.7
+      "structuralRiskScore": 1.72
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/models/admin-email-template.data.ts",
@@ -7930,11 +7962,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
-      "nonBlankLines": 9,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox-sdk.mapper.ts",
@@ -7978,11 +8010,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "nonBlankLines": 207,
+      "nonBlankLines": 213,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.14
+      "structuralRiskScore": 22.26
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-meal-plans/admin-meal-plans.routes.ts",
@@ -8170,11 +8202,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/pages/admin-outgoing-emails.ts",
-      "nonBlankLines": 191,
+      "nonBlankLines": 192,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.32
+      "structuralRiskScore": 23.34
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-public/pages/unauthorized.ts",
@@ -8546,11 +8578,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-billing.service.ts",
-      "nonBlankLines": 419,
-      "decisionPoints": 36,
+      "nonBlankLines": 517,
+      "decisionPoints": 45,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 62.38
+      "structuralRiskScore": 77.84
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-bugs.service.ts",
@@ -8807,6 +8839,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.44
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-billing-cancellation-http-response.ts",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-billing-cancellation-reason-http-response.ts",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-billing-cancellation-report-http-response.ts",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/admin-billing-payment-http-response-paged-http-response.ts",
@@ -9578,11 +9634,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/models.ts",
-      "nonBlankLines": 114,
+      "nonBlankLines": 117,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 2.34
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/model/save-catalog-meal-plan-http-request.ts",
@@ -13602,11 +13658,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "nonBlankLines": 83,
-      "decisionPoints": 9,
+      "nonBlankLines": 104,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.16
+      "structuralRiskScore": 17.08
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.ts",
+      "nonBlankLines": 80,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.1
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
+      "nonBlankLines": 48,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.96
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.ts",
@@ -13626,11 +13698,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-billing.facade.ts",
-      "nonBlankLines": 26,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.ts",
@@ -13639,6 +13711,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 22.44
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/features/premium/models/cancellation.models.ts",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/models/premium-plan-price.ts",
@@ -13666,11 +13746,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.ts",
-      "nonBlankLines": 22,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.ts",
@@ -13730,11 +13810,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.ts",
-      "nonBlankLines": 310,
-      "decisionPoints": 40,
+      "nonBlankLines": 316,
+      "decisionPoints": 42,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 66.2
+      "structuralRiskScore": 69.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-tour.ts",
@@ -16866,11 +16946,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
-      "nonBlankLines": 417,
-      "decisionPoints": 59,
+      "nonBlankLines": 591,
+      "decisionPoints": 86,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 96.84
+      "structuralRiskScore": 140.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/client-tasks.service.ts",
@@ -17290,11 +17370,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/billing-overview-http-response.ts",
-      "nonBlankLines": 31,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.64
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/bleeding-entry-http-response.ts",
@@ -17330,6 +17410,14 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/bulk-recommendation-result-http-response.ts",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/cancel-subscription-http-response.ts",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18346,11 +18434,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/models.ts",
-      "nonBlankLines": 277,
+      "nonBlankLines": 279,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.04
+      "structuralRiskScore": 7.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/notification-http-response.ts",
@@ -18879,6 +18967,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.34
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/submit-cancellation-feedback-http-request.ts",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/model/symptom-log-http-model.ts",
@@ -20242,11 +20338,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/billing.models.ts",
-      "nonBlankLines": 32,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/models/charts.data.ts",
@@ -21146,11 +21242,11 @@
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingQuery.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
@@ -21250,6 +21346,30 @@
     },
     {
       "path": "Modules/Admin/Application.Abstractions/Models/AdminAuditRunSummary.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReadModel.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReasonReadModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReportReadModel.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -22329,6 +22449,22 @@
       "structuralRiskScore": 5.26
     },
     {
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.28
+    },
+    {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQuery.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -23058,11 +23194,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 41,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
+      "structuralRiskScore": 2.82
     },
     {
       "path": "Modules/Admin/Presentation/Controllers/AdminBugReportsController.cs",
@@ -23218,11 +23354,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminBillingHttpResponseMappings.cs",
-      "nonBlankLines": 116,
+      "nonBlankLines": 125,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.5
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminBugReportHttpMappings.cs",
@@ -23274,11 +23410,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "nonBlankLines": 139,
+      "nonBlankLines": 142,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.78
+      "structuralRiskScore": 11.84
     },
     {
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpResponseMappings.cs",
@@ -23754,6 +23890,30 @@
     },
     {
       "path": "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationReasonHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationReportHttpResponse.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -25586,11 +25746,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingErrors.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 47,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.88
+      "structuralRiskScore": 6.94
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/BillingInputLimits.cs",
@@ -25615,6 +25775,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.62
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingCheckoutLock.cs",
@@ -25642,11 +25810,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGateway.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Common/IBillingProviderGatewayAccessor.cs",
@@ -25721,6 +25889,30 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationEmailCandidateModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationRequestModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationSnapshotModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingCheckoutSessionModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -25778,11 +25970,11 @@
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingSubscriptionOverviewReadModel.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Billing/Application.Abstractions/Models/BillingWebhookEventModel.cs",
@@ -25799,6 +25991,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommandHandler.cs",
+      "nonBlankLines": 97,
+      "decisionPoints": 22,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 36.94
     },
     {
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommand.cs",
@@ -25850,11 +26058,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "nonBlankLines": 98,
+      "nonBlankLines": 101,
       "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.46
+      "structuralRiskScore": 21.52
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -25961,6 +26169,14 @@
       "structuralRiskScore": 2.2
     },
     {
+      "path": "Modules/Billing/Application/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommandHandler.cs",
+      "nonBlankLines": 70,
+      "decisionPoints": 10,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.4
+    },
+    {
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommand.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -25975,6 +26191,22 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.06
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommand.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.18
     },
     {
       "path": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
@@ -25994,19 +26226,27 @@
     },
     {
       "path": "Modules/Billing/Application/DependencyInjection.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Billing/Application/Models/BillingCancellationModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Billing/Application/Models/BillingOverviewModel.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQuery.cs",
@@ -26018,11 +26258,11 @@
     },
     {
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
-      "nonBlankLines": 111,
+      "nonBlankLines": 113,
       "decisionPoints": 23,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.72
+      "structuralRiskScore": 38.76
     },
     {
       "path": "Modules/Billing/Application/Services/BillingAccessService.cs",
@@ -26031,6 +26271,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 9.98
+    },
+    {
+      "path": "Modules/Billing/Application/Services/BillingCancellationRecorder.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.12
     },
     {
       "path": "Modules/Billing/Contracts/Commands/ProcessBillingWebhookInbox/ProcessBillingWebhookInboxCommand.cs",
@@ -26055,6 +26303,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Contracts/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Billing/Contracts/Models/BillingCancellationEmailRunResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Billing/Contracts/Models/BillingRenewalRunResult.cs",
@@ -26097,6 +26361,14 @@
       "structuralRiskScore": 3.2
     },
     {
+      "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingCancellationId.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
       "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingPaymentId.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -26119,6 +26391,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "nonBlankLines": 86,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 27.22
     },
     {
       "path": "Modules/Billing/Domain/Entities/BillingDomainGuard.cs",
@@ -26202,19 +26482,27 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 44,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 2.38
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.76
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingDbContext.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
@@ -26226,11 +26514,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "nonBlankLines": 98,
+      "nonBlankLines": 99,
       "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.96
+      "structuralRiskScore": 19.98
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
@@ -26295,6 +26583,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 9.66
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
+      "nonBlankLines": 89,
+      "decisionPoints": 24,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 37.78
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
@@ -26393,6 +26689,14 @@
       "structuralRiskScore": 15.66
     },
     {
+      "path": "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
       "path": "Modules/Billing/PersistenceModel/BillingPaymentConfiguration.cs",
       "nonBlankLines": 75,
       "decisionPoints": 0,
@@ -26442,11 +26746,11 @@
     },
     {
       "path": "Modules/Billing/Presentation/Controllers/BillingController.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 75,
       "decisionPoints": 1,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.64
+      "structuralRiskScore": 5
     },
     {
       "path": "Modules/Billing/Presentation/Controllers/BillingWebhookController.cs",
@@ -26466,19 +26770,19 @@
     },
     {
       "path": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 30,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.6
     },
     {
       "path": "Modules/Billing/Presentation/Mappings/BillingHttpResponseMappings.cs",
-      "nonBlankLines": 38,
+      "nonBlankLines": 43,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
+      "structuralRiskScore": 0.86
     },
     {
       "path": "Modules/Billing/Presentation/Requests/CreateCheckoutSessionHttpRequest.cs",
@@ -26489,12 +26793,28 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
-      "nonBlankLines": 22,
+      "path": "Modules/Billing/Presentation/Requests/SubmitCancellationFeedbackHttpRequest.cs",
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Billing/Presentation/Responses/CancelSubscriptionHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Billing/Presentation/Responses/CheckoutSessionHttpResponse.cs",
@@ -37169,6 +37489,22 @@
       "structuralRiskScore": 0.4
     },
     {
+      "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommandHandler.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/SubscriptionCancellationEmailContent.cs",
+      "nonBlankLines": 82,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.14
+    },
+    {
       "path": "Modules/Identity/Application/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommandHandler.cs",
       "nonBlankLines": 34,
       "decisionPoints": 1,
@@ -37391,6 +37727,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Identity/Contracts/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommand.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Identity/Contracts/Email/Commands/UpsertEmailTemplate/UpsertEmailTemplateCommand.cs",
@@ -43402,11 +43746,11 @@
     },
     {
       "path": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
-      "nonBlankLines": 36,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
+      "structuralRiskScore": 2.7
     },
     {
       "path": "Modules/Notifications/Presentation/Controllers/NotificationPushController.cs",
@@ -43458,11 +43802,11 @@
     },
     {
       "path": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
-      "nonBlankLines": 92,
+      "nonBlankLines": 95,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
+      "structuralRiskScore": 1.9
     },
     {
       "path": "Modules/Notifications/Presentation/Requests/NotificationReadStatusHttpRequest.cs",
@@ -49002,11 +49346,11 @@
     },
     {
       "path": "Modules/Users/Contracts/Models/UserBillingProfileModel.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Users/Contracts/Models/UserCommentAuthorModel.cs",
@@ -49914,11 +50258,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "nonBlankLines": 155,
+      "nonBlankLines": 156,
       "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.6
+      "structuralRiskScore": 49.62
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileWriteGuardInterceptor.cs",
@@ -55723,6 +56067,18 @@
       "coveredThrough": []
     },
     {
+      "name": "CancelSubscriptionCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommandHandler.cs",
+      "line": 16,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ChangeClientTaskStatusCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
@@ -57206,6 +57562,18 @@
       "coveredThrough": []
     },
     {
+      "name": "QueueSubscriptionCancellationEmailCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommandHandler.cs",
+      "line": 8,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/SubscriptionCancellationEmailTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ReconcileAchievementsCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Gamification/Application/Commands/ReconcileAchievements/ReconcileAchievementsCommandHandler.cs",
@@ -57642,6 +58010,19 @@
       "coveredThrough": []
     },
     {
+      "name": "SendCancellationConfirmationsCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommandHandler.cs",
+      "line": 15,
+      "testReferenceCount": 2,
+      "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs",
+        "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.CancellationEmail.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "SendClientTaskRemindersCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/SendClientTaskReminders/SendClientTaskRemindersCommandHandler.cs",
@@ -57848,6 +58229,18 @@
       "testReferences": [
         "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/UserBillingServiceTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "SubmitCancellationFeedbackCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
+      "line": 9,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -58720,7 +59113,7 @@
       "name": "AdminNotificationsController",
       "role": "Controller",
       "path": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
-      "line": 22,
+      "line": 21,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/AdminNotificationsControllerTests.cs"
@@ -60313,6 +60706,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminBillingCancellationsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminBillingPaymentsQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
@@ -60693,8 +61096,9 @@
       "role": "QueryHandler",
       "path": "Modules/Billing/Application/Queries/GetBillingOverview/GetBillingOverviewQueryHandler.cs",
       "line": 13,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.OverviewAndContextTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.TrialIdentitySecurityTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs",

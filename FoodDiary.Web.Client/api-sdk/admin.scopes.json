@@ -48,7 +48,8 @@
             "GET /api/v{version}/admin/billing/payments": "getAdminBillingPayments",
             "GET /api/v{version}/admin/billing/revenue-summary": "getAdminBillingRevenueSummary",
             "GET /api/v{version}/admin/billing/subscriptions": "getAdminBillingSubscriptions",
-            "GET /api/v{version}/admin/billing/webhook-events": "getAdminBillingWebhookEvents"
+            "GET /api/v{version}/admin/billing/webhook-events": "getAdminBillingWebhookEvents",
+            "GET /api/v{version}/admin/billing/cancellations": "getAdminBillingCancellations"
         },
         "prefix": "/api/v{version}/admin/billing"
     },

@@ -5,15 +5,23 @@
             <p class="premium-access-page__text fd-ui-body">{{ viewModel().copyState.stateLabelKey | translate }}</p>
         </div>
 
-        @if (!isLoading() && viewModel().showManageBilling) {
-            <fd-ui-button variant="secondary" fill="outline" [loading]="portalLoading()" (click)="manageBilling.emit()">
-                {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
-            </fd-ui-button>
-        } @else if (!isLoading() && viewModel().showStartTrial) {
-            <fd-ui-button variant="primary" [loading]="trialLoading()" (click)="startTrial.emit()">
-                {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
-            </fd-ui-button>
-        }
+        <div class="fd-row fd-wrap fd-gap-actions">
+            @if (!isLoading() && viewModel().showManageBilling) {
+                <fd-ui-button variant="secondary" fill="outline" [loading]="portalLoading()" (click)="manageBilling.emit()">
+                    {{
+                        (overview()?.cancellationAvailable || overview()?.cancelAtPeriodEnd || overview()?.subscriptionStatus === 'canceled'
+                            ? 'PREMIUM_PAGE.CANCELLATION.PAYMENTS_ACTION'
+                            : 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION'
+                        ) | translate
+                    }}
+                </fd-ui-button>
+            } @else if (!isLoading() && viewModel().showStartTrial) {
+                <fd-ui-button variant="primary" [loading]="trialLoading()" (click)="startTrial.emit()">
+                    {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
+                </fd-ui-button>
+            }
+            <fd-premium-cancellation-actions [overview]="overview()" (overviewChanged)="overviewChanged.emit($event)" />
+        </div>
     </div>
 
     @if (isLoading()) {

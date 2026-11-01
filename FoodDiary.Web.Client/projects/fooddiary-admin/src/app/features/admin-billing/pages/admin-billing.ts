@@ -13,23 +13,19 @@ import { adminPage } from '../../../shared/period/admin-query';
 import { AdminBillingFacade } from '../lib/admin-billing.facade';
 import { AdminBillingFiltersComponent } from './admin-billing-filters';
 import { AdminBillingMetadataPanelComponent } from './admin-billing-metadata-panel';
-import { AdminBillingPaymentsTableComponent } from './admin-billing-payments-table';
-import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table';
-import { AdminBillingWebhooksTableComponent } from './admin-billing-webhooks-table';
+import { AdminBillingRecordsComponent } from './admin-billing-records';
 
 @Component({
     selector: 'fd-admin-billing',
     imports: [
         FdUiTabsComponent,
+        AdminBillingRecordsComponent,
         CommonModule,
         AdminPeriodControlComponent,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiPaginationComponent,
         AdminBillingFiltersComponent,
-        AdminBillingSubscriptionsTableComponent,
-        AdminBillingPaymentsTableComponent,
-        AdminBillingWebhooksTableComponent,
         AdminBillingMetadataPanelComponent,
     ],
     templateUrl: './admin-billing.html',
@@ -41,7 +37,7 @@ export class AdminBillingComponent {
     private readonly route = inject(ActivatedRoute);
 
     protected onTabChange(value: string): void {
-        if (value === 'subscriptions' || value === 'payments' || value === 'webhook-events') {
+        if (value === 'subscriptions' || value === 'payments' || value === 'webhook-events' || value === 'cancellations') {
             this.billing.setTab(value);
         }
     }
@@ -53,7 +49,7 @@ export class AdminBillingComponent {
             this.billing.status.set(params.get('status') ?? '');
             this.billing.kind.set(params.get('kind') ?? '');
             const tab = params.get('tab');
-            this.billing.activeTab.set(tab === 'payments' || tab === 'webhook-events' ? tab : 'subscriptions');
+            this.billing.activeTab.set(tab === 'payments' || tab === 'webhook-events' || tab === 'cancellations' ? tab : 'subscriptions');
             this.billing.page.set(adminPage(params.get('page')));
             const range = adminPeriod(params);
             if (range === null) {

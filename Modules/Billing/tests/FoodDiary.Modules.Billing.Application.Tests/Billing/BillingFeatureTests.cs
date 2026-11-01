@@ -136,7 +136,8 @@ public partial class BillingFeatureTests {
             subscriptionWriter,
             paymentRecorder,
             premiumRoleSyncer,
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         return new ProcessBillingWebhookCommandHandler(
             new FakeBillingProviderGatewayAccessor(gateway, gateway),
             webhookEventRepository,
@@ -460,7 +461,8 @@ public partial class BillingFeatureTests {
                     subscription.CurrentPeriodStartUtc,
                     subscription.CurrentPeriodEndUtc,
                     subscription.CancelAtPeriodEnd,
-                    subscription.NextBillingAttemptUtc));
+                    subscription.NextBillingAttemptUtc,
+                    subscription.ExternalSubscriptionId));
         }
 
         public Task<BillingSubscription?> GetByExternalCustomerIdAsync(

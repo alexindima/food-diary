@@ -3,6 +3,10 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Billing.Application.Abstractions.Common;
 
 public static class BillingErrors {
+    public static Error CancellationUnavailable => new("Billing.CancellationUnavailable", "Subscription cancellation is unavailable or its state has changed. Refresh and try again.", Kind: ErrorKind.Conflict);
+    public static Error CancellationNotFound => new("Billing.CancellationNotFound", "Cancellation was not found.", Kind: ErrorKind.NotFound);
+    public static Error InvalidCancellationFeedback => new("Billing.InvalidCancellationFeedback", "Cancellation feedback is invalid.", Kind: ErrorKind.Validation);
+
     public static Error WebhookProcessingFailed => new(
         "Billing.WebhookProcessingFailed",
         "Stored webhook processing failed.",

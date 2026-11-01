@@ -42,15 +42,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 41
+- Public contract files: 44
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 41
+- Public contract types: 44
 - Interfaces: 13
-- DTO/read-model/projection types: 12
+- DTO/read-model/projection types: 15
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
@@ -70,6 +70,9 @@ No literal attribute-routed controller was associated with this module.
 - `interface IBugAcknowledgementReceipts`
 - `interface IBugAcknowledgementSource`
 - `record AdminAuditRunSummary`
+- `record AdminBillingCancellationReadModel`
+- `record AdminBillingCancellationReasonReadModel`
+- `record AdminBillingCancellationReportReadModel`
 - `record AdminBillingListFilter`
 - `record AdminBillingPaymentReadModel`
 - `record AdminBillingRevenueCurrencyReadModel`
@@ -81,10 +84,7 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminBugReportPage`
 - `record AdminDashboardMetrics`
 - `record AdminDashboardRevenuePoint`
-- `record AdminDashboardTrend`
-- `record AdminImpersonationSessionReadModel`
-- `record AdminMailInboxDmarcRecordModel`
-- ... 11 more type(s)
+- ... 14 more type(s)
 
 ## Focused Tests
 

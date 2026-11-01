@@ -12,6 +12,7 @@ export type BillingOverview = {
     cancelAtPeriodEnd: boolean;
     renewalEnabled: boolean;
     manageBillingAvailable: boolean;
+    cancellationAvailable?: boolean;
     premiumTrialStartUtc: string | null;
     premiumTrialEndUtc: string | null;
     premiumTrialActive: boolean;

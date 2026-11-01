@@ -211,6 +211,10 @@ export class AdminEmailTemplateEditDialogComponent {
             email: 'example@example.com',
             temporarypassword: 'Demo-only-password',
             loginlink: 'https://fooddiary.club/login',
+            accessmessage: 'Your subscription access continues until December 1, 2026, 14:00 (UTC+04:00).',
+            feedbackemail: 'feedback@fooddiary.club',
+            feedbacklink: 'mailto:feedback@fooddiary.club',
+            subscriptionlink: 'https://fooddiary.club/premium',
         };
         const supported = new Set(this.supportedVariables().map(name => name.toLowerCase()));
         return value.replaceAll(/{{([a-z]+)}}/gi, (match: string, name: string) =>
@@ -219,6 +223,9 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     private getDefaultPreviewLink(key: string): string {
+        if (key === 'subscription_cancellation') {
+            return 'https://fooddiary.club/premium';
+        }
         if (key === 'account_created') {
             return 'https://fooddiary.club/login';
         }

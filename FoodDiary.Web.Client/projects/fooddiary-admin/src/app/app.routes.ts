@@ -60,6 +60,10 @@ export const routes: Routes = [
         loadChildren: async () => import('./features/admin-mail-inbox/admin-mail-inbox.routes').then(m => m.adminMailInboxRoutes),
     },
     {
+        path: 'feedback',
+        loadChildren: async () => import('./features/admin-mail-inbox/admin-mail-inbox.routes').then(m => m.adminFeedbackRoutes),
+    },
+    {
         path: 'daily-advices',
         loadChildren: async () => import('./features/admin-daily-advices/admin-daily-advices.routes').then(m => m.adminDailyAdvicesRoutes),
     },

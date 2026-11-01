@@ -5,6 +5,11 @@ using FoodDiary.Modules.Billing.Presentation.Responses;
 namespace FoodDiary.Modules.Billing.Presentation.Mappings;
 
 public static class BillingHttpResponseMappings {
+    extension(BillingCancellationModel model) {
+        public CancelSubscriptionHttpResponse ToHttpResponse() =>
+            new(model.CancellationId, model.Overview.ToHttpResponse());
+    }
+
     extension(BillingOverviewModel model) {
         public BillingOverviewHttpResponse ToHttpResponse() =>
                 new(
@@ -27,7 +32,8 @@ public static class BillingHttpResponseMappings {
                     model.PaddleClientToken,
                     model.AvailableProviders,
                     model.PaddleMonthlyPriceId,
-                    model.PaddleYearlyPriceId);
+                    model.PaddleYearlyPriceId,
+                    model.CancellationAvailable);
     }
 
     extension(BillingCheckoutSessionModel model) {

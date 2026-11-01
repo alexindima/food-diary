@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1677,
+    "productionProjectEdges": 1679,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 118,
+    "selectorUnreferencedComponents": 119,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 129,
-    "criticalSymbolsWithoutTestReferences": 43,
+    "componentsWithoutDirectSpecs": 132,
+    "criticalSymbolsWithoutTestReferences": 44,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -71,16 +71,16 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "Notifications",
-      "fanIn": 5,
-      "fanOut": 1,
+      "module": "Identity",
+      "fanIn": 4,
+      "fanOut": 2,
       "level": "informational",
       "role": "aggregate-owner"
     },
     {
-      "module": "Identity",
-      "fanIn": 3,
-      "fanOut": 2,
+      "module": "Notifications",
+      "fanIn": 5,
+      "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -155,6 +155,13 @@
       "role": "read-composer"
     },
     {
+      "module": "Billing",
+      "fanIn": 0,
+      "fanOut": 3,
+      "level": "informational",
+      "role": "aggregate-owner"
+    },
+    {
       "module": "DailyAdvices",
       "fanIn": 2,
       "fanOut": 1,
@@ -214,13 +221,6 @@
       "module": "WeeklyGoals",
       "fanIn": 0,
       "fanOut": 3,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
-      "module": "Billing",
-      "fanIn": 0,
-      "fanOut": 2,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -1278,6 +1278,14 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.spec.ts"
     },
     {
+      "class": "PremiumCancelDialogComponent",
+      "selector": "fd-premium-cancel-dialog",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "specPath": null
+    },
+    {
       "class": "ProductAddDialogComponent",
       "selector": "fd-product-add-dialog",
       "feature": "products",
@@ -1813,6 +1821,37 @@
       "specPath": null
     },
     {
+      "class": "AdminBillingCancellationsTableComponent",
+      "selector": "fd-admin-billing-cancellations-table",
+      "feature": "admin-billing",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.html",
+      "inputs": [
+        {
+          "name": "items",
+          "type": "AdminBillingCancellation[]",
+          "required": true
+        },
+        {
+          "name": "reasons",
+          "type": "AdminBillingCancellationReason[]",
+          "required": true
+        },
+        {
+          "name": "feedbackCount",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "totalItems",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminBillingFiltersComponent",
       "selector": "fd-admin-billing-filters",
       "feature": "admin-billing",
@@ -1892,6 +1931,16 @@
           "type": ""
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "AdminBillingRecordsComponent",
+      "selector": "fd-admin-billing-records",
+      "feature": "admin-billing",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
+      "inputs": [],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -4780,6 +4829,16 @@
       "specPath": null
     },
     {
+      "class": "PremiumCancelDialogComponent",
+      "selector": "fd-premium-cancel-dialog",
+      "feature": "premium",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "PremiumPlanPriceComponent",
       "selector": "fd-premium-plan-price",
       "feature": "premium",
@@ -5671,6 +5730,16 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
       "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminBillingCancellationsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
+      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

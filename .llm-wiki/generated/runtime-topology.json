@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "fb203dc25ed0cce4e05e9db5c821167883ba5e90a9c932dd8b51c8c659a66339",
-    "sourceFileCount": 4678
+    "sourceFingerprint": "d60a3647c88a8e452728d4307e3523ffb8b6f8f787ef2e97f5780b26e2fd46dd",
+    "sourceFileCount": 4711
   },
   "summary": {
     "composeServices": 18,
     "hostedServices": 16,
     "httpClients": 22,
     "webhooks": 22,
-    "recurringJobRegistrations": 18,
-    "networkPolicies": 42
+    "recurringJobRegistrations": 19,
+    "networkPolicies": 43
   },
   "semantics": {
     "declared": "Compose fields describe repository declarations, not effective production exposure or IAM.",
@@ -1087,6 +1087,14 @@
     },
     {
       "api": "recurringJobManager.AddOrUpdate",
+      "detail": "RecurringJobIds.BillingCancellationEmail",
+      "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
+      "behaviorSignals": [],
+      "behaviorSignalScope": "registration-expression",
+      "targetBehaviorEvidence": "not-expanded; inspect the registered job implementation before making retry, cancellation, or idempotency claims"
+    },
+    {
+      "api": "recurringJobManager.AddOrUpdate",
       "detail": "RecurringJobIds.BillingRenewal",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
       "behaviorSignals": [],
@@ -1629,6 +1637,25 @@
         "cancellation-propagation-candidate",
         "idempotency",
         "retry-or-resilience",
+        "timeout-or-delay"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "PaddleBillingGateway.Cancellation",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
+      "securitySignals": [
+        "ip-address-policy",
+        "timeout-policy",
+        "uri-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "policy-file",

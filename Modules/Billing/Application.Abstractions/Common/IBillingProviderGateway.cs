@@ -6,6 +6,9 @@ namespace FoodDiary.Modules.Billing.Application.Abstractions.Common;
 public interface IBillingProviderGateway {
     string Provider { get; }
 
+    Task<Result<BillingCancellationSnapshotModel>> CancelSubscriptionAsync(BillingCancellationRequestModel request, CancellationToken cancellationToken = default) =>
+        Task.FromResult(Result.Failure<BillingCancellationSnapshotModel>(BillingErrors.CancellationUnavailable));
+
     Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken = default);

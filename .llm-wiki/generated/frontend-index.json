@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2772,
-    "symbols": 871,
-    "routes": 108,
+    "typescriptFiles": 2784,
+    "symbols": 875,
+    "routes": 110,
     "features": 46,
-    "specs": 844,
+    "specs": 846,
     "localeFiles": 5,
     "roles": {
-      "Component": 503,
+      "Component": 507,
       "Directive": 20,
       "Facade": 89,
       "Other": 41,
@@ -138,11 +138,13 @@
       "name": "admin-billing",
       "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing",
       "symbols": [
+        "AdminBillingCancellationsTableComponent",
         "AdminBillingComponent",
         "AdminBillingFacade",
         "AdminBillingFiltersComponent",
         "AdminBillingMetadataPanelComponent",
         "AdminBillingPaymentsTableComponent",
+        "AdminBillingRecordsComponent",
         "AdminBillingService",
         "AdminBillingSubscriptionsTableComponent",
         "AdminBillingWebhooksTableComponent"
@@ -293,6 +295,7 @@
       "tests": [
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-feedback.spec.ts",
         "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.spec.ts"
       ]
     },
@@ -1035,6 +1038,8 @@
         "PremiumBenefitsCardComponent",
         "PremiumBillingFacade",
         "PremiumBillingService",
+        "PremiumCancelDialogComponent",
+        "PremiumCancellationActionsComponent",
         "PremiumOverviewCardComponent",
         "PremiumPlanPriceComponent",
         "PremiumPlanPricingFacade",
@@ -1046,6 +1051,7 @@
       ],
       "tests": [
         "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-checkout.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/paddle-price-preview.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/premium/lib/premium-plan-pricing.facade.spec.ts",
@@ -2246,7 +2252,7 @@
       "role": "Component",
       "selector": "app-root",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.ts",
-      "line": 62
+      "line": 64
     },
     {
       "name": "AdminAchievementsService",
@@ -2400,14 +2406,21 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/api/admin-billing.service.ts",
-      "line": 25
+      "line": 27
     },
     {
       "name": "AdminBillingFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/lib/admin-billing.facade.ts",
-      "line": 33
+      "line": 34
+    },
+    {
+      "name": "AdminBillingCancellationsTableComponent",
+      "role": "Component",
+      "selector": "fd-admin-billing-cancellations-table",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
+      "line": 15
     },
     {
       "name": "AdminBillingFiltersComponent",
@@ -2431,6 +2444,13 @@
       "line": 15
     },
     {
+      "name": "AdminBillingRecordsComponent",
+      "role": "Component",
+      "selector": "fd-admin-billing-records",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
+      "line": 20
+    },
+    {
       "name": "AdminBillingSubscriptionsTableComponent",
       "role": "Component",
       "selector": "fd-admin-billing-subscriptions-table",
@@ -2449,7 +2469,7 @@
       "role": "Component",
       "selector": "fd-admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.ts",
-      "line": 39
+      "line": 35
     },
     {
       "name": "AdminBugsService",
@@ -2666,7 +2686,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "line": 49
+      "line": 50
     },
     {
       "name": "AdminMealPlansService",
@@ -2981,7 +3001,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/api/sdk/generated/api/admin-billing.service.ts",
-      "line": 78
+      "line": 92
     },
     {
       "name": "AdminBugsSdk",
@@ -5228,7 +5248,21 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/api/premium-billing.service.ts",
-      "line": 20
+      "line": 22
+    },
+    {
+      "name": "PremiumCancellationActionsComponent",
+      "role": "Component",
+      "selector": "fd-premium-cancellation-actions",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/components/cancellation-actions/premium-cancellation-actions.ts",
+      "line": 24
+    },
+    {
+      "name": "PremiumCancelDialogComponent",
+      "role": "Component",
+      "selector": "fd-premium-cancel-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
+      "line": 30
     },
     {
       "name": "PaddleCheckoutService",
@@ -5242,7 +5276,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/premium/lib/premium-billing.facade.ts",
-      "line": 14
+      "line": 15
     },
     {
       "name": "PremiumPlanPricingFacade",
@@ -5270,7 +5304,7 @@
       "role": "Component",
       "selector": "fd-premium-overview-card",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/overview-card/premium-overview-card.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "PremiumPlanPriceComponent",
@@ -6915,7 +6949,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/billing.service.ts",
-      "line": 57
+      "line": 75
     },
     {
       "name": "ClientTasksSdk",
@@ -7809,34 +7843,39 @@
       "line": 59
     },
     {
-      "path": "daily-advices",
+      "path": "feedback",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 63
     },
     {
-      "path": "lessons",
+      "path": "daily-advices",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 67
     },
     {
-      "path": "achievements",
+      "path": "lessons",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 71
     },
     {
-      "path": "moderation",
+      "path": "achievements",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 75
     },
     {
-      "path": "unauthorized",
+      "path": "moderation",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 79
     },
     {
-      "path": "**",
+      "path": "unauthorized",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
       "line": 83
+    },
+    {
+      "path": "**",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/app.routes.ts",
+      "line": 87
     },
     {
       "path": "",
@@ -7897,6 +7936,11 @@
       "path": "",
       "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
       "line": 6
+    },
+    {
+      "path": "",
+      "source": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
+      "line": 14
     },
     {
       "path": "",
@@ -8284,16 +8328,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4170,
-      "russianProperties": 4170,
+      "englishProperties": 4193,
+      "russianProperties": 4193,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1321,
-      "russianProperties": 1321,
+      "englishProperties": 1354,
+      "russianProperties": 1354,
       "countsMatch": true
     },
     {

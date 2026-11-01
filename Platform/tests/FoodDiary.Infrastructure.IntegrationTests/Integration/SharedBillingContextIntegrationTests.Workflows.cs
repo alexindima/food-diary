@@ -258,6 +258,6 @@ public sealed partial class SharedBillingContextIntegrationTests {
             provider.GetRequiredService<IBillingTransactionRunner>(), new BillingWebhookContextResolver(subscriptions, users, payments),
             new BillingWebhookSubscriptionWriter(subscriptions, TimeProvider.System), new BillingWebhookPaymentRecorder(payments),
             new BillingWebhookPremiumRoleSyncer(new BillingAccessService(users, subscriptions, TimeProvider.System),
-                marketing), TimeProvider.System);
+                marketing), TimeProvider.System, provider.GetRequiredService<BillingCancellationRecorder>());
     }
 }

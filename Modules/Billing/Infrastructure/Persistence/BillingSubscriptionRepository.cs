@@ -30,7 +30,8 @@ public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> sub
                 subscription.CurrentPeriodStartUtc,
                 subscription.CurrentPeriodEndUtc,
                 subscription.CancelAtPeriodEnd,
-                subscription.NextBillingAttemptUtc))
+                subscription.NextBillingAttemptUtc,
+                subscription.ExternalSubscriptionId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

@@ -156,3 +156,8 @@
     font-size: var(--fd-text-label-floating-size);
     white-space: pre-wrap;
 }
+
+.admin-billing__cancellation-comment {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

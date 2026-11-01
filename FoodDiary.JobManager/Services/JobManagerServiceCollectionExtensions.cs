@@ -111,6 +111,7 @@ public static class JobManagerServiceCollectionExtensions {
             services.AddTransient<ImageCleanupJob>();
             services.AddTransient<BillingRenewalJob>();
             services.AddTransient<BillingWebhookInboxJob>();
+            services.AddTransient<BillingCancellationEmailJob>();
             services.AddTransient<PaddleNotificationRecoveryJob>();
             services.AddTransient<FastingNotificationJob>();
             services.AddTransient<ImageObjectDeletionOutboxJob>();

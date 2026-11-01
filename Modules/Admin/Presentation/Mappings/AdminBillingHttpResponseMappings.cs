@@ -6,6 +6,16 @@ using FoodDiary.Presentation.Api.Responses;
 namespace FoodDiary.Modules.Admin.Presentation.Mappings;
 
 public static class AdminBillingHttpResponseMappings {
+    extension(AdminBillingCancellationReportReadModel model) {
+        public AdminBillingCancellationReportHttpResponse ToHttpResponse() =>
+            new([.. model.Items.Select(static item => new AdminBillingCancellationHttpResponse(
+                item.Id, item.UserId, item.UserEmail, item.Provider, item.ExternalSubscriptionId, item.Plan,
+                item.Source, item.Outcome, item.RequestedAtUtc, item.EffectiveAtUtc,
+                item.ReasonCode, item.Comment, item.FeedbackSubmittedAtUtc))],
+                model.Page, model.Limit, model.TotalItems, model.TotalPages, model.FeedbackCount,
+                [.. model.Reasons.Select(static item => new AdminBillingCancellationReasonHttpResponse(item.ReasonCode, item.Count))]);
+    }
+
     extension(AdminBillingRevenueSummaryReadModel model) {
         public AdminBillingRevenueSummaryHttpResponse ToHttpResponse() =>
                 new(

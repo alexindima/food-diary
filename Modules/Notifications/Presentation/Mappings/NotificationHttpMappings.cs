@@ -1,6 +1,7 @@
 using FoodDiary.Modules.Notifications.Application.Models;
 using FoodDiary.Modules.Notifications.Application.Commands.RemoveWebPushSubscription;
 using FoodDiary.Modules.Notifications.Application.Commands.ScheduleTestNotification;
+using FoodDiary.Modules.Notifications.Application.Commands.ScheduleAdminTestNotification;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotificationPreferences;
 using FoodDiary.Modules.Notifications.Application.Queries.GetNotifications;
 using FoodDiary.Modules.Notifications.Application.Queries.GetUnreadCount;
@@ -62,6 +63,9 @@ public static class NotificationHttpMappings {
     }
 
     extension(ScheduleTestNotificationHttpRequest request) {
+        public ScheduleAdminTestNotificationCommand ToAdminCommand(Guid actorUserId, Guid targetUserId) =>
+            new(actorUserId, targetUserId, request.DelaySeconds, request.Type);
+
         public ScheduleTestNotificationCommand ToCommand(Guid userId) =>
                 new(userId, request.DelaySeconds, request.Type);
     }

@@ -1151,6 +1151,7 @@ public sealed class JobsTests {
             [
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.BillingRenewal,
+                RecurringJobIds.BillingCancellationEmail,
                 RecurringJobIds.BillingWebhookInbox,
                 RecurringJobIds.PaddleNotificationRecovery,
                 RecurringJobIds.FastingNotifications,
@@ -1177,6 +1178,7 @@ public sealed class JobsTests {
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.BillingRenewal,
                 RecurringJobIds.BillingWebhookInbox,
+                RecurringJobIds.BillingCancellationEmail,
                 RecurringJobIds.PaddleNotificationRecovery,
                 RecurringJobIds.FastingNotifications,
                 RecurringJobIds.ImageObjectDeletionOutbox,

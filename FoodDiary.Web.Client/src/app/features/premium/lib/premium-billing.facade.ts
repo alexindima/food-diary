@@ -9,10 +9,19 @@ import type {
     PortalSessionResponse,
 } from '../../../shared/models/billing.models';
 import { PremiumBillingService } from '../api/premium-billing.service';
+import type { CancellationConfirmation, CancellationFeedback, CancellationId } from '../models/cancellation.models';
 
 @Service()
 export class PremiumBillingFacade {
     private readonly billingService = inject(PremiumBillingService);
+
+    public cancelSubscription(): Observable<CancellationConfirmation> {
+        return this.billingService.cancelSubscription();
+    }
+
+    public submitCancellationFeedback(cancellationId: CancellationId, feedback: CancellationFeedback): Observable<unknown> {
+        return this.billingService.submitCancellationFeedback(cancellationId, feedback);
+    }
 
     public getOverview(): Observable<BillingOverview> {
         return this.billingService.getOverview();

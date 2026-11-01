@@ -11,6 +11,11 @@ internal static class BillingCrossModuleRelationships {
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<BillingCancellation>().HasOne<User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<BillingPayment>().HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.UserId)

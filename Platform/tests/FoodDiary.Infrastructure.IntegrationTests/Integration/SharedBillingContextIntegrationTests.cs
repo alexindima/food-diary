@@ -35,7 +35,7 @@ public sealed partial class SharedBillingContextIntegrationTests(PostgresDatabas
             () => Assert.Same(provider.GetRequiredService<IBillingPaymentReadRepository>(), provider.GetRequiredService<IBillingPaymentWriteRepository>()),
             () => Assert.Same(provider.GetRequiredService<IBillingWebhookEventReadRepository>(), provider.GetRequiredService<IBillingWebhookEventWriteRepository>()),
             () => Assert.False(context.Database.HasPendingModelChanges()));
-        Assert.Equal(3, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(4, owned.Model.GetEntityTypes().Count());
         Assert.Same(context.Database.GetDbConnection(), owned.Database.GetDbConnection());
         var user = User.Create("billing-owner@example.com", "hash");
         context.Users.Add(user);

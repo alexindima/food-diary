@@ -1,3 +1,5 @@
+const CANCELLATION_TOTAL = 41;
+const CANCELLATION_FEEDBACK_COUNT = 7;
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
@@ -21,6 +23,7 @@ type BillingApiMock = {
     getSubscriptions: ReturnType<typeof vi.fn>;
     getPayments: ReturnType<typeof vi.fn>;
     getWebhookEvents: ReturnType<typeof vi.fn>;
+    getCancellations: ReturnType<typeof vi.fn>;
 };
 type SubscriptionsPage = typeof subscriptionsPage;
 type BillingTestContext = {
@@ -51,6 +54,9 @@ async function setupBillingAsync(billingApi: BillingApiMock = createBillingServi
 
 function createBillingServiceMock(): BillingApiMock {
     return {
+        getCancellations: vi
+            .fn()
+            .mockReturnValue(of({ items: [], page: 1, limit: PAGE_SIZE, totalPages: 0, totalItems: 0, feedbackCount: 0, reasons: [] })),
         getRevenueSummary: vi.fn().mockReturnValue(
             of({
                 fromUtc: '2026-04-01T00:00:00Z',
@@ -314,5 +320,69 @@ describe('AdminBillingComponent metadata', () => {
         billing.showMetadata('{"payment_id":"pay_123"}');
 
         expect(billing.selectedMetadata()).toContain('"payment_id": "pay_123"');
+    });
+});
+
+describe('Admin cancellation report', () => {
+    it('uses next UTC midnight as the exclusive cancellation date bound', async () => {
+        const { billingApi, fixture } = await setupBillingAsync();
+        await TestBed.inject(Router).navigateByUrl('/?tab=cancellations&period=custom&from=2024-02-29&to=2024-02-29');
+        await fixture.whenStable();
+        expect(billingApi.getCancellations, 'Cancellation report must include the entire final UTC calendar day.').toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            expect.objectContaining({ fromUtc: '2024-02-29T00:00:00.000Z', toUtc: '2024-03-01T00:00:00Z' }),
+        );
+    });
+
+    it('shows filtered totals and reasons independently of the current page rows', async () => {
+        const api = createBillingServiceMock();
+        api.getCancellations.mockReturnValue(
+            of({
+                items: [
+                    {
+                        id: adminId<'billing-cancellation'>('cancellation-1'),
+                        userId: adminId<'user'>('user-1'),
+                        userEmail: 'synthetic@example.test',
+                        provider: 'Paddle',
+                        externalSubscriptionId: 'sub_owned',
+                        plan: 'monthly',
+                        source: 'fooddiary',
+                        outcome: 'scheduled',
+                        requestedAtUtc: adminUtcInstant('2026-11-01T10:00:00Z'),
+                        effectiveAtUtc: adminUtcInstant('2026-12-01T10:00:00Z'),
+                        reasonCode: null,
+                        comment: '<script>feedback</script>',
+                        feedbackSubmittedAtUtc: adminUtcInstant('2026-11-01T10:01:00Z'),
+                    },
+                ],
+                page: 1,
+                limit: PAGE_SIZE,
+                totalPages: 3,
+                totalItems: 41,
+                feedbackCount: 7,
+                reasons: [
+                    { reasonCode: 'too_expensive', count: 6 },
+                    { reasonCode: null, count: 35 },
+                ],
+            }),
+        );
+        const { billing, fixture } = await setupBillingAsync(api);
+        api.getRevenueSummary.mockClear();
+        billing.activeTab.set('cancellations');
+        billing.load();
+        expect(api.getRevenueSummary).not.toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(api.getCancellations).toHaveBeenCalledOnce();
+        expect(billing.totalItems()).toBe(CANCELLATION_TOTAL);
+        expect(billing.cancellationFeedbackCount()).toBe(CANCELLATION_FEEDBACK_COUNT);
+        expect(billing.cancellationReasons()).toEqual([
+            { reasonCode: 'too_expensive', count: 6 },
+            { reasonCode: null, count: 35 },
+        ]);
+        const host = fixture.nativeElement as HTMLElement;
+        const report = host.querySelector('fd-admin-billing-cancellations-table');
+        expect(report?.textContent).toContain('<script>feedback</script>');
+        expect(report?.querySelector('script')).toBeNull();
     });
 });

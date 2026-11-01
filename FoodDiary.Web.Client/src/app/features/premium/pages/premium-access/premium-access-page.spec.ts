@@ -180,6 +180,40 @@ describe('PremiumAccessPageComponent entitlement recovery', () => {
     });
 });
 
+describe('PremiumAccessPageComponent historical subscription', () => {
+    beforeEach(resetMocks);
+
+    it.each(['canceled', null])('offers existing plans when a historical portal remains available with status %s', async status => {
+        billingService.getOverview.mockReturnValue(
+            of({ ...createOverview(), subscriptionStatus: status, manageBillingAvailable: true, canStartPremiumTrial: false }),
+        );
+        const { component } = setupComponent();
+        await settleAsync();
+
+        expect(component['showPlans'](), 'An ended subscription must allow choosing a new plan').toBe(true);
+        expect(component['overviewViewModel']().showManageBilling).toBe(true);
+        expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+        await component['startCheckoutAsync']('monthly', 'paddle');
+        expect(billingService.createCheckoutSession).toHaveBeenCalledWith('monthly', 'paddle');
+        expect(fakeDocument.location.href).toBe(CHECKOUT_URL);
+    });
+
+    it.each(['active', 'past_due', 'paused', 'unpaid', 'incomplete'])(
+        'keeps an unresolved subscription with status %s in management without a new checkout',
+        async status => {
+            billingService.getOverview.mockReturnValue(
+                of({ ...createOverview(), subscriptionStatus: status, manageBillingAvailable: true }),
+            );
+            const { component } = setupComponent();
+            await settleAsync();
+
+            expect(component['showPlans']()).toBe(false);
+            expect(component['overviewViewModel']().showManageBilling).toBe(true);
+            expect(billingService.createCheckoutSession).not.toHaveBeenCalled();
+        },
+    );
+});
+
 describe('PremiumAccessPageComponent prices', () => {
     beforeEach(resetMocks);
 

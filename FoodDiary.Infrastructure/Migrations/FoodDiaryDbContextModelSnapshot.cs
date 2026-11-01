@@ -484,6 +484,77 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("FoodRecognitionJobImages", (string)null);
                 });
 
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingCancellation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime?>("ConfirmationEmailHandledAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("EffectiveAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExternalSubscriptionId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("FeedbackSubmittedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Outcome")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Plan")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("ReasonCode")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("RequestedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedAtUtc");
+
+                    b.HasIndex("ConfirmationEmailHandledAtUtc", "RequestedAtUtc")
+                        .HasFilter("\"ConfirmationEmailHandledAtUtc\" IS NULL");
+
+                    b.HasIndex("UserId", "Provider", "ExternalSubscriptionId", "RequestedAtUtc");
+
+                    b.ToTable("BillingCancellations", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingPayment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -5218,6 +5289,15 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasOne("FoodDiary.Modules.Ai.PersistenceModel.FoodRecognitionJob", null)
                         .WithMany("AdditionalImages")
                         .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Billing.Domain.Entities.BillingCancellation", b =>
+                {
+                    b.HasOne("FoodDiary.Modules.Users.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

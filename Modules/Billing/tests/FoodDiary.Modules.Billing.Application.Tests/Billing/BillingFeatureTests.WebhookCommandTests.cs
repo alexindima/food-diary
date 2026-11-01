@@ -116,7 +116,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookPremiumRoleSyncer(
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder()),
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         ProcessQueuedBillingWebhookCommandHandler service = CreateInboxHandler(
             repository,
             new NoOpBillingTransactionRunner(),
@@ -193,7 +194,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookPremiumRoleSyncer(
                 billingAccessService,
                 new NoOpMarketingConversionRecorder()),
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         ProcessQueuedBillingWebhookCommandHandler handler = CreateInboxHandler(
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
@@ -253,7 +255,8 @@ public partial class BillingFeatureTests {
             billingWebhookSubscriptionWriter: null!,
             billingWebhookPaymentRecorder: null!,
             billingWebhookPremiumRoleSyncer: null!,
-            new FixedDateTimeProvider(Now));
+            new FixedDateTimeProvider(Now), new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
 
         Result result = await processor.ProcessAsync(
             BillingProviderNames.Paddle,
@@ -297,7 +300,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookPremiumRoleSyncer(
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder()),
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         ProcessQueuedBillingWebhookCommandHandler handler = CreateInboxHandler(
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
@@ -735,7 +739,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookPremiumRoleSyncer(
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder()),
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         BillingWebhookEventModel webhookEvent = CreateWebhookPaymentEvent(user, "evt_serialized", "sub_serialized") with {
             ExternalPaymentMethodId = "pm_stable",
         };
@@ -889,7 +894,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookPremiumRoleSyncer(
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder()),
-            dateTimeProvider);
+            dateTimeProvider, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
 
         Result result = await processor.ProcessAsync(
             BillingProviderNames.Paddle,

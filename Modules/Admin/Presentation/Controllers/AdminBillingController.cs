@@ -15,6 +15,12 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/admin/billing")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminBillingController(ISender mediator) : BaseApiController(mediator) {
+    [HttpGet("cancellations")]
+    [ProducesResponseType<AdminBillingCancellationReportHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetCancellations([FromQuery] GetAdminBillingHttpQuery query) =>
+        HandleOk(query.ToCancellationsQuery(), static value => value.ToHttpResponse());
+
     [HttpGet("revenue-summary")]
     [ProducesResponseType<AdminBillingRevenueSummaryHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -1,0 +1,51 @@
+<section class="fd-stack fd-gap-md" [attr.aria-label]="'ADMIN_BILLING.CANCELLATIONS.TITLE' | translate">
+    <p>{{ 'ADMIN_BILLING.CANCELLATIONS.RESPONSES' | translate: { count: feedbackCount(), total: totalItems() } }}</p>
+    <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'ADMIN_BILLING.CANCELLATIONS.SUMMARY_HINT' | translate }}</p>
+    <dl class="fd-row fd-wrap fd-gap-md">
+        @for (reason of reasons(); track reason.reasonCode) {
+            <div>
+                <dt>{{ `ADMIN_BILLING.CANCELLATIONS.REASONS.${reason.reasonCode || 'not_provided'}` | translate }}</dt>
+                <dd>{{ reason.count }}</dd>
+            </div>
+        }
+    </dl>
+    <div>
+        <table class="admin-billing__table" tabindex="0" [attr.aria-label]="'ADMIN_BILLING.CANCELLATIONS.TITLE' | translate">
+            <thead>
+                <tr>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.REQUESTED' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.USER' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.PLAN' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.OUTCOME' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.EFFECTIVE' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.REASON' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.COMMENT' | translate }}</th>
+                    <th>{{ 'ADMIN_BILLING.CANCELLATIONS.SOURCE' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of items(); track item.id) {
+                    <tr>
+                        <td>{{ item.requestedAtUtc | date: 'short' : 'UTC' }}</td>
+                        <td>
+                            <a [routerLink]="['/users', item.userId]">{{ item.userEmail || item.userId }}</a>
+                        </td>
+                        <td>
+                            {{ item.plan || '—' }}<span>{{ item.provider }}</span
+                            ><span>{{ item.externalSubscriptionId }}</span>
+                        </td>
+                        <td>{{ `ADMIN_BILLING.CANCELLATIONS.OUTCOMES.${item.outcome}` | translate }}</td>
+                        <td>{{ item.effectiveAtUtc | date: 'short' : 'UTC' }}</td>
+                        <td>{{ `ADMIN_BILLING.CANCELLATIONS.REASONS.${item.reasonCode || 'not_provided'}` | translate }}</td>
+                        <td class="admin-billing__cancellation-comment">{{ item.comment || '—' }}</td>
+                        <td>{{ `ADMIN_BILLING.CANCELLATIONS.SOURCES.${item.source}` | translate }}</td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="8">{{ 'ADMIN_BILLING.CANCELLATIONS.EMPTY' | translate }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

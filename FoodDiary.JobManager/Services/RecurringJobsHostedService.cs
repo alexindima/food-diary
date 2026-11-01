@@ -139,6 +139,10 @@ public sealed class RecurringJobsHostedService(
 
     private void RegisterBillingJobs() {
         recurringJobManager.AddOrUpdate(
+            RecurringJobIds.BillingCancellationEmail,
+            Job.FromExpression<BillingCancellationEmailJob>(job => job.Execute(CancellationToken.None)),
+            "* * * * *");
+        recurringJobManager.AddOrUpdate(
             RecurringJobIds.BillingWebhookInbox,
             Job.FromExpression<BillingWebhookInboxJob>(job => job.Execute(CancellationToken.None)),
             "* * * * *");

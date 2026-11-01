@@ -1,4 +1,7 @@
 using FoodDiary.Modules.Billing.Application.Commands.CreateCheckoutSession;
+using FoodDiary.Modules.Billing.Application.Commands.CancelSubscription;
+using FoodDiary.Modules.Billing.Application.Commands.SubmitCancellationFeedback;
+using FoodDiary.Modules.Billing.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Billing.Application.Commands.CreatePortalSession;
 using FoodDiary.Modules.Billing.Application.Commands.ProcessBillingWebhook;
 using FoodDiary.Modules.Billing.Application.Commands.StartPremiumTrial;
@@ -14,9 +17,15 @@ public static class BillingHttpMappings {
     }
 
     extension(Guid userId) {
+        public CancelSubscriptionCommand ToCancelSubscriptionCommand() => new(userId);
         public CreatePortalSessionCommand ToPortalSessionCommand() => new(userId);
         public StartPremiumTrialCommand ToStartPremiumTrialCommand() => new(userId);
         public GetBillingOverviewQuery ToBillingOverviewQuery() => new(userId);
+    }
+
+    extension(SubmitCancellationFeedbackHttpRequest request) {
+        public SubmitCancellationFeedbackCommand ToCommand(Guid userId, Guid cancellationId) =>
+            new(userId, new BillingCancellationId(cancellationId), request.ReasonCode, request.Comment);
     }
 
     extension(string provider) {

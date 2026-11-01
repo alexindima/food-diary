@@ -21,6 +21,7 @@
       "Users"
     ],
     "Billing": [
+      "Identity",
       "Marketing",
       "Users"
     ],
@@ -176,6 +177,7 @@
       "Users"
     ],
     "Billing": [
+      "Identity",
       "Marketing",
       "Users"
     ],

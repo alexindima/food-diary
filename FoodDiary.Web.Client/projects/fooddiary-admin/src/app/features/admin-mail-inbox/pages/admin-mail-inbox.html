@@ -1,4 +1,7 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
+    @if (feedbackView) {
+        <p class="fd-ui-text-muted">{{ 'ADMIN_FEEDBACK.ADDRESS_HINT' | translate }}</p>
+    }
     <div class="fd-row fd-wrap fd-gap-sm">
         <fd-ui-button variant="secondary" [hidden]="unreadCount() === null" (click)="unreadFilter.set('unread'); loadMessages(true)"
             >{{ 'ADMIN_MAIL_INBOX.UNREAD' | translate }}: {{ unreadCount() }}</fd-ui-button
@@ -8,7 +11,7 @@
         >
     </div>
     @if (recordId()) {
-        <a routerLink="/mail-inbox" queryParamsHandling="merge" [queryParams]="{ id: null, page: 1 }">{{
+        <a queryParamsHandling="merge" [routerLink]="inboxPath" [queryParams]="{ id: null, page: 1 }">{{
             'ADMIN_MAIL_INBOX.ALL_MESSAGES' | translate
         }}</a>
     }
@@ -25,11 +28,13 @@
             (valueChange)="senderFilter.set($event?.toString() ?? '')"
         />
 
-        <fd-ui-input
-            [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
-            [value]="recipientFilter()"
-            (valueChange)="recipientFilter.set($event?.toString() || ''); loadMessages(true)"
-        />
+        @if (!feedbackView) {
+            <fd-ui-input
+                [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
+                [value]="recipientFilter()"
+                (valueChange)="recipientFilter.set($event?.toString() || ''); loadMessages(true)"
+            />
+        }
         <fd-ui-select
             [label]="'ADMIN_MAIL_INBOX.TYPE_FILTER' | translate"
             [value]="categoryFilter()"
@@ -98,9 +103,9 @@
                                         {{ message.subject || '(no subject)' }}
                                     </span>
                                     <a
-                                        routerLink="/mail-inbox"
                                         queryParamsHandling="merge"
                                         fdUiStopActivation
+                                        [routerLink]="inboxPath"
                                         [queryParams]="{ id: message.id, page: 1 }"
                                         >{{ 'ADMIN_MAIL_INBOX.PERMALINK' | translate }}</a
                                     >

@@ -14,6 +14,7 @@ public static class DependencyInjection {
             configuration.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
         services.AddScoped<BillingAccessService>();
+        services.AddScoped<BillingCancellationRecorder>();
         services.AddScoped<BillingWebhookContextResolver>();
         services.AddScoped<BillingWebhookPaymentRecorder>();
         services.AddScoped<BillingWebhookPremiumRoleSyncer>();

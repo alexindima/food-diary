@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Providers.Billing;
 
-public sealed class PaddleBillingGateway(
+public sealed partial class PaddleBillingGateway(
     HttpClient httpClient,
     IOptions<PaddleOptions> options,
     TimeProvider? timeProvider = null)

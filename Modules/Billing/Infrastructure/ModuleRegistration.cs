@@ -28,6 +28,8 @@ public static class ModuleRegistration {
                 provider.GetService<TimeProvider>(), CreateTransactionSynchronizer(provider)));
         services.AddScoped<IBillingWebhookEventReadRepository>(static provider => provider.GetRequiredService<BillingWebhookEventRepository>());
         services.AddScoped<IBillingWebhookEventWriteRepository>(static provider => provider.GetRequiredService<BillingWebhookEventRepository>());
+        services.AddScoped<IBillingCancellationRepository>(static provider =>
+            new BillingCancellationRepository(provider.GetRequiredService<BillingDbContext>().BillingCancellations, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IBillingTransactionRunner, EfBillingTransactionRunner>();
         services.AddScoped<IBillingCheckoutLock, PostgresBillingCheckoutLock>();
         return services;

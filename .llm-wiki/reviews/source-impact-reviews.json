@@ -93,18 +93,18 @@
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "22d451dce128566c39c8a170ad3287bb53c91c70b38e751a906ec296f68d05d3",
+      "pageSha256": "0d7af1f2b0acb8619aca374a7a5c9f62c62f4d7b95654f5f68b6f4709aba83b4",
       "sources": [
         {
-          "path": "FoodDiary.ReadModel.Composition/AGENTS.md",
-          "sha256": "45a1642c88ee7e3624fbbd2cea4eaae888d3e7afd78bd60457853b182beba059",
-          "reviewReason": "Reviewed the current Primary Backend page against RecipeUsageQuery, RecipeOverviewReadService and the updated composition guide. Meal-plan usage is a no-tracking scalar count in the existing host-composed reader and caller transaction; ports, module dependencies, writes, schema and transport contracts remain unchanged. The page describes these boundaries correctly. Architecture suite2272 passes; real UI/API rejects a used recipe and permits deletion after removing the plan reference."
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
+          "reviewReason": "Reviewed the current module guide against BillingCancellation ownership: Billing owns domain, commands and tracked persistence; Admin joins remain read composition, shared user transactions remain coordinated, and the manifest adds only the owned cancellation aggregate. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged."
         }
       ],
-      "reason": "Reviewed the current Primary Backend page against RecipeUsageQuery, RecipeOverviewReadService and the updated composition guide. Meal-plan usage is a no-tracking scalar count in the existing host-composed reader and caller transaction; ports, module dependencies, writes, schema and transport contracts remain unchanged. The page describes these boundaries correctly. Architecture suite2272 passes; real UI/API rejects a used recipe and permits deletion after removing the plan reference.",
+      "reason": "Reviewed the current module guide against BillingCancellation ownership: Billing owns domain, commands and tracked persistence; Admin joins remain read composition, shared user transactions remain coordinated, and the manifest adds only the owned cancellation aggregate. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7c0537f04c8007c83771813fce48c91255472da1",
-      "reviewedAtUtc": "2026-10-15T15:28:32.6482066Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T00:12:26.8162078Z"
     },
     {
       "pageId": "system.architecture",
@@ -112,20 +112,30 @@
       "pageSha256": "b4f39f36ee825fcbf9753aab59e1c555dc22f5fce4cd6311378923e865ebe603",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
+          "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
+          "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
+        },
+        {
           "path": "docs/backend/BROWSER_SESSIONS.md",
           "sha256": "fbe13e98660d74715ccec1d9272e09ff1c09c397707e44156b3ad0c69d6cfa05",
           "reviewReason": "Reviewed the merged Identity promotion and renewal SQL: owner, credential, version, expiry, revocation and remembered-state fences stay in Identity. No module dependency or host/storage boundary changed; BROWSER_SESSIONS.md describes the optional promotion request."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8aa1c7966d396e4e9efd1bb679113adc6b15cdb59ae689ae002af486ea135c3a",
-          "reviewReason": "Reviewed the two new direct references: read composition consumes Dashboard.Contracts history DTOs and Dashboard response mapping consumes Hydration.Presentation.Contracts. Both are narrow read/transport contracts; module ownership, host graph, transaction model and dependency direction remain as documented."
+          "sha256": "09d2a54309152f711e1fc908c334b184a4853bffb0f0bd177c6613391ab21be0",
+          "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
         }
       ],
-      "reason": "Reviewed the merged Identity promotion and renewal SQL: owner, credential, version, expiry, revocation and remembered-state fences stay in Identity. No module dependency or host/storage boundary changed; BROWSER_SESSIONS.md describes the optional promotion request.",
+      "reason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:33.2737362Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:42.0810401Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -231,15 +241,25 @@
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         },
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
+          "reviewReason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged."
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
+          "reviewReason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged."
+        },
+        {
           "path": "FoodDiary.Web.Client/angular.json",
           "sha256": "803027bcef2a5de5b53130a89f56ae3b727ef1eaae91fae7c6f346a321737164",
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots.",
+      "reason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "311e21be57522f05c62cd691b100d461df9b3b89",
-      "reviewedAtUtc": "2026-10-25T06:16:07.3534104Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:39.7612445Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -330,14 +350,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0416170332c5fbc220fadc528ff0166b8d28f84c58ef2dd9fa81dc51057d46cf",
-          "reviewReason": "Reviewed the actual OpenAPI delta: one additive admin POST for selected-user test scheduling, reusing unchanged request/response schemas. Existing operations, properties and documented responses are unchanged; SDK export and HTTP snapshot tests passed. The compatibility workflow remains accurate."
+          "sha256": "7ca68fa269b865f38b3dc3a3a53468cad1caa7d61d336a5a4c23237e6321e22e",
+          "reviewReason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged."
         }
       ],
-      "reason": "Reviewed the actual OpenAPI delta: one additive admin POST for selected-user test scheduling, reusing unchanged request/response schemas. Existing operations, properties and documented responses are unchanged; SDK export and HTTP snapshot tests passed. The compatibility workflow remains accurate.",
+      "reason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
-      "reviewedAtUtc": "2026-10-31T19:29:06.0366887Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T00:12:31.6914805Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -346,8 +366,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7a84aadb610fc3e6a828f07c5fc96284cfb1e3733dd63c31553ee93e32fd9b3f",
-          "reviewReason": "Reviewed the architecture-health index delta: the existing Premium overview now has focused rendered tests, and the new support card is covered by the profile-to-Subscription browser journey. Removed profile billing UI/facade/contracts have no remaining runtime consumers; checkout, trial, portal APIs and route ownership stay within premium. No backend project edges or enforced drift changed. The workflow guidance remains accurate."
+          "sha256": "8f5c6c08cc9bfafa022131df94956a9e41abac1ecfdccfc5c44ab6262c30fa63",
+          "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -355,15 +375,20 @@
           "reviewReason": "Reviewed conservative removal diagnostics: retained JSON projection inputs are never marked removable solely by a limited text scan. This agrees with the existing dynamic-consumer and behavior-proof guidance; dependency drift enforcement and SQLite query contracts are unchanged."
         },
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
+          "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
+        },
+        {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "8aa1c7966d396e4e9efd1bb679113adc6b15cdb59ae689ae002af486ea135c3a",
-          "reviewReason": "Matrix changes explicitly document existing contributor DTO use for bounded dashboard hydration history. No project, module cycle, foreign aggregate write or removal candidate was introduced; architecture-health generation remains current and the workflow guidance still applies."
+          "sha256": "09d2a54309152f711e1fc908c334b184a4853bffb0f0bd177c6613391ab21be0",
+          "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
         }
       ],
-      "reason": "Reviewed the architecture-health index delta: the existing Premium overview now has focused rendered tests, and the new support card is covered by the profile-to-Subscription browser journey. Removed profile billing UI/facade/contracts have no remaining runtime consumers; checkout, trial, portal APIs and route ownership stay within premium. No backend project edges or enforced drift changed. The workflow guidance remains accurate.",
+      "reason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable.",
       "baseRef": "HEAD",
-      "gitHead": "b808e454a498bdce9fee204f3618557c1c8dda24",
-      "reviewedAtUtc": "2026-10-31T21:27:25.8616449Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:40.5087336Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -602,8 +627,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "beca3a5e6dcf42d454c1e63091e94fb9b90ca5ddef95872e44801378f054923b",
-          "reviewReason": "Reviewed task-finish additions: six observed retrospective hypotheses for the sealed PWA task. They do not approve/apply learning, modify policy or create durable memory. The documented independent review, experiment and append-only verification boundaries remain accurate."
+          "sha256": "8ca230a0f4976f5bbd8d279c155132c2efe7a766839413d6e486960f55515c86",
+          "reviewReason": "Reviewed the new completed-task observation in the append-only promotion registry. It records hypotheses and cost signals only; no approval, application, instruction change or policy change was performed. The documented separate review and promotion boundary remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -626,10 +651,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed task-finish additions: six observed retrospective hypotheses for the sealed PWA task. They do not approve/apply learning, modify policy or create durable memory. The documented independent review, experiment and append-only verification boundaries remain accurate.",
+      "reason": "Reviewed the new completed-task observation in the append-only promotion registry. It records hypotheses and cost signals only; no approval, application, instruction change or policy change was performed. The documented separate review and promotion boundary remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:30.2910902Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:38:19.8750922Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -758,8 +783,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "e959cc87e5e3f0077f7fc6b1c1a4bbbf321edd4ef586494c6cc25153479db243",
-          "reviewReason": "Compared the incoming domain projection with the previous published baseline: the additions are UserGoalRevision, its owner ID and profile history mapping. Inspected Capture/ToDailyGoals, null-preserving initial history, revision ordering, the migration backfill and profile-owned cascade. Existing domain/persistence review commands and ownership guidance remain current; focused historical goal HTTP tests passed."
+          "sha256": "fcb0fb159eaf7c48b3e762e798af0eaa611efcf89324be216c0550870186e347",
+          "reviewReason": "Reviewed the nullable handled timestamp, filtered pending index, paired additive EF migration and snapshot. Upgrade backfills historical rows; real PostgreSQL rollback after shared outbox save preserves pending state and retry produces one queue row. Existing domain/persistence review procedure remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -772,10 +797,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Compared the incoming domain projection with the previous published baseline: the additions are UserGoalRevision, its owner ID and profile history mapping. Inspected Capture/ToDailyGoals, null-preserving initial history, revision ordering, the migration backfill and profile-owned cascade. Existing domain/persistence review commands and ownership guidance remain current; focused historical goal HTTP tests passed.",
-      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:45:08.2202052Z"
+      "reason": "Reviewed the nullable handled timestamp, filtered pending index, paired additive EF migration and snapshot. Upgrade backfills historical rows; real PostgreSQL rollback after shared outbox save preserves pending state and retry produces one queue row. Existing domain/persistence review procedure remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:42.9213186Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -968,14 +993,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "43566028b59218141e18af2fd1378fca07cf278cf477eb86f856627a418cb3b8",
-          "reviewReason": "Reviewed the task-finish-generated append-only outcome event: it binds this deployment task completion and retrospective fingerprints to the applicable root AGENTS.md hash. The registry verifies successfully; no instruction, experiment, thresholds or learning behavior changes. The existing page accurately describes this new observation."
+          "sha256": "b0c76b5a97b43966df853333ae4b201b00ea6ba26f40e64f6099ea1c8741e049",
+          "reviewReason": "Reviewed the automatic instruction fingerprint/outcome event for the sealed cancellation email task. It records an observation of existing guide versions and does not edit instructions or adopt any experiment. The documented observational and separate review behavior remains accurate."
         }
       ],
-      "reason": "Reviewed the task-finish-generated append-only outcome event: it binds this deployment task completion and retrospective fingerprints to the applicable root AGENTS.md hash. The registry verifies successfully; no instruction, experiment, thresholds or learning behavior changes. The existing page accurately describes this new observation.",
-      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "gitHead": "d8026ade02071e02201b28f15759882c04826680",
-      "reviewedAtUtc": "2026-10-30T13:44:20.9343601Z"
+      "reason": "Reviewed the automatic instruction fingerprint/outcome event for the sealed cancellation email task. It records an observation of existing guide versions and does not edit instructions or adopt any experiment. The documented observational and separate review behavior remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:38:20.6908593Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1000,8 +1025,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "984233a22bf7f31cd44948c9954ed8695835ef63ab952f51391a47cd9cdcf9e1",
-          "reviewReason": "Reviewed the one observed eval candidate emitted by task completion. The active eval suite and approval/application policy are unchanged. Observation remains reviewable evidence rather than automatic activation, as documented."
+          "sha256": "0ad9fd480ae3bdb2ce7b00b70e2ae541ed778b00688758344047b994a74231d9",
+          "reviewReason": "Reviewed the automatic eval candidate observation from the sealed task. No candidate was approved or applied, and no active evaluation, risk floor or verification rule changed. The page accurately separates observation from activation."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1014,10 +1039,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the one observed eval candidate emitted by task completion. The active eval suite and approval/application policy are unchanged. Observation remains reviewable evidence rather than automatic activation, as documented.",
+      "reason": "Reviewed the automatic eval candidate observation from the sealed task. No candidate was approved or applied, and no active evaluation, risk floor or verification rule changed. The page accurately separates observation from activation.",
       "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:29.2575964Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:38:21.5595406Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1047,14 +1072,14 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1d5245dc71b27d556527e57c3b7610ee2a3a2278f13c6e77ffd7ebc900db3194",
-          "reviewReason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate."
+          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
+          "reviewReason": "The ownership graph adds only Billing to Identity narrow contract consumption. Billing still owns cancellation writes, Identity owns templates, Users owns profile projection, Admin consumes MailInbox through its approved client. Existing instructions and ownership rules remain correct."
         }
       ],
-      "reason": "Reviewed architecture, catalog and ownership pages against the additive Admin Application to BodyMetrics Contracts read edge. The graph, project matrix and 2116 architecture tests agree; existing layer and foreign-write guidance remains accurate.",
+      "reason": "The ownership graph adds only Billing to Identity narrow contract consumption. Billing still owns cancellation writes, Identity owns templates, Users owns profile projection, Admin consumes MailInbox through its approved client. Existing instructions and ownership rules remain correct.",
       "baseRef": "HEAD",
-      "gitHead": "48cb4e39c4f5fd8d3038ddfc1057a6b613014510",
-      "reviewedAtUtc": "2026-10-05T15:06:13.5920379Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:45.0948595Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -1121,8 +1146,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bf3ab711725484c9384459ddb39ff5fec2971685af56e65367cad61b5d4ab940",
-          "reviewReason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current."
+          "sha256": "7003bb8e48e71491ac7fe29e1378d36c88a02596300a449fc5f2308fc6eaa470",
+          "reviewReason": "Reviewed new email address/body copies through existing EmailOutbox/MailRelay and existing inbound MailInbox retention. Only verified active accounts receive confirmations. Feedback stays Admin-only inert text with unverified From, no inferred account association and no new feedback store/provider transfer. Privacy review guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1135,10 +1160,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current.",
-      "baseRef": "e34223ff323edbb725b9e08cc5b79149be15afbb",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:50:12.2588443Z"
+      "reason": "Reviewed new email address/body copies through existing EmailOutbox/MailRelay and existing inbound MailInbox retention. Only verified active accounts receive confirmations. Feedback stays Admin-only inert text with unverified From, no inferred account association and no new feedback store/provider transfer. Privacy review guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:41.4016871Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1304,8 +1329,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5a6199775b987ebed49a0b5c16a24340eb77ee4e7e9b5dbaae3209f0a3e7b9c4",
-          "reviewReason": "Reviewed the runtime-topology.json diff: only freshness.sourceFingerprint and freshness.sourceFileCount changed. The Notifications read-status query and owner read-only adapter add no host, worker, recurring job, external client or deployment dependency. Existing runtime entries and the runtime-impact guide remain accurate."
+          "sha256": "23cc4bf1108ed92933b25c0dc84060b19763242d49a2dfaa86664df84114d659",
+          "reviewReason": "Refreshed runtime inventory includes the minute cancellation confirmation job. Reviewed cancellation propagation, per-user serialization, queue+marker atomicity, per-record retry, existing transport idempotency and JobExecutionObserver counts. Existing runtime guidance remains accurate; actual runtime verification is recorded separately from topology inference."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1318,10 +1343,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the runtime-topology.json diff: only freshness.sourceFingerprint and freshness.sourceFileCount changed. The Notifications read-status query and owner read-only adapter add no host, worker, recurring job, external client or deployment dependency. Existing runtime entries and the runtime-impact guide remain accurate.",
+      "reason": "Refreshed runtime inventory includes the minute cancellation confirmation job. Reviewed cancellation propagation, per-user serialization, queue+marker atomicity, per-record retry, existing transport idempotency and JobExecutionObserver counts. Existing runtime guidance remains accurate; actual runtime verification is recorded separately from topology inference.",
       "baseRef": "HEAD",
-      "gitHead": "b4e461ce14488eea9a26cb449facac76dbb8b71c",
-      "reviewedAtUtc": "2026-10-31T17:07:20.6637775Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:43.6451329Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1638,6 +1663,11 @@
       "pageSha256": "901bff07ffe15e58cbdf52f3e2bb284cc4d394cf44485ddeea5c5406b5546118",
       "sources": [
         {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "c260265bff0c11a1117556b94660207b4644052ffd9611a01c869c0ee72ea1e6",
+          "reviewReason": "Catalog and symbol inputs now include the new slices/job and admin feedback route; source discovery may return these current owners. No query ranking, retrieval policy, provider or acceptance threshold changed. Existing distinction between navigation evidence and verified runtime flow remains correct."
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "df4ed4e5d42b6987613a85055638b7fd431bfe990c3b8ec002fa69be80c88112",
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
@@ -1658,10 +1688,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current.",
+      "reason": "Catalog and symbol inputs now include the new slices/job and admin feedback route; source discovery may return these current owners. No query ranking, retrieval policy, provider or acceptance threshold changed. Existing distinction between navigation evidence and verified runtime flow remains correct.",
       "baseRef": "HEAD",
-      "gitHead": "215d9393f00c8cecf6bb16d37db4f4a60bb1739b",
-      "reviewedAtUtc": "2026-10-31T19:38:23.953469Z"
+      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
+      "reviewedAtUtc": "2026-11-01T02:24:44.3956227Z"
     },
     {
       "pageId": "workflow.review-diff",

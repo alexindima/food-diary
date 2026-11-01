@@ -1236,6 +1236,38 @@
         "WEBHOOK_INBOX": {
             "ATTEMPTS": "Attempts",
             "NEXT_RETRY": "Next retry"
+        },
+        "CANCELLATIONS": {
+            "TITLE": "Cancellations",
+            "RESPONSES": "Feedback: {{count}} of {{total}} cancellation records",
+            "SUMMARY_HINT": "Summary of all records matching the filters. A scheduled cancellation does not mean access has ended. Paddle events may include automatic cancellation after non-payment; status alone does not identify the reason.",
+            "REQUESTED": "Recorded (UTC)",
+            "USER": "User",
+            "PLAN": "Plan",
+            "OUTCOME": "Outcome",
+            "EFFECTIVE": "Cancellation date (UTC)",
+            "REASON": "Reason",
+            "COMMENT": "Comment",
+            "SOURCE": "Record source",
+            "EMPTY": "No cancellations in the selected period.",
+            "OUTCOMES": {
+                "scheduled": "Scheduled",
+                "canceled": "Subscription ended",
+                "cancellation_removed": "Cancellation removed"
+            },
+            "SOURCES": {
+                "fooddiary": "FoodDiary",
+                "paddle": "Paddle portal or event"
+            },
+            "REASONS": {
+                "too_expensive": "Too expensive",
+                "ai_not_useful": "AI features are not helpful",
+                "missing_features": "Missing features",
+                "technical_issues": "Technical problems",
+                "not_using": "Not using the app enough",
+                "other": "Other reason",
+                "not_provided": "No reason provided"
+            }
         }
     },
     "HUNGER_BEFORE_SCALE": {
@@ -1376,7 +1408,8 @@
             "password_reset": "Password reset",
             "bug_report_received": "Bug acknowledgement",
             "dietologist_invitation": "Dietologist invitation",
-            "template_test": "Template test"
+            "template_test": "Template test",
+            "subscription_cancellation": "Subscription cancellation"
         },
         "STATUSES": {
             "pending": "Queued",
@@ -1878,6 +1911,11 @@
             "HOW_TO_KEEP_A_FOOD_DIARY": "How to keep a food diary",
             "CALORIES_IN_HOMEMADE_MEALS": "Homemade meal calories"
         }
+    },
+    "ADMIN_FEEDBACK": {
+        "TITLE": "Feedback",
+        "SUBTITLE": "Read feedback sent to feedback@fooddiary.club.",
+        "ADDRESS_HINT": "Messages addressed to feedback@fooddiary.club."
     },
     "LANDING_HERO": {
         "OVERLINE": "Food diary and calorie counter",
@@ -7450,7 +7488,7 @@
             "RENEWS_ON": "Renews on",
             "TRIAL_ENDS_ON": "Trial ends on",
             "ENDS_ON": "Access ends on",
-            "MANAGE_HINT": "Use the billing portal to update your payment method or turn off auto-renewal. Select “Manage or cancel subscription”.",
+            "MANAGE_HINT": "Use the buttons above to manage your subscription and payments.",
             "TRIAL_HINT": "Start a 7-day trial without a card and try every Premium AI feature.",
             "CHECKOUT_HINT": "Choose a plan below to start Premium through the payment form.",
             "CHECKOUT_UNAVAILABLE_HINT": "Premium checkout is temporarily unavailable.",
@@ -7527,6 +7565,31 @@
             "BALANCE_OVER": "over goal",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        },
+        "CANCELLATION": {
+            "TITLE": "Turn off auto-renewal?",
+            "ACTION": "Turn off auto-renewal",
+            "PAID_MESSAGE": "Auto-renewal will stop, and there will be no next charge. Premium and AI features will remain available until {{date}}",
+            "IMMEDIATE_MESSAGE": "Your subscription will be canceled immediately. There will be no new charges or renewal attempts.",
+            "OPTIONAL_HINT": "This survey is optional. Leave the fields empty to cancel right away. Your feedback helps us improve FoodDiary.",
+            "REASON": "Reason (optional)",
+            "COMMENT": "Comment (optional)",
+            "SKIP_REASON": "Skip the reason",
+            "KEEP": "Keep subscription",
+            "CONFIRM": "Cancel subscription",
+            "SUCCESS": "Auto-renewal is off. Your subscription status has been updated.",
+            "ERROR": "We could not confirm cancellation. Refresh and try again, or contact support.",
+            "FEEDBACK_ERROR": "Your subscription is canceled, but we could not save your feedback. This does not affect cancellation.",
+            "PAYMENTS_ACTION": "Payments and invoices",
+            "REASONS": {
+                "too_expensive": "Too expensive",
+                "ai_not_useful": "AI features are not helpful",
+                "missing_features": "Missing features",
+                "technical_issues": "Technical problems",
+                "not_using": "Not using the app enough",
+                "other": "Other reason"
+            },
+            "PERIOD_MESSAGE": "Auto-renewal will be turned off. Premium and AI features will remain available until the end of the current period. We will show the exact date after Paddle confirms cancellation."
         }
     },
     "LESSONS": {

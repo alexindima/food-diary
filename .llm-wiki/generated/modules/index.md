@@ -20,7 +20,7 @@ are reported separately; `none observed` never means proven isolation.
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [Admin](admin.md) | orchestrator | 8 | 8 | 0 | 3 | assembly-isolated |
 | [Ai](ai.md) | aggregate-owner | 2 | 2 | 2 | 3 | assembly-isolated |
-| [Billing](billing.md) | aggregate-owner | 2 | 2 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
+| [Billing](billing.md) | aggregate-owner | 3 | 3 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 1 | 1 | 5 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 1 | 1 | 1 | 2 | project-reference-matrix |
 | [Cycles](cycles.md) | aggregate-owner | 2 | 2 | 2 | 2 | project-reference-matrix |
@@ -33,7 +33,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Favorites](favorites.md) | aggregate-owner | 1 | 1 | 3 | 3 | project-reference-matrix |
 | [Gamification](gamification.md) | aggregate-owner | 2 | 2 | 2 | 3 | project-reference-matrix |
 | [Hydration](hydration.md) | aggregate-owner | 1 | 1 | 3 | 2 | project-reference-matrix |
-| [Identity](identity.md) | aggregate-owner | 2 | 2 | 3 | 3 | project-reference-matrix-and-module-boundary-tests |
+| [Identity](identity.md) | aggregate-owner | 2 | 2 | 4 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [Images](images.md) | aggregate-owner | 1 | 1 | 4 | 3 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 2 | 2 | 1 | 2 | project-reference-matrix-and-module-boundary-tests |
 | [Marketing](marketing.md) | aggregate-owner | 0 | 0 | 1 | 3 | project-reference-matrix-and-module-boundary-tests |

@@ -57,6 +57,26 @@ public sealed class BillingController(ISender mediator) : AuthorizedController(m
     public Task<IActionResult> CreatePortalSession([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToPortalSessionCommand(), static value => value.ToHttpResponse());
 
+    [HttpPost("cancel")]
+    [ProducesResponseType<CancelSubscriptionHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.BillingRateLimitPolicyName)]
+    [EnableIdempotency]
+    public Task<IActionResult> CancelSubscription([FromCurrentUser] Guid userId) =>
+        HandleOk(userId.ToCancelSubscriptionCommand(), static value => value.ToHttpResponse());
+
+    [HttpPost("cancellations/{cancellationId:guid}/feedback")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    [BlockImpersonatedAccess]
+    [EnableIdempotency]
+    public Task<IActionResult> SubmitCancellationFeedback([FromCurrentUser] Guid userId, Guid cancellationId,
+        [FromBody] SubmitCancellationFeedbackHttpRequest request) =>
+        HandleNoContent(request.ToCommand(userId, cancellationId));
+
     private string GetRequestId() =>
         IdempotencyRequestContext.GetRequestId(HttpContext) ??
         throw new InvalidOperationException("Required idempotency context is unavailable.");

@@ -28,6 +28,7 @@ public sealed partial class FoodDiaryDbContext : ICompositionReadContext {
     IQueryable<AiUsage> ICompositionReadContext.AiUsages => AiUsages.AsNoTracking();
     IQueryable<ImageAsset> ICompositionReadContext.FoodRecognitionImageAssets => ImageAssets.AsNoTracking()
         .Where(asset => FoodRecognitionJobs.AsNoTracking().Any(job => job.ImageAssetId == asset.Id || job.AdditionalImages.Any(image => image.ImageAssetId == asset.Id)));
+    IQueryable<BillingCancellation> ICompositionReadContext.BillingCancellations => BillingCancellations.AsNoTracking();
     IQueryable<BillingPayment> ICompositionReadContext.BillingPayments => BillingPayments.AsNoTracking();
     IQueryable<BillingSubscription> ICompositionReadContext.BillingSubscriptions => BillingSubscriptions.AsNoTracking();
     IQueryable<BillingWebhookEvent> ICompositionReadContext.BillingWebhookEvents => BillingWebhookEvents.AsNoTracking();

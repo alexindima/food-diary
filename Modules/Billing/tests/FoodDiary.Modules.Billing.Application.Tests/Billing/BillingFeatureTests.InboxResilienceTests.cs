@@ -116,7 +116,8 @@ public partial class BillingFeatureTests {
             new BillingWebhookSubscriptionWriter(subscriptions, clock),
             new BillingWebhookPaymentRecorder(new RecordingBillingPaymentRepository()),
             new BillingWebhookPremiumRoleSyncer(new BillingAccessService(users, subscriptions, clock),
-                new NoOpMarketingConversionRecorder()), clock);
+                new NoOpMarketingConversionRecorder()), clock, new BillingCancellationRecorder(
+            Substitute.For<IBillingCancellationRepository>(), TimeProvider.System));
         return new ProcessQueuedBillingWebhookCommandHandler(events, transactions, processor, clock, resolver);
     }
 }

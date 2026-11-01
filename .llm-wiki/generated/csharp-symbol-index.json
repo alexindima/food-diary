@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4677,
-    "symbols": 4612,
-    "interfaceImplementationLinks": 207,
+    "sourceFiles": 4710,
+    "symbols": 4645,
+    "interfaceImplementationLinks": 209,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2385,
+      "class": 2398,
       "enum": 73,
-      "interface": 422,
-      "record": 1590,
-      "record struct": 142
+      "interface": 423,
+      "record": 1608,
+      "record struct": 143
     },
     "roles": {
-      "Command": 238,
-      "CommandHandler": 232,
-      "Configuration": 102,
+      "Command": 242,
+      "CommandHandler": 236,
+      "Configuration": 103,
       "Controller": 114,
-      "Entity": 103,
+      "Entity": 104,
       "Event": 19,
       "Factory": 15,
       "Handler": 10,
@@ -32,17 +32,17 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 74,
-      "Other": 1900,
-      "Query": 305,
-      "QueryHandler": 219,
+      "Other": 1912,
+      "Query": 306,
+      "QueryHandler": 220,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
-      "Repository": 101,
-      "Request": 179,
-      "Response": 269,
+      "Repository": 104,
+      "Request": 180,
+      "Response": 273,
       "Service": 177,
       "Validator": 238,
-      "ValueObject": 182,
+      "ValueObject": 183,
       "WriteRepository": 47
     }
   },
@@ -895,6 +895,13 @@
       "line": 6
     },
     {
+      "name": "BillingCancellationEmailJob",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/BillingCancellationEmailJob.cs",
+      "line": 8
+    },
+    {
       "name": "BillingRenewalJob",
       "kind": "class",
       "role": "Other",
@@ -1551,6 +1558,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Telemetry/SuppressRequestAccessLogAttribute.cs",
       "line": 4
+    },
+    {
+      "name": "AdminBillingRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.Cancellations.cs",
+      "line": 6
     },
     {
       "name": "AdminBillingRepository",
@@ -2806,6 +2820,27 @@
       "line": 2
     },
     {
+      "name": "AdminBillingCancellationReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingCancellationReasonReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReasonReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingCancellationReportReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application.Abstractions/Models/AdminBillingCancellationReportReadModel.cs",
+      "line": 2
+    },
+    {
       "name": "AdminBillingListFilter",
       "kind": "record",
       "role": "Other",
@@ -3737,6 +3772,20 @@
       "line": 4
     },
     {
+      "name": "GetAdminBillingCancellationsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminBillingCancellationsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
+      "line": 8
+    },
+    {
       "name": "GetAdminBillingPaymentsQuery",
       "kind": "record",
       "role": "Query",
@@ -4560,7 +4609,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Mappings/AdminHttpQueryMappings.cs",
-      "line": 27
+      "line": 28
     },
     {
       "name": "AdminHttpResponseMappings",
@@ -4980,6 +5029,27 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Responses/AdminAuditRunSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingCancellationHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingCancellationReasonHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationReasonHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingCancellationReportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Responses/AdminBillingCancellationReportHttpResponse.cs",
       "line": 2
     },
     {
@@ -6607,6 +6677,13 @@
       "line": 2
     },
     {
+      "name": "IBillingCancellationRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
+      "line": 7
+    },
+    {
       "name": "IBillingCheckoutLock",
       "kind": "interface",
       "role": "Other",
@@ -6698,6 +6775,27 @@
       "line": 4
     },
     {
+      "name": "BillingCancellationEmailCandidateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationEmailCandidateModel.cs",
+      "line": 5
+    },
+    {
+      "name": "BillingCancellationRequestModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationRequestModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BillingCancellationSnapshotModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application.Abstractions/Models/BillingCancellationSnapshotModel.cs",
+      "line": 2
+    },
+    {
       "name": "BillingCheckoutSessionModel",
       "kind": "record",
       "role": "Other",
@@ -6761,6 +6859,20 @@
       "line": 2
     },
     {
+      "name": "CancelSubscriptionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommand.cs",
+      "line": 8
+    },
+    {
+      "name": "CancelSubscriptionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/CancelSubscription/CancelSubscriptionCommandHandler.cs",
+      "line": 16
+    },
+    {
       "name": "CreateCheckoutSessionCommand",
       "kind": "record",
       "role": "Command",
@@ -6807,7 +6919,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "BillingWebhookEventValidator",
@@ -6901,6 +7013,13 @@
       "line": 7
     },
     {
+      "name": "SendCancellationConfirmationsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommandHandler.cs",
+      "line": 15
+    },
+    {
       "name": "StartPremiumTrialCommand",
       "kind": "record",
       "role": "Command",
@@ -6913,6 +7032,20 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
       "line": 15
+    },
+    {
+      "name": "SubmitCancellationFeedbackCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SubmitCancellationFeedbackCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
+      "line": 9
     },
     {
       "name": "BillingCurrentUserAccessResolver",
@@ -6934,6 +7067,13 @@
       "role": "Other",
       "path": "Modules/Billing/Application/DependencyInjection.cs",
       "line": 9
+    },
+    {
+      "name": "BillingCancellationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Models/BillingCancellationModel.cs",
+      "line": 2
     },
     {
       "name": "BillingOverviewModel",
@@ -6964,6 +7104,13 @@
       "line": 10
     },
     {
+      "name": "BillingCancellationRecorder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Services/BillingCancellationRecorder.cs",
+      "line": 6
+    },
+    {
       "name": "ProcessBillingWebhookInboxCommand",
       "kind": "record",
       "role": "Command",
@@ -6983,6 +7130,20 @@
       "role": "Command",
       "path": "Modules/Billing/Contracts/Commands/ReplayFailedPaddleNotifications/ReplayFailedPaddleNotificationsCommand.cs",
       "line": 5
+    },
+    {
+      "name": "SendCancellationConfirmationsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Billing/Contracts/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "BillingCancellationEmailRunResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Contracts/Models/BillingCancellationEmailRunResult.cs",
+      "line": 2
     },
     {
       "name": "BillingRenewalRunResult",
@@ -7020,6 +7181,13 @@
       "line": 2
     },
     {
+      "name": "BillingCancellationId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingCancellationId.cs",
+      "line": 4
+    },
+    {
       "name": "BillingPaymentId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -7039,6 +7207,13 @@
       "role": "ValueObject",
       "path": "Modules/Billing/Domain.Contracts/ValueObjects/Ids/BillingWebhookEventId.cs",
       "line": 4
+    },
+    {
+      "name": "BillingCancellation",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 6
     },
     {
       "name": "BillingDomainGuard",
@@ -7118,6 +7293,13 @@
       "line": 9
     },
     {
+      "name": "BillingCancellationRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
+      "line": 9
+    },
+    {
       "name": "BillingDbContext",
       "kind": "class",
       "role": "Other",
@@ -7186,6 +7368,13 @@
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
       "line": 13
+    },
+    {
+      "name": "PaddleBillingGateway",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
+      "line": 8
     },
     {
       "name": "PaddleBillingGateway",
@@ -7272,6 +7461,13 @@
       "line": 6
     },
     {
+      "name": "BillingCancellationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs",
+      "line": 7
+    },
+    {
       "name": "BillingPaymentConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -7339,7 +7535,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Presentation/Mappings/BillingHttpMappings.cs",
-      "line": 9
+      "line": 12
     },
     {
       "name": "BillingHttpResponseMappings",
@@ -7356,10 +7552,24 @@
       "line": 2
     },
     {
+      "name": "SubmitCancellationFeedbackHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Billing/Presentation/Requests/SubmitCancellationFeedbackHttpRequest.cs",
+      "line": 4
+    },
+    {
       "name": "BillingOverviewHttpResponse",
       "kind": "record",
       "role": "Response",
       "path": "Modules/Billing/Presentation/Responses/BillingOverviewHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CancelSubscriptionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Billing/Presentation/Responses/CancelSubscriptionHttpResponse.cs",
       "line": 2
     },
     {
@@ -16596,6 +16806,20 @@
       "line": 9
     },
     {
+      "name": "QueueSubscriptionCancellationEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "SubscriptionCancellationEmailContent",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/SubscriptionCancellationEmailContent.cs",
+      "line": 9
+    },
+    {
       "name": "UpsertEmailTemplateCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -16790,6 +17014,13 @@
       "role": "Other",
       "path": "Modules/Identity/Contracts/Authentication/Services/IImpersonationTokenIssuer.cs",
       "line": 4
+    },
+    {
+      "name": "QueueSubscriptionCancellationEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Contracts/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommand.cs",
+      "line": 7
     },
     {
       "name": "UpsertEmailTemplateCommand",
@@ -21983,7 +22214,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Notifications/Presentation/Controllers/AdminNotificationsController.cs",
-      "line": 22
+      "line": 21
     },
     {
       "name": "NotificationPushController",
@@ -22032,7 +22263,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Presentation/Mappings/NotificationHttpMappings.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "NotificationReadStatusHttpRequest",
@@ -32372,6 +32603,13 @@
       "interface": "IAdminBillingRepository",
       "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
       "implementation": "AdminBillingRepository",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.Cancellations.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAdminBillingRepository",
+      "interfacePath": "Modules/Admin/Application.Abstractions/Common/IAdminBillingRepository.cs",
+      "implementation": "AdminBillingRepository",
       "implementationPath": "FoodDiary.ReadModel.Composition/Admin/AdminBillingRepository.cs",
       "confidence": "naming-convention"
     },
@@ -32485,6 +32723,13 @@
       "interfacePath": "Modules/Identity/Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "implementation": "AuthenticationTokenService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IBillingCancellationRepository",
+      "interfacePath": "Modules/Billing/Application.Abstractions/Common/IBillingCancellationRepository.cs",
+      "implementation": "BillingCancellationRepository",
+      "implementationPath": "Modules/Billing/Infrastructure/Persistence/BillingCancellationRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -33866,7 +34111,7 @@
       "implementation": "JobExecutionStateTracker",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Services/JobManagerServiceCollectionExtensions.cs",
-      "line": 133
+      "line": 134
     },
     {
       "service": "IIdempotencyStore",

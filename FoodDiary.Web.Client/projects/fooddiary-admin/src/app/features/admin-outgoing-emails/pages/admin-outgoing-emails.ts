@@ -74,6 +74,7 @@ export class AdminOutgoingEmailsComponent {
         'account_created',
         'password_reset',
         'bug_report_received',
+        'subscription_cancellation',
         'dietologist_invitation',
         'template_test',
     ];

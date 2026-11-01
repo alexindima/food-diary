@@ -5,6 +5,7 @@ namespace FoodDiary.Infrastructure.Persistence;
 
 public sealed partial class FoodDiaryDbContext {
     public DbSet<BillingSubscription> BillingSubscriptions => Set<BillingSubscription>();
+    public DbSet<BillingCancellation> BillingCancellations => Set<BillingCancellation>();
     public DbSet<BillingPayment> BillingPayments => Set<BillingPayment>();
     public DbSet<BillingWebhookEvent> BillingWebhookEvents => Set<BillingWebhookEvent>();
 }

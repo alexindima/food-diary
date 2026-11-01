@@ -404,6 +404,113 @@
                 },
                 "type": "object"
             },
+            "AdminBillingCancellationHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "comment": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "effectiveAtUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "externalSubscriptionId": {
+                        "type": "string"
+                    },
+                    "feedbackSubmittedAtUtc": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "id": {
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "outcome": {
+                        "type": "string"
+                    },
+                    "plan": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "provider": {
+                        "type": "string"
+                    },
+                    "reasonCode": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "requestedAtUtc": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "userEmail": {
+                        "nullable": true,
+                        "type": "string"
+                    },
+                    "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminBillingCancellationReasonHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "count": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "reasonCode": {
+                        "nullable": true,
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminBillingCancellationReportHttpResponse": {
+                "additionalProperties": false,
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/AdminBillingCancellationHttpResponse"
+                        },
+                        "type": "array"
+                    },
+                    "feedbackCount": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "limit": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "page": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "reasons": {
+                        "items": {
+                            "$ref": "#/components/schemas/AdminBillingCancellationReasonHttpResponse"
+                        },
+                        "type": "array"
+                    },
+                    "totalItems": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "AdminBillingPaymentHttpResponse": {
                 "additionalProperties": false,
                 "properties": {
@@ -6238,6 +6345,172 @@
                     }
                 ],
                 "tags": ["AdminAudit"]
+            }
+        },
+        "/api/v{version}/admin/billing/cancellations": {
+            "get": {
+                "operationId": "getAdminBillingCancellations",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "Page",
+                        "schema": {
+                            "default": 1,
+                            "format": "int32",
+                            "maximum": 10000,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Limit",
+                        "schema": {
+                            "default": 20,
+                            "format": "int32",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Provider",
+                        "schema": {
+                            "maxLength": 64,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Status",
+                        "schema": {
+                            "maxLength": 64,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Kind",
+                        "schema": {
+                            "maxLength": 64,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "Search",
+                        "schema": {
+                            "maxLength": 128,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "FromUtc",
+                        "schema": {
+                            "format": "date-time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ToUtc",
+                        "schema": {
+                            "format": "date-time",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "version",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBillingCancellationReportHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBillingCancellationReportHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminBillingCancellationReportHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
+                                }
+                            }
+                        },
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    },
+                    {
+                        "AdminSession": []
+                    }
+                ],
+                "tags": ["AdminBilling"]
             }
         },
         "/api/v{version}/admin/billing/payments": {

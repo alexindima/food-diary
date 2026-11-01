@@ -10,4 +10,6 @@ public sealed record UserBillingProfileModel(
     bool HasPaidPremium,
     DateTime? PremiumTrialStartedAtUtc,
     DateTime? PremiumTrialEndsAtUtc,
-    bool IsEmailConfirmed = false);
+    bool IsEmailConfirmed = false,
+    string? Language = null,
+    string? TimeZoneId = null);

@@ -1,3 +1,4 @@
+import type { AdminBillingCancellationHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-cancellation-http-response';
 import type { AdminBillingPaymentHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-payment-http-response';
 import type { AdminBillingRevenueCurrencyHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-revenue-currency-http-response';
 import type { AdminBillingRevenueSummaryHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-revenue-summary-http-response';
@@ -5,6 +6,7 @@ import type { AdminBillingSubscriptionHttpResponse } from '../../../shared/api/s
 import type { AdminBillingWebhookEventHttpResponse } from '../../../shared/api/sdk/generated/model/admin-billing-webhook-event-http-response';
 import { requireSdkFields } from '../../../shared/api/sdk/sdk-response';
 import { adminId, adminUtcInstant, optionalAdminId, optionalAdminUtcInstant } from '../../../shared/models/semantics/admin-meaning';
+import type { AdminBillingCancellation } from '../models/admin-billing.models';
 import type {
     AdminBillingPayment,
     AdminBillingRevenueCurrency,
@@ -87,4 +89,29 @@ export function adminBillingRevenueCurrencyFromSdk(response: AdminBillingRevenue
         'earningsTrackedPayments',
     ]);
     return { ...value };
+}
+
+export function adminBillingCancellationFromSdk(response: AdminBillingCancellationHttpResponse): AdminBillingCancellation {
+    const value = requireSdkFields(response, [
+        'id',
+        'userId',
+        'provider',
+        'externalSubscriptionId',
+        'source',
+        'outcome',
+        'requestedAtUtc',
+        'effectiveAtUtc',
+    ]);
+    return {
+        ...value,
+        id: adminId<'billing-cancellation'>(value.id),
+        userId: adminId<'user'>(value.userId),
+        userEmail: value.userEmail ?? null,
+        plan: value.plan ?? null,
+        reasonCode: value.reasonCode ?? null,
+        comment: value.comment ?? null,
+        requestedAtUtc: adminUtcInstant(value.requestedAtUtc),
+        effectiveAtUtc: adminUtcInstant(value.effectiveAtUtc),
+        feedbackSubmittedAtUtc: optionalAdminUtcInstant(value.feedbackSubmittedAtUtc) ?? null,
+    };
 }

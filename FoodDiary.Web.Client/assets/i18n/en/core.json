@@ -825,6 +825,38 @@
         "WEBHOOK_INBOX": {
             "ATTEMPTS": "Attempts",
             "NEXT_RETRY": "Next retry"
+        },
+        "CANCELLATIONS": {
+            "TITLE": "Cancellations",
+            "RESPONSES": "Feedback: {{count}} of {{total}} cancellation records",
+            "SUMMARY_HINT": "Summary of all records matching the filters. A scheduled cancellation does not mean access has ended. Paddle events may include automatic cancellation after non-payment; status alone does not identify the reason.",
+            "REQUESTED": "Recorded (UTC)",
+            "USER": "User",
+            "PLAN": "Plan",
+            "OUTCOME": "Outcome",
+            "EFFECTIVE": "Cancellation date (UTC)",
+            "REASON": "Reason",
+            "COMMENT": "Comment",
+            "SOURCE": "Record source",
+            "EMPTY": "No cancellations in the selected period.",
+            "OUTCOMES": {
+                "scheduled": "Scheduled",
+                "canceled": "Subscription ended",
+                "cancellation_removed": "Cancellation removed"
+            },
+            "SOURCES": {
+                "fooddiary": "FoodDiary",
+                "paddle": "Paddle portal or event"
+            },
+            "REASONS": {
+                "too_expensive": "Too expensive",
+                "ai_not_useful": "AI features are not helpful",
+                "missing_features": "Missing features",
+                "technical_issues": "Technical problems",
+                "not_using": "Not using the app enough",
+                "other": "Other reason",
+                "not_provided": "No reason provided"
+            }
         }
     },
     "HUNGER_BEFORE_SCALE": {
@@ -965,7 +997,8 @@
             "password_reset": "Password reset",
             "bug_report_received": "Bug acknowledgement",
             "dietologist_invitation": "Dietologist invitation",
-            "template_test": "Template test"
+            "template_test": "Template test",
+            "subscription_cancellation": "Subscription cancellation"
         },
         "STATUSES": {
             "pending": "Queued",
@@ -1436,5 +1469,10 @@
             "HOW_TO_KEEP_A_FOOD_DIARY": "How to keep a food diary",
             "CALORIES_IN_HOMEMADE_MEALS": "Homemade meal calories"
         }
+    },
+    "ADMIN_FEEDBACK": {
+        "TITLE": "Feedback",
+        "SUBTITLE": "Read feedback sent to feedback@fooddiary.club.",
+        "ADDRESS_HINT": "Messages addressed to feedback@fooddiary.club."
     }
 }

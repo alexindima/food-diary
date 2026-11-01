@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
+import { entityId } from '../../../shared/models/semantics/entity-id';
 import { PremiumBillingService } from './premium-billing.service';
 
 const BILLING_FLAGS = {
@@ -15,25 +16,60 @@ const BILLING_FLAGS = {
     availableProviders: ['paddle'],
 };
 
-describe('PremiumBillingService', () => {
-    let service: PremiumBillingService;
-    let httpMock: HttpTestingController;
+let service: PremiumBillingService;
+let httpMock: HttpTestingController;
 
-    const baseUrl = environment.apiUrls.billing;
+const baseUrl = environment.apiUrls.billing;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [PremiumBillingService, provideHttpClient(), provideHttpClientTesting()],
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [PremiumBillingService, provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    service = TestBed.inject(PremiumBillingService);
+    httpMock = TestBed.inject(HttpTestingController);
+});
+
+afterEach(() => {
+    httpMock.verify();
+});
+
+describe('Premium cancellation adapter', () => {
+    it('cancels without sending any survey data in the cancellation request', () => {
+        service.cancelSubscription().subscribe(value => {
+            expect(value.cancellationId).toBe('owned-cancellation');
+            expect(value.overview.cancelAtPeriodEnd).toBe(true);
         });
-
-        service = TestBed.inject(PremiumBillingService);
-        httpMock = TestBed.inject(HttpTestingController);
+        const request = httpMock.expectOne(`${baseUrl}/cancel`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toBeNull();
+        request.flush({
+            cancellationId: 'owned-cancellation',
+            overview: {
+                ...BILLING_FLAGS,
+                isPremium: true,
+                cancelAtPeriodEnd: true,
+                manageBillingAvailable: true,
+                cancellationAvailable: false,
+            },
+        });
     });
 
-    afterEach(() => {
-        httpMock.verify();
+    it('saves optional feedback through its separate endpoint', () => {
+        service
+            .submitCancellationFeedback(entityId<'billing-cancellation'>('owned-cancellation'), {
+                reasonCode: null,
+                comment: 'Comment only',
+            })
+            .subscribe();
+        const request = httpMock.expectOne(`${baseUrl}/cancellations/owned-cancellation/feedback`);
+        expect(request.request.method).toBe('POST');
+        expect(request.request.body).toEqual({ reasonCode: null, comment: 'Comment only' });
+        request.flush(null);
     });
+});
 
+describe('PremiumBillingService', () => {
     it('loads billing overview', () => {
         service.getOverview().subscribe();
 

@@ -825,6 +825,38 @@
         "WEBHOOK_INBOX": {
             "ATTEMPTS": "Попытки",
             "NEXT_RETRY": "Следующая попытка"
+        },
+        "CANCELLATIONS": {
+            "TITLE": "Отмены",
+            "RESPONSES": "Отзывов: {{count}} из {{total}} записей об отменах",
+            "SUMMARY_HINT": "Сводка по всем записям с выбранными фильтрами. Запланированная отмена ещё не означает окончание доступа. События Paddle могут включать автоматическую отмену после неоплаты; её причину мы не определяем по статусу.",
+            "REQUESTED": "Дата записи (UTC)",
+            "USER": "Пользователь",
+            "PLAN": "План",
+            "OUTCOME": "Результат",
+            "EFFECTIVE": "Дата отмены (UTC)",
+            "REASON": "Причина",
+            "COMMENT": "Комментарий",
+            "SOURCE": "Источник записи",
+            "EMPTY": "В выбранном периоде отмен нет.",
+            "OUTCOMES": {
+                "scheduled": "Запланирована",
+                "canceled": "Подписка завершена",
+                "cancellation_removed": "Отмена снята"
+            },
+            "SOURCES": {
+                "fooddiary": "FoodDiary",
+                "paddle": "Портал или событие Paddle"
+            },
+            "REASONS": {
+                "too_expensive": "Слишком дорого",
+                "ai_not_useful": "ИИ-функции не помогают",
+                "missing_features": "Не хватает нужных функций",
+                "technical_issues": "Технические проблемы",
+                "not_using": "Редко пользуюсь приложением",
+                "other": "Другая причина",
+                "not_provided": "Причина не указана"
+            }
         }
     },
     "HUNGER_BEFORE_SCALE": {
@@ -965,7 +997,8 @@
             "password_reset": "Восстановление пароля",
             "bug_report_received": "Подтверждение получения бага",
             "dietologist_invitation": "Приглашение диетолога",
-            "template_test": "Проверка шаблона"
+            "template_test": "Проверка шаблона",
+            "subscription_cancellation": "Подтверждение отмены подписки"
         },
         "STATUSES": {
             "pending": "В очереди",
@@ -1436,5 +1469,10 @@
             "HOW_TO_KEEP_A_FOOD_DIARY": "Как вести дневник питания",
             "CALORIES_IN_HOMEMADE_MEALS": "Калории домашнего блюда"
         }
+    },
+    "ADMIN_FEEDBACK": {
+        "TITLE": "Обратная связь",
+        "SUBTITLE": "Отзывы и предложения, отправленные на feedback@fooddiary.club.",
+        "ADDRESS_HINT": "Письма, отправленные на feedback@fooddiary.club."
     }
 }

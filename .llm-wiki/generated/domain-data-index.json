@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 290,
-    "entities": 92,
+    "domainTypes": 291,
+    "entities": 93,
     "valueObjects": 143,
-    "invariants": 646,
-    "persistenceMappings": 98,
-    "indexes": 179,
+    "invariants": 652,
+    "persistenceMappings": 99,
+    "indexes": 182,
     "relationships": 40
   },
   "domainTypes": [
@@ -163,6 +163,13 @@
       "role": "entity",
       "path": "Modules/Ai/Domain/Entities/AiUsage.cs",
       "line": 8
+    },
+    {
+      "area": "FoodDiary",
+      "name": "BillingCancellation",
+      "role": "entity",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -2146,6 +2153,48 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value cannot be negative.\")",
       "path": "Modules/Ai/Domain/ValueObjects/AiTokenUsage.cs",
       "line": 38
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A confirmed cancellation is required.\", nameof(subscription))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 27
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Unknown cancellation source.\", nameof(source))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 30
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Cancellation owner does not match.\", nameof(subscription))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 50
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Unknown cancellation reason.\", nameof(reasonCode))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 70
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Feedback must not exceed 2000 characters.\", nameof(comment))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 73
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"A UTC instant is required.\", nameof(value))",
+      "path": "Modules/Billing/Domain/Entities/BillingCancellation.cs",
+      "line": 94
     },
     {
       "area": "FoodDiary",
@@ -6669,6 +6718,18 @@
       ],
       "relationships": [],
       "path": "Shared/FoodDiary.Audit.PersistenceModel/Configurations/AuditEntryConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "BillingCancellation",
+      "table": "BillingCancellations",
+      "indexes": [
+        "item => item.RequestedAtUtc)",
+        "item => new { item.ConfirmationEmailHandledAtUtc, item.RequestedAtUtc })",
+        "item => new { item.UserId, item.Provider, item.ExternalSubscriptionId, item.RequestedAtUtc })"
+      ],
+      "relationships": [],
+      "path": "Modules/Billing/PersistenceModel/BillingCancellationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
