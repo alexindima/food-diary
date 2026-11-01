@@ -36,6 +36,9 @@
     &__menu {
         display: none;
     }
+    &__install-error {
+        flex-basis: 100%;
+    }
     &__active,
     a[aria-current='page'] {
         color: var(--fd-color-primary-700);
@@ -57,6 +60,18 @@
 
         &__languages {
             gap: var(--fd-space-xs);
+        }
+        &__install-label {
+            display: none;
+        }
+    }
+
+    @media #{variables.$media-xs} {
+        gap: var(--fd-space-xxs);
+        padding-inline: var(--fd-space-xs);
+
+        &__languages {
+            gap: var(--fd-space-xxs);
         }
     }
 }

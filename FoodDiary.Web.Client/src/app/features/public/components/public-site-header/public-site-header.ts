@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, type TemplateRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent, FdUiMenuComponent, FdUiMenuItemComponent, FdUiMenuTriggerDirective } from 'fd-ui-kit';
+import {
+    FdUiButtonComponent,
+    FdUiDialogComponent,
+    FdUiDialogService,
+    FdUiInlineAlertComponent,
+    FdUiMenuComponent,
+    FdUiMenuItemComponent,
+    FdUiMenuTriggerDirective,
+} from 'fd-ui-kit';
 
 import { localizedPublicPath, publicSiteLocale } from '../../../../config/public-site-paths';
+import { PwaInstallService } from '../../../../shared/service-worker/pwa-install.service';
+import { PwaInstallPromotionService } from '../../../../shared/service-worker/pwa-install-promotion.service';
 
 @Component({
     selector: 'fd-public-site-header',
@@ -12,6 +22,8 @@ import { localizedPublicPath, publicSiteLocale } from '../../../../config/public
         RouterLinkActive,
         TranslatePipe,
         FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiInlineAlertComponent,
         FdUiMenuComponent,
         FdUiMenuItemComponent,
         FdUiMenuTriggerDirective,
@@ -21,6 +33,9 @@ import { localizedPublicPath, publicSiteLocale } from '../../../../config/public
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicSiteHeaderComponent {
+    private readonly dialogs = inject(FdUiDialogService);
+    private readonly promotion = inject(PwaInstallPromotionService);
+    protected readonly pwa = inject(PwaInstallService);
     public readonly path = input('/');
     protected readonly locale = computed(() => publicSiteLocale(this.path()));
     protected readonly home = computed(() => localizedPublicPath('/', this.locale()));
@@ -34,4 +49,12 @@ export class PublicSiteHeaderComponent {
         { label: 'EN', lang: 'en', path: localizedPublicPath(this.path(), 'en') },
         { label: 'RU', lang: 'ru', path: localizedPublicPath(this.path(), 'ru') },
     ]);
+
+    protected async installAsync(instructions: TemplateRef<unknown>): Promise<void> {
+        if (this.pwa.installMode() === 'ios') {
+            this.dialogs.open(instructions, { size: 'sm' });
+            return;
+        }
+        await this.promotion.installAsync();
+    }
 }

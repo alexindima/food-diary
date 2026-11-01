@@ -1452,6 +1452,7 @@
     "PUBLIC_SITE": {
         "LANGUAGE": "Язык",
         "LOGIN": "Войти",
+        "INSTALL": "Установить",
         "NAV": {
             "LABEL": "Навигация по сайту",
             "FOOD_DIARY": "Дневник питания",

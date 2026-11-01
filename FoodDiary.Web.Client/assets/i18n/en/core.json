@@ -1452,6 +1452,7 @@
     "PUBLIC_SITE": {
         "LANGUAGE": "Language",
         "LOGIN": "Sign in",
+        "INSTALL": "Install app",
         "NAV": {
             "LABEL": "Public navigation",
             "FOOD_DIARY": "Food diary",
