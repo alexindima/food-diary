@@ -17,14 +17,22 @@ using FoodDiary.Modules.Identity.Presentation.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.SignalR;
 using FoodDiary.Web.Api.Extensions.Filters;
+using StackExchange.Redis;
 
 namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiAuthenticationServiceCollectionExtensions {
     extension(IServiceCollection services) {
-        internal IServiceCollection AddApiAuthentication() {
+        internal IServiceCollection AddApiAuthentication(IConfiguration configuration) {
             services.AddSingleton<SessionSecurityHubFilter>();
-            services.AddSignalR(options => options.AddFilter<SessionSecurityHubFilter>());
+            ISignalRServerBuilder signalR = services.AddSignalR(options => options.AddFilter<SessionSecurityHubFilter>());
+            string? redisConnectionString = configuration.GetConnectionString("Redis");
+            if (!string.IsNullOrWhiteSpace(redisConnectionString)) {
+                signalR.AddStackExchangeRedis(redisConnectionString, options => {
+                    // Keep this application namespace stable while old and new API revisions coexist.
+                    options.Configuration.ChannelPrefix = RedisChannel.Literal("fooddiary:signalr");
+                });
+            }
             services.AddSingleton<IConfigureOptions<CorsOptions>, CorsOptionsSetup>();
             services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
             services.AddSingleton<IConfigureOptions<RateLimiterOptions>, RateLimiterOptionsSetup>();

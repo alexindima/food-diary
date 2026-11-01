@@ -2397,7 +2397,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 22
+      "line": 23
     },
     {
       "name": "ApiAuthorizationMiddlewareResultHandler",
@@ -34132,7 +34132,7 @@
       "implementation": "ApiAuthorizationMiddlewareResultHandler",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
-      "line": 70
+      "line": 78
     },
     {
       "service": "IIdempotencyStore",

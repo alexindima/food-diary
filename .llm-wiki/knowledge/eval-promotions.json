@@ -2377,6 +2377,87 @@
       },
       "reason": "",
       "eventHash": "a1646e359bfd0c163d6d998956011dbd2f38e4caabeec6456b98c1e71944160c"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 13,
+      "kind": "observed",
+      "candidateId": "learned-abbc0bfc182ce813",
+      "createdAtUtc": "2026-11-01T19:55:40.4992282Z",
+      "previousHash": "a1646e359bfd0c163d6d998956011dbd2f38e4caabeec6456b98c1e71944160c",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signalr-backplane",
+        "retrospectiveHash": "86ed0593d702eb3ee299b63a56e0461b409067391e58a25711c5957795b4cbcf",
+        "packetFingerprint": "50f422593e4ddb1e5a22bd7aa0c45832442efa9490ff7280da1e174659b60be4",
+        "signals": [
+          {
+            "id": "cost-architecture-health",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-health",
+              "error=39500%"
+            ]
+          },
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1073.33%"
+            ]
+          },
+          {
+            "id": "cost-nuget-vulnerability-audit",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=622.03%",
+              "nuget-vulnerability-audit"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-abbc0bfc182ce813",
+          "changedPaths": [
+            ".nuget/lockfiles/FoodDiary.Web.Api.IntegrationTests.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Web.Api.packages.lock.json",
+            ".nuget/lockfiles/FoodDiary.Web.Api.Tests.packages.lock.json",
+            "Directory.Packages.props",
+            "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+            "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+            "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SignalRBackplaneIntegrationTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/SignalRRedisServer.cs",
+            "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/SignalRBackplaneConfigurationTests.cs"
+          ],
+          "expectedModules": [],
+          "expectedScopes": [
+            "Api",
+            "Backend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "architecture-decision",
+            "architecture-drift",
+            "backend-boundaries",
+            "dependency-nuget"
+          ],
+          "expectedChecks": [
+            "architecture-health",
+            "architecture-tests",
+            "nuget-vulnerability-audit"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "81c67af5648aa904e422822ab7ed1116da8b037aa4bd90f05df3c477d4cbc84b"
+      },
+      "reason": "",
+      "eventHash": "afb41ec146340fc90a71017bfd3996f70577a4cc39110aeaa7409ee0e809211d"
     }
   ]
 }

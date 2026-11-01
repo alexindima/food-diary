@@ -241,6 +241,11 @@
           "reviewReason": "Reviewed source inventory and diff behavior against the Git child-environment fix. RepositoryRoot now fences inherited checkout/index variables without modifying caller environment; NUL paths, ignored/deleted filtering and Git exit behavior remain. Real linked-worktree, Unicode inventory and failure regressions passed; no HTTP contract changed."
         },
         {
+          "path": "Directory.Packages.props",
+          "sha256": "cf2203fd5b96c0b5c9f779ac5e985e8a1649049f43a85b4d114f9757e0be21c4",
+          "reviewReason": "Reviewed Directory.Packages.props and API project reference: only Microsoft.AspNetCore.SignalR.StackExchangeRedis 10.0.14 was added. Regenerated catalog records this package; project inventory, module ownership and documented catalog generation/limitations remain correct."
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
           "sha256": "df20e80e9bcab63176ff55f5b75af2750d7b0010a75b8999a946fdcfe1dc19c2",
           "reviewReason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged."
@@ -256,10 +261,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged.",
+      "reason": "Reviewed Directory.Packages.props and API project reference: only Microsoft.AspNetCore.SignalR.StackExchangeRedis 10.0.14 was added. Regenerated catalog records this package; project inventory, module ownership and documented catalog generation/limitations remain correct.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:39.7612445Z"
+      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
+      "reviewedAtUtc": "2026-11-01T19:47:12.0813515Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -1354,8 +1359,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "754297ba52d00ddfe94d063db55e19658c3ed826f8500339ab6275918331076b",
-          "reviewReason": "Regenerated topology reflects mechanical formatting and the renamed, not-yet-deployed Billing cancellation email migration. SQL/model and runtime job/transport behavior are unchanged. Real PostgreSQL upgrade/backfill, current model and outbox rollback/retry checks pass again; existing runtime guidance remains correct."
+          "sha256": "735183934e110abb2ef8222c1b35a2f93863878274269350ab94e21a83be9ca4",
+          "reviewReason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1368,10 +1373,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed exact policy paths for the ranking-reader test obligation. This creates no host, worker, external provider, job or product runtime change; the regenerated topology remains current and the publication-state distinctions remain valid.",
+      "reason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:23.7163806Z"
+      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
+      "reviewedAtUtc": "2026-11-01T19:47:13.0864195Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1685,38 +1690,18 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "901bff07ffe15e58cbdf52f3e2bb284cc4d394cf44485ddeea5c5406b5546118",
+      "pageSha256": "89788c9ef43cfbeb288d55f3c71bdbd9f04f4114595d86ed56bbc770af461e4b",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c260265bff0c11a1117556b94660207b4644052ffd9611a01c869c0ee72ea1e6",
-          "reviewReason": "Catalog and symbol inputs now include the new slices/job and admin feedback route; source discovery may return these current owners. No query ranking, retrieval policy, provider or acceptance threshold changed. Existing distinction between navigation evidence and verified runtime flow remains correct."
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
-          "reviewReason": "The existing AI provider role signal now outranks an incidental schema configuration match. All unchanged retrieval corpora and runtime parity checks pass. No exact fixture path, query, acceptance threshold or abstention safeguard was changed; ranked context remains navigation evidence as documented."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteContextSearchReader.cs",
-          "sha256": "169c3db38a44f5af518e4f2a75b4f0a4b13e3188fbf027824793c7cb6c1123d7",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteFlowScopeReader.cs",
-          "sha256": "32ac9cfcabede42c0dbecac581887cdabea871e8ae2481ca08228c71fd17ab87",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-          "sha256": "5dee837eda9979bf9aa855bf75cfa5b60f9b47ce6d94d805e6882f8ce430b293",
-          "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
+          "sha256": "3f6803444d1b29e458e1a4f6cd5084ab50088a20d8c680f30a13ce3fffc3bff3",
+          "reviewReason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate."
         }
       ],
-      "reason": "The existing AI provider role signal now outranks an incidental schema configuration match. All unchanged retrieval corpora and runtime parity checks pass. No exact fixture path, query, acceptance threshold or abstention safeguard was changed; ranked context remains navigation evidence as documented.",
+      "reason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
-      "reviewedAtUtc": "2026-11-01T03:09:24.5761189Z"
+      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
+      "reviewedAtUtc": "2026-11-01T19:47:12.6014149Z"
     },
     {
       "pageId": "workflow.review-diff",

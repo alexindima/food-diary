@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1385,
     "ambiguousContracts": 29,
-    "consumerEdges": 11131,
+    "consumerEdges": 11132,
     "productionConsumerEdges": 6208,
-    "testConsumerEdges": 4923,
+    "testConsumerEdges": 4924,
     "consumedContracts": 1385,
     "unconsumedContracts": 0
   },
@@ -98727,6 +98727,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Hosts/tests/FoodDiary.JobManager.Tests/JobsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationPusher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application.Abstractions/Common/INotificationPusher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SignalRBackplaneIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

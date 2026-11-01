@@ -648,6 +648,10 @@
             "version": null
           },
           {
+            "name": "Microsoft.AspNetCore.SignalR.StackExchangeRedis",
+            "version": null
+          },
+          {
             "name": "Microsoft.CodeAnalysis.Common",
             "version": null
           },

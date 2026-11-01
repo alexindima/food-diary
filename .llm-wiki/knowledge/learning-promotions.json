@@ -10754,6 +10754,168 @@
       "targetId": "",
       "reason": "",
       "eventHash": "86c3e2e4aeeff2b19c4394ab066a479a8320e3176465f45ca44692c179785f15"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 70,
+      "kind": "observed",
+      "id": "learning-d0259b3955726a523f24",
+      "createdAtUtc": "2026-11-01T19:55:38.4920307Z",
+      "previousHash": "86c3e2e4aeeff2b19c4394ab066a479a8320e3176465f45ca44692c179785f15",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signalr-backplane",
+        "retrospectiveHash": "86ed0593d702eb3ee299b63a56e0461b409067391e58a25711c5957795b4cbcf",
+        "completionFingerprint": "680a606c41ab1d2f89ab6ffc5e9d6195e90051f0bdbf8cc03151ba7e8dddef87",
+        "packetFingerprint": "50f422593e4ddb1e5a22bd7aa0c45832442efa9490ff7280da1e174659b60be4",
+        "sourceCandidateId": "cost-architecture-health",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-health'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1584s versus 4s, error 39500%.",
+        "score": 70,
+        "evidence": [
+          "architecture-health",
+          "error=39500%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-health",
+          "recommendedSeconds": 4.0,
+          "expectedSeconds": 1584.0,
+          "errorPercent": 39500.0
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Web.Api.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.Tests.packages.lock.json",
+          "Directory.Packages.props",
+          "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SignalRBackplaneIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/SignalRRedisServer.cs",
+          "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/SignalRBackplaneConfigurationTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-health"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "d028dc21feacb4fad257191c600d3b5a6b7b801f083f8834803535e0d9fe06cd"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 71,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-01T19:55:38.4920307Z",
+      "previousHash": "d028dc21feacb4fad257191c600d3b5a6b7b801f083f8834803535e0d9fe06cd",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signalr-backplane",
+        "retrospectiveHash": "86ed0593d702eb3ee299b63a56e0461b409067391e58a25711c5957795b4cbcf",
+        "completionFingerprint": "680a606c41ab1d2f89ab6ffc5e9d6195e90051f0bdbf8cc03151ba7e8dddef87",
+        "packetFingerprint": "50f422593e4ddb1e5a22bd7aa0c45832442efa9490ff7280da1e174659b60be4",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1584s versus 135s, error 1073.33%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1073.33%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 135.0,
+          "expectedSeconds": 1584.0,
+          "errorPercent": 1073.33
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Web.Api.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.Tests.packages.lock.json",
+          "Directory.Packages.props",
+          "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SignalRBackplaneIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/SignalRRedisServer.cs",
+          "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/SignalRBackplaneConfigurationTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "c02fde7ad42a42678447a1ff56ccf049a6daa428033b7704581ba87f61b7fe4a"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 72,
+      "kind": "observed",
+      "id": "learning-01dbd7562ff405fb11ea",
+      "createdAtUtc": "2026-11-01T19:55:38.4920307Z",
+      "previousHash": "c02fde7ad42a42678447a1ff56ccf049a6daa428033b7704581ba87f61b7fe4a",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/signalr-backplane",
+        "retrospectiveHash": "86ed0593d702eb3ee299b63a56e0461b409067391e58a25711c5957795b4cbcf",
+        "completionFingerprint": "680a606c41ab1d2f89ab6ffc5e9d6195e90051f0bdbf8cc03151ba7e8dddef87",
+        "packetFingerprint": "50f422593e4ddb1e5a22bd7aa0c45832442efa9490ff7280da1e174659b60be4",
+        "sourceCandidateId": "cost-nuget-vulnerability-audit",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'nuget-vulnerability-audit'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 852s versus 118s, error 622.03%.",
+        "score": 70,
+        "evidence": [
+          "error=622.03%",
+          "nuget-vulnerability-audit"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "nuget-vulnerability-audit",
+          "recommendedSeconds": 118.0,
+          "expectedSeconds": 852.0,
+          "errorPercent": 622.03
+        },
+        "changedPaths": [
+          ".nuget/lockfiles/FoodDiary.Web.Api.IntegrationTests.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.packages.lock.json",
+          ".nuget/lockfiles/FoodDiary.Web.Api.Tests.packages.lock.json",
+          "Directory.Packages.props",
+          "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+          "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/SignalRBackplaneIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/SignalRRedisServer.cs",
+          "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/SignalRBackplaneConfigurationTests.cs"
+        ],
+        "subjectIds": [
+          "nuget-vulnerability-audit"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "007cac0f6291dff954d9af3286eed13f139e89d955c9dd166100775fd8211996"
     }
   ],
   "hashSchemaVersion": 2

@@ -107,7 +107,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddApplicationModules(configuration, environment)
                 .AddApiOptions()
                 .AddLocalization()
-                .AddApiAuthentication()
+                .AddApiAuthentication(configuration)
                 .AddApiHostServices()
                 .AddApiDataProtection(configuration)
                 .AddApiSwagger()
