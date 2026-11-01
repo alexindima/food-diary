@@ -872,14 +872,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "7cc5610e2bf504cbe8e9474859cb7c697e31acbc4d997e8cafa0bd72d9fbe751",
-          "reviewReason": "Reviewed package.json after adding reduced-motion checks: existing build, lint, test and frontend visual-evidence entrypoints remain available with their prior behavior. The additive test:motion scripts compile source SCSS with Angular encapsulation and run browser contracts; they complement the documented real application visual evidence workflow and do not replace its runtime ownership or screenshot requirements."
+          "sha256": "5afa5d307cd5d2b0d9a30435c8f6b867025f86a233c07c2bc42fae528b6fe16f",
+          "reviewReason": "Reviewed FoodDiary.Web.Client/package.json: only the minimatch 11.0.3 development override changed. All documented rendered-UI commands, Playwright entrypoints, quality scripts and browser evidence requirements remain unchanged; no UI behavior, selectors or localization was edited."
         }
       ],
-      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
+      "reason": "Reviewed FoodDiary.Web.Client/package.json: only the minimatch 11.0.3 development override changed. All documented rendered-UI commands, Playwright entrypoints, quality scripts and browser evidence requirements remain unchanged; no UI behavior, selectors or localization was edited.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:15.6354472Z"
+      "gitHead": "7d42bccfb26ad058e794d2c7d58cf629a8eaceea",
+      "reviewedAtUtc": "2026-11-01T06:25:45.2924025Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",

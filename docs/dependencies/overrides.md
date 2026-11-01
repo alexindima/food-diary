@@ -1,5 +1,44 @@
 # Temporary dependency constraints
 
+## npm minimatch and mobile glob
+
+Reviewed on 2026-11-01. The web workspace overrides `minimatch` to `11.0.3`
+for [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249).
+All versions before `11.0.1` are affected by pattern amplification and quadratic
+preprocessing at `optimizationLevel: 2`. The previous graph contained both
+`10.2.6` and a nested `10.2.5` pinned by `ng-morph`.
+
+The web consumers are ESLint, `@eslint/config-array`,
+`@typescript-eslint/typescript-estree`, `eslint-plugin-sonarjs`, `ng-morph`,
+`multimatch`, and `@ts-morph/common`. Their installed callers use the retained
+`minimatch()`, `minimatch.match()`, and `Minimatch.match()` APIs. None uses the
+removed `makeRe()` or `AST` API or assumes that compiled pattern parts are
+`RegExp` objects. Current parent releases still require minimatch 10, so a
+parent-only update cannot resolve the complete graph.
+
+The mobile workspace instead overrides only `rimraf`'s `glob` dependency to
+`14.0.3`, which brings minimatch 11 and also fixes
+[GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4).
+Latest `rimraf 6.1.3` still requests glob 13. Overriding minimatch alone under
+glob 13 would break its assumptions about `RegExp` pattern parts. Rimraf uses
+the retained public `glob()` and `globSync()` APIs, with `withFileTypes: false`.
+Capacitor CLI's observed rimraf calls use literal paths without enabling glob.
+
+These are development dependencies. No FoodDiary application endpoint accepting
+patterns for these consumers was identified. Storybook 10.6.3 separately bundles
+an older glob/minimatch implementation; npm overrides do not replace vendored
+code. Its observed inputs are local configuration and package scanning, with no
+demonstrated application-user attack path. A clean npm audit covers the installed
+package graph, not that bundled implementation.
+
+Remove each override after every affected parent supports a patched matcher in
+a fresh resolution without it. Recheck all nested copies and both npm audits.
+Verify bounded preprocessing in CommonJS and ESM, ordinary and Windows/partial
+matching, actual ESLint/import-boundary and ng-morph consumers, web builds, and
+mobile rimraf literal/glob operations plus cancelled glob traversal. Retain the
+other constraints until their own documented security or compatibility conditions
+are satisfied; this update does not establish that they can safely be removed.
+
 ## Angular build Vite override
 
 Reviewed on 2026-10-22. `@angular/build 22.2.3`, still the latest release,
