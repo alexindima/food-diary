@@ -1,28 +1,45 @@
 <fd-ui-card class="statistics-overview-card">
-    <h2 class="statistics-overview-card__title fd-ui-card-title">{{ 'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate }}</h2>
-    <p class="statistics-overview-card__basis fd-ui-body-sm fd-ui-text-muted">
-        {{ 'STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY' | translate }}
-    </p>
-    <div class="statistics-overview-card__metrics">
-        <div class="statistics-overview-card__calories fd-row fd-align-baseline fd-gap-sm">
-            <strong class="fd-ui-metric-lg">{{ data().averageCalories | localizedNumber: locale() : 0 : 0 }}</strong>
-            <span class="fd-ui-body-sm fd-ui-text-muted">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+    <fd-dashboard-widget-frame
+        [headingLevel]="2"
+        [title]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate"
+        [description]="'STATISTICS.DASHBOARD.BALANCE.SUBTITLE' | translate"
+    >
+        <div class="fd-stack fd-gap-card-content">
+            <table class="statistics-overview-card__table" [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate">
+                <thead>
+                    <tr class="fd-ui-caption fd-ui-text-muted">
+                        <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.NUTRIENT' | translate }}</th>
+                        <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.AVERAGE' | translate }}</th>
+                        <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.GOAL' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of rows(); track row.key) {
+                        <tr [attr.data-nutrient]="row.key">
+                            <th class="fd-ui-action-text" scope="row">{{ row.labelKey | translate }}</th>
+                            <td class="fd-ui-body-sm">
+                                {{ row.current | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
+                            </td>
+                            <td class="fd-ui-body-sm fd-ui-text-muted">
+                                @if (row.goal > 0) {
+                                    {{ row.goal | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
+                                } @else {
+                                    {{ 'STATISTICS.DASHBOARD.BALANCE.NO_GOAL' | translate }}
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="statistics-overview-card__coverage fd-stack fd-gap-xxs">
+                <span class="fd-ui-body-sm">
+                    {{
+                        'STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS' | translate: { current: data().trackedDays, total: data().periodDays }
+                    }}
+                </span>
+                <p class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT' | translate }}</p>
+                <p class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT' | translate }}</p>
+            </div>
         </div>
-        <dl class="statistics-overview-card__nutrients">
-            @for (nutrient of data().nutrients; track nutrient.key) {
-                <div class="statistics-overview-card__nutrient" [attr.data-nutrient]="nutrient.key">
-                    <dt class="fd-ui-body-sm">{{ getNutrientLabelKey(nutrient.key) | translate }}</dt>
-                    <dd class="fd-ui-stat-value">
-                        {{ nutrient.current | localizedNumber: locale() : 0 : 1 }} {{ 'GENERAL.UNITS.G' | translate }}
-                    </dd>
-                </div>
-            }
-        </dl>
-    </div>
-    <div class="statistics-overview-card__coverage fd-stack fd-gap-xxs">
-        <span class="fd-ui-body-sm">
-            {{ 'STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS' | translate: { current: data().trackedDays, total: data().periodDays } }}
-        </span>
-        <p class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT' | translate }}</p>
-    </div>
+    </fd-dashboard-widget-frame>
 </fd-ui-card>

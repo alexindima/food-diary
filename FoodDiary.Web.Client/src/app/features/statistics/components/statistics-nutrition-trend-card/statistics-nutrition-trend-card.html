@@ -5,9 +5,12 @@
     >
         <section class="statistics-nutrition-trend-card__chart">
             <div class="statistics-nutrition-trend-card__chart-header">
-                <h2 class="statistics-nutrition-trend-card__title fd-ui-card-title">
-                    {{ 'STATISTICS.DASHBOARD.TREND.TITLE' | translate }}
-                </h2>
+                <fd-dashboard-widget-header
+                    class="statistics-nutrition-trend-card__title"
+                    role="heading"
+                    aria-level="2"
+                    [title]="'STATISTICS.DASHBOARD.TREND.TITLE' | translate"
+                />
                 <fd-ui-segmented-toggle
                     class="statistics-nutrition-trend-card__chart-mode"
                     appearance="soft"

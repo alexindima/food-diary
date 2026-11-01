@@ -18,6 +18,7 @@ import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
+import { DashboardWidgetHeaderComponent } from '../../../../components/shared/dashboard-widget-header/dashboard-widget-header';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
@@ -53,6 +54,7 @@ type StatisticsTrendChartMode = 'bars' | 'line';
 @Component({
     selector: 'fd-statistics-nutrition-trend-card',
     imports: [
+        DashboardWidgetHeaderComponent,
         LocalizedNumberPipe,
         TranslatePipe,
         FdUiBarChartComponent,

@@ -6,6 +6,7 @@
 }
 
 .statistics-nutrition-trend-card {
+    --fd-card-density-default-padding-bottom: var(--fd-space-card-padding-y);
     &__layout {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(230px, 280px);
@@ -25,11 +26,12 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        gap: var(--fd-space-md);
-        margin-bottom: var(--fd-space-sm);
+        gap: var(--fd-space-card-content-gap);
+        margin-bottom: var(--fd-space-card-content-gap);
     }
 
     &__title {
+        flex: 1 1 min-content;
         margin: 0;
     }
 
@@ -79,6 +81,11 @@
     }
 
     @media #{variables.$media-tablet} {
+        &__chart-header {
+            gap: calc(var(--fd-space-card-content-gap) / 2);
+            margin-bottom: calc(var(--fd-space-card-content-gap) / 2);
+        }
+
         &__layout {
             grid-template-columns: 1fr;
         }
@@ -88,12 +95,6 @@
             padding-left: 0;
             border-top: var(--fd-border-subtle);
             border-left: 0;
-        }
-    }
-
-    @media #{variables.$media-mobile} {
-        &__chart-header {
-            align-items: flex-start;
         }
     }
 }

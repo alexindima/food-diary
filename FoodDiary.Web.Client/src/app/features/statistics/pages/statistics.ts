@@ -24,7 +24,6 @@ import { FdPageContainerDirective } from '../../../shared/ui/layout/page-contain
 import { StatisticsBodyTrendCardComponent } from '../components/statistics-body-trend-card/statistics-body-trend-card';
 import { StatisticsDietStabilityCardComponent } from '../components/statistics-diet-stability-card/statistics-diet-stability-card';
 import { StatisticsMealStructureCardComponent } from '../components/statistics-meal-structure-card/statistics-meal-structure-card';
-import { StatisticsNutrientBalanceCardComponent } from '../components/statistics-nutrient-balance-card/statistics-nutrient-balance-card';
 import { StatisticsNutritionTrendCardComponent } from '../components/statistics-nutrition-trend-card/statistics-nutrition-trend-card';
 import { StatisticsOverviewCardComponent } from '../components/statistics-overview-card/statistics-overview-card';
 import { StatisticsFacade } from '../lib/statistics.facade';
@@ -55,7 +54,6 @@ import { STATISTICS_TOUR } from './statistics-tour';
         ErrorStateComponent,
         SkeletonCardComponent,
         StatisticsOverviewCardComponent,
-        StatisticsNutrientBalanceCardComponent,
         StatisticsNutritionTrendCardComponent,
         StatisticsMealStructureCardComponent,
         StatisticsBodyTrendCardComponent,

@@ -6,7 +6,7 @@
 }
 
 .statistics-diet-stability-card {
-    --fd-space-card-gap: var(--fd-space-card-content-gap);
+    --fd-card-density-default-padding-bottom: var(--fd-space-card-padding-y);
     height: 100%;
 
     &--insufficient {
@@ -117,10 +117,6 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-    }
-
-    @media #{variables.$media-tablet} {
-        --fd-space-card-gap: calc(var(--fd-space-card-content-gap) / 2);
     }
 
     @media #{variables.$media-mobile} {

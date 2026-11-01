@@ -10,6 +10,7 @@ import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent, FdUiStopActi
 })
 export class DashboardWidgetHeaderComponent {
     public readonly title = input.required<string>();
+    public readonly headingLevel = input<number | null>(null);
     public readonly helpText = input<string | null>(null);
     public readonly description = input<string | null>(null);
     public readonly iconName = input<string | null>(null);

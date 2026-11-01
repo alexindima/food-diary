@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6879,
+    "productionFiles": 6878,
     "wikiToolFiles": 226,
     "wikiToolsWithoutTestReferences": 5,
     "criticalSymbols": 1035,
@@ -10138,19 +10138,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.94
+      "structuralRiskScore": 4.96
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-contour.utils.ts",
@@ -15842,51 +15842,43 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.ts",
-      "nonBlankLines": 138,
+      "nonBlankLines": 140,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.76
+      "structuralRiskScore": 14.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.ts",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
+      "structuralRiskScore": 3.5
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
-      "nonBlankLines": 26,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.ts",
-      "nonBlankLines": 300,
+      "nonBlankLines": 302,
       "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42
+      "structuralRiskScore": 42.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.ts",
-      "nonBlankLines": 20,
+      "nonBlankLines": 34,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.68
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/lib/statistics-dashboard-card.mapper.ts",
@@ -15986,11 +15978,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.ts",
-      "nonBlankLines": 112,
+      "nonBlankLines": 110,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.24
+      "structuralRiskScore": 5.2
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/statistics.routes.ts",

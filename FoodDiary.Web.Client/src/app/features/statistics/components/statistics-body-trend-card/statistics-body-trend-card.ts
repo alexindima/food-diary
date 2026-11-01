@@ -13,6 +13,7 @@ import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-s
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
+import { DashboardWidgetHeaderComponent } from '../../../../components/shared/dashboard-widget-header/dashboard-widget-header';
 import { injectCurrentLanguage } from '../../../../shared/i18n/inject-current-language';
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
 import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
@@ -28,6 +29,7 @@ const CHART_PADDING_RATIO = 0.2;
 @Component({
     selector: 'fd-statistics-body-trend-card',
     imports: [
+        DashboardWidgetHeaderComponent,
         LocalizedNumberPipe,
         RouterLink,
         TranslatePipe,

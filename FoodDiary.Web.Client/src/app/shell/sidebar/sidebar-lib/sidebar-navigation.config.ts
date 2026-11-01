@@ -17,7 +17,7 @@ export const BODY_TRACKING_ITEMS: SidebarRouteItem[] = [
 ];
 
 export const DESKTOP_BOTTOM_ITEMS: SidebarRouteItem[] = [
-    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
+    { id: 'statistics', icon: 'bar_chart', labelKey: 'STATISTICS.TITLE', route: '/statistics' },
     { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
     { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
     { id: 'lessons', icon: 'school', labelKey: 'SIDEBAR.LESSONS', route: '/lessons' },
@@ -25,7 +25,7 @@ export const DESKTOP_BOTTOM_ITEMS: SidebarRouteItem[] = [
 ];
 
 export const MOBILE_REPORT_ITEMS: SidebarRouteItem[] = [
-    { id: 'statistics', icon: 'bar_chart', labelKey: 'SIDEBAR.REPORTS', route: '/statistics' },
+    { id: 'statistics', icon: 'bar_chart', labelKey: 'STATISTICS.TITLE', route: '/statistics' },
     { id: 'goals', icon: 'flag', labelKey: 'SIDEBAR.GOALS', route: '/goals' },
     { id: 'gamification', icon: 'emoji_events', labelKey: 'SIDEBAR.ACHIEVEMENTS', route: '/gamification' },
     { id: 'weekly-check-in', icon: 'assessment', labelKey: 'SIDEBAR.WEEKLY_CHECK_IN', route: '/weekly-check-in' },

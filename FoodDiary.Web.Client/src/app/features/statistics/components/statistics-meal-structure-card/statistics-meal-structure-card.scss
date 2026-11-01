@@ -6,6 +6,7 @@
 }
 
 .statistics-meal-structure-card {
+    --fd-card-density-default-padding-bottom: var(--fd-space-card-padding-y);
     --fd-card-content-height: auto;
     --fd-card-content-justify: flex-start;
     height: 100%;

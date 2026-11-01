@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit';
 
+import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import type { StatisticsDietStabilityData } from '../../models/statistics-dashboard-card.models';
 
 const MIN_RECORDED_DAYS = 3;
@@ -11,7 +12,7 @@ const STABILITY_DEVIATION_TOLERANCE_PERCENT = 20;
 
 @Component({
     selector: 'fd-statistics-diet-stability-card',
-    imports: [UpperCasePipe, TranslatePipe, FdUiCardComponent],
+    imports: [DashboardWidgetFrameComponent, UpperCasePipe, TranslatePipe, FdUiCardComponent],
     templateUrl: './statistics-diet-stability-card.html',
     styleUrl: './statistics-diet-stability-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

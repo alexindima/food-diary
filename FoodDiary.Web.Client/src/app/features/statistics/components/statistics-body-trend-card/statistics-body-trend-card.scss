@@ -6,6 +6,7 @@
 }
 
 .statistics-body-trend-card {
+    --fd-card-density-default-padding-bottom: var(--fd-space-card-padding-y);
     --statistics-body-chart-gap: var(--fd-space-sm);
     --statistics-body-date-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
 
@@ -20,7 +21,7 @@
     }
 
     &__title {
-        margin: 0 0 var(--fd-space-lg);
+        margin: 0 0 var(--fd-space-card-content-gap);
     }
 
     &__chart-shell {
@@ -88,6 +89,10 @@
     }
 
     @media #{variables.$media-tablet} {
+        &__title {
+            margin-bottom: calc(var(--fd-space-card-content-gap) / 2);
+        }
+
         &__layout {
             grid-template-columns: 1fr;
         }

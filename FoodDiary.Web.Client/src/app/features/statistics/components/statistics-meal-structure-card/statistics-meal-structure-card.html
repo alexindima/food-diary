@@ -1,55 +1,61 @@
-<fd-ui-card class="statistics-meal-structure-card" [title]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate">
-    @if (data().totalCalories > 0) {
-        <div class="fd-row fd-justify-between fd-gap-sm">
-            <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY' | translate }}</span>
-            <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | localizedNumber: locale() : 1 : 1 }}</strong>
-        </div>
+<fd-ui-card class="statistics-meal-structure-card">
+    <fd-dashboard-widget-frame [headingLevel]="2" [title]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate">
+        <div class="fd-stack fd-gap-card-content">
+            @if (data().totalCalories > 0) {
+                <div class="fd-row fd-justify-between fd-gap-sm">
+                    <span class="fd-ui-caption fd-ui-text-muted">{{
+                        'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEALS_PER_DAY' | translate
+                    }}</span>
+                    <strong class="fd-ui-metric-md">{{ data().averageMealsPerDay | localizedNumber: locale() : 1 : 1 }}</strong>
+                </div>
 
-        <div class="statistics-meal-structure-card__distribution">
-            <span class="statistics-meal-structure-card__bar-heading fd-ui-caption fd-ui-text-muted">
-                {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate }}
-            </span>
-            <div
-                class="statistics-meal-structure-card__bar"
-                role="img"
-                [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate"
-            >
-                @for (item of data().items; track item.key) {
-                    @if (item.percentage > 0) {
-                        <span [class]="getBarSegmentClass(item)" [style.flex-grow]="item.percentage">{{ item.percentage }}%</span>
+                <div class="statistics-meal-structure-card__distribution">
+                    <span class="statistics-meal-structure-card__bar-heading fd-ui-caption fd-ui-text-muted">
+                        {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate }}
+                    </span>
+                    <div
+                        class="statistics-meal-structure-card__bar"
+                        role="img"
+                        [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.DISTRIBUTION' | translate"
+                    >
+                        @for (item of data().items; track item.key) {
+                            @if (item.percentage > 0) {
+                                <span [class]="getBarSegmentClass(item)" [style.flex-grow]="item.percentage">{{ item.percentage }}%</span>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div
+                    class="statistics-meal-structure-card__table"
+                    role="table"
+                    [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate"
+                >
+                    <div
+                        class="statistics-meal-structure-card__row statistics-meal-structure-card__row--header fd-ui-caption fd-ui-text-muted"
+                        role="row"
+                    >
+                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL' | translate }}</span>
+                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.SHARE' | translate }}</span>
+                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.AVERAGE' | translate }}</span>
+                    </div>
+                    @for (item of data().items; track item.key) {
+                        <div role="row" [class]="getRowClass(item)">
+                            <strong class="statistics-meal-structure-card__label fd-ui-action-text" role="cell"
+                                ><i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}</strong
+                            >
+                            <span class="fd-ui-body-sm" role="cell">{{ item.percentage }}%</span>
+                            <span class="fd-ui-body-sm" role="cell"
+                                >{{ item.calories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
+                            >
+                        </div>
                     }
-                }
-            </div>
-        </div>
-
-        <div
-            class="statistics-meal-structure-card__table"
-            role="table"
-            [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate"
-        >
-            <div
-                class="statistics-meal-structure-card__row statistics-meal-structure-card__row--header fd-ui-caption fd-ui-text-muted"
-                role="row"
-            >
-                <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL' | translate }}</span>
-                <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.SHARE' | translate }}</span>
-                <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.AVERAGE' | translate }}</span>
-            </div>
-            @for (item of data().items; track item.key) {
-                <div role="row" [class]="getRowClass(item)">
-                    <strong class="statistics-meal-structure-card__label fd-ui-action-text" role="cell"
-                        ><i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}</strong
-                    >
-                    <span class="fd-ui-body-sm" role="cell">{{ item.percentage }}%</span>
-                    <span class="fd-ui-body-sm" role="cell"
-                        >{{ item.calories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
-                    >
+                </div>
+            } @else {
+                <div class="statistics-meal-structure-card__empty fd-ui-body-sm fd-ui-text-muted">
+                    {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.EMPTY' | translate }}
                 </div>
             }
         </div>
-    } @else {
-        <div class="statistics-meal-structure-card__empty fd-ui-body-sm fd-ui-text-muted">
-            {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.EMPTY' | translate }}
-        </div>
-    }
+    </fd-dashboard-widget-frame>
 </fd-ui-card>

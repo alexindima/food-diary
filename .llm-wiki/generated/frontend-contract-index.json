@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 516,
+    "components": 515,
     "componentsWithoutDirectSpecs": 132,
-    "inputs": 1667,
+    "inputs": 1668,
     "outputs": 557,
     "apiCalls": 323,
-    "templatesWithTranslations": 373,
-    "translationKeys": 2221,
-    "consumerEdges": 1313,
-    "consumedComponents": 328,
+    "templatesWithTranslations": 372,
+    "translationKeys": 2219,
+    "consumerEdges": 1316,
+    "consumedComponents": 327,
     "unconsumedComponents": 187
   },
   "components": [
@@ -12891,6 +12891,11 @@
           "required": true
         },
         {
+          "name": "headingLevel",
+          "type": "number | null",
+          "required": false
+        },
+        {
           "name": "helpText",
           "type": "string | null",
           "required": false
@@ -12930,6 +12935,11 @@
           "name": "title",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "headingLevel",
+          "type": "number | null",
+          "required": false
         },
         {
           "name": "helpText",
@@ -15521,22 +15531,6 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.spec.ts"
-    },
-    {
-      "class": "StatisticsNutrientBalanceCardComponent",
-      "selector": "fd-statistics-nutrient-balance-card",
-      "feature": "statistics",
-      "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
-      "inputs": [
-        {
-          "name": "data",
-          "type": "StatisticsOverviewData",
-          "required": true
-        }
-      ],
-      "outputs": [],
-      "specPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.spec.ts"
     },
     {
       "class": "StatisticsNutritionTrendCardComponent",
@@ -24550,19 +24544,6 @@
     },
     {
       "feature": "statistics",
-      "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
-      "keys": [
-        "STATISTICS.DASHBOARD.BALANCE.AVERAGE",
-        "STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT",
-        "STATISTICS.DASHBOARD.BALANCE.GOAL",
-        "STATISTICS.DASHBOARD.BALANCE.NO_GOAL",
-        "STATISTICS.DASHBOARD.BALANCE.NUTRIENT",
-        "STATISTICS.DASHBOARD.BALANCE.SUBTITLE",
-        "STATISTICS.DASHBOARD.BALANCE.TITLE"
-      ]
-    },
-    {
-      "feature": "statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
       "keys": [
         "STATISTICS.DASHBOARD.TREND.CHART_TYPE_LABEL",
@@ -24575,9 +24556,12 @@
       "feature": "statistics",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
       "keys": [
-        "GENERAL.UNITS.G",
-        "GENERAL.UNITS.KCAL",
-        "STATISTICS.DASHBOARD.OVERVIEW.AVERAGE_PER_DAY",
+        "STATISTICS.DASHBOARD.BALANCE.AVERAGE",
+        "STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT",
+        "STATISTICS.DASHBOARD.BALANCE.GOAL",
+        "STATISTICS.DASHBOARD.BALANCE.NO_GOAL",
+        "STATISTICS.DASHBOARD.BALANCE.NUTRIENT",
+        "STATISTICS.DASHBOARD.BALANCE.SUBTITLE",
         "STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT",
         "STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS",
         "STATISTICS.DASHBOARD.OVERVIEW.TITLE"
@@ -27007,6 +26991,46 @@
       "outputsHandled": []
     },
     {
+      "component": "DashboardWidgetFrameComponent",
+      "selector": "fd-dashboard-widget-frame",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "headingLevel",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "DashboardWidgetFrameComponent",
+      "selector": "fd-dashboard-widget-frame",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "headingLevel",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "DashboardWidgetFrameComponent",
+      "selector": "fd-dashboard-widget-frame",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-frame/dashboard-widget-frame.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "description",
+        "headingLevel",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "DashboardWidgetHeaderComponent",
       "selector": "fd-dashboard-widget-header",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts",
@@ -27015,10 +27039,35 @@
       "occurrences": 1,
       "inputsUsed": [
         "description",
+        "headingLevel",
         "helpText",
         "iconLabel",
         "iconName",
         "iconTone",
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "DashboardWidgetHeaderComponent",
+      "selector": "fd-dashboard-widget-header",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-body-trend-card/statistics-body-trend-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "DashboardWidgetHeaderComponent",
+      "selector": "fd-dashboard-widget-header",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/dashboard-widget-header/dashboard-widget-header.ts",
+      "consumerFeature": "statistics",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
         "title"
       ],
       "outputsHandled": []
@@ -32911,9 +32960,7 @@
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.html",
       "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
+      "inputsUsed": [],
       "outputsHandled": []
     },
     {
@@ -32922,18 +32969,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "title"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "statistics",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
@@ -44050,18 +44085,6 @@
       "component": "StatisticsMealStructureCardComponent",
       "selector": "fd-statistics-meal-structure-card",
       "componentPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
-      "consumerFeature": "statistics",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "data"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "StatisticsNutrientBalanceCardComponent",
-      "selector": "fd-statistics-nutrient-balance-card",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrient-balance-card/statistics-nutrient-balance-card.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
       "occurrences": 1,

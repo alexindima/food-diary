@@ -5,10 +5,12 @@ import { describe, expect, it } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { StatisticsOverviewCardComponent } from './statistics-overview-card';
 
-/* eslint-disable @typescript-eslint/no-magic-numbers -- Recorded-day scenarios reproduce sparse and fully recorded periods. */
+const COMPARISON_ROW_COUNT = 5;
+const COMPARISON_COLUMN_COUNT = 3;
+const FULLY_RECORDED_WEEK_DAYS = 7;
 
 describe('StatisticsOverviewCardComponent', () => {
-    it.each([1, 2, 7])('keeps units and the averaging basis visible with %s recorded days', async trackedDays => {
+    it.each([1, 2, FULLY_RECORDED_WEEK_DAYS])('shows averages, goals and diary coverage for %s recorded days', async trackedDays => {
         await TestBed.configureTestingModule({
             imports: [StatisticsOverviewCardComponent],
             providers: [provideTranslateTesting()],
@@ -19,9 +21,11 @@ describe('StatisticsOverviewCardComponent', () => {
             STATISTICS: {
                 DASHBOARD: {
                     OVERVIEW: {
-                        AVERAGE_PER_DAY: 'Average per recorded day',
+                        TITLE: 'Nutrition overview',
                         RECORDED_DAYS: 'Entries on {{current}} of {{total}} days',
+                        COMPLETENESS_HINT: 'Days without entries are excluded. Recorded days may be incomplete.',
                     },
+                    BALANCE: { NO_GOAL: 'Not set', SUBTITLE: 'Average per recorded day and base daily goals from your profile.' },
                 },
             },
         });
@@ -35,29 +39,31 @@ describe('StatisticsOverviewCardComponent', () => {
             calorieGoal: 2000,
             calorieChangePercent: -76,
             nutrients: [
-                { key: 'protein', current: 10.4, goal: 150 },
+                { key: 'protein', current: 180, goal: 150 },
                 { key: 'fat', current: 2.8, goal: 65 },
                 { key: 'carbs', current: 111.5, goal: 200 },
-                { key: 'fiber', current: 14, goal: 28 },
+                { key: 'fiber', current: 14, goal: 0 },
             ],
         });
         fixture.detectChanges();
         const root = fixture.nativeElement as HTMLElement;
+        const rows = root.querySelectorAll<HTMLTableRowElement>('tbody tr');
 
-        const visibleUnits = Array.from(root.querySelectorAll('span')).filter(
-            element => element.textContent.includes('kcal') && element.closest('[hidden]') === null,
-        );
-
-        expect(visibleUnits, 'calorie units remain visible for sparse diary entries').not.toHaveLength(0);
-        expect(root.textContent).toContain('485');
+        expect(rows).toHaveLength(COMPARISON_ROW_COUNT);
+        expect(root.querySelectorAll('thead th[scope="col"]')).toHaveLength(COMPARISON_COLUMN_COUNT);
+        expect(rows[0].cells[1].textContent.trim()).toBe('485 kcal');
+        expect(rows[0].cells[2].textContent.trim()).toBe('2,000 kcal');
+        expect(rows[1].cells[1].textContent.trim()).toBe('180 g');
+        expect(rows[1].cells[2].textContent.trim()).toBe('150 g');
+        expect(rows[4].cells[2].textContent.trim()).toBe('Not set');
+        expect(root.textContent).toContain('Nutrition overview');
         expect(root.textContent).toContain('Average per recorded day');
         expect(root.textContent.split(`Entries on ${trackedDays} of 7 days`)).toHaveLength(2);
+        expect(root.textContent).toContain('Days without entries are excluded. Recorded days may be incomplete.');
         expect(root.querySelector('[role="progressbar"]')).toBeNull();
-        expect(root.textContent).not.toContain('150');
-        expect(root.textContent).toContain('10.4');
 
         translate.use('ru');
         fixture.detectChanges();
-        expect(root.textContent).toContain('10,4');
+        expect(root.textContent).toContain('2,8');
     });
 });

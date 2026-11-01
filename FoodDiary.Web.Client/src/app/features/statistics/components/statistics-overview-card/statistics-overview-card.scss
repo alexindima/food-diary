@@ -1,67 +1,50 @@
-@use 'variables' as variables;
-
 :host {
     display: block;
     min-width: 0;
 }
 
 .statistics-overview-card {
-    &__title {
-        margin: 0;
+    --fd-card-density-default-padding-bottom: var(--fd-space-card-padding-y);
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        text-align: left;
     }
 
-    &__basis {
-        margin: 0;
+    &__table th,
+    &__table td {
+        padding: var(--fd-space-sm) 0;
+        vertical-align: baseline;
+        overflow-wrap: anywhere;
+        border-bottom: var(--fd-border-subtle);
     }
 
-    &__metrics {
-        display: grid;
-        grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-        gap: var(--fd-space-lg);
-        align-items: center;
+    &__table th + th,
+    &__table td {
+        padding-left: var(--fd-space-sm);
+        text-align: right;
     }
 
-    &__nutrients {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: var(--fd-space-md);
-        margin: 0;
-    }
-
-    &__nutrient {
-        display: grid;
-        gap: var(--fd-space-xxs);
-        min-width: 0;
-    }
-
-    &__nutrient dd {
-        margin: 0;
+    &__table tbody tr:last-child th,
+    &__table tbody tr:last-child td {
+        border-bottom: 0;
     }
 
     @each $nutrient, $token in (protein: proteins, fat: fats, carbs: carbs, fiber: fiber) {
-        &__nutrient[data-nutrient='#{$nutrient}'] {
+        &__table tr[data-nutrient='#{$nutrient}'] th,
+        &__table tr[data-nutrient='#{$nutrient}'] td:first-of-type {
             color: var(--fd-color-nutrition-#{$token}-text);
         }
     }
 
     &__coverage {
-        margin-top: var(--fd-space-xs);
-        padding-top: var(--fd-space-sm);
+        padding-top: var(--fd-space-card-content-gap);
         border-top: var(--fd-border-subtle);
     }
 
     &__coverage p {
         margin: 0;
-    }
-
-    @media #{variables.$media-mobile} {
-        &__metrics {
-            grid-template-columns: 1fr;
-            gap: var(--fd-space-md);
-        }
-
-        &__nutrients {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
     }
 }

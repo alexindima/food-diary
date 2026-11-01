@@ -4843,7 +4843,7 @@
             },
             "BALANCE": {
                 "TITLE": "Goal comparison",
-                "SUBTITLE": "Recorded-day averages and daily goals from your profile.",
+                "SUBTITLE": "Average per recorded day and base daily goals from your profile.",
                 "NUTRIENT": "Metric",
                 "AVERAGE": "Average",
                 "GOAL": "Base goal",
