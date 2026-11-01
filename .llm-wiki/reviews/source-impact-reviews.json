@@ -988,18 +988,23 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "0db41d7538eaac40f355fca45f03664a301eadd563ecc268a12b5e487c65e304",
+      "pageSha256": "17abdf53b45501803a30f30d3507f5782eff5c73759d887dd836b1b6461f60fa",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
-          "reviewReason": "Reviewed ci-tests.yml and index-pipeline contract: the new deployment test executes before existing diagnostics in the focused Ubuntu job. Generator ordering, affected selection, resource limits, caches and every Wiki regression gate remain intact."
+          "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
+          "sha256": "e395bc619baf10eaff6a7121ecc1658ad048134f6ae262b753d2e72cad07171f",
+          "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+          "sha256": "ad99efc3bc1c3ffecaef237e13a518b6604565dcdcaf51639d29a38c908511c3",
+          "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
         }
       ],
-      "reason": "Reviewed ci-tests.yml and index-pipeline contract: the new deployment test executes before existing diagnostics in the focused Ubuntu job. Generator ordering, affected selection, resource limits, caches and every Wiki regression gate remain intact.",
-      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "reviewedAtUtc": "2026-10-30T13:33:39.3027728Z"
+      "reason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened.",
+      "baseRef": "HEAD",
+      "gitHead": "927735766ff95df7d0a0623839861bff0779da03",
+      "reviewedAtUtc": "2026-11-01T08:59:01.9398009Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

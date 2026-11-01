@@ -894,10 +894,14 @@ Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; Reu
     $wikiFacadeText.Contains('$indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }')) 'Index cache reuse is not enabled consistently for fast, strict, and update workflows.'
 Assert-Wiki ($wikiFacadeText.Contains('Affected update scope frozen before generation') -and
     $wikiFacadeText.Contains('$verifyArguments.ChangedPath = $updateChangedPaths')) 'Affected update-and-verify does not preserve one immutable changed-path scope across generation and verification.'
-Assert-Wiki ($wikiFacadeText.Contains("`$Command -in @('develop', 'start')") -and
-    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId `$TaskSessionId -Format Text") -and
-    $wikiFacadeText.Contains("-not `$PSBoundParameters.ContainsKey('ChangedPath')") -and
-    $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId `$TaskSessionId -Format Object")) 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
+$facadeScopePassed = $false
+try {
+    & (Join-Path $toolsRoot 'Test-LlmWikiFacadeTaskScope.ps1')
+    $facadeScopePassed = $?
+} catch {
+    Write-Host "Facade task baseline regression: $($_.Exception.Message)"
+}
+Assert-Wiki $facadeScopePassed 'Wiki facade does not capture and reuse a task baseline while preserving explicit changed paths.'
 Assert-Wiki ($taskBaselineText -match "rev-parse', 'HEAD'" -and $taskBaselineText -match 'initialChangedPaths' -and
     $taskBaselineText -match 'baselineFingerprint.+Get-PathFingerprint') 'Task baseline does not bind the starting HEAD and pre-existing file contents.'
 

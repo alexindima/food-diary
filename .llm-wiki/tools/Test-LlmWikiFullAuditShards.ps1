@@ -15,7 +15,10 @@ $expected = @{
     # allowlist assertion. All 336 Core assertions and their shard remain.
     # The browser storage assertion now names the migrated non-secret session
     # metadata owner. Its top-three requirement and all 336 assertions remain.
-    Core = @{ count = 336; hash = 'cf61c41740d3e71bbbd460da127b8bb5719a7487d3c31e10cf31765c67868854' }
+    # The baseline assertion now executes the facade behavior regression rather
+    # than matching the formatting of its Capture invocation. Scope, explicit
+    # overrides and session continuity are tested; all 336 assertions remain.
+    Core = @{ count = 336; hash = 'bcf878cddff87e24772fdc4f6adf146820f7483daecf31b312e1b9f3109e6f53' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     # CI repair retains tamper rejection and adds separate stale-metadata and
