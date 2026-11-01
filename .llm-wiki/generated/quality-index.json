@@ -26578,11 +26578,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
-      "nonBlankLines": 108,
+      "nonBlankLines": 110,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.66
+      "structuralRiskScore": 9.7
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.Cancellation.cs",
@@ -26602,11 +26602,11 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
-      "nonBlankLines": 117,
+      "nonBlankLines": 120,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.84
+      "structuralRiskScore": 27.9
     },
     {
       "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddlePage.cs",

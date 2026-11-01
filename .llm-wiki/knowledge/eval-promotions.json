@@ -1633,9 +1633,66 @@
       "schemaVersion": 1,
       "sequence": 10,
       "kind": "observed",
-      "candidateId": "learned-986412f49b149430",
-      "createdAtUtc": "2026-11-01T00:41:20.5007081Z",
+      "candidateId": "learned-224f82680ddecd73",
+      "createdAtUtc": "2026-10-31T22:23:41.7614477Z",
       "previousHash": "d84137d82cb802e9d3a150452ab476fb14516ef5e4ee4fb6e615315a9e0c7e2f",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/paddle-sandbox-20261101",
+        "retrospectiveHash": "47f63cba30742573a75ad945110555373ae6fe01e90f9262256453d31d5bf669",
+        "packetFingerprint": "9c7275595f1746d125503357cb5caf5d4b9b49e09305328155f9acb9da8ac902",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1171.79%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-224f82680ddecd73",
+          "changedPaths": [
+            "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+            "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.PaddlePaginationTests.cs",
+            "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/PaddleNotificationRecoveryServiceTests.cs"
+          ],
+          "expectedModules": [
+            "Billing"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "deployment-rollout",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "runtime-resilience",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "1c25501ca915e7154c5baadddac0cf8edb617ce93be55f780db42308cb037582"
+      },
+      "reason": "",
+      "eventHash": "5912831a5acd3c7df86014b3262ebf4174a4761763309c840e2ed23f5e48010c"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 11,
+      "kind": "observed",
+      "candidateId": "learned-986412f49b149430",
+      "createdAtUtc": "2026-11-01T02:45:27.2715622Z",
+      "previousHash": "5912831a5acd3c7df86014b3262ebf4174a4761763309c840e2ed23f5e48010c",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -1940,15 +1997,15 @@
         "caseHash": "eaf4afc13f9d2bf2e79f93d47a03a7d737a600da39eb5eefe2af8ecef06b7f46"
       },
       "reason": "",
-      "eventHash": "63de98deca479c782d1d5e4aa24cb463d7e119aa02f57121c5425e5b4b83780d"
+      "eventHash": "876914cb94768fcf268e843fc0c5649a367f521a0501fb9c2fe540d7cfcb22b4"
     },
     {
       "schemaVersion": 1,
-      "sequence": 11,
+      "sequence": 12,
       "kind": "observed",
       "candidateId": "learned-3626291c0ff1ac0d",
-      "createdAtUtc": "2026-11-01T02:37:25.1334494Z",
-      "previousHash": "63de98deca479c782d1d5e4aa24cb463d7e119aa02f57121c5425e5b4b83780d",
+      "createdAtUtc": "2026-11-01T02:45:36.2030189Z",
+      "previousHash": "876914cb94768fcf268e843fc0c5649a367f521a0501fb9c2fe540d7cfcb22b4",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -2319,7 +2376,7 @@
         "caseHash": "1258eef0369950b0cd9aca111da8852fa8245e9b99dfdbe0beea4e5834517578"
       },
       "reason": "",
-      "eventHash": "20be9487c5621a203b1ab322b90cce22a97652992e09bcba439e21bcc1f92ae0"
+      "eventHash": "a1646e359bfd0c163d6d998956011dbd2f38e4caabeec6456b98c1e71944160c"
     }
   ]
 }

@@ -6107,9 +6107,58 @@
       "schemaVersion": 1,
       "sequence": 46,
       "kind": "observed",
-      "id": "learning-e4648757d7268d402408",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-10-31T22:23:38.4692926Z",
       "previousHash": "f9d8e15f9521656f4effe887d3b1c1d7f7337168d40b381c97cf14dedd5b6bb5",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/paddle-sandbox-20261101",
+        "retrospectiveHash": "47f63cba30742573a75ad945110555373ae6fe01e90f9262256453d31d5bf669",
+        "completionFingerprint": "19ba73e4cb228fca74677f107bc3ffbb8625272f5ff4db8697639360f83adb52",
+        "packetFingerprint": "9c7275595f1746d125503357cb5caf5d4b9b49e09305328155f9acb9da8ac902",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1488s versus 117s, error 1171.79%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1171.79%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 117.0,
+          "expectedSeconds": 1488.0,
+          "errorPercent": 1171.79
+        },
+        "changedPaths": [
+          "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+          "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.PaddlePaginationTests.cs",
+          "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/PaddleNotificationRecoveryServiceTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "7923a6aee4091d96f01991d0cf2cec1f3aeefeaa6afc79cf795b94aa198039f7"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 47,
+      "kind": "observed",
+      "id": "learning-e4648757d7268d402408",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "7923a6aee4091d96f01991d0cf2cec1f3aeefeaa6afc79cf795b94aa198039f7",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -6274,15 +6323,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "f6d1c4570c73766c1d417825cd56c0591422d03fd6e749bd410d55944470d4ad"
+      "eventHash": "d7fe6df993d3bf3bb143028e58b47671799fe4c94877d66099e49c44d096d0a5"
     },
     {
       "schemaVersion": 1,
-      "sequence": 47,
+      "sequence": 48,
       "kind": "observed",
       "id": "learning-b3771e08dbc9a591368e",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "f6d1c4570c73766c1d417825cd56c0591422d03fd6e749bd410d55944470d4ad",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "d7fe6df993d3bf3bb143028e58b47671799fe4c94877d66099e49c44d096d0a5",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -6447,15 +6496,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "4c61fea5bbf96e816dbeba6a2a2cd782e6dca755efadd061c87559709ccba5d9"
+      "eventHash": "6aaa4522b2435a268d5b716fc0e112066774a3c09dce93e7bad847906343fb54"
     },
     {
       "schemaVersion": 1,
-      "sequence": 48,
+      "sequence": 49,
       "kind": "observed",
       "id": "learning-d0259b3955726a523f24",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "4c61fea5bbf96e816dbeba6a2a2cd782e6dca755efadd061c87559709ccba5d9",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "6aaa4522b2435a268d5b716fc0e112066774a3c09dce93e7bad847906343fb54",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -6620,15 +6669,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "5f42be84c54d6eac84c66b7baff8d3c42afcb14a9bbb52ff9865701424baeea6"
+      "eventHash": "dc2eb3cf53c74d7ef61af8a31776367d1531aba08b7ec4920861e73c34558e22"
     },
     {
       "schemaVersion": 1,
-      "sequence": 49,
+      "sequence": 50,
       "kind": "observed",
       "id": "learning-f4e2669dc52781873f25",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "5f42be84c54d6eac84c66b7baff8d3c42afcb14a9bbb52ff9865701424baeea6",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "dc2eb3cf53c74d7ef61af8a31776367d1531aba08b7ec4920861e73c34558e22",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -6793,15 +6842,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "e73757b95efbbfcacdd2c22c4179e0b05c3abd0cd900f84b2769b20a3fb38a3e"
+      "eventHash": "ae4063151e4a25c18ec00b90e71d33627591c0a4a3139b43f1633273f8f998be"
     },
     {
       "schemaVersion": 1,
-      "sequence": 50,
+      "sequence": 51,
       "kind": "observed",
       "id": "learning-87a774099f7ac8b15aa1",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "e73757b95efbbfcacdd2c22c4179e0b05c3abd0cd900f84b2769b20a3fb38a3e",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "ae4063151e4a25c18ec00b90e71d33627591c0a4a3139b43f1633273f8f998be",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -6966,15 +7015,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "67966e90154b9db3b9b27381228cfedf60d4b7fad53b9533a82601d90c736d63"
+      "eventHash": "009bf537f27ef69dd17dbc8b4ea2ae739595b70040d9e4cf792deee0ab2e6572"
     },
     {
       "schemaVersion": 1,
-      "sequence": 51,
+      "sequence": 52,
       "kind": "observed",
       "id": "learning-90fec7b6a6aa17e3d440",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "67966e90154b9db3b9b27381228cfedf60d4b7fad53b9533a82601d90c736d63",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "009bf537f27ef69dd17dbc8b4ea2ae739595b70040d9e4cf792deee0ab2e6572",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -7139,15 +7188,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "18c854fe285dab6297ddcdc34c4ab4af2fddfb2ac95f1e4ac0e30b0ff84c7dc5"
+      "eventHash": "1a2c75ca9f0e9021558aae34fabee944885c05bbac39bae1a1b527179b2e5d89"
     },
     {
       "schemaVersion": 1,
-      "sequence": 52,
+      "sequence": 53,
       "kind": "observed",
       "id": "learning-15d5675ec59bafd6f70b",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "18c854fe285dab6297ddcdc34c4ab4af2fddfb2ac95f1e4ac0e30b0ff84c7dc5",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "1a2c75ca9f0e9021558aae34fabee944885c05bbac39bae1a1b527179b2e5d89",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -7312,15 +7361,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "29b7ed9ee59d498773651c7fd6df196d13b423f6f6d22646eb4545ced7044750"
+      "eventHash": "1b648b51ce584677f2b8fec03264b2ccb96a8ae6bd948fe8d3f0171a93941783"
     },
     {
       "schemaVersion": 1,
-      "sequence": 53,
+      "sequence": 54,
       "kind": "observed",
       "id": "learning-2fa74582878b9a599228",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "29b7ed9ee59d498773651c7fd6df196d13b423f6f6d22646eb4545ced7044750",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "1b648b51ce584677f2b8fec03264b2ccb96a8ae6bd948fe8d3f0171a93941783",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -7485,15 +7534,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "58ad9037211e509365d8d670d66be931dddd056b67ca466dc09fd9d538fe57b0"
+      "eventHash": "38724e7e7171eec7735180f6a5092125a9127e4a35118c442e5ec80240e29ab2"
     },
     {
       "schemaVersion": 1,
-      "sequence": 54,
+      "sequence": 55,
       "kind": "observed",
       "id": "learning-0498327012da9ab1d384",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "58ad9037211e509365d8d670d66be931dddd056b67ca466dc09fd9d538fe57b0",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "38724e7e7171eec7735180f6a5092125a9127e4a35118c442e5ec80240e29ab2",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -7658,15 +7707,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "98756738953edc3ea0e672dac248f18df53e73b14ac98ed278cf9e2af8a7b405"
+      "eventHash": "97697832776f3f35c379a04ff41e1e8f180143b341b08c8d238e7d80d60ee944"
     },
     {
       "schemaVersion": 1,
-      "sequence": 55,
+      "sequence": 56,
       "kind": "observed",
       "id": "learning-01dbd7562ff405fb11ea",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "98756738953edc3ea0e672dac248f18df53e73b14ac98ed278cf9e2af8a7b405",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "97697832776f3f35c379a04ff41e1e8f180143b341b08c8d238e7d80d60ee944",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -7831,15 +7880,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "3fb401583f945b4caa9376ffde801eecbf5cf1be6dfc5d549ddb942c2cef0430"
+      "eventHash": "790dee8dee1470f17aff67aa197ec5ab5397d1e80d01224eeea1068b7da18ed3"
     },
     {
       "schemaVersion": 1,
-      "sequence": 56,
+      "sequence": 57,
       "kind": "observed",
       "id": "learning-4f0d2a0ad218ad3fcfad",
-      "createdAtUtc": "2026-11-01T00:41:19.5213169Z",
-      "previousHash": "3fb401583f945b4caa9376ffde801eecbf5cf1be6dfc5d549ddb942c2cef0430",
+      "createdAtUtc": "2026-11-01T02:45:25.5282153Z",
+      "previousHash": "790dee8dee1470f17aff67aa197ec5ab5397d1e80d01224eeea1068b7da18ed3",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/subscription-cancellation-20261101",
         "retrospectiveHash": "78212a3ffbddd3ecac92eb022c1ba39eaccd641f11461eae07bc47f4de0ebfd7",
@@ -8004,15 +8053,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "f27098a80c77638cb48f0df81447596b6cc9b170ee302ff0860a7e9b2db7b1d9"
+      "eventHash": "9b64a32b03fd710fa23ecac2b1c3dfb03a8771ab867478bd437047afc074ad4b"
     },
     {
       "schemaVersion": 1,
-      "sequence": 57,
+      "sequence": 58,
       "kind": "observed",
       "id": "learning-e4648757d7268d402408",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "f27098a80c77638cb48f0df81447596b6cc9b170ee302ff0860a7e9b2db7b1d9",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "9b64a32b03fd710fa23ecac2b1c3dfb03a8771ab867478bd437047afc074ad4b",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -8229,15 +8278,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "cf2410bb51d1f691c917c9b645706f260c0e04fb7dce909de7e550c62495b277"
+      "eventHash": "2fc0d793b83867cc4ababf876c123a0998839c4d63f7b0702039606022d23ace"
     },
     {
       "schemaVersion": 1,
-      "sequence": 58,
+      "sequence": 59,
       "kind": "observed",
       "id": "learning-b3771e08dbc9a591368e",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "cf2410bb51d1f691c917c9b645706f260c0e04fb7dce909de7e550c62495b277",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "2fc0d793b83867cc4ababf876c123a0998839c4d63f7b0702039606022d23ace",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -8454,15 +8503,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "66ca1198d9e51e653e7141170070c6367d185f8fb31039188ce4e4188b533842"
+      "eventHash": "59a07c3d2612f39883854fd2c77725ad9c804c5d1c9033c4b16bad5f3a5fb666"
     },
     {
       "schemaVersion": 1,
-      "sequence": 59,
+      "sequence": 60,
       "kind": "observed",
       "id": "learning-d0259b3955726a523f24",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "66ca1198d9e51e653e7141170070c6367d185f8fb31039188ce4e4188b533842",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "59a07c3d2612f39883854fd2c77725ad9c804c5d1c9033c4b16bad5f3a5fb666",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -8679,15 +8728,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "36c449ec87683b1203f7de280c868d7baf2f86a87c4122b21373708cfa006e20"
+      "eventHash": "228f7c938fea620a57e9f9d1f2a404f615cd18ce97aceb32e6ef2579c66fb90a"
     },
     {
       "schemaVersion": 1,
-      "sequence": 60,
+      "sequence": 61,
       "kind": "observed",
       "id": "learning-f4e2669dc52781873f25",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "36c449ec87683b1203f7de280c868d7baf2f86a87c4122b21373708cfa006e20",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "228f7c938fea620a57e9f9d1f2a404f615cd18ce97aceb32e6ef2579c66fb90a",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -8904,15 +8953,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "81b849183d03e6c9553e38411f7f3f572e4ba4a3386d2c21f82938890d98f69c"
+      "eventHash": "6e35faea69e43b354d9a9b97e25ba101de75d9451c81af086c9eaf22fede8ead"
     },
     {
       "schemaVersion": 1,
-      "sequence": 61,
+      "sequence": 62,
       "kind": "observed",
       "id": "learning-87a774099f7ac8b15aa1",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "81b849183d03e6c9553e38411f7f3f572e4ba4a3386d2c21f82938890d98f69c",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "6e35faea69e43b354d9a9b97e25ba101de75d9451c81af086c9eaf22fede8ead",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -9129,15 +9178,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "c6bcbd7a45b9ffaac6a4fb83e1aaae4ff56ccd8e3aaf8d046a874cc41a1d0860"
+      "eventHash": "6016b012f0551b93d3b6a948a74da08cd2b74192268c04320dd4d636e595b4cf"
     },
     {
       "schemaVersion": 1,
-      "sequence": 62,
+      "sequence": 63,
       "kind": "observed",
       "id": "learning-90fec7b6a6aa17e3d440",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "c6bcbd7a45b9ffaac6a4fb83e1aaae4ff56ccd8e3aaf8d046a874cc41a1d0860",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "6016b012f0551b93d3b6a948a74da08cd2b74192268c04320dd4d636e595b4cf",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -9354,15 +9403,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "c4eec1b2b3cf3c7973e53fc72021d27554da6e35c3b08e248a4c55500dd3c271"
+      "eventHash": "becf1834cfdd883ba7efc2bd612e1794a7e76453b1c054fb8042cd955263ae65"
     },
     {
       "schemaVersion": 1,
-      "sequence": 63,
+      "sequence": 64,
       "kind": "observed",
       "id": "learning-15d5675ec59bafd6f70b",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "c4eec1b2b3cf3c7973e53fc72021d27554da6e35c3b08e248a4c55500dd3c271",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "becf1834cfdd883ba7efc2bd612e1794a7e76453b1c054fb8042cd955263ae65",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -9579,15 +9628,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "57cc8b5e8dd8f3f7ab4a4550446981088f2841c0842526a57603085ed8c8b53a"
+      "eventHash": "3e2f40ca795e7ca28804f5b8e6f9865bcc46126ea824895217be992ecf4d2046"
     },
     {
       "schemaVersion": 1,
-      "sequence": 64,
+      "sequence": 65,
       "kind": "observed",
       "id": "learning-2fa74582878b9a599228",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "57cc8b5e8dd8f3f7ab4a4550446981088f2841c0842526a57603085ed8c8b53a",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "3e2f40ca795e7ca28804f5b8e6f9865bcc46126ea824895217be992ecf4d2046",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -9804,15 +9853,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "b36ece174f060195227eeb1a2a1b2e49db9027de25b726b6d49281228297a176"
+      "eventHash": "6bf84e69189355d8a45b779e063c7a2a9ff5b1de32b5d2db74448b750dbd4370"
     },
     {
       "schemaVersion": 1,
-      "sequence": 65,
+      "sequence": 66,
       "kind": "observed",
       "id": "learning-0498327012da9ab1d384",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "b36ece174f060195227eeb1a2a1b2e49db9027de25b726b6d49281228297a176",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "6bf84e69189355d8a45b779e063c7a2a9ff5b1de32b5d2db74448b750dbd4370",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -10029,15 +10078,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "a729a375119d99365ee9038a8d93b384eebcd95ddbebd6e5cc45300d27ed82c8"
+      "eventHash": "1df3c03338877b2e808b540ee0a4126daf70c68a8e7ca6ead30b0245e84c4232"
     },
     {
       "schemaVersion": 1,
-      "sequence": 66,
+      "sequence": 67,
       "kind": "observed",
       "id": "learning-01dbd7562ff405fb11ea",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "a729a375119d99365ee9038a8d93b384eebcd95ddbebd6e5cc45300d27ed82c8",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "1df3c03338877b2e808b540ee0a4126daf70c68a8e7ca6ead30b0245e84c4232",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -10254,15 +10303,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "7eec882da8dad1b916c5ae44cc3ab8f72858b52663a2a7cff2b138419a37193e"
+      "eventHash": "b2c9f13e773e1d462e2c800c3d4de5c26c0387dc0f7464e831eaca791f3d7967"
     },
     {
       "schemaVersion": 1,
-      "sequence": 67,
+      "sequence": 68,
       "kind": "observed",
       "id": "learning-4f0d2a0ad218ad3fcfad",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "7eec882da8dad1b916c5ae44cc3ab8f72858b52663a2a7cff2b138419a37193e",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "b2c9f13e773e1d462e2c800c3d4de5c26c0387dc0f7464e831eaca791f3d7967",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -10479,15 +10528,15 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "334070de8ad734b2182274f05e83bfe9e4e910a735efb3fbf897ba2be150510a"
+      "eventHash": "5f9e4ea3858fdd3600545b9ccb930a44cb20940ff81219acda41f8cffec3c1f0"
     },
     {
       "schemaVersion": 1,
-      "sequence": 68,
+      "sequence": 69,
       "kind": "observed",
       "id": "learning-08a457b53cbcc7519a45",
-      "createdAtUtc": "2026-11-01T02:37:24.0314924Z",
-      "previousHash": "334070de8ad734b2182274f05e83bfe9e4e910a735efb3fbf897ba2be150510a",
+      "createdAtUtc": "2026-11-01T02:45:34.9346369Z",
+      "previousHash": "5f9e4ea3858fdd3600545b9ccb930a44cb20940ff81219acda41f8cffec3c1f0",
       "observation": {
         "workspace": ".artifacts/llm-wiki/tasks/cancellation-email-feedback-20261101",
         "retrospectiveHash": "29e674fc3d0f01ff432d50206849fff0136140a3c4614cbda82e1c47a5692ecb",
@@ -10704,7 +10753,7 @@
       "decision": null,
       "targetId": "",
       "reason": "",
-      "eventHash": "971fd22079434be0d67645f9be105aa3cb3465b973a454000688fd4774924a33"
+      "eventHash": "86c3e2e4aeeff2b19c4394ab066a479a8320e3176465f45ca44692c179785f15"
     }
   ],
   "hashSchemaVersion": 2

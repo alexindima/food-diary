@@ -84,7 +84,8 @@ public sealed class PaddleNotificationRecoveryService(
                     }
                 }
 
-                next = NormalizeNext(payload.Meta?.Pagination?.Next);
+                PaginationMeta? pagination = payload.Meta?.Pagination;
+                next = pagination?.HasMore is true ? NormalizeNext(pagination.Next) : null;
             }
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
             return new PaddleNotificationRecoveryResult(inspected, replayed, WasLimited: true);
@@ -131,5 +132,7 @@ public sealed class PaddleNotificationRecoveryService(
 
     private sealed record ResponseMeta(PaginationMeta? Pagination);
 
-    private sealed record PaginationMeta(string? Next);
+    private sealed record PaginationMeta(
+        [property: JsonPropertyName("has_more")] bool HasMore,
+        string? Next);
 }

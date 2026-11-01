@@ -50,9 +50,10 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
         }
 
         List<TItem>? items = envelopeResult.Value.Data;
+        PaginationMeta? pagination = envelopeResult.Value.Meta?.Pagination;
         return items is null
             ? Result.Failure<PaddlePage<TItem>>(CreateProviderFailure("Paddle returned an empty list response."))
-            : Result.Success(new PaddlePage<TItem>(items, NormalizeNext(envelopeResult.Value.Meta?.Pagination?.Next)));
+            : Result.Success(new PaddlePage<TItem>(items, pagination?.HasMore is true ? NormalizeNext(pagination.Next) : null));
     }
 
     private async Task<Result<PaddleEnvelope<TResponse>>> SendEnvelopeAsync<TResponse>(
@@ -120,5 +121,6 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
         [property: JsonPropertyName("pagination")] PaginationMeta? Pagination);
 
     private sealed record PaginationMeta(
+        [property: JsonPropertyName("has_more")] bool HasMore,
         [property: JsonPropertyName("next")] string? Next);
 }

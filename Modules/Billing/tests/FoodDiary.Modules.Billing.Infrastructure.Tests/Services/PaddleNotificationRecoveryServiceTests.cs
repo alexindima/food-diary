@@ -69,12 +69,29 @@ public sealed class PaddleNotificationRecoveryServiceTests {
         Assert.Empty(handler.Requests);
     }
 
+    [Fact]
+    public async Task ReplayFailedAsync_WhenFinalPageStillContainsNext_StopsWithoutReportingLimit() {
+        HttpResponseMessage[] responses = [.. Enumerable.Range(0, 100).Select(_ => JsonResponse("""
+            {
+              "data": [],
+              "meta": { "pagination": { "has_more": false, "next": "https://sandbox-api.paddle.com/notifications?after=last" } }
+            }
+            """))];
+        var handler = new QueueHandler(responses);
+        var service = new PaddleNotificationRecoveryService(new HttpClient(handler), MsOptions.Create(ValidOptions()));
+
+        PaddleNotificationRecoveryResult result = await service.ReplayFailedAsync(CancellationToken.None);
+
+        Assert.False(result.WasLimited, "Terminal Paddle notification pages must stop before the page limit.");
+        Assert.Single(handler.Requests);
+    }
+
     [Theory]
     [InlineData("https://sandbox-api.paddle.com/notifications?page=2")]
     [InlineData("notifications?page=2")]
     public async Task ReplayFailedAsync_WithNextPage_FollowsAbsoluteAndRelativeLinks(string next) {
         var handler = new QueueHandler(
-            JsonResponse($"{{\"data\":[],\"meta\":{{\"pagination\":{{\"next\":\"{next}\"}}}}}}"),
+            JsonResponse($"{{\"data\":[],\"meta\":{{\"pagination\":{{\"has_more\":true,\"next\":\"{next}\"}}}}}}"),
             JsonResponse("""{"data":[],"meta":{"pagination":{"next":null}}}"""));
         var service = new PaddleNotificationRecoveryService(new HttpClient(handler), MsOptions.Create(ValidOptions()));
 

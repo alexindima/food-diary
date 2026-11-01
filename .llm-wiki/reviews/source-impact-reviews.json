@@ -627,8 +627,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "8ca230a0f4976f5bbd8d279c155132c2efe7a766839413d6e486960f55515c86",
-          "reviewReason": "Reviewed the new completed-task observation in the append-only promotion registry. It records hypotheses and cost signals only; no approval, application, instruction change or policy change was performed. The documented separate review and promotion boundary remains accurate."
+          "sha256": "c9ec82034b1d18f963edbf4a801d801dac021b4bd9183bdc44377843669d8bb9",
+          "reviewReason": "Merged the current master observation chain and replayed both sealed subscription task observations through the existing public observe command with the repository string-date JSON parser. All chains verify; no candidate was approved or applied, and the documented observation/promotion boundary remains unchanged."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -651,10 +651,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the new completed-task observation in the append-only promotion registry. It records hypotheses and cost signals only; no approval, application, instruction change or policy change was performed. The documented separate review and promotion boundary remains accurate.",
+      "reason": "Merged the current master observation chain and replayed both sealed subscription task observations through the existing public observe command with the repository string-date JSON parser. All chains verify; no candidate was approved or applied, and the documented observation/promotion boundary remains unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:38:19.8750922Z"
+      "gitHead": "20a58974c648ac43c93553aa60655202d12be170",
+      "reviewedAtUtc": "2026-11-01T02:50:19.2181532Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -993,14 +993,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "b0c76b5a97b43966df853333ae4b201b00ea6ba26f40e64f6099ea1c8741e049",
-          "reviewReason": "Reviewed the automatic instruction fingerprint/outcome event for the sealed cancellation email task. It records an observation of existing guide versions and does not edit instructions or adopt any experiment. The documented observational and separate review behavior remains accurate."
+          "sha256": "df42ee7317cd2cdc8b92bae37800513e014715ffd0fb5c4fe8916a87de2b2775",
+          "reviewReason": "Retained the master instruction outcome and replayed the two sealed subscription task outcomes through the public observation command. Registry verification passes; no instruction version or policy was edited. The page still describes observation rather than adoption."
         }
       ],
-      "reason": "Reviewed the automatic instruction fingerprint/outcome event for the sealed cancellation email task. It records an observation of existing guide versions and does not edit instructions or adopt any experiment. The documented observational and separate review behavior remains accurate.",
+      "reason": "Retained the master instruction outcome and replayed the two sealed subscription task outcomes through the public observation command. Registry verification passes; no instruction version or policy was edited. The page still describes observation rather than adoption.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:38:20.6908593Z"
+      "gitHead": "20a58974c648ac43c93553aa60655202d12be170",
+      "reviewedAtUtc": "2026-11-01T02:50:20.0674429Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1025,8 +1025,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "0ad9fd480ae3bdb2ce7b00b70e2ae541ed778b00688758344047b994a74231d9",
-          "reviewReason": "Reviewed the automatic eval candidate observation from the sealed task. No candidate was approved or applied, and no active evaluation, risk floor or verification rule changed. The page accurately separates observation from activation."
+          "sha256": "c3cd28f424ac38de0e64a871aeb01b72cb83358cce1f797f8638afc0b6699b3b",
+          "reviewReason": "Preserved master eval observations and re-observed the two completed subscription tasks using their sealed retrospective provenance. The chain verifies and no evaluation was activated; the documented review boundary remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1039,10 +1039,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the automatic eval candidate observation from the sealed task. No candidate was approved or applied, and no active evaluation, risk floor or verification rule changed. The page accurately separates observation from activation.",
+      "reason": "Preserved master eval observations and re-observed the two completed subscription tasks using their sealed retrospective provenance. The chain verifies and no evaluation was activated; the documented review boundary remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:38:21.5595406Z"
+      "gitHead": "20a58974c648ac43c93553aa60655202d12be170",
+      "reviewedAtUtc": "2026-11-01T02:50:20.7885835Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1329,8 +1329,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "23cc4bf1108ed92933b25c0dc84060b19763242d49a2dfaa86664df84114d659",
-          "reviewReason": "Refreshed runtime inventory includes the minute cancellation confirmation job. Reviewed cancellation propagation, per-user serialization, queue+marker atomicity, per-record retry, existing transport idempotency and JobExecutionObserver counts. Existing runtime guidance remains accurate; actual runtime verification is recorded separately from topology inference."
+          "sha256": "fa2cdb8c0490b6eca8f6bd7e65bd4f24ce23c50c48e2f3a456971a115b808887",
+          "reviewReason": "Reviewed the combined native cancellation and existing Paddle pagination completion fix. Provider recovery now honors has_more=false; the scheduled email job, transaction/outbox boundaries and transport ownership are preserved. All221 Billing infrastructure tests pass and the regenerated topology reflects the combined committed sources."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1343,10 +1343,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Refreshed runtime inventory includes the minute cancellation confirmation job. Reviewed cancellation propagation, per-user serialization, queue+marker atomicity, per-record retry, existing transport idempotency and JobExecutionObserver counts. Existing runtime guidance remains accurate; actual runtime verification is recorded separately from topology inference.",
+      "reason": "Reviewed the combined native cancellation and existing Paddle pagination completion fix. Provider recovery now honors has_more=false; the scheduled email job, transaction/outbox boundaries and transport ownership are preserved. All221 Billing infrastructure tests pass and the regenerated topology reflects the combined committed sources.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:43.6451329Z"
+      "gitHead": "20a58974c648ac43c93553aa60655202d12be170",
+      "reviewedAtUtc": "2026-11-01T02:50:21.5651749Z"
     },
     {
       "pageId": "workflow-security-review",
