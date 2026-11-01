@@ -13,6 +13,9 @@ if ($plan.commands.xplatCoverage -notmatch 'coverage\.runsettings') { throw 'XPl
 if ($plan.scope.integration) { throw 'Unit-test coverage plan was incorrectly classified as integration coverage.' }
 
 Write-Host 'LLM Wiki coverage plan regression passed.'
+$browserPlan = $null
+try { $browserPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiCoveragePlan.ps1') -ProposedPath 'FoodDiary.Web.Client/e2e/client-smoke/auth-recovery.spec.ts' -Format Json | ConvertFrom-Json } catch { Write-Host "Browser coverage diagnosis: $($_.Exception.Message)" }
+if ($null -eq $browserPlan -or $browserPlan.scope.framework -ne 'playwright' -or $null -ne $browserPlan.commands.coverage -or $browserPlan.commands.focusedTest -notmatch 'test:e2e:client:smoke') { throw 'Playwright scenarios were sent to the Angular coverage planner.' }
 
 $clientRoot = (Resolve-Path (Join-Path $PSScriptRoot '../../FoodDiary.Web.Client')).Path
 foreach ($entry in @(@('src/app', 'app'), @('projects/fooddiary-admin', 'admin'), @('projects/fd-ui-kit', 'ui-kit'), @('projects/fd-tour', 'tour'))) {

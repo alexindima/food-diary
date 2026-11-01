@@ -102,6 +102,8 @@ $boundedDataQueryBugIntent = $bugIntent -and
     $normalized -notmatch '\b(auth|authentication|password|credential|token|secret|oauth|payment|billing|subscription|webhook|privacy|security)\b'
 $ciMaintenanceIntent = $normalized -match '\b(ci|compiler|analy[sz]er|diagnostic|warning|lint|format|ma\d{4})\b'
 $dependencyMaintenanceIntent = $normalized -match '\b(storybook|peer dependenc|dependency compatibility|package[- ]lock|dependency bump|npm install|restore dependenc)\b'
+$manifestOnly = $callerGroundedPaths.Count -gt 0 -and @($callerGroundedPaths | Where-Object { $_ -notmatch '(?i)(^|/)(package(?:-lock)?\.json|npm-shrinkwrap\.json|yarn\.lock|pnpm-lock\.yaml)$' }).Count -eq 0
+if ($manifestOnly -and $normalized -match '(?i)\b(development dependenc|devdependenc|lockfile|dependabot|dependency (?:vulnerability|advisory|patch))') { $dependencyMaintenanceIntent = $true }
 $deploymentBuildMaintenanceIntent = $normalized -match '\b(docker|dockerfile|container build|image build|deployment build)\b'
 $ruPatternTerms = @(ConvertFrom-UnicodeEscape '\u043f\u043e\u0020\u0430\u043d\u0430\u043b\u043e\u0433\u0438\u0438'; ConvertFrom-UnicodeEscape '\u043a\u0430\u043a\u0020\u0443\u0436\u0435'; ConvertFrom-UnicodeEscape '\u043f\u0435\u0440\u0435\u043d\u0435\u0441\u0442\u0438\u0020\u043f\u0430\u0442\u0442\u0435\u0440\u043d'; ConvertFrom-UnicodeEscape '\u043f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c\u0020\u0434\u043b\u044f')
 $patternExtensionIntent = $normalized -match '\b(follow|reuse|mirror|port|replicate|same as|existing pattern|analogous to)\b' -or (Test-IntentTerm $ruPatternTerms)
@@ -253,7 +255,9 @@ if ($profile -eq 'visual-ui-change') {
     } else {
         Add-Stage 'focused-verification' 'Derive and run focused component checks, then compile the frontend.' "./.llm-wiki/wiki.ps1 test-plan -Intent '$escapedObjective'; # run the focused component tests; cd FoodDiary.Web.Client && npm run build" $true 'Focused component tests and the production frontend build pass.'
     }
-    Add-Stage 'browser-evidence' 'Verify the changed rendering at the viewport(s) affected by the requested scope.' "./.llm-wiki/wiki.ps1 visual-qa -Url '<local URL>' -FixturePath '<upload fixture>' -TriggerSelector '<optional trigger>' -ResultSelector '<expected result>' -Run" $true 'Automated browser evidence proves upload, the affected viewport, visible result, screenshot, and console health; omitted viewports are explicitly out of scope.'
+    $uploadQa = $normalized -match '(?i)\b(upload|photo|image input|file input)\b|загруз.{0,15}(фото|изображ|файл)'
+    $browserCommand = if ($uploadQa) { "./.llm-wiki/wiki.ps1 visual-qa -Url '<local URL>' -FixturePath '<upload fixture>' -TriggerSelector '<optional trigger>' -ResultSelector '<expected result>' -Run" } else { '# use the scoped browser guide to repeat the changed UI scenario; capture its affected viewport, screenshot and console output' }
+    Add-Stage 'browser-evidence' 'Verify the changed rendering at the viewport(s) affected by the requested scope.' $browserCommand $true 'Browser evidence proves the requested UI scenario, affected viewport, visible result, screenshot and console health; omitted viewports are explicitly out of scope, and unrelated interactions are not required.'
     Add-Stage 'completion' 'Confirm the final diff stays inside the visual owner slice and run the uncached strict affected gate.' "./.llm-wiki/wiki.ps1 diff; ./.llm-wiki/wiki.ps1 verify-strict-affected" $true 'Actual paths remain visual-only and the strict affected gate passes after focused checks and browser evidence; full repository verification remains the CI gate.'
 } else {
     $changeReviewCommand = if ($requiresWorkspace) {
@@ -320,6 +324,8 @@ $result = [pscustomobject][ordered]@{
     objective = $Objective
     profile = $profile
     workflowVariant = $(if ($visualTiny) { 'visual-tiny' } else { $profile })
+    iterationCommand = $(if ($visualUiChange) { './.llm-wiki/wiki.ps1 continue-ui; ./.llm-wiki/wiki.ps1 verify-fast -VisualUiCompletion' } else { $null })
+    publicationCommand = $(if ($visualUiChange) { './.llm-wiki/wiki.ps1 ui-finalize' } else { $null })
     workflowLevel = $workflowLevel
     maintenanceKind = $(if ($profile -eq 'maintenance') { $maintenanceKind } else { $null })
     confidence = $confidence
@@ -353,6 +359,7 @@ Write-Host "Confidence: discovery=$discoveryConfidence; blocker-count=$blockerCo
 foreach ($confidenceReason in $confidenceReasons) { Write-Host "Confidence reason: $confidenceReason" }
 Write-Host "Objective: $Objective"
 Write-Host "Ceremony budget: $($ceremonyBudget.label), at most $($ceremonyBudget.maximumRequiredStages) required stage(s)"
+if ($result.iterationCommand) { Write-Host "During visual iteration: $($result.iterationCommand)"; Write-Host "Finalize once before publication: $($result.publicationCommand)" }
 foreach ($reason in $result.reasons) { Write-Host "Reason: $reason" }
 Write-Host ''
 foreach ($stage in $result.stages) {

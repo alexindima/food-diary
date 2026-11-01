@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 119,
     "routedStandaloneComponents": 68,
     "componentsWithoutDirectSpecs": 132,
-    "criticalSymbolsWithoutTestReferences": 44,
+    "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -1773,6 +1773,7 @@
       "feature": "admin-acquisition",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-comparison.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-comparison.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "report",
@@ -1789,6 +1790,9 @@
       "feature": "admin-acquisition",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-link-preview.scss"
+      ],
       "inputs": [
         {
           "name": "url",
@@ -1810,6 +1814,7 @@
       "feature": "admin-ai-prompts",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/components/admin-ai-prompt-variables.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "variables",
@@ -1826,6 +1831,9 @@
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-cancellations-table.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -1857,6 +1865,9 @@
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-filters.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.scss"
+      ],
       "inputs": [
         {
           "name": "activeTab",
@@ -1918,6 +1929,9 @@
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-metadata-panel.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-metadata-panel.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.scss"
+      ],
       "inputs": [
         {
           "name": "metadata",
@@ -1939,6 +1953,7 @@
       "feature": "admin-billing",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing-records.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -1949,6 +1964,9 @@
       "feature": "admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-details.scss"
+      ],
       "inputs": [
         {
           "name": "report",
@@ -1965,6 +1983,9 @@
       "feature": "admin-bugs",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-list.scss"
+      ],
       "inputs": [
         {
           "name": "data",
@@ -1986,6 +2007,9 @@
       "feature": "admin-dashboard",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "data",
@@ -2002,6 +2026,7 @@
       "feature": "admin-moderation",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-context.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-context.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "report",
@@ -2018,6 +2043,9 @@
       "feature": "admin-outgoing-emails",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-email-details.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-email-details.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-email-details.scss"
+      ],
       "inputs": [
         {
           "name": "mail",
@@ -2039,6 +2067,7 @@
       "feature": "admin-outgoing-emails",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-status-counts.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-status-counts.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "counts",
@@ -2060,6 +2089,9 @@
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-login-activity-section.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.scss"
+      ],
       "inputs": [
         {
           "name": "isLoading",
@@ -2106,6 +2138,9 @@
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-sessions-section.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.scss"
+      ],
       "inputs": [
         {
           "name": "isLoading",
@@ -2152,6 +2187,9 @@
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users-table.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-users.scss"
+      ],
       "inputs": [
         {
           "name": "users",
@@ -2197,6 +2235,9 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-google-section/auth-google-section.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-google-section/auth-google-section.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.scss"
+      ],
       "inputs": [
         {
           "name": "isReady",
@@ -2218,6 +2259,9 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth-register-fields/auth-register-fields.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/auth/auth.scss"
+      ],
       "inputs": [
         {
           "name": "form",
@@ -2239,6 +2283,9 @@
       "feature": "auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/auth/components/telegram-entry-button/telegram-entry-button.scss"
+      ],
       "inputs": [],
       "outputs": [
         {
@@ -2254,6 +2301,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-care-prompts/cycle-day-care-prompts.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-care-prompts/cycle-day-care-prompts.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -2270,6 +2320,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-day-item.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-day-item.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [
         {
           "name": "item",
@@ -2314,6 +2367,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-item/cycle-factor-item.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-item/cycle-factor-item.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [
         {
           "name": "factor",
@@ -2344,6 +2400,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-list/cycle-factor-list.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-factor-list/cycle-factor-list.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -2374,6 +2433,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-nutrition-summary-card/cycle-nutrition-summary-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-nutrition-summary-card/cycle-nutrition-summary-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [
         {
           "name": "isLoading",
@@ -2395,6 +2457,9 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -2405,6 +2470,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-advice-block/dashboard-advice-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-advice-block/dashboard-advice-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2441,6 +2509,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/dashboard-card-shell/dashboard-card-shell.scss"
+      ],
       "inputs": [
         {
           "name": "hoverable",
@@ -2457,6 +2528,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-cycle-block/dashboard-cycle-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-cycle-block/dashboard-cycle-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2502,6 +2576,7 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-edit-hint/dashboard-edit-hint.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-edit-hint/dashboard-edit-hint.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "actionLabel",
@@ -2533,6 +2608,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-fasting-block/dashboard-fasting-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-fasting-block/dashboard-fasting-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2569,6 +2647,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-hydration-block/dashboard-hydration-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2623,6 +2704,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-meals-block/dashboard-meals-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-meals-block/dashboard-meals-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2694,6 +2778,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-nutrition-block/dashboard-nutrition-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2749,6 +2836,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-quick-add/dashboard-quick-add.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-quick-add/dashboard-quick-add.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "isAiMealSaving",
@@ -2779,6 +2869,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-summary-block/dashboard-summary-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2819,6 +2912,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard-sections/dashboard-tdee-block/dashboard-tdee-block.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.scss"
+      ],
       "inputs": [
         {
           "name": "shouldRender",
@@ -2869,6 +2965,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/hydration-card/hydration-card-actions/hydration-card-actions.scss"
+      ],
       "inputs": [
         {
           "name": "canAdd",
@@ -2900,6 +2999,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "sources",
@@ -2936,6 +3038,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card.scss"
+      ],
       "inputs": [
         {
           "name": "insight",
@@ -2957,6 +3062,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-footer/tdee-insight-dialog-footer.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "showSuggestion",
@@ -2987,6 +3095,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-hint/tdee-insight-dialog-hint.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-hint/tdee-insight-dialog-hint.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "locale",
@@ -3018,6 +3129,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "locale",
@@ -3044,6 +3158,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-setup/tdee-insight-dialog-setup.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-setup/tdee-insight-dialog-setup.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -3060,6 +3177,9 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-summary/tdee-insight-dialog-summary.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog.scss"
+      ],
       "inputs": [
         {
           "name": "locale",
@@ -3101,6 +3221,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.scss"
+      ],
       "inputs": [
         {
           "name": "fasting",
@@ -3122,6 +3245,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-header.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-header.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-header.scss"
+      ],
       "inputs": [
         {
           "name": "show",
@@ -3153,6 +3279,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-hydration-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-hydration-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-hydration-card.scss"
+      ],
       "inputs": [
         {
           "name": "hydration",
@@ -3169,6 +3298,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-meals-card.scss"
+      ],
       "inputs": [
         {
           "name": "meals",
@@ -3210,6 +3342,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-metric-list.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-metric-list.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-metric-list.scss"
+      ],
       "inputs": [
         {
           "name": "titleKey",
@@ -3236,6 +3371,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-notices.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-notices.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-notices.scss"
+      ],
       "inputs": [
         {
           "name": "detailsLoading",
@@ -3257,6 +3395,9 @@
       "feature": "dietologist",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-summary-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-summary-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-summary-card.scss"
+      ],
       "inputs": [
         {
           "name": "titleKey",
@@ -3278,6 +3419,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-basic/fasting-active-basic-controls.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-basic/fasting-active-basic-controls.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.scss"
+      ],
       "inputs": [
         {
           "name": "canManageCurrentCyclicDay",
@@ -3332,6 +3476,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-extended/fasting-active-extended-controls.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/active-extended/fasting-active-extended-controls.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.scss"
+      ],
       "inputs": [
         {
           "name": "canExtendActiveSession",
@@ -3461,6 +3608,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-checkin-chart-dialog/fasting-checkin-chart-dialog.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3471,6 +3621,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/cyclic-setup/fasting-cyclic-setup-controls.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/cyclic-setup/fasting-cyclic-setup-controls.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.scss"
+      ],
       "inputs": [
         {
           "name": "cyclicPresetOptions",
@@ -3553,6 +3706,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-history-dialog/fasting-history-dialog.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3563,6 +3719,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-protocol-dialog/fasting-protocol-dialog.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3573,6 +3732,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-session-details-dialog/fasting-session-details-dialog.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3583,6 +3745,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/setup/fasting-setup-controls.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/setup/fasting-setup-controls.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-controls/fasting-controls.scss"
+      ],
       "inputs": [
         {
           "name": "modeOptions",
@@ -3750,6 +3915,7 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-groups/fasting-timer-card-groups.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "groups",
@@ -3766,6 +3932,9 @@
       "feature": "fasting",
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card-items/fasting-timer-card-items.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -3782,6 +3951,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/design-tokens.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "pageTitle",
@@ -3823,6 +3993,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-navigation.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3833,6 +4004,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/dialog-playbook.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "pageTitle",
@@ -3859,6 +4031,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog-swipe.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3869,6 +4042,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete-menu.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/autocomplete/fd-ui-autocomplete.scss"
+      ],
       "inputs": [
         {
           "name": "id",
@@ -3915,6 +4091,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chart-legend/fd-ui-chart-legend.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -3936,6 +4115,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/chip-select/fd-ui-chip-select.scss"
+      ],
       "inputs": [
         {
           "name": "options",
@@ -3972,6 +4154,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint-overlay.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint-overlay.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/hint/fd-ui-hint-overlay.scss"
+      ],
       "inputs": [
         {
           "name": "tooltipId",
@@ -4008,6 +4193,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/inline-alert/fd-ui-inline-alert.scss"
+      ],
       "inputs": [
         {
           "name": "appearance",
@@ -4067,6 +4255,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-legend.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-legend.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-legend.scss"
+      ],
       "inputs": [
         {
           "name": "show",
@@ -4088,6 +4279,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-x-axis.scss"
+      ],
       "inputs": [
         {
           "name": "show",
@@ -4114,6 +4308,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-y-axis.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-y-axis.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart-y-axis.scss"
+      ],
       "inputs": [
         {
           "name": "show",
@@ -4140,6 +4337,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.scss"
+      ],
       "inputs": [],
       "outputs": [
         {
@@ -4155,6 +4355,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-divider.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-divider.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4165,6 +4368,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.scss"
+      ],
       "inputs": [
         {
           "name": "type",
@@ -4211,6 +4417,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-options.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/radio/fd-ui-radio-group.scss"
+      ],
       "inputs": [
         {
           "name": "id",
@@ -4255,6 +4464,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-error-state.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-error-state.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.scss"
+      ],
       "inputs": [
         {
           "name": "errorIcon",
@@ -4291,6 +4503,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-loading-state.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-loading-state.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/section-state/fd-ui-section-state.scss"
+      ],
       "inputs": [
         {
           "name": "loadingLabel",
@@ -4307,6 +4522,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-item.scss"
+      ],
       "inputs": [
         {
           "name": "item",
@@ -4347,6 +4565,9 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-section.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-section.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/sidebar/fd-ui-sidebar-section.scss"
+      ],
       "inputs": [
         {
           "name": "section",
@@ -4386,6 +4607,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/form/fd-ui-form.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4396,6 +4618,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/style-governance.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "pageTitle",
@@ -4427,6 +4650,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/themes.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "pageTitle",
@@ -4483,6 +4707,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/toast/fd-ui-toast.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "undo",
@@ -4499,6 +4724,7 @@
       "feature": "fd-ui-kit",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/ux-playbook.stories.ts",
       "templatePath": null,
+      "stylePaths": [],
       "inputs": [
         {
           "name": "pageTitle",
@@ -4525,6 +4751,7 @@
       "feature": "fooddiary-admin",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "categories",
@@ -4561,6 +4788,7 @@
       "feature": "fooddiary-admin",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [
         {
@@ -4576,6 +4804,9 @@
       "feature": "gamification",
       "path": "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/gamification/dialogs/gamification-achievements-dialog/gamification-achievements-dialog.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4586,6 +4817,9 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-day.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.scss"
+      ],
       "inputs": [
         {
           "name": "dayKey",
@@ -4632,6 +4866,9 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.scss"
+      ],
       "inputs": [
         {
           "name": "calories",
@@ -4698,6 +4935,9 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.scss"
+      ],
       "inputs": [
         {
           "name": "calories",
@@ -4742,6 +4982,9 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.scss"
+      ],
       "inputs": [
         {
           "name": "water",
@@ -4772,6 +5015,9 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-summary-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.scss"
+      ],
       "inputs": [
         {
           "name": "calories",
@@ -4793,6 +5039,7 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/access-banners/premium-access-banners.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/access-banners/premium-access-banners.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "checkoutReturnState",
@@ -4824,6 +5071,9 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/benefits-card/premium-benefits-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4834,6 +5084,7 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/premium/dialogs/cancel-subscription/premium-cancel-dialog.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4844,6 +5095,9 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/plans-card/premium-plan-price.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
+      ],
       "inputs": [
         {
           "name": "plan",
@@ -4875,6 +5129,9 @@
       "feature": "premium",
       "path": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access-sections/support-card/premium-support-card.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/premium/pages/premium-access/premium-access-page.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4885,6 +5142,9 @@
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/products/components/favorite-product-row/favorite-product-row.scss"
+      ],
       "inputs": [
         {
           "name": "product",
@@ -4953,6 +5213,9 @@
       "feature": "products",
       "path": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/products/components/public-product-gallery/public-product-gallery.scss"
+      ],
       "inputs": [
         {
           "name": "images",
@@ -4974,6 +5237,9 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.scss"
+      ],
       "inputs": [
         {
           "name": "available",
@@ -5000,6 +5266,9 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.scss"
+      ],
       "inputs": [
         {
           "name": "hasTelegramIdentity",
@@ -5031,6 +5300,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5041,6 +5313,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5051,6 +5326,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/landing-cta/landing-cta.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5061,6 +5339,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-faq/landing-faq.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-faq/landing-faq.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/landing-faq/landing-faq.scss"
+      ],
       "inputs": [
         {
           "name": "questions",
@@ -5082,6 +5363,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5092,6 +5376,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/landing-steps/landing-steps.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/landing-steps/landing-steps.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/landing-steps/landing-steps.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5102,6 +5389,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/not-found/not-found.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5112,6 +5402,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/privacy-policy/privacy-policy.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/privacy-policy/privacy-policy.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/privacy-policy/privacy-policy.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5122,6 +5415,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/public-article/public-article-page.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5132,6 +5428,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.scss"
+      ],
       "inputs": [
         {
           "name": "path",
@@ -5148,6 +5447,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.scss"
+      ],
       "inputs": [
         {
           "name": "path",
@@ -5164,6 +5466,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-content-sections.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-content-sections.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-sections.scss"
+      ],
       "inputs": [
         {
           "name": "audience",
@@ -5195,6 +5500,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-footer-sections.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-footer-sections.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-sections/seo-landing-sections.scss"
+      ],
       "inputs": [
         {
           "name": "relatedPages",
@@ -5221,6 +5529,9 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/public/pages/seo-landing/seo-landing-page/seo-landing-page.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5231,6 +5542,7 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-language-dialog/recipe-language-dialog.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5241,6 +5553,9 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-recent.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-recent.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/recipes/components/list/recipe-list-sections/recipe-list-results/recipe-list-results.scss"
+      ],
       "inputs": [
         {
           "name": "recentRecipeItems",
@@ -5266,6 +5581,7 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/dialogs/recipe-publication-dialog/recipe-publication-dialog.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5276,6 +5592,9 @@
       "feature": "recipes",
       "path": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/recipes/components/manage/recipe-video-input/recipe-video-input.scss"
+      ],
       "inputs": [
         {
           "name": "enabled",
@@ -5311,6 +5630,9 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/active-filters/active-filters.scss"
+      ],
       "inputs": [
         {
           "name": "chips",
@@ -5336,6 +5658,9 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-input-action-bar.scss"
+      ],
       "inputs": [
         {
           "name": "isProcessing",
@@ -5405,6 +5730,9 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor-messages.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor-messages.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/nutrition-editor/nutrition-editor-messages.scss"
+      ],
       "inputs": [
         {
           "name": "fieldErrors",
@@ -5441,6 +5769,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-actions/pwa-install-actions.html",
+      "stylePaths": [],
       "inputs": [
         {
           "name": "instructionsId",
@@ -5457,6 +5786,7 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/pwa-install-card/pwa-install-card.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5467,6 +5797,9 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.scss"
+      ],
       "inputs": [
         {
           "name": "message",
@@ -5517,6 +5850,9 @@
       "feature": "shell",
       "path": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-route-links/sidebar-route-links.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-route-links/sidebar-route-links.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/shell/sidebar/sidebar-route-links/sidebar-route-links.scss"
+      ],
       "inputs": [
         {
           "name": "items",
@@ -5548,6 +5884,7 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-browser-dialog/shopping-list-browser-dialog.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5558,6 +5895,7 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-list-picker/shopping-list-picker.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5568,6 +5906,7 @@
       "feature": "shopping-lists",
       "path": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/shopping-lists/dialogs/shopping-merge-preview/shopping-merge-preview.html",
+      "stylePaths": [],
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5578,6 +5917,9 @@
       "feature": "usda",
       "path": "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-section/micronutrient-section.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-section/micronutrient-section.html",
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/features/usda/components/micronutrient-panel/micronutrient-panel.scss"
+      ],
       "inputs": [
         {
           "name": "titleKey",
@@ -5989,6 +6331,16 @@
       "name": "Find-LlmWikiTraceCandidates",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Find-LlmWikiTraceCandidates.ps1",
+      "line": 1,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "LlmWikiFrontendTestRunner",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiFrontendTestRunner.ps1",
       "line": 1,
       "testReferenceCount": 0,
       "testReferences": [],

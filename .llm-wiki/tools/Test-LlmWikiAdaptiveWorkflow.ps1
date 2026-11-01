@@ -23,6 +23,11 @@ $visualPaths = @(
     'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.scss'
 )
 if ($Group -in @('All', 'Routing')) {
+$developmentDependency = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') -Objective 'Fix a minimatch development dependency vulnerability by updating the lockfile; application behavior is unchanged' -ProposedPath 'FoodDiary.Web.Client/package.json','FoodDiary.Web.Client/package-lock.json' -Format Json | ConvertFrom-Json
+Assert-Adaptive ($developmentDependency.profile -eq 'maintenance' -and -not $developmentDependency.requiresWorkspace -and -not $developmentDependency.requiresDesign) 'A development dependency lockfile fix received architectural/UI ceremony.'
+$styleOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') -Objective 'Fix spacing in the existing statistics card' -ProposedPath 'FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.scss' -Format Json | ConvertFrom-Json
+Assert-Adaptive ($styleOnly.iterationCommand -match 'continue-ui' -and $styleOnly.iterationCommand -match 'VisualUiCompletion' -and $styleOnly.publicationCommand -match 'ui-finalize') 'Visual routing omitted the cheap iteration path or one-time publication finalization.'
+Assert-Adaptive (@($styleOnly.stages | Where-Object { $_.id -eq 'browser-evidence' -and ($_.command -match 'FixturePath|upload fixture' -or $_.completionEvidence -match 'proves upload') }).Count -eq 0) 'A stylesheet-only browser check required an unrelated file-upload scenario.'
 $adaptiveWorkflowSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'))
 Assert-Adaptive ($adaptiveWorkflowSource -match 'SkipTestPlan\s*=\s*\$true') 'Adaptive routing rebuilt focused test plans that its classification does not consume.'
 $tiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `

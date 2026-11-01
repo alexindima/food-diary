@@ -10,6 +10,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 $repositoryRoot = (Resolve-Path $RepositoryRoot).Path
 $gitDirectory = (Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot -Arguments @('rev-parse', '--absolute-git-dir') -FailureMessage 'Unable to resolve the Git directory for the LLM Wiki session.').Lines[0].Trim()
 $stateDirectory = Join-Path $gitDirectory 'llm-wiki/sessions'

@@ -159,7 +159,7 @@ function Get-ReadOnlySnapshotFingerprint {
 
     $head = (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments @('rev-parse', 'HEAD') -FailureMessage 'Unable to resolve HEAD for the isolated read-only snapshot.').Lines[0].Trim()
     $material = [Collections.Generic.List[string]]::new()
-    $material.Add('schema=7')
+    $material.Add('schema=8')
     # A slot owns an exclusively locked checkout, not one commit. Content
     # readiness still includes HEAD so a revision change resets that checkout
     # while preserving its ignored compiler and graph caches.
@@ -174,11 +174,10 @@ function Get-ReadOnlySnapshotFingerprint {
     foreach ($relativePath in @($OverlayPath | Sort-Object -Unique)) {
         $material.Add($(if ($SlotKey) { "scope=$relativePath" } else { "$relativePath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $relativePath))" }))
     }
-    foreach ($dependencyPath in @(
-        '.artifacts/llm-wiki/code-graph/code-graph.fingerprint'
-    )) {
-        if (-not $SlotKey) { $material.Add("dependency:$dependencyPath=$(Get-FileHashOrMissing (Join-Path $RepositoryRoot $dependencyPath))") }
-    }
+    # The copied SQLite database is a disposable acceleration input. The inner
+    # manager verifies and rebuilds it against this private checkout before use.
+    # A concurrent rebuild of the source checkout's graph changes no source and
+    # must not invalidate an otherwise consistent captured overlay.
     $hasher = [Security.Cryptography.SHA256]::Create()
     try {
         return (([BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($material -join "`n"))) -replace '-', '').ToLowerInvariant())

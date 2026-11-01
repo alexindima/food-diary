@@ -1,4 +1,16 @@
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
+
+function Get-LlmWikiEvidenceRuntimeVersion([string]$Runtime) {
+    switch ($Runtime) {
+        'dotnet' { [string](& dotnet --version) }
+        'npm' { [string](& npm --version) }
+        'node' { [string](& node --version) }
+        'docker' { [string](& docker --version) }
+        default { [string]$PSVersionTable.PSVersion }
+    }
+}
 
 function Get-LlmWikiSha256([string]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
@@ -64,7 +76,7 @@ function Test-LlmWikiVerificationExecutionProof([object]$Receipt, [string]$Repos
     try {
         $proof = $Receipt.executionProof
         $sourcePath = [string]$proof.sourceEvidencePath
-        if ($sourcePath -notmatch '^\.artifacts/llm-wiki/(?:tasks/[^/.][^/]*/)?[^/]+\.json$' -or $sourcePath -match '(?:^|/)\.\.(?:/|$)') { return $false }
+        if ($sourcePath -notmatch '^\.artifacts/llm-wiki/(?:[^/]+/)*[^/]+\.json$' -or $sourcePath -match '\\|(?:^|/)\.\.?(?:/|$)') { return $false }
         $source = Get-Content -LiteralPath (Join-Path $RepositoryRoot $sourcePath) -Raw | ConvertFrom-Json
         $entry = @($source.checks | Where-Object id -eq $proof.checkId | Select-Object -First 1)
         if ($entry.Count -ne 1 -or $entry[0].status -ne 'passed' -or $entry[0].lineage.kind -ne 'executed-check' -or $null -eq $entry[0].lineage.execution.exitCode -or [int]$entry[0].lineage.execution.exitCode -ne 0) { return $false }

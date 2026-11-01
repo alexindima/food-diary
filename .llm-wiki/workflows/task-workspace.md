@@ -55,6 +55,12 @@ sources:
 
 # Start a Governed AI Task Workspace
 
+Refresh retains acceptance links to existing supplemental check IDs as well as
+required policy checks. A retained link is not execution proof: changed source,
+policy, runtime or logs still invalidate lineage. Assessment caching excludes
+the coordination-only execution lease, while evidence JSON and execution logs
+remain fingerprinted dependencies.
+
 `task-handoff -Compact` retains readiness, continuity, pending evidence, journal
 decisions, source anchors and resume commands. It verifies saved confidence,
 critique and impact artifacts, but does not synthesize those full-only

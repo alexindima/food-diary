@@ -3,6 +3,10 @@ param([switch]$SkipRefresh)
 
 $ErrorActionPreference = 'Stop'
 $planner = Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1'
+$resourcePlan = & $planner -ProposedPath 'FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.html' -SkipRefresh:$SkipRefresh -Format Json | ConvertFrom-Json
+if ('FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.spec.ts' -notin @($resourcePlan.required)) { throw 'Fast planning lost the component test for an explicit template resource.' }
+$rankingPlan = & $planner -ProposedPath '.llm-wiki/policies/context-search-ranking.json' -SkipRefresh -Format Json | ConvertFrom-Json
+if ('Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.QueryPreparation.cs' -notin @($rankingPlan.required)) { throw 'Fast planning omitted the ranking reader rejection tests.' }
 # The mixed Meals flow used by development-context has more downstream tests
 # than the bounded response. Its service test must survive that boundary.
 $scope = @(

@@ -302,7 +302,6 @@ if ($Check) {
     exit 0
 }
 
-$utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-[System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
+Write-LlmWikiTextFileAtomically -Path $outputPath -Content $jsonText
 Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host "Generated .llm-wiki/generated/quality-index.json."

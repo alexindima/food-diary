@@ -4,12 +4,17 @@ param(
     [string]$Action,
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
     [string]$SessionId,
+    [string[]]$PlannedPath,
+    [string]$Objective,
+    [string]$WorkspacePath,
     [ValidateSet('Object', 'Text', 'Json')]
     [string]$Format = 'Object'
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+Enable-LlmWikiStringDateJsonParsing
 
 function Invoke-Git([string[]]$Arguments) {
     return (Invoke-LlmWikiGitCommand -RepositoryRoot $RepositoryRoot -Arguments $Arguments -FailureMessage "git $($Arguments -join ' ') failed.").Lines
@@ -40,6 +45,15 @@ function Get-PathFingerprint([string]$RepositoryPath) {
     }
 }
 
+function Test-DeclaredScope([string]$Path, [string[]]$Scope) {
+    if ($Scope.Count -eq 0) { return $true }
+    foreach ($prefix in $Scope) {
+        if ([string]::Equals($Path, $prefix, [StringComparison]::OrdinalIgnoreCase) -or
+            $Path.StartsWith($prefix + '/', [StringComparison]::OrdinalIgnoreCase)) { return $true }
+    }
+    return $false
+}
+
 $session = & (Join-Path $PSScriptRoot 'Resolve-LlmWikiSession.ps1') `
     -SessionId $SessionId `
     -Create:($Action -eq 'Capture') `
@@ -60,29 +74,39 @@ if ($Action -eq 'Close') {
     if ($wasAvailable) { Remove-Item -LiteralPath $baselinePath -Force }
     $result = [pscustomobject]@{ available = $false; closed = $wasAvailable; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @(); ageHours = 0; commitsAhead = 0 }
 } elseif ($Action -eq 'Capture') {
+    $plannedPaths = @($PlannedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | ForEach-Object {
+        $candidate = (ConvertTo-RepositoryPath $_).TrimEnd('/')
+        if ([IO.Path]::IsPathRooted($candidate) -or $candidate -match '(^|/)\.\.(/|$)') { throw 'PlannedPath must remain repository-relative.' }
+        $candidate
+    } | Sort-Object -Unique)
     $head = (Invoke-Git @('rev-parse', 'HEAD') | Select-Object -First 1)
     $initialPaths = @(Get-ChangedPaths 'HEAD')
     $fingerprints = [ordered]@{}
     foreach ($path in $initialPaths) { $fingerprints[$path] = Get-PathFingerprint $path }
     $baseline = [ordered]@{
-        schemaVersion = 1
+        schemaVersion = 2
         capturedAtUtc = [DateTime]::UtcNow.ToString('o')
         head = $head
         initialChangedPaths = $initialPaths
         fingerprints = $fingerprints
+        plannedPaths = $plannedPaths
+        objective = $Objective
+        workspacePath = $(if ($WorkspacePath) { $WorkspacePath } else { [string]$session.workspacePath })
     }
     $null = New-Item -ItemType Directory -Path $stateDirectory -Force
     $baseline | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $baselinePath -Encoding utf8
-    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @(); excludedChangedPaths = $initialPaths; capturedAtUtc = $baseline.capturedAtUtc; ageHours = 0; commitsAhead = 0 }
+    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @(); excludedChangedPaths = $initialPaths; capturedAtUtc = $baseline.capturedAtUtc; ageHours = 0; commitsAhead = 0; plannedPaths = $plannedPaths; objective = $Objective; workspacePath = $baseline.workspacePath }
 } elseif (-not (Test-Path -LiteralPath $baselinePath -PathType Leaf)) {
     $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @(); ageHours = 0; commitsAhead = 0 }
 } else {
     $baseline = Get-Content -LiteralPath $baselinePath -Raw | ConvertFrom-Json
+    $plannedPaths = @(if ($baseline.PSObject.Properties['plannedPaths']) { @($baseline.plannedPaths) })
     $currentPaths = @(Get-ChangedPaths ([string]$baseline.head))
     $delta = [System.Collections.Generic.List[string]]::new()
     foreach ($path in $currentPaths) {
         $baselineFingerprint = $baseline.fingerprints.PSObject.Properties[$path]
-        if ($null -eq $baselineFingerprint -or [string]$baselineFingerprint.Value -cne (Get-PathFingerprint $path)) {
+        if ((Test-DeclaredScope $path $plannedPaths) -and
+            ($null -eq $baselineFingerprint -or [string]$baselineFingerprint.Value -cne (Get-PathFingerprint $path))) {
             $delta.Add($path)
         }
     }
@@ -99,6 +123,9 @@ if ($Action -eq 'Close') {
         capturedAtUtc = [string]$baseline.capturedAtUtc
         ageHours = [Math]::Round(([DateTimeOffset]::UtcNow - $capturedAt).TotalHours, 1)
         commitsAhead = [int]($commitsAheadOutput | Select-Object -First 1)
+        plannedPaths = $plannedPaths
+        objective = $(if ($baseline.PSObject.Properties['objective']) { [string]$baseline.objective } else { '' })
+        workspacePath = $(if ($baseline.PSObject.Properties['workspacePath']) { [string]$baseline.workspacePath } else { [string]$session.workspacePath })
     }
 }
 

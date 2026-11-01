@@ -9,6 +9,11 @@ tags:
   - developer-experience
   - planning
 sources:
+  - .llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1
+  - .llm-wiki/tools/Resolve-LlmWikiSession.ps1
+  - .llm-wiki/tools/LlmWikiFrontendTestRunner.ps1
+  - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
+  - .llm-wiki/tools/code-graph.mjs
   - .llm-wiki/tools/LlmWikiPlanReview.ps1
   - .llm-wiki/wiki.ps1
   - .llm-wiki/tools/Get-LlmWikiExperience.ps1
@@ -29,6 +34,20 @@ sources:
 ---
 
 # Compact LLM Wiki developer experience
+
+The existing session baseline persists declared paths, intent and an explicit
+workspace. Later implicit discovery and diff commands retain that boundary;
+explicit path/ref/workspace arguments override it. Concurrent paths are reported
+as excluded context. A session without its own governed workspace keeps its
+adaptive route instead of falling back to another `tasks/current`.
+
+Visual routing also prints a repeatable `iterationCommand` using `continue-ui`
+and the visual completion mode, plus a one-time `publicationCommand`. The final
+strict affected gate is retained. Runtime ownership reads declared styleUrl and
+styleUrls resources, including shared stylesheets, and recommends existing paths.
+Component-directory candidates stay inside that directory. Test plans route
+Playwright scenarios separately from Angular specs and omit unrelated backend
+tests for an explicitly frontend-only slice.
 
 Core help groups daily code discovery, research, next action, test planning, refresh, verification, and backend bootstrap while retaining the complete catalog. Machine clients should use research `nextActionState` together with its grounded evidence. `catalog -CheckFreshness` distinguishes complete generation and full verification from graph freshness.
 

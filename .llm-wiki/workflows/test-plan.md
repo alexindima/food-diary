@@ -9,6 +9,7 @@ tags:
   - testing
   - planning
 sources:
+  - .llm-wiki/tools/LlmWikiFrontendTestRunner.ps1
   - docs/ai/AI_WORKFLOW.md
   - .llm-wiki/tools/LlmWikiNativeCompilation.ps1
   - .llm-wiki/tools/LlmWikiNativeTestDiscovery.ps1
@@ -31,6 +32,16 @@ sources:
 ---
 
 # Generate a change-aware test plan
+
+An explicitly frontend-only slice omits unrelated .NET test candidates. For a
+stylesheet-only iteration the complete frontend verify command is marked as a
+publication regression check; focused local checks do not replace that gate.
+HTML/SCSS/CSS paths also resolve their colocated component specs in the fast plan.
+Playwright specs under `e2e/` use their existing browser-suite package script,
+not Angular `--include`. A browser coverage plan returns the focused Playwright
+command and `coverage=null` when no code-coverage collector is configured.
+Ranking-policy changes select the .NET reader rejection tests alongside the
+existing retrieval corpus and parity checks.
 
 Before executing a direct Docker-dependent test command, run
 `pwsh -NoProfile -File scripts/Ensure-Docker.ps1` and require success before

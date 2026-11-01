@@ -35,6 +35,9 @@ explicit `-ChangedPath` still includes it. For a committed change set:
 
 The `wiki.ps1 diff`, `impact`, and `verify` facade commands use the captured task
 delta when the current session has a baseline and no explicit `-ChangedPath`.
+If the baseline declares planned paths, later unrelated edits stay outside that
+boundary. Explicit `-BaseRef` or `-HeadRef` requests preserve the requested Git
+comparison instead of silently applying a session path filter.
 `start` and `develop` capture pre-existing working changes in that baseline, so a
 new task can have an empty delta while other chats still have uncommitted work.
 For a shared-master review, pass the complete reviewed path set explicitly with

@@ -3,6 +3,7 @@ id: workflow.evidence-bundle
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - docs/ai/AI_WORKFLOW.md
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
   - .llm-wiki/tools/Recover-LlmWikiEvidenceExecution.ps1
@@ -116,6 +117,20 @@ policy and records its exit status and duration automatically. It resolves the
 current policy again immediately before execution, requires an exact
 ID/command match, and applies a narrow command-family allowlist. Editing
 `evidence.json` therefore cannot introduce an arbitrary shell command.
+
+Before spawning a check it validates that the JSON destination is under
+`.artifacts/llm-wiki/`, opens the evidence for writing and probes its adjacent
+`logs/` directory. Nested evidence locations use that same adjacent log boundary
+for recording and validation. Invalid or unwritable destinations fail before
+running a potentially expensive check.
+
+An explicit supplemental ID and command can also execute bounded Node tests or
+scripts, Wiki test scripts through `pwsh -NoProfile -File`, `docker compose config`
+and `docker build --check`. These checks retain actual exit status, runtime
+version, execution record and log hash. They cannot replace a required policy
+check or publish its reusable receipt. Shell operators remain outside the
+allowlist. Refresh retains their acceptance links; changed dependencies or logs
+still invalidate proof.
 
 For a focused regression test, opt into `evidence-run -RegressionPhase before`
 with a distinct supplemental ID, an explicit allowed test command, the test-file

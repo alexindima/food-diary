@@ -7,6 +7,16 @@ $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Test-LlmWikiNativeTestDiscovery.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
+$styleOnlyPlan = & $tool -ChangedPath 'FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.scss' -Intent 'Fix spacing in the existing statistics card' -NoBaseline -Format Json | ConvertFrom-Json
+if (@($styleOnlyPlan.focusedTestFiles | Where-Object { $_ -match '\.cs$' }).Count -gt 0) { throw 'A stylesheet-only plan included unrelated backend tests.' }
+if (@($styleOnlyPlan.commands | Where-Object { $_.id -eq 'frontend-verify' -and $_.priority -eq 'required' }).Count -gt 0) { throw 'Stylesheet iteration required the full publication frontend suite.' }
+$browserPlan = & $tool -ChangedPath 'FoodDiary.Web.Client/e2e/client-smoke/auth-recovery.spec.ts' -NoBaseline -Format Json | ConvertFrom-Json
+if (@($browserPlan.commands | Where-Object { $_.command -match 'test:e2e:client:smoke -- e2e/client-smoke/auth-recovery.spec.ts' }).Count -ne 1 -or
+    @($browserPlan.commands | Where-Object { $_.command -match 'test:ci:app.*e2e/' }).Count -gt 0) { throw 'Playwright tests were assigned to the Angular component runner.' }
+$rankingPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath '.llm-wiki/policies/context-search-ranking.json' -Format Json | ConvertFrom-Json
+if (@($rankingPolicy.requiredChecks | Where-Object { $_.command -match 'dotnet test .*FoodDiary.Development.Mcp.Tests.*FullyQualifiedName~SqliteWikiContextSearchTests' }).Count -ne 1) { throw 'Ranking policy verification omitted the .NET reader negative-case tests.' }
+$ordinaryPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath 'FoodDiary.Web.Client/src/app/features/statistics/components/statistics-nutrition-trend-card/statistics-nutrition-trend-card.scss' -Format Json | ConvertFrom-Json
+if ('wiki-ranking-reader-tests' -in @($ordinaryPolicy.requiredChecks.id)) { throw 'An unrelated visual change selected the ranking-reader gate.' }
 $frontendPath = 'FoodDiary.Web.Client/src/app/features/dashboard/pages/dashboard.ts'
 $frontendDiff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') -ChangedPath $frontendPath -Format Json | ConvertFrom-Json
 $frontendPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath $frontendPath -Format Json | ConvertFrom-Json

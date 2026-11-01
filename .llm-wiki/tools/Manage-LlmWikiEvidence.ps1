@@ -212,6 +212,7 @@ switch ($Action) {
     }
     'run' {
         if (-not [IO.File]::Exists($absolutePath)) { throw "Evidence bundle does not exist: $Path. Run evidence init first." }
+        $executionLocation = Get-LlmWikiEvidenceExecutionLocation $repositoryRoot $Path -Prepare
         try { $executionLease = [IO.File]::Open($absolutePath + '.execution.lock', [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None) }
         catch { throw "Cannot acquire evidence execution lease: $($_.Exception.Message) A live execution or recovery may own it; inspect before retrying." }
         try {
@@ -223,7 +224,7 @@ switch ($Action) {
         $entry = @($evidence.checks | Where-Object { $_.id -eq $Id } | Select-Object -First 1)
         $requiredCheck = $entry.Count -gt 0
         if ($RegressionPhase -and $requiredCheck) { throw 'Use a distinct supplemental ID for regression evidence; required checks keep their canonical verification.' }
-        if ($RegressionPhase) {
+        if ($RegressionPhase -or (-not $requiredCheck -and -not [string]::IsNullOrWhiteSpace($Command))) {
             if (-not $evidence.PSObject.Properties['supplementalChecks']) { $evidence | Add-Member -NotePropertyName supplementalChecks -NotePropertyValue @() }
             $entry = @($evidence.supplementalChecks | Where-Object id -eq $Id | Select-Object -First 1)
             if ($entry.Count -eq 0) {
@@ -248,15 +249,14 @@ switch ($Action) {
             -ChangedPath @($evidence.change.changedPaths) `
             -Format Json | ConvertFrom-Json
         $canonicalCheck = @($policy.requiredChecks | Where-Object id -eq $Id | Select-Object -First 1)
-        if ($canonicalCheck.Count -eq 0 -and -not $RegressionPhase) {
+        if ($canonicalCheck.Count -gt 0 -and -not $requiredCheck) { throw "Required check '$Id' is missing from this evidence bundle. Reinitialize evidence from the current policy; a supplemental check cannot replace it." }
+        if ($canonicalCheck.Count -eq 0 -and $requiredCheck) {
             throw "Check '$Id' is not required by the current change policy."
         }
         if ($canonicalCheck.Count -gt 0 -and ($RegressionPhase -or $commandToRun -cne [string]$canonicalCheck[0].command)) {
             throw "Refusing non-canonical command for check '$Id'. Reinitialize evidence from the current policy."
         }
-        $allowedCommand = $commandToRun -match '^dotnet (test|format|list) [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:-]+)*$' -or
-            $commandToRun -match '^cd FoodDiary\.Web\.Client && npm (run [A-Za-z0-9_:-]+|audit)$' -or
-            $commandToRun -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
+        $allowedCommand = Test-LlmWikiCanonicalExecutionCommand $commandToRun
         if ($RegressionPhase) {
             # Focused filters and Angular include flags remain shell-free data.
             $allowedCommand = $commandToRun -match '^dotnet test [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:=~,-]+)*$' -or
@@ -264,6 +264,7 @@ switch ($Action) {
                 $commandToRun -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
             if ($commandToRun -match '(?:^|\s)--no-build(?:\s|$)') { $allowedCommand = $false }
         }
+        if (-not $requiredCheck -and (Test-LlmWikiSupplementalExecutionCommand $commandToRun)) { $allowedCommand = $true }
         if (-not $allowedCommand) {
             throw "Refusing command outside the evidence execution allowlist: $commandToRun"
         }
@@ -286,7 +287,7 @@ switch ($Action) {
 
         Write-Host "Running evidence check '$Id': $commandToRun"
         $beforeExecution = Get-LlmWikiVerificationFingerprint $repositoryRoot
-        $logsDirectory = Join-Path (Split-Path -Parent $absolutePath) 'logs'
+        $logsDirectory = $executionLocation.logsDirectory
         $null = New-Item -ItemType Directory -Path $logsDirectory -Force
         $safeId = $Id -replace '[^A-Za-z0-9_.-]', '_'
         $executionLog = Join-Path $logsDirectory "$safeId-$([guid]::NewGuid().ToString('N')).log"

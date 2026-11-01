@@ -60,6 +60,7 @@ foreach ($path in $scope) {
     }
     foreach ($candidate in @(
         ($normalizedPath -replace '\.ts$', '.spec.ts')
+        $(if ($normalizedPath -match '\.(?:html|scss|css)$') { $normalizedPath -replace '\.(?:html|scss|css)$', '.spec.ts' })
         ($normalizedPath -replace '\.cs$', 'Tests.cs')
         $(if ($normalizedPath -match '\.(?:js|mjs|cjs)$') { $normalizedPath -replace '\.(js|mjs|cjs)$', '.test.$1' })
         $(if ($normalizedPath -match '\.ps1$') { $normalizedPath -replace '/(?:Get|Set|Write|Build|Find|Invoke|Manage|Update|New)-([^/]+)\.ps1$', '/Test-$1.ps1' })
@@ -94,6 +95,7 @@ foreach ($consumer in @($impact.consumers)) {
     }
 }
 $required = @(
+    $(if ('.llm-wiki/policies/context-search-ranking.json' -in $scope) { 'Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.QueryPreparation.cs' })
     $(if (@($scope | Where-Object { $_.Replace('\', '/') -eq '.github/workflows/ci-tests.yml' }).Count -gt 0) { 'Tooling/tests/FoodDiary.ArchitectureTests/BuildWorkflowGuardrailTests.cs' })
     @($scoped | Sort-Object)
 ) | Select-Object -First $Limit

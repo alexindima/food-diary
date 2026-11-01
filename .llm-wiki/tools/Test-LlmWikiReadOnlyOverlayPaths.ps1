@@ -67,6 +67,13 @@ try {
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('init', '--quiet')
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('add', '--all')
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('-c', 'user.name=Wiki Smoke', '-c', 'user.email=wiki-smoke@example.invalid', 'commit', '--quiet', '-m', 'fixture')
+    $graphDirectory = Join-Path $fixture '.artifacts/llm-wiki/code-graph'
+    $null = New-Item -ItemType Directory -Path $graphDirectory -Force
+    [IO.File]::WriteAllText((Join-Path $graphDirectory 'code-graph.fingerprint'), 'first derived graph')
+    $beforeGraphRefresh = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $fixture -OverlayPath @('alpha/changed.txt')
+    [IO.File]::WriteAllText((Join-Path $graphDirectory 'code-graph.fingerprint'), 'concurrent graph refresh')
+    $afterGraphRefresh = Get-ReadOnlySnapshotFingerprint -RepositoryRoot $fixture -OverlayPath @('alpha/changed.txt')
+    if ($beforeGraphRefresh -cne $afterGraphRefresh) { throw 'An external derived graph refresh invalidated unchanged snapshot source inputs.' }
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('mv', 'alpha/old-location.cs', 'alpha/new-location.cs')
     foreach ($path in @('alpha/changed.txt', $unicodePath, 'outside.txt', '.llm-wiki/note.txt', 'alpha/untracked.txt', 'outside-untracked.txt')) {
         [IO.File]::WriteAllText((Join-Path $fixture $path), 'changed', [Text.UTF8Encoding]::new($false))

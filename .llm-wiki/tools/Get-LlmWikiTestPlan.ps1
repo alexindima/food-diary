@@ -36,6 +36,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiProjectLookup.ps1')
 . (Join-Path $toolsRoot 'LlmWikiSourceInventory.ps1')
 . (Join-Path $toolsRoot 'LlmWikiNativeTestDiscovery.ps1')
+. (Join-Path $toolsRoot 'LlmWikiFrontendTestRunner.ps1')
 $testSourceContents = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
 $nativeScanner = $null
 $moduleTestRoots = @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
@@ -115,6 +116,8 @@ $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
 }
 $ruleIds = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
 $scopes = @($diff.scopes)
+$frontendOnlyChange = $effectivePaths.Count -gt 0 -and @($effectivePaths | Where-Object { $_ -notmatch '^FoodDiary\.Web\.Client/' }).Count -eq 0
+$stylesheetOnly = $frontendOnlyChange -and @($effectivePaths | Where-Object { $_ -notmatch '\.(?:scss|css)$' }).Count -eq 0
 $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -428,6 +431,7 @@ $rankedSeen = [System.Collections.Generic.HashSet[string]]::new([System.StringCo
 function Add-RankedTests {
     param([string[]]$Paths, [int]$Rank, [string]$Reason)
     foreach ($path in @($Paths)) {
+        if ($frontendOnlyChange -and $path -match '\.cs$') { continue }
         if ([string]::IsNullOrWhiteSpace($path) -or -not $rankedSeen.Add($path)) { continue }
         $rankedFocusedTests.Add([pscustomobject]@{
             path = $path
@@ -621,8 +625,8 @@ $commands = @(@(
         id = $_.id
         command = $_.command
         source = 'policy'
-        priority = 'required'
-        reason = "triggered-policy:$($_.sourceRule)"
+        priority = $(if ($stylesheetOnly -and $_.id -eq 'frontend-verify') { 'full-regression' } else { 'required' })
+        reason = $(if ($stylesheetOnly -and $_.id -eq 'frontend-verify') { 'publication-gate; local stylesheet checks and browser evidence cover iteration' } else { "triggered-policy:$($_.sourceRule)" })
     } }) +
     @($diff.recommendedChecks | ForEach-Object { [pscustomobject]@{
         id = "recommended-$((Get-LlmWikiSha256 ([string]$_)).Substring(0, 10))"
@@ -695,9 +699,12 @@ foreach ($plannedTestProject in @($plannedTestProjects | Sort-Object)) {
 
 $frontendFocusedTests = @(
     $selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } |
-        Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' } |
+        Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' -and $_ -notmatch '^FoodDiary\.Web\.Client/e2e/' } |
         Select-Object -First 5
 )
+foreach ($browserTest in @($selectedFocusedTests | Where-Object { $_.path -match '^FoodDiary\.Web\.Client/e2e/.+\.spec\.ts$' })) {
+    $commands += Get-LlmWikiFrontendBrowserCheck -RepositoryRoot $repositoryRoot -Path $browserTest.path -Package $frontendPackage
+}
 foreach ($frontendProjectGroup in @($frontendFocusedTests | Group-Object {
     if ($_ -match '^FoodDiary\.Web\.Client/projects/fooddiary-admin/') { 'admin' }
     elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-ui-kit/') { 'ui-kit' }

@@ -7,6 +7,9 @@ sources:
   - docs/README.md
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
+  - docs/backend/PRODUCTION_RUNTIME_DIAGNOSTICS.md
+  - docs/backend/BACKEND_OBSERVABILITY_BASELINE.md
+  - docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md
 ---
 
 # FoodDiary Knowledge Index
@@ -53,6 +56,11 @@ authoritative.
 - [Mail services](modules/mail-services.md) — MailRelay and MailInbox service
   boundaries.
 - [Bug triage](../docs/backend/BUG_TRIAGE.md) — independent email-to-bug queue and local worker setup.
+- [Production incident diagnostics](../docs/backend/PRODUCTION_RUNTIME_DIAGNOSTICS.md)
+  — resolve a production symptom to runtime version, health and current source.
+- [Backend observability baseline](../docs/backend/BACKEND_OBSERVABILITY_BASELINE.md)
+  and [frontend observability baseline](../docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md)
+  — interpret logs and telemetry during a read-only production audit.
 - [Frontend](modules/frontend.md) — Angular application, admin application,
   UI kit, and tour engine.
 

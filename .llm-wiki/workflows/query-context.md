@@ -3,6 +3,7 @@ id: workflow.query-context
 kind: workflow
 status: current
 sources:
+  - .llm-wiki/policies/change-policies.json
   - .llm-wiki/tools/Find-LlmWikiContext.ps1
   - .llm-wiki/tools/LlmWikiQueryCache.ps1
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
@@ -35,6 +36,18 @@ sources:
 ---
 
 # Query Repository Context
+
+For an existing provider operation include the known provider and operation name
+or pass its confirmed module/path scope. A query such as `billing portal session
+management provider flow` is ambiguous across configured billing providers; a
+top candidate is a navigation lead, not the active production provider. Use
+`trace` for the endpoint/handler/provider chain and confirm configuration in its
+owning source. Do not add a provider-specific ranking rule merely to force an
+underspecified query to select one implementation.
+
+Ranking-policy changes also require the focused .NET
+`SqliteWikiContextSearchTests` through change policy. Retrieval corpora and
+Node/.NET parity alone do not cover reader rejection and negative cases.
 
 Each CLI context request probes the live graph status before cache reuse. Its
 bounded `currentWorkspace` token carries the repository identity, Git HEAD,

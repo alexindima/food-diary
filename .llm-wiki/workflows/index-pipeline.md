@@ -130,6 +130,13 @@ sources:
 
 # Run the Staged Index Pipeline
 
+The quality generator publishes a complete UTF-8 replacement atomically instead
+of truncating its current JSON file. Readers mapping the old file can finish
+while later readers see the new index. Temporary sharing locks receive a bounded
+retry; failed publication retains the existing artifact. Transaction source
+fingerprints and final freshness checks still decide whether generated output
+is current.
+
 Read-only query snapshots live in each checkout's ignored
 `.artifacts/llm-wiki/read-only-snapshots` directory. For `D:\FD`, both checkout
 creation and cache cleanup use drive D rather than the Windows system temp

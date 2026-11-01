@@ -15,6 +15,27 @@ and accepted ADRs determine concrete behavior.
 5. Follow the existing verification planner, refresh affected artifacts, and
    hand off actual results and unresolved risks.
 
+`develop` and `start` retain the declared `PlannedPath`, intent and task workspace
+in the existing session baseline. Subsequent implicit `diff`, planning and
+verification use that task boundary; unrelated concurrent edits remain visible
+as excluded workspace context. Explicit paths, refs and workspace selections
+take precedence. `next` resumes the session task and never borrows a different
+`tasks/current` merely because the current session has no governed workspace.
+To expand scope, pass the newly reviewed paths explicitly or reroute the task;
+do not rely on unrelated dirty files becoming part of its diff.
+
+During bounded visual iteration use `continue-ui` and
+`verify-fast -VisualUiCompletion`, then `ui-finalize` once before publication.
+The final strict and CI gates remain required. Stylesheet-only test plans keep
+backend tests out of the local list and label full frontend verification as a
+publication check. A generic layout check repeats its own visible scenario;
+upload fixtures are required only when the requested scenario includes upload.
+
+Browser scenarios under `FoodDiary.Web.Client/e2e/` use their package.json
+Playwright runner, rather than Angular `--include`. `coverage-plan` returns that
+focused browser command with no fabricated coverage command when no browser
+coverage collector is configured. Ask for Angular source coverage separately.
+
 Pass distinct observable outcomes with `start -Criterion` when defects or audit
 scenarios are already known. For a visual assessment without implementation,
 use the scoped browser guide and `node scripts/ai/task-runtime.mjs list` to find
@@ -37,6 +58,9 @@ only SQL timing diagnostics, and invalidates the full dependent assessment set
 before rebuilding the report. Unchanged check evidence is retained through the
 existing lineage rules. Stale dependency metadata points to refresh; unexpected
 current impact still requires review or replanning.
+Supplemental check IDs remain acceptance links during refresh. The execution
+lease is coordination state, not an assessment input; source, evidence and log
+contents continue to invalidate cached results when they change.
 
 Generic command guides declare their generators and query contracts as sources.
 Use a generated index as a page source when the page actually asserts facts

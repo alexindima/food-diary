@@ -12,6 +12,33 @@ function Enable-LlmWikiStringDateJsonParsing {
     $global:PSDefaultParameterValues['ConvertFrom-Json:DateKind'] = 'String'
 }
 
+function Write-LlmWikiTextFileAtomically {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Path, [Parameter(Mandatory)][AllowEmptyString()][string]$Content)
+    $absolute = [IO.Path]::GetFullPath($Path)
+    $temporary = $absolute + '.pending-' + [guid]::NewGuid().ToString('N')
+    try {
+        [IO.File]::WriteAllText($temporary, $Content, [Text.UTF8Encoding]::new($false))
+        $timer = [Diagnostics.Stopwatch]::StartNew()
+        while ($true) {
+            try {
+                if ([IO.File]::Exists($absolute)) { [IO.File]::Replace($temporary, $absolute, [NullString]::Value) }
+                else { [IO.File]::Move($temporary, $absolute) }
+                break
+            } catch [IO.IOException] {
+                # Readers may map the old artifact on Windows. Never truncate
+                # that mapping; publish a complete replacement and briefly wait
+                # for a transient sharing lock instead of losing the generation.
+                $code = $_.Exception.HResult -band 0xffff
+                if ($code -notin @(17, 32, 33, 80, 183, 1224) -or $timer.ElapsedMilliseconds -ge 2000) { throw }
+                Start-Sleep -Milliseconds 50
+            }
+        }
+    } finally {
+        if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) }
+    }
+}
+
 function ConvertFrom-LlmWikiJson {
     [CmdletBinding()]
     param(

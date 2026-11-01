@@ -2,6 +2,22 @@
   "schemaVersion": 1,
   "rules": [
     {
+      "id": "wiki-ranking-reader-contract",
+      "description": "Shared context-ranking changes must cover the .NET reader rejection and boundary cases as well as retrieval corpora.",
+      "pathPatterns": [
+        "^\\.llm-wiki/policies/context-search-ranking\\.json$",
+        "^FoodDiary\\.Development\\.Mcp/Wiki/SqliteContextSearchReader(?:\\.[^/]+)?\\.cs$"
+      ],
+      "excludePatterns": [],
+      "requiredChecks": [
+        {
+          "id": "wiki-ranking-reader-tests",
+          "command": "dotnet test Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj --artifacts-path .artifacts/llm-wiki/mcp-ranking-tests --filter FullyQualifiedName~SqliteWikiContextSearchTests"
+        }
+      ],
+      "reviewObligations": []
+    },
+    {
       "id": "backend-boundaries",
       "description": "Production backend changes must preserve architectural boundaries.",
       "pathPatterns": [

@@ -9,7 +9,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $outputPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/frontend-contract-index.json'
-$sourceInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.ts', ':(icase)FoodDiary.Web.Client/**/*.html') -FailureMessage 'Unable to enumerate frontend-contract sources.')
+$sourceInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', ':(icase)FoodDiary.Web.Client/**/*.ts', ':(icase)FoodDiary.Web.Client/**/*.html', ':(icase)FoodDiary.Web.Client/**/*.scss', ':(icase)FoodDiary.Web.Client/**/*.css') -FailureMessage 'Unable to enumerate frontend-contract sources.')
 $sourceInputs = @($sourceInputs | Where-Object { $_ -notmatch '[\/](node_modules|dist[^\/]*|coverage|\.angular)[\/]' -and [IO.File]::Exists((Join-Path $repositoryRoot $_)) })
 $sdkManifestPaths = @('FoodDiary.Web.Client/api-sdk/scopes.json', 'FoodDiary.Web.Client/api-sdk/admin.scopes.json')
 $sdkOperations = @{}
@@ -93,6 +93,16 @@ foreach ($file in $tsFiles) {
             $templateAbsolute = Join-Path $file.DirectoryName $templateMatch.Groups['value'].Value
             if (Test-Path -LiteralPath $templateAbsolute) { $templatePath = ConvertTo-RepositoryPath $templateAbsolute }
         }
+        $styleUrls = [Collections.Generic.List[string]]::new()
+        foreach ($match in [regex]::Matches($metadata, "\bstyleUrl\s*:\s*['""](?<value>[^'""]+)['""]")) { $styleUrls.Add($match.Groups['value'].Value) }
+        foreach ($array in [regex]::Matches($metadata, '(?s)\bstyleUrls\s*:\s*\[(?<values>[^\]]*)\]')) {
+            foreach ($match in [regex]::Matches($array.Groups['values'].Value, "['""](?<value>[^'""]+)['""]")) { $styleUrls.Add($match.Groups['value'].Value) }
+        }
+        $stylePaths = @($styleUrls | ForEach-Object {
+            $absolute = [IO.Path]::GetFullPath((Join-Path $file.DirectoryName $_))
+            $prefix = $repositoryRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            if ($absolute.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $absolute -PathType Leaf)) { ConvertTo-RepositoryPath $absolute }
+        } | Sort-Object -Unique)
         $inputs = @(
             [regex]::Matches($content, '(?m)(?:readonly\s+)?(?<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?:input|model)(?:\.required)?\s*(?:<(?<type>[^\r\n]+?)>)?\s*\(') |
                 ForEach-Object {
@@ -120,6 +130,7 @@ foreach ($file in $tsFiles) {
             feature = $feature
             path = $path
             templatePath = $templatePath
+            stylePaths = $stylePaths
             inputs = $inputs
             outputs = $outputs
             specPath = if (Test-Path -LiteralPath $specPath) { ConvertTo-RepositoryPath $specPath } else { $null }

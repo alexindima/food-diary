@@ -95,11 +95,7 @@ function Get-LineageChangeReason([object]$Entry, [object]$Requirement) {
     if ([string]$Entry.lineage.dependencies.contentFingerprint -cne [string]$content.fingerprint) { return 'dependency-content-changed' }
     $policyHash = (Get-FileHash -LiteralPath (Join-Path $wikiRoot 'policies/change-policies.json') -Algorithm SHA256).Hash.ToLowerInvariant()
     if ([string]$Entry.lineage.policyFingerprint -cne $policyHash) { return 'change-policy-changed' }
-    $currentRuntimeVersion = switch ([string]$Entry.lineage.execution.runtime) {
-        'dotnet' { [string](& dotnet --version) }
-        'npm' { [string](& npm --version) }
-        default { [string]$PSVersionTable.PSVersion }
-    }
+    $currentRuntimeVersion = Get-LlmWikiEvidenceRuntimeVersion ([string]$Entry.lineage.execution.runtime)
     if ([string]$Entry.lineage.execution.runtimeVersion -cne $currentRuntimeVersion) { return 'runtime-version-changed' }
     $currentOs = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription.Trim()
     $currentArchitecture = [string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
@@ -152,6 +148,11 @@ function Get-AvailableScenarios([object]$Packet, [string]$Intent) {
 
 $history = [System.Collections.Generic.List[object]]::new()
 $newCheckIds = @(Get-Ids @($newPacket.policy.requiredChecks))
+$supplementalChecks = @(if ($evidence.PSObject.Properties['supplementalChecks']) { @($evidence.supplementalChecks) })
+# A supplemental check is an existing evidence identity, even though policy does
+# not require it. Retaining its mapping does not attest to its execution; normal
+# lineage validation still rejects missing, changed or stale proof.
+$newCheckIds = @($newCheckIds + @(Get-Ids $supplementalChecks) | Sort-Object -Unique)
 $newReviewIds = @(Get-Ids @($newPacket.policy.reviewObligations))
 $invalidatedCheckIds = [System.Collections.Generic.List[string]]::new()
 $invalidatedReviewIds = [System.Collections.Generic.List[string]]::new()
@@ -316,7 +317,7 @@ $evidence | Add-Member -NotePropertyName invalidationHistory -NotePropertyValue 
 $acceptance.availableEvidence.scenarios = $newAvailableScenarios
 $acceptance.availableEvidence | Add-Member -NotePropertyName changedPaths -NotePropertyValue @($newPacket.diff.changedPaths) -Force
 $acceptance.availableEvidence | Add-Member -NotePropertyName renames -NotePropertyValue @($(if ($newPacket.diff.PSObject.Properties['renames']) { @($newPacket.diff.renames) } else { @() })) -Force
-$acceptance.availableEvidence.checks = @($newPacket.policy.requiredChecks | ForEach-Object {
+$acceptance.availableEvidence.checks = @(@($newPacket.policy.requiredChecks) + $supplementalChecks | ForEach-Object {
     [pscustomobject][ordered]@{ id = $_.id; command = $_.command }
 })
 $acceptance.availableEvidence.reviews = @($newPacket.policy.reviewObligations | ForEach-Object {

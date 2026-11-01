@@ -25,6 +25,9 @@ review obligations, and structural invariants.
 Current policy families cover backend boundaries, HTTP contracts, paired
 English/Russian localization, EF migration pairs, frontend verification,
 security-sensitive areas, and LLM-Wiki freshness.
+Shared ranking-policy and .NET context-reader changes additionally require the
+filtered `SqliteWikiContextSearchTests` suite, including rejection and boundary
+cases. This requirement does not apply to ordinary frontend styling changes.
 Domain invariant review covers `Modules/<Module>/Domain`, shared domain
 primitives, and the remaining legacy domain projects.
 Data-access review covers module infrastructure and the independent mail-service

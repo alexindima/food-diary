@@ -36,9 +36,8 @@ if (-not [string]::IsNullOrWhiteSpace($WorkspacePath)) {
     } else {
         $normalizedEvidencePath = $EvidencePath.Replace('\', '/')
     }
-    if ($normalizedEvidencePath -notmatch '^\.artifacts/llm-wiki/(?:tasks/[^/]+/)?[^/]+\.json$') {
-        throw 'EvidencePath must be a direct JSON artifact or task evidence under .artifacts/llm-wiki.'
-    }
+    $location = Get-LlmWikiEvidenceExecutionLocation $repositoryRoot $normalizedEvidencePath
+    $normalizedEvidencePath = $location.relativePath
 }
 $absoluteEvidencePath = Join-Path $repositoryRoot $normalizedEvidencePath
 if (-not (Test-Path -LiteralPath $absoluteEvidencePath -PathType Leaf)) { throw "Evidence is absent: $normalizedEvidencePath" }
@@ -83,7 +82,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
             $artifact = if ($lineage.PSObject.Properties['artifact']) { $lineage.artifact } else { $null }
             if ([string]$lineage.kind -eq 'executed-check' -and $null -ne $artifact) {
                 $artifactPath = [string]$artifact.path
-                $expectedPrefix = if (-not [string]::IsNullOrWhiteSpace($normalizedWorkspacePath)) { "$normalizedWorkspacePath/logs/" } else { '.artifacts/llm-wiki/' }
+                $expectedPrefix = ((Split-Path -Parent $normalizedEvidencePath).Replace('\', '/').TrimEnd('/') + '/logs/')
                 if (-not $artifactPath.StartsWith($expectedPrefix, [StringComparison]::Ordinal)) {
                     $entryIssues.Add('execution artifact path is outside the evidence boundary')
                 } else {
@@ -96,11 +95,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
                 }
             }
         }
-        $currentRuntimeVersion = switch ([string]$lineage.execution.runtime) {
-            'dotnet' { [string](& dotnet --version) }
-            'npm' { [string](& npm --version) }
-            default { [string]$PSVersionTable.PSVersion }
-        }
+        $currentRuntimeVersion = Get-LlmWikiEvidenceRuntimeVersion ([string]$lineage.execution.runtime)
         if ([string]$lineage.execution.runtimeVersion -cne $currentRuntimeVersion) { $entryIssues.Add('runtime version changed') }
         $currentOs = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription.Trim()
         $currentArchitecture = [string][System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture

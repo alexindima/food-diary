@@ -83,6 +83,12 @@ $timestamp = '{"value":"2026-01-01T00:04:30.0000000Z"}' | ConvertFrom-Json
         [IO.File]::WriteAllText((Join-Path $fixture "$workspace/change-critique.json"), '{}')
         $withDerivedOutput = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments $arguments
         Assert-Reliability ($withDerivedOutput.call -eq 1) 'An unconsumed critique output invalidated reusable requirement assessment.'
+        $lease = [IO.File]::Open((Join-Path $fixture "$workspace/evidence.json.execution.lock"), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+        try {
+            $leaseCompatible = $false
+            try { $withLease = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments $arguments; $leaseCompatible = $withLease.call -eq 1 } catch { Write-Host "Lease diagnosis: $($_.Exception.Message)" }
+            Assert-Reliability $leaseCompatible 'A live evidence execution lease blocked an unchanged read-only assessment.'
+        } finally { $lease.Dispose() }
         $cacheFile = @(Get-ChildItem -LiteralPath (Join-Path $fixture '.git/llm-wiki/query-cache/task-assessments') -File -Filter '*.json')[0]
         [IO.File]::WriteAllText($cacheFile.FullName, '{broken')
         $recovered = Invoke-LlmWikiAssessment -ToolName 'Manage-LlmWikiRequirementModel.ps1' -Arguments $arguments

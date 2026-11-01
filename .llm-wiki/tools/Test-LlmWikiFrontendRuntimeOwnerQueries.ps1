@@ -53,6 +53,20 @@ foreach ($case in $cases) {
 if ($reducedCases -ne $cases.Count) {
     throw "SQLite runtime-owner payload filtering reduced records for only $reducedCases/$($cases.Count) parity cases."
 }
+$sharedStyleComponent = 'FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-sources.ts'
+$sharedStyle = 'FoodDiary.Web.Client/src/app/features/dashboard/dialogs/nutrition-details-dialog/nutrition-details-dialog.scss'
+$sharedOwner = & $tool -Query '' -CandidatePath $sharedStyleComponent -Format Json | ConvertFrom-Json
+if (@($sharedOwner.owners | Where-Object { $_.componentPath -eq $sharedStyleComponent -and $sharedStyle -in @($_.recommendedScope) }).Count -ne 1) {
+    throw 'Runtime ownership omitted the component-declared shared stylesheet.'
+}
+foreach ($owner in @($sharedOwner.owners)) {
+    foreach ($path in @($owner.recommendedScope)) {
+        if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot $path) -PathType Leaf)) { throw "Runtime ownership invented a resource path: $path" }
+    }
+}
+$componentDirectory = 'FoodDiary.Web.Client/src/app/components/shared/nutrition-weekly-trend-card'
+$directoryOwners = & $tool -Query '' -CandidatePath $componentDirectory -Format Json | ConvertFrom-Json
+if ($directoryOwners.ownerCount -ne 1 -or -not $directoryOwners.owners[0].componentPath.StartsWith("$componentDirectory/")) { throw 'An explicit component directory selected unrelated sibling owners.' }
 function Get-NormalizedSourceHash([string]$Path) {
     $text = [IO.File]::ReadAllText($Path).Replace("`r`n", "`n")
     $sha = [Security.Cryptography.SHA256]::Create()

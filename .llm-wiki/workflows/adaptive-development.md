@@ -104,7 +104,7 @@ Read-oriented facade commands run under a shared index lock in a content-address
 isolated snapshot. The guard detects any source mutation inside that snapshot,
 fails the command, and discards the poisoned snapshot; it never restores or
 overwrites files in the caller's worktree. New snapshots are standalone shared
-clones under the OS-local temp directory, so they do not consume the repository's
+clones under `.artifacts/llm-wiki/read-only-snapshots`, so they do not consume the repository's
 linked-worktree registrations. Safe snapshots are reused and bounded by a
 retention policy. Git-local hook variables are cleared before addressing an
 explicit repository root, and a cached snapshot is rebuilt when its required
@@ -207,6 +207,11 @@ only paths changed after that capture, so unrelated work that was already presen
 does not expand affected indexes, policy checks, or source-impact reviews. A
 subsequent edit to an already dirty file is still detected. Explicit
 `-ChangedPath` always overrides the captured task delta.
+When planned paths were supplied, the same baseline retains that boundary,
+intent and workspace for subsequent commands. Later foreign edits outside the
+boundary remain excluded context. Explicit Git refs also bypass the implicit
+task delta. Visual routes expose a cheap repeatable `iterationCommand` and a
+one-time `publicationCommand`; the final strict gate remains required.
 
 Baselines use a Wiki-owned internal UUID. A Codex thread/task environment value,
 when available, is only an external lookup hint; one active internal session can

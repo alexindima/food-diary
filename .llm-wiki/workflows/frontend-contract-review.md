@@ -13,6 +13,12 @@ sources:
 
 # Frontend contract review
 
+Component records include existing resources declared through `styleUrl` and
+`styleUrls`. Runtime ownership recommends these actual paths, including shared
+stylesheets, rather than assuming a same-name SCSS file. Exact directory inputs
+stay within that component directory; declaration and render-chain evidence
+still need confirmation in current source.
+
 For a changed component, query its selector, inputs, outputs, template, direct spec, translations, and API calls:
 
 ```powershell

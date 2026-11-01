@@ -7,6 +7,25 @@ $toolsRoot = $PSScriptRoot
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
 
+$publicationRoot = Join-Path ([IO.Path]::GetTempPath()) ('wiki-json-publication-' + [guid]::NewGuid().ToString('N'))
+$null = New-Item -ItemType Directory -Path $publicationRoot -Force
+$mapped = $null; $view = $null
+try {
+    $publicationPath = Join-Path $publicationRoot 'index.json'
+    [IO.File]::WriteAllText($publicationPath, '{"value":"old"}')
+    $reader = [IO.File]::Open($publicationPath, [IO.FileMode]::Open, [IO.FileAccess]::Read, ([IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete))
+    $mapped = [IO.MemoryMappedFiles.MemoryMappedFile]::CreateFromFile($reader, [NullString]::Value, 0, [IO.MemoryMappedFiles.MemoryMappedFileAccess]::Read, [IO.HandleInheritability]::None, $false)
+    $view = $mapped.CreateViewAccessor(0, 0, [IO.MemoryMappedFiles.MemoryMappedFileAccess]::Read)
+    $published = $false
+    try { Write-LlmWikiTextFileAtomically -Path $publicationPath -Content '{"value":"new"}'; $published = $true } catch { Write-Host "Atomic publication diagnosis: $($_.Exception.Message)" }
+    if (-not $published -or [IO.File]::ReadAllText($publicationPath) -cne '{"value":"new"}' -or $view.ReadByte(10) -ne [byte][char]'o') { throw 'Generated JSON could not be published while a reader maps the prior index.' }
+    if (@(Get-ChildItem -LiteralPath $publicationRoot -File).Count -ne 1) { throw 'Atomic publication left temporary output files.' }
+} finally {
+    if ($view) { $view.Dispose() }; if ($mapped) { $mapped.Dispose() }
+    if ([IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($publicationRoot)) -cne [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')) { throw 'Publication fixture escaped its owned parent.' }
+    Remove-Item -LiteralPath $publicationRoot -Recurse -Force
+}
+
 $isoTimestamp = '2026-07-29T13:34:35.1234567Z'
 $parsed = "{`"at`":`"$isoTimestamp`"}" | ConvertFrom-Json
 if ($parsed.at -isnot [string] -or $parsed.at -cne $isoTimestamp) {

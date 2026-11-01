@@ -20,7 +20,7 @@ $tools=Join-Path $fixture '.llm-wiki/tools'
 $workspace='.artifacts/llm-wiki/tasks/fixture'
 $null=New-Item -ItemType Directory -Path $tools,(Join-Path $fixture $workspace),(Join-Path $fixture 'src'),(Join-Path $fixture 'tests') -Force
 Copy-Item -LiteralPath $SutPath -Destination (Join-Path $tools 'Update-LlmWikiTaskEvidence.ps1')
-foreach($name in @('LlmWikiVerificationReceipts.ps1','LlmWikiGitPaths.ps1')){Copy-Item -LiteralPath (Join-Path $sourceRoot ".llm-wiki/tools/$name") -Destination $tools}
+foreach($name in @('LlmWikiVerificationReceipts.ps1','LlmWikiGitPaths.ps1','LlmWikiJson.ps1')){Copy-Item -LiteralPath (Join-Path $sourceRoot ".llm-wiki/tools/$name") -Destination $tools}
 # Explicit isolated boundaries: no graph lookup or receipt import is under test.
 [IO.File]::WriteAllText((Join-Path $tools 'Find-LlmWikiProductJourney.ps1'),'param($Query,$ChangedPath,$Format); ''{"journeys":[]}''')
 [IO.File]::WriteAllText((Join-Path $tools 'Import-LlmWikiEvidenceReceipts.ps1'),'param($WorkspacePath); [IO.File]::WriteAllText((Join-Path $PSScriptRoot "../../.artifacts/import-boundary-called"),"observed"); ''{"importedCount":0}''')
@@ -55,6 +55,7 @@ $criteria=@(
  (Criterion 'multiple-explicit' @('tests/focused.ps1','tests/explicit.ps1','tests/second-explicit.ps1')),
  (Criterion 'null' $null $null $null $null $null),
  (Criterion 'scalar-identities' @() 'src/value.ps1' 'keep-check' 'keep-review' 'keep-scenario'),
+ (Criterion 'supplemental-check' @() @() 'node-regression'),
  (Criterion 'outside' '../outside.ps1'),
  (Criterion 'rooted' (Join-Path $fixture 'tests/explicit.ps1')),
  (Criterion 'missing' 'tests/missing.ps1'),
@@ -63,6 +64,7 @@ $criteria=@(
 $matrix=@{objective='Keep explicit evidence references';criteria=$criteria;availableEvidence=@{scenarios=@();changedPaths=@();checks=@();reviews=@();testPaths=@()}}
 if ($caseSiblingRelative) { $matrix.criteria += (Criterion 'case-sibling' $caseSiblingRelative) }
 $evidence=@{structuralViolations=@();checks=@(@{id='keep-check';status='pending';command='./check.ps1'},@{id='removed-check';status='pending';command='./removed.ps1'});reviews=@(@{id='keep-review';status='pending';description='Keep'},@{id='removed-review';status='pending';description='Remove'});git=@{head='fixture-head';base='fixture-base';comparedHead=$null};change=@{changedPaths=@('src/value.ps1');scopes=@();modules=@()}}
+$evidence.supplementalChecks = @(@{id='node-regression';status='pending';command='node --test tests/focused.test.mjs'})
 Write-Json "$workspace/change-packet.json" $old
 Write-Json "$workspace/.refresh-fixture-packet.json" $new
 Write-Json "$workspace/acceptance-matrix.json" $matrix
@@ -85,6 +87,7 @@ if ($caseSiblingRelative) {
 $nullMapping=M 'null'
 Check 'null-canonical-empty-all5-fields' (@($nullMapping.testPaths).Count -eq 0 -and @($nullMapping.changedPaths).Count -eq 0 -and @($nullMapping.checkIds).Count -eq 0 -and @($nullMapping.reviewIds).Count -eq 0 -and @($nullMapping.scenarioIds).Count -eq 0) $nullMapping
 $ids=M 'scalar-identities'
+Check 'supplemental-check-link-retained' (@((M 'supplemental-check').checkIds).Count -eq 1 -and (M 'supplemental-check').checkIds[0] -eq 'node-regression' -and 'node-regression' -in @($actual.availableEvidence.checks.id)) (M 'supplemental-check')
 Check 'scalar-changed-check-review-scenario-retained' (@($ids.changedPaths).Count -eq 1 -and @($ids.checkIds).Count -eq 1 -and @($ids.reviewIds).Count -eq 1 -and @($ids.scenarioIds).Count -eq 1) $ids
 $invalid=M 'invalidated'
 Check 'invalidated-identities-and-missing-test-removed' (@($invalid.testPaths).Count -eq 0 -and @($invalid.changedPaths).Count -eq 0 -and @($invalid.checkIds).Count -eq 0 -and @($invalid.reviewIds).Count -eq 0 -and @($invalid.scenarioIds).Count -eq 0 -and ($actual.criteria|Where-Object id -eq 'invalidated').status -eq 'pending') $invalid

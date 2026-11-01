@@ -14,6 +14,10 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $absoluteWorkspace = Join-Path $repositoryRoot $WorkspacePath
 $hasWorkspace = Test-Path -LiteralPath (Join-Path $absoluteWorkspace 'workspace.json') -PathType Leaf
+if ($hasWorkspace -and -not [string]::IsNullOrWhiteSpace($Objective)) {
+    $descriptor = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'workspace.json') -Raw | ConvertFrom-Json
+    $hasWorkspace = [string]$descriptor.objective -ceq $Objective
+}
 
 if ($hasWorkspace) {
     $delivery = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiDeliveryWorkflow.ps1') status -WorkspacePath $WorkspacePath -Format Json | ConvertFrom-Json

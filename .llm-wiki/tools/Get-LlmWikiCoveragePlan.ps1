@@ -10,6 +10,21 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $paths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
 if ($paths.Count -eq 0) { throw "coverage-plan requires -PlannedPath for the test or production source under investigation." }
+. (Join-Path $PSScriptRoot 'LlmWikiFrontendTestRunner.ps1')
+$browserPaths = @($paths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/e2e/.+\.spec\.ts$' })
+if ($browserPaths.Count -gt 0) {
+    if ($browserPaths.Count -ne $paths.Count) { throw 'Request separate browser-scenario and unit-coverage plans.' }
+    $package = Get-Content -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Web.Client/package.json') -Raw | ConvertFrom-Json
+    $plans = @($browserPaths | ForEach-Object {
+        $check = Get-LlmWikiFrontendBrowserCheck -RepositoryRoot $repositoryRoot -Path $_ -Package $package
+        [pscustomobject]@{ scope = @{ paths = @($_); framework = 'playwright' }; commands = @{ focusedTest = $check.command; coverage = $null }; commandEvidence = $check.commandEvidence }
+    })
+    $result = @{ schemaVersion = 1; scope = @{ paths = $paths; query = $Query; framework = 'playwright' }; plans = $plans; commands = $(if ($plans.Count -eq 1) { $plans[0].commands } else { $null }); notes = @('These browser scenarios have a verified Playwright runner but no configured code-coverage collector. Use an Angular unit-test coverage plan for source coverage; browser execution alone does not prove it.') }
+    if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; return }
+    foreach ($plan in $plans) { Write-Host "Browser scenario: $($plan.commands.focusedTest)" }
+    Write-Host $result.notes[0]
+    return
+}
 
 $frontendPaths = @($paths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.(?:spec\.)?ts$' })
 if ($frontendPaths.Count -gt 0) {

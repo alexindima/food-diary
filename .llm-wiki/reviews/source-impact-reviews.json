@@ -175,8 +175,8 @@
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "201243bb5431f8e5402bafc953bda5563017d30eb15d8aa4bd2a54f43ac1801a",
+          "reviewReason": "Reviewed the facade scope/ref changes against the frontend-index reader and generator. TypeScript/locale inventory fields and cached versus strict check semantics are unchanged; final frontend contract and index-selection groups cover compatibility."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -189,10 +189,10 @@
           "reviewReason": "Reviewed Angular file replacements that remove client/admin WebMCP implementations from production. Project boundaries and frontend index fields remain unchanged; the production metadata guards exercise the actual emitted graph."
         }
       ],
-      "reason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current.",
+      "reason": "Reviewed the facade scope/ref changes against the frontend-index reader and generator. TypeScript/locale inventory fields and cached versus strict check semantics are unchanged; final frontend contract and index-selection groups cover compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:15.3226284Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:20.7487081Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -273,14 +273,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "309922374e252f3c1780c9b988377c406a2ca87aea293f5c8cafb465eab7fc75",
-          "reviewReason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged."
+          "sha256": "a939703900ac4b4f8c758268c0b094cbb0c7fb409a795d71e451311393d0aac1",
+          "reviewReason": "Reviewed actual evidence-run and acceptance mapping contracts. Supplemental execution cannot replace a canonical required check, refresh now retains existing supplemental IDs, and the matrix still requires observed evidence rather than a manual green label. Execution and mapping regression logs cover both boundaries."
         }
       ],
-      "reason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged.",
+      "reason": "Reviewed actual evidence-run and acceptance mapping contracts. Supplemental execution cannot replace a canonical required check, refresh now retains existing supplemental IDs, and the matrix still requires observed evidence rather than a manual green label. Execution and mapping regression logs cover both boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:27:02.7926365Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:20.9175429Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -366,8 +366,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8f5c6c08cc9bfafa022131df94956a9e41abac1ecfdccfc5c44ab6262c30fa63",
-          "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
+          "sha256": "361135c8e611fefede7fbae53e5eddf3fdb663411c18660047490119287fe897",
+          "reviewReason": "Inspected the regenerated architecture projection: zero dependency violations, zero unused allowances, zero untracked production projects and zero module-cycle nodes. Static candidate counts remain navigation evidence and no generation/freshness claim is weakened."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -385,10 +385,10 @@
           "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
         }
       ],
-      "reason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable.",
+      "reason": "Inspected the regenerated architecture projection: zero dependency violations, zero unused allowances, zero untracked production projects and zero module-cycle nodes. Static candidate counts remain navigation evidence and no generation/freshness claim is weakened.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:40.5087336Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:21.083014Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -397,14 +397,14 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
-          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed the Node graph diff: changes are frontend resource ownership and directory matching, with no backend-contract SQL or HTTP surface change. Backend contract records remain byte-stable after generation; code-graph and contract-query checks preserve the described reader contract."
         }
       ],
-      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
+      "reason": "Reviewed the Node graph diff: changes are frontend resource ownership and directory matching, with no backend-contract SQL or HTTP surface change. Backend contract records remain byte-stable after generation; code-graph and contract-query checks preserve the described reader contract.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:48:35.5455913Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:21.2492868Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -418,14 +418,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "309922374e252f3c1780c9b988377c406a2ca87aea293f5c8cafb465eab7fc75",
-          "reviewReason": "Reviewed unchanged manifest and critique semantics: regression evidence uses the existing bundle and lineage, and the focused fixture now covers both runs and stale handoff reporting."
+          "sha256": "a939703900ac4b4f8c758268c0b094cbb0c7fb409a795d71e451311393d0aac1",
+          "reviewReason": "Reviewed manifest evidence integration after supplemental execution changes. Required policy command equality and source-bound lineage remain enforced; a required ID missing from the bundle is now rejected before execution. Manifest scope and readiness semantics remain intact."
         }
       ],
-      "reason": "Reviewed unchanged manifest and critique semantics: regression evidence uses the existing bundle and lineage, and the focused fixture now covers both runs and stale handoff reporting.",
+      "reason": "Reviewed manifest evidence integration after supplemental execution changes. Required policy command equality and source-bound lineage remain enforced; a required ID missing from the bundle is now rejected before execution. Manifest scope and readiness semantics remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:27:02.9980354Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:21.4162605Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -453,6 +453,21 @@
           "reviewReason": "Reviewed CI648ed5ca6 retrieval failures and the minimal existing AI prompt-provider role affinity correction250to450. Complete unchanged SQL/.NET parity retrieval corpora pass, as do the original image migration expectations after giving the unshipped Billing email migration its explicit owned purpose name. Queries, expected paths, thresholds, indexes and writer/reader boundaries are unchanged; discovery guidance remains accurate."
         },
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
+          "sha256": "faf1cc8c45ace8bd39ff639dd9c5d27e886566f9547d0db79e4bdefe8c6708d1",
+          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "201243bb5431f8e5402bafc953bda5563017d30eb15d8aa4bd2a54f43ac1801a",
+          "reviewReason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged."
+        },
+        {
           "path": "FoodDiary.Development.Mcp/Wiki/DevelopmentContextEvaluationRunner.cs",
           "sha256": "265e9c0941094d989aea9e17758211102f8fb1ada6e868f4eb908716a3acd69a",
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
@@ -478,10 +493,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed CI648ed5ca6 retrieval failures and the minimal existing AI prompt-provider role affinity correction250to450. Complete unchanged SQL/.NET parity retrieval corpora pass, as do the original image migration expectations after giving the unshipped Billing email migration its explicit owned purpose name. Queries, expected paths, thresholds, indexes and writer/reader boundaries are unchanged; discovery guidance remains accurate.",
+      "reason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
-      "reviewedAtUtc": "2026-11-01T03:09:23.5451794Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:21.6297389Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -726,8 +741,8 @@
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
+          "reviewReason": "Reviewed the new exact ranking-reader policy requirement. It adds a filtered local .NET check and no project/package/provider or production rollout change. Existing manifest/lockfile comparison and compiled helper publication guidance remains valid."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1",
@@ -735,10 +750,10 @@
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification.",
+      "reason": "Reviewed the new exact ranking-reader policy requirement. It adds a filtered local .NET check and no project/package/provider or production rollout change. Existing manifest/lockfile comparison and compiled helper publication guidance remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:47.4368948Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:21.8587996Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -904,8 +919,8 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
-          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -913,10 +928,10 @@
           "reviewReason": "Finish still refreshes the current packet, creates the impact simulation, and includes impact-simulation.json in the seal. Explicit ChangedPath now consistently supplies the selected actual packet to initial status, refresh and final status; forecast/unexpected-impact gates and metadata-drift checks are unchanged. The page describes no automatic narrowing from allowed scope, so its forecast and sealed-receipt claims remain accurate."
         }
       ],
-      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
+      "reason": "Reviewed the changed Node functions and current impact-simulation consumer. Only frontend runtime-owner resources and scope precision changed; simulation, dirty-content fingerprints, advisory confidence and conformance receipts remain unchanged and are covered by the graph/governed groups.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:48:35.9804961Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:22.1504562Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -951,8 +966,8 @@
         },
         {
           "path": ".llm-wiki/tools/LlmWikiAssessmentRunner.ps1",
-          "sha256": "29612ccafc232f0c9fe75f1966bde632b1a95298ba673221dfae6417a830f4f5",
-          "reviewReason": "Reviewed CI repair: cold telemetry initialization precedes assessment hashing, observed workers preserve the existing JSON date contract, and impact smoke assertions now distinguish stale metadata, tampered receipts and genuine scope growth. Linux governed-delivery and Windows reliability regressions pass."
+          "sha256": "5d19a8c26ff7a490346df365afebf01d0fb8b3bdcedd3dc8902ccf56dce3e8e7",
+          "reviewReason": "Reviewed assessment dependency enumeration. Only coordination files ending in execution.lock are omitted; evidence JSON, logs, source, policies and runtime inputs stay hashed. The held-lease regression and source/log mutation cases verify that cached success cannot replace semantic critique."
         },
         {
           "path": ".llm-wiki/tools/LlmWikiSubstantiveReview.ps1",
@@ -965,10 +980,10 @@
           "reviewReason": "Reviewed unchanged manifest and critique semantics: regression evidence uses the existing bundle and lineage, and the focused fixture now covers both runs and stale handoff reporting."
         }
       ],
-      "reason": "Reviewed unchanged manifest and critique semantics: regression evidence uses the existing bundle and lineage, and the focused fixture now covers both runs and stale handoff reporting.",
+      "reason": "Reviewed assessment dependency enumeration. Only coordination files ending in execution.lock are omitted; evidence JSON, logs, source, policies and runtime inputs stay hashed. The held-lease regression and source/log mutation cases verify that cached success cannot replace semantic critique.",
       "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:27:03.5130781Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:22.4200382Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -1088,14 +1103,14 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
+          "reviewReason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:49.0402138Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:22.660388Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1151,8 +1166,8 @@
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
-          "reviewReason": "Compared the sensitive-data projection: the 18 added health candidates belong to UserDailyGoals and UserGoalRevision/profile history, with no new boundary, logging or external-transfer records. Inspected profile-owned history cascade and scoped read projection. The final Node diff reuses escaped FTS terms and restricts short-token recall in both pools; it adds no telemetry payload, credential storage or transfer. Existing lifecycle review guidance remains current."
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed the Node runtime-owner diff and facade snapshot changes. No private payload, retention, transfer or telemetry surface was added; the graph remains a local derived reader/writer system with current source hashes. Explicit stale and mutation failures remain protected by isolation tests."
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
@@ -1160,10 +1175,10 @@
           "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
         }
       ],
-      "reason": "Reviewed new email address/body copies through existing EmailOutbox/MailRelay and existing inbound MailInbox retention. Only verified active accounts receive confirmations. Feedback stays Admin-only inert text with unverified From, no inferred account association and no new feedback store/provider transfer. Privacy review guidance remains accurate.",
+      "reason": "Reviewed the Node runtime-owner diff and facade snapshot changes. No private payload, retention, transfer or telemetry surface was added; the graph remains a local derived reader/writer system with current source hashes. Explicit stale and mutation failures remain protected by isolation tests.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:41.4016871Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:22.9225085Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1213,15 +1228,20 @@
       "pageSha256": "a1f4eff3107a8780e6875e098196da239166a684bcd8b1068cca25c858448b59",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
+          "sha256": "52069ee054dbab16fc5c785970619a280bc3d25aac1e5072998d6e745f506937",
+          "reviewReason": "Reviewed the quality generator and atomic publication helper. Quality signal selection and all static-coverage limitations are unchanged; only complete file replacement avoids truncating a mapped Windows reader. Portability tests verify old reader/new file contents and temporary-file cleanup."
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
           "sha256": "4b953d81c7099333bc0fd1ada8692cfebd8a631857e690fabbaf10d43540fa8e",
           "reviewReason": "Reviewed conservative migration hint against static-signal caveats here. Zero PS/MJS/MD references do not prove absence of C# or dynamic consumers. No quality index interpretation, provider, schema or hotspot query behavior changed."
         }
       ],
-      "reason": "Reviewed conservative migration hint against static-signal caveats here. Zero PS/MJS/MD references do not prove absence of C# or dynamic consumers. No quality index interpretation, provider, schema or hotspot query behavior changed.",
+      "reason": "Reviewed the quality generator and atomic publication helper. Quality signal selection and all static-coverage limitations are unchanged; only complete file replacement avoids truncating a mapped Windows reader. Portability tests verify old reader/new file contents and temporary-file cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "e19f1cf4dfb6fd888b372cc9c58c29b024e10d6b",
-      "reviewedAtUtc": "2026-10-24T13:41:17.2296442Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:23.199729Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1240,14 +1260,14 @@
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "309922374e252f3c1780c9b988377c406a2ca87aea293f5c8cafb465eab7fc75",
-          "reviewReason": "Reviewed the supplemental regression phases, actual failed exit retained with successful expected-failure recording, original log hashes, unchanged tests and stale-source rejection. Required checks and existing scope, dispatch, planning and verification contracts remain unchanged."
+          "sha256": "a939703900ac4b4f8c758268c0b094cbb0c7fb409a795d71e451311393d0aac1",
+          "reviewReason": "Reviewed evidence execution and canonical policy binding against readiness consumers. Supplemental runs retain actual logs and runtime versions, cannot downgrade a required check, and do not create readiness from a manual status. Existing structural, scope, review and execution dimensions are preserved."
         }
       ],
-      "reason": "Reviewed the privacy dimension guard: missing or null sections are explicitly not-assessed with a regenerate-packet diagnostic. Complete empty summaries remain not-applicable and populated summaries retain review requirements. Readiness weights, blocking gates and FailOnNotReady behavior are preserved.",
-      "baseRef": "7d20404a6a1d9afa3387b2cf3f97f92753e0be3c",
-      "gitHead": "b996ebb55ff925d2f40e9c2cb13e59aae4a5a7ff",
-      "reviewedAtUtc": "2026-10-28T01:53:00.6411896Z"
+      "reason": "Reviewed evidence execution and canonical policy binding against readiness consumers. Supplemental runs retain actual logs and runtime versions, cannot downgrade a required check, and do not create readiness from a manual status. Existing structural, scope, review and execution dimensions are preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:23.4568915Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -1334,8 +1354,8 @@
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
+          "reviewReason": "Reviewed exact policy paths for the ranking-reader test obligation. This creates no host, worker, external provider, job or product runtime change; the regenerated topology remains current and the publication-state distinctions remain valid."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -1343,10 +1363,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Regenerated topology reflects mechanical formatting and the renamed, not-yet-deployed Billing cancellation email migration. SQL/model and runtime job/transport behavior are unchanged. Real PostgreSQL upgrade/backfill, current model and outbox rollback/retry checks pass again; existing runtime guidance remains correct.",
+      "reason": "Reviewed exact policy paths for the ranking-reader test obligation. This creates no host, worker, external provider, job or product runtime change; the regenerated topology remains current and the publication-state distinctions remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
-      "reviewedAtUtc": "2026-11-01T03:09:25.5794214Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:23.7163806Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1357,12 +1377,17 @@
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
           "reviewReason": "The existing AI prompt-provider role weight changed within the read-only discovery ranker. No security control, query scope, trust threshold, privacy classification or authorization changed. Complete retrieval/parity regressions pass; this workflow still correctly treats navigation results as leads rather than security verdicts."
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
+          "sha256": "52069ee054dbab16fc5c785970619a280bc3d25aac1e5072998d6e745f506937",
+          "reviewReason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force."
         }
       ],
-      "reason": "The existing AI prompt-provider role weight changed within the read-only discovery ranker. No security control, query scope, trust threshold, privacy classification or authorization changed. Complete retrieval/parity regressions pass; this workflow still correctly treats navigation results as leads rather than security verdicts.",
+      "reason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force.",
       "baseRef": "HEAD",
-      "gitHead": "648ed5ca692be2425d9192454d86281d00e031f4",
-      "reviewedAtUtc": "2026-11-01T03:09:26.5986969Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:23.9783721Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1387,19 +1412,19 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "b0d11bd5acdef6ce3f3bf5b823c0669241accbecfcfbeedcea1dd51eaa21b3fc",
-          "reviewReason": "Reviewed the optional supplemental regression phases, retained historical logs, current green lineage and unchanged canonical required checks. Existing planning, scope, refresh, dispatch and verification commands retain their documented contracts; bug diagnosis stays within existing stages."
+          "sha256": "14ee62700e53e914e4f708a12513880976e77e435cb30c8d5fed4ebcbe3eadb0",
+          "reviewReason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1",
-          "sha256": "b8761c2216ca8c3d8acdbac33e48167a96b5e41453db754c036c0b9c4aef55e7",
-          "reviewReason": "Reviewed the optional supplemental regression phases, retained historical logs, current green lineage and unchanged canonical required checks. Existing planning, scope, refresh, dispatch and verification commands retain their documented contracts; bug diagnosis stays within existing stages."
+          "sha256": "fa5dff5dd61d08c68f29859a090e76bd58f4230d59798352573a6f7cb105fbc2",
+          "reviewReason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact."
         }
       ],
-      "reason": "Reviewed the optional supplemental regression phases, retained historical logs, current green lineage and unchanged canonical required checks. Existing planning, scope, refresh, dispatch and verification commands retain their documented contracts; bug diagnosis stays within existing stages.",
+      "reason": "Reviewed planner selection and actual assertions: an explicit frontend-only change omits unrelated .NET tests, styles label full verify as publication regression, and browser specs use the verified Playwright runner. Existing scoped compiled-input reuse, explicit absence states and scenario/evidence separation remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "63be08aad9862333fd0c320c5a6f3321a5d9ae7c",
-      "reviewedAtUtc": "2026-10-24T15:15:30.4058246Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:24.5439603Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1433,14 +1458,14 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "201243bb5431f8e5402bafc953bda5563017d30eb15d8aa4bd2a54f43ac1801a",
+          "reviewReason": "Reviewed facade changes against dispatch routing. Baseline scope, next-workspace resolution and backend-only Wiki preparation do not add dispatch payload fields, change lease identity or bypass event-chain validation. Command catalog and facade-contract regressions remain the relevant guard."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed facade changes against dispatch routing. Baseline scope, next-workspace resolution and backend-only Wiki preparation do not add dispatch payload fields, change lease identity or bypass event-chain validation. Command catalog and facade-contract regressions remain the relevant guard.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:51.2872441Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:24.7954374Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1516,6 +1541,11 @@
       "pageSha256": "6e3a51425ad1d9e89dcb54afc593f6d653b3242954e43f500114e0ed4c2c490e",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1",
+          "sha256": "ac26d9800a23eb1814b987c3bda4bbd64844cc836c3e32111da3e61027daf7f3",
+          "reviewReason": "Reviewed frontend contract generation after adding stylePaths. Existing selector/input/output/API/template/spec fields retain their shape; declared existing styleUrl/styleUrls resources are additive navigation data. Source-scan trace confidence and backend mapping semantics are unchanged."
+        },
+        {
           "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
           "sha256": "423fc5ce434756fbb4ba80afb99eadcc64dfcebcc237c0bd027b42bb8cf88cf3",
           "reviewReason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain."
@@ -1526,10 +1556,10 @@
           "reviewReason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain."
         }
       ],
-      "reason": "Confirmed CI trace-output failure under inherited StrictMode on Windows and Linux. Guard the optional request declaration before reading its path; retain the handler and resolved impact paths. The unchanged strengthened fixture fails before and passes after on both systems, and also checks a separately declared command is included without becoming a consumer. Updated trace documentation; all existing end-to-end trace assertions remain.",
+      "reason": "Reviewed frontend contract generation after adding stylePaths. Existing selector/input/output/API/template/spec fields retain their shape; declared existing styleUrl/styleUrls resources are additive navigation data. Source-scan trace confidence and backend mapping semantics are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "10eb7aa677de4fa48caf5c2805dbcccfc0cdaec7",
-      "reviewedAtUtc": "2026-10-24T20:54:16.2240412Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:25.0564478Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1538,45 +1568,35 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "2b3ccdac5f7dd6e6408d6f57e784375e3848ac23692dd5449fb9058499d0ff1f",
-          "reviewReason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated."
+          "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
+          "reviewReason": "Reviewed policy selection through the governed task runner. The new filtered reader check is canonical and accepted by the same shared command-family validator as evidence-run; tampered commands remain rejected before execution. Dry-run proof and positive/negative policy cases cover wiring without claiming execution."
         },
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
-          "reviewReason": "InvokeTaskChecks still enforces the current policy ID, exact command and allowlist and derives failure from recorded terminal evidence. The change retains the real execution-owner log and artifact lineage rather than overwriting it with wrapper stdout. It does not change plan coverage, supersedence, fail-fast ordering or canonical plan verification, so the documented planner invariants remain accurate."
+          "sha256": "6bb1af7762aab3949f31a446dd75b1fa3396cb00a8fcb5ef7dca3fe1a3f9ee0f",
+          "reviewReason": "Reviewed policy selection through the governed task runner. The new filtered reader check is canonical and accepted by the same shared command-family validator as evidence-run; tampered commands remain rejected before execution. Dry-run proof and positive/negative policy cases cover wiring without claiming execution."
         }
       ],
-      "reason": "Reviewed policy wording, facade messages and related workflow pages against the final hook and CI sources. Full verification is enforced by CI; local focused verification, integrity-bound evidence plans, graph queries and report generation retain their behavior. Confirmed 15 real Git hook scenarios, 27 focused architecture tests, Storybook build, skill validation and formatting; obsolete pre-push narratives were updated.",
+      "reason": "Reviewed policy selection through the governed task runner. The new filtered reader check is canonical and accepted by the same shared command-family validator as evidence-run; tampered commands remain rejected before execution. Dry-run proof and positive/negative policy cases cover wiring without claiming execution.",
       "baseRef": "HEAD",
-      "gitHead": "527d31e44882971eb8bd195d7e95c9957c735155",
-      "reviewedAtUtc": "2026-10-26T23:50:51.7504724Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:25.3478653Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
       "pagePath": ".llm-wiki/workflows/verification-telemetry.md",
-      "pageSha256": "9155cfe3bfc300002234149cf92c8cecde096d0c583d322dc9b86538f0e3d14d",
+      "pageSha256": "e9c84bfe29780d6956d1408c0e4a23175bd65d19b0276f609ea63c857761c2c5",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
-          "reviewReason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews."
-        },
-        {
           "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "e52343742e9908c66e927a33d3a2d70d6e8ed8585cf0175fa95e2ae35c53c641",
-          "reviewReason": "The task runner still records actual status, elapsed time and command after resolving the executed check result; the wiki-verify self-telemetry exception remains. Only replacement of the execution log/lineage is removed. Telemetry cohort/input hashing, locking, dry-run exclusion and failure history are not changed, so the page operational-history and flakiness limitations remain accurate."
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "b6de79034b6ec1e8b8b7a8f7074dd8798c28cc52faa650f9275ec1d3194da12a",
-          "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
+          "sha256": "6bb1af7762aab3949f31a446dd75b1fa3396cb00a8fcb5ef7dca3fe1a3f9ee0f",
+          "reviewReason": "Reviewed the task-runner delta: shared command-family validation and string-date initialization precede existing selection/execution. DryRun performs no check and appends no telemetry; event identity, outcome/duration recording, archive hashes and required gate behavior remain unchanged."
         }
       ],
-      "reason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions.",
+      "reason": "Reviewed the task-runner delta: shared command-family validation and string-date initialization precede existing selection/execution. DryRun performs no check and appends no telemetry; event identity, outcome/duration recording, archive hashes and required gate behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "deae228a9937a674257b750011aaa451af4028b1",
-      "reviewedAtUtc": "2026-10-23T22:20:36.566365Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:25.6290801Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1721,19 +1741,19 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "2a7d919a7bae773ba6a9d0e981da21964558e6e08c8f82f6fe578f86240be171",
-          "reviewReason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions."
+          "sha256": "1a3b3ab0268c38564e095eb3973c84aa49f1ce81f8a9a47f85c2f0f95c984cb7",
+          "reviewReason": "Reviewed graph and facade diagnosis boundaries. A shared derived graph refresh no longer changes source identity, while private readiness still verifies/rebuilds its own SQLite. Scoped task identity and explicit refs are preserved; health, cleanup ownership and full-generation/full-verification distinctions are unchanged."
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "e2cd07d42bb3517b3238ed1c6afd06e0924b5c3da57a96765bc5caea14aa947c",
-          "reviewReason": "Reviewed the hook-policy and Wiki status-message diffs against the affected navigation, runtime and lifecycle pages. The Git-only hook and CI ownership are documented in AGENTS.md and TESTING_STRATEGY.md; discovery, runtime topology, projection contracts, evidence receipts and task dispatch behavior are unchanged. No unchanged page retains a claim that pre-push runs application verification."
+          "sha256": "201243bb5431f8e5402bafc953bda5563017d30eb15d8aa4bd2a54f43ac1801a",
+          "reviewReason": "Reviewed graph and facade diagnosis boundaries. A shared derived graph refresh no longer changes source identity, while private readiness still verifies/rebuilds its own SQLite. Scoped task identity and explicit refs are preserved; health, cleanup ownership and full-generation/full-verification distinctions are unchanged."
         }
       ],
-      "reason": "Reviewed these workflows against the Node search diff. Only short-token FTS matching and shared escaped-term preparation changed; graph extraction, typed contract/consumer projections, impact traversal, source hashing, read-only repair and snapshot freshness contracts remain unchanged. The token rule is documented in the query and graph pages and is exercised in the actual frozen retrieval and reader regressions.",
+      "reason": "Reviewed graph and facade diagnosis boundaries. A shared derived graph refresh no longer changes source identity, while private readiness still verifies/rebuilds its own SQLite. Scoped task identity and explicit refs are preserved; health, cleanup ownership and full-generation/full-verification distinctions are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:48:36.4878554Z"
+      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
+      "reviewedAtUtc": "2026-11-01T08:01:24.2597865Z"
     }
   ]
 }

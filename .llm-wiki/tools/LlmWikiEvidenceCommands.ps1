@@ -1,5 +1,42 @@
 . (Join-Path $PSScriptRoot 'LlmWikiVerificationReceipts.ps1')
 
+function Get-LlmWikiEvidenceExecutionLocation {
+    param([string]$RepositoryRoot, [string]$EvidencePath, [switch]$Prepare)
+    $root = [IO.Path]::GetFullPath($RepositoryRoot).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+    $absolute = [IO.Path]::GetFullPath($(if ([IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $root $EvidencePath }))
+    $comparison = if ([IO.Path]::DirectorySeparatorChar -eq '\') { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
+    if (-not $absolute.StartsWith($root, $comparison)) { throw 'Evidence execution destination must remain inside the repository.' }
+    $relative = $absolute.Substring($root.Length).Replace('\', '/')
+    if ($relative -notmatch '^\.artifacts/llm-wiki/(?:[^/]+/)*[^/]+\.json$') { throw 'Evidence execution destination must be JSON under .artifacts/llm-wiki.' }
+    $logs = Join-Path ([IO.Path]::GetDirectoryName($absolute)) 'logs'
+    if ($Prepare) {
+        # Fail before spending time on the check, including read-only evidence
+        # files and unwritable/malformed log directories.
+        $handle = [IO.File]::Open($absolute, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::Read)
+        $handle.Dispose()
+        $null = New-Item -ItemType Directory -Path $logs -Force
+        $probe = Join-Path $logs ('.preflight-' + [guid]::NewGuid().ToString('N'))
+        try { $handle = [IO.File]::Open($probe, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None); $handle.Dispose() }
+        finally { if ([IO.File]::Exists($probe)) { [IO.File]::Delete($probe) } }
+    }
+    [pscustomobject]@{ evidencePath = $absolute; relativePath = $relative; logsDirectory = $logs; logPrefix = $logs + [IO.Path]::DirectorySeparatorChar }
+}
+
+function Test-LlmWikiSupplementalExecutionCommand([string]$Command) {
+    # These are test/validation commands, not a general shell escape hatch.
+    return $Command -match '^node (?:--test(?: [A-Za-z0-9_./\\:=,-]+)*|[A-Za-z0-9_./\\-]+\.(?:mjs|cjs|js)(?: [A-Za-z0-9_./\\:=,-]+)*)$' -or
+        $Command -match '^pwsh -NoProfile -File \.llm-wiki/tools/Test-[A-Za-z0-9_.-]+\.ps1(?: -[A-Za-z0-9_-]+ [A-Za-z0-9_./\\:,-]+)*$' -or
+        $Command -match '^docker compose(?: -f [A-Za-z0-9_./\\-]+)? config(?: (?:--quiet|-q))?$' -or
+        $Command -match '^docker build --check(?: -f [A-Za-z0-9_./\\-]+)? [A-Za-z0-9_./\\-]+$'
+}
+
+function Test-LlmWikiCanonicalExecutionCommand([string]$Command) {
+    # Callers first verify exact equality with the current policy command.
+    return $Command -match '^dotnet (test|format|list) [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:=~,-]+)*$' -or
+        $Command -match '^cd FoodDiary\.Web\.Client && npm (run [A-Za-z0-9_:-]+|audit)$' -or
+        $Command -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
+}
+
 function Get-LlmWikiRegressionTestFiles([string]$RepositoryRoot, [string[]]$TestPath) {
     if (@($TestPath).Count -eq 0) { throw 'Regression evidence requires -TestPath for the focused test files.' }
     foreach ($path in @($TestPath | Sort-Object -Unique)) {

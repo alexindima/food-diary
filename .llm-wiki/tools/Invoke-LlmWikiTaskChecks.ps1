@@ -11,6 +11,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiEvidenceCommands.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 
@@ -56,9 +57,7 @@ foreach ($check in $selectedChecks) {
     if ([string]$check.command -cne $canonicalChecks[[string]$check.id]) {
         throw "Refusing tampered command for check '$($check.id)'. Reinitialize evidence from the current policy."
     }
-    $allowedCommand = [string]$check.command -match '^dotnet (test|format|list) [A-Za-z0-9_./\\-]+(?: [A-Za-z0-9_./\\:-]+)*$' -or
-        [string]$check.command -match '^cd FoodDiary\.Web\.Client && npm (run [A-Za-z0-9_:-]+|audit)$' -or
-        [string]$check.command -match '^\./\.llm-wiki/wiki\.ps1 [A-Za-z0-9_./\\:-]+(?: [A-Za-z0-9_./\\:-]+)*$'
+    $allowedCommand = Test-LlmWikiCanonicalExecutionCommand ([string]$check.command)
     if (-not $allowedCommand) {
         throw "Refusing command outside the task execution allowlist: $($check.command)"
     }

@@ -33,7 +33,7 @@ function Invoke-LlmWikiAssessment {
             if ($ToolName -ne 'Manage-LlmWikiChangeCritique.ps1' -or $action -eq 'assess') { $unconsumedOutputs += 'change-critique.json' }
             if ($ToolName -ne 'Manage-LlmWikiChangeCritique.ps1' -and ($ToolName -ne 'Manage-LlmWikiConfidenceLedger.ps1' -or $action -eq 'assess')) { $unconsumedOutputs += 'confidence-ledger.json' }
         }
-        $dependencies = @(Get-ChildItem -LiteralPath (Join-Path $repository $workspace) -File -Recurse | Where-Object { $_.Name -notmatch '^\.refresh-' -and $_.Name -notin $unconsumedOutputs } | ForEach-Object { $_.FullName.Substring($repository.Length + 1).Replace('\', '/') })
+        $dependencies = @(Get-ChildItem -LiteralPath (Join-Path $repository $workspace) -File -Recurse | Where-Object { $_.Name -notmatch '^\.refresh-|\.execution\.lock$' -and $_.Name -notin $unconsumedOutputs } | ForEach-Object { $_.FullName.Substring($repository.Length + 1).Replace('\', '/') })
         foreach ($relativeRoot in @('.llm-wiki/knowledge', '.artifacts/llm-wiki/scheduler/quality-adjustments', '.artifacts/llm-wiki/scheduler/context-feedback', '.artifacts/llm-wiki/scheduler/dispatches')) {
             $absoluteRoot = Join-Path $repository $relativeRoot
             if (Test-Path -LiteralPath $absoluteRoot) { $dependencies += @(Get-ChildItem -LiteralPath $absoluteRoot -File -Filter '*.json' | ForEach-Object { $_.FullName.Substring($repository.Length + 1).Replace('\', '/') }) }

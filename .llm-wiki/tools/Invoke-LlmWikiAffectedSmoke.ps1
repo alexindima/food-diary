@@ -229,6 +229,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'task-baseline' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSessionResolution.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiFacadeTaskScope.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiDiffContextQueries.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
@@ -425,6 +429,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'governed-delivery' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiEvidenceExecution.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiFeedbackReliability.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiBehaviorWorkflow.ps1')

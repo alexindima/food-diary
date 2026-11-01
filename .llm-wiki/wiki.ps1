@@ -341,10 +341,10 @@ if (-not $PSBoundParameters.ContainsKey('WorkspacePath') -and $Command -in $sess
     $resolvedSession = & (Join-Path $toolsRoot 'Resolve-LlmWikiSession.ps1') `
         -SessionId $TaskSessionId `
         -Create:($Command -eq 'task-start') `
+        -ReadOnly:($Command -ne 'task-start') `
         -Format Object
     $candidateWorkspace = [string]$resolvedSession.workspacePath
-    $candidateAbsolutePath = Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $candidateWorkspace
-    if ($Command -eq 'task-start' -or (Test-Path -LiteralPath $candidateAbsolutePath)) {
+    if ($resolvedSession.available -or $Command -eq 'task-start') {
         $WorkspacePath = $candidateWorkspace
         Write-Host "LLM Wiki session workspace: $WorkspacePath"
     }
@@ -402,8 +402,12 @@ $wikiToolingPlanningIntent = $Command -in $explicitScopePlanningCommands -and
     ([string]$Objective) -match '(?i)\b(llm[- ]?wiki|wiki\.ps1|wiki tooling|development mcp)\b'
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
-    & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
+    $captureArguments = @{ Action = 'Capture'; SessionId = $TaskSessionId; Objective = $Objective; Format = 'Text' }
+    if ($PSBoundParameters.ContainsKey('ProposedPath')) { $captureArguments.PlannedPath = $ProposedPath }
+    if ($PSBoundParameters.ContainsKey('WorkspacePath')) { $captureArguments.WorkspacePath = $WorkspacePath }
+    & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') @captureArguments
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath') -and
+    -not $PSBoundParameters.ContainsKey('BaseRef') -and -not $PSBoundParameters.ContainsKey('HeadRef') -and
     -not ($Command -in $explicitScopePlanningCommands -and $PSBoundParameters.ContainsKey('ProposedPath')) -and
     -not $wikiToolingPlanningIntent) {
     $taskBaseline = try {
@@ -429,6 +433,30 @@ if ($Command -in @('develop', 'start')) {
             }
         }
         $PSBoundParameters['ChangedPath'] = $ChangedPath
+    }
+}
+
+# The same session baseline owns the declared task boundary and adaptive intent.
+# A missing session workspace must never fall back to another task's current/.
+# Explicit query/path/ref arguments remain independent requests and take priority.
+if ($Command -in (@('status', 'next') + $explicitScopePlanningCommands) -and
+    -not $PSBoundParameters.ContainsKey('WorkspacePath') -and
+    -not $explicitChangedPathInput -and -not $PSBoundParameters.ContainsKey('ProposedPath') -and
+    -not $PSBoundParameters.ContainsKey('BaseRef') -and -not $PSBoundParameters.ContainsKey('HeadRef') -and [string]::IsNullOrWhiteSpace($Query)) {
+    $savedTask = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Status -SessionId $TaskSessionId -Format Object
+    if ($savedTask.available -and $savedTask.PSObject.Properties['objective'] -and
+        ([string]::IsNullOrWhiteSpace($Objective) -or $Objective -ceq [string]$savedTask.objective)) {
+        if ($Command -in @('status', 'next') -and -not $PSBoundParameters.ContainsKey('WorkspacePath') -and $savedTask.workspacePath) { $WorkspacePath = [string]$savedTask.workspacePath }
+        if ([string]::IsNullOrWhiteSpace($Objective) -and $savedTask.objective) {
+            $Objective = [string]$savedTask.objective
+            $PSBoundParameters['Objective'] = $Objective
+        }
+        if (@($savedTask.plannedPaths).Count -gt 0) {
+            $ProposedPath = @($savedTask.plannedPaths)
+            $PSBoundParameters['ProposedPath'] = $ProposedPath
+            # Planning needs the declared files even before the first edit.
+            if ($Command -in $explicitScopePlanningCommands) { $PSBoundParameters.Remove('ChangedPath') | Out-Null; $ChangedPath = $null }
+        }
     }
 }
 
@@ -473,7 +501,7 @@ function Invoke-WikiTool {
             -ToolPath $toolPath `
             -ToolArguments $ToolArguments `
             -PrepareCodeGraph:($Command -in $compiledIndexReadOnlyCommands -and $CompiledIndexSource -eq 'Sqlite') `
-            -BackendOnlyRefresh:($BackendOnlyRefresh -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests') -or $Command -in $standaloneIndexCommands)
+            -BackendOnlyRefresh:($BackendOnlyRefresh -or ($wikiToolingPlanningIntent -and @(@($ProposedPath) + @($ChangedPath) | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' }).Count -eq 0) -or $ChangeType -in @('Api', 'Backend', 'Database', 'Tests') -or $Command -in $standaloneIndexCommands)
     } else {
         & $toolPath @ToolArguments
     }

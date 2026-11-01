@@ -57,12 +57,8 @@ $definitionValue = if ($null -ne $requirement) {
     if ($Kind -eq 'review-attestation') { [string]$requirement.description } else { [string]$requirement.command }
 } elseif (-not [string]::IsNullOrWhiteSpace($Definition)) { $Definition } else { '' }
 if ($null -ne $requirement -and $Kind -ne 'review-attestation' -and -not (Test-LlmWikiEvidenceExecutionCommand $definitionValue $Command $repositoryRoot)) { throw "Execution command is incompatible with required check '$Id'." }
-$runtimeName = if ($Command -match '^(?:dotnet )') { 'dotnet' } elseif ($Command -match '(?:^|&& )npm ') { 'npm' } else { 'powershell' }
-$runtimeVersion = switch ($runtimeName) {
-    'dotnet' { [string](& dotnet --version) }
-    'npm' { [string](& npm --version) }
-    default { [string]$PSVersionTable.PSVersion }
-}
+$runtimeName = if ($Command -match '^dotnet ') { 'dotnet' } elseif ($Command -match '(?:^|&& )npm ') { 'npm' } elseif ($Command -match '^node ') { 'node' } elseif ($Command -match '^docker ') { 'docker' } else { 'powershell' }
+$runtimeVersion = Get-LlmWikiEvidenceRuntimeVersion $runtimeName
 $platform = "$([System.Runtime.InteropServices.RuntimeInformation]::OSDescription.Trim())/$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)"
 function Get-Hash([object]$Value) {
     $json = $Value | ConvertTo-Json -Depth 12 -Compress
@@ -122,9 +118,8 @@ if ($PSBoundParameters.ContainsKey('ArtifactPath')) {
     $repositoryPrefix = $repositoryRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
     if (-not $artifactAbsolute.StartsWith($repositoryPrefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Execution artifact must remain inside the repository.' }
     $artifactRelative = $artifactAbsolute.Substring($repositoryPrefix.Length).Replace('\', '/')
-    $evidenceRelative = [IO.Path]::GetFullPath($absoluteEvidencePath).Substring($repositoryPrefix.Length).Replace('\', '/')
-    $artifactPrefix = if ($evidenceRelative -match '^(\.artifacts/llm-wiki/tasks/[^/]+)/[^/]+\.json$') { "$($Matches[1])/logs/" } else { '.artifacts/llm-wiki/' }
-    if (-not $artifactRelative.StartsWith($artifactPrefix, [StringComparison]::Ordinal) -or -not (Test-Path -LiteralPath $artifactAbsolute -PathType Leaf)) { throw 'Execution artifact must be an existing log inside its evidence boundary.' }
+    $location = Get-LlmWikiEvidenceExecutionLocation $repositoryRoot $EvidencePath
+    if (-not $artifactAbsolute.StartsWith($location.logPrefix, [StringComparison]::OrdinalIgnoreCase) -or -not (Test-Path -LiteralPath $artifactAbsolute -PathType Leaf)) { throw 'Execution artifact must be an existing log inside its evidence boundary.' }
     $lineage | Add-Member -NotePropertyName artifact -NotePropertyValue ([pscustomobject][ordered]@{
         path = $artifactRelative
         sha256 = (Get-FileHash -LiteralPath $artifactAbsolute -Algorithm SHA256).Hash.ToLowerInvariant()

@@ -46,6 +46,25 @@ try {
     Assert-Baseline ($committedDelta.commitsAhead -ge 1 -and $committedDelta.ageHours -ge 0) 'Task baseline did not expose its age and commit distance.'
     $closed = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Close -RepositoryRoot $fixtureRoot -SessionId 'fixture-a'
     Assert-Baseline ($closed.closed -and -not (Test-Path -LiteralPath $committedDelta.baselinePath)) 'Task baseline close did not retire the stale session state.'
+
+    $scopeCaptured = $false
+    try {
+        $scoped = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -RepositoryRoot $fixtureRoot -SessionId 'fixture-scoped' -PlannedPath 'owned' -Objective 'Fix the owned feature' -WorkspacePath '.artifacts/llm-wiki/tasks/owned'
+        $scopeCaptured = @($scoped.plannedPaths) -contains 'owned'
+    } catch { Write-Host "Scope capture diagnosis: $($_.Exception.Message)" }
+    Assert-Baseline $scopeCaptured 'Declared task scope was not retained by the baseline.'
+    $null = New-Item -ItemType Directory -Path (Join-Path $fixtureRoot 'owned'),(Join-Path $fixtureRoot 'owned-sibling') -Force
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot 'owned/task.txt'), 'owned change')
+    [IO.File]::WriteAllText((Join-Path $fixtureRoot 'owned-sibling/foreign.txt'), 'concurrent foreign change')
+    $scopedDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -RepositoryRoot $fixtureRoot -SessionId 'fixture-scoped'
+    Assert-Baseline (@($scopedDelta.changedPaths).Count -eq 1 -and $scopedDelta.changedPaths[0] -eq 'owned/task.txt') 'Unrelated concurrent edits escaped the declared task boundary.'
+    Assert-Baseline (@($scopedDelta.excludedChangedPaths) -contains 'owned-sibling/foreign.txt') 'Foreign edits were hidden instead of reported as excluded context.'
+    Assert-Baseline ($scopedDelta.objective -eq 'Fix the owned feature' -and $scopedDelta.workspacePath -eq '.artifacts/llm-wiki/tasks/owned') 'The saved task identity was lost between facade commands.'
+    $stored = Get-Content -LiteralPath $scopedDelta.baselinePath -Raw | ConvertFrom-Json
+    $stored.PSObject.Properties.Remove('plannedPaths')
+    $stored | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $scopedDelta.baselinePath -Encoding utf8
+    $legacyDelta = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -RepositoryRoot $fixtureRoot -SessionId 'fixture-scoped'
+    Assert-Baseline (@($legacyDelta.changedPaths) -contains 'owned-sibling/foreign.txt') 'Legacy unscoped baselines no longer preserve complete diff discovery.'
 } finally {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }
