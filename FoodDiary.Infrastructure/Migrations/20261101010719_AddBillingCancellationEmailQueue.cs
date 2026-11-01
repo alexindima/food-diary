@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FoodDiary.Infrastructure.Migrations {
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
-    public partial class AddBillingCancellationEmailDelivery : Migration {
+    public partial class AddBillingCancellationEmailQueue : Migration {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.AddColumn<DateTime>(
