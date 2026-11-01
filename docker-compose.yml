@@ -254,6 +254,58 @@ services:
       - full
       - backend
 
+  api-green:
+    image: ${API_IMAGE_REF:-ghcr.io/alexindima/food-diary/api:local}
+    build:
+      context: .
+      dockerfile: FoodDiary.Web.Api/Dockerfile
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:${API_GREEN_PORT:-5001}:5000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
+      BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
+      MailRelayClient__BaseUrl: http://mail-relay:5088
+      MailRelayClient__AllowInsecureHttp: "true"
+      MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
+      MailInboxClient__BaseUrl: https://mail.fooddiary.club:5098
+      MailInboxClient__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Set MAIL_INBOX_METADATA_API_KEY}
+      MailInboxClient__ContentApiKey: ${MAIL_INBOX_CONTENT_API_KEY:?Set MAIL_INBOX_CONTENT_API_KEY}
+      MailInboxClient__StateApiKey: ${MAIL_INBOX_STATE_API_KEY:?Set MAIL_INBOX_STATE_API_KEY}
+      DataProtection__KeyRingPath: /var/lib/fooddiary/data-protection-keys
+    env_file:
+      - path: .env
+      # Host-network Nginx reaches this bridge-network API through its gateway.
+      - path: .forwarded-proxy.env
+        required: false
+    volumes:
+      - api-data-protection-keys:/var/lib/fooddiary/data-protection-keys
+    tmpfs:
+      - /tmp:size=256m,mode=1777,nosuid,nodev
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
+      interval: 180s
+      timeout: 10s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    profiles:
+      - blue-green
+
   mail-relay:
     image: ${MAIL_RELAY_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-relay:local}
     build:
@@ -428,6 +480,32 @@ services:
         condition: service_healthy
     profiles:
       - full
+
+  client-ssr-green:
+    image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
+    entrypoint: ["node", "/app/server/server.mjs"]
+    restart: unless-stopped
+    read_only: true
+    user: "65534:65534"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      PORT: "4000"
+      SSR_API_ORIGIN: http://api-green:5000
+    ports:
+      - "127.0.0.1:${SSR_GREEN_PORT:-4001}:4000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/health/ssr').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      api-green:
+        condition: service_healthy
+    profiles:
+      - blue-green
 
   client:
     image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}

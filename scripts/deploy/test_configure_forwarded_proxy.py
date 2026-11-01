@@ -20,12 +20,12 @@ class ForwardedProxyDeploymentTests(unittest.TestCase):
     def test_api_loads_discovered_proxy_before_recreation(self):
         compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
         # Inspect the complete service, including its indented children.
-        api = compose[compose.index("\n  api:\n"):compose.index("\n  mail-relay:\n")]
+        api = compose[compose.index("\n  api:"):compose.index("\n  api-green:")]
         self.assertIn("path: .forwarded-proxy.env", api,
                       "API must load the exact Docker bridge proxy trust before admin HTTPS SSO")
         workflow = (ROOT / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
         configure = workflow.index("python3 scripts/deploy/configure_forwarded_proxy.py")
-        recreate = workflow.index("docker compose --profile backend up -d --force-recreate --no-deps api")
+        recreate = workflow.index("blue_green.py start-api")
         self.assertLess(configure, recreate)
 
     def test_deployment_checks_admin_origin_after_nginx_is_ready(self):

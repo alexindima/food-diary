@@ -115,7 +115,7 @@ test("database readiness runs before server uploads and writer shutdown", () => 
     assert.ok(!guardStep.includes("continue-on-error"));
     assert.ok(!guardStep.includes(" stop "));
     assert.ok(deployment < workflow.indexOf("$SCP_CMD docker-compose.yml"));
-    assert.ok(deployment < workflow.indexOf("stop --timeout 60 api telegram-bot job-manager"));
+    assert.ok(deployment < workflow.indexOf("stop --timeout 60 api api-green telegram-bot job-manager"));
 });
 
 test("server bounds independent chains and preserves the primary and publication barriers", () => {
@@ -129,13 +129,48 @@ test("server bounds independent chains and preserves the primary and publication
     assert.match(remote, /test -f "\$FOODDIARY_MAIN_MIGRATED"; exec "\$@"/u);
     const primary = remote.slice(remote.indexOf("backup_dir=/var/backups/fooddiary"));
     const positions = [
-        "stop --timeout 60 api telegram-bot job-manager", "pg_dump --format=custom", "pg_restore --list",
-        "docker compose --profile backend run -T --rm db-init update", ': > "$FOODDIARY_MAIN_MIGRATED"',
-        "exec 8>&-", "--no-deps api", 'wait "$auxiliary_pid"', 'publish_frontend.py", "publish"',
-        "--no-deps client-ssr", "--no-deps nginx",
+        "stop --timeout 60 api api-green telegram-bot job-manager", "pg_dump --format=custom", "pg_restore --list",
+        "docker compose --profile backend run -T --rm db-init update", "blue_green.py start-api", ': > "$FOODDIARY_MAIN_MIGRATED"',
+        "exec 8>&-", 'wait "$auxiliary_pid"', 'publish_frontend.py", "publish"',
+        "blue_green.py start-ssr", "blue_green.py switch", "blue_green.py finish",
     ].map(value => primary.indexOf(value));
     assert.ok(positions.every(value => value >= 0));
     assert.deepEqual(positions, [...positions].sort((left, right) => left - right));
+});
+
+test("handover preserves signed receipts and uses explicit migration/rollback barriers", async () => {
+    assert.match(workflow, /release_mode=\$\(python3 scripts\/deploy\/blue_green\.py plan --mode "\$DEPLOY_MODE"\)/u);
+    assert.match(workflow, /if \[ "\$release_mode" = "maintenance" \]; then\s+docker compose[^\n]+stop/u);
+    assert.match(workflow, /if \[ "\$release_mode" = "maintenance" \]; then\s+python3 scripts\/deploy\/blue_green\.py migration-started/u);
+    assert.match(workflow, /python3 scripts\/deploy\/blue_green\.py abort/u);
+    assert.doesNotMatch(workflow, /force-recreate --no-deps nginx/u);
+    assert.doesNotMatch(workflow, /\$SCP_CMD[^\n]*00-fooddiary-upstreams/u);
+    assert.ok(workflow.indexOf("blue_green.py initialize-routing") < workflow.indexOf("$SCP_CMD nginx.conf"));
+    assert.ok(workflow.includes('git rev-parse "${SOURCE_COMMIT_SHA}:Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots"'));
+    assert.ok(workflow.includes("DEPLOY_API_CONTRACT_SHA='${DEPLOY_API_CONTRACT_SHA}'"));
+    assert.ok(workflow.indexOf("Verify complete production image manifest") < workflow.indexOf("blue_green.py plan"));
+    const ci = await readFile(new URL("../workflows/ci-tests.yml", import.meta.url), "utf8");
+    const step = ci.split("- name: Test blue-green handover and real Nginx connection draining")[1].split("- name:")[0];
+    assert.match(step, /test_blue_green\.py/u);
+    assert.match(step, /test_blue_green_nginx\.py/u);
+    assert.match(step, /FOODDIARY_NGINX_BINARY=\/usr\/sbin\/nginx/u);
+    assert.doesNotMatch(step, /continue-on-error|if:/u);
+});
+
+test("portable handover behavior and recovery regressions", { timeout: 70000 }, () => {
+    const result = spawnSync(process.platform === "win32" ? "python" : "python3",
+        ["-B", "-m", "unittest", "discover", "-s", "scripts/deploy", "-p", "test_blue_green.py"],
+        { cwd: fileURLToPath(new URL("../../", import.meta.url)), encoding: "utf8", timeout: 60000 });
+    assert.equal(result.status, 0, result.stderr || result.error?.message);
+});
+
+test("real Nginx handover with the available local binary", {
+    skip: !process.env.FOODDIARY_NGINX_BINARY, timeout: 70000,
+}, () => {
+    const result = spawnSync(process.platform === "win32" ? "python" : "python3",
+        ["-B", "-m", "unittest", "discover", "-s", "scripts/deploy", "-p", "test_blue_green_nginx.py"],
+        { cwd: fileURLToPath(new URL("../../", import.meta.url)), encoding: "utf8", timeout: 60000 });
+    assert.equal(result.status, 0, result.stderr || result.error?.message);
 });
 
 test("parallel deployment behavioral tests are mandatory on the Linux CI runner", async () => {

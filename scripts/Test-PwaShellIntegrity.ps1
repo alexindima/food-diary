@@ -88,6 +88,9 @@ http {
     include /etc/nginx/mime.types;
     log_format fooddiary_privacy '`$status';
     map `$http_upgrade `$connection_upgrade { default upgrade; '' close; }
+    upstream fooddiary_api { server 127.0.0.1:9; }
+    upstream fooddiary_ssr { server 127.0.0.1:9; }
+    map `$cookie_fd_api_slot `$fooddiary_hub_upstream { default fooddiary_api; }
     $server
     $adminServer
 }

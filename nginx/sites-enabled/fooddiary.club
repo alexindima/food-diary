@@ -277,7 +277,7 @@ server {
     }
 
     location /api/ {
-        proxy_pass http://127.0.0.1:5000;
+        proxy_pass http://fooddiary_api;
         proxy_set_header Host $server_name;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -285,7 +285,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
 
         location ~ ^/api/v[0-9]+(?:\.[0-9]+)?/ai/food/recipe-import/video/?$ {
-            proxy_pass http://127.0.0.1:5000;
+            proxy_pass http://fooddiary_api;
             client_max_body_size 52m;
             proxy_read_timeout 190s;
             proxy_http_version 1.1;
@@ -294,14 +294,18 @@ server {
     }
 
     location ~ ^/explore(?:/|$) {
-        proxy_pass http://127.0.0.1:4000;
+        proxy_pass http://fooddiary_ssr;
         proxy_set_header Host $server_name;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /hubs/ {
-        proxy_pass http://127.0.0.1:5000;
+        proxy_pass http://$fooddiary_hub_upstream;
+        # Keep negotiate and transport on the same API throughout handover.
+        # $proxy_host is the selected named upstream, including for negotiation.
+        add_header Set-Cookie "fd_api_slot=$proxy_host; Path=/hubs; HttpOnly; Secure; SameSite=None" always;
+        proxy_next_upstream off;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
@@ -406,7 +410,7 @@ server {
     }
 
     location ^~ /api/ {
-        proxy_pass http://127.0.0.1:5000;
+        proxy_pass http://fooddiary_api;
         proxy_set_header Host $server_name;
         proxy_set_header X-Forwarded-Host $server_name;
         proxy_set_header X-Forwarded-Proto $scheme;

@@ -20,33 +20,18 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "2d76f3b5a011cedacee04e17c3814e1adb42c22493cd93cbb52f0c7607e67ded",
+      "pageSha256": "ac438aaaad818deaa15b0fd448a206e8368be2799344b5461d15327be74da8f1",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61",
-          "reviewReason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described."
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "72fed76f3afe61c0d7cd3eb6750398c8d8be3f124734e4f852aae58e87754027",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "94275383b3bd26d58b1f56aaa6f9633e69e95e2d4a850d6baa57e85fb9254de8",
-          "reviewReason": "The changed architecture/module-map sources add provider-only verified COMMIT ownership and clarify retirement of the central application-abstractions aggregator. The index still correctly routes readers to the modular-monolith architecture and supporting-service owners and asserts no changing inventory counts, rollout completion or test result."
-        },
-        {
           "path": "docs/README.md",
-          "sha256": "ae200b5649ab592b274d7d3f571d53f77c976302d640df460ddc7b005c71251b",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
+          "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
+      "reason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:12.3635378Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:43.6584192Z"
     },
     {
       "pageId": "module.frontend",
@@ -206,19 +191,19 @@
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "4ad16697fd06ff9f16e5cb509d4d4fc2621db388e4c046180930a27c46261f56",
+          "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0059 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
         },
         {
           "path": "docs/README.md",
-          "sha256": "ae200b5649ab592b274d7d3f571d53f77c976302d640df460ddc7b005c71251b",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
+          "reviewReason": "Reviewed README and ADR catalog changes: accepted ADR0059 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate."
         }
       ],
-      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
+      "reason": "Reviewed README and ADR catalog changes: accepted ADR0059 records a durable deployment boundary; source authority, generated navigation and evidence obligations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:12.6510552Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:44.0327391Z"
     },
     {
       "pageId": "system.quality-index",
@@ -335,8 +320,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
-          "reviewReason": "Reviewed ci-tests.yml: the only addition is an unconditional isolated deployment-shell unittest step; API snapshots, successful-ancestor baseline selection and compatibility failure handling are unchanged."
+          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
+          "reviewReason": "Reviewed final ci-tests.yml: added mandatory handover behavior and pinned Nginx tests; existing baseline selection, API compatibility and source-review gates are intact. Deployment snapshot equality is an additional conservative rollout gate, not a replacement for semantic API compatibility."
         },
         {
           "path": ".llm-wiki/policies/api-compatibility-acceptance.json",
@@ -359,10 +344,10 @@
           "reviewReason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged."
         }
       ],
-      "reason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged.",
+      "reason": "Reviewed final ci-tests.yml: added mandatory handover behavior and pinned Nginx tests; existing baseline selection, API compatibility and source-review gates are intact. Deployment snapshot equality is an additional conservative rollout gate, not a replacement for semantic API compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T00:12:31.6914805Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:44.4093441Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -725,14 +710,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "4ad16697fd06ff9f16e5cb509d4d4fc2621db388e4c046180930a27c46261f56",
+          "reviewReason": "Reviewed ADR catalog and accepted ADR0059 against0055 atomic publication and0058 session ownership: new slot handover is documented without changing generic ADR trigger or decision lookup guidance."
         }
       ],
-      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
+      "reason": "Reviewed ADR catalog and accepted ADR0059 against0055 atomic publication and0058 session ownership: new slot handover is documented without changing generic ADR trigger or decision lookup guidance.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:49.4958151Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:44.7344416Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -996,6 +981,11 @@
       "pageSha256": "17abdf53b45501803a30f30d3507f5782eff5c73759d887dd836b1b6461f60fa",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
+          "reviewReason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
           "sha256": "e395bc619baf10eaff6a7121ecc1658ad048134f6ae262b753d2e72cad07171f",
           "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
@@ -1006,10 +996,10 @@
           "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
         }
       ],
-      "reason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened.",
+      "reason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "927735766ff95df7d0a0623839861bff0779da03",
-      "reviewedAtUtc": "2026-11-01T08:59:01.9398009Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:45.4649493Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -1312,8 +1302,8 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c167f51402eddefb234924ffdd4d64aee365ae86995436e16f46b10d594b1263",
-          "reviewReason": "Reviewed ci-tests.yml and review-report contract: the focused job gains a mandatory deployment test without condition or continue-on-error; report publication, provenance and focused/Full aggregate requirements are unchanged."
+          "sha256": "5e1d107fd029b37e5cce9b2a0604b39fe4edd3d4517bf5b04b027fd0e6d8edb4",
+          "reviewReason": "Reviewed ci-tests.yml report publication and aggregate Wiki gate: unchanged; deployment tests add evidence without bypassing compatibility, dependency, report or audit requirements."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
@@ -1331,10 +1321,10 @@
           "reviewReason": "Reviewed additive substantive-review output and packet metadata compatibility; automated assessment and reviewer attestation remain explicit, and evidence applicability gates are preserved."
         }
       ],
-      "reason": "Reviewed ci-tests.yml and review-report contract: the focused job gains a mandatory deployment test without condition or continue-on-error; report publication, provenance and focused/Full aggregate requirements are unchanged.",
-      "baseRef": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "gitHead": "b9599517f44eeb6705b01cfa9adbcfaab6d767fc",
-      "reviewedAtUtc": "2026-10-30T13:33:40.6631837Z"
+      "reason": "Reviewed ci-tests.yml report publication and aggregate Wiki gate: unchanged; deployment tests add evidence without bypassing compatibility, dependency, report or audit requirements.",
+      "baseRef": "HEAD",
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:46.0084951Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1359,8 +1349,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "735183934e110abb2ef8222c1b35a2f93863878274269350ab94e21a83be9ca4",
-          "reviewReason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources."
+          "sha256": "e1828d0095e4a873ca58ff7d4cb1ebe1b932a93eb46a8d23a810900e9d11c249",
+          "reviewReason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1373,10 +1363,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources.",
+      "reason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
-      "reviewedAtUtc": "2026-11-01T19:47:13.0864195Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:46.5734381Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1694,14 +1684,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "3f6803444d1b29e458e1a4f6cd5084ab50088a20d8c680f30a13ce3fffc3bff3",
-          "reviewReason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate."
+          "sha256": "e34fb4eaf58ccf581c8c9e6b8ebf392ec33653373321dae0ee098b7ac3bfdc04",
+          "reviewReason": "Reviewed regenerated catalog:458 .NET projects,159 test projects and two new operational docs. No project or ownership boundary changed; compiled context provenance, scope and SQL query guidance remain accurate."
         }
       ],
-      "reason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate.",
+      "reason": "Reviewed regenerated catalog:458 .NET projects,159 test projects and two new operational docs. No project or ownership boundary changed; compiled context provenance, scope and SQL query guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
-      "reviewedAtUtc": "2026-11-01T19:47:12.6014149Z"
+      "gitHead": "1f520db19882d949f58152a1ba54c982b32157ed",
+      "reviewedAtUtc": "2026-11-01T21:46:47.2545331Z"
     },
     {
       "pageId": "workflow.review-diff",

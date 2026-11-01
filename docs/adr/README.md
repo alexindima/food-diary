@@ -89,3 +89,4 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0056: Required content revisions for shopping-list updates](0056-shopping-list-content-revisions.md)
 - [0057: Opt-in bounded native incident diagnostics](0057-opt-in-native-diagnostics.md)
 - [0058: Browser sessions in the existing API](0058-browser-sessions-in-the-existing-api.md)
+- [0059: Single-host blue-green API and SSR deployment](0059-single-host-blue-green-deployment.md)
