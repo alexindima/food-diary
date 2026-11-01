@@ -4822,8 +4822,7 @@
                 "NUTRIENTS": "Average nutrient progress",
                 "DIARY_COMPLETENESS": "Diary completed",
                 "DAYS": "days",
-                "COMPLETENESS_HINT": "Days without entries are excluded. Entries for individual days may be incomplete.",
-                "RECORDED_DAYS": "Entries on {{current}} of {{total}} days",
+                "SUMMARY_HINT": "Averages use days with entries ({{current}} of {{total}}); entries may be incomplete. Current base goals from your profile are shown, without weekday-specific settings.",
                 "AVERAGE_RECORDED_DAYS": "Average over days with entries ({{count}})",
                 "BASE_GOAL_HINT": "Comparisons use the base daily goal. Weekday-specific targets are not included here."
             },
@@ -4843,12 +4842,10 @@
             },
             "BALANCE": {
                 "TITLE": "Goal comparison",
-                "SUBTITLE": "Average per recorded day and base daily goals from your profile.",
                 "NUTRIENT": "Metric",
                 "AVERAGE": "Average",
                 "GOAL": "Base goal",
-                "NO_GOAL": "Not set",
-                "BASE_GOAL_HINT": "Current base goals are shown; weekday-specific targets are excluded."
+                "NO_GOAL": "Not set"
             },
             "MEAL_STRUCTURE": {
                 "TITLE": "Calories by meal type",

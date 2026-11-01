@@ -366,8 +366,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "361135c8e611fefede7fbae53e5eddf3fdb663411c18660047490119287fe897",
-          "reviewReason": "Inspected the regenerated architecture projection: zero dependency violations, zero unused allowances, zero untracked production projects and zero module-cycle nodes. Static candidate counts remain navigation evidence and no generation/freshness claim is weakened."
+          "sha256": "ade1f8f7b0a2a1e9b0bd29f9fa7307454c332c31cb1f0859b8b06905ceb8049a",
+          "reviewReason": "Reviewed the final generated architecture-health delta: the added DataTablePreviewComponent is a Storybook-only preview, which adds one unreferenced selector and one component without a direct spec. Backend dependency edges, module cycles and enforced architecture invariants are unchanged. The page already treats unreferenced selectors as investigation candidates and explicitly warns against automatic removal, so its instructions remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -385,10 +385,10 @@
           "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
         }
       ],
-      "reason": "Inspected the regenerated architecture projection: zero dependency violations, zero unused allowances, zero untracked production projects and zero module-cycle nodes. Static candidate counts remain navigation evidence and no generation/freshness claim is weakened.",
+      "reason": "Reviewed the final generated architecture-health delta: the added DataTablePreviewComponent is a Storybook-only preview, which adds one unreferenced selector and one component without a direct spec. Backend dependency edges, module cycles and enforced architecture invariants are unchanged. The page already treats unreferenced selectors as investigation candidates and explicitly warns against automatic removal, so its instructions remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:21.083014Z"
+      "gitHead": "b8469f0b22ecb3cbaa2b4e38f54b1a382554b3b3",
+      "reviewedAtUtc": "2026-11-01T18:18:17.2477625Z"
     },
     {
       "pageId": "workflow-backend-contract-review",

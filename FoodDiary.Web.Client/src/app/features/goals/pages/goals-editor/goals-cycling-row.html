@@ -6,19 +6,14 @@
                 {{ (enabled() ? 'GOALS_PAGE.EDITOR.CYCLING_ENABLED_HINT' : 'GOALS_PAGE.EDITOR.CYCLING_HINT') | translate }}
             </p>
         </div>
-        <div class="goals-editor-toggle">
-            <label for="goals-editor-cycling-enabled">{{
-                (enabled() ? 'GOALS_PAGE.EDITOR.ENABLED' : 'GOALS_PAGE.EDITOR.DISABLED') | translate
-            }}</label>
-            <input
-                id="goals-editor-cycling-enabled"
-                class="goals-editor-toggle__input"
-                type="checkbox"
-                [checked]="enabled()"
-                (change)="enabled.set(!enabled())"
-            />
-            <label class="goals-editor-toggle__control" for="goals-editor-cycling-enabled"><i aria-hidden="true"></i></label>
-        </div>
+        <fd-ui-switch
+            [checked]="enabled()"
+            [ariaLabel]="'GOALS_PAGE.CYCLING_TITLE' | translate"
+            [onLabel]="'GOALS_PAGE.EDITOR.ENABLED' | translate"
+            [offLabel]="'GOALS_PAGE.EDITOR.DISABLED' | translate"
+            [showStateLabel]="true"
+            (checkedChange)="enabled.set($event)"
+        />
     </header>
     @if (enabled()) {
         <div class="goals-editor-cycling__summary">

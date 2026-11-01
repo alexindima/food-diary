@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 515,
-    "componentsWithoutDirectSpecs": 132,
-    "inputs": 1668,
+    "components": 516,
+    "componentsWithoutDirectSpecs": 133,
+    "inputs": 1670,
     "outputs": 557,
     "apiCalls": 323,
     "templatesWithTranslations": 372,
-    "translationKeys": 2219,
-    "consumerEdges": 1316,
+    "translationKeys": 2218,
+    "consumerEdges": 1317,
     "consumedComponents": 327,
-    "unconsumedComponents": 187
+    "unconsumedComponents": 188
   },
   "components": [
     {
@@ -4794,6 +4794,28 @@
       "inputs": [],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.spec.ts"
+    },
+    {
+      "class": "DataTablePreviewComponent",
+      "selector": "fd-data-table-preview",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/data-table.stories.ts",
+      "templatePath": null,
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "theme",
+          "type": "'ocean' | 'leaf' | 'dark'",
+          "required": false
+        },
+        {
+          "name": "uiStyle",
+          "type": "'classic' | 'modern'",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
     },
     {
       "class": "DesignTokensDocsComponent",
@@ -23639,6 +23661,8 @@
         "GENERAL.UNITS.KCAL",
         "GOALS_PAGE.CYCLING_TITLE",
         "GOALS_PAGE.EDITOR.CYCLING_NOTE",
+        "GOALS_PAGE.EDITOR.DISABLED",
+        "GOALS_PAGE.EDITOR.ENABLED",
         "GOALS_PAGE.EDITOR.REPEAT_WEEKDAYS",
         "GOALS_PAGE.EDITOR.RESET_DAYS",
         "GOALS_PAGE.EDITOR.WEEKLY_AVERAGE",
@@ -26001,13 +26025,10 @@
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
       "keys": [
         "STATISTICS.DASHBOARD.BALANCE.AVERAGE",
-        "STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT",
         "STATISTICS.DASHBOARD.BALANCE.GOAL",
         "STATISTICS.DASHBOARD.BALANCE.NO_GOAL",
         "STATISTICS.DASHBOARD.BALANCE.NUTRIENT",
-        "STATISTICS.DASHBOARD.BALANCE.SUBTITLE",
-        "STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT",
-        "STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS",
+        "STATISTICS.DASHBOARD.OVERVIEW.SUMMARY_HINT",
         "STATISTICS.DASHBOARD.OVERVIEW.TITLE"
       ]
     },
@@ -28468,7 +28489,6 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-overview-card/statistics-overview-card.html",
       "occurrences": 1,
       "inputsUsed": [
-        "description",
         "headingLevel",
         "title"
       ],
@@ -41461,6 +41481,24 @@
         "ariaLabel",
         "checked",
         "disabled",
+        "offLabel",
+        "onLabel",
+        "showStateLabel"
+      ],
+      "outputsHandled": [
+        "checkedChange"
+      ]
+    },
+    {
+      "component": "FdUiSwitchComponent",
+      "selector": "fd-ui-switch",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/switch/fd-ui-switch.ts",
+      "consumerFeature": "goals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "ariaLabel",
+        "checked",
         "offLabel",
         "onLabel",
         "showStateLabel"

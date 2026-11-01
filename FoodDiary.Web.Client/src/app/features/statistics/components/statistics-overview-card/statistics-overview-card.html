@@ -1,26 +1,25 @@
 <fd-ui-card class="statistics-overview-card">
-    <fd-dashboard-widget-frame
-        [headingLevel]="2"
-        [title]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate"
-        [description]="'STATISTICS.DASHBOARD.BALANCE.SUBTITLE' | translate"
-    >
+    <fd-dashboard-widget-frame [headingLevel]="2" [title]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate">
         <div class="fd-stack fd-gap-card-content">
-            <table class="statistics-overview-card__table" [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate">
+            <table
+                class="fd-data-table statistics-overview-card__table"
+                [attr.aria-label]="'STATISTICS.DASHBOARD.OVERVIEW.TITLE' | translate"
+            >
                 <thead>
-                    <tr class="fd-ui-caption fd-ui-text-muted">
+                    <tr>
                         <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.NUTRIENT' | translate }}</th>
-                        <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.AVERAGE' | translate }}</th>
-                        <th scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.GOAL' | translate }}</th>
+                        <th class="fd-data-table__number" scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.AVERAGE' | translate }}</th>
+                        <th class="fd-data-table__number" scope="col">{{ 'STATISTICS.DASHBOARD.BALANCE.GOAL' | translate }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (row of rows(); track row.key) {
                         <tr [attr.data-nutrient]="row.key">
-                            <th class="fd-ui-action-text" scope="row">{{ row.labelKey | translate }}</th>
-                            <td class="fd-ui-body-sm">
+                            <th scope="row">{{ row.labelKey | translate }}</th>
+                            <td class="fd-data-table__number">
                                 {{ row.current | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
                             </td>
-                            <td class="fd-ui-body-sm fd-ui-text-muted">
+                            <td class="fd-data-table__number fd-ui-text-muted">
                                 @if (row.goal > 0) {
                                     {{ row.goal | localizedNumber: locale() : 0 : row.fractionDigits }} {{ row.unitKey | translate }}
                                 } @else {
@@ -31,15 +30,9 @@
                     }
                 </tbody>
             </table>
-            <div class="statistics-overview-card__coverage fd-stack fd-gap-xxs">
-                <span class="fd-ui-body-sm">
-                    {{
-                        'STATISTICS.DASHBOARD.OVERVIEW.RECORDED_DAYS' | translate: { current: data().trackedDays, total: data().periodDays }
-                    }}
-                </span>
-                <p class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.OVERVIEW.COMPLETENESS_HINT' | translate }}</p>
-                <p class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BALANCE.BASE_GOAL_HINT' | translate }}</p>
-            </div>
+            <p class="statistics-overview-card__coverage fd-ui-caption fd-ui-text-muted">
+                {{ 'STATISTICS.DASHBOARD.OVERVIEW.SUMMARY_HINT' | translate: { current: data().trackedDays, total: data().periodDays } }}
+            </p>
         </div>
     </fd-dashboard-widget-frame>
 </fd-ui-card>

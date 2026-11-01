@@ -32,6 +32,35 @@ describe('GoalsCyclingRowComponent', () => {
         expect(compactText).toContain(EXPECTED_AVERAGE.toString());
     });
 
+    it('opens and closes the weekly editor through the visible switch without changing configured day values', () => {
+        const fixture = createComponent(createDayCalories(CHANGED_WEDNESDAY_CALORIES));
+        fixture.componentRef.setInput('enabled', false);
+        fixture.detectChanges();
+        const element = fixture.nativeElement as HTMLElement;
+        const toggle = element.querySelector<HTMLButtonElement>('button[role="switch"]');
+        const changes: boolean[] = [];
+        fixture.componentInstance.enabled.subscribe(value => changes.push(value));
+
+        expect(toggle).not.toBeNull();
+        expect(toggle?.getAttribute('aria-checked')).toBe('false');
+        expect(element.querySelector('fd-goals-cycling-day')).toBeNull();
+        toggle?.click();
+        fixture.detectChanges();
+
+        expect(toggle?.getAttribute('aria-checked')).toBe('true');
+        expect(element.querySelectorAll('fd-goals-cycling-day')).toHaveLength(DAYS_PER_WEEK);
+        expect(element.querySelector<HTMLInputElement>('#goals-editor-cycling-wednesdayCalories')?.value).toBe(
+            String(CHANGED_WEDNESDAY_CALORIES),
+        );
+        toggle?.click();
+        fixture.detectChanges();
+
+        expect(toggle?.getAttribute('aria-checked')).toBe('false');
+        expect(element.querySelector('fd-goals-cycling-day')).toBeNull();
+        expect(changes).toEqual([true, false]);
+        expect(fixture.componentInstance.dayCalories().wednesdayCalories).toBe(CHANGED_WEDNESDAY_CALORIES);
+    });
+
     it('emits the base target for every day when reset is selected', () => {
         const fixture = createComponent(createDayCalories(CHANGED_WEDNESDAY_CALORIES));
         const changes: Array<{ key: DayCalorieKey; value: number }> = [];

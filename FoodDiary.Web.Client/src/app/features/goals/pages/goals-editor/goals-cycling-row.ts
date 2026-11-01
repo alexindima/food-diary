@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, model, out
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
 import { map } from 'rxjs';
 
 import { LocalizedNumberPipe } from '../../../../shared/i18n/localized-number.pipe';
@@ -17,7 +18,7 @@ const AVERAGE_SCALE_MULTIPLIER = 2;
 
 @Component({
     selector: 'fd-goals-cycling-row',
-    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, GoalsCyclingDayComponent],
+    imports: [TranslatePipe, LocalizedNumberPipe, FdUiButtonComponent, FdUiSwitchComponent, GoalsCyclingDayComponent],
     templateUrl: './goals-cycling-row.html',
     styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

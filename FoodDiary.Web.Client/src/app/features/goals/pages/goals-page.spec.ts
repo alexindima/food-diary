@@ -65,8 +65,9 @@ describe('GoalsPageComponent calorie cycling', () => {
             facade.dayCalories.set(createDayCalories(0));
             const fixture = createComponent();
             const element = fixture.nativeElement as HTMLElement;
-            const toggle = element.querySelector<HTMLInputElement>('#goals-editor-cycling-enabled');
-            toggle?.dispatchEvent(new Event('change'));
+            const toggle = element.querySelector<HTMLButtonElement>('fd-goals-cycling-row button[role="switch"]');
+            expect(toggle).not.toBeNull();
+            toggle?.click();
             fixture.detectChanges();
             const handler = TestBed.inject(UnsavedChangesService).getHandler();
 
@@ -95,7 +96,7 @@ describe('GoalsPageComponent calorie cycling', () => {
         handler?.discard();
         fixture.detectChanges();
         expect(handler?.hasChanges()).toBe(false);
-        expect(element.querySelector<HTMLInputElement>('#goals-editor-cycling-enabled')?.checked).toBe(false);
+        expect(element.querySelector('fd-goals-cycling-row button[role="switch"]')?.getAttribute('aria-checked')).toBe('false');
         expect(element.querySelector('fd-goals-cycling-day')).toBeNull();
         expect(facade.saveManuallyAsync).not.toHaveBeenCalled();
     });

@@ -22,10 +22,10 @@ describe('StatisticsOverviewCardComponent', () => {
                 DASHBOARD: {
                     OVERVIEW: {
                         TITLE: 'Nutrition overview',
-                        RECORDED_DAYS: 'Entries on {{current}} of {{total}} days',
-                        COMPLETENESS_HINT: 'Days without entries are excluded. Recorded days may be incomplete.',
+                        SUMMARY_HINT:
+                            'Averages use days with entries ({{current}} of {{total}}); entries may be incomplete. Current base goals from your profile are shown, without weekday-specific settings.',
                     },
-                    BALANCE: { NO_GOAL: 'Not set', SUBTITLE: 'Average per recorded day and base daily goals from your profile.' },
+                    BALANCE: { NO_GOAL: 'Not set' },
                 },
             },
         });
@@ -57,9 +57,9 @@ describe('StatisticsOverviewCardComponent', () => {
         expect(rows[1].cells[2].textContent.trim()).toBe('150 g');
         expect(rows[4].cells[2].textContent.trim()).toBe('Not set');
         expect(root.textContent).toContain('Nutrition overview');
-        expect(root.textContent).toContain('Average per recorded day');
-        expect(root.textContent.split(`Entries on ${trackedDays} of 7 days`)).toHaveLength(2);
-        expect(root.textContent).toContain('Days without entries are excluded. Recorded days may be incomplete.');
+        expect(root.textContent).toContain(
+            `Averages use days with entries (${trackedDays} of 7); entries may be incomplete. Current base goals from your profile are shown, without weekday-specific settings.`,
+        );
         expect(root.querySelector('[role="progressbar"]')).toBeNull();
 
         translate.use('ru');

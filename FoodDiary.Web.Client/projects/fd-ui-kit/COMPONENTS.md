@@ -7,6 +7,24 @@ For tooltip and accessible-name rules, see `ACCESSIBILITY_AND_TOOLTIPS.md`.
 
 ## Usage
 
+### Compact data tables
+
+Use the global `fd-data-table` utility for read-only summary tables. Keep native
+`table`, `thead`, `tbody` and `th` semantics; provide an accessible table name,
+`scope="col"` on column headings and `scope="row"` on row headings.
+Add `fd-data-table__number` to numeric headings and cells for end alignment,
+tabular digits and unbroken values. The three-column summary pattern reserves
+30% for each numeric column and lets the label use the remaining space.
+
+The shared pattern owns typography, 40px minimum row height, cell spacing and
+dividers (without a trailing divider). Rows grow when labels or headings wrap.
+Feature styles may add semantic colors and markers. Do not repeat table spacing
+or typography in consumers. These read-only rows do not need touch targets;
+interactive controls retain their usual accessible target sizes.
+
+Styles are included through `src/styles/utilities.scss`. See Storybook
+`Foundation/Data tables` for the theme and density preview.
+
 Page bodies and `fd-ui-dialog` use a short entrance animation. Use the app's
 `fd-motion-enter` utility for newly revealed inline panels. These entrances respect
 `prefers-reduced-motion`; avoid applying them to content that updates continuously.

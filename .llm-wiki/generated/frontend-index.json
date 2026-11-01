@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2782,
+    "typescriptFiles": 2783,
     "symbols": 874,
     "routes": 110,
     "features": 46,
@@ -4784,7 +4784,7 @@
       "role": "Component",
       "selector": "fd-goals-cycling-row",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-cycling-row.ts",
-      "line": 25
+      "line": 26
     },
     {
       "name": "GoalsEditorComponent",
@@ -8319,8 +8319,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4193,
-      "russianProperties": 4193,
+      "englishProperties": 4190,
+      "russianProperties": 4190,
       "countsMatch": true
     },
     {

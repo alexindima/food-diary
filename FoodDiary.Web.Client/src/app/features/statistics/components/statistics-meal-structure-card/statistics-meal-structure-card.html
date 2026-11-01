@@ -26,31 +26,32 @@
                     </div>
                 </div>
 
-                <div
-                    class="statistics-meal-structure-card__table"
-                    role="table"
-                    [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate"
-                >
-                    <div
-                        class="statistics-meal-structure-card__row statistics-meal-structure-card__row--header fd-ui-caption fd-ui-text-muted"
-                        role="row"
-                    >
-                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL' | translate }}</span>
-                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.SHARE' | translate }}</span>
-                        <span role="columnheader">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.AVERAGE' | translate }}</span>
-                    </div>
-                    @for (item of data().items; track item.key) {
-                        <div role="row" [class]="getRowClass(item)">
-                            <strong class="statistics-meal-structure-card__label fd-ui-action-text" role="cell"
-                                ><i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}</strong
-                            >
-                            <span class="fd-ui-body-sm" role="cell">{{ item.percentage }}%</span>
-                            <span class="fd-ui-body-sm" role="cell"
-                                >{{ item.calories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span
-                            >
-                        </div>
-                    }
-                </div>
+                <table class="fd-data-table" [attr.aria-label]="'STATISTICS.DASHBOARD.MEAL_STRUCTURE.TITLE' | translate">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.MEAL' | translate }}</th>
+                            <th class="fd-data-table__number" scope="col">{{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.SHARE' | translate }}</th>
+                            <th class="fd-data-table__number" scope="col">
+                                {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.AVERAGE' | translate }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of data().items; track item.key) {
+                            <tr [class]="getRowClass(item)">
+                                <th scope="row">
+                                    <span class="statistics-meal-structure-card__label"
+                                        ><i aria-hidden="true"></i>{{ getLabelKey(item) | translate }}</span
+                                    >
+                                </th>
+                                <td class="fd-data-table__number">{{ item.percentage }}%</td>
+                                <td class="fd-data-table__number">
+                                    {{ item.calories | localizedNumber: locale() : 0 : 0 }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             } @else {
                 <div class="statistics-meal-structure-card__empty fd-ui-body-sm fd-ui-text-muted">
                     {{ 'STATISTICS.DASHBOARD.MEAL_STRUCTURE.EMPTY' | translate }}

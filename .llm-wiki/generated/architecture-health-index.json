@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 119,
+    "selectorUnreferencedComponents": 120,
     "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 132,
+    "componentsWithoutDirectSpecs": 133,
     "criticalSymbolsWithoutTestReferences": 45,
     "explicitDebtMarkers": 12
   },
@@ -1076,6 +1076,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.html",
       "specPath": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.spec.ts"
+    },
+    {
+      "class": "DataTablePreviewComponent",
+      "selector": "fd-data-table-preview",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/data-table.stories.ts",
+      "templatePath": null,
+      "specPath": null
     },
     {
       "class": "DesignTokensDocsComponent",
@@ -3940,6 +3948,28 @@
           "name": "items",
           "type": "readonly FastingTimerCardDisplayItem[]",
           "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "DataTablePreviewComponent",
+      "selector": "fd-data-table-preview",
+      "feature": "fd-ui-kit",
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/data-table.stories.ts",
+      "templatePath": null,
+      "stylePaths": [],
+      "inputs": [
+        {
+          "name": "theme",
+          "type": "'ocean' | 'leaf' | 'dark'",
+          "required": false
+        },
+        {
+          "name": "uiStyle",
+          "type": "'classic' | 'modern'",
+          "required": false
         }
       ],
       "outputs": [],
