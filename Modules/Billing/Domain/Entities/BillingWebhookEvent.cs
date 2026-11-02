@@ -88,6 +88,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             PayloadJson = DomainGuard.OptionalJson(payloadJson, JsonMaxLength, nameof(payloadJson)),
         };
         webhookEvent.SetProcessingState(BillingWebhookProcessingState.Processed);
+        webhookEvent.PayloadJson = null;
         webhookEvent.SetCreated(webhookEvent.ReceivedAtUtc);
         return webhookEvent;
     }
@@ -98,6 +99,8 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
         }
 
         DateTime normalizedProcessedAt = NormalizeTransitionTimestamp(processedAtUtc, nameof(processedAtUtc));
+        PayloadJson = null;
+        ParsedEventJson = null;
         SetProcessingState(BillingWebhookProcessingState.Processed);
         ProcessedAtUtc = normalizedProcessedAt;
         ErrorMessage = null;

@@ -1,5 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { environment } from '../../../environments/environment';
 import { SKIP_AUTH } from '../../constants/http-context.tokens';
@@ -9,11 +10,14 @@ import { createSdkConnection, sdkRequestOptions } from '../api/sdk/sdk-connectio
 import { ClientTelemetrySessionService } from '../observability/client-telemetry-session.service';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { MARKETING_NOTICE_VERSION, MarketingConsentService } from './marketing-consent.service';
 import { type AnonymousVisitorId, anonymousVisitorId, type MarketingAttributionIdentity, marketingSessionId } from './marketing-identity';
 import { sanitizeMarketingLandingPath } from './marketing-landing-path';
 
 type MarketingAttributionPayload = MarketingAttributionIdentity & {
     timestamp: string;
+    consentNoticeVersion: string;
+    consentGrantedAtUtc: string;
     landingPath: string;
     referrerHost?: string;
     utmSource?: string;
@@ -40,6 +44,7 @@ const RANDOM_RADIX = 36;
 
 @Service()
 export class MarketingAttributionService {
+    private readonly consent = inject(MarketingConsentService);
     private readonly http = inject(HttpClient);
     private readonly storage = inject(BrowserStorageService);
     private readonly browserWindow = inject(BrowserWindowService);
@@ -49,7 +54,27 @@ export class MarketingAttributionService {
     private readonly telemetryContext = new HttpContext().set(SKIP_AUTH, true).set(SKIP_OBSERVABILITY, true);
     private readonly authenticatedTelemetryContext = new HttpContext().set(SKIP_OBSERVABILITY, true);
 
+    public constructor() {
+        this.consent.changed.pipe(takeUntilDestroyed()).subscribe(allowed => {
+            if (allowed) {
+                this.initialize();
+            } else {
+                this.clearIdentifiers();
+            }
+        });
+    }
+
+    private clearIdentifiers(): void {
+        this.storage.removeItem('local', ANONYMOUS_ID_STORAGE_KEY);
+        this.storage.removeItem('local', FIRST_TOUCH_STORAGE_KEY);
+        this.storage.removeItem('session', SESSION_CAPTURE_STORAGE_KEY);
+    }
+
     public initialize(): void {
+        if (!this.consent.isAllowed()) {
+            this.clearIdentifiers();
+            return;
+        }
         if (!this.browserWindow.isAvailable()) {
             return;
         }
@@ -77,13 +102,23 @@ export class MarketingAttributionService {
     }
 
     public recordSignupCompleted(): void {
+        if (!this.consent.isAllowed()) {
+            this.clearIdentifiers();
+            return;
+        }
         if (!this.browserWindow.isAvailable()) {
             return;
         }
 
         this.sanitizeStoredAttribution();
         const source = this.readFirstTouch() ?? this.createOrganicPayload();
+        if (source === null) {
+            return;
+        }
         const payload = this.createSignupPayload(source);
+        if (payload === null) {
+            return;
+        }
         this.sdk.client
             .postMarketingAttributionEventsSignup(
                 { version: this.sdk.version, marketingSignupAttributionHttpRequest: payload, idempotencyKey: crypto.randomUUID() },
@@ -99,11 +134,17 @@ export class MarketingAttributionService {
     }
 
     private createPayload(): MarketingAttributionPayload | null {
+        const consentGrantedAtUtc = this.consent.grantedAt();
+        if (consentGrantedAtUtc === null) {
+            return null;
+        }
         const landingPath = this.getLandingPath();
         const params = new URLSearchParams(this.browserWindow.getSearch() ?? '');
         const referrerHost = this.getExternalReferrerHost();
         const payload: MarketingAttributionPayload = {
             timestamp: new Date().toISOString(),
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+            consentGrantedAtUtc,
             anonymousId: this.getAnonymousId(),
             sessionId: marketingSessionId(this.telemetrySession.getSessionId()),
             landingPath,
@@ -119,9 +160,15 @@ export class MarketingAttributionService {
         return null;
     }
 
-    private createSignupPayload(source: MarketingAttributionPayload): MarketingSignupAttributionPayload {
+    private createSignupPayload(source: MarketingAttributionPayload): MarketingSignupAttributionPayload | null {
+        const consentGrantedAtUtc = this.consent.grantedAt();
+        if (consentGrantedAtUtc === null) {
+            return null;
+        }
         return {
             timestamp: new Date().toISOString(),
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+            consentGrantedAtUtc,
             anonymousId: source.anonymousId,
             sessionId: source.sessionId,
             landingPath: source.landingPath,
@@ -135,9 +182,15 @@ export class MarketingAttributionService {
         };
     }
 
-    private createOrganicPayload(): MarketingAttributionPayload {
+    private createOrganicPayload(): MarketingAttributionPayload | null {
+        const consentGrantedAtUtc = this.consent.grantedAt();
+        if (consentGrantedAtUtc === null) {
+            return null;
+        }
         return {
             timestamp: new Date().toISOString(),
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+            consentGrantedAtUtc,
             anonymousId: this.getAnonymousId(),
             sessionId: marketingSessionId(this.telemetrySession.getSessionId()),
             landingPath: this.getLandingPath(),
@@ -146,6 +199,10 @@ export class MarketingAttributionService {
     }
 
     private readFirstTouch(): MarketingAttributionPayload | null {
+        const consentGrantedAtUtc = this.consent.grantedAt();
+        if (consentGrantedAtUtc === null) {
+            return null;
+        }
         const value = this.storage.getJson('local', FIRST_TOUCH_STORAGE_KEY);
         if (!this.isStoredAttributionPayload(value)) {
             this.storage.removeItem('local', FIRST_TOUCH_STORAGE_KEY);
@@ -154,6 +211,8 @@ export class MarketingAttributionService {
 
         const payload = {
             ...value,
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+            consentGrantedAtUtc,
             landingPath: sanitizeMarketingLandingPath(value.landingPath),
             anonymousId: anonymousVisitorId(value.anonymousId),
             sessionId: marketingSessionId(value.sessionId),

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { writeGeneratedFile } from './generated-file.mjs';
 
 const rootDir = process.cwd();
 const i18nDir = path.join(rootDir, 'assets', 'i18n');
@@ -14,7 +15,7 @@ for (const locale of locales) {
     }, {});
 
     const targetPath = path.join(i18nDir, `${locale}.json`);
-    fs.writeFileSync(targetPath, `${JSON.stringify(merged, null, 4)}\n`, 'utf8');
+    await writeGeneratedFile(targetPath, `${JSON.stringify(merged, null, 4)}\n`);
 }
 
 console.log('Legacy i18n files generated');

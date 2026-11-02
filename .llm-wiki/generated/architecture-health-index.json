@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1679,
+    "productionProjectEdges": 1692,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 4,
     "ambiguousBackendContracts": 29,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 120,
-    "routedStandaloneComponents": 68,
-    "componentsWithoutDirectSpecs": 133,
-    "criticalSymbolsWithoutTestReferences": 45,
+    "selectorUnreferencedComponents": 121,
+    "routedStandaloneComponents": 69,
+    "componentsWithoutDirectSpecs": 134,
+    "criticalSymbolsWithoutTestReferences": 49,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -23,7 +23,7 @@
   "moduleHotspots": [
     {
       "module": "Users",
-      "fanIn": 30,
+      "fanIn": 31,
       "fanOut": 0,
       "level": "review-candidate",
       "role": "aggregate-owner"
@@ -232,16 +232,16 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "MealPlanning",
-      "fanIn": 0,
-      "fanOut": 2,
+      "module": "Marketing",
+      "fanIn": 1,
+      "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
     },
     {
-      "module": "Marketing",
-      "fanIn": 1,
-      "fanOut": 0,
+      "module": "MealPlanning",
+      "fanIn": 0,
+      "fanOut": 2,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -1516,6 +1516,14 @@
       "path": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.html",
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/food-recognition-history/food-recognition-history-dialog.spec.ts"
+    },
+    {
+      "class": "HealthConsentDialogComponent",
+      "selector": "fd-health-consent-dialog",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.html",
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/health-consent-dialog/health-consent-dialog.spec.ts"
     },
     {
       "class": "NotificationsDialogComponent",
@@ -5262,6 +5270,17 @@
       "specPath": null
     },
     {
+      "class": "AccountDeletionOfferComponent",
+      "selector": "fd-account-deletion-offer",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/components/account-deletion-offer/account-deletion-offer.html",
+      "stylePaths": [],
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "UserManagePasswordMethodComponent",
       "selector": "fd-user-manage-password-method",
       "feature": "profile",
@@ -5460,25 +5479,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.scss"
-      ],
-      "inputs": [
-        {
-          "name": "path",
-          "type": "",
-          "required": false
-        }
-      ],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "PublicSiteHeaderComponent",
-      "selector": "fd-public-site-header",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/public/components/public-site-header/public-site-header.scss"
       ],
       "inputs": [
         {
@@ -5752,6 +5752,17 @@
           "type": ""
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "MarketingConsentComponent",
+      "selector": "fd-marketing-consent",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
+      "stylePaths": [],
+      "inputs": [],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -6038,6 +6049,16 @@
       "coveredThrough": []
     },
     {
+      "name": "UpdatePrivacyConsentCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
+      "line": 11,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
@@ -6088,10 +6109,30 @@
       "coveredThrough": []
     },
     {
+      "name": "UserPrivacyController",
+      "role": "Controller",
+      "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+      "line": 16,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "AuthenticateBrowserSessionQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQueryHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "ExportPersonalDataQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
+      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -6172,6 +6213,16 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 9,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetUserPrivacyQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
+      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

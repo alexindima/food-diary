@@ -10,6 +10,7 @@ import { TelegramWebAppService } from '../auth/telegram-web-app.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { MarketingAttributionService } from '../marketing/marketing-attribution.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { PrivacyConsentFacade } from '../privacy/privacy-consent.facade';
 import { ThemeService } from '../theme/theme.service';
 
 @Service()
@@ -20,6 +21,7 @@ export class AppBootstrapService {
     private readonly localizationService = inject(LocalizationService);
     private readonly themeService = inject(ThemeService);
     private readonly userService = inject(UserService);
+    private readonly privacy = inject(PrivacyConsentFacade);
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly telegram = inject(TelegramWebAppService);
     private readonly recovery = inject(AuthRecoveryStateService);
@@ -45,6 +47,7 @@ export class AppBootstrapService {
 
         await this.localizationService.loadApplicationTranslationsAsync();
         const user = await firstValueFrom(this.userService.getInfoSilently());
+        await this.privacy.flushPendingWithdrawalAsync();
         await this.localizationService.applyLanguagePreferenceAsync(user?.language ?? null);
         await this.localizationService.loadApplicationTranslationsAsync();
         this.themeService.syncWithUserPreferences(user?.theme, user?.uiStyle, user?.surfaceStyle);

@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, type Locator, type Page, type Request, type Route, test } from '@playwright/test';
 
 import type { UserHttpResponse } from '../../src/app/shared/api/sdk/generated/model/user-http-response';
-import { hydrationEntryFixture, userFixture } from '../../src/testing/api-fixtures';
+import { consentingPrivacyFixture, hydrationEntryFixture, userFixture } from '../../src/testing/api-fixtures';
 import { fixtureUuid, jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
 
 const fixtureContract = new OpenApiFixtures();
@@ -98,6 +98,7 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { path: '/waist-entries/latest', createResponse: () => null },
     { path: '/products/suggestions', createResponse: () => [] },
     { path: '/favorite-meals/check/e09f5f5f-a5d9-5af4-8045-2946ea17eb0d', createResponse: () => false },
+    { path: '/users/privacy', createResponse: consentingPrivacyFixture },
     { path: '/users/info', createResponse: createUser },
     { path: '/users/overview', createResponse: createUserOverview },
     { path: '/auth/sessions', createResponse: () => [] },

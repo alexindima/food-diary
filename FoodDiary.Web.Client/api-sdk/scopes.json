@@ -234,6 +234,8 @@
         "prefix": "/api/v{version}/users",
         "name": "Users",
         "operations": {
+            "GET /api/v{version}/users/privacy": "getUsersPrivacy",
+            "PUT /api/v{version}/users/privacy": "putUsersPrivacy",
             "POST /api/v{version}/users/ai-consent": "postUsersAiConsent",
             "DELETE /api/v{version}/users/ai-consent": "deleteUsersAiConsent",
             "GET /api/v{version}/users/overview": "getUsersOverview",
@@ -490,6 +492,7 @@
     {
         "operations": {
             "GET /api/v{version}/export/cycle": "getExportCycle",
+            "GET /api/v{version}/export/personal-data": "getExportPersonalData",
             "POST /api/v{version}/export/cycle/sensitive": "postExportCycleSensitive",
             "GET /api/v{version}/export/diary": "getExportDiary"
         },

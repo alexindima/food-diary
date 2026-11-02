@@ -20,6 +20,7 @@ public static class DependencyInjection {
         services.AddScoped<UserContextService>();
         services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserMarketingConsentRecorder>(static provider => provider.GetRequiredService<UserContextService>());
 
         return services;
     }

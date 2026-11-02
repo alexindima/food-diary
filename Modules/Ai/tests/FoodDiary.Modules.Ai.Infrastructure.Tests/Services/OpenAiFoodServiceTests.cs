@@ -25,6 +25,25 @@ public sealed class OpenAiFoodServiceTests {
     private const string TextPrompt = "Parse text '{{userText}}'. {{languageHint}}";
     private const string NutritionPrompt = "Estimate nutrition for {{itemsJson}}.";
 
+    [Theory]
+    [InlineData("vision")]
+    [InlineData("text")]
+    [InlineData("nutrition")]
+    public async Task FoodRecognition_DisablesProviderApplicationStateStorage(string operation) {
+        using var httpClient = new HttpClient(new CapturingHttpMessageHandler(_ =>
+            string.Equals(operation, "nutrition", StringComparison.Ordinal) ? CreateNutritionSuccessResponse() : CreateVisionSuccessResponse()));
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key" });
+        Result result = operation switch {
+            "vision" => await client.AnalyzeFoodImageAsync("https://example.test/meal.webp", "en", description: null, VisionPrompt, CancellationToken.None),
+            "text" => await client.ParseFoodTextAsync("apple", "en", TextPrompt, CancellationToken.None),
+            _ => await client.CalculateNutritionAsync([new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)], NutritionPrompt, CancellationToken.None),
+        };
+        Assert.True(result.IsSuccess);
+        using var body = JsonDocument.Parse(CapturingHttpMessageHandler.LastRequestBody!);
+        Assert.True(body.RootElement.TryGetProperty("store", out JsonElement store), "Provider state storage must be explicitly disabled.");
+        Assert.False(store.GetBoolean());
+    }
+
     [Fact]
     public async Task AnalyzeFoodImageAsync_PreservesDataUrlForTokenCountAndRecognition() {
         const string dataUrl = "data:image/png;base64,AQID";

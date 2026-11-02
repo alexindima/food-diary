@@ -47,6 +47,7 @@ public static class ApiApplicationBuilderExtensions {
             app.UseMiddleware<BrowserRequestProtectionMiddleware>();
             app.UseAuthorization();
             app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
+            app.UseMiddleware<HealthConsentMiddleware>();
             app.UseOutputCache();
 
             app.MapOperationalEndpoints();

@@ -44,7 +44,7 @@ public sealed class LegacyTokenUpgradeTests {
             new InlineTransactionRunner(),
             new AllowCurrentUserAccessService(),
             protector,
-            new TestUnitOfWork(context));
+            new TestUnitOfWork(context), privacy: PrivacyTestReader.Accepted());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", new DateTime(2026, 8, 15, 0, 0, 0, DateTimeKind.Utc)),

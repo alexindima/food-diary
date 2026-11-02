@@ -110,6 +110,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         builder.Property(e => e.AiOutputTokenLimit)
             .HasDefaultValue(1_000_000L);
         builder.Property(e => e.AiConsentAcceptedAt);
+        builder.Property(e => e.HealthConsentNoticeVersion).HasMaxLength(64);
+        builder.Property(e => e.AiConsentNoticeVersion).HasMaxLength(64);
+        builder.Property(e => e.MarketingConsentNoticeVersion).HasMaxLength(64);
         builder.Property(e => e.PremiumTrialStartedAtUtc)
             .HasColumnType("timestamp with time zone");
         builder.Property(e => e.PremiumTrialEndsAtUtc)

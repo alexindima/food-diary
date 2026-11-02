@@ -1,0 +1,21 @@
+<fd-ui-card>
+    <div class="fd-stack fd-gap-sm">
+        <h2>{{ 'PRIVACY_CHOICES.DELETE_OFFER_TITLE' | translate }}</h2>
+        <p>{{ 'PRIVACY_CHOICES.DELETE_OFFER_TEXT' | translate }}</p>
+        @if (deletion.failed()) {
+            <p role="alert">{{ 'USER_MANAGE.DELETE_ACCOUNT_ERROR' | translate }}</p>
+        }
+        <fd-ui-button type="button" variant="secondary" [loading]="privacy.busy()" (click)="privacy.downloadAsync()">{{
+            'PRIVACY_CHOICES.DOWNLOAD' | translate
+        }}</fd-ui-button>
+        <fd-ui-button
+            type="button"
+            variant="danger"
+            [loading]="deletion.busy()"
+            [disabled]="privacy.busy()"
+            [disabledReason]="'DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate"
+            (click)="deletion.confirmAsync()"
+            >{{ 'PRIVACY_CHOICES.DELETE_ACCOUNT' | translate }}</fd-ui-button
+        >
+    </div>
+</fd-ui-card>

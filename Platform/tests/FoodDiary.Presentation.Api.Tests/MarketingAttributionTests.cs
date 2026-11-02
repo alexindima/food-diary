@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +24,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public void AnonymousRequestValidation_AcceptsValuesAtEveryBoundary() {
         var request = new MarketingAttributionHttpRequest(
-            Timestamp: new string('t', 64),
+            Timestamp: "2026-08-18T12:00:00Z",
             AnonymousId: new string('a', 96),
             SessionId: new string('s', 96),
             LandingPath: new string('p', 512),
@@ -33,7 +34,7 @@ public sealed class MarketingAttributionTests {
             UtmCampaign: new string('c', 160),
             UtmContent: new string('o', 160),
             UtmTerm: new string('e', 160),
-            BuildVersion: new string('b', 64));
+            BuildVersion: new string('b', 64), ConsentNoticeVersion: "2026-11-02", ConsentGrantedAtUtc: new DateTime(2026, 8, 18, 11, 0, 0, DateTimeKind.Utc));
 
         IReadOnlyList<ValidationResult> errors = Validate(request);
 
@@ -76,7 +77,7 @@ public sealed class MarketingAttributionTests {
             AnonymousId: "anonymous",
             SessionId: "session",
             LandingPath: "/",
-            BuildVersion: "build\r");
+            BuildVersion: "build\r", ConsentNoticeVersion: "2026-11-02", ConsentGrantedAtUtc: new DateTime(2026, 8, 18, 11, 0, 0, DateTimeKind.Utc));
 
         IReadOnlyList<ValidationResult> errors = Validate(request);
 
@@ -326,7 +327,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_TruncatesPublicAttributionValues() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
         string longValue = new('x', 300);
 
         await handler.Handle(
@@ -344,7 +345,7 @@ public sealed class MarketingAttributionTests {
                 longValue,
                 longValue,
                 longValue,
-                Guid.NewGuid()),
+                Guid.NewGuid(), ConsentNoticeVersion: "2026-11-02", ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1)),
             CancellationToken.None);
 
         MarketingAttributionEventRecord record = Assert.Single(repository.Events);
@@ -358,7 +359,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsUnsupportedEventType() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
 
         Result result = await handler.Handle(
             CreateRecordCommand("premium_started", userId: Guid.NewGuid()),
@@ -371,7 +372,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsMissingEventId() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
 
         Result result = await handler.Handle(
             CreateRecordCommand("page_landing", userId: null) with { EventId = null },
@@ -384,7 +385,7 @@ public sealed class MarketingAttributionTests {
     [Fact]
     public async Task RecordAsync_RejectsSignupWithoutAuthenticatedUser() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System, Substitute.For<IUserMarketingConsentRecorder>());
 
         Result result = await handler.Handle(
             CreateRecordCommand("signup_completed", userId: null),
@@ -398,7 +399,7 @@ public sealed class MarketingAttributionTests {
     public async Task RecordAsync_RejectsTimestampOutsideIngestionWindow() {
         var repository = new InMemoryMarketingAttributionEventRepository();
         DateTime now = new(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc);
-        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(now));
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(now), Substitute.For<IUserMarketingConsentRecorder>());
         RecordMarketingAttributionCommand command = CreateRecordCommand("page_landing", userId: null) with {
             Timestamp = now.AddDays(-2).ToString("O"),
         };
@@ -424,7 +425,7 @@ public sealed class MarketingAttributionTests {
             UtmContent: null,
             UtmTerm: null,
             BuildVersion: null,
-            EventId: Guid.NewGuid());
+            EventId: Guid.NewGuid(), ConsentNoticeVersion: "2026-11-02", ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1));
 
     private static IReadOnlyList<ValidationResult> Validate(object instance) {
         List<ValidationResult> results = [];

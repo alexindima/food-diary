@@ -1321,7 +1321,7 @@
         "write:UserRole"
       ],
       "reason": "Users owner context executes eligibility SQL, profile unlink and User/UserRole deletion. Ordered owner participants lock all source-owned content before fresh reference selection; a late reference after negative preflight defers deletion without side effects. Strict fixture cleanup refuses transfer and retries only remaining validated fixtures for bounded progress. The shared item coordinator owns retries, UoW save, verified commit and tracker reset. Participants never save or commit; no foreign aggregate writes. ADR 0054.",
-      "technicalSourceSha256": "a54459da81cea5ba717367c7df77b38c242f62f19e15b5ec7b1da80310c77aa6"
+      "technicalSourceSha256": "e869d4f97244c55e067fd1f626fc68fa16334ee65023569f0b0f059585979582"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
       "module": "Users",
@@ -1360,6 +1360,7 @@
         "entity:Role",
         "entity:User",
         "entity:UserNutritionProfile",
+        "entity:UserPrivacyConsentEvent",
         "entity:UserRoleAuditEvent",
         "tracked:User",
         "tracked:UserRoleAuditEvent",
@@ -1367,7 +1368,7 @@
         "write:UserRoleAuditEvent"
       ],
       "reason": "Users owns tracked account/profile/role-audit attachment. Detached goal updates read the persisted profile revision, insert only new history and retain immutable snapshots via owner navigation entries. No context escape, SaveChanges or commit; original profile xmin checks and caller unit of work remain authoritative.",
-      "technicalSourceSha256": "29724e61c13563d3bd7d2b0b14afa0fab21f969cc9b7006951074bf06e7124bf"
+      "technicalSourceSha256": "500317718f917e6d1afa9a1eb6c0c317af54735c2b03e213d6aa20156902c87a"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
       "module": "Users",
@@ -1838,7 +1839,7 @@
         "tracked:WeightGoal"
       ],
       "reason": "Owner context saves before shared and dependent contexts using the declared AccountPrincipals priority. It registers owned sets, transaction synchronizers, Telegram conflict and account lifecycle write guards, and an owner purge participant for atomic receipts. Registration performs no queries or writes.",
-      "technicalSourceSha256": "6b77bda5b6fe6b460ae3750098913124a949fbd332d3ac179cf3db70822628f3"
+      "technicalSourceSha256": "53bfeeb9cc9a905b6df79332f726c46925c3693cbc9046fce4ceda37e7104d3e"
     },
     "Modules/ContentReports/Infrastructure/Persistence/ContentReportsDbContext.cs": {
       "module": "ContentReports",
@@ -1896,15 +1897,17 @@
         "context:CurrentTransaction",
         "context:Database",
         "entity:Recipe",
-        "entity:RecipeImage",
+        "entity:RecipeIngredient",
         "entity:RecipeStep",
         "tracked:Recipe",
-        "tracked:RecipeImage",
+        "tracked:RecipeIngredient",
         "tracked:RecipeStep",
-        "write:Recipe"
+        "write:Recipe",
+        "write:RecipeIngredient",
+        "write:RecipeStep"
       ],
-      "reason": "Recipes owner locks all source-owned Recipe rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. Re-reads the owned closure, transfers legacy/gallery images through source-filtered Images ownership, then changes only selected own recipes. No foreign aggregate writes, save or commit. ADR 0054.",
-      "technicalSourceSha256": "1ded5a9fd92881bfdc398373cb63be8a7a51b07a0840d0c3131ebfb57e436573"
+      "reason": "Reviewed GDPR erasure: same per-account coordinator transaction and lock order; owner-scoped parameterized deletion of owned gallery rows, redaction of captions/identifying text and unlinking images before retained numeric composition is reassigned. No external effects or early saves.",
+      "technicalSourceSha256": "72d2da1e858541a8b2b573ba37954f9ee9cd06c43686175674f57470d4de3b41"
     },
     "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs": {
       "module": "Products",
@@ -1912,13 +1915,11 @@
         "context:CurrentTransaction",
         "context:Database",
         "entity:Product",
-        "entity:ProductImage",
         "tracked:Product",
-        "tracked:ProductImage",
         "write:Product"
       ],
-      "reason": "Products owner locks all source-owned Product rows in ID order with SELECT FOR UPDATE in the Users-owned item transaction before authoritative reference selection. FK key-share checks serialize concurrent foreign links. After recipe retention, re-reads surviving foreign references, transfers source-owned legacy/gallery assets through Images and changes only selected own products. No foreign aggregate writes, save or commit. ADR 0054.",
-      "technicalSourceSha256": "7e299a45e70053f262ef82bdc9c0b929536f6c6389ef3bfb573521a18334a2df"
+      "reason": "Reviewed GDPR erasure: same per-account coordinator transaction and lock order; owner-scoped parameterized deletion of owned gallery rows, redaction of captions/identifying text and unlinking images before retained numeric composition is reassigned. No external effects or early saves.",
+      "technicalSourceSha256": "72cfe590b57a4934c68c67bd8c1eca49c4026fddfc3e93a246dae15ae671c3b3"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.SystemOwnership.cs": {
       "module": "Users",
@@ -1949,6 +1950,75 @@
         "entity:User"
       ],
       "reason": "Read-only cancellation report joins Users with Billing cancellation history, applies filters and count/summary before SQL paging; context is the no-tracking facade. No writes or tracking."
+    },
+    "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs": {
+      "module": "ReadModelComposition",
+      "reason": "Reviewed privacy read: explicit no-tracking projections, scoped to the authenticated owner; no writes, credentials or foreign private data. Archive sections are bounded and declared in its manifest. ADR 0059.",
+      "capabilities": [
+        "entity:AiUsage",
+        "entity:BillingCancellation",
+        "entity:BillingPayment",
+        "entity:BillingSubscription",
+        "entity:BleedingEntry",
+        "entity:ContentReport",
+        "entity:CycleConsent",
+        "entity:CycleDayNote",
+        "entity:CycleFactor",
+        "entity:CyclePredictionRevision",
+        "entity:CycleProfile",
+        "entity:CycleSymptomEntry",
+        "entity:ExerciseEntry",
+        "entity:FastingCheckIn",
+        "entity:FastingOccurrence",
+        "entity:FastingPlan",
+        "entity:FastingSession",
+        "entity:FavoriteMeal",
+        "entity:FavoriteProduct",
+        "entity:FavoriteRecipe",
+        "entity:HydrationEntry",
+        "entity:ImageAsset",
+        "entity:MarketingAttributionEvent",
+        "entity:Meal",
+        "entity:MealAiItem",
+        "entity:MealAiSession",
+        "entity:MealItem",
+        "entity:MenstrualEpisode",
+        "entity:Notification",
+        "entity:Product",
+        "entity:RecentItem",
+        "entity:Recipe",
+        "entity:RecipeComment",
+        "entity:RecipeIngredient",
+        "entity:RecipeLike",
+        "entity:RecipeStep",
+        "entity:ShoppingList",
+        "entity:User",
+        "entity:UserAchievement",
+        "entity:UserGoalRevision",
+        "entity:UserLessonProgress",
+        "entity:UserLoginEvent",
+        "entity:UserNutritionProfile",
+        "entity:UserPreferences",
+        "entity:UserPrivacyConsentEvent",
+        "entity:UserRefreshTokenSession",
+        "entity:UserRole",
+        "entity:UserRoleAuditEvent",
+        "entity:WaistEntry",
+        "entity:WaistGoal",
+        "entity:WearableConnection",
+        "entity:WearableSyncEntry",
+        "entity:WebPushSubscription",
+        "entity:WeeklyGoal",
+        "entity:WeightEntry",
+        "entity:WeightGoal"
+      ]
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserPrivacyStateReader.cs": {
+      "module": "Users",
+      "reason": "Reviewed privacy read: explicit no-tracking projections, scoped to the authenticated owner; no writes, credentials or foreign private data. Archive sections are bounded and declared in its manifest. ADR 0059.",
+      "capabilities": [
+        "entity:User"
+      ]
     }
   }
 }

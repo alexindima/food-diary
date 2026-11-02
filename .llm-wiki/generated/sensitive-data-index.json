@@ -6,17 +6,24 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1742,
-    "credential": 170,
+    "candidateFields": 1766,
+    "credential": 171,
     "identity": 187,
-    "health": 813,
-    "financial": 147,
-    "privateContent": 425,
+    "health": 830,
+    "financial": 151,
+    "privateContent": 427,
     "boundaryFiles": 228,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
   "fields": [
+    {
+      "category": "credential",
+      "name": "PrivacyExportUserRefreshTokenSession",
+      "type": "IQueryable<UserRefreshTokenSession>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 91
+    },
     {
       "category": "credential",
       "name": "Password",
@@ -1219,28 +1226,56 @@
       "name": "BillingCancellations",
       "type": "IQueryable<BillingCancellation>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 30
+      "line": 40
     },
     {
       "category": "financial",
       "name": "BillingPayments",
       "type": "IQueryable<BillingPayment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 31
+      "line": 41
     },
     {
       "category": "financial",
       "name": "BillingSubscriptions",
       "type": "IQueryable<BillingSubscription>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 32
+      "line": 42
     },
     {
       "category": "financial",
       "name": "BillingWebhookEvents",
       "type": "IQueryable<BillingWebhookEvent>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 33
+      "line": 43
+    },
+    {
+      "category": "financial",
+      "name": "PrivacyExportBillingCancellation",
+      "type": "IQueryable<BillingCancellation>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 73
+    },
+    {
+      "category": "financial",
+      "name": "PrivacyExportBillingPayment",
+      "type": "IQueryable<BillingPayment>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 74
+    },
+    {
+      "category": "financial",
+      "name": "PrivacyExportBillingSubscription",
+      "type": "IQueryable<BillingSubscription>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 75
+    },
+    {
+      "category": "financial",
+      "name": "PrivacyExportWebPushSubscription",
+      "type": "IQueryable<WebPushSubscription>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 97
     },
     {
       "category": "financial",
@@ -2164,7 +2199,7 @@
       "name": "ITransactionalCommand",
       "type": "IRequest<Result>,",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "line": 23
+      "line": 25
     },
     {
       "category": "financial",
@@ -2241,21 +2276,140 @@
       "name": "HydrationEntries",
       "type": "IQueryable<HydrationEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 39
+      "line": 49
     },
     {
       "category": "health",
       "name": "WaistEntries",
       "type": "IQueryable<WaistEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 59
+      "line": 69
     },
     {
       "category": "health",
       "name": "WeightEntries",
       "type": "IQueryable<WeightEntry>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 60
+      "line": 70
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportWaistEntry",
+      "type": "IQueryable<WaistEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 76
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportWeightEntry",
+      "type": "IQueryable<WeightEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 77
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCycleProfile",
+      "type": "IQueryable<CycleProfile>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 79
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportExerciseEntry",
+      "type": "IQueryable<ExerciseEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 80
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportFastingCheckIn",
+      "type": "IQueryable<FastingCheckIn>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 81
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportFastingOccurrence",
+      "type": "IQueryable<FastingOccurrence>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 82
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportFastingPlan",
+      "type": "IQueryable<FastingPlan>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 83
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportFastingSession",
+      "type": "IQueryable<FastingSession>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 84
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportHydrationEntry",
+      "type": "IQueryable<HydrationEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 89
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportWaistGoal",
+      "type": "IQueryable<WaistGoal>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 106
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportWeightGoal",
+      "type": "IQueryable<WeightGoal>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 107
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportUserNutritionProfile",
+      "type": "IQueryable<UserNutritionProfile>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 113
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCycleSymptomEntry",
+      "type": "IQueryable<CycleSymptomEntry>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 121
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCyclePredictionRevision",
+      "type": "IQueryable<CyclePredictionRevision>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 122
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCycleFactor",
+      "type": "IQueryable<CycleFactor>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 123
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCycleDayNote",
+      "type": "IQueryable<CycleDayNote>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 124
+    },
+    {
+      "category": "health",
+      "name": "PrivacyExportCycleConsent",
+      "type": "IQueryable<CycleConsent>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 125
     },
     {
       "category": "health",
@@ -6945,35 +7099,35 @@
       "name": "Gender",
       "type": "BirthDate,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 167
+      "line": 175
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "WeightKg,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 167
+      "line": 175
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "gender,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 178
+      "line": 186
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "height,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 179
+      "line": 187
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "weight,",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 179
+      "line": 187
     },
     {
       "category": "health",
@@ -9241,28 +9395,42 @@
       "name": "FoodRecognitionImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 29
+      "line": 39
     },
     {
       "category": "privateContent",
       "name": "ImageAssets",
       "type": "IQueryable<ImageAsset>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 40
+      "line": 50
     },
     {
       "category": "privateContent",
       "name": "RecipeComments",
       "type": "IQueryable<RecipeComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 47
+      "line": 57
     },
     {
       "category": "privateContent",
       "name": "RecommendationComments",
       "type": "IQueryable<RecommendationComment>",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 53
+      "line": 63
+    },
+    {
+      "category": "privateContent",
+      "name": "PrivacyExportImageAsset",
+      "type": "IQueryable<ImageAsset>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 92
+    },
+    {
+      "category": "privateContent",
+      "name": "PrivacyExportRecipeComment",
+      "type": "IQueryable<RecipeComment>",
+      "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "line": 100
     },
     {
       "category": "privateContent",

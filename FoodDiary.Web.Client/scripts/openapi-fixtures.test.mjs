@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { invalidJsonFixture, jsonFixture, OpenApiFixtures } from '../e2e/support/openapi-fixtures.mjs';
-import { hydrationEntryFixture, userFixture } from '../src/testing/api-fixtures.ts';
+import { consentingPrivacyFixture, hydrationEntryFixture, userFixture } from '../src/testing/api-fixtures.ts';
 
 const contract = new OpenApiFixtures();
 
 test('shared user and hydration builders obey the actual SDK schemas', () => {
     contract.assertSchema('UserHttpResponse', userFixture());
+    contract.assertSchema('UserPrivacyHttpResponse', consentingPrivacyFixture());
     contract.assertSchema('HydrationEntryHttpResponse', hydrationEntryFixture());
 });
 

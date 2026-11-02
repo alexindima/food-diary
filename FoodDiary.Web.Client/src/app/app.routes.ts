@@ -1,5 +1,5 @@
-import type { Type } from '@angular/core';
-import type { Route, Routes } from '@angular/router';
+import { inject, type Type } from '@angular/core';
+import { type CanActivateFn, type Route, Router, type Routes } from '@angular/router';
 
 import { PUBLIC_SEO_LANDING_ROUTES, type PublicSeoLandingRouteConfig } from './config/public-seo-landing-routes.config';
 import { localizedPublicPath, PUBLIC_INFORMATION_PAGES, type PublicSiteLocale } from './config/public-site-paths';
@@ -9,8 +9,34 @@ import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { AuthService } from './services/auth.service';
 import { publicSiteLocaleGuard } from './shared/i18n/public-site-locale.guard';
 import { mobileShellStartGuard } from './shared/platform/mobile-shell-start.guard';
+import { PrivacyConsentFacade } from './shared/privacy/privacy-consent.facade';
+
+const healthConsentGuard: CanActivateFn = async () => {
+    const auth = inject(AuthService);
+    const privacy = inject(PrivacyConsentFacade);
+    const router = inject(Router);
+    if (!auth.isAuthenticated()) {
+        return true;
+    }
+    return (await privacy.ensureHealthConsentAsync()) ? true : router.createUrlTree(['/privacy-settings']);
+};
+
+const healthPaths = new Set([
+    'dashboard',
+    'meals',
+    'goals',
+    'statistics',
+    'weight-history',
+    'waist-history',
+    'cycle-tracking',
+    'fasting',
+    'hydration',
+    'weekly-check-in',
+    'recommendations',
+]);
 
 const publicSeoLanding = (
     { path, titleKey, descriptionKey, baseKey, featureKeys, stepKeys, faqKeys, relatedPaths }: PublicSeoLandingRouteConfig,
@@ -53,6 +79,13 @@ const publicInformationRoutes = (locale: PublicSiteLocale): Routes =>
     }));
 
 const configuredRoutes: Routes = [
+    {
+        path: 'privacy-settings',
+        canActivate: [authGuard],
+        loadComponent: async () =>
+            import('./features/profile/pages/privacy-settings/privacy-settings').then(m => m.PrivacySettingsComponent),
+        data: { seo: { noIndex: true } },
+    },
     {
         path: '',
         loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
@@ -218,4 +251,9 @@ const configuredRoutes: Routes = [
     },
 ];
 
-export const routes: Routes = requireSessionForGuardedRoutes(configuredRoutes, [authGuard, dietologistGuard]);
+export const routes: Routes = requireSessionForGuardedRoutes(
+    configuredRoutes.map(route =>
+        healthPaths.has(route.path ?? '') ? { ...route, canActivate: [...(route.canActivate ?? []), healthConsentGuard] } : route,
+    ),
+    [authGuard, dietologistGuard],
+);

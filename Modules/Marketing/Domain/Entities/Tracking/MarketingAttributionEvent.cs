@@ -28,6 +28,8 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
     public string? UtmContent { get; private set; }
     public string? UtmTerm { get; private set; }
     public string? BuildVersion { get; private set; }
+    public string? ConsentNoticeVersion { get; private set; }
+    public DateTime? ConsentGrantedAtUtc { get; private set; }
 
     private MarketingAttributionEvent() {
     }
@@ -46,7 +48,7 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
         string? utmContent = null,
         string? utmTerm = null,
         string? buildVersion = null,
-        Guid? eventId = null) {
+        Guid? eventId = null, string? consentNoticeVersion = null, DateTime? consentGrantedAtUtc = null) {
         var entity = new MarketingAttributionEvent {
             Id = eventId is { } eventGuid && eventGuid != Guid.Empty
                 ? new MarketingAttributionEventId(eventGuid)
@@ -64,6 +66,8 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
             UtmContent = NormalizeOptional(utmContent, UtmValueMaxLength),
             UtmTerm = NormalizeOptional(utmTerm, UtmValueMaxLength),
             BuildVersion = NormalizeOptional(buildVersion, BuildVersionMaxLength),
+            ConsentNoticeVersion = NormalizeOptional(consentNoticeVersion, 64),
+            ConsentGrantedAtUtc = consentGrantedAtUtc,
         };
 
         entity.SetCreated(entity.OccurredAtUtc);

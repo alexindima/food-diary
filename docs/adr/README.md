@@ -44,6 +44,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 
 ## Creating A Record
 
+- [0059: Purpose-specific privacy controls and account erasure](0059-purpose-specific-privacy-controls.md) (Proposed)
+
 1. Copy [`template.md`](template.md) to the next zero-padded sequence number.
 2. Complete the context, decision drivers, considered options, decision, and consequences.
 3. Link related or superseded ADRs and the tests or manifests that enforce the decision.

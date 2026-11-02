@@ -5,15 +5,20 @@ using FoodDiary.Modules.Marketing.Contracts.Commands.RecordPremiumConversion;
 using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Mediator;
+using FoodDiary.Modules.Users.Contracts.Common;
 
 namespace FoodDiary.Modules.Marketing.Application.Commands.RecordPremiumConversion;
 
 public sealed class RecordPremiumConversionCommandHandler(IMarketingAttributionEventReadRepository marketingAttributionEventReadRepository,
     IMarketingAttributionEventWriteRepository marketingAttributionEventWriteRepository,
-    TimeProvider dateTimeProvider) : IRequestHandler<RecordPremiumConversionCommand, Unit> {
+    TimeProvider dateTimeProvider,
+    IUserPrivacyStateReader privacy) : IRequestHandler<RecordPremiumConversionCommand, Unit> {
     public async Task<Unit> Handle(RecordPremiumConversionCommand request, CancellationToken cancellationToken) {
         UserId userId = DecodeConsumerUserId(request.UserId);
         if (userId == UserId.Empty) {
+            return Unit.Value;
+        }
+        if ((await privacy.GetAsync(userId, cancellationToken))?.MarketingAcceptedAtUtc is null) {
             return Unit.Value;
         }
 

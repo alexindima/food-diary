@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1385,
+    "contracts": 1394,
     "ambiguousContracts": 29,
-    "consumerEdges": 11132,
-    "productionConsumerEdges": 6208,
-    "testConsumerEdges": 4924,
-    "consumedContracts": 1385,
+    "consumerEdges": 11196,
+    "productionConsumerEdges": 6258,
+    "testConsumerEdges": 4938,
+    "consumedContracts": 1394,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -5130,6 +5130,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "ExportPersonalDataQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "ExtendActiveFastingCommand",
       "roles": [
         "Command"
@@ -8947,6 +8964,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetUserPrivacyQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14451,6 +14485,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IPersonalDataArchiveReader",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IPipelineBehavior",
       "roles": [
         "Other"
@@ -16559,6 +16610,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IUserNotificationProfileService",
       "roles": [
         "Service"
@@ -16571,6 +16639,23 @@
       ],
       "definitionPaths": [
         "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -22476,6 +22561,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "UpdatePrivacyConsentCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "UpdatePrivacyConsentHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/UpdatePrivacyConsentHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "UpdateProductCommand",
       "roles": [
         "Command"
@@ -23170,6 +23289,40 @@
       ],
       "definitionPaths": [
         "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "kinds": [
+        "class"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "UserPrivacyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -28513,6 +28666,20 @@
         "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/HealthConsentMiddleware.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Web.Api/Extensions/ImpersonationAccessGuardMiddleware.cs",
       "isTest": false,
       "referenceCount": 1
@@ -28626,6 +28793,20 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/Presentation/RecipeLikes/Controllers/RecipeLikesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs",
+        "FoodDiary.Telegram.Bot/Api/Generated/Model/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Filters/UserProfileHealthConsentFilter.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -42822,6 +43003,32 @@
       "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Presentation.Tests/ExportControllerTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "ExportPersonalDataQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ExportPersonalDataQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Presentation/Mappings/ExportHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "ExtendActiveFastingCommand",
@@ -57275,6 +57482,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetUserPrivacyQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetUserPrivacyQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserPrivacyHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetUsersForAdministrationQuery",
       "roles": [
         "Query"
@@ -68422,6 +68655,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70788,6 +71034,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70881,7 +71140,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
       "isTest": false,
-      "referenceCount": 35
+      "referenceCount": 92
     },
     {
       "contract": "ICompositionReadContext",
@@ -71308,6 +71567,19 @@
         "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICompositionReadContext",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Users/UserCurrentWaistProvider.cs",
       "isTest": false,
       "referenceCount": 1
@@ -71350,6 +71622,19 @@
       "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Persistence/SharedRuntimeRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ICompositionReadContext",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/PersonalDataArchiveTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ICompositionReadContext",
@@ -72635,6 +72920,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74117,6 +74415,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -88156,33 +88467,7 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageAssetOwnershipService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageAssetOwnershipService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Service.Contracts/Common/IImageAssetOwnershipService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Recipes/Infrastructure/Persistence/RecipesUserContentRetentionParticipant.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -103008,6 +103293,58 @@
       "referenceCount": 6
     },
     {
+      "contract": "IPersonalDataArchiveReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/ReadModelCompositionRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPersonalDataArchiveReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPersonalDataArchiveReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPersonalDataArchiveReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/PersonalDataArchiveTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IPipelineBehavior",
       "roles": [
         "Other"
@@ -106149,6 +106486,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -107345,6 +107695,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -108334,6 +108697,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -109530,6 +109906,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -121580,6 +121969,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Controllers/UsersController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -130329,6 +130731,19 @@
         "Modules/Users/Application/Common/IUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Common/IUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -132435,6 +132850,19 @@
         "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/MarketingConsentOrderingTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/SystemContentOwnerAdministrationTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -132594,6 +133022,71 @@
       "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Common/UserContextService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUserMarketingConsentRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IUserNotificationProfileService",
@@ -132776,6 +133269,162 @@
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Web.Api/Extensions/HealthConsentMiddleware.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserPrivacyStateReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Filters/UserProfileHealthConsentFilter.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/HealthConsentMiddlewareTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/PrivacyTestReader.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/PrivacyTestReader.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserPrivacyStateReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/UserProfileHealthConsentFilterTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserProfileImageService",
@@ -134255,6 +134904,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -135698,6 +136360,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -135777,6 +136452,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -137025,6 +137713,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application.Abstractions/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/MarketingConsentOrderingTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -142367,9 +143068,35 @@
         "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MarketingAttributionEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Tracking.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "MarketingAttributionEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "MarketingAttributionEvent",
@@ -152364,7 +153091,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
       "isTest": false,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -152390,7 +153117,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
       "isTest": true,
-      "referenceCount": 12
+      "referenceCount": 13
     },
     {
       "contract": "RecordMarketingAttributionCommand",
@@ -159717,7 +160444,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearablesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 13
+      "referenceCount": 14
     },
     {
       "contract": "SyncWearableDataCommand",
@@ -163649,6 +164376,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "UpdatePrivacyConsentCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UpdatePrivacyConsentCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserPrivacyHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdatePrivacyConsentHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/UpdatePrivacyConsentHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdatePrivacyConsentHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/UpdatePrivacyConsentHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserPrivacyHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "UpdateProductCommand",
       "roles": [
         "Command"
@@ -164827,6 +165606,19 @@
         "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Filters/UserProfileHealthConsentFilter.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "UpdateUserHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Presentation/Mappings/UserHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
@@ -164867,6 +165659,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UpdateUserHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation/Requests/UpdateUserHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Presentation.Api.Tests/UserProfileHealthConsentFilterTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -166751,7 +167556,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "UserLoginEvent",
@@ -166777,7 +167582,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "UserLoginEvent",
@@ -166789,6 +167594,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.ReadModel.Composition/Identity/UserLoginEventQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserLoginEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -166988,6 +167806,162 @@
       "referenceCount": 1
     },
     {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/Entities/User.Privacy.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/Entities/User.Profile.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/UsersDbContext.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Platform/tests/FoodDiary.Infrastructure.Tests/Services/PersonalDataArchiveTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Tooling/tests/FoodDiary.ArchitectureTests/UserDataLifecycleGuardrailTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserPrivacyHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Presentation/Mappings/UserPrivacyHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "UserRestoredDomainEvent",
       "roles": [
         "Event"
@@ -167050,7 +168024,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "UserRoleAuditEvent",
@@ -167075,6 +168049,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserRoleAuditEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserRoleAuditEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
       "isTest": false,
       "referenceCount": 1
     },

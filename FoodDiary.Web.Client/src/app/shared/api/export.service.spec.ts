@@ -3,12 +3,27 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SessionEventsService } from '../auth/session-events.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { ExportService } from './export.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/export';
 const BLOB_URL = 'blob:food-diary';
 const REPORT_ORIGIN = 'https://fooddiary.test';
+
+it('cancels a personal archive before downloading it when the session ends', () => {
+    let completed = false;
+    service.exportPersonalData().subscribe({
+        complete: () => {
+            completed = true;
+        },
+    });
+    const request = httpMock.expectOne(`${BASE_URL}/personal-data`);
+    TestBed.inject(SessionEventsService).notifySessionEnded();
+    expect(request.cancelled).toBe(true);
+    expect(completed).toBe(true);
+    expect(createObjectUrlSpy).not.toHaveBeenCalled();
+});
 
 let service: ExportService;
 let httpMock: HttpTestingController;

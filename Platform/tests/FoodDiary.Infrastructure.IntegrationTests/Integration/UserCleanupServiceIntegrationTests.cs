@@ -225,7 +225,7 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
     }
 
     [RequiresDockerFact]
-    public async Task CleanupDeletedUsersAsync_WithReassign_ReassignsContentAssetsAndDeletesUser() {
+    public async Task CleanupDeletedUsersAsync_WithReassign_DeletesUnreferencedPrivateContentAndAssets() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
@@ -242,7 +242,7 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
             Assert.Equal(1, batch.RemovedCount);
             await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
             Assert.Equal(
-                ["users/deleted/meal.webp", "users/deleted/profile.webp"],
+                ["users/deleted/meal.webp", "users/deleted/product.webp", "users/deleted/profile.webp", "users/deleted/recipe.webp", "users/deleted/step.webp"],
                 [.. imageObjectDeletionOutbox.ObjectKeys.Order(StringComparer.Ordinal)]);
         }
     }
@@ -472,17 +472,10 @@ public sealed partial class UserCleanupServiceIntegrationTests(PostgresDatabaseF
             .AnyAsync(user => user.Id == survivorUser.Id, cancellationToken)
             .ConfigureAwait(false));
 
-        Product reassignedProduct = await verificationContext.Products.SingleAsync(cancellationToken).ConfigureAwait(false);
-        Recipe reassignedRecipe = await verificationContext.Recipes.SingleAsync(cancellationToken).ConfigureAwait(false);
-        List<ImageAsset> reassignedAssets = await verificationContext.ImageAssets
-            .OrderBy(asset => asset.ObjectKey)
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        Assert.Equal(survivorUser.Id, reassignedProduct.UserId);
-        Assert.Equal(survivorUser.Id, reassignedRecipe.UserId);
-        Assert.All(reassignedAssets, asset => Assert.Equal(survivorUser.Id, asset.UserId));
-        Assert.Single(await verificationContext.RecipeSteps.ToListAsync(cancellationToken).ConfigureAwait(false));
+        Assert.Empty(await verificationContext.Products.ToListAsync(cancellationToken));
+        Assert.Empty(await verificationContext.Recipes.ToListAsync(cancellationToken));
+        Assert.Empty(await verificationContext.ImageAssets.ToListAsync(cancellationToken));
+        Assert.Empty(await verificationContext.RecipeSteps.ToListAsync(cancellationToken));
         Assert.False(await verificationContext.Meals.AnyAsync(cancellationToken).ConfigureAwait(false));
         Assert.False(await verificationContext.ShoppingLists.AnyAsync(cancellationToken).ConfigureAwait(false));
         Assert.False(await verificationContext.ShoppingListItems.AnyAsync(cancellationToken).ConfigureAwait(false));

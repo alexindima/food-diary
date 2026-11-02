@@ -41,6 +41,7 @@ public static class ReadModelCompositionRegistration {
     public static IServiceCollection AddReadModelComposition(this IServiceCollection services) {
         services.TryAddScoped<ICompositionReadContext>(static provider => provider.GetRequiredService<FoodDiaryDbContext>());
         services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();
+        services.AddScoped<IPersonalDataArchiveReader, PersonalDataArchiveReader>();
         services.AddScoped<IUserCurrentWaistProvider, UserCurrentWaistProvider>();
         services.AddScoped<IAiUsageQuery, AiUsageQuery>();
         services.AddScoped<IUserLoginEventQuery, UserLoginEventQuery>();

@@ -2919,6 +2919,13 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
+                    b.Property<DateTime?>("ConsentGrantedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ConsentNoticeVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -4501,6 +4508,10 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("AiConsentAcceptedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("AiConsentNoticeVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<long>("AiInputTokenLimit")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
@@ -4545,6 +4556,16 @@ namespace FoodDiary.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
+                    b.Property<DateTime?>("HealthConsentAcceptedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("HealthConsentDeclinedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("HealthConsentNoticeVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -4560,6 +4581,13 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("MarketingConsentAcceptedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MarketingConsentNoticeVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -4887,6 +4915,44 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserPreferences", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserPrivacyConsentEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Granted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NoticeVersion")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("OccurredAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "OccurredAtUtc");
+
+                    b.ToTable("UserPrivacyConsentEvents", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserRole", b =>
@@ -6233,6 +6299,15 @@ namespace FoodDiary.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserPrivacyConsentEvent", b =>
+                {
+                    b.HasOne("FoodDiary.Modules.Users.Domain.Entities.User", null)
+                        .WithMany("PrivacyConsentEvents")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserRole", b =>
                 {
                     b.HasOne("FoodDiary.Modules.Users.Domain.Entities.Role", "Role")
@@ -6380,6 +6455,8 @@ namespace FoodDiary.Infrastructure.Migrations
 
                     b.Navigation("Preferences")
                         .IsRequired();
+
+                    b.Navigation("PrivacyConsentEvents");
 
                     b.Navigation("UserRoles");
 

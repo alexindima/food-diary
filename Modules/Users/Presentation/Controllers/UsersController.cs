@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Users.Presentation.Mappings.Mappings;
 using FoodDiary.Modules.Users.Presentation.Mappings;
+using FoodDiary.Modules.Users.Presentation.Filters;
 using FoodDiary.Presentation.Api.Controllers;
 
 using FoodDiary.Modules.Users.Presentation.Requests;
@@ -22,6 +23,8 @@ public sealed class UsersController(ISender mediator) : AuthorizedController(med
         HandleOk(userId.ToUserQuery(), static value => value.ToHttpResponse());
 
     [HttpPatch("info")]
+    [TypeFilter(typeof(UserProfileHealthConsentFilter))]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

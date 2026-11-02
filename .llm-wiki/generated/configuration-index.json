@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 68,
+    "optionTypes": 69,
     "configurationFiles": 8,
     "configurationKeys": 301,
     "environmentVariables": 188
@@ -644,6 +644,14 @@
         "MaximumTrackedEmails"
       ],
       "path": "Modules/Identity/Infrastructure/Authentication/PasswordLoginThrottleOptions.cs"
+    },
+    {
+      "type": "PrivacyOptions",
+      "section": "Privacy",
+      "properties": [
+        "RequireHealthConsent"
+      ],
+      "path": "FoodDiary.Web.Api/Options/PrivacyOptions.cs"
     },
     {
       "type": "RecipeVideoOptions",

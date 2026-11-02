@@ -6,12 +6,15 @@ using FoodDiary.Modules.Marketing.Application.Abstractions.Common;
 using FoodDiary.Modules.Marketing.Application.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 
 namespace FoodDiary.Modules.Marketing.Application.Commands.RecordMarketingAttribution;
 
 public sealed class RecordMarketingAttributionCommandHandler(
     IMarketingAttributionEventRepository repository,
-    TimeProvider timeProvider)
+    TimeProvider timeProvider,
+    IUserMarketingConsentRecorder consentRecorder)
     : IRequestHandler<RecordMarketingAttributionCommand, Result> {
     private const int EventTypeMaxLength = 32;
     private const int AnonymousIdMaxLength = 96;
@@ -54,6 +57,9 @@ public sealed class RecordMarketingAttributionCommandHandler(
             return Result.Failure(timestampResult.Error);
         }
 
+        if (!HasCurrentOptIn(request, timestampResult.Value)) {
+            return Result.Failure(Errors.Validation.Invalid(nameof(request.ConsentNoticeVersion), "A current, prior marketing opt-in is required."));
+        }
         MarketingAttributionEventRecord? trustedLanding = null;
         if (string.Equals(request.EventType, MarketingAttributionEventTypes.SignupCompleted, StringComparison.Ordinal)) {
             if (await repository.ExistsForUserAsync(request.UserId!.Value, MarketingAttributionEventTypes.SignupCompleted, cancellationToken)) {
@@ -84,11 +90,20 @@ public sealed class RecordMarketingAttributionCommandHandler(
             trustedLanding?.UtmContent ?? NormalizeOptional(request.UtmContent, UtmValueMaxLength),
             trustedLanding?.UtmTerm ?? NormalizeOptional(request.UtmTerm, UtmValueMaxLength),
             trustedLanding?.BuildVersion ?? NormalizeOptional(request.BuildVersion, BuildVersionMaxLength),
-            eventId);
+            eventId, request.ConsentNoticeVersion, request.ConsentGrantedAtUtc);
 
         await repository.AddAsync(record, cancellationToken);
+        if (request.UserId is { } consentingUser) {
+            Result consent = await consentRecorder.RecordOptInAsync(consentingUser, PrivacyNoticeVersions.Current, timeProvider.GetUtcNow().UtcDateTime, cancellationToken);
+            if (consent.IsFailure) { return consent; }
+        }
         return Result.Success();
     }
+
+    private static bool HasCurrentOptIn(RecordMarketingAttributionCommand request, DateTime occurredAtUtc) =>
+        string.Equals(request.ConsentNoticeVersion, PrivacyNoticeVersions.Current, StringComparison.Ordinal)
+        && request.ConsentGrantedAtUtc is { Kind: DateTimeKind.Utc } grantedAtUtc
+        && grantedAtUtc <= occurredAtUtc && occurredAtUtc - grantedAtUtc < TimeSpan.FromDays(180);
 
     private Result<DateTime> ParseTimestampUtc(string? timestamp) {
         if (!DateTime.TryParse(

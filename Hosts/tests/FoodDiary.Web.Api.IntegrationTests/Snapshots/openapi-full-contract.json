@@ -11239,6 +11239,46 @@
       ]
     },
     {
+      "Path": "/api/v{version}/export/personal-data",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "429",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/zip",
+              "Type": "string",
+              "Format": "binary",
+              "Nullable": false,
+              "Headers": [
+                {
+                  "Name": "Content-Disposition",
+                  "Type": "string"
+                }
+              ]
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/fasting/current",
       "Operations": [
         {
@@ -18818,6 +18858,90 @@
               "Reference": "#/components/schemas/UserHttpResponse",
               "Nullable": false
             }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/users/privacy",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/UserPrivacyHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/UserPrivacyHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/UserPrivacyHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        },
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "RequestBody": {
+            "Required": false,
+            "Content": [
+              {
+                "MediaType": "application/*\u002Bjson",
+                "Reference": "#/components/schemas/UpdatePrivacyConsentHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "application/json",
+                "Reference": "#/components/schemas/UpdatePrivacyConsentHttpRequest",
+                "Nullable": false
+              },
+              {
+                "MediaType": "text/json",
+                "Reference": "#/components/schemas/UpdatePrivacyConsentHttpRequest",
+                "Nullable": false
+              }
+            ]
+          },
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "403",
+            "404",
+            "413",
+            "500"
           ],
           "PathParameters": [
             {
@@ -36984,6 +37108,30 @@
       ]
     },
     {
+      "Name": "UpdatePrivacyConsentHttpRequest",
+      "Properties": [
+        {
+          "Name": "granted",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "noticeVersion",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "purpose",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "UpdateProductHttpRequest",
       "Properties": [
         {
@@ -38253,6 +38401,45 @@
           "Required": false,
           "Type": "number",
           "Format": "double",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "UserPrivacyHttpResponse",
+      "Properties": [
+        {
+          "Name": "aiAcceptedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "healthAcceptedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "healthDeclinedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "marketingAcceptedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "noticeVersion",
+          "Required": false,
+          "Type": "string",
           "Nullable": true
         }
       ]

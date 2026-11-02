@@ -10,8 +10,9 @@ RecipeRepository uses RecipesDbContext for all owned tracking and mutations. Reg
 
 RecipesUserContentRetentionParticipant retains only the source user's reader-selected
 recipe closure before ordinary account purge. The composed reader owns surviving-reference
-selection; the owner adapter transfers legacy covers and all galleries through the
-source-filtered Images capability inside the existing per-user transaction. It never saves or commits.
+selection; the owner adapter clears identifying text, covers and galleries before
+transferring numeric composition inside the existing per-user transaction. Images
+remain with the erased account for owner-side purge. It never saves or commits.
 
 Its lock phase selects all source-owned Recipe IDs in stable order FOR UPDATE
 before any authoritative retention read. Preserve these locks until the caller

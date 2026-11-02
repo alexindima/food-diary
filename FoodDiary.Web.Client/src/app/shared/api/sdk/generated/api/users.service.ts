@@ -24,6 +24,8 @@ import { UpdateDesiredWaistHttpRequest } from '../model/update-desired-waist-htt
 
 import { UpdateDesiredWeightHttpRequest } from '../model/update-desired-weight-http-request';
 
+import { UpdatePrivacyConsentHttpRequest } from '../model/update-privacy-consent-http-request';
+
 import { UpdateUserAppearanceHttpRequest } from '../model/update-user-appearance-http-request';
 
 import { UpdateUserHttpRequest } from '../model/update-user-http-request';
@@ -33,6 +35,8 @@ import { UserDesiredWaistHttpResponse } from '../model/user-desired-waist-http-r
 import { UserDesiredWeightHttpResponse } from '../model/user-desired-weight-http-response';
 
 import { UserHttpResponse } from '../model/user-http-response';
+
+import { UserPrivacyHttpResponse } from '../model/user-privacy-http-response';
 
 import { WaistGoalHistoryPageHttpResponse } from '../model/waist-goal-history-page-http-response';
 
@@ -63,6 +67,10 @@ export interface GetUsersInfoRequestParams {
 }
 
 export interface GetUsersOverviewRequestParams {
+    version: string;
+}
+
+export interface GetUsersPrivacyRequestParams {
     version: string;
 }
 
@@ -110,6 +118,11 @@ export interface PutUsersDesiredWaistRequestParams {
 export interface PutUsersDesiredWeightRequestParams {
     version: string;
     updateDesiredWeightHttpRequest?: UpdateDesiredWeightHttpRequest;
+}
+
+export interface PutUsersPrivacyRequestParams {
+    version: string;
+    updatePrivacyConsentHttpRequest?: UpdatePrivacyConsentHttpRequest;
 }
 
 @Injectable()
@@ -574,6 +587,83 @@ export class UsersSdk extends BaseService {
         let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/users/overview`;
         const { basePath, withCredentials } = this.configuration;
         return this.httpClient.request<ProfileOverviewHttpResponse>('get', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint get /api/v{version}/users/privacy
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getUsersPrivacy(
+        requestParameters: GetUsersPrivacyRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<UserPrivacyHttpResponse>;
+    public getUsersPrivacy(
+        requestParameters: GetUsersPrivacyRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<UserPrivacyHttpResponse>>;
+    public getUsersPrivacy(
+        requestParameters: GetUsersPrivacyRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<UserPrivacyHttpResponse>>;
+    public getUsersPrivacy(
+        requestParameters: GetUsersPrivacyRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getUsersPrivacy.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/users/privacy`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<UserPrivacyHttpResponse>('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
@@ -1340,6 +1430,92 @@ export class UsersSdk extends BaseService {
         return this.httpClient.request<UserDesiredWeightHttpResponse>('put', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             body: updateDesiredWeightHttpRequest,
+            responseType: <any>responseType_,
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint put /api/v{version}/users/privacy
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public putUsersPrivacy(
+        requestParameters: PutUsersPrivacyRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<void>;
+    public putUsersPrivacy(
+        requestParameters: PutUsersPrivacyRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpResponse<void>>;
+    public putUsersPrivacy(
+        requestParameters: PutUsersPrivacyRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<HttpEvent<void>>;
+    public putUsersPrivacy(
+        requestParameters: PutUsersPrivacyRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: { httpHeaderAccept?: 'application/json' | 'text/json' | 'text/plain'; context?: HttpContext; transferCache?: boolean },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling putUsersPrivacy.');
+        }
+        const updatePrivacyConsentHttpRequest = requestParameters?.updatePrivacyConsentHttpRequest;
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept(['application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        // to determine the Content-Type header
+        const consumes: string[] = ['application/*+json', 'application/json', 'text/json'];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/users/privacy`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('put', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
+            body: updatePrivacyConsentHttpRequest,
             responseType: <any>responseType_,
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

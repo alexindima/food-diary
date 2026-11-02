@@ -24,7 +24,7 @@ public sealed partial class WearablesFeatureTests {
         };
         IUnitOfWork unitOfWork = CreateUnitOfWork();
         var handler = new SyncWearableDataCommandHandler([client], repository, new InMemoryWearableSyncRepository(),
-            new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork);
+            new SerializedWearableTransactionRunner(), CreateCurrentUserAccessService(), CreateTokenProtector(), unitOfWork, privacy: PrivacyTestReader.Accepted());
 
         Result<WearableDailySummaryModel> result = await handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date), CancellationToken.None);
@@ -55,7 +55,7 @@ public sealed partial class WearablesFeatureTests {
         };
         var runner = new SerializedWearableTransactionRunner();
         var handler = new SyncWearableDataCommandHandler([client], repository, new InMemoryWearableSyncRepository(),
-            runner, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork());
+            runner, CreateCurrentUserAccessService(), CreateTokenProtector(), CreateUnitOfWork(), privacy: PrivacyTestReader.Accepted());
         Task<Result<WearableDailySummaryModel>> first = handler.Handle(
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date.AddDays(-1)), CancellationToken.None);
         await entered.Task.WaitAsync(TimeSpan.FromSeconds(5));

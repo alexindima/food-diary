@@ -10,8 +10,41 @@ import { ClientTelemetrySessionService } from '../observability/client-telemetry
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 import { MarketingAttributionService } from './marketing-attribution.service';
+import { MARKETING_NOTICE_VERSION, MarketingConsentService } from './marketing-consent.service';
 
 describe('MarketingAttributionService', () => {
+    it('starts only after an explicit opt-in and stops after withdrawal', () => {
+        const { service, httpMock, storage } = setup({}, false);
+        service.initialize();
+        httpMock.expectNone(() => true);
+        const consent = TestBed.inject(MarketingConsentService);
+        consent.decide(true);
+        const request = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        expect(request.request.body).toMatchObject({
+            consentNoticeVersion: MARKETING_NOTICE_VERSION,
+            consentGrantedAtUtc: consent.grantedAt(),
+        });
+        request.flush(null);
+        consent.decide(false);
+        service.recordSignupCompleted();
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+        httpMock.expectNone(() => true);
+        httpMock.verify();
+    });
+    it('does not capture a visitor or signup before marketing opt-in and removes legacy identifiers', () => {
+        const { service, httpMock, storage } = setup({}, false);
+        storage.setItem('local', 'fd_marketing_anonymous_id', 'legacy-id');
+        service.initialize();
+        service.recordSignupCompleted();
+        httpMock.expectNone(() => true);
+        expect(storage.getItem('local', 'fd_marketing_anonymous_id')).toBeNull();
+        expect(storage.getJson('local', 'fd_marketing_first_touch')).toBeNull();
+        expect(storage.getItem('session', 'fd_marketing_session_capture')).toBeNull();
+        httpMock.verify();
+    });
+});
+
+describe('MarketingAttributionService capture', () => {
     it('captures UTM landing attribution once per session', () => {
         const { service, httpMock, storage } = setup();
 
@@ -298,7 +331,10 @@ describe('MarketingAttributionService historical URL privacy', () => {
     });
 });
 
-function setup(overrides: Partial<BrowserWindowMock> = {}): {
+function setup(
+    overrides: Partial<BrowserWindowMock> = {},
+    allowMarketing = true,
+): {
     service: MarketingAttributionService;
     httpMock: HttpTestingController;
     storage: BrowserStorageMock;
@@ -306,6 +342,13 @@ function setup(overrides: Partial<BrowserWindowMock> = {}): {
     browserWindow: BrowserWindowMock;
 } {
     const storage = new BrowserStorageMock();
+    if (allowMarketing) {
+        storage.setJson('local', 'fd_marketing_consent', {
+            version: MARKETING_NOTICE_VERSION,
+            allowed: true,
+            decidedAt: new Date().toISOString(),
+        });
+    }
     const browserWindow = new BrowserWindowMock(overrides);
     const session = {
         getSessionId: (): string => 'fd-session-test',

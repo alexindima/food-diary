@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Recipes.Application.Abstractions.Common;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Recipes.Domain.Entities;
@@ -13,8 +12,7 @@ namespace FoodDiary.Modules.Recipes.Infrastructure.Persistence;
 internal sealed class RecipesUserContentRetentionParticipant(
     RecipesDbContext context,
     IModuleTransactionCoordinator coordinator,
-    IRecipeUserPurgeRetentionReadService retentionReadService,
-    IImageAssetOwnershipService imageAssetOwnershipService) : IUserContentRetentionParticipant {
+    IRecipeUserPurgeRetentionReadService retentionReadService) : IUserContentRetentionParticipant {
     public int Order => 7;
 
     public async Task LockOwnedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
@@ -45,16 +43,35 @@ internal sealed class RecipesUserContentRetentionParticipant(
 
         IQueryable<Recipe> recipes = context.Recipes.Where(recipe => recipe.UserId == sourceUserId && recipeIds.Contains(recipe.Id));
         IQueryable<RecipeStep> steps = context.RecipeSteps.Where(step => step.Recipe.UserId == sourceUserId && recipeIds.Contains(step.RecipeId));
-        List<ImageAssetId> imageIds = await recipes.Where(recipe => recipe.ImageAssetId != null)
-            .Select(recipe => recipe.ImageAssetId!.Value).ToListAsync(cancellationToken);
-        imageIds.AddRange(await recipes.SelectMany(recipe => recipe.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken));
-        imageIds.AddRange(await steps.Where(step => step.ImageAssetId != null)
-            .Select(step => step.ImageAssetId!.Value).ToListAsync(cancellationToken));
-        imageIds.AddRange(await steps.SelectMany(step => step.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken));
-
-        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken);
-        await recipes.ExecuteUpdateAsync(setters => setters.SetProperty(recipe => recipe.UserId, targetUserId), cancellationToken);
+        Guid[] retainedIds = [.. recipeIds.Select(id => id.Value)];
+        // Keep only the numeric composition needed by surviving references. Personal
+        // captions and images remain owned by the erased account and are purged later.
+        await context.Database.ExecuteSqlInterpolatedAsync($"""
+            DELETE FROM "RecipeStepImages" WHERE "RecipeStepId" IN
+            (SELECT s."Id" FROM "RecipeSteps" s JOIN "Recipes" r ON r."Id" = s."RecipeId"
+             WHERE r."UserId" = {sourceUserId.Value} AND r."Id" = ANY({retainedIds}))
+            """, cancellationToken);
+        await context.Database.ExecuteSqlInterpolatedAsync($"""
+            DELETE FROM "RecipeImages" WHERE "RecipeId" IN
+            (SELECT "Id" FROM "Recipes" WHERE "UserId" = {sourceUserId.Value} AND "Id" = ANY({retainedIds}))
+            """, cancellationToken);
+        await steps.ExecuteUpdateAsync(setters => setters
+            .SetProperty(step => step.Title, (string?)null)
+            .SetProperty(step => step.Instruction, "Retained nutritional composition")
+            .SetProperty(step => step.ImageUrl, (string?)null)
+            .SetProperty(step => step.ImageAssetId, (ImageAssetId?)null), cancellationToken);
+        await context.RecipeIngredients.Where(ingredient => ingredient.RecipeStep.Recipe.UserId == sourceUserId && recipeIds.Contains(ingredient.RecipeStep.RecipeId))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(ingredient => ingredient.PublicName, (string?)null)
+                .SetProperty(ingredient => ingredient.PublicUnit, (string?)null)
+                .SetProperty(ingredient => ingredient.TextName, ingredient => ingredient.TextName == null ? null : "Retained ingredient")
+                .SetProperty(ingredient => ingredient.AmountText, (string?)null), cancellationToken);
+        await recipes.ExecuteUpdateAsync(setters => setters
+            .SetProperty(recipe => recipe.Name, "Retained recipe")
+            .SetProperty(recipe => recipe.Description, (string?)null)
+            .SetProperty(recipe => recipe.Comment, (string?)null)
+            .SetProperty(recipe => recipe.ImageUrl, (string?)null)
+            .SetProperty(recipe => recipe.ImageAssetId, (ImageAssetId?)null)
+            .SetProperty(recipe => recipe.UserId, targetUserId), cancellationToken);
     }
 }

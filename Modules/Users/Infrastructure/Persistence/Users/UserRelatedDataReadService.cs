@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
@@ -20,7 +21,9 @@ public sealed class UserRelatedDataReadService(DbSet<User> users, Func<Cancellat
         }
 
         UserId[] ids = [.. userIds.Distinct()];
-        return await users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id))
+        return await users.AsNoTracking().Where(user => Enumerable.Contains(ids, user.Id)
+                && user.IsActive && user.DeletedAt == null && user.HealthConsentAcceptedAtUtc != null
+                && user.HealthConsentNoticeVersion == PrivacyNoticeVersions.Current)
             .Select(user => new { user.Id, user.Preferences.FastingCheckInReminderHours, user.Preferences.FastingCheckInFollowUpReminderHours })
             .ToDictionaryAsync(user => user.Id, user => new UserFastingReminderModel(
                 FastingReminderSchedule.FromStoredHours(user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours)), cancellationToken);

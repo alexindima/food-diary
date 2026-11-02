@@ -18,7 +18,7 @@ sources:
 - Extracted project: `Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Images
-- Business-module consumers: Admin, Ai, Billing, BodyMetrics, ContentReports, Cycles, DailyAdvices, Dashboard, Dietologist, Exercises, Export, Fasting, Favorites, Gamification, Hydration, Identity, Images, Lessons, MealPlanning, Meals, Notifications, Products, RecipeCommunity, Recipes, Statistics, Tdee, Usda, Wearables, WeeklyCheckIn, WeeklyGoals
+- Business-module consumers: Admin, Ai, Billing, BodyMetrics, ContentReports, Cycles, DailyAdvices, Dashboard, Dietologist, Exercises, Export, Fasting, Favorites, Gamification, Hydration, Identity, Images, Lessons, Marketing, MealPlanning, Meals, Notifications, Products, RecipeCommunity, Recipes, Statistics, Tdee, Usda, Wearables, WeeklyCheckIn, WeeklyGoals
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -39,25 +39,27 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 100
-- Observed external consumer groups: 33
+- Public contract files: 105
+- Observed external consumer groups: 34
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 100
-- Interfaces: 37
-- DTO/read-model/projection types: 38
+- Public contract types: 105
+- Interfaces: 40
+- DTO/read-model/projection types: 39
 - Enums: 2
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 0
 - `class CurrentUserAccessResolver`
+- `class PersonalDataArchiveLimitException`
 - `class UserAuthenticationErrors`
 - `class UserErrors`
 - `class UserIdParser`
 - `enum UserAccountStatusFilter`
 - `enum UserPasswordResetIssueStatus`
 - `interface ICurrentUserAccessService`
+- `interface IPersonalDataArchiveReader`
 - `interface IProfileDietologistReadService`
 - `interface IProfileNotificationReadService`
 - `interface IUserAccessTokenSecurityReader`
@@ -79,16 +81,14 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserDietologistProfileReadService`
 - `interface IUserFastingReminderReadService`
 - `interface IUserGamificationProfileReadService`
-- `interface IUserGoogleIdentityRepository`
-- `interface IUserHydrationProfileReadService`
-- ... 70 more type(s)
+- ... 75 more type(s)
 
 ## Extraction Readiness
 
 - Abstraction-owned profile-read consumers: 11 across 3 group(s)
-- Implementation-owned IUserContextService consumers: 13 across 1 group(s)
+- Implementation-owned IUserContextService consumers: 14 across 1 group(s)
 - Consumers receiving the User aggregate: 0
-- Consumers with aggregate mutation access: 11
+- Consumers with aggregate mutation access: 12
 - Composition registrations: 1
 - Remaining blocker classes: 2
 - Extraction readiness: partial; migrate legacy aggregate/mutation consumers
@@ -108,6 +108,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/CurrentUserAccessPolicyTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/HistoryProfileCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/MarketingConsentOrderingTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/AllowImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Support/RecordingImageAssetAccessService.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/SystemContentOwnerAdministrationTests.cs`
@@ -130,7 +131,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ActivityLevelContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/BmrCalculationInputTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/CopiedUserUpdateTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/FastingReminderSettingsTests.cs`
 
 ## Working Rule
 

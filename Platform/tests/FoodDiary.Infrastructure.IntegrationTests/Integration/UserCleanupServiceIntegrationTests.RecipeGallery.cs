@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Favorites.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Images.Domain.Entities.Assets;
 using FoodDiary.Modules.Recipes.Domain.Contracts.ValueObjects.Ids;
@@ -15,7 +16,7 @@ public sealed partial class UserCleanupServiceIntegrationTests {
     [RequiresDockerTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task CleanupDeletedUsersAsync_WithRecipeGalleries_ReassignsEveryReferencedAssetAtomically(bool failAfterReassignment) {
+    public async Task CleanupDeletedUsersAsync_WithRecipeGalleries_RedactsRetainedContentAndPurgesOwnedAssetsAtomically(bool failAfterReassignment) {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         (User deleted, User survivor) = await SeedReassignScenarioAsync(context);
         RecipeGalleryPurgeScenario scenario = await AddRecipeGalleriesAsync(context, deleted);
@@ -47,32 +48,25 @@ public sealed partial class UserCleanupServiceIntegrationTests {
             () => Assert.Equal(expectedOwner, legacyRecipe.UserId),
             () => Assert.Equal(scenario.ForeignAsset.UserId, foreignRecipe.UserId),
             () => Assert.Equal(scenario.ForeignAsset.UserId, foreignAsset.UserId),
-            () => Assert.Equal(scenario.ForeignAsset.ObjectKey, foreignAsset.ObjectKey),
-            () => Assert.Equal(scenario.ForeignAsset.Url, foreignAsset.Url),
-            () => Assert.Equal(scenario.LegacyRecipeAsset.Id, legacyRecipe.ImageAssetId),
-            () => Assert.Equal(scenario.LegacyStepAsset.Id, legacyStep.ImageAssetId),
-            () => Assert.Empty(legacyRecipe.Images),
-            () => Assert.Empty(legacyStep.Images),
-            () => Assert.Equal(scenario.RecipeImages.Select(image => image.ImageAssetId),
-                galleryRecipe.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId)),
-            () => Assert.Equal(scenario.RecipeImages.Select(image => image.ImageUrl),
-                galleryRecipe.Images.OrderBy(image => image.Position).Select(image => image.ImageUrl), StringComparer.Ordinal),
-            () => Assert.Equal(scenario.StepImages.Select(image => image.ImageAssetId),
-                galleryStep.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId)),
-            () => Assert.Equal(scenario.StepImages.Select(image => image.ImageUrl),
-                galleryStep.Images.OrderBy(image => image.Position).Select(image => image.ImageUrl), StringComparer.Ordinal),
             () => Assert.Equal(scenario.ForeignAsset.Id, Assert.Single(foreignRecipe.Images).ImageAssetId),
             () => Assert.False(context.ChangeTracker.HasChanges()));
-
-        foreach (ImageAsset original in scenario.OwnedAssets) {
-            ImageAsset retained = Assert.Single(retainedAssets, asset => asset.Id == original.Id);
-            Assert.Multiple(
-                () => Assert.Equal(expectedOwner, retained.UserId),
-                () => Assert.Equal(original.ObjectKey, retained.ObjectKey),
-                () => Assert.Equal(original.Url, retained.Url));
-        }
-        if (!failAfterReassignment) {
-            Assert.Equal(["users/deleted/meal.webp", "users/deleted/profile.webp"],
+        if (failAfterReassignment) {
+            Assert.Equal(scenario.LegacyRecipeAsset.Id, legacyRecipe.ImageAssetId);
+            Assert.Equal(scenario.LegacyStepAsset.Id, legacyStep.ImageAssetId);
+            Assert.Equal(scenario.RecipeImages.Select(image => image.ImageAssetId), galleryRecipe.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId));
+            Assert.Equal(scenario.StepImages.Select(image => image.ImageAssetId), galleryStep.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId));
+            foreach (ImageAsset original in scenario.OwnedAssets) {
+                Assert.Equal(deleted.Id, Assert.Single(retainedAssets, asset => asset.Id == original.Id).UserId);
+            }
+        } else {
+            Assert.Null(legacyRecipe.ImageAssetId);
+            Assert.Null(legacyStep.ImageAssetId);
+            Assert.Empty(galleryRecipe.Images);
+            Assert.Empty(galleryStep.Images);
+            Assert.Equal("Retained recipe", galleryRecipe.Name);
+            Assert.Equal("Retained nutritional composition", galleryStep.Instruction);
+            Assert.Single(retainedAssets);
+            Assert.Equal(scenario.OwnedAssets.Select(asset => asset.ObjectKey).Append("users/deleted/meal.webp").Append("users/deleted/profile.webp").Order(StringComparer.Ordinal),
                 outbox.ObjectKeys.Order(StringComparer.Ordinal), StringComparer.Ordinal);
         }
     }
@@ -98,6 +92,7 @@ public sealed partial class UserCleanupServiceIntegrationTests {
         var foreignRecipe = Recipe.Create(foreignOwner.Id, "Foreign gallery", 1);
         foreignRecipe.ReplaceImages([new RecipeImage(foreignAsset.Id, foreignAsset.Url, 0)]);
         context.Users.Add(foreignOwner);
+        context.FavoriteRecipes.AddRange(FavoriteRecipe.Create(foreignOwner.Id, recipe.Id), FavoriteRecipe.Create(foreignOwner.Id, legacyRecipe.Id));
         context.ImageAssets.AddRange(recipeExtra, stepExtra, sharedExtra, legacyRecipeAsset, legacyStepAsset, foreignAsset);
         context.Recipes.AddRange(legacyRecipe, foreignRecipe);
         await context.SaveChangesAsync();

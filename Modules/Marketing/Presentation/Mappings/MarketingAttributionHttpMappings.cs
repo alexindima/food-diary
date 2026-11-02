@@ -23,7 +23,7 @@ public static class MarketingAttributionHttpMappings {
                 request.UtmContent,
                 request.UtmTerm,
                 request.BuildVersion,
-                eventId);
+                eventId, request.ConsentNoticeVersion, request.ConsentGrantedAtUtc);
         }
     }
 
@@ -43,7 +43,7 @@ public static class MarketingAttributionHttpMappings {
                 request.UtmContent,
                 request.UtmTerm,
                 request.BuildVersion,
-                eventId);
+                eventId, request.ConsentNoticeVersion, request.ConsentGrantedAtUtc);
         }
     }
 }

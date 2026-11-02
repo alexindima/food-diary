@@ -1,10 +1,13 @@
 using FoodDiary.Modules.Export.Application.Models;
 using FoodDiary.Modules.Export.Application.Queries.ExportCycle;
 using FoodDiary.Modules.Export.Application.Queries.ExportDiary;
+using FoodDiary.Modules.Export.Application.Queries.ExportPersonalData;
 
 namespace FoodDiary.Modules.Export.Presentation.Mappings;
 
 public static class ExportHttpMappings {
+    public static ExportPersonalDataQuery ToPersonalDataQuery(Guid userId) => new(userId);
+
     public static ExportDiaryQuery ToQuery(
         Guid userId,
         DateTime dateFrom,

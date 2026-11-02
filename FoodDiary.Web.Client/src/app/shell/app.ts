@@ -32,6 +32,7 @@ import { filter, from, mergeMap } from 'rxjs';
 
 import { AppUpdateNoticeComponent } from '../components/shared/app-update-notice/app-update-notice';
 import { AuthRecoveryNoticeComponent } from '../components/shared/auth-recovery-notice/auth-recovery-notice';
+import { MarketingConsentComponent } from '../components/shared/marketing-consent/marketing-consent';
 import { PwaInstallBannerComponent } from '../components/shared/pwa-install-banner/pwa-install-banner';
 import { isPublicMarketingPath } from '../config/public-site-paths';
 import { QuickMealDrawerComponent } from '../features/meals/contracts/quick-meal-drawer';
@@ -70,6 +71,7 @@ type AppShellMode = 'authenticated' | 'public';
         AppUpdateNoticeComponent,
         AuthRecoveryNoticeComponent,
         PwaInstallBannerComponent,
+        MarketingConsentComponent,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',

@@ -9,6 +9,7 @@ import ts from 'typescript';
 
 import { canonicalJson, userApiContract } from './api-sdk-contract.mjs';
 import { normalizeBinaryResponseTypes } from './api-sdk-normalization.mjs';
+import { writeGeneratedFile } from './generated-file.mjs';
 
 const clientRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = resolve(clientRoot, '..');
@@ -142,7 +143,7 @@ if (exportApi) {
             throw new Error(`${label} API changed. Review the contract and run npm run ${admin ? 'sdk:admin:update' : 'sdk:update'}.`);
         }
     } else {
-        await writeFile(contractPath, contract);
+        await writeGeneratedFile(contractPath, contract);
     }
 }
 
@@ -228,7 +229,7 @@ try {
             if (current !== content) differences.push(file);
         } else if (current !== content) {
             await mkdir(dirname(target), { recursive: true });
-            await writeFile(target, content);
+            await writeGeneratedFile(target, content);
         }
     }
     if (check && differences.length) throw new Error(`SDK drift: ${differences.join(', ')}. Run npm run sdk:generate.`);

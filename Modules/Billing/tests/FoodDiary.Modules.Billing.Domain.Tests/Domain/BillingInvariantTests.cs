@@ -55,7 +55,7 @@ public sealed class BillingInvariantTests {
             () => Assert.Equal("sub_1", webhookEvent.ExternalObjectId),
             () => Assert.Equal("processed", webhookEvent.Status),
             () => Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.ProcessedAtUtc),
-            () => Assert.Equal("{\"id\":\"evt_1\"}", webhookEvent.PayloadJson),
+            () => Assert.Null(webhookEvent.PayloadJson),
             () => Assert.Null(webhookEvent.ErrorMessage),
             () => Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.CreatedOnUtc));
     }

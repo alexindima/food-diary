@@ -59,27 +59,30 @@ public sealed partial class UserCleanupServiceIntegrationTests {
             () => Assert.Equal(scenario.Root.Visibility, root.Visibility),
             () => Assert.Equal(SystemContentOwner.Id, child.UserId),
             () => Assert.Equal(Visibility.Private, child.Visibility),
-            () => Assert.Equal(scenario.Root.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId),
-                root.Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId)),
-            () => Assert.Equal(scenario.Root.Steps.Single().Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId),
-                root.Steps.Single().Images.OrderBy(image => image.Position).Select(image => image.ImageAssetId)));
+            () => Assert.Equal("Retained recipe", root.Name),
+            () => Assert.Null(root.Description),
+            () => Assert.Null(root.Comment),
+            () => Assert.Null(root.ImageAssetId),
+            () => Assert.Null(root.ImageUrl),
+            () => Assert.Empty(root.Images),
+            () => Assert.Empty(root.Steps.Single().Images),
+            () => Assert.Null(root.Steps.Single().ImageAssetId),
+            () => Assert.Equal("Retained nutritional composition", root.Steps.Single().Instruction));
         Assert.False(await observer.Recipes.AnyAsync(recipe => recipe.Id == scenario.UnrelatedRecipe.Id));
         Assert.False(await observer.Products.AnyAsync(product => product.Id == scenario.UnrelatedProduct.Id));
         foreach (Product product in scenario.RetainedProducts) {
             Product retained = await observer.Products.AsNoTracking().SingleAsync(item => item.Id == product.Id);
             Assert.Multiple(
                 () => Assert.Equal(SystemContentOwner.Id, retained.UserId),
-                () => Assert.Equal(product.Visibility, retained.Visibility));
+                () => Assert.Equal(product.Visibility, retained.Visibility),
+                () => Assert.Equal("Retained product", retained.Name),
+                () => Assert.Null(retained.Comment),
+                () => Assert.Null(retained.ImageAssetId),
+                () => Assert.Equal(product.CaloriesPerBase, retained.CaloriesPerBase));
         }
-        foreach (ImageAsset asset in scenario.RetainedAssets) {
-            ImageAsset retained = await observer.ImageAssets.AsNoTracking().SingleAsync(item => item.Id == asset.Id);
-            Assert.Multiple(
-                () => Assert.Equal(SystemContentOwner.Id, retained.UserId),
-                () => Assert.Equal(asset.Url, retained.Url),
-                () => Assert.Equal(asset.ObjectKey, retained.ObjectKey));
-        }
-        Assert.False(await observer.ImageAssets.AnyAsync(asset => asset.Id == scenario.UnrelatedAsset.Id));
-        Assert.Equal([scenario.UnrelatedAsset.ObjectKey], outbox.ObjectKeys);
+        Assert.Empty(await observer.ImageAssets.ToListAsync());
+        Assert.Equal(scenario.RetainedAssets.Select(asset => asset.ObjectKey).Append(scenario.UnrelatedAsset.ObjectKey).Order(StringComparer.Ordinal),
+            outbox.ObjectKeys.Order(StringComparer.Ordinal), StringComparer.Ordinal);
         await AssertForeignSystemOwnershipReferencesAsync(observer, scenario);
     }
 
@@ -108,7 +111,7 @@ public sealed partial class UserCleanupServiceIntegrationTests {
     }
 
     [RequiresDockerFact]
-    public async Task CleanupDeletedUsersAsync_ValidConfiguredSuccessor_PreservesFullReassignmentWithoutSystemOwner() {
+    public async Task CleanupDeletedUsersAsync_ValidConfiguredSuccessor_RetainsOnlyRedactedReferencedContentWithoutSystemOwner() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         SystemOwnershipScenario scenario = await SeedSystemOwnershipScenarioAsync(context, privateRoot: false);
         await using ServiceProvider provider = CreateServiceProvider(context, new RecordingImageObjectDeletionOutbox(), out UserCleanupService service);
@@ -121,9 +124,10 @@ public sealed partial class UserCleanupServiceIntegrationTests {
         Assert.False(await observer.Users.AnyAsync(user => user.Id == scenario.Deleted.Id));
         Assert.All(await observer.Recipes.ToListAsync(), recipe => Assert.Equal(scenario.Survivor.Id, recipe.UserId));
         Assert.All(await observer.Products.ToListAsync(), product => Assert.Equal(scenario.Survivor.Id, product.UserId));
-        Assert.All(await observer.ImageAssets.ToListAsync(), asset => Assert.Equal(scenario.Survivor.Id, asset.UserId));
-        Assert.True(await observer.Recipes.AnyAsync(recipe => recipe.Id == scenario.UnrelatedRecipe.Id));
-        Assert.True(await observer.Products.AnyAsync(product => product.Id == scenario.UnrelatedProduct.Id));
+        Assert.Empty(await observer.ImageAssets.ToListAsync());
+        Assert.False(await observer.Recipes.AnyAsync(recipe => recipe.Id == scenario.UnrelatedRecipe.Id));
+        Assert.False(await observer.Products.AnyAsync(product => product.Id == scenario.UnrelatedProduct.Id));
+        Assert.Equal("Retained recipe", (await observer.Recipes.SingleAsync(recipe => recipe.Id == scenario.Root.Id)).Name);
         await AssertForeignSystemOwnershipReferencesAsync(observer, scenario);
     }
 

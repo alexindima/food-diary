@@ -19,7 +19,8 @@ public sealed class SyncWearableDataCommandHandler(
     IWearableTransactionRunner transactionRunner,
     ICurrentUserAccessService currentUserAccessService,
     IWearableTokenProtector tokenProtector,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IUserPrivacyStateReader privacy)
     : ICommandHandler<SyncWearableDataCommand, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,
@@ -30,6 +31,9 @@ public sealed class SyncWearableDataCommandHandler(
             cancellationToken);
         if (userIdResult.IsFailure) {
             return CurrentUserAccessResolver.ToFailure<WearableDailySummaryModel>(userIdResult);
+        }
+        if ((await privacy.GetAsync(userIdResult.Value, cancellationToken))?.HealthAcceptedAtUtc is null) {
+            return Result.Failure<WearableDailySummaryModel>(new Error("Privacy.HealthConsentRequired", "Health data processing consent is required for wearable import.", ErrorKind.Forbidden));
         }
 
         Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);

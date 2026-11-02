@@ -8,13 +8,33 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 
 namespace FoodDiary.Modules.Users.Application.Common;
 
 internal sealed class UserContextService(
     IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository) :
-    IUserContextService, IUserProfileReadService {
+    IUserContextService, IUserProfileReadService, IUserMarketingConsentRecorder {
+    public async Task<Result> RecordOptInAsync(UserId userId, string noticeVersion, DateTime recordedAtUtc, CancellationToken cancellationToken) {
+        if (!string.Equals(noticeVersion, PrivacyNoticeVersions.Current, StringComparison.Ordinal)) {
+            return Result.Failure(new Error("Privacy.InvalidNotice", "Review the current privacy notice before saving your choice.", ErrorKind.Validation));
+        }
+        Result<User> user = await GetAccessibleUserAsync(userId, cancellationToken);
+        if (user.IsFailure) { return Result.Failure(user.Error); }
+        // A delayed signup attribution request must never undo a later explicit
+        // refusal. Existing choices can only be changed through the privacy UI.
+        if (user.Value.MarketingConsentNoticeVersion is not null) {
+            return user.Value.MarketingConsentAcceptedAtUtc is null
+                ? Result.Failure(new Error("Privacy.MarketingConsentRequired", "Marketing consent was withdrawn.", ErrorKind.Forbidden))
+                : Result.Success();
+        }
+        user.Value.RecordPrivacyConsent(PrivacyConsentPurpose.MarketingAttribution, granted: true, noticeVersion, recordedAtUtc);
+        await userWriteRepository.UpdateAsync(user.Value, cancellationToken);
+        return Result.Success();
+    }
+
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);

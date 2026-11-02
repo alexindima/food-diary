@@ -23,9 +23,8 @@ IUserSessionRevocationService and IUserProfileImageService are consumer-owned se
 
 IUserFastingReminderReadService and IUserCommentAuthorReadService expose batch
 read-only dictionaries keyed by UserId, containing only reminder hours or author
-names. Missing users are omitted. These preserve existing related-data reads for
-all account states; they do not grant authentication/access or filter inactive
-and soft-deleted accounts. No IQueryable or aggregate escapes these contracts.
+names. Missing users are omitted. Author reads preserve all account states; reminder reads omit inactive, deleted
+and non-consenting accounts. Neither grants authentication/access. No IQueryable or aggregate escapes these contracts.
 
 Administration reads/mutations and billing access/profile/trial/Premium operations use public requests. Their handlers remain in Users Application. Mutations participate in the caller unit of work. Billing dispatches CheckUserAccessQuery; the existing narrow ICurrentUserAccessService capability remains valid for other callers.
 
@@ -38,8 +37,8 @@ Callers dispatch CleanupDeletedUsersCommand through ISender. Do not expose IUser
 IUserContentRetentionParticipant is an owner-side lifecycle extension used only by
 scheduled account purge. It detects retained references and transfers selected
 owned content inside Users' coordinated transaction; it must not save, commit or
-mutate foreign aggregates. Explicit configured successors retain existing full
-content reassignment behavior; automatic system ownership is selective.
+mutate foreign aggregates. Configured successors and automatic system ownership both retain only referenced
+composition, after owner-side removal of identifying text and images.
 
 All retention participants first lock their source-owned rows in participant/ID
 order before any authoritative reference read or transfer. Their locks share the

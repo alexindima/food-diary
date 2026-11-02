@@ -108,7 +108,15 @@ public sealed class UserRepository(DbSet<User> users, DbSet<UserRoleAuditEvent> 
         long? persistedRevision = user.NutritionProfile.GoalHistory.Count == 0 ? null : await users.AsNoTracking()
             .Where(account => account.Id == user.Id).Select(account => (long?)account.NutritionProfile.GoalRevision)
             .SingleOrDefaultAsync(cancellationToken);
+        Guid[] eventIds = [.. user.PrivacyConsentEvents.Select(item => item.Id)];
+        List<Guid> persistedEventIds = eventIds.Length == 0 ? [] : await users.AsNoTracking()
+            .Where(account => account.Id == user.Id).SelectMany(account => account.PrivacyConsentEvents)
+            .Where(item => Enumerable.Contains(eventIds, item.Id)).Select(item => item.Id).ToListAsync(cancellationToken);
         users.Update(user);
+        foreach (UserPrivacyConsentEvent item in user.PrivacyConsentEvents) {
+            users.Entry(user).Collection(account => account.PrivacyConsentEvents).FindEntry(item)!.State = persistedEventIds.Contains(item.Id)
+                ? EntityState.Unchanged : EntityState.Added;
+        }
         foreach (UserGoalRevision revision in user.NutritionProfile.GoalHistory) {
             // Update attaches a detached graph as Modified even for newly appended, client-keyed snapshots.
             // Existing snapshots are immutable; only revisions added after the persisted profile are inserted.

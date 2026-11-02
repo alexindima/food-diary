@@ -23,7 +23,7 @@ public sealed partial class MarketingAttributionEventRepository(DbSet<MarketingA
             record.UtmContent,
             record.UtmTerm,
             record.BuildVersion,
-            record.EventId);
+            record.EventId, record.ConsentNoticeVersion, record.ConsentGrantedAtUtc);
 
         attributionEvents.Add(entity);
         return Task.CompletedTask;

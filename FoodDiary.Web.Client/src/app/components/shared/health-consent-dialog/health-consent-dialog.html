@@ -1,0 +1,21 @@
+<fd-ui-dialog [title]="'PRIVACY_CHOICES.HEALTH_TITLE' | translate">
+    <div class="fd-stack fd-gap-md">
+        <p>{{ 'PRIVACY_CHOICES.HEALTH_TEXT' | translate }}</p>
+        <p>{{ 'PRIVACY_CHOICES.WITHDRAWAL' | translate }}</p>
+        <a target="_blank" rel="noopener noreferrer" [href]="policyPath()">{{ 'USER_MANAGE.PRIVACY_POLICY_LINK' | translate }}</a>
+        <div class="fd-row fd-gap-sm fd-align-start">
+            <input id="health-consent-agreement" type="checkbox" [checked]="agreed()" (change)="change($event)" />
+            <label for="health-consent-agreement">{{ 'PRIVACY_CHOICES.HEALTH_AGREEMENT' | translate }}</label>
+        </div>
+    </div>
+    <div fdUiDialogFooter class="fd-row fd-gap-sm fd-justify-end">
+        <fd-ui-button type="button" variant="secondary" (click)="close(false)">{{ 'PRIVACY_CHOICES.DECLINE' | translate }}</fd-ui-button>
+        <fd-ui-button
+            type="button"
+            [disabled]="!agreed()"
+            [disabledReason]="'PRIVACY_CHOICES.HEALTH_AGREEMENT' | translate"
+            (click)="close(true)"
+            >{{ 'PRIVACY_CHOICES.ACCEPT' | translate }}</fd-ui-button
+        >
+    </div>
+</fd-ui-dialog>

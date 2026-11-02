@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { environment } from '../../../../../environments/environment';
+
 @Component({
     selector: 'fd-privacy-policy',
     templateUrl: './privacy-policy.html',
@@ -8,4 +10,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslatePipe],
 })
-export class PrivacyPolicyComponent {}
+export class PrivacyPolicyComponent {
+    protected readonly supportEmail = environment.supportEmail;
+}

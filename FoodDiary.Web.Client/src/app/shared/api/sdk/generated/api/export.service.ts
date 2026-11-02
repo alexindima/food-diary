@@ -37,6 +37,10 @@ export interface GetExportDiaryRequestParams {
     reportOrigin?: string;
 }
 
+export interface GetExportPersonalDataRequestParams {
+    version: string;
+}
+
 export interface PostExportCycleSensitiveRequestParams {
     version: string;
     sensitiveCycleExportHttpRequest?: SensitiveCycleExportHttpRequest;
@@ -259,6 +263,89 @@ export class ExportSdk extends BaseService {
         return this.httpClient.request('get', `${basePath}${localVarPath}`, {
             context: localVarHttpContext,
             params: localVarQueryParameters.toHttpParams(),
+            responseType: 'blob',
+            ...(withCredentials ? { withCredentials } : {}),
+            headers: localVarHeaders,
+            observe: observe,
+            ...(localVarTransferCache !== undefined ? { transferCache: localVarTransferCache } : {}),
+            reportProgress: reportProgress,
+        });
+    }
+
+    /**
+     * @endpoint get /api/v{version}/export/personal-data
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     * @param options additional options
+     */
+    public getExportPersonalData(
+        requestParameters: GetExportPersonalDataRequestParams,
+        observe?: 'body',
+        reportProgress?: boolean,
+        options?: {
+            httpHeaderAccept?: 'application/zip' | 'application/json' | 'text/json' | 'text/plain';
+            context?: HttpContext;
+            transferCache?: boolean;
+        },
+    ): Observable<Blob>;
+    public getExportPersonalData(
+        requestParameters: GetExportPersonalDataRequestParams,
+        observe?: 'response',
+        reportProgress?: boolean,
+        options?: {
+            httpHeaderAccept?: 'application/zip' | 'application/json' | 'text/json' | 'text/plain';
+            context?: HttpContext;
+            transferCache?: boolean;
+        },
+    ): Observable<HttpResponse<Blob>>;
+    public getExportPersonalData(
+        requestParameters: GetExportPersonalDataRequestParams,
+        observe?: 'events',
+        reportProgress?: boolean,
+        options?: {
+            httpHeaderAccept?: 'application/zip' | 'application/json' | 'text/json' | 'text/plain';
+            context?: HttpContext;
+            transferCache?: boolean;
+        },
+    ): Observable<HttpEvent<Blob>>;
+    public getExportPersonalData(
+        requestParameters: GetExportPersonalDataRequestParams,
+        observe: any = 'body',
+        reportProgress: boolean = false,
+        options?: {
+            httpHeaderAccept?: 'application/zip' | 'application/json' | 'text/json' | 'text/plain';
+            context?: HttpContext;
+            transferCache?: boolean;
+        },
+    ): Observable<any> {
+        const version = requestParameters?.version;
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling getExportPersonalData.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        // authentication (BrowserSession) required
+
+        const localVarHttpHeaderAcceptSelected: string | undefined =
+            options?.httpHeaderAccept ??
+            this.configuration.selectHeaderAccept(['application/zip', 'application/json', 'text/json', 'text/plain']);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+        let localVarPath = `/api/v${this.configuration.encodeParam({ name: 'version', value: version, in: 'path', style: 'simple', explode: false, dataType: 'string', dataFormat: undefined })}/export/personal-data`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request('get', `${basePath}${localVarPath}`, {
+            context: localVarHttpContext,
             responseType: 'blob',
             ...(withCredentials ? { withCredentials } : {}),
             headers: localVarHeaders,

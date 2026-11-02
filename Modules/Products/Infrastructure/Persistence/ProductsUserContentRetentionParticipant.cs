@@ -1,5 +1,4 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
-using FoodDiary.Modules.Images.Service.Contracts.Common;
 using FoodDiary.Modules.Products.Application.Abstractions.Common;
 using FoodDiary.Modules.Products.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Products.Domain.Entities;
@@ -13,8 +12,7 @@ namespace FoodDiary.Modules.Products.Infrastructure.Persistence;
 internal sealed class ProductsUserContentRetentionParticipant(
     ProductsDbContext context,
     IModuleTransactionCoordinator coordinator,
-    IProductUserPurgeRetentionReadService retentionReadService,
-    IImageAssetOwnershipService imageAssetOwnershipService) : IUserContentRetentionParticipant {
+    IProductUserPurgeRetentionReadService retentionReadService) : IUserContentRetentionParticipant {
     public int Order => 10;
 
     public async Task LockOwnedContentAsync(UserId sourceUserId, CancellationToken cancellationToken) {
@@ -44,12 +42,20 @@ internal sealed class ProductsUserContentRetentionParticipant(
         }
 
         IQueryable<Product> products = context.Products.Where(product => product.UserId == sourceUserId && productIds.Contains(product.Id));
-        List<ImageAssetId> imageIds = await products.Where(product => product.ImageAssetId != null)
-            .Select(product => product.ImageAssetId!.Value).ToListAsync(cancellationToken);
-        imageIds.AddRange(await products.SelectMany(product => product.Images).Select(image => image.ImageAssetId)
-            .ToListAsync(cancellationToken));
-
-        await imageAssetOwnershipService.ReassignAsync([.. imageIds.Distinct()], sourceUserId, targetUserId, cancellationToken);
-        await products.ExecuteUpdateAsync(setters => setters.SetProperty(product => product.UserId, targetUserId), cancellationToken);
+        Guid[] retainedIds = [.. productIds.Select(id => id.Value)];
+        await context.Database.ExecuteSqlInterpolatedAsync($"""
+            DELETE FROM "ProductImages" WHERE "ProductId" IN
+            (SELECT "Id" FROM "Products" WHERE "UserId" = {sourceUserId.Value} AND "Id" = ANY({retainedIds}))
+            """, cancellationToken);
+        await products.ExecuteUpdateAsync(setters => setters
+            .SetProperty(product => product.Name, "Retained product")
+            .SetProperty(product => product.Brand, (string?)null)
+            .SetProperty(product => product.Category, (string?)null)
+            .SetProperty(product => product.Barcode, (string?)null)
+            .SetProperty(product => product.Description, (string?)null)
+            .SetProperty(product => product.Comment, (string?)null)
+            .SetProperty(product => product.ImageUrl, (string?)null)
+            .SetProperty(product => product.ImageAssetId, (ImageAssetId?)null)
+            .SetProperty(product => product.UserId, targetUserId), cancellationToken);
     }
 }

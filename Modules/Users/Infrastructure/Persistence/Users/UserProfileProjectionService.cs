@@ -6,6 +6,7 @@ using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Users.Domain.Entities;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -47,7 +48,10 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
             await synchronizeTransactionAsync(cancellationToken);
         }
         return await ReadAsync(userId, user => new UserAiProfileModel(user.Id, user.Preferences.Language,
-            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null), cancellationToken);
+            user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null &&
+                (user.AiConsentNoticeVersion == PrivacyNoticeVersions.Current
+                 || (PrivacyNoticeVersions.Current == PrivacyNoticeVersions.LegacyCompatibleAiNotice &&
+                     (user.AiConsentNoticeVersion == null || user.AiConsentNoticeVersion == PrivacyNoticeVersions.LegacyUnversioned)))), cancellationToken);
     }
 
     public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default,

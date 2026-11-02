@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Modules.Export.Presentation.Mappings;
 using FoodDiary.Modules.Export.Presentation.Requests;
+using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Mediator;
@@ -15,6 +16,16 @@ namespace FoodDiary.Modules.Export.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/export")]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class ExportController(ISender mediator) : AuthorizedController(mediator) {
+    [HttpGet("personal-data")]
+    [ProducesFileResponse("application/zip")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
+    [EnableRateLimiting(PresentationPolicyNames.ExportRateLimitPolicyName)]
+    [BlockImpersonatedAccess]
+    public Task<IActionResult> ExportPersonalData([FromCurrentUser] Guid userId) => HandleFile(ExportHttpMappings.ToPersonalDataQuery(userId));
+
     [HttpGet("diary")]
     [ProducesFileResponse("text/csv", "application/pdf")]
     [ProducesResponseType(StatusCodes.Status200OK)]

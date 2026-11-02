@@ -56,7 +56,7 @@ public static class UserMappings {
             [.. user.GetRoleNames()],
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt,
+            user.HasCurrentAiConsent() ? user.AiConsentAcceptedAt : null,
             user.MustChangePassword);
 
     public static UserModel ToModel(this User user) {
@@ -108,7 +108,7 @@ public static class UserMappings {
             user.IsActive,
             user.IsEmailConfirmed,
             user.LastLoginAtUtc,
-            user.AiConsentAcceptedAt,
+            user.HasCurrentAiConsent() ? user.AiConsentAcceptedAt : null,
             user.MustChangePassword,
             !string.IsNullOrWhiteSpace(user.GoogleIssuer) &&
             !string.IsNullOrWhiteSpace(user.GoogleSubject),

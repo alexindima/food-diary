@@ -13,7 +13,8 @@ ProductRepository delegates usage counting to IProductUsageQuery. Host compositi
 ProductsDbContext owns the Product runtime entity. ProductRepository uses the owner context; ProductSnapshotReadService receives its narrow DbSet. Synchronize owner reads with the current shared transaction, including after intermediate saves. Shared IUnitOfWork coordinates commits; the serializable mutation runner uses the coordinator contract and the ordered purge participant uses its owner context. Product ownership extraction preserves its schema and migration identity; cross-module FK migrations remain in central Infrastructure.
 
 ProductsUserContentRetentionParticipant runs after Recipes retention and transfers only
-reader-selected products owned by the source user, plus their owned cover/gallery assets.
+reader-selected products owned by the source user after clearing identifying text
+and covers/galleries. Images remain with the erased account for purge.
 Refresh selection inside the caller's per-user transaction so newly retained recipes keep
 their product dependencies. Foreign-reference discovery stays in composition; this adapter never saves or commits.
 

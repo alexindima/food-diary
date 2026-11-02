@@ -32,6 +32,7 @@ internal static class OpenAiRequestFactory {
 
         return new {
             model,
+            store = false,
             max_output_tokens = maxOutputTokens,
             input = new[] {
                 new {
@@ -62,6 +63,7 @@ internal static class OpenAiRequestFactory {
 
         return new {
             model,
+            store = false,
             max_output_tokens = maxOutputTokens,
             input = new[] {
                 new {
@@ -97,6 +99,7 @@ internal static class OpenAiRequestFactory {
 
         return new {
             model,
+            store = false,
             max_output_tokens = maxOutputTokens,
             input = new[] {
                 new {

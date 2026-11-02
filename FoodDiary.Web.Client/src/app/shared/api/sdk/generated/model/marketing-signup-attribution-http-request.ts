@@ -11,6 +11,8 @@
 export interface MarketingSignupAttributionHttpRequest {
     anonymousId?: string;
     buildVersion?: string | null;
+    consentGrantedAtUtc?: string | null;
+    consentNoticeVersion?: string | null;
     landingPath?: string;
     referrerHost?: string | null;
     sessionId?: string;

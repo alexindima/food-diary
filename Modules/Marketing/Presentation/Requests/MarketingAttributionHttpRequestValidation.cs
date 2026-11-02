@@ -1,9 +1,19 @@
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace FoodDiary.Modules.Marketing.Presentation.Requests;
 
 internal static class MarketingAttributionHttpRequestValidation {
+    public static IEnumerable<ValidationResult> ValidateConsent(string? version, DateTime? grantedAtUtc, string timestamp) {
+        if (!string.Equals(version, PrivacyNoticeVersions.Current, StringComparison.Ordinal) || grantedAtUtc is null
+            || grantedAtUtc.Value.Kind != DateTimeKind.Utc
+            || !DateTime.TryParse(timestamp, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out DateTime occurredAtUtc)
+            || grantedAtUtc > occurredAtUtc || occurredAtUtc - grantedAtUtc > TimeSpan.FromDays(180)) {
+            yield return new ValidationResult("A current, prior marketing opt-in is required.", ["ConsentNoticeVersion", "ConsentGrantedAtUtc"]);
+        }
+    }
+
     public static IReadOnlyList<ValidationResult> Validate(
         string? timestamp,
         string? anonymousId,

@@ -1,0 +1,23 @@
+{
+  "version": "2026-11-02",
+  "locale": "en",
+  "health": {
+    "HEALTH_TITLE": "Processing your health and tracking data",
+    "HEALTH_TEXT": "To provide your personal diary and tracking features, Food Diary stores and processes the nutrition records, body measurements, hydration, fasting, exercise, goals and cycle data that you choose to enter. Cycle and fertility features also have their own separate choices. AI processing is optional and requires a separate choice.",
+    "HEALTH_AGREEMENT": "I explicitly consent to Food Diary storing and processing my health and tracking data for these personal diary and tracking features.",
+    "WITHDRAWAL": "You can withdraw this consent in privacy settings. Tracking features will pause. You can still access account settings, request a copy of your data or delete your account. Withdrawal does not undo processing that was lawful before withdrawal."
+  },
+  "marketing": {
+    "TITLE": "Optional campaign measurement",
+    "TEXT": "With your permission, we store a visitor identifier on this browser and send campaign source and visit information to Food Diary. If you register, these events can be linked to your account and subscription conversion. Your diary works without this tracking. You can change your choice here at any time.",
+    "ALLOW": "Allow measurement",
+    "REJECT": "Decline measurement"
+  },
+  "ai": {
+    "TITLE": "AI Usage Consent",
+    "TEXT": "<p>We use AI (e.g., OpenAI) to recognize food.</p><p>When using AI features:</p><ul><li>your data (text, voice, photos) is sent for processing</li><li>data may be processed by third-party services</li><li>data may be transferred outside the EU</li></ul><p>You can disable AI in settings at any time.</p><p><a href='/privacy-policy' target='_blank'>More in Privacy Policy</a></p>",
+    "AGREE_LABEL": "I have read and agree to the processing of my data as described above",
+    "ACCEPT": "I Accept",
+    "CANCEL": "Cancel"
+  }
+}

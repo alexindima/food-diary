@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Application.Contracts.Common.Abstractions.Events;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -25,9 +27,10 @@ namespace FoodDiary.Modules.Users.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task BatchReads_KeepPersistedValuesAndAllAccountStatesWithoutTracking() {
+    public async Task BatchReads_KeepAuthorStatesButOnlyRemindActiveConsentingUsersWithoutTracking() {
         await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
         var active = User.Create("related-active@example.com", "hash");
+        active.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking, granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
         active.UpdatePersonalInfo(username: "author", firstName: "Name");
         active.UpdatePreferences(new UserPreferenceUpdate(ReminderDelays: new FastingReminderDelayUpdate(FirstHours: 6, FollowUpHours: 10)));
         var inactive = User.Create("related-inactive@example.com", "hash");
@@ -48,7 +51,7 @@ public sealed class UserRelatedDataReadIntegrationTests(PostgresDatabaseFixture 
 
         Assert.Multiple(
             () => Assert.Equal(3, authors.Count),
-            () => Assert.Equal(3, reminders.Count),
+            () => Assert.Single(reminders),
             () => Assert.Equal("Name", authors[active.Id].FirstName),
             () => Assert.Equal("author", authors[active.Id].Username),
             () => Assert.Null(authors[inactive.Id].FirstName),

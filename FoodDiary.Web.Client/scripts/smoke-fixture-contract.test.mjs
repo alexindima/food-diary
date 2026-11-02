@@ -4,7 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import ts from 'typescript';
 import { fixtureUuid, jsonFixture, OpenApiFixtures } from '../e2e/support/openapi-fixtures.mjs';
-import { hydrationEntryFixture, userFixture } from '../src/testing/api-fixtures.ts';
+import { consentingPrivacyFixture, hydrationEntryFixture, userFixture } from '../src/testing/api-fixtures.ts';
 
 test('all default authenticated smoke fixtures obey their SDK response schemas', () => {
     const source = readFileSync(new URL('../e2e/client-smoke/client-smoke.spec.ts', import.meta.url), 'utf8');
@@ -15,7 +15,17 @@ test('all default authenticated smoke fixtures obey their SDK response schemas',
     const javascript = ts.transpileModule(selected, {
         compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
     }).outputText;
-    const context = { OpenApiFixtures, jsonFixture, fixtureUuid, hydrationEntryFixture, userFixture, Buffer, URL, console };
+    const context = {
+        OpenApiFixtures,
+        jsonFixture,
+        fixtureUuid,
+        consentingPrivacyFixture,
+        hydrationEntryFixture,
+        userFixture,
+        Buffer,
+        URL,
+        console,
+    };
     vm.createContext(context);
     vm.runInContext(`${javascript}\nthis.fixtureScenarios = CLIENT_API_MOCKS;`, context);
     const contract = new OpenApiFixtures();

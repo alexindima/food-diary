@@ -16,8 +16,8 @@ sources:
 
 - Origin: extracted-project
 - Extracted project: `Modules/Marketing/Application/FoodDiary.Modules.Marketing.Application.csproj`
-- Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Business-module dependencies: Users
+- Abstraction-contract dependencies: Users
 - Business-module consumers: Billing
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -86,6 +86,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/MarketingIdConversionTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
 - [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/MarketingConsentOrderingTests.cs`
 - [presentation] `Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MarketingIdentitySemanticBoundaryTests.cs`
 - [architecture-boundary] `Tooling/tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`

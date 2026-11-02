@@ -59,6 +59,7 @@ public static class UsersModuleRegistration {
         services.AddScoped<IUserRoleMembershipService>(provider => new UserRoleMembershipService(
             provider.GetRequiredService<UsersDbContext>().Database, provider.GetRequiredService<UsersDbContext>().Users, provider.GetRequiredService<UsersDbContext>().Roles, provider.GetRequiredService<UsersDbContext>().UserRoles, CreateTransactionSynchronizer(provider)));
         services.AddScoped<IUserCleanupService, UserCleanupService>();
+        services.AddScoped<IUserPrivacyStateReader, UserPrivacyStateReader>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AtomicCommandReceiptsUserDataPurgeParticipant>());
         return services;
     }

@@ -1,4 +1,31 @@
 {
+    "PRIVACY_CHOICES": {
+        "RELOAD": "Update the application to review the latest privacy notice. Withdrawal and account deletion remain available.",
+        "TITLE": "Your data and privacy choices",
+        "HEALTH_TITLE": "Processing your health and tracking data",
+        "HEALTH_TEXT": "To provide your personal diary and tracking features, Food Diary stores and processes the nutrition records, body measurements, hydration, fasting, exercise, goals and cycle data that you choose to enter. Cycle and fertility features also have their own separate choices. AI processing is optional and requires a separate choice.",
+        "HEALTH_AGREEMENT": "I explicitly consent to Food Diary storing and processing my health and tracking data for these personal diary and tracking features.",
+        "WITHDRAWAL": "You can withdraw this consent in privacy settings. Tracking features will pause. You can still access account settings, request a copy of your data or delete your account. Withdrawal does not undo processing that was lawful before withdrawal.",
+        "ACCEPT": "Consent and continue",
+        "DECLINE": "Do not consent",
+        "WITHDRAW": "Withdraw consent",
+        "REVIEW": "Review consent",
+        "ACCOUNT": "Account settings and deletion",
+        "ERROR": "The action could not be completed. Please try again.",
+        "DOWNLOAD": "Download my application data",
+        "DOWNLOAD_SCOPE": "The archive contains your application records. Contact support for additional access requests, including correspondence or provider-held data.",
+        "DELETE_OFFER_TITLE": "Delete your account and data",
+        "DELETE_OFFER_TEXT": "Health data consent is not active. You can download a copy of your data before deleting your whole account. Deletion closes access and schedules account and data cleanup; it is not immediate. The privacy policy explains retention and any required exceptions. Cancelling deletion does not restore consent.",
+        "DELETE_ACCOUNT": "Delete account and data"
+    },
+    "MARKETING_CONSENT": {
+        "SYNC_ERROR": "Your choice is applied on this device, but could not be saved for your account. Please retry in privacy settings.",
+        "TITLE": "Optional campaign measurement",
+        "TEXT": "With your permission, we store a visitor identifier on this browser and send campaign source and visit information to Food Diary. If you register, these events can be linked to your account and subscription conversion. Your diary works without this tracking. You can change your choice here at any time.",
+        "ALLOW": "Allow measurement",
+        "REJECT": "Decline measurement",
+        "SETTINGS": "Privacy preferences"
+    },
     "SESSION_RECOVERY": {
         "TITLE": "Connection needed",
         "RESTORE_UNAVAILABLE": "We could not check your sign-in session. Your session has not been rejected. Check your connection and try again; if you have made several attempts, wait a moment.",
@@ -323,7 +350,7 @@
             "PASSWORD_PLACEHOLDER": "Choose a secure password",
             "CONFIRM_PASSWORD": "Confirm password",
             "CONFIRM_PASSWORD_PLACEHOLDER": "Repeat the password",
-            "AGREE_TO_TERMS": "I agree to the <a href='{{privacyUrl}}' target='_blank' rel='noopener noreferrer' aria-label='Privacy Policy (opens in a new tab)'>Privacy Policy</a>",
+            "AGREE_TO_TERMS": "I have read the <a href='{{privacyUrl}}' target='_blank' rel='noopener noreferrer' aria-label='Privacy Policy (opens in a new tab)'>Privacy Policy</a>",
             "REGISTER": "Register",
             "ACCOUNT_DELETED": "This email belongs to a deleted account. Please restore it instead."
         },

@@ -11,6 +11,8 @@ import { imageSelection } from '../models/image-upload.data';
 import { calendarDate, utcInstant } from '../models/semantics/date-value';
 import { entityId } from '../models/semantics/entity-id';
 import { type ChangePasswordRequest, UpdateUserAppearanceDto, UpdateUserDto, type User } from '../models/user.data';
+import { PrivacyConsentPurpose } from '../privacy/privacy-consent-purpose';
+import { PRIVACY_NOTICE_VERSION } from '../privacy/privacy-notice-version';
 import { type UserProfileOverview, UserService } from './user.service';
 
 const DESIRED_WAIST = 80;
@@ -218,7 +220,7 @@ describe('UserService mutation session ownership', () => {
         { action: 'updateAppearance', endpoint: 'preferences/appearance', response: MOCK_USER },
         { action: 'updateDashboardLayout', endpoint: 'info', response: MOCK_USER },
         { action: 'setPassword', endpoint: 'password/set', response: null },
-        { action: 'acceptAiConsent', endpoint: 'ai-consent', response: null },
+        { action: 'acceptAiConsent', endpoint: 'privacy', response: null },
         { action: 'revokeAiConsent', endpoint: 'ai-consent', response: null },
         { action: 'deleteCurrentUser', endpoint: '', response: null },
     ] as const)('ignores old-session cache effects from $action after the same account logs in again', ({ action, endpoint, response }) => {
@@ -618,15 +620,22 @@ describe('UserService overview state', () => {
 });
 
 describe('UserService consent state', () => {
+    it('clears cached AI consent when withdrawn through privacy settings', () => {
+        service.getInfo().subscribe();
+        httpMock.expectOne(`${BASE_URL}/info`).flush({ ...MOCK_USER, aiConsentAcceptedAt: '2026-11-02T00:00:00Z' });
+        service.updatePrivacy(PrivacyConsentPurpose.AiProcessing, false, PRIVACY_NOTICE_VERSION).subscribe();
+        httpMock.expectOne(`${BASE_URL}/privacy`).flush(null);
+        expect(service.user()?.aiConsentAcceptedAt).toBeNull();
+    });
     it.each([false, true])('accepts and revokes consent with cached user=%s', cached => {
         if (cached) {
             service.getInfo().subscribe();
             httpMock.expectOne(`${BASE_URL}/info`).flush(MOCK_USER);
         }
         service.acceptAiConsent().subscribe();
-        const accept = httpMock.expectOne(`${BASE_URL}/ai-consent`);
-        expect(accept.request.method).toBe('POST');
-        expect(accept.request.body).toBeNull();
+        const accept = httpMock.expectOne(`${BASE_URL}/privacy`);
+        expect(accept.request.method).toBe('PUT');
+        expect(accept.request.body).toEqual({ purpose: 2, granted: true, noticeVersion: '2026-11-02' });
         accept.flush(null);
         if (cached) {
             expect(service.user()?.aiConsentAcceptedAt).toEqual(expect.any(String));
@@ -650,7 +659,9 @@ describe('UserService consent state', () => {
         const error = vi.fn();
         const next = vi.fn();
         (action === 'accept' ? service.acceptAiConsent() : service.revokeAiConsent()).subscribe({ next, error });
-        httpMock.expectOne(`${BASE_URL}/ai-consent`).flush('offline', { status: 503, statusText: 'Unavailable' });
+        httpMock
+            .expectOne(`${BASE_URL}/${action === 'accept' ? 'privacy' : 'ai-consent'}`)
+            .flush('offline', { status: 503, statusText: 'Unavailable' });
         expect(next).not.toHaveBeenCalled();
         expect(error).toHaveBeenCalledWith(expect.objectContaining({ status: 503 }));
         expect(service.user()).toEqual(MOCK_USER);

@@ -31,6 +31,7 @@ import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation
 import { LocalizationService } from './shared/i18n/localization.service';
 import { MarketingAttributionService } from './shared/marketing/marketing-attribution.service';
 import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
+import { PrivacyConsentFacade } from './shared/privacy/privacy-consent.facade';
 import { AppUpdateService } from './shared/service-worker/app-update.service';
 import { AppVersionRecoveryService } from './shared/service-worker/app-version-recovery.service';
 import { PwaInstallService } from './shared/service-worker/pwa-install.service';
@@ -81,6 +82,7 @@ export const appConfig: ApplicationConfig = {
             await inject(AppBootstrapService).initializeSessionAsync();
         }),
         provideAppInitializer(() => {
+            inject(PrivacyConsentFacade);
             inject(AppBootstrapService).initializeObservability();
         }),
         provideAppInitializer(() => {

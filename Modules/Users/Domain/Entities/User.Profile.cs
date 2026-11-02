@@ -1,5 +1,6 @@
 using FoodDiary.Modules.Images.Contracts.ValueObjects.Ids;
 using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 using FoodDiary.Modules.Users.Domain.ValueObjects;
@@ -15,6 +16,10 @@ public sealed partial class User {
         }
 
         AiConsentAcceptedAt = DomainTime.UtcNow;
+        AiConsentNoticeVersion = PrivacyNoticeVersions.LegacyUnversioned;
+        _privacyConsentEvents.Add(UserPrivacyConsentEvent.Create(Id,
+            PrivacyConsentPurpose.AiProcessing, granted: true,
+            PrivacyNoticeVersions.LegacyUnversioned, AiConsentAcceptedAt.Value));
         SetModified();
     }
 
@@ -25,6 +30,9 @@ public sealed partial class User {
         }
 
         AiConsentAcceptedAt = null;
+        _privacyConsentEvents.Add(UserPrivacyConsentEvent.Create(Id,
+            PrivacyConsentPurpose.AiProcessing, granted: false,
+            PrivacyNoticeVersions.LegacyUnversioned, DomainTime.UtcNow));
         SetModified();
     }
 

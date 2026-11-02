@@ -1,5 +1,6 @@
 import type { HydrationEntryHttpResponse } from '../app/shared/api/sdk/generated/model/hydration-entry-http-response';
 import type { UserHttpResponse } from '../app/shared/api/sdk/generated/model/user-http-response';
+import type { UserPrivacyHttpResponse } from '../app/shared/api/sdk/generated/model/user-privacy-http-response';
 
 export const FIXTURE_USER_ID = '00000000-0000-4000-8000-000000000001';
 export const FIXTURE_HYDRATION_ID = '00000000-0000-4000-8000-000000000002';
@@ -33,5 +34,16 @@ export function hydrationEntryFixture(overrides: Partial<HydrationEntryHttpRespo
         timestampUtc: '2026-04-19T12:00:00Z',
         amountMl: 250,
         ...overrides,
+    };
+}
+
+/** Authenticated journey fixtures represent an account that already opted in. */
+export function consentingPrivacyFixture(): UserPrivacyHttpResponse {
+    return {
+        noticeVersion: '2026-11-02',
+        healthAcceptedAtUtc: '2026-11-02T00:00:00Z',
+        healthDeclinedAtUtc: null,
+        aiAcceptedAtUtc: null,
+        marketingAcceptedAtUtc: null,
     };
 }

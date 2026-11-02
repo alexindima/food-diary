@@ -23,8 +23,11 @@ import type {
     WaistGoalHistoryItem,
     WeightGoalHistoryItem,
 } from '../models/user.data';
+import { PrivacyConsentPurpose } from '../privacy/privacy-consent-purpose';
+import { PRIVACY_NOTICE_VERSION } from '../privacy/privacy-notice-version';
 import { UsersSdk } from './sdk/generated/api/users.service';
 import { createSdkConnection, sdkRequestOptions } from './sdk/sdk-connection';
+import { requireSdkFields } from './sdk/sdk-response';
 import {
     profileOverviewFromSdk,
     userFromSdk,
@@ -40,6 +43,14 @@ export type UserProfileOverview = {
     notificationPreferences: NotificationPreferences;
     webPushSubscriptions: WebPushSubscriptionItem[];
     dietologistRelationship: DietologistRelationship | null;
+};
+
+export type UserPrivacyState = {
+    noticeVersion: string;
+    healthAcceptedAtUtc: string | null;
+    healthDeclinedAtUtc: string | null;
+    aiAcceptedAtUtc: string | null;
+    marketingAcceptedAtUtc: string | null;
 };
 
 @Service()
@@ -59,6 +70,41 @@ export class UserService {
         this.sessionEvents.sessionEnded$.pipe(takeUntilDestroyed()).subscribe(() => {
             this.clearUser();
         });
+    }
+
+    public getPrivacy(): Observable<UserPrivacyState> {
+        return this.sdk.client.getUsersPrivacy({ version: this.sdk.version }).pipe(
+            map(response => {
+                const value = requireSdkFields(response, ['noticeVersion']);
+                return {
+                    noticeVersion: value.noticeVersion,
+                    healthAcceptedAtUtc: value.healthAcceptedAtUtc ?? null,
+                    healthDeclinedAtUtc: value.healthDeclinedAtUtc ?? null,
+                    aiAcceptedAtUtc: value.aiAcceptedAtUtc ?? null,
+                    marketingAcceptedAtUtc: value.marketingAcceptedAtUtc ?? null,
+                };
+            }),
+        );
+    }
+
+    public updatePrivacy(purpose: PrivacyConsentPurpose, granted: boolean, noticeVersion: string): Observable<void> {
+        const session = this.sessionVersion;
+        return this.sdk.client
+            .putUsersPrivacy({
+                version: this.sdk.version,
+                updatePrivacyConsentHttpRequest: { purpose, granted, noticeVersion },
+            })
+            .pipe(
+                tap(() => {
+                    const current = this.userSignal();
+                    if (current !== null && purpose === PrivacyConsentPurpose.AiProcessing) {
+                        this.setUserForSession(session, {
+                            ...current,
+                            aiConsentAcceptedAt: granted ? utcInstant(new Date().toISOString()) : null,
+                        });
+                    }
+                }),
+            );
     }
 
     public clearUser(): void {
@@ -174,14 +220,7 @@ export class UserService {
     }
 
     public acceptAiConsent(): Observable<void> {
-        const session = this.sessionVersion;
-        return this.sdk.client.postUsersAiConsent({ version: this.sdk.version }).pipe(
-            tap(() => {
-                const current = this.userSignal();
-                if (current !== null && session === this.sessionVersion) {
-                    this.userSignal.set({ ...current, aiConsentAcceptedAt: utcInstant(new Date().toISOString()) });
-                }
-            }),
+        return this.updatePrivacy(PrivacyConsentPurpose.AiProcessing, true, PRIVACY_NOTICE_VERSION).pipe(
             catchError((error: unknown) => rethrowApiError('Accept AI consent error', error)),
         );
     }

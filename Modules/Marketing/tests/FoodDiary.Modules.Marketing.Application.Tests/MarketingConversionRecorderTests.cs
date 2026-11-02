@@ -1,3 +1,5 @@
+using FoodDiary.Modules.Users.Contracts.Common;
+using FoodDiary.Modules.Users.Contracts.Models;
 using FoodDiary.Modules.Marketing.Domain.ValueObjects;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Testing;
@@ -10,12 +12,19 @@ namespace FoodDiary.Modules.Marketing.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingConversionRecorderTests {
+    private static IUserPrivacyStateReader ConsentingPrivacyReader() {
+        IUserPrivacyStateReader reader = Substitute.For<IUserPrivacyStateReader>();
+        reader.GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>()).Returns(
+            new UserPrivacyStateModel("2026-11-02", Now, Now, Now));
+        return reader;
+    }
+
     private static readonly DateTime Now = new(2026, 7, 9, 10, 0, 0, DateTimeKind.Utc);
 
     [Fact]
     public async Task RecordPremiumStartedAsync_WithEmptyUserId_DoesNotReadOrWriteAttribution() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.Empty), CancellationToken.None);
 
@@ -28,7 +37,7 @@ public sealed class MarketingConversionRecorderTests {
     [Fact]
     public async Task RecordPremiumStartedAsync_WithoutUserAttribution_DoesNotRecordEvent() {
         var repository = new InMemoryMarketingAttributionEventRepository();
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: Guid.NewGuid()), CancellationToken.None);
 
@@ -56,7 +65,7 @@ public sealed class MarketingConversionRecorderTests {
                 "story",
                 "food",
                 "1.2.3"));
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 
@@ -90,7 +99,7 @@ public sealed class MarketingConversionRecorderTests {
                 UtmContent: null,
                 UtmTerm: null,
                 BuildVersion: null));
-        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now)));
+        ISender recorder = RequestTestSender.Create(new RecordPremiumConversionCommandHandler(repository, repository, new FixedDateTimeProvider(Now), ConsentingPrivacyReader()));
 
         await recorder.Send(new RecordPremiumConversionCommand(UserId: userId), CancellationToken.None);
 

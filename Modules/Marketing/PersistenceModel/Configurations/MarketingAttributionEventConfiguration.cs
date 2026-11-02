@@ -9,6 +9,8 @@ namespace FoodDiary.Modules.Marketing.PersistenceModel.Configurations;
 
 internal sealed class MarketingAttributionEventConfiguration : IEntityTypeConfiguration<MarketingAttributionEvent> {
     public void Configure(EntityTypeBuilder<MarketingAttributionEvent> builder) {
+        builder.Property(e => e.ConsentNoticeVersion).HasMaxLength(64);
+        builder.Property(e => e.ConsentGrantedAtUtc).HasColumnType("timestamp with time zone");
         builder.Property(e => e.Id)
             .HasConversion(
                 id => id.Value,

@@ -15,7 +15,9 @@ public sealed record MarketingSignupAttributionHttpRequest(
     string? UtmCampaign = null,
     string? UtmContent = null,
     string? UtmTerm = null,
-    string? BuildVersion = null) : IValidatableObject {
+    string? BuildVersion = null,
+    [Required, MaxLength(64)] string? ConsentNoticeVersion = null,
+    [Required] DateTime? ConsentGrantedAtUtc = null) : IValidatableObject {
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
         MarketingAttributionHttpRequestValidation.Validate(
             Timestamp,
@@ -28,5 +30,5 @@ public sealed record MarketingSignupAttributionHttpRequest(
             UtmCampaign,
             UtmContent,
             UtmTerm,
-            BuildVersion);
+            BuildVersion).Concat(MarketingAttributionHttpRequestValidation.ValidateConsent(ConsentNoticeVersion, ConsentGrantedAtUtc, Timestamp));
 }

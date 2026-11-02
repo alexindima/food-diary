@@ -9,6 +9,7 @@ import { AuthRecoveryStateService } from '../auth/auth-recovery-state.service';
 import { TelegramWebAppService } from '../auth/telegram-web-app.service';
 import { LocalizationService } from '../i18n/localization.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
+import { PrivacyConsentFacade } from '../privacy/privacy-consent.facade';
 import { ThemeService } from '../theme/theme.service';
 import { AppBootstrapService } from './app-bootstrap.service';
 
@@ -77,6 +78,7 @@ beforeEach(() => {
             { provide: LocalizationService, useValue: localizationService },
             { provide: ThemeService, useValue: themeService },
             { provide: UserService, useValue: userService },
+            { provide: PrivacyConsentFacade, useValue: { flushPendingWithdrawalAsync: vi.fn().mockResolvedValue(undefined) } },
             { provide: FrontendObservabilityService, useValue: observabilityService },
             { provide: BrowserWindowService, useValue: browserWindow },
             { provide: TelegramWebAppService, useValue: telegram },

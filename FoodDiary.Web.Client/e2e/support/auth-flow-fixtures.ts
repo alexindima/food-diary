@@ -1,7 +1,7 @@
 import type { Page, WebSocketRoute } from '@playwright/test';
 
 import type { UserHttpResponse } from '../../src/app/shared/api/sdk/generated/model/user-http-response';
-import { userFixture } from '../../src/testing/api-fixtures';
+import { consentingPrivacyFixture, userFixture } from '../../src/testing/api-fixtures';
 import { jsonFixture, OpenApiFixtures } from './openapi-fixtures.mjs';
 
 const RECORD_SEPARATOR = '\u001E';
@@ -70,6 +70,7 @@ export async function installClientAuthApiAsync(
         }
         const responses: Partial<Record<string, () => unknown>> = {
             '/api/v1/auth/telegram/configuration': () => ({ loginEnabled: true, registrationEnabled: true, oidcEnabled: true }),
+            '/api/v1/users/privacy': consentingPrivacyFixture,
             '/api/v1/users/info': () => {
                 state.profileRequests++;
                 return state.user;

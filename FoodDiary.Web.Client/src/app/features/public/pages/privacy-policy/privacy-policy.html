@@ -2,5 +2,8 @@
     <div class="privacy-policy__container">
         <h1 class="privacy-policy__title fd-page-title">{{ 'PRIVACY_POLICY.TITLE' | translate }}</h1>
         <div class="privacy-policy__content" [innerHTML]="'PRIVACY_POLICY.CONTENT' | translate"></div>
+        <p>
+            {{ 'PRIVACY_POLICY.CONTACT' | translate }} <a [href]="`mailto:${supportEmail}`">{{ supportEmail }}</a>
+        </p>
     </div>
 </div>

@@ -75,6 +75,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FeatureErrorContractTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/PrivacyTestReader.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearableDateValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/WearablesFeatureTests.ConnectionLifecycle.cs`
@@ -96,6 +97,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/WearableClientTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/PrivacyTestReader.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`
 - [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearableHttpMappingsTests.cs`
 - [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs`

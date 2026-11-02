@@ -13,12 +13,16 @@ public sealed class BillingWebhookProcessingStateTests {
         BillingWebhookEvent webhook = CreateReceived();
         Assert.Equal(BillingWebhookProcessingState.Received, webhook.ProcessingState);
         Assert.Equal("received", webhook.Status);
+        Assert.Equal("{}", webhook.PayloadJson);
+        Assert.Equal("{}", webhook.ParsedEventJson);
 
         webhook.MarkFailed(Now.AddMinutes(1), "temporary");
         Assert.Multiple(() => {
             Assert.Equal(BillingWebhookProcessingState.Failed, webhook.ProcessingState);
             Assert.Equal("failed", webhook.Status);
             Assert.Equal(1, webhook.AttemptCount);
+            Assert.Equal("{}", webhook.PayloadJson);
+            Assert.Equal("{}", webhook.ParsedEventJson);
             Assert.Equal(Now.AddMinutes(2), webhook.NextAttemptAtUtc);
         });
         webhook.MarkProcessed(Now.AddMinutes(2));
@@ -32,6 +36,8 @@ public sealed class BillingWebhookProcessingStateTests {
             Assert.Equal(stamp, webhook.ModifiedOnUtc);
             Assert.Null(webhook.NextAttemptAtUtc);
             Assert.Null(webhook.ErrorMessage);
+            Assert.Null(webhook.PayloadJson);
+            Assert.Null(webhook.ParsedEventJson);
             Assert.Equal(1, webhook.AttemptCount);
         });
     }
@@ -78,6 +84,8 @@ public sealed class BillingWebhookProcessingStateTests {
             Assert.Equal("retry", webhook.ErrorMessage);
             Assert.Equal(Now.AddMinutes(3), webhook.NextAttemptAtUtc);
             Assert.Null(webhook.ProcessedAtUtc);
+            Assert.Equal("{}", webhook.PayloadJson);
+            Assert.Equal("{}", webhook.ParsedEventJson);
         });
     }
 

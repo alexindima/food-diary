@@ -87,9 +87,7 @@ public sealed partial class UserCleanupService(
             cancellationToken.ThrowIfCancellationRequested();
             UserId userId = candidate.UserId;
             try {
-                UserId? retainedContentOwner = reassignTarget is null
-                    ? await ResolveRetainedContentOwnerAsync(userId, cancellationToken)
-                    : null;
+                UserId? retainedContentOwner = reassignTarget ?? await ResolveRetainedContentOwnerAsync(userId, cancellationToken);
                 if (await CleanupUserAsync(userId, reassignTarget, thresholdUtc, cancellationToken, retainedContentOwner)) {
                     removed++;
                 }
@@ -172,20 +170,18 @@ public sealed partial class UserCleanupService(
                 return false;
             }
 
-            if (reassignTarget is null) {
+            foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
+                await participant.LockOwnedContentAsync(userId, token);
+            }
+            if ((retainedContentOwner ?? reassignTarget) is { } contentOwner) {
                 foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                    await participant.LockOwnedContentAsync(userId, token);
+                    await participant.RetainReferencedContentAsync(userId, contentOwner, token);
                 }
-                if (retainedContentOwner is { } contentOwner) {
-                    foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                        await participant.RetainReferencedContentAsync(userId, contentOwner, token);
-                    }
-                } else {
-                    foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
-                        if (await participant.HasReferencedContentAsync(userId, token)) {
-                            // Scheduled cleanup retries in the next full pass; strict fixture cleanup refuses transfer.
-                            return false;
-                        }
+            } else {
+                foreach (IUserContentRetentionParticipant participant in _contentRetentionParticipants) {
+                    if (await participant.HasReferencedContentAsync(userId, token)) {
+                        // Scheduled cleanup retries in the next full pass; strict fixture cleanup refuses transfer.
+                        return false;
                     }
                 }
             }
@@ -194,7 +190,7 @@ public sealed partial class UserCleanupService(
                 .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), token);
 
             foreach (IUserDataPurgeParticipant participant in _participants) {
-                await participant.PurgeAsync(userId, reassignTarget, token);
+                await participant.PurgeAsync(userId, reassignTarget: null, token);
             }
             await DeleteUserRowsAsync(userId, token);
             return true;

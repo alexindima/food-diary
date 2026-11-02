@@ -118,8 +118,8 @@
         },
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
-          "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
+          "sha256": "731cfb023e2f892ba7c0da02e47e6cdf703ba99de433bef8d9fb676c0f8e0a3f",
+          "reviewReason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed."
         },
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
@@ -128,14 +128,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "09d2a54309152f711e1fc908c334b184a4853bffb0f0bd177c6613391ab21be0",
-          "reviewReason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate."
+          "sha256": "7e8621bc568d240165070a366b013edc40831aa6d22142fa52f1f55f26713b14",
+          "reviewReason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed."
         }
       ],
-      "reason": "Reviewed the module graph and exact project matrix. Billing calls Identity through its narrow email command contract and Users through its scalar query; shared transactional EmailOutbox and existing separate MailRelay/MailInbox hosts remain. No layer rule, write ownership or new host is introduced, so architecture guidance stays accurate.",
+      "reason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:42.0810401Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T22:12:32.8053028Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -206,8 +206,8 @@
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "10d3de97d8f4081fd22a64dff58e583046249a94efbb3403ea55473737b4fef6",
+          "reviewReason": "Reviewed ADR index addition 0059: a Proposed privacy decision, not an accepted legal or architecture approval. Historical ADR 0054 remains intact; current lifecycle details stay in the living backend guide, consistent with this knowledge-layer page."
         },
         {
           "path": "docs/README.md",
@@ -215,10 +215,10 @@
           "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
         }
       ],
-      "reason": "Compared the root guide diff with these navigation, authority, context and review pages. Only local hook execution and diagnostic locations changed: pre-push now checks committed Wiki page contracts and source-review receipts; architecture, source precedence, change-policy obligations and query/review command contracts remain as described.",
+      "reason": "Reviewed ADR index addition 0059: a Proposed privacy decision, not an accepted legal or architecture approval. Historical ADR 0054 remains intact; current lifecycle details stay in the living backend guide, consistent with this knowledge-layer page.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:15:12.6510552Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T22:12:37.7324935Z"
     },
     {
       "pageId": "system.quality-index",
@@ -252,8 +252,8 @@
         },
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
-          "reviewReason": "Regenerated Git-visible catalog includes the new cancellation email slices, job, integration test and existing feedback route. Project inventory and approved module dependency metadata remain authoritative; catalog limitations about literal routes and nonproof of runtime behavior are unchanged."
+          "sha256": "731cfb023e2f892ba7c0da02e47e6cdf703ba99de433bef8d9fb676c0f8e0a3f",
+          "reviewReason": "Regenerated catalog includes privacy controller, profile filter, DTOs, modules and project references. Literal route discovery remains navigation only; current exported OpenAPI and generated SDK establish the HTTP surface. No catalog algorithm or inventory semantics changed."
         },
         {
           "path": "FoodDiary.Web.Client/angular.json",
@@ -261,10 +261,10 @@
           "reviewReason": "Angular targets now replace local development providers in production, staging and audit builds. No Angular application or project was added; the catalogue continues to enumerate the same build targets and project roots."
         }
       ],
-      "reason": "Reviewed Directory.Packages.props and API project reference: only Microsoft.AspNetCore.SignalR.StackExchangeRedis 10.0.14 was added. Regenerated catalog records this package; project inventory, module ownership and documented catalog generation/limitations remain correct.",
+      "reason": "Regenerated catalog includes privacy controller, profile filter, DTOs, modules and project references. Literal route discovery remains navigation only; current exported OpenAPI and generated SDK establish the HTTP surface. No catalog algorithm or inventory semantics changed.",
       "baseRef": "HEAD",
-      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
-      "reviewedAtUtc": "2026-11-01T19:47:12.0813515Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T22:12:38.8817472Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -355,14 +355,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "7ca68fa269b865f38b3dc3a3a53468cad1caa7d61d336a5a4c23237e6321e22e",
-          "reviewReason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged."
+          "sha256": "54084dee0521372be8db184a023413ba5da8a30cefd7e8044cf7d7759f3b3a39",
+          "reviewReason": "Reviewed the final OpenAPI snapshot and generated user SDK: privacy GET/PUT, scoped archive and explicit 403 statuses are additive in the structural comparison (0 breaking); health-consent rejection is an intentional behavioral restriction requiring coordinated rollout, not proved by the schema gate."
         }
       ],
-      "reason": "Reviewed the compatibility workflow and additive contract delta: native cancel, feedback and Admin report routes plus optional capability. The canonical compatibility check passes against 3858b2061; no accepted breaking-change policy was modified. Rechecked after moving transport construction into the existing mapping helpers; command arguments and HTTP contracts remain unchanged.",
+      "reason": "Reviewed the final OpenAPI snapshot and generated user SDK: privacy GET/PUT, scoped archive and explicit 403 statuses are additive in the structural comparison (0 breaking); health-consent rejection is an intentional behavioral restriction requiring coordinated rollout, not proved by the schema gate.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T00:12:31.6914805Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:18.1205195Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -371,8 +371,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ade1f8f7b0a2a1e9b0bd29f9fa7307454c332c31cb1f0859b8b06905ceb8049a",
-          "reviewReason": "Reviewed the final generated architecture-health delta: the added DataTablePreviewComponent is a Storybook-only preview, which adds one unreferenced selector and one component without a direct spec. Backend dependency edges, module cycles and enforced architecture invariants are unchanged. The page already treats unreferenced selectors as investigation candidates and explicitly warns against automatic removal, so its instructions remain accurate."
+          "sha256": "85cb3b1447ba4fef39f0d11c35c44dd1aa4561d2a15086ce01206d7b42d42fca",
+          "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -386,14 +386,14 @@
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "09d2a54309152f711e1fc908c334b184a4853bffb0f0bd177c6613391ab21be0",
-          "reviewReason": "The refreshed index and 2283 architecture tests verify the intentional Billing to Identity.Contracts dependency, matching exact matrix and acyclic module metadata. No automated deletion or new exception was inferred from unreferenced template/route records. Existing architecture review guidance remains applicable."
+          "sha256": "7e8621bc568d240165070a366b013edc40831aa6d22142fa52f1f55f26713b14",
+          "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the final generated architecture-health delta: the added DataTablePreviewComponent is a Storybook-only preview, which adds one unreferenced selector and one component without a direct spec. Backend dependency edges, module cycles and enforced architecture invariants are unchanged. The page already treats unreferenced selectors as investigation candidates and explicitly warns against automatic removal, so its instructions remain accurate.",
+      "reason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions.",
       "baseRef": "HEAD",
-      "gitHead": "b8469f0b22ecb3cbaa2b4e38f54b1a382554b3b3",
-      "reviewedAtUtc": "2026-11-01T18:18:17.2477625Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-02T01:30:09.7869233Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -725,14 +725,14 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "491b608449c05d05c51ecf976985c58541c8ad09fa179bd3c2696919bd815e23",
-          "reviewReason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate."
+          "sha256": "10d3de97d8f4081fd22a64dff58e583046249a94efbb3403ea55473737b4fef6",
+          "reviewReason": "Reviewed new durable consent ownership and redacted retention semantics in Proposed ADR 0059, extending rather than rewriting accepted history. The generic decision trigger and lifecycle remain accurate; no deployment or legal acceptance is inferred."
         }
       ],
-      "reason": "Reviewed ADR 0058 and current architecture/SDK sources: opaque user/admin cookies stay in the modular monolith, bot and explicit Mini token transports remain, admin SSO expiry is capped and per-tab impersonation is isolated. Updated frontend counts to 41/263 and 22/73 and linked the session runbook; index, ADR navigation and independent mail service ownership remain accurate.",
+      "reason": "Reviewed new durable consent ownership and redacted retention semantics in Proposed ADR 0059, extending rather than rewriting accepted history. The generic decision trigger and lifecycle remain accurate; no deployment or legal acceptance is inferred.",
       "baseRef": "HEAD",
-      "gitHead": "a826573be4d41709ae0387d8c2a678dbd3490c31",
-      "reviewedAtUtc": "2026-10-25T21:37:49.4958151Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T22:12:34.0689606Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -741,8 +741,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "7de05a829bff876d9d47075f676c9766eb753d13bb0267e139db03e09bbe8bef",
-          "reviewReason": "Configuration records now include three independent login budgets and validated password cooldown options. The runbook documents migration of old Auth overrides, Redis selection, fail-closed behavior and rollback by ordinary code deployment. The existing centrally pinned StackExchange.Redis package is reused; there is no schema migration or new secret."
+          "sha256": "8b4aa25ed754569573217e32c0abf0897e5322cf52c5e993ea0e19ce5e1c1668",
+          "reviewReason": "Reviewed configuration index and direct project reference/lockfile changes: no package-version upgrades or new provider dependencies; consent schema, default-on health gate and matching client require coordinated rollout. Migration/provider verification remains blocked by local Docker and is recorded as pending."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -755,10 +755,10 @@
           "reviewReason": "The workflow accurately describes temporary/native versus repository-relative source fixtures and per-test cache invalidation."
         }
       ],
-      "reason": "Reviewed the new exact ranking-reader policy requirement. It adds a filtered local .NET check and no project/package/provider or production rollout change. Existing manifest/lockfile comparison and compiled helper publication guidance remains valid.",
+      "reason": "Reviewed configuration index and direct project reference/lockfile changes: no package-version upgrades or new provider dependencies; consent schema, default-on health gate and matching client require coordinated rollout. Migration/provider verification remains blocked by local Docker and is recorded as pending.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:21.8587996Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:19.0053320Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -803,8 +803,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "fcb0fb159eaf7c48b3e762e798af0eaa611efcf89324be216c0550870186e347",
-          "reviewReason": "Reviewed the nullable handled timestamp, filtered pending index, paired additive EF migration and snapshot. Upgrade backfills historical rows; real PostgreSQL rollback after shared outbox save preserves pending state and retry produces one queue row. Existing domain/persistence review procedure remains accurate."
+          "sha256": "24391b31033f525355c063910f8ede1d5c4383e9fc64d6d2f7cbd1931f1b5e4b",
+          "reviewReason": "Reviewed consent factory, purpose/version/UTC validation, event FK cascade, user repository event state tracking and paired EF migration. Domain and archive unit checks passed; real PostgreSQL migration, translation and rollback coverage remains pending. The workflow correctly requires real-provider evidence."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -817,10 +817,10 @@
           "reviewReason": "Reviewed FD0020 rollout: namespace imports and explicit aliases preserve the same CLR types, literals, SQL, API signatures and transaction operations. The only new behavior is a build-time style diagnostic; its scope and generated/migration exceptions are documented in FoodDiary.Analyzers/AGENTS.md. Source indexes were regenerated from current files and both the full solution and SQLite reader build cleanly. The 13 persistence fingerprint changes contain only imports and type qualification edits."
         }
       ],
-      "reason": "Reviewed the nullable handled timestamp, filtered pending index, paired additive EF migration and snapshot. Upgrade backfills historical rows; real PostgreSQL rollback after shared outbox save preserves pending state and retry produces one queue row. Existing domain/persistence review procedure remains accurate.",
+      "reason": "Reviewed consent factory, purpose/version/UTC validation, event FK cascade, user repository event state tracking and paired EF migration. Domain and archive unit checks passed; real PostgreSQL migration, translation and rollback coverage remains pending. The workflow correctly requires real-provider evidence.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:42.9213186Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:20.1397990Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -892,14 +892,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "5afa5d307cd5d2b0d9a30435c8f6b867025f86a233c07c2bc42fae528b6fe16f",
-          "reviewReason": "Reviewed FoodDiary.Web.Client/package.json: only the minimatch 11.0.3 development override changed. All documented rendered-UI commands, Playwright entrypoints, quality scripts and browser evidence requirements remain unchanged; no UI behavior, selectors or localization was edited."
+          "sha256": "43ed752460a276e48fc6dfecfc9889638035b0a30346db2f86ff5146697b8fa4",
+          "reviewReason": "Reviewed package scripts and Chrome evidence: unchecked health consent, disabled accept, decline persistence, explicit review, EN desktop and RU mobile rendering, keyboard and no overflow. Controlled contract-validated fixtures were used; unavailable WebMCP and intentionally blocked SignalR errors are documented. Atomic generator tests do not change the browser QA instructions."
         }
       ],
-      "reason": "Reviewed FoodDiary.Web.Client/package.json: only the minimatch 11.0.3 development override changed. All documented rendered-UI commands, Playwright entrypoints, quality scripts and browser evidence requirements remain unchanged; no UI behavior, selectors or localization was edited.",
+      "reason": "Reviewed package scripts and Chrome evidence: unchecked health consent, disabled accept, decline persistence, explicit review, EN desktop and RU mobile rendering, keyboard and no overflow. Controlled contract-validated fixtures were used; unavailable WebMCP and intentionally blocked SignalR errors are documented. Atomic generator tests do not change the browser QA instructions.",
       "baseRef": "HEAD",
-      "gitHead": "7d42bccfb26ad058e794d2c7d58cf629a8eaceea",
-      "reviewedAtUtc": "2026-11-01T06:25:45.2924025Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:20.9596569Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -1097,14 +1097,14 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "63dc064933e208b53e143a8694a235ba055d42de5eadf6428a1e4717cbb04fa6",
-          "reviewReason": "The ownership graph adds only Billing to Identity narrow contract consumption. Billing still owns cancellation writes, Identity owns templates, Users owns profile projection, Admin consumes MailInbox through its approved client. Existing instructions and ownership rules remain correct."
+          "sha256": "731cfb023e2f892ba7c0da02e47e6cdf703ba99de433bef8d9fb676c0f8e0a3f",
+          "reviewReason": "Reviewed Users-owned consent writes, Export-owned use case, composed read archive, Recipes/Products owner redaction and Billing payload minimization. Narrow consent port stages changes in caller UOW; no foreign aggregate writes were acquired. Generic downstream-impact workflow remains accurate."
         }
       ],
-      "reason": "The ownership graph adds only Billing to Identity narrow contract consumption. Billing still owns cancellation writes, Identity owns templates, Users owns profile projection, Admin consumes MailInbox through its approved client. Existing instructions and ownership rules remain correct.",
+      "reason": "Reviewed Users-owned consent writes, Export-owned use case, composed read archive, Recipes/Products owner redaction and Billing payload minimization. Narrow consent port stages changes in caller UOW; no foreign aggregate writes were acquired. Generic downstream-impact workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "3858b2061c5eb53afd314d22bcb6f86b1169e67a",
-      "reviewedAtUtc": "2026-11-01T02:24:45.0948595Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T22:12:29.6477712Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -1171,8 +1171,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "7003bb8e48e71491ac7fe29e1378d36c88a02596300a449fc5f2308fc6eaa470",
-          "reviewReason": "Reviewed new email address/body copies through existing EmailOutbox/MailRelay and existing inbound MailInbox retention. Only verified active accounts receive confirmations. Feedback stays Admin-only inert text with unverified From, no inferred account association and no new feedback store/provider transfer. Privacy review guidance remains accurate."
+          "sha256": "c7cfdd930206610c1f69f00b5e8c204d53d0e74bf4d72f79b018e890ec423544",
+          "reviewReason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -1181,14 +1181,14 @@
         },
         {
           "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "4be671940bc2027438306b21f9eeb678a1645c52c5612992df6928eaa6203875",
-          "reviewReason": "The sensitive-data schema remains candidate-based and explicitly non-probative. PERSONAL_DATA_LIFECYCLE now documents selective long-lived system retention, source-owner image transfer, row locks/FK integrity and strict fixture cleanup. The current bounded cleanup source validates the full identity set then retries a stable remaining list only while progress occurs, at most the initial candidate count. The guide still requires purpose/ownership/copies/provider/retention/deletion review and never promises all referenced catalog data is erased or that static names prove a leak."
+          "sha256": "8e62cb84cd1d024b79a5ab48f8da9be2ad10552906bd469bbc1807ed9ecb351a",
+          "reviewReason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers."
         }
       ],
-      "reason": "Reviewed the Node runtime-owner diff and facade snapshot changes. No private payload, retention, transfer or telemetry surface was added; the graph remains a local derived reader/writer system with current source hashes. Explicit stale and mutation failures remain protected by isolation tests.",
+      "reason": "Reviewed the lifecycle update recording the explicit owner choice to offer whole-account deletion after withdrawal, with archive and independent confirmation. It preserves the delayed soft-delete lifecycle and states that cancellation leaves consent withdrawn. Optional deletion does not justify retention: erasure/independent grounds, historical retained content and real PostgreSQL/operational/legal checks remain release blockers.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:22.9225085Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-02T01:30:10.5830164Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -1359,8 +1359,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "735183934e110abb2ef8222c1b35a2f93863878274269350ab94e21a83be9ca4",
-          "reviewReason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources."
+          "sha256": "0c78cef96c043512a150edd5d8f61f39abccc2e7e8e50f928ca3d31d1a4c85b5",
+          "reviewReason": "Reviewed refreshed runtime topology against existing hosts, consent middleware/filter, wearable sync and provider request factory. No new host or recurring job was introduced; provider store:false does not establish zero retention. Background consent coverage and actual infrastructure settings require release review; topology remains advisory."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1373,10 +1373,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Runtime topology diff changes only its source fingerprint after API composition wiring. No deployable host, worker, provider or recurring job is added. The documented topology interpretation and resilience review instructions remain accurate; actual backplane failure behavior was reviewed in owning sources.",
+      "reason": "Reviewed refreshed runtime topology against existing hosts, consent middleware/filter, wearable sync and provider request factory. No new host or recurring job was introduced; provider store:false does not establish zero retention. Background consent coverage and actual infrastructure settings require release review; topology remains advisory.",
       "baseRef": "HEAD",
-      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
-      "reviewedAtUtc": "2026-11-01T19:47:13.0864195Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:24.1132146Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1694,14 +1694,14 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "3f6803444d1b29e458e1a4f6cd5084ab50088a20d8c680f30a13ce3fffc3bff3",
-          "reviewReason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate."
+          "sha256": "1d209dd1f4843155f184b553cecd47ba884b7f0c2396f16f793cc768270211e5",
+          "reviewReason": "Reviewed refreshed repository catalog and query workflow: added privacy features are navigation inputs; no ranking, SQL reader, frozen corpus or discovery contract changed. Source/index freshness remains distinct from retrieval quality and runtime correctness."
         }
       ],
-      "reason": "Reviewed catalog diff and query-context guidance. The only catalog semantic change is one API package reference, with no project/path relocation, query contract or ranking behavior change. Existing navigation guidance remains accurate.",
+      "reason": "Reviewed refreshed repository catalog and query workflow: added privacy features are navigation inputs; no ranking, SQL reader, frozen corpus or discovery contract changed. Source/index freshness remains distinct from retrieval quality and runtime correctness.",
       "baseRef": "HEAD",
-      "gitHead": "3be1a5abc6c10c95c8d755cc75db92a887aecd4b",
-      "reviewedAtUtc": "2026-11-01T19:47:12.6014149Z"
+      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
+      "reviewedAtUtc": "2026-11-01T23:06:23.0348144Z"
     },
     {
       "pageId": "workflow.review-diff",

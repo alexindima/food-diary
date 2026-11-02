@@ -8,38 +8,38 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4710,
-    "symbols": 4645,
-    "interfaceImplementationLinks": 209,
+    "sourceFiles": 4735,
+    "symbols": 4670,
+    "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2398,
-      "enum": 73,
-      "interface": 423,
-      "record": 1608,
+      "class": 2413,
+      "enum": 74,
+      "interface": 426,
+      "record": 1614,
       "record struct": 143
     },
     "roles": {
-      "Command": 242,
-      "CommandHandler": 236,
-      "Configuration": 103,
-      "Controller": 114,
-      "Entity": 104,
-      "Event": 19,
+      "Command": 243,
+      "CommandHandler": 237,
+      "Configuration": 104,
+      "Controller": 115,
+      "Entity": 105,
+      "Event": 20,
       "Factory": 15,
       "Handler": 10,
       "LookupRepository": 3,
       "Mapper": 9,
       "Mapping": 4,
-      "Options": 74,
-      "Other": 1912,
-      "Query": 306,
-      "QueryHandler": 220,
+      "Options": 75,
+      "Other": 1924,
+      "Query": 308,
+      "QueryHandler": 222,
       "ReadModelRepository": 33,
       "ReadRepository": 39,
       "Repository": 104,
-      "Request": 180,
-      "Response": 273,
+      "Request": 181,
+      "Response": 274,
       "Service": 177,
       "Validator": 238,
       "ValueObject": 183,
@@ -766,7 +766,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Reads.cs",
-      "line": 25
+      "line": 35
     },
     {
       "name": "FoodDiaryDbContext",
@@ -808,7 +808,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/ICompositionReadContext.cs",
-      "line": 26
+      "line": 36
     },
     {
       "name": "InitialAdminBootstrapOptions",
@@ -1819,6 +1819,13 @@
       "line": 8
     },
     {
+      "name": "PersonalDataArchiveReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
+      "line": 13
+    },
+    {
       "name": "UserCurrentWaistProvider",
       "kind": "class",
       "role": "Other",
@@ -2484,6 +2491,13 @@
       "line": 8
     },
     {
+      "name": "HealthConsentMiddleware",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/HealthConsentMiddleware.cs",
+      "line": 12
+    },
+    {
       "name": "ImpersonationAccessGuardMiddleware",
       "kind": "class",
       "role": "Other",
@@ -2650,6 +2664,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Options/OutputCacheOptionsSetup.cs",
       "line": 7
+    },
+    {
+      "name": "PrivacyOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Web.Api/Options/PrivacyOptions.cs",
+      "line": 2
     },
     {
       "name": "RateLimiterOptionsSetup",
@@ -12445,6 +12466,20 @@
       "line": 5
     },
     {
+      "name": "ExportPersonalDataQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "ExportPersonalDataQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
+      "line": 8
+    },
+    {
       "name": "CsvFieldEscaper",
       "kind": "class",
       "role": "Other",
@@ -12589,7 +12624,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Export/Presentation/Controllers/ExportController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "ExportRequestLimits",
@@ -12610,7 +12645,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Presentation/Mappings/ExportHttpMappings.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "SensitiveCycleExportHttpRequest",
@@ -18833,14 +18868,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "RecordPremiumConversionCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "MarketingAttributionEventTypes",
@@ -19057,7 +19092,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Presentation/Requests/MarketingAttributionHttpRequestValidation.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MarketingSignupAttributionHttpRequest",
@@ -23250,7 +23285,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/Persistence/ProductsUserContentRetentionParticipant.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "ProductsUserDataPurgeParticipant",
@@ -24776,7 +24811,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserContentRetentionParticipant.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "RecipesUserDataPurgeParticipant",
@@ -26221,6 +26256,20 @@
       "line": 7
     },
     {
+      "name": "UpdatePrivacyConsentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdatePrivacyConsentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
+      "line": 11
+    },
+    {
       "name": "UpdateUserCommand",
       "kind": "record",
       "role": "Command",
@@ -26309,7 +26358,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Common/UserContextService.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "UserInputParser",
@@ -26494,6 +26543,20 @@
       "line": 4
     },
     {
+      "name": "GetUserPrivacyQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserPrivacyQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
+      "line": 8
+    },
+    {
       "name": "GetUsersForAdministrationQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -26669,6 +26732,13 @@
       "line": 5
     },
     {
+      "name": "IPersonalDataArchiveReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs",
+      "line": 4
+    },
+    {
       "name": "IProfileDietologistReadService",
       "kind": "interface",
       "role": "Service",
@@ -26795,11 +26865,25 @@
       "line": 6
     },
     {
+      "name": "IUserMarketingConsentRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IUserMarketingConsentRecorder.cs",
+      "line": 7
+    },
+    {
       "name": "IUserNotificationProfileService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs",
       "line": 7
+    },
+    {
+      "name": "IUserPrivacyStateReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs",
+      "line": 5
     },
     {
       "name": "IUserProfileImageService",
@@ -26856,6 +26940,13 @@
       "role": "Service",
       "path": "Modules/Users/Contracts/Common/IUserWeeklyCheckInProfileReadService.cs",
       "line": 6
+    },
+    {
+      "name": "PersonalDataArchiveLimitException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/PersonalDataArchiveLimitException.cs",
+      "line": 2
     },
     {
       "name": "UserAccountStatusFilter",
@@ -27103,6 +27194,13 @@
       "line": 2
     },
     {
+      "name": "UserPrivacyStateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Models/UserPrivacyStateModel.cs",
+      "line": 2
+    },
+    {
       "name": "UserRegistrationModel",
       "kind": "record",
       "role": "Other",
@@ -27222,10 +27320,24 @@
       "line": 2
     },
     {
+      "name": "PrivacyConsentPurpose",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Domain.Contracts/Enums/PrivacyConsentPurpose.cs",
+      "line": 2
+    },
+    {
       "name": "RoleNames",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Domain.Contracts/Enums/RoleNames.cs",
+      "line": 2
+    },
+    {
+      "name": "PrivacyNoticeVersions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Domain.Contracts/Privacy/PrivacyNoticeVersions.cs",
       "line": 2
     },
     {
@@ -27400,8 +27512,15 @@
       "name": "User",
       "kind": "class",
       "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/User.Privacy.cs",
+      "line": 5
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
       "path": "Modules/Users/Domain/Entities/User.Profile.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "User",
@@ -27429,6 +27548,13 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/UserPreferences.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPrivacyConsentEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs",
       "line": 6
     },
     {
@@ -27754,11 +27880,18 @@
       "line": 7
     },
     {
+      "name": "UserPrivacyStateReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserPrivacyStateReader.cs",
+      "line": 8
+    },
+    {
       "name": "UserProfileProjectionService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "UserProfileProjectionService",
@@ -27779,7 +27912,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRelatedDataReadService.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "UserRepository",
@@ -27873,6 +28006,13 @@
       "line": 7
     },
     {
+      "name": "UserPrivacyConsentEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
+      "line": 7
+    },
+    {
       "name": "UserRoleAuditEventConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -27920,6 +28060,13 @@
       "role": "Response",
       "path": "Modules/Users/Presentation.Contracts/Responses/UserHttpResponse.cs",
       "line": 4
+    },
+    {
+      "name": "UserPrivacyHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Users/Presentation.Contracts/Responses/UserPrivacyHttpResponse.cs",
+      "line": 2
     },
     {
       "name": "WaistGoalHistoryHttpResponse",
@@ -27971,11 +28118,18 @@
       "line": 15
     },
     {
+      "name": "UserPrivacyController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
+      "line": 16
+    },
+    {
       "name": "UsersController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UsersController.cs",
-      "line": 17
+      "line": 18
     },
     {
       "name": "UsersPasswordController",
@@ -28011,6 +28165,13 @@
       "role": "Other",
       "path": "Modules/Users/Presentation/Extensions/UsersPresentationServiceCollectionExtensions.cs",
       "line": 5
+    },
+    {
+      "name": "UserProfileHealthConsentFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Presentation/Filters/UserProfileHealthConsentFilter.cs",
+      "line": 11
     },
     {
       "name": "GoalsController",
@@ -28062,6 +28223,13 @@
       "line": 9
     },
     {
+      "name": "UserPrivacyHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Presentation/Mappings/UserPrivacyHttpMappings.cs",
+      "line": 8
+    },
+    {
       "name": "ChangePasswordHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -28088,6 +28256,13 @@
       "role": "Request",
       "path": "Modules/Users/Presentation/Requests/UpdateDesiredWeightHttpRequest.cs",
       "line": 2
+    },
+    {
+      "name": "UpdatePrivacyConsentHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Users/Presentation/Requests/UpdatePrivacyConsentHttpRequest.cs",
+      "line": 4
     },
     {
       "name": "UpdateUserAppearanceHttpRequest",
@@ -33552,6 +33727,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IPersonalDataArchiveReader",
+      "interfacePath": "Modules/Users/Contracts/Common/IPersonalDataArchiveReader.cs",
+      "implementation": "PersonalDataArchiveReader",
+      "implementationPath": "FoodDiary.ReadModel.Composition/Users/PersonalDataArchiveReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IPostCommitActionQueue",
       "interfacePath": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
       "implementation": "PostCommitActionQueue",
@@ -33920,6 +34102,13 @@
       "interfacePath": "Modules/Users/Contracts/Common/IUserNotificationProfileService.cs",
       "implementation": "UserNotificationProfileService",
       "implementationPath": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserPrivacyStateReader",
+      "interfacePath": "Modules/Users/Contracts/Common/IUserPrivacyStateReader.cs",
+      "implementation": "UserPrivacyStateReader",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserPrivacyStateReader.cs",
       "confidence": "naming-convention"
     },
     {

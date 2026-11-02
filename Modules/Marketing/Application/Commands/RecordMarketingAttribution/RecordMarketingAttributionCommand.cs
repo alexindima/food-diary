@@ -20,4 +20,6 @@ public sealed record RecordMarketingAttributionCommand(
     string? UtmContent,
     string? UtmTerm,
     string? BuildVersion,
-    Guid? EventId = null) : IRequest<Result>, ITransactionalCommand;
+    Guid? EventId = null,
+    string? ConsentNoticeVersion = null,
+    DateTime? ConsentGrantedAtUtc = null) : IRequest<Result>, ITransactionalCommand;

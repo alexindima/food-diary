@@ -101,6 +101,7 @@ public sealed class UserDataLifecycleGuardrailTests {
             "UserAchievement(UserId):Cascade",
             "UserLessonProgress(UserId):Cascade",
             "UserPreferences(Id):Cascade",
+            "UserPrivacyConsentEvent(UserId):Cascade",
             "UserNutritionProfile(Id):Cascade",
             "UserLoginEvent(UserId):Cascade",
             "UserRefreshTokenSession(UserId):Cascade",
@@ -125,8 +126,8 @@ public sealed class UserDataLifecycleGuardrailTests {
         policies.Add("ClientTask(DietologistUserId):Restrict", new UserDataLifecyclePolicy(UserDataDisposition.Delete, "Client collaboration tasks are removed when either participant is deleted."));
         policies.Add("DietologistInvitation(DietologistUserId):SetNull", new UserDataLifecyclePolicy(UserDataDisposition.Anonymize, "The optional dietologist reference is cleared by the database."));
         policies.Add("UserRoleAuditEvent(ActorUserId):SetNull", new UserDataLifecyclePolicy(UserDataDisposition.Anonymize, "The optional actor reference is cleared while the role audit event follows its configured retention."));
-        policies.Add("Product(UserId):Cascade", new UserDataLifecyclePolicy(UserDataDisposition.Reassign, "User-owned catalog content may be reassigned to the configured active cleanup owner; otherwise it is deleted."));
-        policies.Add("Recipe(UserId):Cascade", new UserDataLifecyclePolicy(UserDataDisposition.Reassign, "User-owned recipe content may be reassigned to the configured active cleanup owner; otherwise it is deleted."));
+        policies.Add("Product(UserId):Cascade", new UserDataLifecyclePolicy(UserDataDisposition.Reassign, "Only referenced numeric catalog composition is reassigned after redaction of identifying text/images; unrelated content is deleted."));
+        policies.Add("Recipe(UserId):Cascade", new UserDataLifecyclePolicy(UserDataDisposition.Reassign, "Only referenced recipe composition is reassigned after redaction of identifying text/images; unrelated content is deleted."));
         return policies;
     }
 

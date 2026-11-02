@@ -95,7 +95,7 @@
       "Gamification",
       "Users"
     ],
-    "Marketing": [],
+    "Marketing": ["Users"],
     "MealPlanning": [
       "Products",
       "Users"
@@ -251,7 +251,7 @@
       "Gamification",
       "Users"
     ],
-    "Marketing": [],
+    "Marketing": ["Users"],
     "MealPlanning": [
       "Products",
       "Users"
