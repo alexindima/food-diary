@@ -10,12 +10,8 @@
     @defer (on immediate; hydrate on viewport; hydrate on interaction) {
         <fd-features />
     }
-    @defer (on immediate; hydrate on viewport; hydrate on interaction) {
-        <fd-dietologist-promo />
-    }
-    @defer (on immediate; hydrate on viewport; hydrate on interaction) {
-        <fd-landing-steps />
-    }
+    <fd-dietologist-promo />
+    <fd-landing-steps />
     @defer (on immediate; hydrate on viewport; hydrate on interaction) {
         <fd-landing-faq [questions]="faqItems" [guides]="seoGuides" />
     }
