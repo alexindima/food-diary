@@ -14,7 +14,15 @@ This document defines how database migrations are validated and how deployment-t
   database access errors and invalid responses block deployment. This preflight
   does not apply migrations or adopt history. A blocked deployment keeps the
   running application in place while the explicit cutover is prepared.
-- Deploy stops the primary database writers, verifies a database backup, runs `docker compose --profile backend run -T --rm db-init update`, then starts the matching application images.
+- Deploy compares the candidate Initializer migration inventory with the live
+  database history. A managed release with identical sets and API contract snapshots uses blue-green API/SSR
+  handover and an online verified backup without stopping primary writers.
+  Pending migrations, first installation and explicit maintenance releases stop
+  both API slots and primary workers, verify backup, run
+  `docker compose --profile backend run -T --rm db-init update`, then start the
+  matching application images. Unknown database migration IDs block deployment.
+  See [the handover runbook](BLUE_GREEN_DEPLOYMENT.md) and
+  [ADR 0060](../adr/0060-single-host-blue-green-deployment.md).
 - The Initializer applies migrations through EF Core's `IMigrator`. The design-time context factory in [`FoodDiaryDbContextFactory.cs`](../../FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs) also supports standalone migration tooling.
 
 ## Migration baseline (17 October 2026)

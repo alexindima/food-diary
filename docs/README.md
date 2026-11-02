@@ -46,6 +46,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 - `backend/BACKEND_EVENT_TAXONOMY.md`
 - `backend/BACKEND_FEATURE_FIRST_COMMON_INVENTORY.md`
 - `backend/BACKEND_MIGRATION_SAFETY.md`
+- [Blue-green deployment](backend/BLUE_GREEN_DEPLOYMENT.md) - API/SSR slots, migration decision, capacity and recovery.
 - `backend/BACKEND_OBSERVABILITY_BASELINE.md`
 - `backend/BACKEND_PERFORMANCE_REVIEW.md`
 - `backend/BACKEND_RUNBOOKS.md`

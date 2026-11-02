@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "5b7c8fe9b0d0c555770867b5e9e533b7a7462edf0c2fccaaef9cd3678d08bdac",
+    "sourceFingerprint": "33414f10abbe58ef085769d2251971f7d63da82fdd5f96d73995d9cf2ba7c7ef",
     "sourceFileCount": 4736
   },
   "summary": {
-    "composeServices": 18,
+    "composeServices": 20,
     "hostedServices": 16,
     "httpClients": 22,
     "webhooks": 22,
@@ -36,6 +36,44 @@
       "profiles": [
         "full",
         "backend"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "ASPNETCORE_ENVIRONMENT",
+        "BuildInfo__CommitSha",
+        "BuildInfo__ImageTag",
+        "ConnectionStrings__DefaultConnection",
+        "ConnectionStrings__Redis",
+        "DataProtection__KeyRingPath",
+        "MailInboxClient__BaseUrl",
+        "MailInboxClient__ContentApiKey",
+        "MailInboxClient__MetadataApiKey",
+        "MailInboxClient__StateApiKey",
+        "MailRelayClient__AllowInsecureHttp",
+        "MailRelayClient__ApiKey",
+        "MailRelayClient__BaseUrl"
+      ],
+      "volumeMounts": [
+        "api-data-protection-keys:/var/lib/fooddiary/data-protection-keys"
+      ],
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
+      "evidenceStatus": "declared-in-repository"
+    },
+    {
+      "name": "api-green",
+      "image": "${API_IMAGE_REF:-ghcr.io/alexindima/food-diary/api:local}",
+      "dockerfile": "FoodDiary.Web.Api/Dockerfile",
+      "dependsOn": [
+        "db-init",
+        "redis"
+      ],
+      "ports": [
+        "127.0.0.1:${API_GREEN_PORT:-5001}:5000"
+      ],
+      "profiles": [
+        "blue-green"
       ],
       "networks": [],
       "environmentKeys": [
@@ -95,6 +133,30 @@
       ],
       "profiles": [
         "full"
+      ],
+      "networks": [],
+      "environmentKeys": [
+        "PORT",
+        "SSR_API_ORIGIN"
+      ],
+      "volumeMounts": [],
+      "readOnlyRootFilesystem": true,
+      "dropsAllCapabilities": true,
+      "noNewPrivileges": true,
+      "evidenceStatus": "declared-in-repository"
+    },
+    {
+      "name": "client-ssr-green",
+      "image": "${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}",
+      "dockerfile": null,
+      "dependsOn": [
+        "api-green"
+      ],
+      "ports": [
+        "127.0.0.1:${SSR_GREEN_PORT:-4001}:4000"
+      ],
+      "profiles": [
+        "blue-green"
       ],
       "networks": [],
       "environmentKeys": [

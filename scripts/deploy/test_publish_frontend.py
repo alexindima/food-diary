@@ -229,7 +229,7 @@ class PublicationTests(unittest.TestCase):
 
     def test_workflow_publishes_before_ssr_and_never_wipes_live_roots(self):
         workflow = (Path(__file__).resolve().parents[2] / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
-        self.assertLess(workflow.index('publish_frontend.py", "publish"'), workflow.index("--no-deps client-ssr"))
+        self.assertLess(workflow.index('publish_frontend.py", "publish"'), workflow.index("blue_green.py start-ssr"))
         self.assertNotIn("rm -rf /var/www/fooddiary.club", workflow)
         self.assertNotIn("rm -rf /var/www/admin.fooddiary.club", workflow)
         self.assertIn("--require-ngsw", workflow)

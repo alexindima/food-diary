@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 22,
     "agentGuides": 297,
-    "documentationPages": 248
+    "documentationPages": 250
   },
   "dotnet": {
     "projects": [
@@ -15984,6 +15984,7 @@
       "docs/adr/0057-opt-in-native-diagnostics.md",
       "docs/adr/0058-browser-sessions-in-the-existing-api.md",
       "docs/adr/0059-purpose-specific-privacy-controls.md",
+      "docs/adr/0060-single-host-blue-green-deployment.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/AGENT_GUIDE_CATALOG.md",
@@ -16112,6 +16113,7 @@
       "docs/backend/BACKEND_RUNBOOKS.md",
       "docs/backend/BACKEND_SECURITY_HARDENING.md",
       "docs/backend/BACKEND_TIME_POLICY.md",
+      "docs/backend/BLUE_GREEN_DEPLOYMENT.md",
       "docs/backend/BROWSER_SESSIONS.md",
       "docs/backend/BUG_TRIAGE.md",
       "docs/backend/MAILINBOX_DATA_LIFECYCLE.md",

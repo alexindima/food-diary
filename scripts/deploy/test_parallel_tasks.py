@@ -98,6 +98,32 @@ emit('bugtriage_finished')
 '''
 
 
+HANDOVER = '''from pathlib import Path
+import os, subprocess, sys
+from trace_fixture import emit
+command = sys.argv[1]
+mode = os.environ.get('RELEASE_MODE', 'maintenance')
+marker = Path(os.environ['FIXTURE']) / 'migration-started'
+prefix = ['docker', 'compose', '--profile', 'backend', '--profile', 'full']
+api, ssr = ('api-green', 'client-ssr-green') if mode == 'overlap' else ('api', 'client-ssr')
+emit('handover', command=command, mode=mode)
+if command == 'plan':
+    print(mode)
+elif command == 'migration-started':
+    marker.touch()
+elif command in ('start-api', 'start-ssr'):
+    service = api if command == 'start-api' else ssr
+    subprocess.run(prefix + ['up', '-d', '--force-recreate', '--no-deps', service], check=True)
+    if command == 'start-api': emit('api_ready')
+elif command == 'switch':
+    emit('nginx_reload')
+elif command == 'finish':
+    emit('retired')
+elif command == 'abort' and mode == 'maintenance' and not marker.exists():
+    subprocess.run(prefix + ['start', 'api', 'telegram-bot', 'job-manager'], check=True)
+'''
+
+
 @unittest.skipUnless(os.name == "posix", "Run POSIX deployment tests in a Linux container on Windows")
 class DeploymentFixture(unittest.TestCase):
     def setUp(self):
@@ -121,6 +147,7 @@ class DeploymentFixture(unittest.TestCase):
         self.environment = dict(os.environ, PATH=str(self.bin) + os.pathsep + os.environ["PATH"],
                                 PYTHONPATH=str(self.bin), EVENT_SOCKET=str(self.root / "events.sock"),
                                 FIXTURE=str(self.root), DEPLOY_COMMIT_SHA=SHA, DEPLOY_IMAGE_TAG="sha-" + SHA)
+        self.environment['DEPLOY_MODE'] = 'auto'
 
     def tearDown(self):
         for path in (self.root / "gates").iterdir():
@@ -195,6 +222,9 @@ class DeploymentFixture(unittest.TestCase):
             shutil.copy(HELPER, scripts / HELPER.name)
         for name in ("install_nginx_logrotate.py", "configure_forwarded_proxy.py"):
             (scripts / name).write_text("# isolated host policy fixture\n")
+        # The state machine has its own portable/real-Nginx tests; this fixture
+        # owns the shell/initializer/publication boundary only.
+        (scripts / "blue_green.py").write_text(HANDOVER)
         (scripts / "publish_frontend.py").write_text(
             "from trace_fixture import emit\nimport os, sys\nemit('assets')\n"
             "sys.exit(41 if os.environ.get('FAIL_PUBLISH') else 0)\n")
@@ -323,12 +353,23 @@ class DeployWorkflowTests(DeploymentFixture):
         api = index(lambda row: row["name"] == "service" and row["service"] == "api")
         assets = index(lambda row: row["name"] == "assets")
         ssr = index(lambda row: row["name"] == "service" and row["service"] == "client-ssr")
-        nginx = index(lambda row: row["name"] == "service" and row["service"] == "nginx")
+        nginx = index(lambda row: row["name"] == "nginx_reload")
         self.assertEqual(sorted([stopped, backup, verified, migration, api, assets, ssr, nginx]),
                          [stopped, backup, verified, migration, api, assets, ssr, nginx])
         for i, row in enumerate(rows):
             if row["name"] == "service" and row["service"] in ("api", "telegram-bot", "job-manager"):
                 self.assertGreater(i, migration)
+
+    def test_overlap_path_keeps_primary_writers_running_and_skips_primary_mutation(self):
+        self.environment['RELEASE_MODE'] = 'overlap'
+        code, output = self.result(self.workflow())
+        self.assertEqual(0, code, output)
+        self.assertFalse(any(row['name'] == 'command' and 'stop' in row.get('arguments', []) for row in self.events))
+        self.assertFalse(any(row['name'] == 'initializer_start' and row['service'] == 'db-init' for row in self.events))
+        self.assertTrue(any(row['name'] == 'service' and row['service'] == 'api-green' for row in self.events))
+        names = [row['name'] for row in self.events]
+        self.assertLess(names.index('assets'), names.index('nginx_reload'))
+        self.assertLess(names.index('nginx_reload'), names.index('retired'))
 
 
 class ParallelTaskTests(DeploymentFixture):
