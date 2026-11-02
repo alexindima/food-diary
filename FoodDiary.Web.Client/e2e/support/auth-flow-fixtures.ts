@@ -15,7 +15,8 @@ export async function seedClientSessionAsync(page: Page, user: UserHttpResponse)
     let authenticated = true;
     await page.route('**/api/v1/auth/session', async route => {
         if (!authenticated) {
-            await route.fulfill({ status: 401 });
+            contract.assertResponse('POST', route.request().url(), HTTP_NO_CONTENT, undefined);
+            await route.fulfill({ status: HTTP_NO_CONTENT });
             return;
         }
         await route.fulfill(
@@ -51,7 +52,8 @@ export async function installClientAuthApiAsync(
         const method = route.request().method();
         if (method === 'POST' && pathname === '/api/v1/auth/session') {
             if (!state.authenticated) {
-                await route.fulfill({ status: 401 });
+                contract.assertResponse(method, pathname, HTTP_NO_CONTENT, undefined);
+                await route.fulfill({ status: HTTP_NO_CONTENT });
                 return;
             }
             await route.fulfill(

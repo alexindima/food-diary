@@ -45,10 +45,11 @@ public sealed class RecipeImportProviderTests {
     }
 
     [Theory]
+    [InlineData("gpt-6-luna", true)]
     [InlineData("gpt-5-mini", true)]
     [InlineData("gpt-5-mini-2025-08-07", true)]
     [InlineData("gpt-4.1", false)]
-    public async Task RecipeImport_ConstrainsMiniReasoningWithinTheExistingOutputBudget(string model, bool useLowReasoning) {
+    public async Task RecipeImport_PreservesModelReasoningWithinTheExistingOutputBudget(string model, bool useLowReasoning) {
         using var handler = new ProviderHandler("not recipe JSON");
         using var http = new HttpClient(handler);
         var client = new OpenAiFoodClient(http, Options.Create(new OpenAiOptions { ApiKey = "unit-test-key", TextModel = model }),

@@ -96,7 +96,51 @@ describe('server-backed browser sessions', () => {
         expect(service.isAuthReady()).toBe(true);
         expect(service.getToken()).toBeNull();
     });
+});
 
+describe('anonymous browser session restoration', () => {
+    it('completes a cookie-free restoration as a ready guest', async () => {
+        const restored = service.restoreSessionAsync();
+        requests.expectOne(`${base}/session`).flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await restored;
+        expect(service.isAuthReady(), 'An anonymous 204 must complete guest initialization').toBe(true);
+        expect(service.isAuthenticated()).toBe(false);
+        expect(service.getUserId()).toBeNull();
+        expect(navigation.navigateToAuthAsync).not.toHaveBeenCalled();
+        await service.restoreSessionAsync();
+        requests.expectNone(`${base}/session`);
+    });
+
+    it('ends a known session when restoration returns no session', async () => {
+        signIn();
+        const restored = firstValueFrom(service.refreshSession());
+        requests.expectOne(`${base}/session`).flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        expect(await restored).toBe(false);
+        expect(service.isAuthenticated(), 'An anonymous 204 must remove stale authenticated state').toBe(false);
+        expect(service.isAuthReady()).toBe(true);
+        expect(navigation.navigateToAuthAsync).toHaveBeenCalled();
+    });
+
+    it('does not clear a newer login when an old anonymous restoration completes', async () => {
+        const restored = service.restoreSessionAsync();
+        const request = requests.expectOne(`${base}/session`);
+        service.acceptExternalAuthentication(authResponseFromSdk({ ...response, sessionId: 'new-session' }));
+        request.flush(null, { status: HttpStatusCode.NoContent, statusText: 'No Content' });
+        await restored;
+        expect(service.isAuthenticated()).toBe(true);
+        expect(service.getSessionKey()).toBe('new-session');
+    });
+
+    it('keeps an empty successful metadata response retryable instead of accepting it as a guest', async () => {
+        const restored = service.restoreSessionAsync();
+        requests.expectOne(`${base}/session`).flush(null, { status: HttpStatusCode.Ok, statusText: 'OK' });
+        await restored;
+        expect(service.isAuthReady()).toBe(false);
+        expect(service.isAuthenticated()).toBe(false);
+    });
+});
+
+describe('server-backed browser session isolation', () => {
     it('coalesces simultaneous session checks and obtains updated roles from the server', async () => {
         signIn();
         const first = firstValueFrom(service.refreshSession());

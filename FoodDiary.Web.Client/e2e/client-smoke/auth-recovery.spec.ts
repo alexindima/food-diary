@@ -6,6 +6,7 @@ import { jsonFixture, OpenApiFixtures } from '../support/openapi-fixtures.mjs';
 
 const contract = new OpenApiFixtures();
 const MAX_RESTORATION_REQUESTS = 3;
+const HTTP_NO_CONTENT = 204;
 
 test.beforeEach(async ({ page, baseURL }) => {
     await page.route('**/*', async route => {
@@ -15,6 +16,39 @@ test.beforeEach(async ({ page, baseURL }) => {
             await route.abort('blockedbyclient');
         }
     });
+});
+
+test('a cookie-free guest opens the landing and login without browser errors', async ({ page }) => {
+    const state = await installClientAuthApiAsync(page);
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => {
+        if (message.type() === 'error') {
+            errors.push(message.text());
+        }
+    });
+    const restoration = page.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/auth/session');
+    await page.goto('/');
+    const restored = await restoration;
+    expect(restored.status()).toBe(HTTP_NO_CONTENT);
+    await expect(page.locator('h1')).toBeVisible();
+    await page.goto('/?auth=login');
+    await expect(page.getByLabel('Email', { exact: true })).toBeVisible();
+    await expect(page.locator('fd-auth-recovery-notice')).toBeEmpty();
+    expect(state.authenticated).toBe(false);
+    expect(state.unexpectedRequests).toEqual([]);
+    expect(errors).toEqual([]);
+});
+
+test('an existing browser session restores the dashboard after reload', async ({ page }) => {
+    const state = await installClientAuthApiAsync(page);
+    state.authenticated = true;
+    await page.goto('/dashboard');
+    await expect(page.locator('fd-dashboard')).toBeVisible();
+    await page.reload();
+    await expect(page.locator('fd-dashboard')).toBeVisible();
+    await expect(page.locator('fd-auth-recovery-notice')).toBeEmpty();
+    expect(state.unexpectedRequests).toEqual([]);
 });
 
 test('a Russian narrow-screen session outage preserves the requested route and recovers through the retry control', async ({ page }) => {

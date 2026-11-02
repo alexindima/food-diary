@@ -4,7 +4,7 @@ import { computed, DestroyRef, effect, inject, PLATFORM_ID, Service, signal, unt
 import { catchError, defer, finalize, firstValueFrom, map, type Observable, of, shareReplay, tap, timeout } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { authResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
+import { authResponseFromSdk, browserSessionResponseFromSdk } from '../shared/api/sdk/auth-sdk.mapper';
 import { AuthSdk } from '../shared/api/sdk/generated/api/auth.service';
 import { TelegramAuthSdk } from '../shared/api/sdk/generated/api/telegram-auth.service';
 import { createSdkConnection, sdkRequestOptions } from '../shared/api/sdk/sdk-connection';
@@ -371,13 +371,15 @@ export class AuthService {
         const contextId = this.browserSession.contextId();
         const usesTelegramRefresh = this.browserSession.telegram && contextId === null;
         const request = usesTelegramRefresh
-            ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} })
-            : this.sdk.client.postAuthSession(
-                  { version: this.sdk.version, rememberMe: contextId === null && this.pwa.shouldRememberSession() ? true : undefined },
-                  'body',
-                  false,
-                  sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
-              );
+            ? this.sdk.client.postAuthRefresh({ version: this.sdk.version, refreshTokenHttpRequest: {} }).pipe(map(authResponseFromSdk))
+            : this.sdk.client
+                  .postAuthSession(
+                      { version: this.sdk.version, rememberMe: contextId === null && this.pwa.shouldRememberSession() ? true : undefined },
+                      'response',
+                      false,
+                      sdkRequestOptions(this.pendingLogoutHeaders({ sessionId, contextId, telegram: this.browserSession.telegram })),
+                  )
+                  .pipe(map(browserSessionResponseFromSdk));
         const pending = this.cookieSessions
             .run(() =>
                 defer(() => {
@@ -386,9 +388,12 @@ export class AuthService {
                     }
                     return request.pipe(
                         timeout(SESSION_RESTORATION_TIMEOUT_MS),
-                        map(authResponseFromSdk),
                         map(response => {
                             if (version !== this.sessionVersion || this.recovery.pendingLogout() !== null) {
+                                return false;
+                            }
+                            if (response === null) {
+                                this.clearRestoredSession(owner);
                                 return false;
                             }
                             if (
@@ -407,13 +412,7 @@ export class AuthService {
                         catchError((error: unknown) => {
                             if (version === this.sessionVersion) {
                                 if (this.isRejectedSession(error, usesTelegramRefresh)) {
-                                    this.recovery.restorationSucceeded();
-                                    this.authReadySignal.set(true);
-                                    if (owner === null) {
-                                        this.clearSession();
-                                    } else {
-                                        this.invalidateLocalSession();
-                                    }
+                                    this.clearRestoredSession(owner);
                                 } else {
                                     this.recovery.restorationFailed(
                                         error instanceof HttpErrorResponse ? error.headers.get('Retry-After') : null,
@@ -435,6 +434,16 @@ export class AuthService {
             );
         this.refreshInFlight$ = pending;
         return pending;
+    }
+
+    private clearRestoredSession(owner: string | null): void {
+        this.recovery.restorationSucceeded();
+        this.authReadySignal.set(true);
+        if (owner === null) {
+            this.clearSession();
+        } else {
+            this.invalidateLocalSession();
+        }
     }
 
     private isRejectedSession(error: unknown, usesTelegramRefresh: boolean): boolean {

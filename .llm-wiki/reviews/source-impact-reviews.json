@@ -55,13 +55,13 @@
       "sources": [
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "fbe13e98660d74715ccec1d9272e09ff1c09c397707e44156b3ad0c69d6cfa05",
-          "reviewReason": "Reviewed the merged AuthService, PwaInstallService, optional generated SDK parameter and browser-session guide. Opaque HttpOnly credentials, serialized restoration/logout and explicit Mini App transport remain accurate; automatic PWA/social persistence is documented in the owning guide."
+          "sha256": "da7af2c91c234af18d9c1ebeffde6975d5ed2dbf4e763c69076f983421b5df88",
+          "reviewReason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass."
         },
         {
           "path": "docs/frontend/WEB_QUALITY.md",
-          "sha256": "d80f21475c8983c69ed4b6fa8507e129ac30b68e5f6947532e1721ca6aa032e1",
-          "reviewReason": "Reviewed docs/frontend/WEB_QUALITY.md and the axe adapter: the documented web-quality ownership and three-engine audit remain accurate. The additive snapshot guard reanalyzes changed DOM at most three times, retains stable violations, and fails execution errors; controlled Chromium/Firefox/WebKit fixtures and the original CI production assets verified these boundaries. No frontend module or API ownership changed."
+          "sha256": "22349e2a2eb861f1dd373b1ef5d58564490669469c5fc57f928225ce337c60f1",
+          "reviewReason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass."
         },
         {
           "path": "FoodDiary.Web.Client/AGENTS.md",
@@ -69,10 +69,10 @@
           "reviewReason": "Reviewed the frontend guide hook-section changes against these pages. The new Git gate checks committed Wiki metadata and review receipts without application builds. Angular ownership/import rules, component-contract discovery, SDK boundaries and rendered QA requirements remain unchanged and current."
         }
       ],
-      "reason": "Reviewed the merged AuthService, PwaInstallService, optional generated SDK parameter and browser-session guide. Opaque HttpOnly credentials, serialized restoration/logout and explicit Mini App transport remain accurate; automatic PWA/social persistence is documented in the owning guide.",
+      "reason": "Reviewed current browser-session documentation and public audit fixture change: ordinary cookie-free website probes now return 204; generated SDK transport, separate admin cookies, identity selectors, retryable outages and renewal claims on this page remain accurate. Focused browser guest and restore scenarios pass.",
       "baseRef": "HEAD",
-      "gitHead": "d9de05f871136c844402b078404a046db60d0596",
-      "reviewedAtUtc": "2026-10-30T11:06:34.0696704Z"
+      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
+      "reviewedAtUtc": "2026-11-02T02:41:38.9090605Z"
     },
     {
       "pageId": "module.mail-services",
@@ -123,8 +123,8 @@
         },
         {
           "path": "docs/backend/BROWSER_SESSIONS.md",
-          "sha256": "fbe13e98660d74715ccec1d9272e09ff1c09c397707e44156b3ad0c69d6cfa05",
-          "reviewReason": "Reviewed the merged Identity promotion and renewal SQL: owner, credential, version, expiry, revocation and remembered-state fences stay in Identity. No module dependency or host/storage boundary changed; BROWSER_SESSIONS.md describes the optional promotion request."
+          "sha256": "da7af2c91c234af18d9c1ebeffde6975d5ed2dbf4e763c69076f983421b5df88",
+          "reviewReason": "Reviewed BROWSER_SESSIONS.md guest-probe clarification against BrowserSessionController and the HTTP tests. The additive anonymous 204 changes no component ownership, credential issuance, cookie transport or protected API authorization described by this architecture page."
         },
         {
           "path": "Tooling/tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
@@ -132,10 +132,10 @@
           "reviewReason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed."
         }
       ],
-      "reason": "Reviewed the new Marketing-to-Users semantic consent port and explicit domain-only archive read dependencies against the matrix, module graph and 2283 passing architecture tests. Host composition and inward layer direction are unchanged; ADR 0059 remains Proposed and no release approval is claimed.",
+      "reason": "Reviewed BROWSER_SESSIONS.md guest-probe clarification against BrowserSessionController and the HTTP tests. The additive anonymous 204 changes no component ownership, credential issuance, cookie transport or protected API authorization described by this architecture page.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T22:12:32.8053028Z"
+      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
+      "reviewedAtUtc": "2026-11-02T02:41:41.4490748Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -355,14 +355,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "54084dee0521372be8db184a023413ba5da8a30cefd7e8044cf7d7759f3b3a39",
-          "reviewReason": "Reviewed the final OpenAPI snapshot and generated user SDK: privacy GET/PUT, scoped archive and explicit 403 statuses are additive in the structural comparison (0 breaking); health-consent rejection is an intentional behavioral restriction requiring coordinated rollout, not proved by the schema gate."
+          "sha256": "7be8f243461268b7007e4dcc3728d2c51745c5c50c3e119471db78ff047c74d9",
+          "reviewReason": "Reviewed the full OpenAPI snapshot diff: POST auth/session adds only documented 204; existing 200 schema and rejection statuses remain. The generic compatibility workflow still correctly classifies response additions as additive and requires behavioral review. No policy or acceptance exception is changed."
         }
       ],
-      "reason": "Reviewed the final OpenAPI snapshot and generated user SDK: privacy GET/PUT, scoped archive and explicit 403 statuses are additive in the structural comparison (0 breaking); health-consent rejection is an intentional behavioral restriction requiring coordinated rollout, not proved by the schema gate.",
+      "reason": "Reviewed the full OpenAPI snapshot diff: POST auth/session adds only documented 204; existing 200 schema and rejection statuses remain. The generic compatibility workflow still correctly classifies response additions as additive and requires behavioral review. No policy or acceptance exception is changed.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:18.1205195Z"
+      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
+      "reviewedAtUtc": "2026-11-02T02:41:43.7232373Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -1359,8 +1359,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0c78cef96c043512a150edd5d8f61f39abccc2e7e8e50f928ca3d31d1a4c85b5",
-          "reviewReason": "Reviewed refreshed runtime topology against existing hosts, consent middleware/filter, wearable sync and provider request factory. No new host or recurring job was introduced; provider store:false does not establish zero retention. Background consent coverage and actual infrastructure settings require release review; topology remains advisory."
+          "sha256": "d81a6303e75015135f9952672ac81c8f53cde02391137cbd51949dde7fcf76c1",
+          "reviewReason": "Reviewed the regenerated runtime topology diff against the final Luna defaults and browser guest-session change. Only the source fingerprint changes; service, HTTP-client and hosted-worker topology is identical. The documented topology and rollout workflow remain accurate."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1373,10 +1373,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed refreshed runtime topology against existing hosts, consent middleware/filter, wearable sync and provider request factory. No new host or recurring job was introduced; provider store:false does not establish zero retention. Background consent coverage and actual infrastructure settings require release review; topology remains advisory.",
+      "reason": "Reviewed the regenerated runtime topology diff against the final Luna defaults and browser guest-session change. Only the source fingerprint changes; service, HTTP-client and hosted-worker topology is identical. The documented topology and rollout workflow remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:24.1132146Z"
+      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
+      "reviewedAtUtc": "2026-11-02T02:58:09.9215689Z"
     },
     {
       "pageId": "workflow-security-review",

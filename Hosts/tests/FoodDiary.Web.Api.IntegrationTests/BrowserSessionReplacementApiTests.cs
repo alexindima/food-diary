@@ -39,7 +39,9 @@ public sealed class BrowserSessionReplacementApiTests(ApiWebApplicationFactory f
             browser.DefaultRequestHeaders.Add("Cookie", replacementCookie);
         }
         using HttpResponseMessage markerOnly = await browser.PostAsync("/api/v1/auth/session", content: null);
-        Assert.Equal(HttpStatusCode.Unauthorized, markerOnly.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, markerOnly.StatusCode);
+        using HttpResponseMessage guestProfile = await browser.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, guestProfile.StatusCode);
         using HttpResponseMessage login = await browser.PostAsJsonAsync("/api/v1/auth/login", new LoginHttpRequest(email, "Password123!", rememberMe));
         login.EnsureSuccessStatusCode();
         string currentCookie = AuthenticationResponseCookies.ReadBrowserSession(login);

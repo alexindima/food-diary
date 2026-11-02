@@ -22,6 +22,7 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
     [AllowAnonymous]
     [HttpPost]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
@@ -41,6 +42,15 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
 
     private async Task<IActionResult> HandleBrowserRestoreAsync(BrowserSessionCookieService cookies, bool rememberMe) {
         string? credential = cookies.Read(HttpContext);
+        bool admin = BrowserSessionCookieService.IsAdmin(HttpContext);
+        string family = admin ? BrowserSessionCookieService.AdminCookieName : BrowserSessionCookieService.BrowserCookieName;
+        string alternateName = (Request.IsHttps ? string.Empty : "__Host-") + family;
+        // A cookie-free website visit is an ordinary guest probe, not a rejected sign-in.
+        // Explicit contexts and alternate-scheme cookies retain their transport diagnostics.
+        if (credential is null && !admin && Request.Headers[BrowserSessionCookieService.ClientHeader] != "telegram" &&
+            !Request.Headers.ContainsKey(BrowserSessionCookieService.SessionHeader) && !Request.Cookies.ContainsKey(alternateName)) {
+            return NoContent();
+        }
         IActionResult result = await HandleOk(credential.ToBrowserRestoreCommand(rememberMe), value => {
             if (value.Renewed) {
                 cookies.Set(HttpContext, value, BrowserSessionCookieService.IsAdmin(HttpContext));
@@ -50,9 +60,6 @@ public sealed class BrowserSessionController(ISender mediator) : BaseApiControll
             return value.ToHttpResponse();
         });
         if (result is IStatusCodeActionResult { StatusCode: StatusCodes.Status401Unauthorized }) {
-            bool admin = BrowserSessionCookieService.IsAdmin(HttpContext);
-            string family = admin ? BrowserSessionCookieService.AdminCookieName : BrowserSessionCookieService.BrowserCookieName;
-            string alternateName = (Request.IsHttps ? string.Empty : "__Host-") + family;
             HttpContext.RequestServices.GetRequiredService<ILogger<BrowserSessionController>>().LogInformation(
                 new EventId(1002, "BrowserSessionRestoreTransportRejected"),
                 "Browser session restoration transport rejected: cookie present {CookiePresent}, alternate cookie present {AlternateCookiePresent}, HTTPS {Https}, admin {Admin}",

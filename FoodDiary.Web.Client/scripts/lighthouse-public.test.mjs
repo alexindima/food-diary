@@ -316,11 +316,11 @@ test('public audit session fixture is anonymous without masking other missing en
     const server = await startStaticServer(root);
     t.after(() => server.close());
     const response = await rawGet(server.origin, '/api/v1/auth/session', {}, 'POST');
-    assert.equal(response.status, 401);
-    assert.match(response.headers['content-type'], /^application\/json\b/u);
+    assert.equal(response.status, 204);
+    assert.equal(response.headers['content-type'], undefined);
     assert.equal(response.headers['cache-control'], 'no-store');
     assert.equal(response.headers['set-cookie'], undefined);
-    assert.deepEqual(JSON.parse(response.body.toString()), {});
+    assert.equal(response.body.length, 0);
     assert.equal((await rawGet(server.origin, '/api/v1/auth/session')).status, 404);
     for (const endpoint of ['/api/v1/auth/logout', '/api/v1/auth/session-other'])
         assert.equal((await rawGet(server.origin, endpoint, {}, 'POST')).status, 405);

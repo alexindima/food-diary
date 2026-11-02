@@ -49,6 +49,15 @@ method are documented in [Authentication throttling](AUTHENTICATION_THROTTLING.m
    metadata. The frontend does not trust stored role or identity hints as proof.
    A changed session or user invalidates a running tab rather than rebinding it.
 
+An ordinary website probe without an authentication cookie returns `204 No Content`
+with no credentials or metadata, allowing guest startup without a browser network
+error. The client completes initialization as a guest. Invalid, expired and revoked
+cookies still return `401`; admin, Telegram, impersonation, explicit session
+selectors and alternate-scheme cookie diagnostics retain their existing checks.
+The previous-session marker cannot authenticate a guest. Protected APIs continue
+to require authentication. Only an explicit `204`, never an empty `200` metadata
+response or a temporary server failure, completes anonymous initialization.
+
 Each authenticated request verifies the secret, active registry record, expiry,
 current account and security version. Restoration may synchronize a changed
 security version after reading the current principal. Critical operations that

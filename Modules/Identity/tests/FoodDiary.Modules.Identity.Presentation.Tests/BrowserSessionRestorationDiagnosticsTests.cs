@@ -59,7 +59,15 @@ public sealed class BrowserSessionRestorationDiagnosticsTests {
         }
         controller.Request.Headers.Cookie = string.Join("; ", cookies);
 
-        ObjectResult result = Assert.IsAssignableFrom<ObjectResult>(await controller.Restore());
+        IActionResult response = await controller.Restore();
+        if (!admin && !selected && !alternate) {
+            Assert.IsType<NoContentResult>(response);
+            Assert.Null(sent);
+            Assert.Empty(logger.ReceivedCalls());
+            Assert.Equal(0, controller.Response.Headers.SetCookie.Count);
+            return;
+        }
+        ObjectResult result = Assert.IsAssignableFrom<ObjectResult>(response);
 
         Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
         Assert.Equal(selected ? "private-selected-cookie" : null, sent!.Credential);

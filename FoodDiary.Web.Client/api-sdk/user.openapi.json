@@ -12981,6 +12981,9 @@
                         },
                         "description": "OK"
                     },
+                    "204": {
+                        "description": "No Content"
+                    },
                     "401": {
                         "content": {
                             "application/json": {

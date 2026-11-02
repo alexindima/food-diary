@@ -99,7 +99,7 @@ rebuild. A supplied `--base-url` records its actual origin, but does not establi
 that the remote deployment matches the checkout.
 
 Without `--api-origin`, the local public server models an anonymous browser with
-`401` for `POST /api/v1/auth/session`. Other missing API endpoints remain errors.
+`204 No Content` for `POST /api/v1/auth/session`. Other missing API endpoints remain errors.
 An explicit API origin keeps its real response, including session outages; this
 fixture does not verify backend authentication.
 

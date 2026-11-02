@@ -1,7 +1,19 @@
+import { type HttpResponse, HttpStatusCode } from '@angular/common/http';
+
 import type { AuthResponse } from '../../auth/auth.data';
 import type { AuthenticationHttpResponse } from './generated/model/authentication-http-response';
 import { requireSdkFields } from './sdk-response';
 import { userFromSdk } from './user-sdk.mapper';
+
+export function browserSessionResponseFromSdk(response: HttpResponse<AuthenticationHttpResponse>): AuthResponse | null {
+    if (response.status === Number(HttpStatusCode.NoContent)) {
+        return null;
+    }
+    if (response.body === null) {
+        throw new Error('Missing browser session response');
+    }
+    return authResponseFromSdk(response.body);
+}
 
 export function authResponseFromSdk(response: AuthenticationHttpResponse): AuthResponse {
     const value = requireSdkFields(response, ['user']);

@@ -52,7 +52,9 @@ public sealed class BrowserSessionRenewalApiTests(CookieExpiryApiWebApplicationF
         using HttpResponseMessage logout = await browser.PostAsync("/api/v1/auth/logout", content: null);
         Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
         using HttpResponseMessage afterLogout = await browser.PostAsync("/api/v1/auth/session", content: null);
-        Assert.Equal(HttpStatusCode.Unauthorized, afterLogout.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, afterLogout.StatusCode);
+        using HttpResponseMessage denied = await browser.GetAsync("/api/v1/users/info");
+        Assert.Equal(HttpStatusCode.Unauthorized, denied.StatusCode);
     }
 
     private async Task<UserRefreshTokenSession> ReadSessionAsync(RefreshTokenSessionId id) {

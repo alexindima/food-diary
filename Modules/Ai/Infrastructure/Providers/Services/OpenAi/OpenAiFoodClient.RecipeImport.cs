@@ -143,9 +143,10 @@ public sealed partial class OpenAiFoodClient {
             },
             text = new { format = new { type = "json_schema", name = "recipe_import", strict = true, schema } },
         })!.AsObject();
-        // The default mini model otherwise spends most of the 4096-token budget on reasoning,
-        // leaving too little space for the structured recipe. Keep other configured models unchanged.
-        if (string.Equals(_options.TextModel, "gpt-5-mini", StringComparison.Ordinal) ||
+        // Keep the current and previous default models on low reasoning so the output budget
+        // leaves room for the structured recipe.
+        if (string.Equals(_options.TextModel, "gpt-6-luna", StringComparison.Ordinal) ||
+            string.Equals(_options.TextModel, "gpt-5-mini", StringComparison.Ordinal) ||
             _options.TextModel.StartsWith("gpt-5-mini-", StringComparison.Ordinal)) {
             request["reasoning"] = JsonSerializer.SerializeToNode(new { effort = "low" });
         }

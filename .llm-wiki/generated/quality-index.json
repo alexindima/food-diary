@@ -232,11 +232,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 641,
-      "decisionPoints": 108,
+      "nonBlankLines": 649,
+      "decisionPoints": 109,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 174.82
+      "structuralRiskScore": 176.48
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -5754,11 +5754,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/e2e/support/auth-flow-fixtures.ts",
-      "nonBlankLines": 192,
+      "nonBlankLines": 194,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.34
+      "structuralRiskScore": 26.38
     },
     {
       "path": "FoodDiary.Web.Client/playwright.admin.smoke.config.ts",
@@ -16770,11 +16770,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 641,
-      "decisionPoints": 108,
+      "nonBlankLines": 649,
+      "decisionPoints": 109,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 174.82
+      "structuralRiskScore": 176.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -16922,11 +16922,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/auth-sdk.mapper.ts",
-      "nonBlankLines": 25,
-      "decisionPoints": 6,
+      "nonBlankLines": 35,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.5
+      "structuralRiskScore": 12.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/cycle-sdk.mapper.ts",
@@ -25426,11 +25426,11 @@
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeImport.cs",
-      "nonBlankLines": 148,
-      "decisionPoints": 49,
+      "nonBlankLines": 149,
+      "decisionPoints": 50,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.46
+      "structuralRiskScore": 77.98
     },
     {
       "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.RecipeTranscription.cs",
@@ -38418,11 +38418,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 5,
+      "nonBlankLines": 66,
+      "decisionPoints": 10,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.68
+      "structuralRiskScore": 18.32
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/TelegramOperationsController.cs",
