@@ -459,8 +459,8 @@
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
-          "reviewReason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query."
+          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
+          "reviewReason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -503,10 +503,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query.",
+      "reason": "Reviewed shared aggregate repository role and equivalent compile/compiles normalization factoring. Direct compile already includes itself, so the union adds no term or ordering change after deduplication. Combined rule count remains700 and context governance/operations pass. Corpus quality thresholds and frozen baselines are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:24.7624321Z"
+      "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
+      "reviewedAtUtc": "2026-11-02T05:28:55.1855013Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1390,8 +1390,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
-          "reviewReason": "Reviewed shared ranking policy change: it only resolves user aggregate repository intent, excludes login/session/event/audit wording and adds no security verdict or control. Curated security discovery and the distinction between navigation, executed tests and runtime proof remain unchanged."
+          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
+          "reviewReason": "Reviewed advisory ranking-only rule plus equivalent normalization consolidation. No security or application authorization behavior changed; combined budget remains700 and curated discovery still treats search results as leads only."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
@@ -1399,10 +1399,10 @@
           "reviewReason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force."
         }
       ],
-      "reason": "Reviewed shared ranking policy change: it only resolves user aggregate repository intent, excludes login/session/event/audit wording and adds no security verdict or control. Curated security discovery and the distinction between navigation, executed tests and runtime proof remain unchanged.",
+      "reason": "Reviewed advisory ranking-only rule plus equivalent normalization consolidation. No security or application authorization behavior changed; combined budget remains700 and curated discovery still treats search results as leads only.",
       "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:25.6098193Z"
+      "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
+      "reviewedAtUtc": "2026-11-02T05:28:55.9869790Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1695,18 +1695,18 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "00d106fb67b806c5902146dfe5e47c4fe16fdef4ae655cc62d619ccf727df5c7",
+      "pageSha256": "38bd1a39b9f849fee5129875ce4fc65bbaf1428d873f6cafb5ba6a2fa195783e",
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
-          "reviewReason": "Documented the bounded user aggregate repository role and reviewed exact filename and excluded related-data intent guards. Both readers consume the same policy. Frozen control corpus and thresholds are unchanged; explicit login-event retrieval still returns the related repository first."
+          "sha256": "ee1b89f981b1da635cb2eff2843ff133b2782313ea5b20a5bca8b693a6d2cadb",
+          "reviewReason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes."
         }
       ],
-      "reason": "Documented the bounded user aggregate repository role and reviewed exact filename and excluded related-data intent guards. Both readers consume the same policy. Frozen control corpus and thresholds are unchanged; explicit login-event retrieval still returns the related repository first.",
+      "reason": "Documented exact user aggregate repository role with related-data exclusions and equivalent compile/compiles factoring. The two spellings now share one normalization entry; direct compile term deduplicates identically, keeping combined budget700 with no threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:25.2026411Z"
+      "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
+      "reviewedAtUtc": "2026-11-02T05:28:55.5593352Z"
     },
     {
       "pageId": "workflow.review-diff",

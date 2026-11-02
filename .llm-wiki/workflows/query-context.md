@@ -269,6 +269,8 @@ entity and repository concepts, an exact `UserRepository.cs` filename, and no
 login, session, event or audit intent. Explicit related-data queries retain their
 own candidates. The existing frozen control corpus and quality thresholds remain
 unchanged; this is a ranking regression repair, not new blind quality evidence.
+The equivalent `compile` and `compiles` expansions share one rule, keeping the
+combined normalization and ranking budget unchanged.
 
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need
