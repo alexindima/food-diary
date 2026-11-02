@@ -16,6 +16,7 @@ sources:
   - .llm-wiki/tools/LlmWikiTestSourceScanner.cs
   - .llm-wiki/tools/Test-LlmWikiNativeTestDiscovery.ps1
   - docs/TESTING_STRATEGY.md
+  - FoodDiary.sln.DotSettings
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiGraphTestPlan.ps1
@@ -48,6 +49,13 @@ Before executing a direct Docker-dependent test command, run
 starting the test process. Backend integration groups perform readiness before
 restore/build automatically. See the Docker readiness section in
 `docs/TESTING_STRATEGY.md` for deadlines, startup controls and diagnostics.
+
+For Rider coverage, the solution team-shared runtime assembly filters live in
+`FoodDiary.sln.DotSettings`, including `FsCheck*` to avoid the dotCover property-test
+instrumentation failure. The `.sln` companion name also applies to `FoodDiary.slnx`.
+CLI coverage needs explicit assembly filters; attribute and result-tree exclusions
+do not prevent instrumentation. See the Rider section in `docs/TESTING_STRATEGY.md`
+for personal-layer overrides and the verified diagnostic.
 
 Discovery prunes build/dependency directories before walking them, preserves
 hidden/system exclusions, and captures matching test text once per invocation.

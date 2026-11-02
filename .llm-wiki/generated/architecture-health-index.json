@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
     "componentsWithoutDirectSpecs": 134,
-    "criticalSymbolsWithoutTestReferences": 49,
+    "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
   "projectDependencyViolations": [],
@@ -5981,16 +5981,6 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
-      "name": "CreateBrowserSessionCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommandHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "DeleteAdminDailyAdviceGroupCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/DeleteAdminDailyAdviceGroup/DeleteAdminDailyAdviceGroupCommandHandler.cs",
@@ -6051,16 +6041,6 @@
       "coveredThrough": []
     },
     {
-      "name": "UpdatePrivacyConsentCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
-      "line": 11,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "AdminDailyAdvicesController",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminDailyAdvicesController.cs",
@@ -6111,16 +6091,6 @@
       "coveredThrough": []
     },
     {
-      "name": "UserPrivacyController",
-      "role": "Controller",
-      "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
-      "line": 16,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "AuthenticateBrowserSessionQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Identity/Application/Authentication/Queries/AuthenticateBrowserSession/AuthenticateBrowserSessionQueryHandler.cs",
@@ -6131,30 +6101,10 @@
       "coveredThrough": []
     },
     {
-      "name": "ExportPersonalDataQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
-      "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "GetAdminAiPromptScenariosQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAiPromptScenarios/GetAdminAiPromptScenariosQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminBillingCancellationsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
-      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -6215,16 +6165,6 @@
       "role": "QueryHandler",
       "path": "Modules/Ai/Application/Queries/GetFoodRecognition/GetFoodRecognitionQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetUserPrivacyQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
-      "line": 8,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

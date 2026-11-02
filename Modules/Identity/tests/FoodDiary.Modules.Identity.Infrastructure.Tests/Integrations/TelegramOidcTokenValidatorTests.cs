@@ -16,7 +16,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
-public sealed class TelegramOidcTokenValidatorTests {
+public sealed partial class TelegramOidcTokenValidatorTests {
     [Theory]
     [InlineData(0, 5)]
     [InlineData(16385, 5)]

@@ -119,6 +119,7 @@ public partial class BillingFeatureTests {
         public UserId UserId { get; } = UserId.New();
         public ISender Sender { get; } = Substitute.For<ISender>();
         public IBillingProviderGateway Gateway { get; } = Substitute.For<IBillingProviderGateway>();
+        public IBillingProviderGatewayAccessor Gateways { get; } = Substitute.For<IBillingProviderGatewayAccessor>();
         public IBillingCancellationRepository Cancellations { get; } = Substitute.For<IBillingCancellationRepository>();
         public List<BillingCancellation> History { get; } = [];
         public BillingSubscription Subscription { get; }
@@ -148,9 +149,8 @@ public partial class BillingFeatureTests {
                 History.Add(call.Arg<BillingCancellation>());
                 return Task.CompletedTask;
             });
-            IBillingProviderGatewayAccessor gateways = Substitute.For<IBillingProviderGatewayAccessor>();
-            gateways.GetProviderOrDefault(BillingProviderNames.Paddle).Returns(Gateway);
-            _handler = new CancelSubscriptionCommandHandler(Sender, subscriptions, gateways, new NoopBillingCheckoutLock(),
+            Gateways.GetProviderOrDefault(BillingProviderNames.Paddle).Returns(Gateway);
+            _handler = new CancelSubscriptionCommandHandler(Sender, subscriptions, Gateways, new NoopBillingCheckoutLock(),
                 new NoOpBillingTransactionRunner(), new BillingCancellationRecorder(Cancellations, time),
                 new BillingAccessService(Sender, subscriptions, time), time);
         }

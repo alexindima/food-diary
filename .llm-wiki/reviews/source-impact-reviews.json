@@ -356,8 +356,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "632c9213a4485fd6b3e4c68038c28656fffc9a41a3d94f6425632c83cc55a4e5",
-          "reviewReason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds."
+          "sha256": "64bf99b383b3f76ec2cd83adfe381a2e8b7a1138b68977efdc3f9224901bcb7a",
+          "reviewReason": "Reviewed the generated delta: six existing critical symbols acquired direct references from added coverage tests; dependency edges, cycles, enforcement policy and removal guidance are unchanged. The page distinguishes syntactic test references from execution evidence and remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -375,10 +375,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds.",
+      "reason": "Reviewed the generated delta: six existing critical symbols acquired direct references from added coverage tests; dependency edges, cycles, enforcement policy and removal guidance are unchanged. The page distinguishes syntactic test references from execution evidence and remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:23.9754527Z"
+      "gitHead": "43f3b644a17a22dd8cb6ce81ae79b58ec403110f",
+      "reviewedAtUtc": "2026-11-02T12:11:57.5430336Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -1527,18 +1527,23 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "119ffe5064c74294d4c54b286ed92f100d463be7d673a1cf5f8a81ee4fcf9a0d",
+      "pageSha256": "afbc8fae001e1e78bcb6a4c7845cd17fed6e868aa90bd0f8fb1acdd61b41a8d2",
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "43fb38c205eb69ddcac90330451d6c429bd316e54db33d0a8f01264583e32b24",
-          "reviewReason": "Compared the final testing-strategy diff with this workflow. The bounded Git/PowerShell-only pre-push gate checks committed page contracts and source reviews; index generation and application tests remain explicit developer and CI operations. Docker readiness, test selection, runner commands and verification receipt semantics remain current."
+          "sha256": "bfa41aded85db1da2482e5c33e3794b57755cd96bd2458ba76a96849f71bbbc5",
+          "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
+        },
+        {
+          "path": "FoodDiary.sln.DotSettings",
+          "sha256": "85e1054678472202caa2cc4a2e4d40c236f9209e2b325a5a1110c8f7b1dc9a65",
+          "reviewReason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged."
         }
       ],
-      "reason": "Compared the final testing-strategy diff with this workflow. The bounded Git/PowerShell-only pre-push gate checks committed page contracts and source reviews; index generation and application tests remain explicit developer and CI operations. Docker readiness, test selection, runner commands and verification receipt semantics remain current.",
+      "reason": "Reviewed the current testing-strategy delta and updated the workflow page with the shared FsCheck assembly filter, .slnx companion naming and separate CLI filters. Product behavior and test-plan selection are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf938c200d4d5f0c48268c323c55b49843ad552f",
-      "reviewedAtUtc": "2026-10-29T23:20:53.5462285Z"
+      "gitHead": "43f3b644a17a22dd8cb6ce81ae79b58ec403110f",
+      "reviewedAtUtc": "2026-11-02T12:05:27.2248786Z"
     },
     {
       "pageId": "workflow-trace-feature",

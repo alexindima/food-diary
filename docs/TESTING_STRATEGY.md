@@ -197,6 +197,30 @@ Run `pwsh -NoProfile -File scripts/Test-DockerReadiness.ps1` for deterministic
 startup, timeout, endpoint and runner-order regressions. The existing CI backend
 partition check runs these fixtures without starting or stopping a real Engine.
 
+## Rider and dotCover runtime filters
+
+`FoodDiary.sln.DotSettings` stores the solution team-shared assembly exclusions.
+Keep the `.sln.DotSettings` filename when opening `FoodDiary.slnx`: JetBrains
+continues using the `.sln` companion settings name for `.slnx` solutions.
+The shared layer survives IDE preference resets and is versioned with the repository.
+See [JetBrains settings compatibility](https://youtrack.jetbrains.com/projects/SUPPORT/articles/SUPPORT-A-4172/Handling-.slnx-DotSettings-Files-Compatibility)
+and [sharing runtime coverage filters](https://www.jetbrains.com/help/dotcover/dotCover__Setting_up_Coverage_Filters.html).
+
+`FsCheck*` must be in **Runtime coverage filters > Do not analyze code in assemblies**.
+dotCover 2026.2.3.1 and 2026.2.4 can fail while instrumenting
+`FsCheck.Xunit.PropertyTestCase.RunAsync` with
+`Inconsistent PDB detected, too large offset in statement table`.
+Excluding `FsCheck*` from assembly instrumentation keeps property tests running
+and leaves FoodDiary production assemblies in coverage. Attribute exclusions
+and result-tree exclusions do not prevent this instrumentation failure.
+
+The personal `FoodDiary.sln.DotSettings.user` layer can override shared settings.
+If Rider's effective assembly filter differs, remove that personal override or
+save the intended change to the solution team-shared layer. Do not commit personal
+settings or copy them wholesale into the shared file. For command-line dotCover,
+pass `--exclude-assemblies FsCheck*` alongside the other intended runtime filters;
+the CLI does not infer Rider's solution settings.
+
 ## Backend Test Projects
 
 | Project | Purpose |

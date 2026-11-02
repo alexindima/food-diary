@@ -39,12 +39,15 @@ public sealed class SessionRetentionIntegrationTests(PostgresDatabaseFixture fix
             active, recentExpiry, recentRevoke, recentLegacy, recentRemembered);
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
+        int synchronizations = 0;
         var repository = new RefreshTokenSessionRepository(context.UserRefreshTokenSessions, context.Database,
-            new FixedClock(now), Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }));
+            new FixedClock(now), Options.Create(new JwtOptions { RefreshTokenExpirationDays = 30, RememberMeRefreshTokenExpirationDays = 90 }),
+            _ => { synchronizations++; return Task.CompletedTask; });
 
         Assert.Equal(2, await repository.DeleteInactiveBeforeAsync(cutoff, 2));
         Assert.Equal(2, await repository.DeleteInactiveBeforeAsync(cutoff, 2));
         Assert.Equal(0, await repository.DeleteInactiveBeforeAsync(cutoff, 2));
+        Assert.Equal(3, synchronizations);
         RefreshTokenSessionId[] remaining = await context.UserRefreshTokenSessions.Where(session => session.UserId == owner.Id)
             .Select(session => session.Id).ToArrayAsync();
         Assert.Equal(new[] { active.Id, recentExpiry.Id, recentRevoke.Id, recentLegacy.Id, recentRemembered.Id }.OrderBy(id => id.Value),

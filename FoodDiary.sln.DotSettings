@@ -1,0 +1,9 @@
+<wpf:ResourceDictionary xml:space="preserve"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:s="clr-namespace:System;assembly=mscorlib"
+                       xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <!-- Rider also uses the .sln.DotSettings name for FoodDiary.slnx.
+       FsCheck must be excluded from assembly instrumentation, not attribute filtering:
+       dotCover otherwise fails in FsCheck.Xunit.PropertyTestCase.RunAsync with an inconsistent PDB. -->
+  <s:String x:Key="/Default/dotCover/Filtering/ExcludedAssembliesString/@EntryValue">System.*||Microsoft.*||JetBrains.*||FsCheck*</s:String>
+</wpf:ResourceDictionary>

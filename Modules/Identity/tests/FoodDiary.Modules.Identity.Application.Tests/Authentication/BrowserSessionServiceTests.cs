@@ -21,7 +21,7 @@ using NSubstitute.Core;
 namespace FoodDiary.Modules.Identity.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
-public sealed class BrowserSessionServiceTests {
+public sealed partial class BrowserSessionServiceTests {
     private static readonly DateTime Now = new(2030, 1, 1, 12, 0, 0, DateTimeKind.Utc);
 
     [Theory]

@@ -9,7 +9,7 @@ using MsOptions = Microsoft.Extensions.Options.Options;
 namespace FoodDiary.Modules.Billing.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
-public sealed class PaddleNotificationRecoveryServiceTests {
+public sealed partial class PaddleNotificationRecoveryServiceTests {
     [Fact]
     public void HasValidConfiguration_ProductionWithoutNotificationSettingId_ReturnsFalse() {
         var options = new PaddleOptions {

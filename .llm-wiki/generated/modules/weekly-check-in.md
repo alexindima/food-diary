@@ -57,6 +57,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs`
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.DatedProfile.cs`
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs`
 - [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs`
 - [presentation] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Presentation.Tests/WeeklyCheckInHttpMappingsTests.cs`

@@ -6,7 +6,7 @@ using FoodDiary.Modules.Identity.Contracts.Email.Commands.QueueSubscriptionCance
 namespace FoodDiary.Modules.Identity.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class SubscriptionCancellationEmailTests {
+public sealed partial class SubscriptionCancellationEmailTests {
     private static readonly DateTime End = new(2026, 12, 1, 10, 0, 0, DateTimeKind.Utc);
 
     [Fact]

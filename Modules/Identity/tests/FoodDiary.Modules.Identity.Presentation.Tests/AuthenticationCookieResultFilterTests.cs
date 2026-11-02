@@ -22,7 +22,7 @@ using FoodDiary.Authentication.Contracts.Authentication.Common;
 namespace FoodDiary.Modules.Identity.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class AuthenticationCookieResultFilterTests {
+public sealed partial class AuthenticationCookieResultFilterTests {
     [Fact]
     public async Task FailedBrowserSessionCreation_ReturnsUnauthorizedWithoutLeakingInternalTokensOrSettingCookies() {
         var http = new DefaultHttpContext();

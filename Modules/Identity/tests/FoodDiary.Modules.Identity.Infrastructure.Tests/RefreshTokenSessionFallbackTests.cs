@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class RefreshTokenSessionFallbackTests {
+public sealed partial class RefreshTokenSessionFallbackTests {
     private static readonly DateTime Now = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     [Theory]

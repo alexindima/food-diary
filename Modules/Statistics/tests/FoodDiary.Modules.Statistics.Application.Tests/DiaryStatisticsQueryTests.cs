@@ -14,7 +14,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Modules.Statistics.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class DiaryStatisticsQueryTests {
+public sealed partial class DiaryStatisticsQueryTests {
     [Fact]
     public async Task CorruptSystemTimeZone_DoesNotQueryNutritionOrHydration() {
         var owner = new UserId(Guid.NewGuid());

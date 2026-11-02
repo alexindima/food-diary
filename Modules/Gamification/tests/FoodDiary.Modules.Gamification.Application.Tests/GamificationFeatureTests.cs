@@ -21,7 +21,7 @@ using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects;
 namespace FoodDiary.Modules.Gamification.Application.Tests;
 
 [ExcludeFromCodeCoverage]
-public class GamificationFeatureTests {
+public partial class GamificationFeatureTests {
     private static readonly DateTime Today = new(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]

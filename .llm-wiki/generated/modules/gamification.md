@@ -74,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementDefinitionAdministrationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/AchievementTargetTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.DatedProfile.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/ReconcileAchievementsCommandHandlerTests.cs`

@@ -9,8 +9,8 @@
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
     "criticalSymbols": 1040,
-    "criticalSymbolsWithTestReferences": 991,
-    "criticalSymbolsWithoutTestReferences": 49,
+    "criticalSymbolsWithTestReferences": 997,
+    "criticalSymbolsWithoutTestReferences": 43,
     "debtMarkers": 12
   },
   "hotspots": [
@@ -22581,8 +22581,8 @@
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.28
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQuery.cs",
@@ -32589,8 +32589,8 @@
       "nonBlankLines": 19,
       "decisionPoints": 3,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 11.88
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.88
     },
     {
       "path": "Modules/Export/Application/Services/CsvFieldEscaper.cs",
@@ -36885,8 +36885,8 @@
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommand.cs",
@@ -48629,8 +48629,8 @@
       "nonBlankLines": 26,
       "decisionPoints": 7,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 18.02
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.02
     },
     {
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
@@ -48957,8 +48957,8 @@
       "nonBlankLines": 15,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.8
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.8
     },
     {
       "path": "Modules/Users/Application/Queries/GetUsersForAdministration/GetUsersForAdministrationQueryHandler.cs",
@@ -50765,8 +50765,8 @@
       "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.54
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.54
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UsersController.cs",
@@ -56651,9 +56651,11 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommandHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/BrowserSessionServiceTests.Boundaries.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -57862,8 +57864,9 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Email/Commands/QueueSubscriptionCancellationEmail/QueueSubscriptionCancellationEmailCommandHandler.cs",
       "line": 8,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/SubscriptionCancellationEmailTests.Boundaries.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/SubscriptionCancellationEmailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57899,9 +57902,10 @@
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingAttributionCoverageTests.cs",
+        "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -57912,8 +57916,9 @@
       "role": "CommandHandler",
       "path": "Modules/Marketing/Application/Commands/RecordPremiumConversion/RecordPremiumConversionCommandHandler.cs",
       "line": 11,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConsentFailureTests.cs",
         "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingConversionRecorderTests.cs",
         "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/MarketingDependencyInjectionTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/CrossModuleRequestBoundaryTests.cs"
@@ -58259,8 +58264,9 @@
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/ScheduleAdminTestNotification/ScheduleAdminTestNotificationCommandHandler.cs",
       "line": 13,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationFailureTests.cs",
         "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/ScheduleAdminTestNotificationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -58310,8 +58316,9 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/SendCancellationConfirmations/SendCancellationConfirmationsCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailBoundaries.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationEmailTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.IntegrationTests/Integration/SharedBillingContextIntegrationTests.CancellationEmail.cs"
       ],
@@ -58534,8 +58541,9 @@
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/SubmitCancellationFeedback/SubmitCancellationFeedbackCommandHandler.cs",
       "line": 9,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationBoundaryTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.CancellationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -58932,9 +58940,11 @@
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdatePrivacyConsent/UpdatePrivacyConsentCommandHandler.cs",
       "line": 11,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/PrivacyConsentHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -59270,8 +59280,9 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Controllers/AdminBillingController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminBillingCancellationControllerTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -59701,9 +59712,11 @@
       "role": "Controller",
       "path": "Modules/Billing/Presentation/Controllers/BillingController.cs",
       "line": 20,
-      "testReferenceCount": 5,
+      "testReferenceCount": 7,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminBillingCancellationControllerTests.cs",
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingCancellationControllerTests.cs",
         "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
@@ -60101,11 +60114,12 @@
       "role": "Controller",
       "path": "Modules/Fasting/Presentation/Features/Logs/LogsController.cs",
       "line": 22,
-      "testReferenceCount": 8,
+      "testReferenceCount": 9,
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
         "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/OpenApiSdkExportTests.cs",
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/ClientTelemetryRouteTests.cs",
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/LogsControllerTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
@@ -60589,9 +60603,11 @@
       "role": "Controller",
       "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
       "line": 16,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserPrivacyControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -60942,9 +60958,11 @@
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/PersonalDataExportTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -61036,9 +61054,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBillingCancellations/GetAdminBillingCancellationsQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/AdminBillingCancellationQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -61685,8 +61705,9 @@
       "role": "QueryHandler",
       "path": "Modules/Statistics/Application/Queries/GetDiaryStatistics/GetDiaryStatisticsQueryHandler.cs",
       "line": 14,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/DiaryStatisticsQueryTests.DatedProfile.cs",
         "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/DiaryStatisticsQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -61922,8 +61943,9 @@
       "role": "QueryHandler",
       "path": "Modules/Gamification/Application/Queries/GetGamification/GetGamificationQueryHandler.cs",
       "line": 19,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.DatedProfile.cs",
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/GamificationFeatureTests.cs",
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/InvalidCalendarZoneTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
@@ -62809,9 +62831,11 @@
       "role": "QueryHandler",
       "path": "Modules/Users/Application/Queries/GetUserPrivacy/GetUserPrivacyQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/PrivacyConsentHandlerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -62961,9 +62985,10 @@
       "role": "QueryHandler",
       "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "line": 22,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/InvalidCalendarZoneTests.cs",
+        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.DatedProfile.cs",
         "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.PeriodBounds.cs",
         "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckInFeatureTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
@@ -63476,10 +63501,11 @@
       "role": "QueryHandler",
       "path": "Modules/Hydration/Application/Queries/ReadRecentHydrationEntries/ReadRecentHydrationEntriesQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardFeatureTests.cs",
-        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs"
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/DashboardSnapshotBuilderTests.cs",
+        "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/ReadRecentHydrationEntriesTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -66248,9 +66274,10 @@
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramOidcTokenValidator.cs",
       "line": 15,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcProviderTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcTokenValidatorTests.Boundaries.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramOidcTokenValidatorTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/WorkflowSemanticBoundaryTests.cs"
       ],

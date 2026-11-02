@@ -29,6 +29,8 @@ public sealed class UserGoalHistoryTests {
         Assert.Equal(new DateOnly(2026, 10, 30), history[3].EffectiveFrom);
         Assert.Equal(2500, history[3].DailyCalorieTarget);
         Assert.Equal(120, history[3].ProteinTarget);
+        Assert.NotEqual(Guid.Empty, history[3].Id.Value);
+        Assert.Equal(new DateTime(2026, 10, 30, 12, 0, 0, DateTimeKind.Utc), history[3].RecordedAtUtc);
     }
 
     [Theory]

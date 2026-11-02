@@ -72,6 +72,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportPeriodBoundaryTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/ExportValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/PersonalDataExportTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Time/UtcDateNormalizerTests.cs`
 - [behavioral-or-text-match] `Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs`
