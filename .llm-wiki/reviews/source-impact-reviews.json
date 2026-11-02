@@ -882,14 +882,14 @@
         },
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "b7b7e45de033fd6f3ad4dd008e1e2850eb600b00136141ef6e5e4e7751140242",
-          "reviewReason": "Reviewed package.json: only adds the streamed EN/RU landing layout browser regression and invokes it after the existing public production build in verify. Chrome visible task-owned interactive QA, viewport, console, interaction and screenshot requirements remain accurate; no browser/session or visual-evidence workflow changes."
+          "sha256": "bf9457b3f5408e8a565667c17be130cac3766939a6369096f4b53631526bfa10",
+          "reviewReason": "Reviewed dependency updates incorporated from current origin/master: package scripts, Playwright smoke commands and visual-qa entrypoints are unchanged; the updates change Angular, tooling, translation-loader and quality-tool dependency versions. The page describes browser identity, interaction, console and screenshot evidence rather than pinning package versions, so its guidance remains accurate. Full browser/build validation remains in CI and this receipt does not claim a new visual browser pass."
         }
       ],
-      "reason": "Reviewed package.json: only adds the streamed EN/RU landing layout browser regression and invokes it after the existing public production build in verify. Chrome visible task-owned interactive QA, viewport, console, interaction and screenshot requirements remain accurate; no browser/session or visual-evidence workflow changes.",
+      "reason": "Reviewed dependency updates incorporated from current origin/master: package scripts, Playwright smoke commands and visual-qa entrypoints are unchanged; the updates change Angular, tooling, translation-loader and quality-tool dependency versions. The page describes browser identity, interaction, console and screenshot evidence rather than pinning package versions, so its guidance remains accurate. Full browser/build validation remains in CI and this receipt does not claim a new visual browser pass.",
       "baseRef": "HEAD",
-      "gitHead": "ada5396d177feb866d07dddd0740164f0e137142",
-      "reviewedAtUtc": "2026-11-02T03:48:42.5373861Z"
+      "gitHead": "93a9413470268df9c4d2e886cb4240afd26ec704",
+      "reviewedAtUtc": "2026-11-02T08:11:06.2911491Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
