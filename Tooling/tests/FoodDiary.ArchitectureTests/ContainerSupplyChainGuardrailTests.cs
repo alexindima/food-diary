@@ -99,21 +99,22 @@ public sealed class ContainerSupplyChainGuardrailTests {
     }
 
     [Fact]
-    public void DeployWorkflow_PreparesNginxLogsAndVerifiesReadinessAfterRecreate() {
+    public void DeployWorkflow_PreparesNginxLogsAndVerifiesReadinessAfterSwitch() {
         string workflow = ReadDeployWorkflow();
 
         int logOwnership = workflow.IndexOf(
             "find /var/log/nginx -maxdepth 1 -type f -exec chown root {} +",
             StringComparison.Ordinal);
-        int recreate = workflow.IndexOf(
-            "docker compose --profile full up -d --force-recreate --no-deps nginx",
+        int handover = workflow.IndexOf(
+            "python3 scripts/deploy/blue_green.py switch",
             StringComparison.Ordinal);
         int readiness = workflow.IndexOf("Waiting for Nginx readiness", StringComparison.Ordinal);
 
         Assert.Multiple(
             () => Assert.True(logOwnership >= 0, "Nginx host-log ownership preparation is missing."),
-            () => Assert.True(recreate > logOwnership, "Nginx log permissions must be prepared before the container is recreated."),
-            () => Assert.True(readiness > recreate, "Nginx readiness must be checked after the container is recreated."),
+            () => Assert.True(handover > logOwnership, "Nginx log permissions must be prepared before traffic is switched."),
+            () => Assert.True(readiness > handover, "Nginx readiness must be checked after traffic is switched."),
+            () => Assert.DoesNotContain("docker compose --profile full up -d --force-recreate --no-deps nginx", workflow, StringComparison.Ordinal),
             () => Assert.Contains("--resolve fooddiary.club:443:127.0.0.1", workflow, StringComparison.Ordinal),
             () => Assert.Contains("docker compose logs --tail=100 --timestamps nginx", workflow, StringComparison.Ordinal));
     }
@@ -161,7 +162,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
     public void DeployWorkflow_ReviewsRotationPolicyBeforeStoppingWriters() {
         string workflow = ReadDeployWorkflow();
         int install = workflow.IndexOf("python3 scripts/deploy/install_nginx_logrotate.py", StringComparison.Ordinal);
-        int stop = workflow.IndexOf("stop --timeout 60 api telegram-bot job-manager", StringComparison.Ordinal);
+        int stop = workflow.IndexOf("stop --timeout 60 api api-green telegram-bot job-manager", StringComparison.Ordinal);
 
         Assert.Multiple(
             () => Assert.True(install >= 0, "Managed Nginx rotation policy installation is missing."),

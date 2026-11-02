@@ -687,8 +687,11 @@ try {
 }
 
 $runtime = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/runtime-topology.json') -Raw | ConvertFrom-Json
-Assert-Wiki ($runtime.summary.composeServices -eq 18) 'Runtime topology did not isolate the 18 declared Compose services, including client-ssr.'
+Assert-Wiki ($runtime.summary.composeServices -eq 20) 'Runtime topology did not isolate the 20 declared Compose services, including both API/SSR slots.'
 Assert-Wiki (@($runtime.composeServices | Where-Object name -eq 'client-ssr').Count -eq 1) 'Runtime topology did not extract the client-ssr Compose service exactly once.'
+Assert-Wiki (@($runtime.composeServices | Where-Object name -eq 'api-green').Count -eq 1) 'Runtime topology did not extract the green API slot exactly once.'
+$greenSsrCompose = @($runtime.composeServices | Where-Object name -eq 'client-ssr-green')
+Assert-Wiki ($greenSsrCompose.Count -eq 1 -and @($greenSsrCompose[0].dependsOn) -contains 'api-green' -and @($greenSsrCompose[0].dependsOn) -notcontains 'api') 'Runtime topology did not keep the green SSR dependency isolated to its matching API slot.'
 $clientCompose = @($runtime.composeServices | Where-Object name -eq 'client')
 Assert-Wiki ($clientCompose.Count -eq 1 -and @($clientCompose[0].dependsOn) -contains 'client-ssr') 'Runtime topology omitted the client dependency on client-ssr.'
 Assert-Wiki (@($runtime.composeServices | Where-Object name -eq 'postgres-data').Count -eq 0) 'Runtime topology misclassified a named volume as a Compose service.'

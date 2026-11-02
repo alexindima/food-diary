@@ -18,7 +18,10 @@ $expected = @{
     # The baseline assertion now executes the facade behavior regression rather
     # than matching the formatting of its Capture invocation. Scope, explicit
     # overrides and session continuity are tested; all 336 assertions remain.
-    Core = @{ count = 336; hash = 'bcf878cddff87e24772fdc4f6adf146820f7483daecf31b312e1b9f3109e6f53' }
+    # ADR0060 adds two Compose slots. Retain all336 prior Core assertions,
+    # update the exact service count, and add green API uniqueness plus the
+    # green SSR's matching API dependency; no coverage or shard was removed.
+    Core = @{ count = 338; hash = '7d594d862b4ca5a1eecfc6f21ba2dc28af3021e0cff29e03dfdcefb06105fe00' }
     # The lease assertion requires fresh-orphan recovery with unchanged stable
     # lock identity; its old unlink requirement is replaced. Counts remain frozen.
     # CI repair retains tamper rejection and adds separate stale-metadata and

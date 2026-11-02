@@ -992,19 +992,19 @@
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
-          "sha256": "e395bc619baf10eaff6a7121ecc1658ad048134f6ae262b753d2e72cad07171f",
-          "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
+          "sha256": "43a2338fbc2f1c28d5b9ae159dfe5263000ee3cdd1bdaec9ceabefd366e73f96",
+          "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTools.ps1",
-          "sha256": "ad99efc3bc1c3ffecaef237e13a518b6604565dcdcaf51639d29a38c908511c3",
-          "reviewReason": "Reviewed the index-pipeline full/focused audit contract against both changed sources. Core now executes the existing independent facade regression for retained scope, explicit overrides and session continuity instead of matching an obsolete Capture call spelling. All 336 Core and 718 total audit assertions, isolated snapshot partitions, required CI shards and failure aggregation remain; the inventory hash was intentionally refreshed without dropping an assertion. The actual Core shard passed locally after the observed CI assertion failure. No generator selection, query semantics or gate was weakened."
+          "sha256": "022a7fceb635873cc33c06a7ed990cac61884d36c74eb7eab5b0e9f916c88bd1",
+          "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         }
       ],
-      "reason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate.",
+      "reason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:34.3771482Z"
+      "gitHead": "2a8965bd8f8dc8020c804d82c1aa755dcb02fb1a",
+      "reviewedAtUtc": "2026-11-02T08:27:45.5197742Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
