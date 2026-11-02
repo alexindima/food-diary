@@ -82,6 +82,7 @@ internal static class TelegramMealJourney {
         Assert.Equal(HttpStatusCode.OK, registration.StatusCode);
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
+        await client.GrantHealthTrackingConsentAsync();
         using HttpResponseMessage create = await client.PostAsJsonAsync(route, new { OccurredAtUtc = occurredAt });
         Assert.Equal(HttpStatusCode.NotFound, create.StatusCode);
         using HttpResponseMessage undo = await client.PostAsync($"{route}/undo", content: null);
