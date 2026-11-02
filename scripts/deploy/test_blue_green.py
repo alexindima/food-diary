@@ -244,6 +244,65 @@ class BlueGreenTests(unittest.TestCase):
         self.assertEqual("maintenance", self.host.plan())
         self.assertEqual("blue", self.host.load()["candidate"])
 
+    def failed_ready_bootstrap(self):
+        self.host.state_path.unlink()
+        self.assertEqual("maintenance", self.host.plan())
+        self.host.start("api")
+        failed = self.host.load()
+        self.host.environment.update(DEPLOY_COMMIT_SHA="d" * 40, DEPLOY_IMAGE_TAG="sha-" + "d" * 40)
+        return failed
+
+    def test_verified_first_bootstrap_rolls_forward_in_maintenance_and_preserves_failed_plan(self):
+        failed = self.failed_ready_bootstrap()
+        self.assertEqual("maintenance", self.host.plan())
+        retry = self.host.load()
+        self.assertEqual(failed, retry["recoveredFrom"])
+        self.assertEqual("d" * 40, retry["sha"])
+        self.assertEqual("blue", retry["candidate"])
+        self.assertFalse(self.commands("start"))
+        self.assertFalse(self.commands("stop"))
+        self.assertEqual(SHA, self.host.versions[5000])
+        self.assertFalse(self.host.state_path.exists())
+
+    def test_first_bootstrap_retry_rejects_incompatible_inputs_without_replacing_plan(self):
+        self.failed_ready_bootstrap()
+        original = self.host.plan_path.read_bytes()
+        cases = (
+            (lambda: self.host.environment.update(DEPLOY_API_CONTRACT_SHA="e" * 40),
+             lambda: self.host.environment.update(DEPLOY_API_CONTRACT_SHA=CONTRACT_SHA)),
+            (lambda: setattr(self.host, "inventory", "applied " + BASELINE + "\npending " + NEXT + "\n"),
+             lambda: setattr(self.host, "inventory", "applied " + BASELINE + "\n")),
+            (lambda: self.host.versions.update({5000: OLD_SHA}),
+             lambda: self.host.versions.update({5000: SHA})),
+            (lambda: deployment.write_atomic(self.host.route_path, deployment.routes("green")),
+             lambda: deployment.write_atomic(self.host.route_path, deployment.routes("blue"))),
+            (lambda: self.host.config["services"]["api-green"]["ports"][0].update(published="5002"),
+             lambda: self.host.config["services"]["api-green"]["ports"][0].update(published="5001")),
+            (lambda: self.host.services.discard("api"), lambda: self.host.services.add("api")),
+        )
+        for index, (change, restore) in enumerate(cases):
+            with self.subTest(index=index):
+                change()
+                with self.assertRaisesRegex(deployment.DeploymentError, "Bootstrap forward recovery"):
+                    self.host.plan()
+                self.assertEqual(original, self.host.plan_path.read_bytes())
+                self.assertFalse(self.commands("start"))
+                self.assertFalse(self.commands("stop"))
+                restore()
+        self.host.applied.append(NEXT)
+        with self.assertRaisesRegex(deployment.DeploymentError, "unknown"):
+            self.host.plan()
+        self.assertEqual(original, self.host.plan_path.read_bytes())
+
+    def test_managed_maintenance_failure_after_api_readiness_still_requires_explicit_recovery(self):
+        self.host.plan("maintenance")
+        self.host.start("api")
+        original = self.host.plan_path.read_bytes()
+        with self.assertRaisesRegex(deployment.DeploymentError, "migration may have run"):
+            self.host.plan()
+        self.assertEqual(original, self.host.plan_path.read_bytes())
+        self.assertFalse(self.commands("start"))
+
     def test_changed_or_unknown_api_contract_selects_maintenance(self):
         for contract in (None, "d" * 40):
             with self.subTest(contract=contract):

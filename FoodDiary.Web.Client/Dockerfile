@@ -17,8 +17,10 @@ RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin && npm r
 FROM nginx:alpine@sha256:785835ea65db4bba6f021acc0f3be91b0fef76a53fe41f8588c6698d2aed0606
 
 # The same immutable client image serves static assets and the separate recipe SSR service.
-RUN apk add --no-cache libstdc++
+RUN apk add --no-cache libstdc++ libatomic
 COPY --from=build /usr/local/bin/node /usr/local/bin/node
+# Fail the image build if the copied Node binary lacks a runtime dependency.
+RUN /usr/local/bin/node --version
 COPY --from=build /app/dist/server /app/server
 COPY --from=build /app/dist/browser /app/browser
 

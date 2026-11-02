@@ -44,6 +44,8 @@ Both APIs share the existing Redis and DataProtection volume. Job workers keep
 their single service instances and are replaced after candidate API readiness.
 Preflight rejects drift between the explicit slot configurations, except for
 validated bindings, profiles and matching SSR origins/dependencies.
+Private host overrides must apply shared API environment and host aliases to
+both `api` and `api-green`; API-only overrides deliberately fail this check.
 
 `scripts/deploy/blue_green.py` warms and checks the candidate API's exact SHA/tag,
 then releases the serialized auxiliary initializer barrier. Existing atomic
@@ -86,6 +88,19 @@ running primary writers. After `migration-started`, automatic recovery never
 restarts old images. Inspect the database and pinned images, complete a forward
 recovery or restore the verified backup with matching images. See
 [migration safety](BACKEND_MIGRATION_SAFETY.md).
+
+There is one narrow forward recovery for the first installation: if its saved
+plan reached `api-ready`, no completed state exists, and that exact API SHA/tag
+still serves from the blue service, a later release may restart maintenance.
+The candidate must have identical applied migration IDs, the same API contract
+fingerprint, identical ports and unchanged blue routing. The new private plan
+retains the complete failed plan in `recoveredFrom`. Normal verified backup and
+target-readiness checks still run; pre-migration images are never restarted.
+Other partial maintenance releases retain explicit recovery requirements.
+
+The final client runtime installs the shared libraries needed by its copied
+Node binary and executes `node --version` during image construction. A missing
+linker dependency therefore fails image publication before SSR is replaced.
 
 The next planner recovers an uncommitted migration-free handover first. For a
 stopped controller, inspect the private plan, current container identities,

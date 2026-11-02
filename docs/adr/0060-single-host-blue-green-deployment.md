@@ -36,6 +36,13 @@ workers before verified backup and migration. Never restart old images after a
 migration attempt automatically. Online expand/contract migration is outside this
 decision. Routine releases still take an online, verified backup.
 
+An interrupted first installation can roll forward after `api-ready` when no
+completed state exists. Require the exact failed-plan API SHA/tag on the blue
+service, unchanged routing/ports, identical migration inventory and the same API
+contract. Preserve the failed plan in `recoveredFrom` and re-enter the ordinary
+maintenance backup/start sequence. This never restarts pre-migration images;
+other post-migration failures still require explicit recovery.
+
 SignalR negotiation returns an HttpOnly, Secure, SameSite=None routing cookie for
 both ordinary browsers and the embedded Telegram client. It grants no authentication. During
 handover that cookie routes transport requests to their original process. After

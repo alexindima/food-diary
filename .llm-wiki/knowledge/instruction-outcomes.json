@@ -2262,6 +2262,47 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "5a63c844f1d980d4c31e89f615102df09dbf90fff6ded4e47fa5752d3a055d78",
       "eventHash": "106958095d318352998cae36a976be3615f8a5c007f2f3b59203afcb3463d548"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "d9f5242b09264784bf2a016939c4e173",
+      "workspace": ".artifacts/llm-wiki/tasks/ssr-runtime-recovery",
+      "recordedAtUtc": "2026-11-02T09:42:31.6193658Z",
+      "completionFingerprint": "c383fcb6f58548a9e50f226882a3987f92e826316c94aa3dd70406bfca887d3e",
+      "retrospectiveHash": "4f300dd813265fc6f72a45b196f3c347df7f4d6cdc4117b42fea2a40d8b2fb6f",
+      "instructionSetFingerprint": "8456fc6d5282cbab400f2b6a359b5154a64763c758e3c7a900c0aa33fd64e497",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "FoodDiary.Web.Client/AGENTS.md",
+          "fingerprint": "7e06a4d1f85eb498a9c94f4a11a4b7bdeec035ea477e419b104a608ba95712f8"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "low",
+        "complexityScore": 15,
+        "complexityBandUpperBound": 34,
+        "cohortKey": "low|complexity<=34",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 95.0,
+        "quality": "excellent",
+        "readinessScore": 100.0,
+        "confidenceScore": 90.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 100.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": true,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "106958095d318352998cae36a976be3615f8a5c007f2f3b59203afcb3463d548",
+      "eventHash": "88f5b3997e68e5c2647aea7d29b966942c54b80b3639ca245339e176eee1780b"
     }
   ]
 }

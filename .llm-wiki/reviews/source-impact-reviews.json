@@ -1013,14 +1013,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "0b909f5370c69584914f709b4b65423bbf4545ea96d2db77fbe20b9d4f1f23bd",
-          "reviewReason": "Reviewed merged instruction outcome registry and its owning validator: all master events, hashes and observations are preserved; the branch-only completed blue-green observation retains its event ID, completion fingerprint, timestamps, sources and outcome values and is appended using the canonical payload hash with the current master chain parent. Registry verification passed. No thresholds, cohort rules, model routing, attribution logic or promotion behavior changed; page guidance remains accurate."
+          "sha256": "57ee18cd50d638fc2a24dc0a8808a1b49cc76f0039d0ef3e83e995ca0a361efa",
+          "reviewReason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed merged instruction outcome registry and its owning validator: all master events, hashes and observations are preserved; the branch-only completed blue-green observation retains its event ID, completion fingerprint, timestamps, sources and outcome values and is appended using the canonical payload hash with the current master chain parent. Registry verification passed. No thresholds, cohort rules, model routing, attribution logic or promotion behavior changed; page guidance remains accurate.",
+      "reason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:47:33.1806908Z"
+      "gitHead": "d8adb3e3cfc69ff7eb9b4be1ed49c4f5f24122de",
+      "reviewedAtUtc": "2026-11-02T09:43:14.4866598Z"
     },
     {
       "pageId": "workflow-integration-scan",

@@ -213,6 +213,7 @@ class Deployment:
             raise DeploymentError("Deployment requires an exact commit SHA and matching image tag.")
         if not re.fullmatch(r"[0-9a-f]{40}", contract_sha):
             raise DeploymentError("Deployment requires the API contract tree fingerprint from the authorized source revision.")
+        bootstrap_recovery = None
         if self.plan_path.exists():
             previous = self.load()
             if previous["phase"] == "retiring":
@@ -220,7 +221,15 @@ class Deployment:
                 # idempotently completing an interrupted retirement/state write.
                 self.finish()
             elif previous["phase"] != "complete":
-                self.abort(previous)
+                if (previous["mode"] == "maintenance" and previous["phase"] == "api-ready"
+                        and previous["previousState"] is None and not self.state_path.exists()
+                        and previous["active"] == previous["candidate"] == "blue"):
+                    # A verified new API already owns the migrated database.
+                    # Only a compatible forward maintenance retry is eligible;
+                    # do not restart pre-migration images or claim completion.
+                    bootstrap_recovery = previous
+                else:
+                    self.abort(previous)
         configuration = json.loads(self.run("docker", "compose", "--profile", "*", "config", "--format", "json").stdout)
         ports = self.ports(configuration)
         target = self.compose("run", "-T", "--rm", "--no-deps", "db-init", "list").stdout
@@ -228,6 +237,13 @@ class Deployment:
                                'exec psql -X -qAt -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" "$POSTGRES_DB"',
                                input=HISTORY_SQL).stdout
         mode = migration_mode(target, json.loads(history))
+        if bootstrap_recovery:
+            if (mode != "overlap" or bootstrap_recovery["apiContractSha"] != contract_sha
+                    or bootstrap_recovery["ports"] != ports
+                    or not self.running("api")
+                    or not self.healthy_api(ports["blue"][0], bootstrap_recovery["sha"], bootstrap_recovery["tag"])
+                    or not self.route_path.exists() or self.route_path.read_text() != routes("blue", ports)):
+                raise DeploymentError("Bootstrap forward recovery requires unchanged migrations, contract and routing, and its exact healthy API.")
         previous_state = json.loads(self.state_path.read_text()) if self.state_path.exists() else None
         active = previous_state["active"] if previous_state else "blue"
         if active not in SLOTS:
@@ -264,6 +280,8 @@ class Deployment:
         plan = dict(schemaVersion=1, mode=mode, active=active, candidate=candidate, ports=ports, sha=sha, tag=tag, apiContractSha=contract_sha,
                     phase="planned", previousState=previous_state,
                     running=running, started=[], workers=[])
+        if bootstrap_recovery:
+            plan["recoveredFrom"] = bootstrap_recovery
         self.save(plan)
         if not self.route_path.exists():
             write_atomic(self.route_path, routes(active, ports), 0o644)
