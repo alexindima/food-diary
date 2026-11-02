@@ -51,6 +51,13 @@ both `api` and `api-green`; API-only overrides deliberately fail this check.
 then releases the serialized auxiliary initializer barrier. Existing atomic
 static publication runs before candidate SSR starts. SSR health and `/explore`
 warmup must pass before Nginx can route requests to it.
+The `/explore` cold render has a separate 30-second request timeout and a
+90-second retry window for timeouts and non-200 responses, both at SSR startup
+and before a switch or interrupted-switch retry. An in-flight request can finish
+after that window, so the total wait is bounded by 120 seconds. The controller
+logs successful warmup duration and reports a specific SSR warmup failure when
+the window expires. Ordinary readiness/version probes retain their five-second
+request timeout; redirects remain rejected and only HTTP 200 permits handover.
 
 The generated `nginx/sites-enabled/00-fooddiary-upstreams.conf` is atomically
 replaced in the existing directory mount. Its checked-in blue default supports
