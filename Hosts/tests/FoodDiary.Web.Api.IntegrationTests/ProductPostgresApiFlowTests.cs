@@ -413,7 +413,9 @@ public sealed class ProductPostgresApiFlowTests(PostgresApiWebApplicationFactory
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
-        return AuthenticationResponseCookies.ReadBrowserSession(response);
+        string browserSession = AuthenticationResponseCookies.ReadBrowserSession(response);
+        await client.GrantHealthTrackingConsentAsync(browserSession);
+        return browserSession;
     }
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {

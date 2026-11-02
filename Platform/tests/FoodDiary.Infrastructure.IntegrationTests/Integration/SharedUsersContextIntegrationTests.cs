@@ -18,6 +18,8 @@ using FoodDiary.Modules.Users.Application.Abstractions.Common;
 using FoodDiary.Modules.Users.Contracts.Common;
 using FoodDiary.Modules.BodyMetrics.Domain.Entities.Tracking;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Users.Domain.Contracts.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
@@ -46,8 +48,9 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         FoodDiaryDbContext shared = provider.GetRequiredService<FoodDiaryDbContext>();
         UsersDbContext owned = provider.GetRequiredService<UsersDbContext>();
         shared.WeightEntries.Add(WeightEntry.Create(user.Id, DateTime.UtcNow, 70));
-        Assert.Equal(9, owned.Model.GetEntityTypes().Count());
+        Assert.Equal(10, owned.Model.GetEntityTypes().Count());
         Assert.NotNull(owned.Model.FindEntityType(typeof(UserGoalRevision)));
+        Assert.NotNull(owned.Model.FindEntityType(typeof(UserPrivacyConsentEvent)));
         Assert.Same(shared.Database.GetDbConnection(), owned.Database.GetDbConnection());
         Assert.Empty(shared.ChangeTracker.Entries<User>());
         Assert.Empty(shared.ChangeTracker.Entries<UserGoalRevision>());
@@ -122,6 +125,7 @@ public sealed class SharedUsersContextIntegrationTests(PostgresDatabaseFixture d
         var user = User.Create("transaction-read@example.com", "hash");
         user.LinkTelegram(7654321);
         user.LinkGoogleIdentity("test-issuer", "test-subject");
+        user.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking, granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
         UserRepository repository = provider.GetRequiredService<UserRepository>();
         await repository.AddAsync(user);
         await provider.GetRequiredService<IUserRoleCatalogService>().EnsureRolesByNamesAsync(["transaction-reader"]);

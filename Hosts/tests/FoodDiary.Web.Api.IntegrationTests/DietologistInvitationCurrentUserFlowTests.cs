@@ -294,6 +294,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
+        await client.GrantHealthTrackingConsentAsync();
 
         Assert.NotNull(authPayload.User);
         var registeredUser = new AuthenticatedUser(client, email, authPayload.User.Id);

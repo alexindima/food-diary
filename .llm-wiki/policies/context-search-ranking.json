@@ -2050,6 +2050,22 @@
   ],
   "structuralRoleBoosts": [
     {
+      "id": "user-aggregate-repository-role",
+      "queryTerms": ["user", "entity", "repository"],
+      "minimumMatches": 3,
+      "excludedQueryTerms": ["login", "session", "event", "audit"],
+      "candidateTerms": ["userrepository"],
+      "minimumCandidateMatches": 1,
+      "minimumQueryIdentityMatches": 2,
+      "score": 80,
+      "identityScope": "file",
+      "affinityDirectOnly": false,
+      "changeTypes": ["Backend", "Database", "Any"],
+      "recordTypes": ["code"],
+      "pathSuffixes": ["/UserRepository.cs"],
+      "excludeTests": true
+    },
+    {
       "id": "ai-prompt-provider",
       "queryTerms": ["ai", "prompt", "provider"],
       "minimumMatches": 2,

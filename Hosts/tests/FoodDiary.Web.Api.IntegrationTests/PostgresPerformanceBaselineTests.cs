@@ -195,6 +195,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
+        await client.GrantHealthTrackingConsentAsync();
         return payload;
     }
 

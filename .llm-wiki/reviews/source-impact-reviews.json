@@ -350,8 +350,8 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
-          "sha256": "df0344366d4a1f7fa61d713d7c8d7cee7f93466f88394c62f2c71286c2da1a2d",
-          "reviewReason": "PresentationBoundaryIntegrationTests now targets the dedicated PasswordLogin budget. Routes, status-code declarations, success DTOs and the existing 429 envelope are preserved; the new result filter strips internal retry metadata into the header. Existing OpenAPI snapshots remain the verification boundary."
+          "sha256": "fba5ad464e6976a17c625076473cfde7f81b5902f5c4097076342f335135e29f",
+          "reviewReason": "Reviewed the existing compatibility workflow against the final diff: PresentationBoundaryIntegrationTests only grants explicit current health consent in its positive registration fixture; contract generation, comparison baselines, acceptance policy and endpoint assertions are unchanged. All five real-host OpenAPI exports pass and user/admin/bot live SDK checks pass."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
@@ -359,10 +359,10 @@
           "reviewReason": "Reviewed the full OpenAPI snapshot diff: POST auth/session adds only documented 204; existing 200 schema and rejection statuses remain. The generic compatibility workflow still correctly classifies response additions as additive and requires behavioral review. No policy or acceptance exception is changed."
         }
       ],
-      "reason": "Reviewed the full OpenAPI snapshot diff: POST auth/session adds only documented 204; existing 200 schema and rejection statuses remain. The generic compatibility workflow still correctly classifies response additions as additive and requires behavioral review. No policy or acceptance exception is changed.",
+      "reason": "Reviewed the existing compatibility workflow against the final diff: PresentationBoundaryIntegrationTests only grants explicit current health consent in its positive registration fixture; contract generation, comparison baselines, acceptance policy and endpoint assertions are unchanged. All five real-host OpenAPI exports pass and user/admin/bot live SDK checks pass.",
       "baseRef": "HEAD",
-      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
-      "reviewedAtUtc": "2026-11-02T02:41:43.7232373Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:14:40.5315163Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -371,8 +371,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "85cb3b1447ba4fef39f0d11c35c44dd1aa4561d2a15086ce01206d7b42d42fca",
-          "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
+          "sha256": "632c9213a4485fd6b3e4c68038c28656fffc9a41a3d94f6425632c83cc55a4e5",
+          "reviewReason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -390,10 +390,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions.",
+      "reason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-02T01:30:09.7869233Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:22:23.9754527Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -453,9 +453,14 @@
       "pageSha256": "d579b45acf7f945aed0470c1531b53e2f7f337fbf9f77c500471f2108c1e1e30",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "82d5e6e0f6ff13fd851deaa40735302d02173556c70dc7d202616be1c4cb2080",
+          "reviewReason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query."
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
-          "reviewReason": "Reviewed CI648ed5ca6 retrieval failures and the minimal existing AI prompt-provider role affinity correction250to450. Complete unchanged SQL/.NET parity retrieval corpora pass, as do the original image migration expectations after giving the unshipped Billing email migration its explicit owned purpose name. Queries, expected paths, thresholds, indexes and writer/reader boundaries are unchanged; discovery guidance remains accurate."
+          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
+          "reviewReason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query."
         },
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
@@ -498,10 +503,10 @@
           "reviewReason": "Reviewed the await/disposal cleanup and the existing AI prompt provider ranking hint. SQL, cancellation, disposal scope, ranking algorithms and read-only/freshness boundaries are unchanged. The existing hint now uses the supported file structural-role mechanism and excludes test files instead of depending on a ConfigureAwait lexical match. Its score, rule count, frozen expected paths and evaluation thresholds remain unchanged; holdout top1=0.95 and MRR=0.9708. Workflow guidance remains current."
         }
       ],
-      "reason": "Reviewed SQLite ownership queries, fast test planning and facade preparation. Declared existing style resources replace invented SCSS names, directory inputs stay scoped, and template/CSS companion tests plus .NET ranking rejection tests are selected explicitly. Query freshness, sole-writer ownership and bounded graph contracts remain unchanged.",
+      "reason": "Reviewed current user and login-event repository owners. A shared declarative role now prefers exact UserRepository for all three user/entity/repository concepts while excluding login/session/event/audit queries. Existing frozen control moves from MRR0.9444 to0.9611 without changing queries, baselines or thresholds; explicit login-event query still ranks its owner first. Personal-data export remains an accepted legitimate owner for the ambiguous archive query.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:21.6297389Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:22:24.7624321Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -1359,8 +1364,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d81a6303e75015135f9952672ac81c8f53cde02391137cbd51949dde7fcf76c1",
-          "reviewReason": "Reviewed the regenerated runtime topology diff against the final Luna defaults and browser guest-session change. Only the source fingerprint changes; service, HTTP-client and hosted-worker topology is identical. The documented topology and rollout workflow remain accurate."
+          "sha256": "83c415a6e9d1eeb20b9678de58bcf794ae304408e963afd870e20f5b4ef9ac9b",
+          "reviewReason": "Reviewed the regenerated topology: only the source fingerprint changes after test-fixture consent setup; service, worker, client and recurring-job inventory and behavior declarations are unchanged. Runtime evidence remains separate from source declarations."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1373,10 +1378,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the regenerated runtime topology diff against the final Luna defaults and browser guest-session change. Only the source fingerprint changes; service, HTTP-client and hosted-worker topology is identical. The documented topology and rollout workflow remain accurate.",
+      "reason": "Reviewed the regenerated topology: only the source fingerprint changes after test-fixture consent setup; service, worker, client and recurring-job inventory and behavior declarations are unchanged. Runtime evidence remains separate from source declarations.",
       "baseRef": "HEAD",
-      "gitHead": "a8913d4b3ae2a28c5cbc5f7e4aed5115ead77016",
-      "reviewedAtUtc": "2026-11-02T02:58:09.9215689Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:22:24.4290134Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1385,8 +1390,8 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "65ccf88cb9d6a80b320b86b4f178e88472418149aeeb7aae96595cddfe229e26",
-          "reviewReason": "The existing AI prompt-provider role weight changed within the read-only discovery ranker. No security control, query scope, trust threshold, privacy classification or authorization changed. Complete retrieval/parity regressions pass; this workflow still correctly treats navigation results as leads rather than security verdicts."
+          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
+          "reviewReason": "Reviewed shared ranking policy change: it only resolves user aggregate repository intent, excludes login/session/event/audit wording and adds no security verdict or control. Curated security discovery and the distinction between navigation, executed tests and runtime proof remain unchanged."
         },
         {
           "path": ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
@@ -1394,10 +1399,10 @@
           "reviewReason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force."
         }
       ],
-      "reason": "Reviewed quality publication and source integrity behavior. Atomic replacement preserves complete JSON and bounded sharing retry without changing sensitive-data candidates or asserting security proof. Existing source hashing, command-family restrictions and read-only snapshot mutation rejection remain in force.",
+      "reason": "Reviewed shared ranking policy change: it only resolves user aggregate repository intent, excludes login/session/event/audit wording and adds no security verdict or control. Curated security discovery and the distinction between navigation, executed tests and runtime proof remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:23.9783721Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:22:25.6098193Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1690,18 +1695,18 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "89788c9ef43cfbeb288d55f3c71bdbd9f04f4114595d86ed56bbc770af461e4b",
+      "pageSha256": "00d106fb67b806c5902146dfe5e47c4fe16fdef4ae655cc62d619ccf727df5c7",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1d209dd1f4843155f184b553cecd47ba884b7f0c2396f16f793cc768270211e5",
-          "reviewReason": "Reviewed refreshed repository catalog and query workflow: added privacy features are navigation inputs; no ranking, SQL reader, frozen corpus or discovery contract changed. Source/index freshness remains distinct from retrieval quality and runtime correctness."
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "889c133cdf96913ca483cf7afd60849b2ff865c377a7bc3ccd76fdcae981eccf",
+          "reviewReason": "Documented the bounded user aggregate repository role and reviewed exact filename and excluded related-data intent guards. Both readers consume the same policy. Frozen control corpus and thresholds are unchanged; explicit login-event retrieval still returns the related repository first."
         }
       ],
-      "reason": "Reviewed refreshed repository catalog and query workflow: added privacy features are navigation inputs; no ranking, SQL reader, frozen corpus or discovery contract changed. Source/index freshness remains distinct from retrieval quality and runtime correctness.",
+      "reason": "Documented the bounded user aggregate repository role and reviewed exact filename and excluded related-data intent guards. Both readers consume the same policy. Frozen control corpus and thresholds are unchanged; explicit login-event retrieval still returns the related repository first.",
       "baseRef": "HEAD",
-      "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:23.0348144Z"
+      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
+      "reviewedAtUtc": "2026-11-02T05:22:25.2026411Z"
     },
     {
       "pageId": "workflow.review-diff",

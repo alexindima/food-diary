@@ -263,6 +263,13 @@ This replaces the overly broad generated-utility affinity, which could promote
 an unrelated language helper for an HTML-generation question. The explicit
 generator role and ordinary utility role remain; the rule-count budget is unchanged.
 
+Queries for the user entity repository prefer `UserRepository` over repositories
+for related login events. The shared declarative role requires all three user,
+entity and repository concepts, an exact `UserRepository.cs` filename, and no
+login, session, event or audit intent. Explicit related-data queries retain their
+own candidates. The existing frozen control corpus and quality thresholds remain
+unchanged; this is a ranking regression repair, not new blind quality evidence.
+
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need
 an auditable task handoff.

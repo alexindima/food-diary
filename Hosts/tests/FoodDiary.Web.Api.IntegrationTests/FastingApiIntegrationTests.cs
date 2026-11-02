@@ -3,6 +3,8 @@ using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.Modules.Fasting.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Modules.Fasting.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -146,6 +148,8 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         await using (scope.ConfigureAwait(false)) {
             FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             var user = User.Create($"fasting-api-{Guid.NewGuid():N}@example.com", "hash");
+            user.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking,
+                granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
             return user;

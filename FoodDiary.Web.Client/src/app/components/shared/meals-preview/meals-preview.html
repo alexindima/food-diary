@@ -1,5 +1,5 @@
 <section class="meals-preview fd-stack fd-gap-xxs">
-    <div class="meals-preview__header fd-row fd-align-center fd-justify-between fd-gap-card-header">
+    <div class="meals-preview__header fd-row fd-wrap fd-align-center fd-justify-between fd-gap-card-header">
         <h2 class="meals-preview__title fd-ui-title-md">{{ titleText() || (titleKey() | translate) }}</h2>
         @if (showViewAll()) {
             <fd-ui-button class="meals-preview__view-all" variant="primary" fill="text" size="sm" (click)="viewAll.emit()">

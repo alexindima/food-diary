@@ -526,7 +526,9 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.SessionId));
-        return AuthenticationResponseCookies.ReadBrowserSession(response);
+        string browserSession = AuthenticationResponseCookies.ReadBrowserSession(response);
+        await client.GrantHealthTrackingConsentAsync(browserSession);
+        return browserSession;
     }
 
     private static async Task<ImageUploadPayload> CreateImageAssetAsync(HttpClient client, string fileName) {

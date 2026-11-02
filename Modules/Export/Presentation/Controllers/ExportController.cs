@@ -20,7 +20,6 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
     [ProducesFileResponse("application/zip")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.ExportRateLimitPolicyName)]
     [BlockImpersonatedAccess]

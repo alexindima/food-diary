@@ -73,4 +73,11 @@ internal static class CookieAuthenticationScenario {
         Assert.Equal(HttpStatusCode.Unauthorized, profile.StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, restore.StatusCode);
     }
+
+    public static async Task AssertGuestAsync(HttpClient browser) {
+        using HttpResponseMessage profile = await browser.GetAsync("/api/v1/users/info");
+        using HttpResponseMessage restore = await browser.PostAsync("/api/v1/auth/session", content: null);
+        Assert.Equal(HttpStatusCode.Unauthorized, profile.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, restore.StatusCode);
+    }
 }

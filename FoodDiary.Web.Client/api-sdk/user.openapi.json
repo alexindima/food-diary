@@ -25037,16 +25037,6 @@
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiErrorHttpResponse"
                                 }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
                             }
                         },
                         "description": "Forbidden"
@@ -40952,16 +40942,6 @@
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiErrorHttpResponse"
                                 }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
                             }
                         },
                         "description": "Forbidden"
@@ -41726,16 +41706,6 @@
                     "403": {
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiErrorHttpResponse"
-                                }
-                            },
-                            "text/plain": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiErrorHttpResponse"
                                 }

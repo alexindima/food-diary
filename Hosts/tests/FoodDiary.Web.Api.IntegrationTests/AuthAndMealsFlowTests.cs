@@ -155,6 +155,7 @@ public sealed class AuthAndMealsFlowTests(ApiWebApplicationFactory factory)
         AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registerResponse));
+        await client.GrantHealthTrackingConsentAsync();
         return client;
     }
 

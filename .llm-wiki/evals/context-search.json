@@ -129,7 +129,8 @@
       "id": "diary-export-read-service",
       "query": "read diary data for a personal export",
       "changeType": "Backend",
-      "expectedPaths": ["Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs"]
+      "expectedPaths": ["Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs"],
+      "acceptedPaths": ["Modules/Export/Application/Queries/ExportPersonalData/ExportPersonalDataQueryHandler.cs"]
     },
     {
       "id": "content-report-review",

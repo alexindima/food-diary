@@ -23,7 +23,6 @@ public sealed class UserPrivacyController(ISender mediator) : AuthorizedControll
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> UpdatePrivacy([FromCurrentUser] Guid userId, [FromBody] UpdatePrivacyConsentHttpRequest request) =>

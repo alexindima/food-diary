@@ -3,6 +3,11 @@ using System.Net.Http.Json;
 using FoodDiary.Modules.Exercises.Presentation.Requests;
 using FoodDiary.Modules.Notifications.Presentation.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Modules.Users.Domain.Entities;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -20,7 +25,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
     [InlineData("POST", "/api/v1/cycles")]
     [InlineData("PUT", "/api/v1/cycles/11111111-1111-1111-1111-111111111111/consents/1")]
     public async Task SensitiveMutations_WithImpersonatedUser_ReturnForbidden(string method, string route) {
-        HttpClient client = CreateAuthenticatedClient(impersonated: true);
+        HttpClient client = await CreateAuthenticatedClientAsync(impersonated: true);
         using var request = new HttpRequestMessage(new HttpMethod(method), route) {
             Content = JsonContent.Create(new { }),
         };
@@ -35,7 +40,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
 
     [RequiresDockerFact]
     public async Task UnannotatedAuthorizedMutation_WithImpersonatedUser_ReturnsForbidden() {
-        HttpClient client = CreateAuthenticatedClient(impersonated: true);
+        HttpClient client = await CreateAuthenticatedClientAsync(impersonated: true);
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/exercises",
@@ -51,7 +56,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
     [InlineData("POST", "/api/v1/exercises")]
     [InlineData("PUT", "/api/v1/exercises/11111111-1111-1111-1111-111111111111")]
     public async Task ExerciseMutation_WithDurationOverDomainLimit_ReturnsBadRequest(string method, string route) {
-        HttpClient client = CreateAuthenticatedClient();
+        HttpClient client = await CreateAuthenticatedClientAsync();
         object payload = string.Equals(method, "POST", StringComparison.Ordinal)
             ? new CreateExerciseEntryHttpRequest(DateTime.UtcNow, "Running", 1441, 100, Name: null, Notes: null)
             : new UpdateExerciseEntryHttpRequest(
@@ -77,7 +82,7 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
 
     [RequiresDockerFact]
     public async Task UpsertWebPushSubscription_WithUnspecifiedExpiration_ReturnsBadRequest() {
-        HttpClient client = CreateAuthenticatedClient();
+        HttpClient client = await CreateAuthenticatedClientAsync();
         var request = new UpsertWebPushSubscriptionHttpRequest(
             "https://push.example.com/subscription",
             new DateTime(2026, 8, 19, 12, 0, 0, DateTimeKind.Unspecified),
@@ -95,10 +100,16 @@ public sealed class PresentationHardeningIntegrationTests(TestAuthApiWebApplicat
             () => Assert.Equal("Validation.Invalid", Assert.IsType<ErrorPayload>(error).Error));
     }
 
-    private HttpClient CreateAuthenticatedClient(bool impersonated = false) {
+    private async Task<HttpClient> CreateAuthenticatedClientAsync(bool impersonated = false) {
+        await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
+        FoodDiaryDbContext database = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var user = User.Create($"hardening-{Guid.NewGuid():N}@example.com", "hash");
+        user.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking, granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
+        database.Users.Add(user);
+        await database.SaveChangesAsync();
         HttpClient client = factory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
-        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, user.Id.Value.ToString());
         if (impersonated) {
             client.DefaultRequestHeaders.Add(TestAuthenticationHandler.ImpersonationHeader, "true");
             client.DefaultRequestHeaders.Add(

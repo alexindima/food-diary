@@ -35,6 +35,7 @@ public sealed class WeeklyGoalCalendarValidationIntegrationTests(ApiWebApplicati
         using HttpClient client = clocked.CreateClient();
         string browserSession = AuthenticationResponseCookies.ReadBrowserSession(registration);
         AuthenticationResponseCookies.ApplyBrowserSession(client, browserSession);
+        await client.GrantHealthTrackingConsentAsync();
         DateOnly nextWeek = localMonday.AddDays(7);
         string weekLabel = nextWeek.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 

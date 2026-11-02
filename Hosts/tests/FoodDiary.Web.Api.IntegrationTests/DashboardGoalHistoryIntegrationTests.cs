@@ -19,6 +19,7 @@ public sealed class DashboardGoalHistoryIntegrationTests(PostgresApiWebApplicati
         using HttpResponseMessage registration = await client.PostAsJsonAsync("/api/v1/auth/register", new RegisterHttpRequest(email, "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
+        await client.GrantHealthTrackingConsentAsync();
         await using (AsyncServiceScope scope = factory.Services.CreateAsyncScope()) {
             FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             User user = await context.Users.SingleAsync(account => account.Email == email);

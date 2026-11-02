@@ -130,6 +130,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(response));
+        await client.GrantHealthTrackingConsentAsync();
         return client;
     }
 

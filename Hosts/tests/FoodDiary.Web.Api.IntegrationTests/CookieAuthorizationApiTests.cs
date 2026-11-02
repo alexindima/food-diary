@@ -105,6 +105,8 @@ public sealed class CookieAuthorizationApiTests(ApiWebApplicationFactory factory
         using HttpClient stranger = CookieAuthenticationScenario.CreateBrowser(factory);
         CookieIdentity ownerIdentity = await CookieAuthenticationScenario.RegisterAsync(factory, owner);
         CookieIdentity strangerIdentity = await CookieAuthenticationScenario.RegisterAsync(factory, stranger);
+        await owner.GrantHealthTrackingConsentAsync();
+        await stranger.GrantHealthTrackingConsentAsync();
         Guid productId = await CreatePrivateProductAsync(owner);
         DateTime date = new(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc);
         using HttpResponseMessage created = await owner.PostAsJsonAsync("/api/v1/meals",

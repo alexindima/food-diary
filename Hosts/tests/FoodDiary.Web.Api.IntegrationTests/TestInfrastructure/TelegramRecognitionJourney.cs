@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using FoodDiary.Modules.Users.Domain.Contracts.Enums;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using System.Text.Json;
 using FoodDiary.Mediator;
 using FoodDiary.Modules.Ai.Contracts.Commands.ProcessNextFoodRecognition;
@@ -21,10 +23,15 @@ internal static class TelegramRecognitionJourney {
         Assert.Equal(HttpStatusCode.OK, botLogin.StatusCode);
         using var authentication = JsonDocument.Parse(await botLogin.Content.ReadAsStringAsync());
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authentication.RootElement.GetProperty("accessToken").GetString());
+        await client.GrantHealthTrackingConsentAsync();
         var request = new { Id = jobId, ImageAssetId = assetId, Description = "Apple" };
         using HttpResponseMessage withoutConsent = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions", request);
         Assert.Equal(HttpStatusCode.Forbidden, withoutConsent.StatusCode);
-        using HttpResponseMessage consent = await client.PostAsync("/api/v1/users/ai-consent", content: null);
+        using HttpResponseMessage consent = await client.PutAsJsonAsync("/api/v1/users/privacy", new {
+            Purpose = PrivacyConsentPurpose.AiProcessing,
+            Granted = true,
+            NoticeVersion = PrivacyNoticeVersions.Current,
+        });
         Assert.Equal(HttpStatusCode.NoContent, consent.StatusCode);
         using HttpResponseMessage start = await client.PostAsJsonAsync("/api/v1/ai/food/recognitions", request);
         Assert.Equal(HttpStatusCode.Accepted, start.StatusCode);

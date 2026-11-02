@@ -8,6 +8,7 @@ import { MarketingConsentService } from '../../../shared/marketing/marketing-con
     selector: 'fd-marketing-consent',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent],
     templateUrl: './marketing-consent.html',
+    styleUrl: './marketing-consent.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketingConsentComponent {

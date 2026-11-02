@@ -3460,7 +3460,7 @@
       "role": "Component",
       "selector": "fd-marketing-consent",
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "line": 13
+      "line": 14
     },
     {
       "name": "MealCardComponent",

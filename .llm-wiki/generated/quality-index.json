@@ -10370,11 +10370,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/meal-card/meal-card.ts",
@@ -32762,11 +32762,11 @@
     },
     {
       "path": "Modules/Export/Presentation/Controllers/ExportController.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 67,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
+      "structuralRiskScore": 3.34
     },
     {
       "path": "Modules/Export/Presentation/ExportRequestLimits.cs",
@@ -50762,19 +50762,19 @@
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UserPrivacyController.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 27,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.56
+      "structuralRiskScore": 7.54
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UsersController.cs",
-      "nonBlankLines": 65,
+      "nonBlankLines": 64,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.3
+      "structuralRiskScore": 3.28
     },
     {
       "path": "Modules/Users/Presentation/Controllers/UsersPasswordController.cs",

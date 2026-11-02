@@ -378,6 +378,8 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
             new RegisterHttpRequest($"cycle-symptom-{Guid.NewGuid():N}@example.com", "Password123!", "en"));
         response.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        return AuthenticationResponseCookies.ReadBrowserSession(response);
+        string browserSession = AuthenticationResponseCookies.ReadBrowserSession(response);
+        await client.GrantHealthTrackingConsentAsync(browserSession);
+        return browserSession;
     }
 }

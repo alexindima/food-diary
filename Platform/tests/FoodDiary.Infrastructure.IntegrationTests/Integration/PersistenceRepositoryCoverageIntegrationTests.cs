@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Identity.Contracts.Authentication.Models;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using Microsoft.Extensions.Options;
 using FoodDiary.Authentication.Contracts.Options;
 using FoodDiary.Modules.Identity.Domain.ValueObjects.Ids;
@@ -877,6 +878,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     public async Task FastingRepositories_CoverPlanOccurrenceSessionCheckInAndTelemetryQueries() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"fasting-{Guid.NewGuid():N}@example.com", "hash");
+        user.RecordPrivacyConsent(PrivacyConsentPurpose.HealthTracking,
+            granted: true, PrivacyNoticeVersions.Current, DateTime.UtcNow);
         context.Users.Add(user);
         await context.SaveChangesAsync();
 

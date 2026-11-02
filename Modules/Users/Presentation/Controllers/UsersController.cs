@@ -24,7 +24,6 @@ public sealed class UsersController(ISender mediator) : AuthorizedController(med
 
     [HttpPatch("info")]
     [TypeFilter(typeof(UserProfileHealthConsentFilter))]
-    [ProducesApiErrorResponse(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

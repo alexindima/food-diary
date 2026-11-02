@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
 using FoodDiary.Modules.Marketing.Presentation.Requests;
+using FoodDiary.Modules.Users.Domain.Contracts.Privacy;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
@@ -24,7 +25,9 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
                 UtmSource: "telegram",
                 UtmMedium: "social",
                 UtmCampaign: "launch",
-                BuildVersion: "test-build")),
+                BuildVersion: "test-build",
+                ConsentNoticeVersion: PrivacyNoticeVersions.Current,
+                ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1))),
         };
         request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
         HttpResponseMessage response = await client.SendAsync(request);
@@ -45,6 +48,8 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
                 anonymousId = "fd-anon-test",
                 sessionId = "fd-session-test",
                 landingPath = "/",
+                consentNoticeVersion = PrivacyNoticeVersions.Current,
+                consentGrantedAtUtc = DateTime.UtcNow.AddMinutes(-1),
             }),
         };
         request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
@@ -63,7 +68,9 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
                 Timestamp: DateTime.UtcNow.ToString("O"),
                 AnonymousId: "fd-anon-test",
                 SessionId: "fd-session-test",
-                LandingPath: "/"));
+                LandingPath: "/",
+                ConsentNoticeVersion: PrivacyNoticeVersions.Current,
+                ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1)));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -78,7 +85,9 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
                 Timestamp: DateTime.UtcNow.ToString("O"),
                 AnonymousId: "fd-anon-test",
                 SessionId: "fd-session-test",
-                LandingPath: "/")),
+                LandingPath: "/",
+                ConsentNoticeVersion: PrivacyNoticeVersions.Current,
+                ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1))),
         };
         request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
         HttpResponseMessage response = await client.SendAsync(request);
@@ -103,7 +112,9 @@ public sealed class MarketingAttributionIntegrationTests(ApiWebApplicationFactor
                 Timestamp: DateTime.UtcNow.ToString("O"),
                 AnonymousId: "fd-anon-test",
                 SessionId: "fd-session-test",
-                LandingPath: "/")),
+                LandingPath: "/",
+                ConsentNoticeVersion: PrivacyNoticeVersions.Current,
+                ConsentGrantedAtUtc: DateTime.UtcNow.AddMinutes(-1))),
         };
         request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString("D"));
         HttpResponseMessage response = await client.SendAsync(request);

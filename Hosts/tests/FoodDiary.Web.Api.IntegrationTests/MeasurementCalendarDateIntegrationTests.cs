@@ -23,6 +23,7 @@ public sealed class MeasurementCalendarDateIntegrationTests(PostgresApiWebApplic
         registration.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
+        await client.GrantHealthTrackingConsentAsync();
         var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         for (int offset = -1; offset <= 1; offset++) {
             var date = day.AddDays(offset).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);

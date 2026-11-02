@@ -38,6 +38,7 @@ public sealed class DashboardTimeZoneIntegrationTests(PostgresApiWebApplicationF
         registration.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registration.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
+        await client.GrantHealthTrackingConsentAsync();
         var day = DateOnly.ParseExact(dateText, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var zone = TimeZoneInfo.FindSystemTimeZoneById(zoneId);
         DateTime start = Midnight(day, zone);

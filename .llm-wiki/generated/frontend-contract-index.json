@@ -15001,7 +15001,9 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
-      "stylePaths": [],
+      "stylePaths": [
+        "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.scss"
+      ],
       "inputs": [],
       "outputs": [],
       "specPath": null

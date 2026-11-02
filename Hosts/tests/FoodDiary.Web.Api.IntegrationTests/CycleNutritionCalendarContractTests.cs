@@ -87,6 +87,7 @@ public sealed class CycleNutritionCalendarContractTests(TestAuthApiWebApplicatio
         Guid userId = body.RootElement.GetProperty("user").GetProperty("id").GetGuid();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, userId.ToString());
+        await client.GrantHealthTrackingConsentAsync();
         return userId;
     }
 

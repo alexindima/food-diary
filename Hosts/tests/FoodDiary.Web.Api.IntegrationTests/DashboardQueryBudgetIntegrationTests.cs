@@ -53,6 +53,7 @@ public sealed class DashboardQueryBudgetIntegrationTests(PostgresApiWebApplicati
             new RegisterHttpRequest(email, "Password123!", "en"));
         registration.EnsureSuccessStatusCode();
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registration));
+        await client.GrantHealthTrackingConsentAsync();
         if (includeCycle) {
             using HttpResponseMessage cycle = await client.PostAsJsonAsync("/api/v1/cycles", new CreateCycleHttpRequest(
                 new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc), (int)CycleTrackingMode.PeriodTracking,

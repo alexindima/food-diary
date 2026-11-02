@@ -32,6 +32,7 @@ public sealed class DurableMealIdempotencyIntegrationTests(PostgresApiWebApplica
         registered.EnsureSuccessStatusCode();
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
+        await client.GrantHealthTrackingConsentAsync();
         using HttpResponseMessage productResponse = await client.PostAsJsonAsync("/api/v1/products",
             new CreateProductHttpRequest(Barcode: null, "Receipt ingredient", Brand: null, "Unknown", Category: null,
                 Description: null, Comment: null, ImageUrl: null, ImageAssetId: null, "G", 100, 100, 120, 10, 5, 20, 3, 0, "Private"));

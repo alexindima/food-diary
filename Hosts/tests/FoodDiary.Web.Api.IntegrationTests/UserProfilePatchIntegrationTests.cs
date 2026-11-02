@@ -24,6 +24,7 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
         Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
+        await client.GrantHealthTrackingConsentAsync();
 
         using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
             new { heightCm = 170, firstName = "QA" });
@@ -94,6 +95,7 @@ public sealed class UserProfilePatchIntegrationTests(PostgresApiWebApplicationFa
         Assert.Equal(HttpStatusCode.OK, registered.StatusCode);
         using var auth = JsonDocument.Parse(await registered.Content.ReadAsStringAsync());
         AuthenticationResponseCookies.ApplyBrowserSession(client, AuthenticationResponseCookies.ReadBrowserSession(registered));
+        await client.GrantHealthTrackingConsentAsync();
 
         using HttpResponseMessage initialized = await client.PatchAsJsonAsync("/api/v1/users/info",
             new { birthDate = new DateTime(2000, 10, 2, 0, 0, 0, DateTimeKind.Utc), firstName = "QA" });

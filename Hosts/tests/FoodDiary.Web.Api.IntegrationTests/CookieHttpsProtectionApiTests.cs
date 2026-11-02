@@ -137,7 +137,7 @@ public sealed class CookieHttpsProtectionApiTests(CookieHttpsProxyFixture fixtur
         browser.DefaultRequestHeaders.Add("Origin", fixture.Origin.GetLeftPart(UriPartial.Authority));
         using HttpResponseMessage logout = await browser.PostAsJsonAsync("/api/v1/auth/logout", new { });
         Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
-        await CookieAuthenticationScenario.AssertRejectedSessionAsync(browser);
+        await CookieAuthenticationScenario.AssertGuestAsync(browser);
     }
 
     [RequiresDockerFact]

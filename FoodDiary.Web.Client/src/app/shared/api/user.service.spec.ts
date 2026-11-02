@@ -619,6 +619,60 @@ describe('UserService overview state', () => {
     });
 });
 
+describe('UserService privacy', () => {
+    it.each(['accepted', 'declined'] as const)('reads the current notice with health consent %s', health => {
+        const state = {
+            noticeVersion: PRIVACY_NOTICE_VERSION,
+            healthAcceptedAtUtc: health === 'accepted' ? '2026-11-02T00:00:00Z' : null,
+            healthDeclinedAtUtc: health === 'declined' ? '2026-11-01T00:00:00Z' : null,
+            aiAcceptedAtUtc: '2026-11-02T01:00:00Z',
+            marketingAcceptedAtUtc: '2026-11-02T02:00:00Z',
+        };
+        const next = vi.fn();
+        service.getPrivacy().subscribe(next);
+        const request = httpMock.expectOne(`${BASE_URL}/privacy`);
+        expect(request.request.method).toBe('GET');
+        request.flush(state);
+        expect(next).toHaveBeenCalledWith(state);
+    });
+
+    it('represents omitted consent timestamps as unaccepted choices', () => {
+        const next = vi.fn();
+        service.getPrivacy().subscribe(next);
+        httpMock.expectOne(`${BASE_URL}/privacy`).flush({ noticeVersion: PRIVACY_NOTICE_VERSION });
+        expect(next).toHaveBeenCalledWith({
+            noticeVersion: PRIVACY_NOTICE_VERSION,
+            healthAcceptedAtUtc: null,
+            healthDeclinedAtUtc: null,
+            aiAcceptedAtUtc: null,
+            marketingAcceptedAtUtc: null,
+        });
+    });
+
+    it('rejects privacy responses without the required notice version', () => {
+        const next = vi.fn();
+        const error = vi.fn();
+        service.getPrivacy().subscribe({ next, error });
+        httpMock.expectOne(`${BASE_URL}/privacy`).flush({});
+        expect(next).not.toHaveBeenCalled();
+        expect(error).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    it('keeps the separate AI choice when health consent changes', () => {
+        const user = { ...MOCK_USER, aiConsentAcceptedAt: utcInstant('2026-11-02T00:00:00Z') };
+        setCurrentUser(user);
+        service.updatePrivacy(PrivacyConsentPurpose.HealthTracking, true, PRIVACY_NOTICE_VERSION).subscribe();
+        const request = httpMock.expectOne(`${BASE_URL}/privacy`);
+        expect(request.request.body).toEqual({
+            purpose: PrivacyConsentPurpose.HealthTracking,
+            granted: true,
+            noticeVersion: PRIVACY_NOTICE_VERSION,
+        });
+        request.flush(null);
+        expect(service.user()).toEqual(user);
+    });
+});
+
 describe('UserService consent state', () => {
     it('clears cached AI consent when withdrawn through privacy settings', () => {
         service.getInfo().subscribe();

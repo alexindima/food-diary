@@ -210,7 +210,7 @@ test.describe('client auth smoke', () => {
         await expect(page.getByRole('heading', { name: 'Food Diary', level: 1 })).toBeVisible();
         await expect(page.getByRole('tab', { name: 'Login' })).toHaveAttribute('aria-selected', 'true');
         await page.getByRole('tab', { name: 'Register' }).click();
-        await expect(page.getByRole('checkbox', { name: 'I agree to the Privacy Policy' })).toBeVisible();
+        await expect(page.getByRole('checkbox', { name: 'I have read the Privacy Policy' })).toBeVisible();
         await expect(page.getByRole('button', { name: 'Register' })).toBeVisible();
         await expectNoHorizontalOverflowAsync(page);
     });
