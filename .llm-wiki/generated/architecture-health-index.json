@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
-    "componentsWithoutDirectSpecs": 134,
+    "componentsWithoutDirectSpecs": 133,
     "criticalSymbolsWithoutTestReferences": 49,
     "explicitDebtMarkers": 12
   },
@@ -5351,19 +5351,6 @@
       "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.html",
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/features/public/components/dietologist-promo/dietologist-promo.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "HeroComponent",
-      "selector": "fd-hero",
-      "feature": "public",
-      "path": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.scss"
       ],
       "inputs": [],
       "outputs": [],

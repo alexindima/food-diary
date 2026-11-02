@@ -49,6 +49,12 @@ in prerendered HTML and hydrates on viewport entry or interaction; client-side
 navigation loads it immediately. Hero actions hydrate with the page. The prerender
 guard requires native FAQ content, related links and the final CTA, and platform
 journeys verify keyboard FAQ interaction and related navigation in both locales.
+Home uses the same hydration boundary for its features, dietologist promotion,
+steps and FAQ sections. Each section remains fully prerendered and activates on
+viewport entry or interaction. The hero's sample nutrition chart uses the same
+boundary, so its geometry observers need not run before the chart is visible on
+mobile. Hero actions and the deferred preview keep their existing behavior.
+Client-side navigation renders these sections immediately.
 
 For a faster representative pass, build once and reuse the output:
 

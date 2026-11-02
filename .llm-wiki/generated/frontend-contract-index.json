@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "components": 520,
-    "componentsWithoutDirectSpecs": 134,
+    "componentsWithoutDirectSpecs": 133,
     "inputs": 1670,
     "outputs": 557,
     "apiCalls": 325,
@@ -11982,7 +11982,7 @@
       ],
       "inputs": [],
       "outputs": [],
-      "specPath": null
+      "specPath": "FoodDiary.Web.Client/src/app/features/public/components/hero/hero.spec.ts"
     },
     {
       "class": "LandingCtaComponent",

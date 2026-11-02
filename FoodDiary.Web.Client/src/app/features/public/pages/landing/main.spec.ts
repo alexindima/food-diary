@@ -116,6 +116,28 @@ async function createRenderedComponentAsync(): Promise<void> {
 
 describe('MainComponent deferred preview', () => {
     it(
+        'activates below-fold sections only when their hydration blocks are triggered',
+        async () => {
+            await createRenderedComponentAsync();
+            fixture.detectChanges();
+
+            const sections = ['fd-features', 'fd-dietologist-promo', 'fd-landing-steps', 'fd-landing-faq'];
+            expect(fixture.debugElement.query(By.css('fd-hero'))).not.toBeNull();
+            for (const section of sections) {
+                expect(fixture.debugElement.query(By.css(section)), `${section} should wait for hydration`).toBeNull();
+            }
+
+            const deferBlocks = await fixture.getDeferBlocks();
+            expect(deferBlocks).toHaveLength(sections.length + 1);
+            for (const [index, section] of sections.entries()) {
+                await deferBlocks[index + 1]?.render(DeferBlockState.Complete);
+                expect(fixture.debugElement.query(By.css(section))).not.toBeNull();
+            }
+        },
+        DEFER_TEST_TIMEOUT_MS,
+    );
+
+    it(
         'renders a stable fallback when the deferred preview fails to load',
         async () => {
             await createRenderedComponentAsync();

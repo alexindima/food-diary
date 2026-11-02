@@ -361,8 +361,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "632c9213a4485fd6b3e4c68038c28656fffc9a41a3d94f6425632c83cc55a4e5",
-          "reviewReason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds."
+          "sha256": "382c3c1f25f2462f4f4e71dc608c0c5f72df8fcad1b08d79daa1b782b83a1157",
+          "reviewReason": "Reviewed the regenerated architecture-health index: adding HeroComponent hydration coverage removes only HeroComponent from componentsWithoutDirectSpecs and reduces that count from 134 to 133. Dependency edges, enforced drift and removal-candidate guidance are unchanged; the workflow remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -380,10 +380,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the regenerated architecture health diff: marketing-consent gains its owned stylesheet reference. Project edges, dependency violations and cycles remain unchanged; the documented distinction between navigation candidates and enforced drift still holds.",
-      "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:23.9754527Z"
+      "reason": "Reviewed the regenerated architecture-health index: adding HeroComponent hydration coverage removes only HeroComponent from componentsWithoutDirectSpecs and reduces that count from 134 to 133. Dependency edges, enforced drift and removal-candidate guidance are unchanged; the workflow remains accurate.",
+      "baseRef": "0114d6fed5eadf6d59ac000a0bca50fc5c5a724f",
+      "gitHead": "62e64de144b5c63c0145aac9c044e56be0784fcd",
+      "reviewedAtUtc": "2026-11-02T22:28:20.5115761Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
