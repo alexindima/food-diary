@@ -10916,6 +10916,110 @@
       "targetId": "",
       "reason": "",
       "eventHash": "007cac0f6291dff954d9af3286eed13f139e89d955c9dd166100775fd8211996"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 73,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-02T06:50:05.0685085Z",
+      "previousHash": "007cac0f6291dff954d9af3286eed13f139e89d955c9dd166100775fd8211996",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/landing-release-consent",
+        "retrospectiveHash": "bf944f926332fc8f539ce52d900936848c93810938f9ff244d7facbab5ee1517",
+        "completionFingerprint": "577f6132e10fde9b98a01a80fb0e64dfe877c49f48a7a49a271fc512b94d1090",
+        "packetFingerprint": "b1dd58bdce365a781f958749dfbf50261113fe92da11260bca65cddd80d34da2",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1800s versus 100s, error 1700%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=1700%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 100.0,
+          "expectedSeconds": 1800.0,
+          "errorPercent": 1700.0
+        },
+        "changedPaths": [
+          "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.cs",
+          "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.Designer.cs",
+          "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+          "FoodDiary.Web.Client/e2e/client-smoke/client-smoke.spec.ts",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/TelegramMealJourney.cs",
+          "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserPrivacyConsentTrackingTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "7abd51751d4d4fe83f5729572db261c0af38cfe0b8c4a74d38d08a55c26f8c75"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 74,
+      "kind": "observed",
+      "id": "learning-0498327012da9ab1d384",
+      "createdAtUtc": "2026-11-02T06:50:05.0685085Z",
+      "previousHash": "7abd51751d4d4fe83f5729572db261c0af38cfe0b8c4a74d38d08a55c26f8c75",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/landing-release-consent",
+        "retrospectiveHash": "bf944f926332fc8f539ce52d900936848c93810938f9ff244d7facbab5ee1517",
+        "completionFingerprint": "577f6132e10fde9b98a01a80fb0e64dfe877c49f48a7a49a271fc512b94d1090",
+        "packetFingerprint": "b1dd58bdce365a781f958749dfbf50261113fe92da11260bca65cddd80d34da2",
+        "sourceCandidateId": "cost-migration-format",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'migration-format'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 375s versus 21s, error 1685.71%.",
+        "score": 70,
+        "evidence": [
+          "error=1685.71%",
+          "migration-format"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "migration-format",
+          "recommendedSeconds": 21.0,
+          "expectedSeconds": 375.0,
+          "errorPercent": 1685.71
+        },
+        "changedPaths": [
+          "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.cs",
+          "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.Designer.cs",
+          "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+          "FoodDiary.Web.Client/e2e/client-smoke/client-smoke.spec.ts",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs",
+          "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/TelegramMealJourney.cs",
+          "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
+          "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserPrivacyConsentTrackingTests.cs"
+        ],
+        "subjectIds": [
+          "migration-format"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "e5cd7441311166f7b64ab16adbb32ab58d33c1031ea494ec3bb9fcb7ae9cb0f4"
     }
   ],
   "hashSchemaVersion": 2

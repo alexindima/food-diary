@@ -652,8 +652,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "454f1a1113e049688498d0c2f8e83e431b6d79763dd59c14ebe5f4819e6f2f60",
-          "reviewReason": "Reviewed the appended SignalR-backplane retrospective observations in learning-promotions.json: three observed cost-calibration candidates with null decisions, no approval/materialization/rollback. The documented separation between observation, explicit approval, shadow/canary and application remains accurate. Combined strict verification passed the registry/knowledge-isolation checks; no governing policy changes are introduced by these records."
+          "sha256": "717e707c5fcbd882a6f11b2c64c06530fd6bb9db402c0507c38c55452e33e2bd",
+          "reviewReason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -676,10 +676,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the appended SignalR-backplane retrospective observations in learning-promotions.json: three observed cost-calibration candidates with null decisions, no approval/materialization/rollback. The documented separation between observation, explicit approval, shadow/canary and application remains accurate. Combined strict verification passed the registry/knowledge-isolation checks; no governing policy changes are introduced by these records.",
-      "baseRef": "origin/master",
-      "gitHead": "ada5396d177feb866d07dddd0740164f0e137142",
-      "reviewedAtUtc": "2026-11-02T04:15:15.1584912Z"
+      "reason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review.",
+      "baseRef": "HEAD",
+      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
+      "reviewedAtUtc": "2026-11-02T06:55:01.2487958Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1023,14 +1023,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "20f95a738fc7bb4bf5feb240d057641711a38c5ad15c362cab725609bcd5576d",
-          "reviewReason": "Reviewed the appended signalr-backplane instruction-outcome event: instruction source hashes, task cohort, scores, success=false and chained event provenance match the documented historical observation model. It changes samples only; no instruction revision, threshold or experiment decision. Workflow explanation remains current and the combined knowledge-registry regressions passed."
+          "sha256": "42f2940d95113633322f5f20c2a8877f92e9e14e21ca76c9952345a48e2dfb87",
+          "reviewReason": "Reviewed the one generated completion outcome and exact instruction fingerprints. It is an immutable correlation observation, not permission to edit AGENTS, risk floors or verification. Existing cohort/experiment semantics and schema remain unchanged."
         }
       ],
-      "reason": "Reviewed the appended signalr-backplane instruction-outcome event: instruction source hashes, task cohort, scores, success=false and chained event provenance match the documented historical observation model. It changes samples only; no instruction revision, threshold or experiment decision. Workflow explanation remains current and the combined knowledge-registry regressions passed.",
-      "baseRef": "origin/master",
-      "gitHead": "ada5396d177feb866d07dddd0740164f0e137142",
-      "reviewedAtUtc": "2026-11-02T04:15:15.4516033Z"
+      "reason": "Reviewed the one generated completion outcome and exact instruction fingerprints. It is an immutable correlation observation, not permission to edit AGENTS, risk floors or verification. Existing cohort/experiment semantics and schema remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
+      "reviewedAtUtc": "2026-11-02T06:55:01.4838831Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1055,8 +1055,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "4d5e368d1c87da67acecf918f1a21239bb9dba46c3a59f1addf6979b5e9893cb",
-          "reviewReason": "Reviewed the appended SignalR-backplane learned-regression observation/case in eval-promotions.json, including expected scopes/rules/checks and caseHash. This records a candidate regression scenario and leaves selection/application as separate governed operations. It does not change evaluator/planner commands or policy; the workflow remains accurate. Combined strict knowledge-isolation and outcome regressions passed."
+          "sha256": "6a6cf4797a81669842458d3655df1ef34db59b3544647dcf913c1bf319abde90",
+          "reviewReason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1069,10 +1069,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended SignalR-backplane learned-regression observation/case in eval-promotions.json, including expected scopes/rules/checks and caseHash. This records a candidate regression scenario and leaves selection/application as separate governed operations. It does not change evaluator/planner commands or policy; the workflow remains accurate. Combined strict knowledge-isolation and outcome regressions passed.",
-      "baseRef": "origin/master",
-      "gitHead": "ada5396d177feb866d07dddd0740164f0e137142",
-      "reviewedAtUtc": "2026-11-02T04:15:15.7448516Z"
+      "reason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved.",
+      "baseRef": "HEAD",
+      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
+      "reviewedAtUtc": "2026-11-02T06:55:01.7028797Z"
     },
     {
       "pageId": "workflow-model-routing",

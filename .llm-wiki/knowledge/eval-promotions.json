@@ -2458,6 +2458,81 @@
       },
       "reason": "",
       "eventHash": "afb41ec146340fc90a71017bfd3996f70577a4cc39110aeaa7409ee0e809211d"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 14,
+      "kind": "observed",
+      "candidateId": "learned-7ea1ea7666fd056e",
+      "createdAtUtc": "2026-11-02T06:50:06.4489476Z",
+      "previousHash": "afb41ec146340fc90a71017bfd3996f70577a4cc39110aeaa7409ee0e809211d",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/landing-release-consent",
+        "retrospectiveHash": "bf944f926332fc8f539ce52d900936848c93810938f9ff244d7facbab5ee1517",
+        "packetFingerprint": "b1dd58bdce365a781f958749dfbf50261113fe92da11260bca65cddd80d34da2",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=1700%"
+            ]
+          },
+          {
+            "id": "cost-migration-format",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'migration-format'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=1685.71%",
+              "migration-format"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-7ea1ea7666fd056e",
+          "changedPaths": [
+            "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.cs",
+            "FoodDiary.Infrastructure/Migrations/20261102055604_FixPrivacyConsentEventTracking.Designer.cs",
+            "FoodDiary.Infrastructure/Migrations/FoodDiaryDbContextModelSnapshot.cs",
+            "FoodDiary.Web.Client/e2e/client-smoke/client-smoke.spec.ts",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs",
+            "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/TestInfrastructure/TelegramMealJourney.cs",
+            "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
+            "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserPrivacyConsentTrackingTests.cs"
+          ],
+          "expectedModules": [
+            "Users"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Database",
+            "Frontend",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "deployment-rollout",
+            "ef-migration",
+            "frontend-workspace",
+            "persistence-model-contract",
+            "privacy-data-lifecycle"
+          ],
+          "expectedChecks": [
+            "architecture-tests",
+            "frontend-verify",
+            "infrastructure-integration-tests",
+            "migration-format"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "fcb479371464c57ae9eeb88d2c54f81fbb024f6bd4cec9cefe573d6c1b84f659"
+      },
+      "reason": "",
+      "eventHash": "717e616d19233516d57751e355aa337b1b916625805fa17b68f7974668e23bb6"
     }
   ]
 }
