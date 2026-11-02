@@ -9,6 +9,7 @@ internal sealed class UserPrivacyConsentEventConfiguration : IEntityTypeConfigur
     public void Configure(EntityTypeBuilder<UserPrivacyConsentEvent> builder) {
         builder.ToTable("UserPrivacyConsentEvents");
         builder.HasKey(item => item.Id);
+        builder.Property(item => item.Id).ValueGeneratedNever();
         builder.Property(item => item.UserId).HasConversion(id => id.Value, id => new UserId(id));
         builder.Property(item => item.Purpose).HasConversion<string>().HasMaxLength(32);
         builder.Property(item => item.NoticeVersion).HasMaxLength(64).IsRequired();

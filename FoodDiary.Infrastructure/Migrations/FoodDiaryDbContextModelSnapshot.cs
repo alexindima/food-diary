@@ -4920,7 +4920,6 @@ namespace FoodDiary.Infrastructure.Migrations
             modelBuilder.Entity("FoodDiary.Modules.Users.Domain.Entities.UserPrivacyConsentEvent", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOnUtc")

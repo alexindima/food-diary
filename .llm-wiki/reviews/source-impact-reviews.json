@@ -1364,8 +1364,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "83c415a6e9d1eeb20b9678de58bcf794ae304408e963afd870e20f5b4ef9ac9b",
-          "reviewReason": "Reviewed the regenerated topology: only the source fingerprint changes after test-fixture consent setup; service, worker, client and recurring-job inventory and behavior declarations are unchanged. Runtime evidence remains separate from source declarations."
+          "sha256": "141a9c508ce7fe2b2ac02a68b352b1eb1790e1ae29a6535d581cd04abd01aef8",
+          "reviewReason": "Reviewed regenerated topology diff: only source fingerprint changes after test-only Redis timing correction. The consent mapping sets domain-assigned event IDs to ValueGeneratedNever and introduces no service, worker, provider or recurring job. Runtime declarations and the documented distinction from actual runtime proof are unchanged."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1378,10 +1378,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the regenerated topology: only the source fingerprint changes after test-fixture consent setup; service, worker, client and recurring-job inventory and behavior declarations are unchanged. Runtime evidence remains separate from source declarations.",
+      "reason": "Reviewed regenerated topology diff: only source fingerprint changes after test-only Redis timing correction. The consent mapping sets domain-assigned event IDs to ValueGeneratedNever and introduces no service, worker, provider or recurring job. Runtime declarations and the documented distinction from actual runtime proof are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "a323a405b922429ffff5d7e0f7fcf1d3d460a700",
-      "reviewedAtUtc": "2026-11-02T05:22:24.4290134Z"
+      "gitHead": "5889f3df784bef6c0e91eed71d843723f276a639",
+      "reviewedAtUtc": "2026-11-02T06:02:17.3976817Z"
     },
     {
       "pageId": "workflow-security-review",

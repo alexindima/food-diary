@@ -950,7 +950,7 @@ test.describe('authenticated feature smoke', () => {
         await page.goto('/missing-page');
 
         await expect(page).toHaveURL(/\/missing-page$/);
-        await expect(page.getByRole('heading')).toContainText('Page not found');
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('Page not found');
         await expect(page.getByText('block', { exact: true })).toHaveCount(0);
         await page.getByRole('button', { name: 'Open the food diary' }).click();
         await expect(page).toHaveURL(/\/food-diary$/);

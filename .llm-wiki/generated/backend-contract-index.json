@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1394,
     "ambiguousContracts": 29,
-    "consumerEdges": 11197,
+    "consumerEdges": 11198,
     "productionConsumerEdges": 6258,
-    "testConsumerEdges": 4939,
+    "testConsumerEdges": 4940,
     "consumedContracts": 1394,
     "unconsumedContracts": 0
   },
@@ -167908,6 +167908,19 @@
       "consumerPath": "Modules/Users/PersistenceModel/Persistence/Configurations/Users/UserPrivacyConsentEventConfiguration.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "UserPrivacyConsentEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/UserPrivacyConsentEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserPrivacyConsentTrackingTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "UserPrivacyConsentEvent",

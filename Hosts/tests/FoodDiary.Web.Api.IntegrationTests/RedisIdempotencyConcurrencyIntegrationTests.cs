@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Runtime.CompilerServices;
 using Docker.DotNet.Models;
@@ -150,10 +149,9 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             $"{container.GetConnectionString()},abortConnect=false").ConfigureAwait(false);
         await using ConfiguredAsyncDisposable connectionDisposal = connection.ConfigureAwait(false);
         var store = new RedisIdempotencyStore(connection);
-        var originalProcessingTtl = TimeSpan.FromMilliseconds(200);
-        var renewedProcessingTtl = TimeSpan.FromSeconds(2);
+        var originalProcessingTtl = TimeSpan.FromSeconds(5);
+        var renewedProcessingTtl = TimeSpan.FromSeconds(20);
         var responseTtl = TimeSpan.FromMinutes(1);
-        var elapsed = Stopwatch.StartNew();
         IdempotencyReservation owner = await store.ReserveAsync(
             "renewed-request",
             "same-hash",
@@ -170,9 +168,12 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             "same-hash",
             owner.OwnerToken!,
             renewedProcessingTtl).ConfigureAwait(false);
-        await WaitUntilAsync(
-            () => Task.FromResult(elapsed.Elapsed >= TimeSpan.FromMilliseconds(350)),
-            TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+        Assert.True(ownerRenewed);
+        await WaitUntilAsync(async () => {
+            TimeSpan? remaining = await connection.GetDatabase()
+                .KeyTimeToLiveAsync("fooddiary:idempotency:renewed-request:lock").ConfigureAwait(false);
+            return remaining is { } ttl && ttl > TimeSpan.Zero && ttl <= renewedProcessingTtl - originalProcessingTtl;
+        }, TimeSpan.FromSeconds(15)).ConfigureAwait(false);
         IdempotencyReservation duplicate = await store.ReserveAsync(
             "renewed-request",
             "same-hash",
