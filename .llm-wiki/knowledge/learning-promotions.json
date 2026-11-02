@@ -11020,6 +11020,55 @@
       "targetId": "",
       "reason": "",
       "eventHash": "e5cd7441311166f7b64ab16adbb32ab58d33c1031ea494ec3bb9fcb7ae9cb0f4"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 75,
+      "kind": "observed",
+      "id": "learning-f4e2669dc52781873f25",
+      "createdAtUtc": "2026-11-02T14:12:54.3858644Z",
+      "previousHash": "e5cd7441311166f7b64ab16adbb32ab58d33c1031ea494ec3bb9fcb7ae9cb0f4",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-auth-diagnostics",
+        "retrospectiveHash": "eeeff9bbc5ed1fcbaf1c4ff724d6316621773762ef3ad2515f2d7ea48257bc91",
+        "completionFingerprint": "87d3ab60f2cf449f5d402d9a52c1e523528d5a3fe97233d1abf72b8c08184b65",
+        "packetFingerprint": "243a26df63c59d7d5daf374438b690cbfe5117284f444db15f36228fda3efd4e",
+        "sourceCandidateId": "cost-architecture-tests",
+        "type": "cost-calibration",
+        "target": "verification-calibration",
+        "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+        "rationale": "Expected 1560s versus 167s, error 834.13%.",
+        "score": 70,
+        "evidence": [
+          "architecture-tests",
+          "error=834.13%"
+        ],
+        "tags": [
+          "calibration",
+          "cost",
+          "verification"
+        ],
+        "data": {
+          "checkId": "architecture-tests",
+          "recommendedSeconds": 167.0,
+          "expectedSeconds": 1560.0,
+          "errorPercent": 834.13
+        },
+        "changedPaths": [
+          "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthDiagnosticsTests.cs",
+          "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+        ],
+        "subjectIds": [
+          "architecture-tests"
+        ]
+      },
+      "decision": null,
+      "targetId": "",
+      "reason": "",
+      "eventHash": "0f4ae9c84e1dac314e84bd8334071dcbfd62dcd8105975c46a4d8fcadc9aa540"
     }
   ],
   "hashSchemaVersion": 2

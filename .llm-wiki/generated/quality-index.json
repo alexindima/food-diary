@@ -38162,11 +38162,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "nonBlankLines": 122,
-      "decisionPoints": 15,
+      "nonBlankLines": 139,
+      "decisionPoints": 16,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.94
+      "structuralRiskScore": 28.78
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
@@ -66180,8 +66180,8 @@
       "name": "TelegramAuthValidator",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "line": 16,
-      "testReferenceCount": 12,
+      "line": 17,
+      "testReferenceCount": 13,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
@@ -66192,6 +66192,7 @@
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UnlinkTelegramCommandTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthDiagnosticsTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs",
         "Platform/tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
         "Tooling/tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs"

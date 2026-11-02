@@ -9,12 +9,16 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Results;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Providers.Authentication;
 
-public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options, TimeProvider dateTimeProvider) : ITelegramAuthValidator {
+public sealed class TelegramAuthValidator(
+    IOptions<TelegramAuthOptions> options,
+    TimeProvider dateTimeProvider,
+    ILogger<TelegramAuthValidator> logger) : ITelegramAuthValidator {
     private static readonly JsonSerializerOptions TelegramUserJsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
@@ -23,31 +27,38 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
 
     public Result<TelegramInitData> ValidateInitData(string initData) {
         if (string.IsNullOrWhiteSpace(initData)) {
-            return Result.Failure<TelegramInitData>(Errors.Validation.Required("initData"));
+            return Reject("missing_init_data", Errors.Validation.Required("initData"));
         }
 
-        if (string.IsNullOrWhiteSpace(_options.BotToken) || !TelegramAuthOptions.HasValidAuthTtl(_options)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramNotConfigured);
+        if (string.IsNullOrWhiteSpace(_options.BotToken)) {
+            return Reject("missing_bot_token", IdentityErrors.TelegramNotConfigured);
+        }
+        if (!TelegramAuthOptions.HasValidAuthTtl(_options)) {
+            return Reject("invalid_auth_ttl", IdentityErrors.TelegramNotConfigured);
         }
 
         Dictionary<string, StringValues> parsed = QueryHelpers.ParseQuery(initData);
         if (parsed.Any(entry => entry.Value.Count != 1)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+            return Reject("duplicate_fields", IdentityErrors.TelegramInvalidData);
         }
         if (!parsed.TryGetValue("hash", out StringValues hashValues)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+            return Reject("missing_hash", IdentityErrors.TelegramInvalidData);
         }
 
         string hash = hashValues.ToString();
         if (string.IsNullOrWhiteSpace(hash)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+            return Reject("empty_hash", IdentityErrors.TelegramInvalidData);
         }
 
         string dataCheckString = BuildDataCheckString(parsed);
-        if (!IsValidHash(dataCheckString, hash) ||
-            !parsed.TryGetValue("auth_date", out StringValues authDateValues) ||
-            !long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long authDateSeconds)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+        if (!IsValidHash(dataCheckString, hash)) {
+            return Reject("hash_mismatch", IdentityErrors.TelegramInvalidData);
+        }
+        if (!parsed.TryGetValue("auth_date", out StringValues authDateValues)) {
+            return Reject("missing_auth_date", IdentityErrors.TelegramInvalidData);
+        }
+        if (!long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long authDateSeconds)) {
+            return Reject("invalid_auth_date", IdentityErrors.TelegramInvalidData);
         }
 
         TelegramAuthTimestampValidator.Status timestampStatus = TelegramAuthTimestampValidator.Validate(
@@ -56,21 +67,28 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             dateTimeProvider.GetUtcNow().UtcDateTime,
             out DateTime authDateUtc);
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Invalid) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+            return Reject("invalid_timestamp", IdentityErrors.TelegramInvalidData);
         }
 
         if (timestampStatus == TelegramAuthTimestampValidator.Status.Expired) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramAuthExpired);
+            return Reject("expired_timestamp", IdentityErrors.TelegramAuthExpired);
         }
 
         if (!parsed.TryGetValue("user", out StringValues userValues)) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+            return Reject("missing_user", IdentityErrors.TelegramInvalidData);
         }
 
-        TelegramWebAppUser? user = DeserializeUser(userValues.ToString());
-
-        if (user is not { Id: > 0 }) {
-            return Result.Failure<TelegramInitData>(IdentityErrors.TelegramInvalidData);
+        TelegramWebAppUser? user;
+        try {
+            user = JsonSerializer.Deserialize<TelegramWebAppUser>(userValues.ToString(), TelegramUserJsonOptions);
+        } catch (JsonException) {
+            return Reject("invalid_user_json", IdentityErrors.TelegramInvalidData);
+        }
+        if (user is null) {
+            return Reject("invalid_user", IdentityErrors.TelegramInvalidData);
+        }
+        if (user.Id <= 0) {
+            return Reject("invalid_user_id", IdentityErrors.TelegramInvalidData);
         }
 
         var telegramInitData = new TelegramInitData(
@@ -87,12 +105,10 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         return Result.Success(telegramInitData);
     }
 
-    private static TelegramWebAppUser? DeserializeUser(string json) {
-        try {
-            return JsonSerializer.Deserialize<TelegramWebAppUser>(json, TelegramUserJsonOptions);
-        } catch (JsonException) {
-            return null;
-        }
+    private Result<TelegramInitData> Reject(string reason, Error error) {
+        // Only constant stage/reason codes belong here; never attach the proof or parser exceptions.
+        logger.LogInformation("Telegram Mini App rejected. Stage={Stage}; Reason={Reason}", "init_data", reason);
+        return Result.Failure<TelegramInitData>(error);
     }
 
     private static string BuildDataCheckString(Dictionary<string, StringValues> parsed) {

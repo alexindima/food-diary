@@ -23,15 +23,20 @@
       "pageSha256": "ac438aaaad818deaa15b0fd448a206e8368be2799344b5461d15327be74da8f1",
       "sources": [
         {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "240577d2ebd365f5e0310e0f5a0cf67f8df5a75852fc0e1c2aa730ee7a216145",
+          "reviewReason": "Reviewed the observability baseline against TelegramAuthValidator and its diagnostic tests: bounded constant stage/reason codes, no proof or user values, information-level single rejection entries, unchanged API and authentication behavior. Index navigation and performance-observability workflow links remain accurate."
+        },
+        {
           "path": "docs/README.md",
           "sha256": "f6df1ef4a2fd36aa6ba151e6f7526f69991203b05083f1339ab11b8285731e97",
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate.",
+      "reason": "Reviewed the observability baseline against TelegramAuthValidator and its diagnostic tests: bounded constant stage/reason codes, no proof or user values, information-level single rejection entries, unchanged API and authentication behavior. Index navigation and performance-observability workflow links remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:33.2344027Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-02T13:57:28.0703170Z"
     },
     {
       "pageId": "module.frontend",
@@ -637,8 +642,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "717e707c5fcbd882a6f11b2c64c06530fd6bb9db402c0507c38c55452e33e2bd",
-          "reviewReason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review."
+          "sha256": "433fbfe0185acedc669ab69ac9349dbe1f47cf115d1487af201e6dda5f77046f",
+          "reviewReason": "Reviewed the appended task-finish observed event: one architecture-test cost hypothesis with sealed-task provenance, no approval, application or policy change. Controlled promotion workflow and safety boundary remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -661,10 +666,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed the two generated observed cost hypotheses from the sealed consent task. Prior hash-chain events are untouched; no approval, application, calibration or durable-memory change occurs. The workflow still treats observations as hypotheses requiring independent evidence and review.",
-      "baseRef": "HEAD",
-      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
-      "reviewedAtUtc": "2026-11-02T06:55:01.2487958Z"
+      "reason": "Reviewed the appended task-finish observed event: one architecture-test cost hypothesis with sealed-task provenance, no approval, application or policy change. Controlled promotion workflow and safety boundary remain accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "dcfdb39f5c34c005399408932dbb28b0e7521446",
+      "reviewedAtUtc": "2026-11-02T14:17:36.8306809Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1013,14 +1018,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "57ee18cd50d638fc2a24dc0a8808a1b49cc76f0039d0ef3e83e995ca0a361efa",
-          "reviewReason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate."
+          "sha256": "c08a635fa01269641e70d7e3f7ee7f4b3f2258b3dad5593ec80048e69e70813a",
+          "reviewReason": "Reviewed the appended versioned instruction-outcome event with AGENTS fingerprints, cohort metadata and recorded task scores. This adds history only and does not alter instruction policy or experiments; the workflow description remains accurate."
         }
       ],
-      "reason": "Reviewed the canonical task-finish observation for SSR runtime recovery: a completed task outcome is appended with exact instruction and completion fingerprints; existing registry events and the append-only chain are preserved. No learning thresholds, source authority, cohort attribution, experiments or promotion behavior changed. Generic instruction effectiveness guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "d8adb3e3cfc69ff7eb9b4be1ed49c4f5f24122de",
-      "reviewedAtUtc": "2026-11-02T09:43:14.4866598Z"
+      "reason": "Reviewed the appended versioned instruction-outcome event with AGENTS fingerprints, cohort metadata and recorded task scores. This adds history only and does not alter instruction policy or experiments; the workflow description remains accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "dcfdb39f5c34c005399408932dbb28b0e7521446",
+      "reviewedAtUtc": "2026-11-02T14:17:37.0358346Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1045,8 +1050,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "6a6cf4797a81669842458d3655df1ef34db59b3544647dcf913c1bf319abde90",
-          "reviewReason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved."
+          "sha256": "bac9f6fe4f86be532bf6c551c2ae04adf45079a4f8c4a7f659f6c068df5c79f8",
+          "reviewReason": "Reviewed the task-finish cost-calibration observation and its pending learned-eval candidate. No eval is approved or executed by this observation; documented review and promotion requirements remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1059,10 +1064,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the generated observed candidate, source paths and cost signals. It remains unapproved/unapplied; active evals and expected policy behavior are unchanged. Prior event hashes and separate promotion boundaries are preserved.",
-      "baseRef": "HEAD",
-      "gitHead": "24870898cb049b67db6c42623f95a665da4b72eb",
-      "reviewedAtUtc": "2026-11-02T06:55:01.7028797Z"
+      "reason": "Reviewed the task-finish cost-calibration observation and its pending learned-eval candidate. No eval is approved or executed by this observation; documented review and promotion requirements remain accurate.",
+      "baseRef": "origin/master",
+      "gitHead": "dcfdb39f5c34c005399408932dbb28b0e7521446",
+      "reviewedAtUtc": "2026-11-02T14:17:37.2359809Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1110,12 +1115,17 @@
           "path": ".llm-wiki/policies/change-policies.json",
           "sha256": "8bb51999c9d122f7ee123156cbec10db9354fd051008745949e6b1ce8176757f",
           "reviewReason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries."
+        },
+        {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "240577d2ebd365f5e0310e0f5a0cf67f8df5a75852fc0e1c2aa730ee7a216145",
+          "reviewReason": "Reviewed the performance-observability workflow against the updated baseline; its flow, security/privacy, cardinality and verification guidance remains accurate. The Mini App diagnostics add only bounded reason codes and introduce no metric, duration or provider-call changes."
         }
       ],
-      "reason": "Reviewed the policy delta: only context-ranking policy/reader paths acquire a focused .NET check. No persistence, query-cardinality, application telemetry or production provider behavior changed; the documented performance/observability obligations continue to apply at their existing boundaries.",
+      "reason": "Reviewed the performance-observability workflow against the updated baseline; its flow, security/privacy, cardinality and verification guidance remains accurate. The Mini App diagnostics add only bounded reason codes and introduce no metric, duration or provider-call changes.",
       "baseRef": "HEAD",
-      "gitHead": "a324091e04a0ac0de9f541cf7b4db6ae164da94c",
-      "reviewedAtUtc": "2026-11-01T08:01:22.660388Z"
+      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
+      "reviewedAtUtc": "2026-11-02T13:57:28.4850216Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1354,8 +1364,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4fcd22d61a2c345e93050aeae07854b695bc69c6d88cb67cd5732d766b2928aa",
-          "reviewReason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate."
+          "sha256": "f7e5d368aa0ed782fc7e1043342e3677988989e13112eca075d6cc490d0191c5",
+          "reviewReason": "Reviewed the topology index delta: source fingerprint changes only, with no added host, worker, external provider, scheduled job or runtime edge. Existing runtime-impact guidance remains accurate for the logger-only change."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1368,10 +1378,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime topology: added api-green/client-ssr-green reuse the same executable images, Redis and keyring; matching SSR origins and loopback bindings are represented. No extra workers or recurring jobs. Generic runtime discovery and source-freshness guidance remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:35.0360096Z"
+      "reason": "Reviewed the topology index delta: source fingerprint changes only, with no added host, worker, external provider, scheduled job or runtime edge. Existing runtime-impact guidance remains accurate for the logger-only change.",
+      "baseRef": "origin/master",
+      "gitHead": "dcfdb39f5c34c005399408932dbb28b0e7521446",
+      "reviewedAtUtc": "2026-11-02T14:17:37.4492789Z"
     },
     {
       "pageId": "workflow-security-review",

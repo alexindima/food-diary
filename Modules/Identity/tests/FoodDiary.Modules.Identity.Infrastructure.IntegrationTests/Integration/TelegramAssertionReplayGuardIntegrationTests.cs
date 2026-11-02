@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 using MsOptions = Microsoft.Extensions.Options.Options;
 using FoodDiary.Infrastructure.IntegrationTests.Integration;
@@ -46,7 +47,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         string raw = string.Create(CultureInfo.InvariantCulture, $"user={Uri.EscapeDataString(user)}&auth_date={authDate}&hash={hash}");
         string alternate = string.Join('&', raw.Split('&').Reverse()).Replace("%20", "+", StringComparison.Ordinal);
         IOptions<TelegramAuthOptions> options = MsOptions.Create(new TelegramAuthOptions { BotToken = botToken, AuthTtlSeconds = 172800 });
-        var validator = new TelegramAuthValidator(options, FixedTime);
+        var validator = new TelegramAuthValidator(options, FixedTime, NullLogger<TelegramAuthValidator>.Instance);
         TelegramInitData first = validator.ValidateInitData(raw).Value;
         TelegramInitData second = validator.ValidateInitData(alternate).Value;
         Assert.Equal(first.ReplayIdentity, second.ReplayIdentity);
@@ -54,7 +55,7 @@ public sealed class TelegramAssertionReplayGuardIntegrationTests(PostgresDatabas
         await using IdentityDbContext anotherContext = new(new DbContextOptionsBuilder<IdentityDbContext>().UseNpgsql(context.Database.GetConnectionString()).Options);
         Assert.True(await new TelegramAssertionReplayGuard(context, FixedTime).TryConsumeAsync(first.ReplayIdentity, first.ExpiresAtUtc, first.AuthDateUtc));
         var later = new AdvancedTimeProvider();
-        Assert.True(new TelegramAuthValidator(options, later).ValidateInitData(alternate).IsSuccess);
+        Assert.True(new TelegramAuthValidator(options, later, NullLogger<TelegramAuthValidator>.Instance).ValidateInitData(alternate).IsSuccess);
         Assert.False(await new TelegramAssertionReplayGuard(anotherContext, later).TryConsumeAsync(second.ReplayIdentity, second.ExpiresAtUtc, second.AuthDateUtc));
     }
 

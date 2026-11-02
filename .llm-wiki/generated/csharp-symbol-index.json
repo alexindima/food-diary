@@ -17314,7 +17314,7 @@
       "kind": "class",
       "role": "Validator",
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "TelegramLoginWidgetValidator",

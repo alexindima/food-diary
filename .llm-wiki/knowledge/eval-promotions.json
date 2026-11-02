@@ -2533,6 +2533,63 @@
       },
       "reason": "",
       "eventHash": "717e616d19233516d57751e355aa337b1b916625805fa17b68f7974668e23bb6"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 15,
+      "kind": "observed",
+      "candidateId": "learned-cffd87a2f8467f52",
+      "createdAtUtc": "2026-11-02T14:12:55.7711333Z",
+      "previousHash": "717e616d19233516d57751e355aa337b1b916625805fa17b68f7974668e23bb6",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/telegram-auth-diagnostics",
+        "retrospectiveHash": "eeeff9bbc5ed1fcbaf1c4ff724d6316621773762ef3ad2515f2d7ea48257bc91",
+        "packetFingerprint": "243a26df63c59d7d5daf374438b690cbfe5117284f444db15f36228fda3efd4e",
+        "signals": [
+          {
+            "id": "cost-architecture-tests",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'architecture-tests'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "architecture-tests",
+              "error=834.13%"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-cffd87a2f8467f52",
+          "changedPaths": [
+            "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+            "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthDiagnosticsTests.cs",
+            "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+          ],
+          "expectedModules": [
+            "Identity"
+          ],
+          "expectedScopes": [
+            "Backend",
+            "Documentation",
+            "Tests"
+          ],
+          "expectedRules": [
+            "backend-boundaries",
+            "observability-critical-flow",
+            "privacy-data-lifecycle",
+            "quality-critical-path",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "architecture-tests"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "170505205d73fc521a6308d952881331fd75646af31964d1db4b1b7c8ee13d15"
+      },
+      "reason": "",
+      "eventHash": "c088abeea8acf8e667b620f186dc5b233bac88829d9ba8c57f0ccbdc0b3c0263"
     }
   ]
 }

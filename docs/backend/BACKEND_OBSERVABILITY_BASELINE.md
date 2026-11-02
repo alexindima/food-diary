@@ -125,6 +125,30 @@ Requests cancelled after the client disconnects use the `cancelled` outcome and
 HTTP status `499`; they do not increment presentation failure metrics or produce
 warning logs.
 
+## Telegram Mini App rejection diagnostics
+
+`TelegramAuthValidator` emits one information-level entry for each rejected
+`initData` proof: `Telegram Mini App rejected. Stage=init_data; Reason=<code>`.
+Successful validation does not emit a rejection. HTTP error responses and
+validation order remain unchanged.
+
+The bounded reason codes are `missing_init_data`, `missing_bot_token`,
+`invalid_auth_ttl`, `duplicate_fields`, `missing_hash`, `empty_hash`,
+`hash_mismatch`, `missing_auth_date`, `invalid_auth_date`, `invalid_timestamp`,
+`expired_timestamp`, `missing_user`, `invalid_user_json`, `invalid_user`, and
+`invalid_user_id`. A hash mismatch alone does not establish its cause; malformed
+input and an incompatible signing token can both lead to that result.
+
+Only constant stage/reason codes are added to the log. Never attach `initData`,
+received or calculated signatures, bot tokens, user fields, dynamic query-field
+names, timestamp values, or parser exceptions. Existing request/trace context
+provides correlation without adding identity fields.
+
+For Loki, select the currently deployed API stream and filter with
+`|= "Telegram Mini App rejected."`. These provider rejections occur before
+replay consumption and account lookup in the Mini App onboarding flow; replay
+or account-link failures retain their existing application diagnostics.
+
 ## Added Background Job Signals
 
 The observability baseline now also includes stable metrics for recurring cleanup jobs in `FoodDiary.JobManager`.

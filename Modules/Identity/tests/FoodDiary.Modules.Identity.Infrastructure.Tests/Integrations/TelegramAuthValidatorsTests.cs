@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Testing.Assertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
@@ -230,7 +231,7 @@ public sealed class TelegramAuthValidatorsTests {
     public void ValidateInitData_WhenBotTokenMissing_ReturnsNotConfigured() {
         var validator = new TelegramAuthValidator(
             MsOptions.Create(new TelegramAuthOptions { BotToken = "" }),
-            new FixedDateTimeProvider(NowUtc));
+            new FixedDateTimeProvider(NowUtc), NullLogger<TelegramAuthValidator>.Instance);
 
         Result<TelegramInitData> result = validator.ValidateInitData("hash=value");
 
@@ -378,7 +379,7 @@ public sealed class TelegramAuthValidatorsTests {
     private static TelegramAuthValidator CreateInitDataValidator(int authTtlSeconds = 3600) {
         return new TelegramAuthValidator(
             MsOptions.Create(new TelegramAuthOptions { BotToken = BotToken, AuthTtlSeconds = authTtlSeconds }),
-            new FixedDateTimeProvider(NowUtc));
+            new FixedDateTimeProvider(NowUtc), NullLogger<TelegramAuthValidator>.Instance);
     }
 
     private static TelegramLoginWidgetValidator CreateWidgetValidator(int authTtlSeconds = 3600) {

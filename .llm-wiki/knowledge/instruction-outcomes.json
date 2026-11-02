@@ -2303,6 +2303,51 @@
       "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
       "previousEventHash": "106958095d318352998cae36a976be3615f8a5c007f2f3b59203afcb3463d548",
       "eventHash": "88f5b3997e68e5c2647aea7d29b966942c54b80b3639ca245339e176eee1780b"
+    },
+    {
+      "schemaVersion": 2,
+      "eventId": "6a901013a2604ba49435bb76996ac997",
+      "workspace": ".artifacts/llm-wiki/tasks/telegram-auth-diagnostics",
+      "recordedAtUtc": "2026-11-02T14:12:58.2978767Z",
+      "completionFingerprint": "87d3ab60f2cf449f5d402d9a52c1e523528d5a3fe97233d1abf72b8c08184b65",
+      "retrospectiveHash": "eeeff9bbc5ed1fcbaf1c4ff724d6316621773762ef3ad2515f2d7ea48257bc91",
+      "instructionSetFingerprint": "4ceefb60d19c8ef7f1da50594fc6378f5ddb09977da8cbcf900dcc8e4817c30e",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "fingerprint": "623a70dd715daaab8bd0a27792b50ad8cfaddd16514389984939b5102821fc61"
+        },
+        {
+          "path": "Modules/Identity/Infrastructure/AGENTS.md",
+          "fingerprint": "3334bb265a97de51821cacfbda33754533a40ababa64e71f77b067cde36ae4d0"
+        },
+        {
+          "path": "Modules/Identity/tests/AGENTS.md",
+          "fingerprint": "070d92d37dc1736959e821aded5f40d1eae51bdee8d235c150b42bc9e5e1514d"
+        }
+      ],
+      "taskSignals": {
+        "riskLevel": "high",
+        "complexityScore": 75,
+        "complexityBandUpperBound": 79,
+        "cohortKey": "high|complexity<=79",
+        "modelRouteId": "unrouted",
+        "contextStrategyId": "default"
+      },
+      "outcome": {
+        "score": 71.25,
+        "quality": "good",
+        "readinessScore": 100.0,
+        "confidenceScore": 95.0,
+        "critiqueScore": 90.0,
+        "verificationScore": 0.0,
+        "repairAttempts": 0,
+        "falseNegativeCount": 0
+      },
+      "success": false,
+      "policyFingerprint": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d",
+      "previousEventHash": "88f5b3997e68e5c2647aea7d29b966942c54b80b3639ca245339e176eee1780b",
+      "eventHash": "d26e0c2239399d4160ada98b5e4c16e75f0b77a1f05eb37a586826c8cba3aeba"
     }
   ]
 }
