@@ -1,6 +1,6 @@
 import { Pipe, type PipeTransform } from '@angular/core';
 
-import { resolveAppLocale } from '../lib/locale.constants';
+import { getLocalizedNumberFormatter } from './localized-number-formatter';
 
 @Pipe({
     name: 'localizedNumber',
@@ -16,7 +16,7 @@ export class LocalizedNumberPipe implements PipeTransform {
             return '';
         }
 
-        const formatted = new Intl.NumberFormat(resolveAppLocale(language), { minimumFractionDigits, maximumFractionDigits }).format(value);
+        const formatted = getLocalizedNumberFormatter(language, minimumFractionDigits, maximumFractionDigits).format(value);
         return formatted.replace('-', '−');
     }
 }

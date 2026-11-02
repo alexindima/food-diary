@@ -57,6 +57,12 @@ viewport/interaction hydration. All content remains fully prerendered; the hero
 actions and deferred preview keep their existing behavior. Client-side navigation
 renders these sections immediately.
 
+Locale number formatting reuses formatter objects across pipe instances and the
+sample summary's comparison text. The shared pool retains at most 32 locale and
+fraction-precision configurations per JavaScript realm; it stores no numeric
+values or formatted strings. Locale fallback, native precision errors and each
+consumer's existing fraction settings remain unchanged.
+
 For a faster representative pass, build once and reuse the output:
 
 ```powershell
