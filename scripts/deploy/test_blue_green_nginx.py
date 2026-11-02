@@ -26,6 +26,15 @@ class Backend(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
     def do_GET(self):
+        host = self.headers.get("Host", "")
+        self.server.hosts.append(host)
+        if "_" in host:
+            body = b"Invalid hostname"
+            self.send_response(400)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if self.headers.get("Upgrade", "").lower() == "websocket":
             key = self.headers["Sec-WebSocket-Key"] + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
             self.send_response(101)
@@ -72,6 +81,7 @@ class NginxHandoverTests(unittest.TestCase):
         for color in ("blue", "blue-ssr", "green", "green-ssr"):
             backend = ThreadingHTTPServer(("127.0.0.1", 0), Backend)
             backend.color = color
+            backend.hosts = []
             backend.entered = threading.Event()
             backend.release = threading.Event()
             threading.Thread(target=backend.serve_forever, daemon=True).start()
@@ -157,6 +167,28 @@ include "{self.routing.as_posix()}";
             if self.process.poll() is not None or time.monotonic() >= deadline:
                 self.fail((self.root / "process.log").read_text(errors="replace"))
             time.sleep(0.025)
+
+    def test_private_probes_send_valid_host_on_both_slots(self):
+        for color, offset in (("blue", 0), ("green", 2)):
+            with self.subTest(slot=color):
+                self.write_routes(color)
+                self.control("-t")
+                self.control("-s", "reload")
+                self.until(lambda: self.request("/api/probe")[2] == color.encode())
+                for path, backend in (("/health/ready", offset), ("/internal/version", offset), ("/health/ssr", offset + 1)):
+                    def probe_body():
+                        connection = http.client.HTTPConnection("127.0.0.1", self.probe, timeout=8)
+                        try:
+                            connection.request("GET", path)
+                            response = connection.getresponse()
+                            self.assertEqual(200, response.status, "Private probe must use a valid upstream Host")
+                            return response.read()
+                        finally:
+                            connection.close()
+                    # Fresh connections can briefly reach retiring workers.
+                    self.until(lambda: probe_body() == self.servers[backend].color.encode())
+                    self.assertEqual("localhost", self.servers[backend].hosts[-1])
+        self.assertEqual(404, self.request("/internal/version")[0])
 
     def test_reload_preserves_inflight_http_and_websocket_and_hub_affinity(self):
         _, headers, body = self.request("/hubs/notifications/negotiate", method="POST")

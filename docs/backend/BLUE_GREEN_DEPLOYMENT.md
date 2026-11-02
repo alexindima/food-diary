@@ -60,6 +60,8 @@ creates the blue route only if no route or managed state exists; failed initial
 preflight therefore leaves restartable ingress configuration. A loopback-only Nginx listener on port `5090` verifies
 the selected API version/readiness and SSR through the actual proxy. Public
 `/internal/version` stays denied; do not expose the probe listener externally.
+The private listener sends `Host: localhost` upstream. Nginx upstream group names
+contain underscores and must not become API request hostnames.
 
 Nginx configuration is checked before reload. Handover preserves old SignalR
 slot cookies for 30 seconds, then maps stale cookies to the current slot. Old
@@ -106,6 +108,12 @@ The next planner recovers an uncommitted migration-free handover first. For a
 stopped controller, inspect the private plan, current container identities,
 readiness and loopback probe under the same deploy lock. `abort` restores a safe
 pre-migration/no-migration release; `finish` can resume a probed retirement.
+After correcting an ingress configuration failure in `switching`, explicitly
+retry `switch` under that lock, then repeat the workflow's public HTTPS and admin
+SSO origin checks before `finish`. The retry rechecks the candidate's exact API
+SHA/tag, SSR health and `/explore` warmup before changing the plan or route. It
+retains saved workers for draining and never reruns migrations or restarts an
+old image. An unhealthy candidate keeps the interrupted plan unchanged.
 Never delete the plan or edit the active slot merely to bypass an inconsistency.
 Command failures retain a private `.deploy-command-failure.log`; do not publish
 its expanded environment or connection details.

@@ -90,6 +90,7 @@ def routes(active, ports=DEFAULT_PORTS, affinity=False):
         blocks += [f"    fooddiary_api_{color} fooddiary_api_{color};" for color in SLOTS]
     blocks += ["}", "server {", f"    listen 127.0.0.1:{PROBE_PORT};", "    server_name localhost;",
                "    access_log off;",
+               "    proxy_set_header Host localhost;",
                "    location = /health/ready { proxy_pass http://fooddiary_api; }",
                "    location = /internal/version { proxy_pass http://fooddiary_api; }",
                "    location = /health/ssr { proxy_pass http://fooddiary_ssr; }", "    location / { return 404; }", "}"]
@@ -328,10 +329,15 @@ class Deployment:
 
     def switch(self):
         plan = self.load()
-        if plan["phase"] != "ssr-ready":
+        if plan["phase"] not in ("ssr-ready", "switching"):
+            raise DeploymentError("Both candidate services must be ready before switching.")
+        api_port, ssr_port = plan["ports"][plan["candidate"]]
+        if (not self.healthy_api(api_port, plan["sha"], plan["tag"])
+                or self.request(f"http://127.0.0.1:{ssr_port}/health/ssr")[0] != 200
+                or self.request(f"http://127.0.0.1:{ssr_port}/explore", headers={"Host": "fooddiary.club", "X-Forwarded-Proto": "https"})[0] != 200):
             raise DeploymentError("Both candidate services must be ready before switching.")
         plan["phase"] = "switching"
-        plan["workers"] = self.workers()
+        plan["workers"] = sorted(set(plan["workers"]) | set(self.workers()))
         self.save(plan)
         write_atomic(self.route_path, routes(plan["candidate"], plan["ports"], plan["mode"] == "overlap"), 0o644)
         self.reload(plan)

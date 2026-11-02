@@ -384,6 +384,43 @@ class BlueGreenTests(unittest.TestCase):
             self.host.finish()
         self.assertFalse(self.commands("stop"))
 
+    def test_interrupted_switch_retries_only_the_verified_candidate_and_keeps_workers(self):
+        self.host.plan("maintenance")
+        self.host.start("api")
+        self.host.start("ssr")
+        self.host.worker_snapshots = deque([[10], [11]])
+        with patch.object(self.host, "reload", side_effect=deployment.DeploymentError("Interrupted reload")):
+            with self.assertRaisesRegex(deployment.DeploymentError, "Interrupted reload"):
+                self.host.switch()
+        self.assertEqual("switching", self.host.load()["phase"])
+        self.host.switch()
+        self.assertEqual([10, 11], self.host.load()["workers"])
+        self.host.finish()
+        self.assertEqual(SHA, json.loads(self.host.state_path.read_text())["sha"])
+        self.assertEqual("complete", self.host.load()["phase"])
+        self.assertFalse(self.commands("stop"))
+
+    def test_interrupted_switch_rejects_unready_candidate_without_mutating_plan_or_routes(self):
+        self.ready_candidate()
+        with patch.object(self.host, "reload", side_effect=deployment.DeploymentError("Interrupted reload")):
+            with self.assertRaises(deployment.DeploymentError):
+                self.host.switch()
+        original = self.host.plan_path.read_bytes(), self.host.route_path.read_bytes()
+        for failure in ("api", "ssr", "warmup"):
+            with self.subTest(failure=failure):
+                request = self.host.request
+                def unready(url, data=None, headers=None):
+                    if (failure == "api" and url.endswith("/internal/version")
+                            or failure == "ssr" and url.endswith("/health/ssr")
+                            or failure == "warmup" and url.endswith("/explore")):
+                        return 503, "unavailable"
+                    return request(url, data, headers)
+                with patch.object(self.host, "request", side_effect=unready):
+                    with self.assertRaisesRegex(deployment.DeploymentError, "candidate.*ready"):
+                        self.host.switch()
+                self.assertEqual(original, (self.host.plan_path.read_bytes(), self.host.route_path.read_bytes()))
+                self.assertFalse(self.commands("stop"))
+
     def test_inactive_slot_or_route_state_drift_is_not_overwritten(self):
         self.host.services.add("api-green")
         with self.assertRaisesRegex(deployment.DeploymentError, "unexpectedly running"):
