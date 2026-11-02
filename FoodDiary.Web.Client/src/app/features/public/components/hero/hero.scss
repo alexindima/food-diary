@@ -46,6 +46,12 @@
         gap: var(--fd-space-md);
         min-width: 0;
     }
+    &__sample fd-day-nutrition-summary {
+        grid-row: 2;
+    }
+    &__sample-note {
+        grid-row: 3;
+    }
     &__blob {
         display: none;
     }

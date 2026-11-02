@@ -379,6 +379,22 @@
     }
 
     @container (max-width: 759px) {
+        &__layout {
+            // The SVG arrives before the labels in streamed prerendered HTML.
+            // Reserve their compact rows before parsing completes; longer text can still grow.
+            --day-summary-label-lines: calc((var(--fd-text-body-sm-size) + var(--fd-text-caption-size) + var(--fd-text-body-size)) * 1.25);
+            --day-summary-label-spacing: calc((var(--fd-space-xxs) + var(--fd-space-micro) + var(--fd-border-width)) * 2);
+            --day-summary-nutrient-row-min: calc(var(--day-summary-label-lines) + var(--day-summary-label-spacing));
+            --day-summary-pulse-lines: calc(var(--fd-size-control-sm) + var(--fd-text-body-sm-size) * 1.35);
+            --day-summary-pulse-spacing: calc(
+                var(--fd-space-micro) + var(--fd-space-xxs) + var(--fd-border-width) * 2 + var(--fd-space-md)
+            );
+            --day-summary-pulse-row-min: calc(var(--day-summary-pulse-lines) + var(--day-summary-pulse-spacing));
+            grid-template-rows:
+                minmax(var(--day-summary-nutrient-row-min), max-content) auto minmax(var(--day-summary-nutrient-row-min), max-content)
+                minmax(var(--day-summary-pulse-row-min), max-content);
+        }
+
         &__nutrient {
             padding-block: var(--fd-space-xxs);
             gap: var(--fd-space-micro);

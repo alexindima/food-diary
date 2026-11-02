@@ -24,6 +24,17 @@ matrix on both device presets with three samples per case; see
 job concurrently with either collection.
 Dynamic recipe pages and authenticated screens are outside this static inventory.
 
+After building, `npm run test:landing-layout:browser` checks actual prerendered
+EN/RU home documents in Chrome at desktop and mobile widths. It pauses delivery
+before the nutrition labels that follow the summary SVG, then verifies that
+finishing the HTML does not move the hero heading. The guard holds the built
+stylesheet and font state constant to isolate streamed HTML from font swapping.
+Compact summary grids reserve
+their text rows from the owning typography and spacing tokens while allowing
+longer content to grow; the hero note is parsed before the chart and stays below
+it through grid placement. This deterministic streaming regression also runs after
+the main build in `npm run verify`; it is separate from Lighthouse measurements.
+
 Localization reuses a successfully loaded initial dictionary for the first route
 or application initialization. Concurrent requests for the same language and
 route share one in-flight load and one translation update. This avoids repeated

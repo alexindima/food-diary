@@ -37,8 +37,9 @@
 
             <article class="hero__sample">
                 <p class="hero__eyebrow">{{ 'LANDING_HERO.PANEL.EYEBROW' | translate }}</p>
+                <!-- Parse the note before the large chart; CSS keeps its visible position below it. -->
+                <p class="hero__subtitle hero__sample-note">{{ 'LANDING_HERO.PANEL.NOTE_TEXT' | translate }}</p>
                 <fd-day-nutrition-summary [data]="sampleSummary" />
-                <p class="hero__subtitle">{{ 'LANDING_HERO.PANEL.NOTE_TEXT' | translate }}</p>
             </article>
         </div>
     </div>
