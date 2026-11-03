@@ -996,6 +996,11 @@
           "reviewReason": "Reviewed ci-tests.yml focused/Full Wiki partitions and required aggregate gate: unchanged; added deployment runtime tests run in the existing script job. Index pipeline commands, worker bounds, failure propagation and freshness guidance remain accurate."
         },
         {
+          "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
+          "sha256": "5ade8897c75359d80ed39cb7a2080da5d9d0fadc430893a8211c261138215be6",
+          "reviewReason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees."
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1",
           "sha256": "43a2338fbc2f1c28d5b9ae159dfe5263000ee3cdd1bdaec9ceabefd366e73f96",
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
@@ -1006,10 +1011,10 @@
           "reviewReason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate."
         }
       ],
-      "reason": "Reviewed Core topology changes against ADR0060: the exact Compose inventory now includes20 services; all336 existing Core assertions remain, with two additional checks for green API uniqueness and matching green SSR dependency. Frozen Core count/hash was intentionally refreshed to338; Governed, Workspace, Orchestration and Common inventories, isolated shard dispatch, CI matrix and failure gate are unchanged. Full Core passed locally, the720-assertion inventory guard passed, and the affected facade-contract smoke passed. Generic pipeline guidance remains accurate.",
+      "reason": "Reviewed Linux proc stat ESRCH handling in Wait-LlmWikiProcessTermination. Only IOException after opening a disappearing proc entry is rechecked: confirmed process exit or absent proc directory returns true; errors for a live process are rethrown. Existing bounded waits, zombie-state recognition, process-tree ownership, native exit-code preservation, logging and index rollback remain unchanged. The index-pipeline documentation still accurately describes these guarantees.",
       "baseRef": "HEAD",
-      "gitHead": "2a8965bd8f8dc8020c804d82c1aa755dcb02fb1a",
-      "reviewedAtUtc": "2026-11-02T08:27:45.5197742Z"
+      "gitHead": "1d91054b9df75037a72d83989ea17af557230780",
+      "reviewedAtUtc": "2026-11-03T04:42:54.3603924Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

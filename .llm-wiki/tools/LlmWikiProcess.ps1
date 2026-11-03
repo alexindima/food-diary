@@ -119,6 +119,13 @@ function Wait-LlmWikiProcessTermination {
             try { $state = [IO.File]::ReadAllText("/proc/$($Process.Id)/stat") }
             catch [IO.FileNotFoundException] { return $true }
             catch [IO.DirectoryNotFoundException] { return $true }
+            catch [IO.IOException] {
+                # Linux can report ESRCH if the process exits after the proc file
+                # is opened. Only accept it after confirming termination.
+                $Process.Refresh()
+                if ($Process.HasExited -or -not [IO.Directory]::Exists("/proc/$($Process.Id)")) { return $true }
+                throw
+            }
             # The command field can contain spaces, parentheses and newlines.
             if ($state -notmatch '(?s)^\d+ \(.+\) ([A-Za-z]) ') {
                 throw "Cannot determine termination state for Wiki PID $($Process.Id)."

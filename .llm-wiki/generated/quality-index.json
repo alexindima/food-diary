@@ -1858,11 +1858,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
-      "nonBlankLines": 183,
-      "decisionPoints": 42,
+      "nonBlankLines": 190,
+      "decisionPoints": 45,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.66
+      "structuralRiskScore": 73.3
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProjectLookup.ps1",
