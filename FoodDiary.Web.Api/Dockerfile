@@ -283,7 +283,8 @@ COPY Shared/FoodDiary.Persistence.Runtime/FoodDiary.Persistence.Runtime.csproj S
 COPY Shared/FoodDiary.Persistence.PostgreSql/FoodDiary.Persistence.PostgreSql.csproj Shared/FoodDiary.Persistence.PostgreSql/
 COPY Shared/FoodDiary.Email.Infrastructure/FoodDiary.Email.Infrastructure.csproj Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/FoodDiary.Audit.Infrastructure.csproj Shared/FoodDiary.Audit.Infrastructure/
-RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --locked-mode
+ARG TARGETARCH
+RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --locked-mode --arch "$TARGETARCH" -p:PublishReadyToRun=true -p:FoodDiaryUseRuntimeLockFiles=true
 
 # Keep restore and source-copy layers below filesystem overlay mount limits.
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:cc02b814237a76c4735fb6eeee87181597b5e56f2ce458a435e527674d91f4d7 AS build
@@ -579,7 +580,9 @@ COPY Shared/FoodDiary.Persistence.Runtime/ Shared/FoodDiary.Persistence.Runtime/
 COPY Shared/FoodDiary.Persistence.PostgreSql/ Shared/FoodDiary.Persistence.PostgreSql/
 COPY Shared/FoodDiary.Email.Infrastructure/ Shared/FoodDiary.Email.Infrastructure/
 COPY Shared/FoodDiary.Audit.Infrastructure/ Shared/FoodDiary.Audit.Infrastructure/
-RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app/publish --no-restore
+ARG TARGETARCH
+ARG PUBLISH_READY_TO_RUN=true
+RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app/publish --no-restore --arch "$TARGETARCH" --self-contained false -p:PublishReadyToRun="$PUBLISH_READY_TO_RUN" -p:FoodDiaryUseRuntimeLockFiles=true
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine@sha256:254fe017495996d3abcc487ffacdcce2b73affb380d3af87af12c8dff41fe0b0
 

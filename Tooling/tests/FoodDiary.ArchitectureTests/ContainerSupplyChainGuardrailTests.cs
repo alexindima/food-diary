@@ -1,5 +1,6 @@
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using System.Text.Json.Nodes;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -298,6 +299,25 @@ public sealed class ContainerSupplyChainGuardrailTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedLockNames, lockNames);
+    }
+
+    [Fact]
+    public void ApiRuntimeLockFiles_PreserveGenericDependencyGraphs() {
+        string lockDirectory = ArchitectureTestPaths.FromRoot(".nuget", "lockfiles");
+        string runtimeDirectory = Path.Combine(lockDirectory, "linux-musl-x64");
+        string[] runtimeFiles = Directory.GetFiles(runtimeDirectory, "*.packages.lock.json");
+        Assert.NotEmpty(runtimeFiles);
+        Assert.Contains(runtimeFiles, path => string.Equals(Path.GetFileName(path), "FoodDiary.Web.Api.packages.lock.json", StringComparison.Ordinal));
+
+        Assert.All(runtimeFiles, path => {
+            string genericPath = Path.Combine(lockDirectory, Path.GetFileName(path));
+            Assert.True(File.Exists(genericPath), $"Runtime lock has no generic counterpart: {Path.GetFileName(path)}");
+            JsonObject genericDependencies = JsonNode.Parse(File.ReadAllText(genericPath))!["dependencies"]!.AsObject();
+            JsonObject runtimeDependencies = JsonNode.Parse(File.ReadAllText(path))!["dependencies"]!.AsObject();
+            Assert.All(genericDependencies, dependency =>
+                Assert.True(JsonNode.DeepEquals(dependency.Value, runtimeDependencies[dependency.Key]),
+                    $"Runtime lock changed the generic dependency graph: {Path.GetFileName(path)}, {dependency.Key}"));
+        });
     }
 
     [Fact]
