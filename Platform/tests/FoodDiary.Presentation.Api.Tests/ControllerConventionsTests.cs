@@ -84,6 +84,7 @@ public sealed class ControllerConventionsTests {
             ["AuthTelegramController"] = "api/v{version:apiVersion}/auth/telegram",
             ["AuthTelegramBackupEmailController"] = "api/v{version:apiVersion}/auth/telegram",
             ["AuthTelegramOnboardingController"] = "api/v{version:apiVersion}/auth/telegram",
+            ["AuthTelegramUnlinkController"] = "api/v{version:apiVersion}/auth/telegram/unlink/oidc",
             ["TelegramOperationsController"] = "api/v{version:apiVersion}/auth/telegram/bot/operations",
         };
 

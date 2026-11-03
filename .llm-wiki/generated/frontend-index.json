@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2802,
-    "symbols": 881,
+    "typescriptFiles": 2804,
+    "symbols": 882,
     "routes": 111,
     "features": 46,
-    "specs": 852,
+    "specs": 853,
     "localeFiles": 5,
     "roles": {
       "Component": 510,
@@ -20,7 +20,7 @@
       "Facade": 91,
       "Other": 41,
       "Pipe": 5,
-      "Service": 214
+      "Service": 215
     }
   },
   "features": [
@@ -3867,7 +3867,7 @@
       "role": "Component",
       "selector": "fd-telegram-auth",
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "line": 42
+      "line": 49
     },
     {
       "name": "CyclesService",
@@ -5722,7 +5722,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 36
+      "line": 37
     },
     {
       "name": "PrivacySettingsComponent",
@@ -5785,7 +5785,7 @@
       "role": "Component",
       "selector": "fd-user-manage-backup-email",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.ts",
-      "line": 20
+      "line": 21
     },
     {
       "name": "UserManagePasswordMethodComponent",
@@ -5806,7 +5806,7 @@
       "role": "Component",
       "selector": "fd-user-manage-telegram-connection",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
-      "line": 14
+      "line": 17
     },
     {
       "name": "UserManageNotificationsFacade",
@@ -7185,7 +7185,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "line": 115
+      "line": 124
     },
     {
       "name": "TelegramBotSdk",
@@ -7368,6 +7368,13 @@
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-backup-email-flow.service.ts",
       "line": 25
+    },
+    {
+      "name": "TelegramUnlinkFlowService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-unlink-flow.service.ts",
+      "line": 17
     },
     {
       "name": "TelegramWebAppService",
@@ -8380,8 +8387,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 4190,
-      "russianProperties": 4190,
+      "englishProperties": 4199,
+      "russianProperties": 4199,
       "countsMatch": true
     },
     {

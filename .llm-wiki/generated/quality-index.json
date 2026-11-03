@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 6917,
+    "productionFiles": 6924,
     "wikiToolFiles": 227,
     "wikiToolsWithoutTestReferences": 6,
-    "criticalSymbols": 1040,
-    "criticalSymbolsWithTestReferences": 991,
+    "criticalSymbols": 1043,
+    "criticalSymbolsWithTestReferences": 994,
     "criticalSymbolsWithoutTestReferences": 49,
     "debtMarkers": 12
   },
@@ -71,6 +71,14 @@
       "structuralRiskScore": 280.12
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
+      "nonBlankLines": 1340,
+      "decisionPoints": 166,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 275.8
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/users.service.ts",
       "nonBlankLines": 1327,
       "decisionPoints": 160,
@@ -93,14 +101,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 245.86
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "nonBlankLines": 1189,
-      "decisionPoints": 147,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 244.28
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -232,11 +232,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 649,
+      "nonBlankLines": 660,
       "decisionPoints": 109,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 176.48
+      "structuralRiskScore": 176.7
     },
     {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -759,20 +759,20 @@
       "structuralRiskScore": 106.06
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
+      "nonBlankLines": 569,
+      "decisionPoints": 63,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 105.88
+    },
+    {
       "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
       "nonBlankLines": 406,
       "decisionPoints": 63,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 104.62
-    },
-    {
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 562,
-      "decisionPoints": 62,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.24
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
@@ -11098,11 +11098,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/telegram-auth/telegram-auth.ts",
-      "nonBlankLines": 180,
-      "decisionPoints": 27,
+      "nonBlankLines": 206,
+      "decisionPoints": 30,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 44.1
+      "structuralRiskScore": 49.12
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
@@ -14562,11 +14562,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "nonBlankLines": 477,
-      "decisionPoints": 55,
+      "nonBlankLines": 474,
+      "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.04
+      "structuralRiskScore": 88.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/user-manage-dietologist-form.mapper.ts",
@@ -14618,11 +14618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "nonBlankLines": 170,
+      "nonBlankLines": 171,
       "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.4
+      "structuralRiskScore": 27.42
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.ts",
@@ -14674,11 +14674,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-backup-email.ts",
-      "nonBlankLines": 51,
-      "decisionPoints": 7,
+      "nonBlankLines": 53,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.52
+      "structuralRiskScore": 13.06
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-password-method.ts",
@@ -14690,19 +14690,19 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "nonBlankLines": 100,
+      "nonBlankLines": 101,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11
+      "structuralRiskScore": 11.02
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-telegram-connection.ts",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 1.98
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-date.mapper.ts",
@@ -14746,11 +14746,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "nonBlankLines": 562,
-      "decisionPoints": 62,
+      "nonBlankLines": 569,
+      "decisionPoints": 63,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 104.24
+      "structuralRiskScore": 105.88
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/profile.routes.ts",
@@ -16738,11 +16738,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts",
-      "nonBlankLines": 171,
+      "nonBlankLines": 172,
       "decisionPoints": 31,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.92
+      "structuralRiskScore": 49.94
     },
     {
       "path": "FoodDiary.Web.Client/src/app/interceptor/frontend-observability.interceptor.ts",
@@ -16770,11 +16770,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/auth.service.ts",
-      "nonBlankLines": 649,
+      "nonBlankLines": 660,
       "decisionPoints": 109,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 176.48
+      "structuralRiskScore": 176.7
     },
     {
       "path": "FoodDiary.Web.Client/src/app/services/error-handler.service.ts",
@@ -17250,11 +17250,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "nonBlankLines": 1189,
-      "decisionPoints": 147,
+      "nonBlankLines": 1340,
+      "decisionPoints": 166,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 244.28
+      "structuralRiskScore": 275.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-bot.service.ts",
@@ -19831,6 +19831,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.46
+    },
+    {
+      "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-unlink-flow.service.ts",
+      "nonBlankLines": 140,
+      "decisionPoints": 36,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 56.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-web-app.service.ts",
@@ -36857,6 +36865,22 @@
       "structuralRiskScore": 16.28
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommand.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommandHandler.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 13,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.48
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -37281,6 +37305,22 @@
       "structuralRiskScore": 6.96
     },
     {
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommandHandler.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.72
+    },
+    {
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -37407,6 +37447,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 7.94
+    },
+    {
+      "path": "Modules/Identity/Application/Authentication/Common/TelegramUnlinkOidcAttempt.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Identity/Application/Authentication/Models/ActiveSessionModel.cs",
@@ -38425,6 +38473,14 @@
       "structuralRiskScore": 3.44
     },
     {
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.76
+    },
+    {
       "path": "Modules/Identity/Presentation/Features/Auth/Controllers/BrowserSessionController.cs",
       "nonBlankLines": 66,
       "decisionPoints": 10,
@@ -38458,11 +38514,11 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
-      "nonBlankLines": 39,
+      "nonBlankLines": 44,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.78
+      "structuralRiskScore": 0.88
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOperationHttpMappings.cs",
@@ -56552,6 +56608,18 @@
       "coveredThrough": []
     },
     {
+      "name": "CompleteTelegramUnlinkCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/CompleteTelegramUnlink/CompleteTelegramUnlinkCommandHandler.cs",
+      "line": 12,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "ConfirmImageUploadCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
@@ -58525,6 +58593,18 @@
       "coveredThrough": []
     },
     {
+      "name": "StartTelegramUnlinkCommandHandler",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/StartTelegramUnlink/StartTelegramUnlinkCommandHandler.cs",
+      "line": 14,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/TelegramUnlinkHandlersTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "StartUserPremiumTrialCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/StartUserPremiumTrial/StartUserPremiumTrialCommandHandler.cs",
@@ -59658,6 +59738,18 @@
       "testReferences": [
         "Hosts/tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/TelegramConfigurationControllerTests.cs",
+        "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "AuthTelegramUnlinkController",
+      "role": "Controller",
+      "path": "Modules/Identity/Presentation/Features/Auth/Controllers/AuthTelegramUnlinkController.cs",
+      "line": 31,
+      "testReferenceCount": 1,
+      "testReferences": [
         "Platform/tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

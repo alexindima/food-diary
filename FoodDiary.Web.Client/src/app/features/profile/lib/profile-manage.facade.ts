@@ -14,6 +14,7 @@ import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
 import { TelegramBackupEmailFlowService } from '../../../shared/auth/telegram-backup-email-flow.service';
+import { TelegramUnlinkFlowService } from '../../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { RequestStateController } from '../../../shared/lib/request-state';
@@ -51,6 +52,7 @@ export class ProfileManageFacade {
     private readonly profileMeasurementsService = inject(ProfileMeasurementsService);
     private readonly telegram = inject(TelegramWebAppService);
     private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
+    private readonly unlinkFlow = inject(TelegramUnlinkFlowService);
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
@@ -60,6 +62,7 @@ export class ProfileManageFacade {
     public readonly isRevokingAiConsent = signal(false);
     public readonly isLinkingGoogle = signal(false);
     public readonly isUnlinkingTelegram = signal(false);
+    public readonly telegramUnlinkError = signal<string | null>(null);
     public readonly isRequestingBackupEmail = signal(false);
     public readonly backupEmailSentTo = signal<string | null>(null);
     public readonly backupEmailResendAt = signal(0);
@@ -105,6 +108,7 @@ export class ProfileManageFacade {
     }
 
     public initialize(): void {
+        this.telegramUnlinkError.set(this.unlinkFlow.consumeError());
         const pendingEmail = this.backupEmailFlow.read();
         if (pendingEmail !== null && pendingEmail.sentAt !== null) {
             this.backupEmailSentTo.set(pendingEmail.email);
@@ -286,10 +290,11 @@ export class ProfileManageFacade {
             return;
         }
         if (!this.hasBackupLogin(user)) {
-            this.setGlobalError('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
+            this.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
             return;
         }
         this.isUnlinkingTelegram.set(true);
+        this.telegramUnlinkError.set(null);
         try {
             const confirmed = await firstValueFrom(
                 this.dialogService
@@ -298,7 +303,7 @@ export class ProfileManageFacade {
                         data: {
                             title: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
                             message: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONFIRM'),
-                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
+                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONTINUE'),
                             cancelLabel: this.translateService.instant('COMMON.CANCEL'),
                         },
                     })
@@ -307,17 +312,9 @@ export class ProfileManageFacade {
             if (confirmed !== true) {
                 return;
             }
-            await this.telegram.initializeAsync();
-            const initData = this.telegram.getInitData();
-            if (initData === null || initData.length === 0) {
-                this.setGlobalError('USER_MANAGE.TELEGRAM_REOPEN');
-                return;
-            }
-            await firstValueFrom(this.authService.unlinkTelegram(initData));
-            this.user.set({ ...user, hasTelegramIdentity: false });
-            await this.authService.onLogoutAsync(true);
+            await this.unlinkFlow.startAsync();
         } catch {
-            this.setGlobalError('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+            this.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
         } finally {
             this.isUnlinkingTelegram.set(false);
         }
