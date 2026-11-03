@@ -50,21 +50,24 @@ afterEach(() => {
 });
 
 describe('Telegram unlink confirmation', () => {
-    it('does not refresh or replay a rejected single-use confirmation', () => {
-        const path = `${root}/auth/telegram/unlink/oidc/complete`;
-        const failed = vi.fn();
-        const rejection = { error: 'Authentication.TelegramInvalidProof' };
-        const status = { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' };
-        http.post(path, { code: 'code', state: 'attempt' }).subscribe({ error: failed });
-        requests.expectOne(path).flush(rejection, status);
-        const repeated = requests.match(path);
-        for (const request of repeated) {
-            request.flush(rejection, status);
-        }
-        expect(auth.refreshSession, 'Unlink confirmation must not restart the current session').not.toHaveBeenCalled();
-        expect(repeated).toHaveLength(0);
-        expect(failed).toHaveBeenCalledOnce();
-    });
+    it.each(['/auth/telegram/unlink/oidc/complete', '/auth/telegram/disconnect'])(
+        'does not refresh or replay a rejected account disconnect %s',
+        pathSuffix => {
+            const path = `${root}${pathSuffix}`;
+            const failed = vi.fn();
+            const rejection = { error: 'Authentication.TelegramInvalidProof' };
+            const status = { status: HttpStatusCode.Unauthorized, statusText: 'Unauthorized' };
+            http.post(path, { code: 'code', state: 'attempt' }).subscribe({ error: failed });
+            requests.expectOne(path).flush(rejection, status);
+            const repeated = requests.match(path);
+            for (const request of repeated) {
+                request.flush(rejection, status);
+            }
+            expect(auth.refreshSession, 'Unlink confirmation must not restart the current session').not.toHaveBeenCalled();
+            expect(repeated).toHaveLength(0);
+            expect(failed).toHaveBeenCalledOnce();
+        },
+    );
 });
 
 describe('browser session request protection', () => {

@@ -7185,7 +7185,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/sdk/generated/api/telegram-auth.service.ts",
-      "line": 124
+      "line": 128
     },
     {
       "name": "TelegramBotSdk",

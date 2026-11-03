@@ -8,6 +8,8 @@ using FoodDiary.Modules.Identity.Application.Authentication.Commands.RequestTele
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.UnlinkTelegram;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.StartTelegramUnlink;
 using FoodDiary.Modules.Identity.Application.Authentication.Commands.CompleteTelegramUnlink;
+using FoodDiary.Modules.Identity.Application.Authentication.Commands.DisconnectTelegram;
+using FoodDiary.Modules.Identity.Presentation.Security;
 using FoodDiary.Modules.Identity.Application.Authentication.Queries.GetTelegramConfiguration;
 using FoodDiary.Modules.Identity.Application.Authentication.Models;
 using FoodDiary.Modules.Identity.Presentation.Features.Auth.Requests;
@@ -25,6 +27,9 @@ public static class TelegramOnboardingHttpMappings {
         new(userId, request.Email, request.InitData);
 
     public static UnlinkTelegramCommand ToUnlinkCommand(this TelegramAuthHttpRequest request, Guid userId) => new(userId, request.InitData);
+
+    public static DisconnectTelegramCommand ToDisconnectCommand(Guid userId, HttpContext context) =>
+        new(userId, TelegramAccountRequestContext.ReadSecurityVersion(context));
 
     public static StartTelegramUnlinkCommand ToUnlinkStartCommand(Guid userId, string binding) => new(userId, binding);
 

@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 4741,
-    "symbols": 4676,
+    "sourceFiles": 4744,
+    "symbols": 4679,
     "interfaceImplementationLinks": 211,
     "dependencyInjectionRegistrations": 74,
     "kinds": {
-      "class": 2416,
+      "class": 2418,
       "enum": 74,
       "interface": 426,
-      "record": 1617,
+      "record": 1618,
       "record struct": 143
     },
     "roles": {
-      "Command": 245,
-      "CommandHandler": 239,
+      "Command": 246,
+      "CommandHandler": 240,
       "Configuration": 104,
       "Controller": 116,
       "Entity": 105,
@@ -32,7 +32,7 @@
       "Mapper": 9,
       "Mapping": 4,
       "Options": 75,
-      "Other": 1925,
+      "Other": 1926,
       "Query": 308,
       "QueryHandler": 222,
       "ReadModelRepository": 33,
@@ -16197,6 +16197,20 @@
       "line": 7
     },
     {
+      "name": "DisconnectTelegramCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DisconnectTelegramCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
+      "line": 9
+    },
+    {
       "name": "ExchangeTelegramOidcCommand",
       "kind": "record",
       "role": "Command",
@@ -17608,7 +17622,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
-      "line": 18
+      "line": 20
     },
     {
       "name": "TelegramOperationHttpMappings",
@@ -17910,6 +17924,13 @@
       "role": "Other",
       "path": "Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs",
       "line": 4
+    },
+    {
+      "name": "TelegramAccountRequestContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/TelegramAccountRequestContext.cs",
+      "line": 7
     },
     {
       "name": "TelegramBotSecretAuthorizationFilter",

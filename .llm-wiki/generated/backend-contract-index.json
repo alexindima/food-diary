@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1396,
+    "contracts": 1397,
     "ambiguousContracts": 29,
-    "consumerEdges": 11314,
-    "productionConsumerEdges": 6281,
-    "testConsumerEdges": 5033,
-    "consumedContracts": 1396,
+    "consumerEdges": 11326,
+    "productionConsumerEdges": 6289,
+    "testConsumerEdges": 5037,
+    "consumedContracts": 1397,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -4716,6 +4716,23 @@
       ],
       "definitionPaths": [
         "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "DisconnectTelegramCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -41393,6 +41410,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "DisconnectTelegramCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DisconnectTelegramCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/TelegramOnboardingHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DisconnectTelegramCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/DisconnectTelegramCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "DisconnectWearableCommand",
       "roles": [
         "Command"
@@ -68223,6 +68279,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ExchangeTelegramOidc/ExchangeTelegramOidcCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -70616,6 +70685,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/CreateBrowserSession/CreateBrowserSessionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104377,6 +104459,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -104575,6 +104670,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/DisconnectTelegramCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IPostCommitActionQueue",
@@ -127582,6 +127690,19 @@
         "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramOperationStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RegisterTelegramOperation/RegisterTelegramOperationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -127650,6 +127771,19 @@
       "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramOperationStore.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramOperationStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application.Abstractions/Authentication/Common/ITelegramOperationStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/DisconnectTelegramCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ITelegramOperationStore",
@@ -136500,6 +136634,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/RequestTelegramBackupEmail/RequestTelegramBackupEmailCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -138476,6 +138623,19 @@
         "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Application/Authentication/Commands/DisconnectTelegram/DisconnectTelegramCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserTelegramAccountService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/UnlinkTelegram/UnlinkTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -138531,6 +138691,19 @@
       "consumerPath": "Modules/Users/Application/Services/UserTelegramAccountService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserTelegramAccountService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Common/IUserTelegramAccountService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/DisconnectTelegramCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IUserTelegramAccountService",

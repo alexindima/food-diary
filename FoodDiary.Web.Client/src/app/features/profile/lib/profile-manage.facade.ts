@@ -303,7 +303,7 @@ export class ProfileManageFacade {
                         data: {
                             title: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
                             message: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONFIRM'),
-                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK_CONTINUE'),
+                            confirmLabel: this.translateService.instant('USER_MANAGE.TELEGRAM_UNLINK'),
                             cancelLabel: this.translateService.instant('COMMON.CANCEL'),
                         },
                     })
@@ -312,7 +312,10 @@ export class ProfileManageFacade {
             if (confirmed !== true) {
                 return;
             }
-            await this.unlinkFlow.startAsync();
+            if (await this.unlinkFlow.disconnectAsync()) {
+                this.user.set({ ...user, hasTelegramIdentity: false });
+                await this.authService.onLogoutAsync(true);
+            }
         } catch {
             this.telegramUnlinkError.set('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
         } finally {

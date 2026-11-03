@@ -7213,6 +7213,32 @@
       ]
     },
     {
+      "Path": "/api/v{version}/auth/telegram/disconnect",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "409",
+            "413",
+            "429",
+            "500"
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/auth/telegram/link",
       "Operations": [
         {

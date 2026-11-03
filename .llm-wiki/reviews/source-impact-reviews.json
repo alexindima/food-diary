@@ -30,7 +30,7 @@
       "reason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change.",
       "baseRef": "HEAD",
       "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
-      "reviewedAtUtc": "2026-11-03T03:57:28.2531520Z"
+      "reviewedAtUtc": "2026-11-03T03:57:28.253152Z"
     },
     {
       "pageId": "module.frontend",
@@ -338,25 +338,25 @@
           "reviewReason": "Re-reviewed the already approved browser-session migration against the latest successful CI baseline ab972d2e5a146f3a5a569102e10f629411c37f14. Both baseline snapshot fingerprints are unchanged; current OpenAPI fingerprint7b3bbbc1c68b313875544182272689952358f3cfb29e20169f5898a273ff3f19 includes session hardening. The exact two approved nullable accessToken identities remain the complete breaking list. FailOnBreaking accepts only those two; the regression suite still rejects unapproved changes. User, admin and bot contract generation passed in CI for cf30f8696. No acceptance scope or guard logic is broadened."
         },
         {
+          "path": "docs/frontend/API_SDK.md",
+          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
+          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
+        },
+        {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
           "sha256": "fba5ad464e6976a17c625076473cfde7f81b5902f5c4097076342f335135e29f",
           "reviewReason": "Reviewed the existing compatibility workflow against the final diff: PresentationBoundaryIntegrationTests only grants explicit current health consent in its positive registration fixture; contract generation, comparison baselines, acceptance policy and endpoint assertions are unchanged. All five real-host OpenAPI exports pass and user/admin/bot live SDK checks pass."
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0607dbe3204165a4e708cdb1a075abb3a17aeaa2f584d8dca13303aedd4dcf9f",
-          "reviewReason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed."
-        },
-        {
-          "path": "docs/frontend/API_SDK.md",
-          "sha256": "cc1af610b6c9bebb2ebd8293b31d21e3dd14cf4fc95686a14ae25bb3b5d240a8",
-          "reviewReason": "Reviewed the CI workflow and API_SDK.md diffs against the API compatibility and frontend contract pages. Existing user, admin and bot SDK gates, last-successful ancestral API baseline selection and transport exception contracts are unchanged; only the duplicate pre-push invocation was removed. Dependency baseline and Storybook checks now run as failing CI steps."
+          "sha256": "74a28550c1bd762f80790328eac71fc9833371f232eb7da72550eaeeed7cba64",
+          "reviewReason": "Reviewed the incoming origin/master 2dd773b10 snapshot: the POST Telegram disconnect operation is additive; the compatibility guard against pre-merge HEAD passed with no unaccepted breaks. The merged full OpenAPI snapshot is byte-identical to origin/master. Generated user SDK, its scope and Telegram consumer changes were merged without edits, and 121 focused frontend tests passed. Existing comparison, acceptance and snapshot workflow guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed.",
+      "reason": "Reviewed the incoming origin/master 2dd773b10 snapshot: the POST Telegram disconnect operation is additive; the compatibility guard against pre-merge HEAD passed with no unaccepted breaks. The merged full OpenAPI snapshot is byte-identical to origin/master. Generated user SDK, its scope and Telegram consumer changes were merged without edits, and 121 focused frontend tests passed. Existing comparison, acceptance and snapshot workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T08:44:50.3691955Z"
+      "gitHead": "3e63fe28eba149619f3e738865766e05728ad908",
+      "reviewedAtUtc": "2026-11-03T14:01:48.1667469Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "141951bb553ff8701e6059e11a2c4e0d2b39b663fbd2d13a4ede44001d999ad3",
-          "reviewReason": "Replayed the sealed marketing-consent-card frontend task through learning-observe on current master. The only new hash-linked observed event is cost-frontend-i18n (expected 1272s, measured 1s), with original completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. No approval, experiment or application event was added; the documented review and materialization boundary remains accurate."
+          "sha256": "c9585045618a1b0b8edf405fa0f83d873062e956f22a056005785ebbbaa9e7dc",
+          "reviewReason": "Merge resolution preserved the complete 86-event origin/master learning chain unchanged, including six Telegram task observations, then used learning-observe to replay the sealed marketing-consent-card cost-frontend-i18n observation. The merged registry has 87 events. No approval, experiment or application was added; human review and explicit materialization remain required as documented."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Replayed the sealed marketing-consent-card frontend task through learning-observe on current master. The only new hash-linked observed event is cost-frontend-i18n (expected 1272s, measured 1s), with original completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. No approval, experiment or application event was added; the documented review and materialization boundary remains accurate.",
+      "reason": "Merge resolution preserved the complete 86-event origin/master learning chain unchanged, including six Telegram task observations, then used learning-observe to replay the sealed marketing-consent-card cost-frontend-i18n observation. The merged registry has 87 events. No approval, experiment or application was added; human review and explicit materialization remain required as documented.",
       "baseRef": "HEAD",
-      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
-      "reviewedAtUtc": "2026-11-03T13:50:44.6328630Z"
+      "gitHead": "3e63fe28eba149619f3e738865766e05728ad908",
+      "reviewedAtUtc": "2026-11-03T14:01:48.7426801Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -731,7 +731,7 @@
       "reason": "Reviewed ADR catalog and accepted ADR0060 against0055 atomic publication and0058 session ownership: new slot handover is documented without changing generic ADR trigger or decision lookup guidance.",
       "baseRef": "HEAD",
       "gitHead": "355a34dd8e3aae32efc7ea92da473ac3e2321908",
-      "reviewedAtUtc": "2026-11-02T07:46:34.0184560Z"
+      "reviewedAtUtc": "2026-11-02T07:46:34.018456Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -757,7 +757,7 @@
       "reason": "Reviewed configuration index and direct project reference/lockfile changes: no package-version upgrades or new provider dependencies; consent schema, default-on health gate and matching client require coordinated rollout. Migration/provider verification remains blocked by local Docker and is recorded as pending.",
       "baseRef": "HEAD",
       "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:19.0053320Z"
+      "reviewedAtUtc": "2026-11-01T23:06:19.005332Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -819,7 +819,7 @@
       "reason": "Reviewed consent factory, purpose/version/UTC validation, event FK cascade, user repository event state tracking and paired EF migration. Domain and archive unit checks passed; real PostgreSQL migration, translation and rollback coverage remains pending. The workflow correctly requires real-provider evidence.",
       "baseRef": "HEAD",
       "gitHead": "2ac962cbcacde63be1994eac2044eb9facde88ce",
-      "reviewedAtUtc": "2026-11-01T23:06:20.1397990Z"
+      "reviewedAtUtc": "2026-11-01T23:06:20.139799Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "18c50f6f49a872970d4235b1a69e0ae2ba291c141f6c74a566aa834a2f10d5e3",
-          "reviewReason": "instruction-outcome-observe appended the completed marketing-consent-card task with its original ordered AGENTS.md source hashes and sealed completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. This preserves historical instruction provenance after transfer onto master. No instructions, policies or experiment behavior changed; the page remains accurate."
+          "sha256": "b2e583e9c278ee2cbf5e0ee06812b2112f1572cbdd0371f0dda02e4bc0e66eeb",
+          "reviewReason": "Preserved all 38 origin/master instruction-outcome events unchanged, including the Telegram task, then used instruction-outcome-observe to replay the sealed marketing-consent-card completion with original AGENTS.md fingerprints. Both task outcomes remain present in the 39-event chain. No authoritative instruction or experiment behavior changed; the historical provenance contract remains accurate."
         }
       ],
-      "reason": "instruction-outcome-observe appended the completed marketing-consent-card task with its original ordered AGENTS.md source hashes and sealed completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. This preserves historical instruction provenance after transfer onto master. No instructions, policies or experiment behavior changed; the page remains accurate.",
+      "reason": "Preserved all 38 origin/master instruction-outcome events unchanged, including the Telegram task, then used instruction-outcome-observe to replay the sealed marketing-consent-card completion with original AGENTS.md fingerprints. Both task outcomes remain present in the 39-event chain. No authoritative instruction or experiment behavior changed; the historical provenance contract remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
-      "reviewedAtUtc": "2026-11-03T13:50:45.4231904Z"
+      "gitHead": "3e63fe28eba149619f3e738865766e05728ad908",
+      "reviewedAtUtc": "2026-11-03T14:01:49.3485343Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "3f1b7c1acef91d3c064b910a72369701306e80cc8c225ca4e84ae2a030451756",
-          "reviewReason": "eval-observe appended one marketing-consent-card candidate from the sealed cost-frontend-i18n retrospective signal. The existing chain is preserved and no approval, apply or rollback event was added. Static eval definitions and active case selection are unchanged, matching the documented separation between observation, review and activation."
+          "sha256": "448e2563093e6793c9db7656138c857ee80963c36da13239cd7ab42b8e360974",
+          "reviewReason": "Preserved all 17 origin/master eval-promotion events unchanged, then used eval-observe to append the sealed marketing-consent-card candidate as event 18. The incoming Telegram candidate and local consent candidate both remain observed only. No active eval definition, approval or application changed; documented observation, review and activation boundaries remain accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "eval-observe appended one marketing-consent-card candidate from the sealed cost-frontend-i18n retrospective signal. The existing chain is preserved and no approval, apply or rollback event was added. Static eval definitions and active case selection are unchanged, matching the documented separation between observation, review and activation.",
+      "reason": "Preserved all 17 origin/master eval-promotion events unchanged, then used eval-observe to append the sealed marketing-consent-card candidate as event 18. The incoming Telegram candidate and local consent candidate both remain observed only. No active eval definition, approval or application changed; documented observation, review and activation boundaries remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
-      "reviewedAtUtc": "2026-11-03T13:50:46.1589690Z"
+      "gitHead": "3e63fe28eba149619f3e738865766e05728ad908",
+      "reviewedAtUtc": "2026-11-03T14:01:49.9074525Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1373,8 +1373,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "70345bbc005bd7840e4f391e79188e41e83b88f2d9620d9d985056043cb39c34",
-          "reviewReason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit."
+          "sha256": "976bdf0836ea560659f32640329ace2c3d14c100b4948f90b5d929d15ab284d0",
+          "reviewReason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1387,10 +1387,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit.",
+      "reason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T08:44:52.1142146Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:09:04.6186664Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1411,7 +1411,7 @@
       "reason": "Reviewed advisory ranking-only rule plus equivalent normalization consolidation. No security or application authorization behavior changed; combined budget remains700 and curated discovery still treats search results as leads only.",
       "baseRef": "HEAD",
       "gitHead": "40f3e0a7a8610c47d5cc832391205e937a30a1f1",
-      "reviewedAtUtc": "2026-11-02T05:28:55.9869790Z"
+      "reviewedAtUtc": "2026-11-02T05:28:55.986979Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

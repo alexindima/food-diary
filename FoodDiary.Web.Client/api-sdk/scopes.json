@@ -438,6 +438,7 @@
             "POST /api/v{version}/auth/telegram/oidc/start": "postAuthTelegramOidcStart",
             "POST /api/v{version}/auth/telegram/oidc/start-link": "postAuthTelegramOidcStartLink",
             "POST /api/v{version}/auth/telegram/unlink": "postAuthTelegramUnlink",
+            "POST /api/v{version}/auth/telegram/disconnect": "postAuthTelegramDisconnect",
             "POST /api/v{version}/auth/telegram/unlink/oidc/start": "postAuthTelegramUnlinkOidcStart",
             "POST /api/v{version}/auth/telegram/unlink/oidc/complete": "postAuthTelegramUnlinkOidcComplete",
             "POST /api/v{version}/auth/telegram/verify": "postAuthTelegramVerify"

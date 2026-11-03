@@ -52,6 +52,16 @@ export class TelegramUnlinkFlowService {
         this.browser.open(url.href, '_self');
     }
 
+    public async disconnectAsync(): Promise<boolean> {
+        const userId = this.auth.getUserId();
+        if (userId === null) {
+            throw new Error('Authentication required');
+        }
+        const revision = this.sessionRevision;
+        await firstValueFrom(this.auth.disconnectTelegram());
+        return this.isCurrentSession(userId, revision);
+    }
+
     public async handleCallbackAsync(
         code: TelegramOAuthCode | null,
         state: TelegramOAuthState | null,

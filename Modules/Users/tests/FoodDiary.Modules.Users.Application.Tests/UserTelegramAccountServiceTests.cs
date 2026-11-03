@@ -143,6 +143,31 @@ public sealed class UserTelegramAccountServiceTests {
         await _sessions.Received(1).RevokeAllAsync(user.Id, Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData("success")]
+    [InlineData("stale")]
+    [InlineData("last-login")]
+    public async Task DisconnectAsync_UsesCurrentAccountBindingAndPreservesSecurityChecks(string scenario) {
+        var user = User.CreateTelegram(123, "hash");
+        if (!string.Equals(scenario, "last-login", StringComparison.Ordinal)) {
+            user.LinkGoogleIdentity("https://accounts.google.com", "subject");
+        }
+        _lookup.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        bool stale = string.Equals(scenario, "stale", StringComparison.Ordinal);
+        long version = user.SecurityVersion + (stale ? 1 : 0);
+
+        Result result = await CreateService().DisconnectAsync(user.Id, version, CancellationToken.None);
+
+        bool success = string.Equals(scenario, "success", StringComparison.Ordinal);
+        Assert.Equal(success, result.IsSuccess);
+        Assert.Equal(success, user.TelegramUserId is null);
+        await _writer.Received(success ? 1 : 0).UpdateAsync(user, CancellationToken.None);
+        await _sessions.Received(success ? 1 : 0).RevokeAllAsync(user.Id, Arg.Any<DateTime>(), CancellationToken.None);
+        if (!success) {
+            Assert.Equal(stale ? "Authentication.TelegramProofStale" : "User.LastSignInMethod", result.Error.Code);
+        }
+    }
+
     [Fact]
     public async Task AddVerifiedEmailAsync_ConflictDoesNotMergeAccounts() {
         var user = User.CreateTelegram(123, "hash");
