@@ -262,6 +262,56 @@ Current diagnostic value:
 
 ## Added Database Failure Signals
 
+### PostgreSQL performance metrics
+
+With an OTLP endpoint configured, the API and JobManager subscribe to the
+native `Npgsql` meter (Npgsql 10). This includes commands issued outside EF Core,
+such as Hangfire storage operations. No PostgreSQL configuration change or
+database restart is required.
+
+| Instrument | Meaning | Prometheus name |
+| --- | --- | --- |
+| `db.client.operation.duration` | Completed database operations, in seconds | `db_client_operation_duration_seconds_{bucket,count,sum}` |
+| `db.client.operation.npgsql.executing` | Commands currently executing | `db_client_operation_npgsql_executing` |
+| `db.client.operation.failed` | Failed database commands | `db_client_operation_failed_total` |
+| `db.client.connection.count` | Current idle/used connections | `db_client_connection_count` |
+| `db.client.connection.max` | Sum of client connection-pool limits | `db_client_connection_max` |
+| `db.client.connection.npgsql.pending_requests` | Requests waiting for a pooled connection | `db_client_connection_npgsql_pending_requests` |
+| `db.client.connection.npgsql.timeouts` | Timeouts obtaining a pooled connection | `db_client_connection_npgsql_timeouts_total` |
+| `db.client.connection.npgsql.create_time` | New-connection creation time, in seconds | `db_client_connection_npgsql_create_time_seconds_{bucket,count,sum}` |
+
+Duration histograms use finite boundaries of 1, 5, 10, 25, 50, 100, 250, 500,
+1000, 2500, 5000, 10000 and 30000 milliseconds, represented in seconds.
+The source-controlled Backend Reliability dashboard shows latency p95/p99/mean,
+operation rate, active operations, failures, connections, pool waits/timeouts
+and connection-creation p95, separated by `exported_job` for the API and
+JobManager. On collectors that use another resource-label mapping, adapt that
+service grouping to the actual exported labels.
+
+The metric view permits only `db.system.name` and
+`db.client.connection.state` (idle/used) from Npgsql. Pool identity, connection
+strings, host/port, query text, parameters and any future attributes are dropped.
+Both hosts explicitly disable metric exemplars, including when an environment
+default enables them: dropped attributes can otherwise survive as exemplar
+filtered tags. The per-pool prepared ratio is not exported, because removing
+pool identity would make that non-additive gauge ambiguous. Existing trace
+privacy processors remain unchanged.
+
+Pools are aggregated within each service. The client pool maximum is not the
+PostgreSQL `max_connections` setting; one exhausted pool can have waiting
+requests even when other pools are idle. These metrics do not identify
+individual SQL statements or request values. They include health checks and
+other driver commands, and their duration is client-observed time, not pure
+server CPU time. Empty series before the first observation or without traffic
+are not proof of health. Use the existing API/module latency metrics and
+separate database diagnostics to investigate a particular slow operation.
+
+After deploying the instrumented hosts and importing the repository dashboard,
+perform the user journey, allow at least two exporter/scrape intervals, and
+compare API latency with SQL duration, operation rate and pool waits in the same
+time window. Trace or database-server diagnostics remain necessary for exact
+statement attribution.
+
 The infrastructure layer now also emits a stable counter when EF Core database commands fail.
 
 Metric:

@@ -3826,11 +3826,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 2,
+      "nonBlankLines": 63,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
+      "structuralRiskScore": 7.26
     },
     {
       "path": "FoodDiary.JobManager/Services/MarketingAttributionCleanupJob.cs",
@@ -5442,11 +5442,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "nonBlankLines": 64,
-      "decisionPoints": 3,
+      "nonBlankLines": 85,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 9.2
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/BrowserRequestProtectionMiddleware.cs",

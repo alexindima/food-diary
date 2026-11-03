@@ -1074,7 +1074,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MarketingAttributionCleanupJob",
@@ -2467,7 +2467,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "BrowserRequestProtectionMiddleware",

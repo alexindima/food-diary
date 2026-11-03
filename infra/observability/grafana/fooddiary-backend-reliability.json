@@ -85,6 +85,205 @@
       ],
       "title": "Database failures (15m)",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Client-observed database operation duration, including health checks and non-EF commands. Empty periods indicate no observed traffic.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, exported_job) (rate(db_client_operation_duration_seconds_bucket{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m])))",
+          "legendFormat": "{{exported_job}} p95",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le, exported_job) (rate(db_client_operation_duration_seconds_bucket{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m])))",
+          "legendFormat": "{{exported_job}} p99",
+          "refId": "B"
+        },
+        {
+          "expr": "sum by (exported_job) (rate(db_client_operation_duration_seconds_sum{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m])) / sum by (exported_job) (rate(db_client_operation_duration_seconds_count{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m]))",
+          "legendFormat": "{{exported_job}} mean",
+          "refId": "C"
+        }
+      ],
+      "title": "PostgreSQL operation latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Completed Npgsql operations per second; compare API and JobManager activity.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 7,
+      "targets": [
+        {
+          "expr": "sum by (exported_job) (rate(db_client_operation_duration_seconds_count{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m]))",
+          "legendFormat": "{{exported_job}}",
+          "refId": "A"
+        }
+      ],
+      "title": "PostgreSQL operation rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Pools are aggregated per service. Client pool limits are distinct from PostgreSQL max_connections.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 8,
+      "targets": [
+        {
+          "expr": "sum by (exported_job, db_client_connection_state) (db_client_connection_count{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"})",
+          "legendFormat": "{{exported_job}} {{db_client_connection_state}}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (exported_job) (db_client_connection_max{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"})",
+          "legendFormat": "{{exported_job}} client pool maximum",
+          "refId": "B"
+        }
+      ],
+      "title": "Npgsql connections (all pools)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "One pool may be exhausted while another remains idle. Timeouts are failures obtaining a pooled connection.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "sum by (exported_job) (db_client_connection_npgsql_pending_requests{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"})",
+          "legendFormat": "{{exported_job}} waiting now",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (exported_job) (increase(db_client_connection_npgsql_timeouts_total{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[15m]))",
+          "legendFormat": "{{exported_job}} timeouts / 15m",
+          "refId": "B"
+        }
+      ],
+      "title": "Npgsql pool waits and timeouts",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "New-connection creation duration. No new connections in the window can leave this panel empty.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 10,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, exported_job) (rate(db_client_connection_npgsql_create_time_seconds_bucket{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[5m])))",
+          "legendFormat": "{{exported_job}} p95",
+          "refId": "A"
+        }
+      ],
+      "title": "PostgreSQL connection creation p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Driver-level activity and failures, including commands outside EF Core. Complements the existing EF failure panel.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "id": 11,
+      "targets": [
+        {
+          "expr": "sum by (exported_job) (db_client_operation_npgsql_executing{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"})",
+          "legendFormat": "{{exported_job}} executing now",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (exported_job) (increase(db_client_operation_failed_total{exported_job=~\"FoodDiary.Web.Api|FoodDiary.JobManager\"}[15m]))",
+          "legendFormat": "{{exported_job}} failures / 15m",
+          "refId": "B"
+        }
+      ],
+      "title": "PostgreSQL active operations and failures",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
@@ -109,5 +308,5 @@
   "timezone": "browser",
   "title": "FoodDiary Backend Reliability",
   "uid": "fooddiary-backend-reliability",
-  "version": 1
+  "version": 2
 }

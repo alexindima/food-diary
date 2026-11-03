@@ -24,8 +24,8 @@
       "sources": [
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "240577d2ebd365f5e0310e0f5a0cf67f8df5a75852fc0e1c2aa730ee7a216145",
-          "reviewReason": "Reviewed the observability baseline against TelegramAuthValidator and its diagnostic tests: bounded constant stage/reason codes, no proof or user values, information-level single rejection entries, unchanged API and authentication behavior. Index navigation and performance-observability workflow links remain accurate."
+          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
+          "reviewReason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change."
         },
         {
           "path": "docs/README.md",
@@ -33,10 +33,10 @@
           "reviewReason": "Reviewed docs/README.md addition and index routing: the new deployment runbook is canonical operational documentation; modular monolith, hosts and discovery entrypoints remain accurate."
         }
       ],
-      "reason": "Reviewed the observability baseline against TelegramAuthValidator and its diagnostic tests: bounded constant stage/reason codes, no proof or user values, information-level single rejection entries, unchanged API and authentication behavior. Index navigation and performance-observability workflow links remain accurate.",
+      "reason": "Reviewed the PostgreSQL performance section added to BACKEND_OBSERVABILITY_BASELINE.md against API and JobManager registration. The knowledge index still routes operators to that authoritative baseline and production diagnostics; it contains no metric inventory requiring a text change.",
       "baseRef": "HEAD",
-      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
-      "reviewedAtUtc": "2026-11-02T13:57:28.0703170Z"
+      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
+      "reviewedAtUtc": "2026-11-03T03:57:28.2531520Z"
     },
     {
       "pageId": "module.frontend",
@@ -1118,14 +1118,14 @@
         },
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "240577d2ebd365f5e0310e0f5a0cf67f8df5a75852fc0e1c2aa730ee7a216145",
-          "reviewReason": "Reviewed the performance-observability workflow against the updated baseline; its flow, security/privacy, cardinality and verification guidance remains accurate. The Mini App diagnostics add only bounded reason codes and introduce no metric, duration or provider-call changes."
+          "sha256": "d10fef273ec7fcaece67a32aa6fa5a2f0e674c45428c2a65daaee2ca9649b28c",
+          "reviewReason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the performance-observability workflow against the updated baseline; its flow, security/privacy, cardinality and verification guidance remains accurate. The Mini App diagnostics add only bounded reason codes and introduce no metric, duration or provider-call changes.",
+      "reason": "Verified the existing workflow requires stable low-cardinality measurements and exclusion of secrets and unbounded identifiers. Native Npgsql views retain only database system and connection state, explicitly disable exemplars, and are exercised by host exporter tests; the workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
-      "reviewedAtUtc": "2026-11-02T13:57:28.4850216Z"
+      "gitHead": "88d17d72e86c662a48bf3557fac031148c726ebd",
+      "reviewedAtUtc": "2026-11-03T03:57:30.2263079Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -1364,8 +1364,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f7e5d368aa0ed782fc7e1043342e3677988989e13112eca075d6cc490d0191c5",
-          "reviewReason": "Reviewed the topology index delta: source fingerprint changes only, with no added host, worker, external provider, scheduled job or runtime edge. Existing runtime-impact guidance remains accurate for the logger-only change."
+          "sha256": "c0ce7fc8d8fcd7bec185d1ded0c9d1b35499991530102c5c055aa52246067f6d",
+          "reviewReason": "Compared the regenerated runtime-topology JSON with the parent revision: only freshness.sourceFingerprint changed after the host metric composition edits. Hosts, workers, clients, recurring jobs, schedules and behaviorSignal records are identical. The runtime-impact workflow guidance remains accurate and needs no prose change."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1378,10 +1378,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed the topology index delta: source fingerprint changes only, with no added host, worker, external provider, scheduled job or runtime edge. Existing runtime-impact guidance remains accurate for the logger-only change.",
-      "baseRef": "origin/master",
-      "gitHead": "dcfdb39f5c34c005399408932dbb28b0e7521446",
-      "reviewedAtUtc": "2026-11-02T14:17:37.4492789Z"
+      "reason": "Compared the regenerated runtime-topology JSON with the parent revision: only freshness.sourceFingerprint changed after the host metric composition edits. Hosts, workers, clients, recurring jobs, schedules and behaviorSignal records are identical. The runtime-impact workflow guidance remains accurate and needs no prose change.",
+      "baseRef": "HEAD^",
+      "gitHead": "b0caedf1ad9cf1fcc7b215c0b22bdcf5b6a4bb96",
+      "reviewedAtUtc": "2026-11-03T04:10:36.5419649Z"
     },
     {
       "pageId": "workflow-security-review",
