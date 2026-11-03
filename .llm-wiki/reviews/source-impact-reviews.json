@@ -349,14 +349,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "74a28550c1bd762f80790328eac71fc9833371f232eb7da72550eaeeed7cba64",
-          "reviewReason": "Reviewed the incoming origin/master 2dd773b10 snapshot: the POST Telegram disconnect operation is additive; the compatibility guard against pre-merge HEAD passed with no unaccepted breaks. The merged full OpenAPI snapshot is byte-identical to origin/master. Generated user SDK, its scope and Telegram consumer changes were merged without edits, and 121 focused frontend tests passed. Existing comparison, acceptance and snapshot workflow guidance remains accurate."
+          "sha256": "ab2986ae89895994ec9257ea943643b5f018f07ca95dd32ea92e8536323ff903",
+          "reviewReason": "The full OpenAPI snapshot adds a documented 502 for five Admin MailInbox and outgoing mail operations. Successful responses and existing documented responses retain their schema. Transport regressions reproduce the prior 500 and verify the dependency failure code and 200 after recovery."
         }
       ],
-      "reason": "Reviewed the incoming origin/master 2dd773b10 snapshot: the POST Telegram disconnect operation is additive; the compatibility guard against pre-merge HEAD passed with no unaccepted breaks. The merged full OpenAPI snapshot is byte-identical to origin/master. Generated user SDK, its scope and Telegram consumer changes were merged without edits, and 121 focused frontend tests passed. Existing comparison, acceptance and snapshot workflow guidance remains accurate.",
+      "reason": "The full OpenAPI snapshot adds a documented 502 for five Admin MailInbox and outgoing mail operations. Successful responses and existing documented responses retain their schema. Transport regressions reproduce the prior 500 and verify the dependency failure code and 200 after recovery.",
       "baseRef": "HEAD",
-      "gitHead": "3e63fe28eba149619f3e738865766e05728ad908",
-      "reviewedAtUtc": "2026-11-03T14:01:48.1667469Z"
+      "gitHead": "e1cc86fbd15b45495ff490c21702fb24f50e024a",
+      "reviewedAtUtc": "2026-11-03T22:18:24.2860747Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
