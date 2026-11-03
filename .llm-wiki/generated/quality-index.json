@@ -14562,11 +14562,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "nonBlankLines": 479,
+      "nonBlankLines": 477,
       "decisionPoints": 55,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.08
+      "structuralRiskScore": 92.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/user-manage-dietologist-form.mapper.ts",
@@ -19834,11 +19834,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/auth/telegram-web-app.service.ts",
-      "nonBlankLines": 103,
-      "decisionPoints": 20,
+      "nonBlankLines": 111,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.06
+      "structuralRiskScore": 33.72
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/bootstrap/app-bootstrap.service.ts",

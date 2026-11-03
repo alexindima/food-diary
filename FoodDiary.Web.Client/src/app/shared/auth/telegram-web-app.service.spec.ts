@@ -32,6 +32,29 @@ describe('TelegramWebAppService', () => {
         expect(document.head.querySelector('script[src*="telegram-web-app"]')).toBeNull();
     });
 
+    it('preserves the original nested launch data when routing changes the fragment and the SDK reads a truncated value', () => {
+        const proof = 'user=%7B%22id%22%3A1%7D&auth_date=1793664000&hash=synthetic-signature';
+        browser.getHref.mockReturnValue(`https://fooddiary.example/#tgWebAppData=${encodeURIComponent(proof)}`);
+        const launchService = TestBed.runInInjectionContext(() => new TelegramWebAppService());
+        browser.getHref.mockReturnValue('https://fooddiary.example/auth/telegram#tgWebAppData=user=truncated&hash=outer-field');
+        browser.getTelegramInitData.mockReturnValue('user=truncated');
+        expect(launchService.getInitData()).toBe(proof);
+        browser.getHref.mockReturnValue('https://fooddiary.example/dashboard');
+        expect(launchService.getInitData()).toBe(proof);
+    });
+
+    it('uses an SDK-only proof when the initial document has no launch data', () => {
+        browser.getTelegramInitData.mockReturnValue('sdk-only-proof');
+        expect(service.getInitData()).toBe('sdk-only-proof');
+    });
+
+    it('does not capture empty launch data over a later SDK proof', () => {
+        browser.getHref.mockReturnValue('https://fooddiary.example/#tgWebAppData=');
+        const launchService = TestBed.runInInjectionContext(() => new TelegramWebAppService());
+        browser.getTelegramInitData.mockReturnValue('sdk-only-proof');
+        expect(launchService.getInitData()).toBe('sdk-only-proof');
+    });
+
     it('loads one SDK for concurrent Mini App initialization calls', async () => {
         browser.getHref.mockReturnValue('https://fooddiary.example/auth/telegram#tgWebAppData=test-proof');
         const first = service.initializeAsync();

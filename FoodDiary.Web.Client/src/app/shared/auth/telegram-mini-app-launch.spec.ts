@@ -57,7 +57,7 @@ describe('Mini App automatic sign-in launch policy', () => {
         'does not authenticate ordinary visits, query hints or SSR: %s',
         async href => {
             browser.getHref.mockReturnValue(href);
-            expect(await service.claimAutomaticSignInAsync()).toBe(false);
+            expect(await freshService().claimAutomaticSignInAsync()).toBe(false);
         },
     );
 });
@@ -88,7 +88,7 @@ describe('Mini App explicit logout across launches', () => {
 
     it('does not create a Mini App logout marker for ordinary website sign-out', async () => {
         browser.getHref.mockReturnValue('https://fooddiary.example/');
-        await service.suppressAutomaticSignInAsync();
+        await freshService().suppressAutomaticSignInAsync();
         expect(sessionStorage.getItem(key)).toBeNull();
         expect(digest).not.toHaveBeenCalled();
     });

@@ -14,9 +14,22 @@ export class TelegramWebAppService {
     private readonly document = inject(DOCUMENT);
     private readonly browser = inject(BrowserWindowService);
     private readonly storage = inject(BrowserStorageService);
+    // Bootstrap constructs this service before the Router normalizes nested fragment encoding.
+    // Keep the original assertion in this application instance only; never persist it.
+    private readonly launchInitData = this.readLaunchInitData();
     private loading: Promise<void> | null = null;
     private automaticSignInAttempted = false;
     private automaticSignInSuppressed = false;
+
+    public getInitData(): string | null {
+        return this.launchInitData ?? this.browser.getTelegramInitData();
+    }
+
+    private readLaunchInitData(): string | null {
+        const href = this.browser.getHref();
+        const data = href === null ? null : new URLSearchParams(new URL(href).hash.slice(1)).get('tgWebAppData');
+        return data === null || data.length === 0 ? null : data;
+    }
 
     public async isAutomaticSignInAllowedAsync(): Promise<boolean> {
         return !this.automaticSignInAttempted && (await this.isLaunchAllowedAsync());
@@ -52,10 +65,7 @@ export class TelegramWebAppService {
     }
 
     private async launchFingerprintAsync(): Promise<string | null> {
-        const href = this.browser.getHref();
-        const data =
-            this.browser.getTelegramInitData() ??
-            (href === null ? null : new URLSearchParams(new URL(href).hash.slice(1)).get('tgWebAppData'));
+        const data = this.getInitData();
         const crypto = this.document.defaultView?.crypto.subtle;
         if (data === null || crypto === undefined) {
             return null;
@@ -69,7 +79,7 @@ export class TelegramWebAppService {
     }
 
     public isMiniAppLaunch(): boolean {
-        if (this.browser.getTelegramInitData() !== null || this.storage.getItem('session', TELEGRAM_MINI_APP_CONTEXT_KEY) === 'true') {
+        if (this.getInitData() !== null || this.storage.getItem('session', TELEGRAM_MINI_APP_CONTEXT_KEY) === 'true') {
             return true;
         }
         const href = this.browser.getHref();

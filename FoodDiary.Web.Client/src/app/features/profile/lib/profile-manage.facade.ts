@@ -24,7 +24,6 @@ import {
     NotificationService,
     type WebPushSubscriptionItem,
 } from '../../../shared/notifications/notification.service';
-import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
@@ -51,7 +50,6 @@ export class ProfileManageFacade {
     private readonly themeService = inject(ThemeService);
     private readonly profileMeasurementsService = inject(ProfileMeasurementsService);
     private readonly telegram = inject(TelegramWebAppService);
-    private readonly browser = inject(BrowserWindowService);
     private readonly backupEmailFlow = inject(TelegramBackupEmailFlowService);
 
     public readonly user = signal<User | null>(null);
@@ -75,7 +73,7 @@ export class ProfileManageFacade {
         this.clearGlobalError();
         try {
             await this.telegram.initializeAsync();
-            const initData = this.browser.getTelegramInitData();
+            const initData = this.telegram.getInitData();
             if (initData === null || initData.length === 0) {
                 await this.backupEmailFlow.startAsync(email.trim());
                 return;
@@ -310,7 +308,7 @@ export class ProfileManageFacade {
                 return;
             }
             await this.telegram.initializeAsync();
-            const initData = this.browser.getTelegramInitData();
+            const initData = this.telegram.getInitData();
             if (initData === null || initData.length === 0) {
                 this.setGlobalError('USER_MANAGE.TELEGRAM_REOPEN');
                 return;

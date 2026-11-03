@@ -15,7 +15,6 @@ import { LocalizationService } from '../../../shared/i18n/localization.service';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { NotificationService } from '../../../shared/notifications/notification.service';
-import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { ProfileMeasurementsService } from '../api/profile-measurements.service';
 import { ProfileManageFacade } from './profile-manage.facade';
@@ -79,8 +78,7 @@ let authService: {
 let toastService: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 let localizationService: { applyLanguagePreferenceAsync: ReturnType<typeof vi.fn> };
 let navigationService: { navigateToHomeAsync: ReturnType<typeof vi.fn> };
-const telegram = { initializeAsync: vi.fn() };
-const browser = { getTelegramInitData: vi.fn() };
+const telegram = { initializeAsync: vi.fn(), getInitData: vi.fn() };
 const backupEmailFlow = { startAsync: vi.fn(), markSent: vi.fn(), read: vi.fn().mockReturnValue(null), clear: vi.fn() };
 
 beforeEach(() => {
@@ -126,7 +124,7 @@ beforeEach(() => {
 
     dialogService.open.mockReturnValue({ afterClosed: () => of(false) });
     telegram.initializeAsync.mockResolvedValue(void 0);
-    browser.getTelegramInitData.mockReturnValue('signed-proof');
+    telegram.getInitData.mockReturnValue('signed-proof');
     backupEmailFlow.startAsync.mockResolvedValue(void 0);
 
     TestBed.configureTestingModule({
@@ -139,7 +137,6 @@ beforeEach(() => {
                 useValue: { getLatest: vi.fn().mockReturnValue(of({ weightKg: null, waistCm: null })) },
             },
             { provide: TelegramWebAppService, useValue: telegram },
-            { provide: BrowserWindowService, useValue: browser },
             { provide: UserService, useValue: userService },
             { provide: NotificationService, useValue: notificationService },
             { provide: FdUiDialogService, useValue: dialogService },
@@ -256,7 +253,7 @@ describe('ProfileManageFacade backup email', () => {
 
     it('starts browser reauthentication when Mini App proof is unavailable', async () => {
         facade.user.set({ ...user, email: null, hasTelegramIdentity: true });
-        browser.getTelegramInitData.mockReturnValue(null);
+        telegram.getInitData.mockReturnValue(null);
         await facade.requestBackupEmailAsync('backup@example.com');
         expect(authService.requestTelegramBackupEmail).not.toHaveBeenCalled();
         expect(facade.backupEmailSentTo()).toBeNull();
@@ -300,7 +297,7 @@ describe('ProfileManageFacade account actions', () => {
     it('requires Mini App proof before requesting unlink', async () => {
         facade.user.set({ ...user, hasTelegramIdentity: true, hasGoogleIdentity: true });
         dialogService.open.mockReturnValue({ afterClosed: () => of(true) });
-        browser.getTelegramInitData.mockReturnValue(null);
+        telegram.getInitData.mockReturnValue(null);
         await facade.unlinkTelegramAsync();
         expect(authService.unlinkTelegram).not.toHaveBeenCalled();
         expect(facade.globalError()).toBe('USER_MANAGE.TELEGRAM_REOPEN');

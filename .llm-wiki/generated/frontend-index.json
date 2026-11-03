@@ -5722,7 +5722,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 37
+      "line": 36
     },
     {
       "name": "PrivacySettingsComponent",

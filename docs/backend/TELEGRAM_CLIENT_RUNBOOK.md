@@ -50,6 +50,7 @@ A successful unlink revokes the identity generation and schedules operation canc
 
 ## Failure investigation
 
+- Mini App launch data is captured once in the per-application `TelegramWebAppService` before Angular routing. Angular fragment normalization can decode nested separators before a lazily loaded SDK reads them, producing a truncated assertion and `missing_hash`. The auth facade, profile proof operations and logout fingerprint use the original in-memory assertion; FoodDiary does not add proof storage or logging. SDK loading and its own session-scoped launch-parameter cache retain their existing behavior. A fresh Mini App opening supplies fresh launch data; a stored Mini App transport hint alone cannot authenticate.
 - Distinguish business completion from Telegram message delivery. A lost `sendMessage` response can leave an uncertain notification outcome; it must not trigger another business operation.
 - Correlate by operation ID and recognition ID. Never include bot tokens, bearer tokens, Mini App assertions, email verification links, photos or protected payloads in diagnostic output.
 - A repeated save uses the same recognition ID and original message time. A changed timestamp is a conflict. After undo/deletion the receipt prevents recreation.
