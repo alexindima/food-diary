@@ -314,6 +314,10 @@ export class AuthService {
             .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
     }
 
+    public disconnectTelegram(): Observable<void> {
+        return this.telegram.client.postAuthTelegramDisconnect({ version: this.telegram.version });
+    }
+
     public completeTelegramUnlink(code: TelegramOAuthCode, state: TelegramOAuthState): Observable<void> {
         return this.telegram.client.postAuthTelegramUnlinkOidcComplete({
             version: this.telegram.version,

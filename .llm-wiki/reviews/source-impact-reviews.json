@@ -345,14 +345,14 @@
         },
         {
           "path": "Hosts/tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "0607dbe3204165a4e708cdb1a075abb3a17aeaa2f584d8dca13303aedd4dcf9f",
-          "reviewReason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed."
+          "sha256": "74a28550c1bd762f80790328eac71fc9833371f232eb7da72550eaeeed7cba64",
+          "reviewReason": "Reviewed the additive authenticated POST auth/telegram/disconnect path, generated TelegramAuth SDK and full OpenAPI snapshot. Existing signed-assertion/OIDC/link/login contracts and DTOs remain; api-compat reports one addition and no breaks. Current-session revocation uses trusted user and SecurityVersion claims, not caller identity fields."
         }
       ],
-      "reason": "Reviewed the two additive authenticated /auth/telegram/unlink/oidc start/complete paths in openapi-full-contract.json and regenerated TelegramAuth SDK. Existing routes, request/response schemas and accepted ADR0058 browser-session transition are unchanged; api-compat reports two additions and zero breaks. The workflow still describes the actual comparison and no new compatibility exception is needed.",
+      "reason": "Reviewed the additive authenticated POST auth/telegram/disconnect path, generated TelegramAuth SDK and full OpenAPI snapshot. Existing signed-assertion/OIDC/link/login contracts and DTOs remain; api-compat reports one addition and no breaks. Current-session revocation uses trusted user and SecurityVersion claims, not caller identity fields.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T08:44:50.3691955Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:09:03.2226734Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -642,8 +642,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "65e9c210d7dea24b3f93ba14995191f5fa7a14eeb14207b3696e586f9dc66477",
-          "reviewReason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate."
+          "sha256": "34428d8502e3d5a34f687abbd8eb446af9c7b79f2bcb13a6a3c497a5b8832745",
+          "reviewReason": "Task finish appended only observed retrospective candidates for this session. Existing event history preserved; no approval/application, durable memory or policy changed."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -666,10 +666,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate.",
+      "reason": "Task finish appended only observed retrospective candidates for this session. Existing event history preserved; no approval/application, durable memory or policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:36.4041114Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:30:48.0093964Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1023,14 +1023,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "afba0085c2f9564ec12cd914dde396977cb45a306afc5f5d19226b9ef40757a5",
-          "reviewReason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate."
+          "sha256": "0d28bc9a12a257297213a599ea424efeca294a018335d797fa6d3a9a7fc2a3f5",
+          "reviewReason": "Task finish appended this session instruction fingerprint/outcome observation only. Existing chain preserved; no AGENTS or instruction policy changed."
         }
       ],
-      "reason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate.",
+      "reason": "Task finish appended this session instruction fingerprint/outcome observation only. Existing chain preserved; no AGENTS or instruction policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:37.4128123Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:30:49.7313859Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1055,8 +1055,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "a7cbefebcc2addc7c8314a4814ffb814e160ae18a08f80a86d24fdd8f60b48fe",
-          "reviewReason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate."
+          "sha256": "3d4c17370b6519c78cbc7d0febe3d79e17f6c832dde49938cca4526d563e65f0",
+          "reviewReason": "Task finish appended an observed candidate with this task provenance only. No active eval case or approval/application changed; existing history preserved."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1069,10 +1069,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate.",
+      "reason": "Task finish appended an observed candidate with this task provenance only. No active eval case or approval/application changed; existing history preserved.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:38.3674798Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:30:48.8982968Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -1369,8 +1369,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "70345bbc005bd7840e4f391e79188e41e83b88f2d9620d9d985056043cb39c34",
-          "reviewReason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit."
+          "sha256": "976bdf0836ea560659f32640329ace2c3d14c100b4948f90b5d929d15ab284d0",
+          "reviewReason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit."
         },
         {
           "path": ".llm-wiki/policies/change-policies.json",
@@ -1383,10 +1383,10 @@
           "reviewReason": "Reviewed migration diagnostic scope. No host, worker, deployment, recurring job or provider is changed; raw JSON projection inputs stay retained. Existing runtime inventory and SQLite freshness guidance remains accurate."
         }
       ],
-      "reason": "Reviewed runtime-topology changes: existing Web API and Angular hosts own the new unlink handlers and client service. There is no new worker, recurring job, webhook, deployment setting or external client implementation. Existing Telegram OIDC provider and protected ticket store are reused; requests propagate cancellation, completion is single-use with no HTTP retry, and bot-operation cancellation remains post-commit.",
+      "reason": "Reviewed current topology: no new host, worker, provider adapter, environment variable or schema. The existing API receives the account-owned disconnect command and propagates cancellation. No external Telegram login is invoked by the new UI action. Session revision prevents delayed logout of a replacement session; the direct endpoint is not automatically replayed, and bot operation cancellation stays post-commit.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T08:44:52.1142146Z"
+      "gitHead": "7d40f35ffb59bac47497d71fbdae225a8bf91315",
+      "reviewedAtUtc": "2026-11-03T12:09:04.6186664Z"
     },
     {
       "pageId": "workflow-security-review",

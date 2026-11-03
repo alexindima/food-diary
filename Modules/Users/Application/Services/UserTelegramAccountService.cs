@@ -74,7 +74,13 @@ internal sealed class UserTelegramAccountService(
         return Result.Success();
     }
 
-    public async Task<Result> UnlinkAsync(UserId userId, long telegramUserId, long securityVersion, CancellationToken cancellationToken = default) {
+    public Task<Result> DisconnectAsync(UserId userId, long securityVersion, CancellationToken cancellationToken = default) =>
+        UnlinkCoreAsync(userId, expectedTelegramUserId: null, securityVersion, cancellationToken);
+
+    public Task<Result> UnlinkAsync(UserId userId, long telegramUserId, long securityVersion, CancellationToken cancellationToken = default) =>
+        UnlinkCoreAsync(userId, telegramUserId, securityVersion, cancellationToken);
+
+    private async Task<Result> UnlinkCoreAsync(UserId userId, long? expectedTelegramUserId, long securityVersion, CancellationToken cancellationToken) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken);
         Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (error is not null) {
@@ -83,7 +89,7 @@ internal sealed class UserTelegramAccountService(
         if (!user!.TelegramUserId.HasValue) {
             return Result.Success();
         }
-        if (user.TelegramUserId != telegramUserId || user.SecurityVersion != securityVersion) {
+        if ((expectedTelegramUserId.HasValue && user.TelegramUserId != expectedTelegramUserId) || user.SecurityVersion != securityVersion) {
             return Result.Failure(new Error("Authentication.TelegramProofStale", "Confirm the current Telegram account again.", ErrorKind.Conflict));
         }
         bool hasPasswordLogin = user.HasPassword && user.Email is not null && user.IsEmailConfirmed;

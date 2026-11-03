@@ -26,6 +26,16 @@ namespace FoodDiary.Modules.Identity.Presentation.Features.Auth.Controllers;
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public sealed class AuthTelegramController(ISender mediator) : BaseApiController(mediator) {
     [Authorize]
+    [HttpPost("disconnect")]
+    [BlockImpersonatedAccess]
+    [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
+    public Task<IActionResult> DisconnectTelegram([FromCurrentUser] Guid userId) =>
+        HandleNoContent(TelegramOnboardingHttpMappings.ToDisconnectCommand(userId, HttpContext));
+
+    [Authorize]
     [HttpPost("backup-email")]
     [BlockImpersonatedAccess]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]

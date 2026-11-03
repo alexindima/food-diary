@@ -14,12 +14,35 @@ const ATTEMPT_TTL_MS = 300_000;
 const state = 's'.repeat(STATE_LENGTH);
 const ended = new Subject<void>();
 const authenticated = new Subject<void>();
-const auth = { getUserId: vi.fn(), startTelegramUnlink: vi.fn(), completeTelegramUnlink: vi.fn() };
+const auth = { getUserId: vi.fn(), disconnectTelegram: vi.fn(), startTelegramUnlink: vi.fn(), completeTelegramUnlink: vi.fn() };
 const browser = { open: vi.fn() };
 let stored: unknown;
 let flow: TelegramUnlinkFlowService;
 
 describe('Telegram unlink callback ownership', () => {
+    it('disconnects the current account without redirecting or persisting an OAuth attempt', async () => {
+        auth.disconnectTelegram.mockReturnValue(of(void 0));
+        expect(await flow.disconnectAsync()).toBe(true);
+        expect(auth.disconnectTelegram).toHaveBeenCalledOnce();
+        expect(browser.open).not.toHaveBeenCalled();
+        expect(stored).toBeNull();
+    });
+
+    it('does not log out a replacement session after delayed direct disconnect', async () => {
+        const response = new Subject<void>();
+        auth.disconnectTelegram.mockReturnValue(response);
+        const completion = flow.disconnectAsync();
+        authenticated.next();
+        response.next();
+        expect(await completion).toBe(false);
+    });
+
+    it('does not disconnect after the current account is logged out', async () => {
+        auth.getUserId.mockReturnValue(null);
+        await expect(flow.disconnectAsync()).rejects.toThrow('Authentication required');
+        expect(auth.disconnectTelegram).not.toHaveBeenCalled();
+    });
+
     it('leaves unrelated Telegram callbacks available to their owning flow', async () => {
         await flow.startAsync();
         expect(
