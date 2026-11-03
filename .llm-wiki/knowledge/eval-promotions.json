@@ -2736,6 +2736,74 @@
       },
       "reason": "",
       "eventHash": "0ce58748453209e2062a4aeeda3e4e61e26e8be24c0a10561a1141e91c5f350f"
+    },
+    {
+      "schemaVersion": 1,
+      "sequence": 17,
+      "kind": "observed",
+      "candidateId": "learned-e3a5135769a8d1b7",
+      "createdAtUtc": "2026-11-03T13:47:40.7873618Z",
+      "previousHash": "0ce58748453209e2062a4aeeda3e4e61e26e8be24c0a10561a1141e91c5f350f",
+      "observation": {
+        "workspace": ".artifacts/llm-wiki/tasks/marketing-consent-card",
+        "retrospectiveHash": "e83804a312c75f53f5b6ab78d38ff37095a399348482a2059b496ff191b819ea",
+        "packetFingerprint": "fba1bcae2ea5be54593f95399a37c1d212456fbbe465078987a6b7833a97d5c4",
+        "signals": [
+          {
+            "id": "cost-frontend-i18n",
+            "type": "cost-calibration",
+            "score": 70,
+            "statement": "Adjust the expected cost of 'frontend-i18n'; the previous forecast overestimated actual effort.",
+            "evidence": [
+              "error=127100%",
+              "frontend-i18n"
+            ]
+          }
+        ],
+        "case": {
+          "id": "learned-e3a5135769a8d1b7",
+          "changedPaths": [
+            "FoodDiary.Web.Client/assets/i18n/en.json",
+            "FoodDiary.Web.Client/assets/i18n/en/core.json",
+            "FoodDiary.Web.Client/assets/i18n/ru.json",
+            "FoodDiary.Web.Client/assets/i18n/ru/core.json",
+            "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.scss",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.spec.ts",
+            "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.spec.ts",
+            "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.ts",
+            "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+            "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
+            "FoodDiary.Web.Client/src/app/shell/app.html",
+            "FoodDiary.Web.Client/src/app/shell/app.spec.ts",
+            "FoodDiary.Web.Client/src/app/shell/app.ts"
+          ],
+          "expectedModules": [],
+          "expectedScopes": [
+            "Frontend",
+            "Localization",
+            "Tests"
+          ],
+          "expectedRules": [
+            "frontend-component-contract",
+            "frontend-component-style",
+            "frontend-workspace",
+            "localization-pair",
+            "security-sensitive"
+          ],
+          "expectedChecks": [
+            "frontend-i18n",
+            "frontend-verify"
+          ],
+          "expectedViolationRules": []
+        },
+        "caseHash": "90a0b3eb92d3a3d8955bad93a430a0ce407dc21ee35060810b80672280400df8"
+      },
+      "reason": "",
+      "eventHash": "bc0a6f02ed215e2beafeb1ceb89ebbb19a28f75ae566a17b39b2408ea94b16f6"
     }
   ]
 }

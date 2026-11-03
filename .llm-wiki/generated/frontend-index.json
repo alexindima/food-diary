@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 2804,
+    "typescriptFiles": 2805,
     "symbols": 882,
     "routes": 111,
     "features": 46,
-    "specs": 853,
+    "specs": 854,
     "localeFiles": 5,
     "roles": {
       "Component": 510,
@@ -3461,7 +3461,7 @@
       "role": "Component",
       "selector": "fd-marketing-consent",
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "line": 14
+      "line": 26
     },
     {
       "name": "MealCardComponent",
@@ -5876,7 +5876,7 @@
       "role": "Component",
       "selector": "fd-public-site-footer",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.ts",
-      "line": 15
+      "line": 16
     },
     {
       "name": "PublicSiteHeaderComponent",
@@ -8395,8 +8395,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 1380,
-      "russianProperties": 1380,
+      "englishProperties": 1390,
+      "russianProperties": 1390,
       "countsMatch": true
     },
     {

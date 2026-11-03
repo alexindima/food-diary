@@ -1,3 +1,36 @@
 :host {
+    /* stylelint-disable-next-line declaration-property-value-disallowed-list -- This nonmodal consent surface stays reachable independently of public-page scrolling. */
+    position: fixed;
+    inset-inline: var(--fd-space-toast-viewport-inset);
+    bottom: calc(var(--fd-space-toast-viewport-inset) + env(safe-area-inset-bottom, 0px));
+    z-index: var(--fd-z-index-menu);
+    max-width: 28rem;
+    margin-inline-start: auto;
+    max-height: calc(100dvh - 2 * var(--fd-space-toast-viewport-inset) - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     overflow-wrap: anywhere;
+}
+
+.marketing-consent {
+    h2,
+    p {
+        margin: 0;
+    }
+
+    &__details {
+        summary {
+            cursor: pointer;
+            color: var(--fd-color-primary-700);
+        }
+
+        p {
+            margin-top: var(--fd-space-sm);
+        }
+    }
+
+    &__actions fd-ui-button {
+        flex: 1;
+        min-width: 0;
+    }
 }

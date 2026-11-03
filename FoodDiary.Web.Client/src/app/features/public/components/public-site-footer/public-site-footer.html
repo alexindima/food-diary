@@ -7,6 +7,9 @@
         @for (link of links(); track link.path) {
             <a [routerLink]="link.path">{{ link.label | translate }}</a>
         }
+        <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="marketingSettingsRequested.emit()">{{
+            'MARKETING_CONSENT.SETTINGS' | translate
+        }}</fd-ui-button>
     </nav>
     <a [href]="`mailto:${supportEmail}`">{{ supportEmail }}</a>
 </footer>

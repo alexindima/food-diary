@@ -13,6 +13,8 @@
         </div>
     </div>
 
+    <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'ADMIN_ACQUISITION.CONSENT_COVERAGE' | translate }}</p>
+
     @if (isLoading() && summary() === null) {
         <p>Loading acquisition data...</p>
     } @else if (failed()) {

@@ -18,6 +18,14 @@ import { AccountDeletionOfferComponent } from '../../components/account-deletion
 export class PrivacySettingsComponent {
     protected readonly privacy = inject(PrivacyConsentFacade);
     protected readonly marketing = inject(MarketingConsentService);
+    protected readonly marketingStateKey = computed(() => {
+        const decision = this.marketing.currentDecision();
+        return decision === null
+            ? 'MARKETING_CONSENT.DEVICE_UNDECIDED'
+            : decision.allowed
+              ? 'MARKETING_CONSENT.DEVICE_ALLOWED'
+              : 'MARKETING_CONSENT.DEVICE_DECLINED';
+    });
     private readonly language = injectCurrentLanguage();
     protected readonly policyPath = computed(() => localizedPublicPath('/privacy-policy', this.language() === 'ru' ? 'ru' : 'en'));
 
@@ -36,7 +44,7 @@ export class PrivacySettingsComponent {
     protected withdrawAi(): void {
         void this.privacy.chooseAsync(2, false);
     }
-    protected withdrawMarketing(): void {
-        this.marketing.decide(false);
+    protected chooseMarketing(allowed: boolean): void {
+        this.marketing.decide(allowed);
     }
 }

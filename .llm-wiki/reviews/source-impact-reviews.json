@@ -365,8 +365,8 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3de2d507a11ccc3b33c39ce6b4ea1e13a238b6921706c8c82ff75adabee3ac66",
-          "reviewReason": "Reviewed the regenerated architecture health projection for the merge of ReadyToRun, deployed authentication changes and the preserved local coverage commit. Dependency violations, unused allowances, untracked production projects and module cycle nodes are zero. Inventory and test-reference candidates changed with the combined sources; the workflow still treats hotspots and unreferenced candidates as investigation leads. No dependency-matrix exception or module-boundary change was added."
+          "sha256": "b58ea677c5ced445d63c44f6964c6fdde5419b0877fab1605d453735ec262b46",
+          "reviewReason": "Regenerated architecture-health-index against master plus the consent UI change. MarketingConsentComponent now has a direct spec, reducing componentsWithoutDirectSpecs from 133 to 132, and PublicSiteFooter exposes marketingSettingsRequested. Dependency violations, module cycles and project edges are unchanged; selector and missing-spec reports remain investigation candidates as documented."
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1",
@@ -384,10 +384,10 @@
           "reviewReason": "Reviewed the refreshed architecture-health records for the profile-owned deletion offer and explicitly provided AccountDeletionFacade. The real component import and existing generated account API are used; strict dependency cruising passed with 2774 modules and state ownership passed. No backend project edges or enforcement rules changed. Unreferenced candidates remain navigation leads, not removal instructions."
         }
       ],
-      "reason": "Reviewed the regenerated architecture health projection for the merge of ReadyToRun, deployed authentication changes and the preserved local coverage commit. Dependency violations, unused allowances, untracked production projects and module cycle nodes are zero. Inventory and test-reference candidates changed with the combined sources; the workflow still treats hotspots and unreferenced candidates as investigation leads. No dependency-matrix exception or module-boundary change was added.",
+      "reason": "Regenerated architecture-health-index against master plus the consent UI change. MarketingConsentComponent now has a direct spec, reducing componentsWithoutDirectSpecs from 133 to 132, and PublicSiteFooter exposes marketingSettingsRequested. Dependency violations, module cycles and project edges are unchanged; selector and missing-spec reports remain investigation candidates as documented.",
       "baseRef": "HEAD",
-      "gitHead": "1bd0e3b30d2dd04195931f36817d2840adb6d167",
-      "reviewedAtUtc": "2026-11-03T11:37:35.4279168Z"
+      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
+      "reviewedAtUtc": "2026-11-03T13:51:13.4690968Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -646,8 +646,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "65e9c210d7dea24b3f93ba14995191f5fa7a14eeb14207b3696e586f9dc66477",
-          "reviewReason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate."
+          "sha256": "141951bb553ff8701e6059e11a2c4e0d2b39b663fbd2d13a4ede44001d999ad3",
+          "reviewReason": "Replayed the sealed marketing-consent-card frontend task through learning-observe on current master. The only new hash-linked observed event is cost-frontend-i18n (expected 1272s, measured 1s), with original completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. No approval, experiment or application event was added; the documented review and materialization boundary remains accurate."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -670,10 +670,10 @@
           "reviewReason": "Reviewed the empty-check telemetry and orphan cost-estimate guards against the learning contracts. No observations are invented or silently promoted; original sealing, receipt hashes and candidate review remain required. Pure calibration and real empty-check retrospective regressions retain their assertions."
         }
       ],
-      "reason": "Reviewed task-finish output: five append-only observed cost-calibration hypotheses for the profile-sign-in task. No approval, apply, policy or durable guidance mutation occurred; the documented observation and separate promotion boundary remain accurate.",
+      "reason": "Replayed the sealed marketing-consent-card frontend task through learning-observe on current master. The only new hash-linked observed event is cost-frontend-i18n (expected 1272s, measured 1s), with original completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. No approval, experiment or application event was added; the documented review and materialization boundary remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:36.4041114Z"
+      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
+      "reviewedAtUtc": "2026-11-03T13:50:44.6328630Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -1027,14 +1027,14 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/instruction-outcomes.json",
-          "sha256": "afba0085c2f9564ec12cd914dde396977cb45a306afc5f5d19226b9ef40757a5",
-          "reviewReason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate."
+          "sha256": "18c50f6f49a872970d4235b1a69e0ae2ba291c141f6c74a566aa834a2f10d5e3",
+          "reviewReason": "instruction-outcome-observe appended the completed marketing-consent-card task with its original ordered AGENTS.md source hashes and sealed completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. This preserves historical instruction provenance after transfer onto master. No instructions, policies or experiment behavior changed; the page remains accurate."
         }
       ],
-      "reason": "Reviewed the single appended profile-sign-in outcome record with current scoped AGENTS fingerprints and sealed task provenance. It records correlation only and changes no instructions, thresholds or experiments; the workflow remains accurate.",
+      "reason": "instruction-outcome-observe appended the completed marketing-consent-card task with its original ordered AGENTS.md source hashes and sealed completion fingerprint a53e06662de53c87aa1a5040837bf7ea7bef2d39155ff8279db107bdca107309. This preserves historical instruction provenance after transfer onto master. No instructions, policies or experiment behavior changed; the page remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:37.4128123Z"
+      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
+      "reviewedAtUtc": "2026-11-03T13:50:45.4231904Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -1059,8 +1059,8 @@
       "sources": [
         {
           "path": ".llm-wiki/knowledge/eval-promotions.json",
-          "sha256": "a7cbefebcc2addc7c8314a4814ffb814e160ae18a08f80a86d24fdd8f60b48fe",
-          "reviewReason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate."
+          "sha256": "3f1b7c1acef91d3c064b910a72369701306e80cc8c225ca4e84ae2a030451756",
+          "reviewReason": "eval-observe appended one marketing-consent-card candidate from the sealed cost-frontend-i18n retrospective signal. The existing chain is preserved and no approval, apply or rollback event was added. Static eval definitions and active case selection are unchanged, matching the documented separation between observation, review and activation."
         },
         {
           "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
@@ -1073,10 +1073,10 @@
           "reviewReason": "Reviewed changed evidence, review, CLI and test contracts. Canonicalization preserves real requirement/source/check drift detection and original payload integrity. Recovery validates original logs/command/checkout/fingerprints under an exclusive lease and preserves actual failure codes. UTF-8 and additive progress diagnostics do not promote silence or wrapper success into passing evidence; focused behavior, lease, canonical mapping and execution-result regressions passed."
         }
       ],
-      "reason": "Reviewed the appended observed eval candidate learned-14ba19a46a424734: it binds this task paths, expected Identity module, rules and six checks. No approval or application event activates it; the documented candidate lifecycle and static baseline remain accurate.",
+      "reason": "eval-observe appended one marketing-consent-card candidate from the sealed cost-frontend-i18n retrospective signal. The existing chain is preserved and no approval, apply or rollback event was added. Static eval definitions and active case selection are unchanged, matching the documented separation between observation, review and activation.",
       "baseRef": "HEAD",
-      "gitHead": "0414686216f02b19563ab8835f7f7d71cc5dbf45",
-      "reviewedAtUtc": "2026-11-03T09:28:38.3674798Z"
+      "gitHead": "ebd2449b62cee564de452c1f0e814a14e9fcd4e7",
+      "reviewedAtUtc": "2026-11-03T13:50:46.1589690Z"
     },
     {
       "pageId": "workflow-model-routing",

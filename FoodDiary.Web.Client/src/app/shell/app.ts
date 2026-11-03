@@ -92,6 +92,8 @@ export class AppComponent {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly pageViewport = viewChild<ElementRef<HTMLElement>>('pageViewport');
+    private readonly publicFooter = viewChild(PublicSiteFooterComponent);
+    protected readonly marketingSettingsOpen = signal(false);
     private readonly outletContexts = inject(ChildrenOutletContexts);
     private readonly installPromotion = inject(PwaInstallPromotionService);
     private readonly sessionEvents = inject(SessionEventsService);
@@ -128,7 +130,21 @@ export class AppComponent {
             this.installPromotion.shouldShowBanner(),
     );
 
+    protected closeMarketingSettings(): void {
+        if (this.marketingSettingsOpen()) {
+            this.publicFooter()?.focusMarketingSettings();
+        } else {
+            this.document.getElementById('main-content')?.focus({ preventScroll: true });
+        }
+        this.marketingSettingsOpen.set(false);
+    }
+
     public constructor() {
+        effect(() => {
+            if (!this.usesPublicSiteChrome()) {
+                this.marketingSettingsOpen.set(false);
+            }
+        });
         this.sessionEvents.localSessionInvalidating$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.routeContentActive.set(false);
             this.dialogService.closeAll();

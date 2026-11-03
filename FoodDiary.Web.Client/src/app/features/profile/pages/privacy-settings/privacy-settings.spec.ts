@@ -30,6 +30,11 @@ const privacy = {
     ensureHealthConsentAsync: vi.fn(),
 };
 const deletion = { busy: signal(false), failed: signal(false), confirmAsync: vi.fn() };
+const marketing = {
+    currentDecision: signal<{ allowed: boolean } | null>(null),
+    accountSyncFailed: signal(false),
+    decide: vi.fn(),
+};
 let fixture: ComponentFixture<PrivacySettingsComponent>;
 
 beforeEach(async () => {
@@ -37,13 +42,15 @@ beforeEach(async () => {
     state.update(value => ({ ...value, healthAcceptedAtUtc: '2026-11-02T10:00:00Z', healthDeclinedAtUtc: null }));
     privacy.loadAsync.mockResolvedValue(state());
     privacy.chooseAsync.mockResolvedValue(true);
+    marketing.currentDecision.set(null);
+    marketing.accountSyncFailed.set(false);
     await TestBed.configureTestingModule({
         imports: [PrivacySettingsComponent],
         providers: [
             provideRouter([]),
             provideTranslateTesting(),
             { provide: PrivacyConsentFacade, useValue: privacy },
-            { provide: MarketingConsentService, useValue: { accountSyncFailed: signal(false), decide: vi.fn() } },
+            { provide: MarketingConsentService, useValue: marketing },
         ],
     })
         .overrideComponent(AccountDeletionOfferComponent, {
@@ -52,6 +59,35 @@ beforeEach(async () => {
         .compileComponents();
     fixture = TestBed.createComponent(PrivacySettingsComponent);
     fixture.detectChanges();
+});
+
+describe('PrivacySettingsComponent marketing choices', () => {
+    it('allows marketing after a previous refusal using the existing device and account synchronization entrypoint', () => {
+        marketing.currentDecision.set({ allowed: false });
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('MARKETING_CONSENT.DEVICE_DECLINED');
+        click('MARKETING_CONSENT.ALLOW');
+        expect(marketing.decide).toHaveBeenCalledExactlyOnceWith(true);
+    });
+
+    it('withdraws marketing without changing health consent', () => {
+        marketing.currentDecision.set({ allowed: true });
+        fixture.detectChanges();
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('MARKETING_CONSENT.DEVICE_ALLOWED');
+        click('MARKETING_CONSENT.REJECT');
+        expect(marketing.decide).toHaveBeenCalledExactlyOnceWith(false);
+        expect(privacy.chooseAsync).not.toHaveBeenCalled();
+    });
+
+    it('keeps the account sync failure visible with both choices available for retry', () => {
+        marketing.accountSyncFailed.set(true);
+        fixture.detectChanges();
+        const root = fixture.nativeElement as HTMLElement;
+        expect(root.textContent).toContain('MARKETING_CONSENT.SYNC_ERROR');
+        expect(Array.from(root.querySelectorAll('button')).some(button => button.textContent.includes('MARKETING_CONSENT.ALLOW'))).toBe(
+            true,
+        );
+    });
 });
 
 function click(label: string): void {

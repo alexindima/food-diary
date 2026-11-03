@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 121,
     "routedStandaloneComponents": 69,
-    "componentsWithoutDirectSpecs": 133,
+    "componentsWithoutDirectSpecs": 132,
     "criticalSymbolsWithoutTestReferences": 43,
     "explicitDebtMarkers": 12
   },
@@ -5479,7 +5479,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "marketingSettingsRequested",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -5744,19 +5749,6 @@
           "type": ""
         }
       ],
-      "specPath": null
-    },
-    {
-      "class": "MarketingConsentComponent",
-      "selector": "fd-marketing-consent",
-      "feature": "shared",
-      "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
-      "stylePaths": [
-        "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.scss"
-      ],
-      "inputs": [],
-      "outputs": [],
       "specPath": null
     },
     {

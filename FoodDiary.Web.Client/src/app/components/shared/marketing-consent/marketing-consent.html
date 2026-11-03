@@ -1,25 +1,21 @@
-@if (consent.accountSyncFailed()) {
-    <p role="alert">
-        {{ 'MARKETING_CONSENT.SYNC_ERROR' | translate }} <a href="/privacy-settings">{{ 'MARKETING_CONSENT.SETTINGS' | translate }}</a>
-    </p>
-}
-@if (expanded()) {
-    <fd-ui-card>
-        <section class="fd-stack fd-gap-sm" aria-labelledby="marketing-consent-title">
-            <h2 id="marketing-consent-title">{{ 'MARKETING_CONSENT.TITLE' | translate }}</h2>
-            <p>{{ 'MARKETING_CONSENT.TEXT' | translate }}</p>
-            <div class="fd-row fd-wrap fd-gap-sm">
-                <fd-ui-button type="button" variant="secondary" (click)="choose(false)">{{
-                    'MARKETING_CONSENT.REJECT' | translate
+@if (visible()) {
+    <fd-ui-card density="compact">
+        <section #notice class="marketing-consent fd-stack fd-gap-sm" tabindex="-1" aria-labelledby="marketing-consent-title">
+            <h2 id="marketing-consent-title" class="fd-ui-title-sm">{{ 'MARKETING_CONSENT.SHORT_TITLE' | translate }}</h2>
+            <p class="fd-ui-body-sm">{{ 'MARKETING_CONSENT.SUMMARY' | translate }}</p>
+            <!-- Native disclosure: the UI kit has no expandable text primitive. -->
+            <details class="marketing-consent__details fd-ui-body-sm">
+                <summary>{{ 'MARKETING_CONSENT.DETAILS' | translate }}</summary>
+                <p>{{ 'MARKETING_CONSENT.TEXT' | translate }}</p>
+            </details>
+            <div class="marketing-consent__actions fd-row fd-gap-sm">
+                <fd-ui-button type="button" variant="secondary" fullWidth (click)="choose(false)">{{
+                    'MARKETING_CONSENT.REJECT_SHORT' | translate
                 }}</fd-ui-button>
-                <fd-ui-button type="button" variant="secondary" (click)="choose(true)">{{
-                    'MARKETING_CONSENT.ALLOW' | translate
+                <fd-ui-button type="button" variant="secondary" fullWidth (click)="choose(true)">{{
+                    'MARKETING_CONSENT.ALLOW_SHORT' | translate
                 }}</fd-ui-button>
             </div>
         </section>
     </fd-ui-card>
-} @else {
-    <fd-ui-button type="button" variant="secondary" fill="ghost" size="sm" (click)="expanded.set(true)">{{
-        'MARKETING_CONSENT.SETTINGS' | translate
-    }}</fd-ui-button>
 }

@@ -49,9 +49,9 @@
                 <router-outlet class="fd-root__content" />
             }
             @if (usesPublicSiteChrome()) {
-                <fd-public-site-footer [path]="currentPath()" />
+                <fd-public-site-footer [path]="currentPath()" (marketingSettingsRequested)="marketingSettingsOpen.set(true)" />
+                <fd-marketing-consent [settingsOpen]="marketingSettingsOpen()" (closed)="closeMarketingSettings()" />
             }
-            <fd-marketing-consent />
         </div>
     </main>
     <fd-ui-toast-host [closeLabel]="'COMMON.CLOSE_NOTIFICATION' | translate" />

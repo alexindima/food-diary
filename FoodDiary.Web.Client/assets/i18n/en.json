@@ -19,6 +19,15 @@
         "DELETE_ACCOUNT": "Delete account and data"
     },
     "MARKETING_CONSENT": {
+        "SHORT_TITLE": "Ad measurement",
+        "SUMMARY": "Allow a browser identifier, ad source and visit data to help measure our campaigns? This is optional.",
+        "DETAILS": "What we collect and how we use it",
+        "ALLOW_SHORT": "Allow",
+        "REJECT_SHORT": "Decline",
+        "DEVICE_ALLOWED": "Ad measurement is allowed in this browser.",
+        "DEVICE_DECLINED": "Ad measurement is disabled in this browser.",
+        "DEVICE_UNDECIDED": "Ad measurement is disabled in this browser until you allow it.",
+        "LOAD_BEFORE_ALLOW": "Wait for the current privacy settings to load.",
         "SYNC_ERROR": "Your choice is applied on this device, but could not be saved for your account. Please retry in privacy settings.",
         "TITLE": "Optional campaign measurement",
         "TEXT": "With your permission, we store a visitor identifier on this browser and send campaign source and visit information to Food Diary. If you register, these events can be linked to your account and subscription conversion. Your diary works without this tracking. You can change your choice here at any time.",
@@ -1759,6 +1768,7 @@
         "DAILY_ADVICES": "Dashboard advices and JSON import"
     },
     "ADMIN_ACQUISITION": {
+        "CONSENT_COVERAGE": "This report includes only visits and conversions recorded with marketing consent. It does not represent all visitors, registrations or purchases.",
         "UTM_LIMIT": "UTM values can contain at most {{max}} characters.",
         "LINK_PATH_LIMIT": "The link path and parameters exceed {{max}} encoded characters. Shorten the path or UTM values.",
         "COMPARE": "Compared with the preceding period",

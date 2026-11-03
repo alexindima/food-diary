@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "components": 520,
-    "componentsWithoutDirectSpecs": 133,
-    "inputs": 1673,
-    "outputs": 557,
+    "componentsWithoutDirectSpecs": 132,
+    "inputs": 1674,
+    "outputs": 559,
     "apiCalls": 327,
     "templatesWithTranslations": 376,
-    "translationKeys": 2244,
-    "consumerEdges": 1329,
+    "translationKeys": 2250,
+    "consumerEdges": 1330,
     "consumedComponents": 329,
     "unconsumedComponents": 190
   },
@@ -12132,7 +12132,12 @@
           "required": false
         }
       ],
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "marketingSettingsRequested",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
@@ -15021,9 +15026,20 @@
       "stylePaths": [
         "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.scss"
       ],
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
+      "inputs": [
+        {
+          "name": "settingsOpen",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "closed",
+          "type": ""
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.spec.ts"
     },
     {
       "class": "MealCardComponent",
@@ -21795,6 +21811,7 @@
       "feature": "admin-acquisition",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/pages/admin-acquisition.html",
       "keys": [
+        "ADMIN_ACQUISITION.CONSENT_COVERAGE",
         "ADMIN_ACQUISITION.EVENT_TOTAL",
         "ADMIN_COMMON.APPLY",
         "ADMIN_COMMON.FIRST_PAGE",
@@ -24664,6 +24681,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
       "keys": [
         "AI_CONSENT.TITLE",
+        "MARKETING_CONSENT.ALLOW",
         "MARKETING_CONSENT.REJECT",
         "MARKETING_CONSENT.SYNC_ERROR",
         "MARKETING_CONSENT.TEXT",
@@ -24975,6 +24993,7 @@
       "feature": "public",
       "path": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
       "keys": [
+        "MARKETING_CONSENT.SETTINGS",
         "PUBLIC_SITE.FOOTER.DESCRIPTION",
         "PUBLIC_SITE.FOOTER.LABEL"
       ]
@@ -25783,12 +25802,12 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
       "keys": [
-        "MARKETING_CONSENT.ALLOW",
-        "MARKETING_CONSENT.REJECT",
-        "MARKETING_CONSENT.SETTINGS",
-        "MARKETING_CONSENT.SYNC_ERROR",
-        "MARKETING_CONSENT.TEXT",
-        "MARKETING_CONSENT.TITLE"
+        "MARKETING_CONSENT.ALLOW_SHORT",
+        "MARKETING_CONSENT.DETAILS",
+        "MARKETING_CONSENT.REJECT_SHORT",
+        "MARKETING_CONSENT.SHORT_TITLE",
+        "MARKETING_CONSENT.SUMMARY",
+        "MARKETING_CONSENT.TEXT"
       ]
     },
     {
@@ -30733,10 +30752,8 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
-        "fill",
-        "size",
         "type",
         "variant"
       ],
@@ -32695,8 +32712,10 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/privacy-settings/privacy-settings.html",
-      "occurrences": 5,
+      "occurrences": 6,
       "inputsUsed": [
+        "disabled",
+        "disabledReason",
         "loading",
         "type",
         "variant"
@@ -32913,6 +32932,21 @@
       "inputsUsed": [
         "fill",
         "size",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "public",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/public/components/public-site-footer/public-site-footer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "size",
+        "type",
         "variant"
       ],
       "outputsHandled": []
@@ -34108,7 +34142,9 @@
       "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/marketing-consent/marketing-consent.html",
       "occurrences": 1,
-      "inputsUsed": [],
+      "inputsUsed": [
+        "density"
+      ],
       "outputsHandled": []
     },
     {
@@ -42967,8 +43003,12 @@
       "consumerFeature": "shell",
       "consumerPath": "FoodDiary.Web.Client/src/app/shell/app.html",
       "occurrences": 1,
-      "inputsUsed": [],
-      "outputsHandled": []
+      "inputsUsed": [
+        "settingsOpen"
+      ],
+      "outputsHandled": [
+        "closed"
+      ]
     },
     {
       "component": "MealAiSessionsComponent",
@@ -45112,7 +45152,9 @@
       "inputsUsed": [
         "path"
       ],
-      "outputsHandled": []
+      "outputsHandled": [
+        "marketingSettingsRequested"
+      ]
     },
     {
       "component": "PublicSiteHeaderComponent",

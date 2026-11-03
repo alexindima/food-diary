@@ -84,6 +84,18 @@ class SessionRootDialog {
 }
 
 describe('AppComponent session-owned route lifetime', () => {
+    it('mounts the marketing notice only on public marketing pages', async () => {
+        const { fixture, rootElement, router } = await createSessionShellAsync({ path: '', component: SessionPublicLogin });
+        expect(rootElement.querySelector('fd-marketing-consent'), 'The diary must have no marketing consent block').toBeNull();
+        allowPrivateEditorDeparture = true;
+        await router.navigateByUrl('/');
+        fixture.detectChanges();
+        expect(rootElement.querySelector('fd-marketing-consent')).not.toBeNull();
+        await router.navigateByUrl('/explore');
+        fixture.detectChanges();
+        expect(rootElement.querySelector('fd-marketing-consent')).toBeNull();
+    });
+
     it('keeps the skip link on the current document, including its query parameters', async () => {
         const { fixture, rootElement, router } = await createSessionShellAsync();
         allowPrivateEditorDeparture = true;
