@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { AiConsentDialogComponent } from '../../../components/shared/ai-consent-dialog/ai-consent-dialog';
 import { AuthService } from '../../../services/auth.service';
 import { AiFoodService } from '../../../shared/api/ai-food.service';
+import { getAiTrialQuotaErrorKey } from '../../../shared/lib/ai-quota-error.utils';
 import { UserFacade } from '../../../shared/lib/user.facade';
 import type { RecipeImportResult } from '../../../shared/models/recipe-import.data';
 
@@ -117,7 +118,7 @@ function recipeImportErrorKey(error: unknown): string {
                 return 'RECIPE_MANAGE.IMPORT.VIDEO_BUSY';
             }
         }
-        const key = recipeImportHttpErrors[String(error.status)];
+        const key = getAiTrialQuotaErrorKey(error) ?? recipeImportHttpErrors[String(error.status)];
         if (key !== undefined) {
             return key;
         }

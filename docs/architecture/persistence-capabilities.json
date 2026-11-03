@@ -391,8 +391,8 @@
         "write:AiQuotaReservation",
         "write:AiUsage"
       ],
-      "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. The provider-only verified COMMIT helper preserves the original Reserve result on confirmed commit and forbids replay on unknown outcome. SQL, validated usage counts, reservation checks, lock order, reconciliation/save/rollback, orphan and compensation semantics are unchanged. ADR 0054.",
-      "technicalSourceSha256": "891b12a077e5d3723e33b42b9b232df2a2590384e2ad6d0af0d60ae4fc202c3e"
+      "reason": "AI owns per-operation quota contexts, retry strategy, row locks and independent transactions. The provider-only verified COMMIT helper preserves the original Reserve result on confirmed commit and forbids replay on unknown outcome. Period seed SQL remains scoped to one user and excludes trial usage from monthly totals. Trial initialization counts legacy usage in the trial window and reconciliation tags usage from the reservation period. Reservation validation, lock order, transaction, orphan and compensation boundaries are preserved. ADR 0054.",
+      "technicalSourceSha256": "a2ece1b621f9ac1b2232acc976e29041541d0061c462326ab766cd7fbd0abe4d"
     },
     "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
       "module": "Ai",

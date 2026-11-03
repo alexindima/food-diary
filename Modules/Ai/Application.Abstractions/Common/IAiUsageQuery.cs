@@ -15,5 +15,6 @@ public interface IAiUsageQuery {
         UserId userId,
         DateTime fromUtc,
         DateTime toUtc,
+        bool isTrial,
         CancellationToken cancellationToken = default);
 }

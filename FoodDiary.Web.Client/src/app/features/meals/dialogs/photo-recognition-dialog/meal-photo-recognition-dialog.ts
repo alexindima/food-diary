@@ -21,6 +21,7 @@ import {
     resolveAiPhotoUnitKey,
     updateAiEditableItem,
 } from '../../../../shared/lib/ai-photo-edit.utils';
+import { getAiTrialQuotaErrorKey } from '../../../../shared/lib/ai-quota-error.utils';
 import { createClientId } from '../../../../shared/lib/client-id.utils';
 import { getNumberProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
@@ -402,7 +403,7 @@ export class MealPhotoRecognitionDialogComponent {
                     if (status === HttpStatusCode.Forbidden) {
                         this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
                     } else if (status === HttpStatusCode.TooManyRequests) {
-                        this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+                        this.errorKey.set(getAiTrialQuotaErrorKey(err) ?? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
                     }
@@ -420,13 +421,7 @@ export class MealPhotoRecognitionDialogComponent {
                 this.reviewItems.set(buildAiEditableItems(items, null, () => this.createEditId()));
                 if (response.recognition !== undefined) {
                     this.nutrition.set(response.recognition.nutrition);
-                    this.nutritionErrorKey.set(
-                        response.recognition.errorCode === null
-                            ? null
-                            : response.recognition.errorCode === 'Ai.QuotaExceeded'
-                              ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA'
-                              : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
-                    );
+                    this.nutritionErrorKey.set(recognitionNutritionErrorKey(response.recognition.errorCode));
                 } else if (items.length > 0) {
                     this.runNutrition(items);
                 }
@@ -445,7 +440,7 @@ export class MealPhotoRecognitionDialogComponent {
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
                     if (status === HttpStatusCode.TooManyRequests) {
-                        this.nutritionErrorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+                        this.nutritionErrorKey.set(getAiTrialQuotaErrorKey(err) ?? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
                         this.nutritionErrorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
                     }
@@ -642,6 +637,16 @@ function hasReliableLocation(
         item.centerY >= 0 &&
         item.centerY <= 1 &&
         (item.locationConfidence ?? 1) >= LOCATION_CONFIDENCE_THRESHOLD
+    );
+}
+
+function recognitionNutritionErrorKey(code: string | null): string | null {
+    if (code === null) {
+        return null;
+    }
+    return (
+        getAiTrialQuotaErrorKey(code) ??
+        (code === 'Ai.QuotaExceeded' ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA' : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR')
     );
 }
 

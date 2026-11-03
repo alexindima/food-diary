@@ -8,6 +8,7 @@ using FoodDiary.Application.Contracts.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
 using FoodDiary.Modules.Ai.Application.Abstractions.Models;
+using FoodDiary.Modules.Ai.Application.Services;
 
 namespace FoodDiary.Modules.Ai.Application.Queries.GetUserAiUsageSummary;
 
@@ -33,22 +34,19 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
         }
 
         UserAiProfileModel context = contextResult.Value;
-        (DateTime monthStartUtc, DateTime monthEndUtc) = GetMonthBoundsUtc(dateTimeProvider.GetUtcNow().UtcDateTime);
+        var window = AiQuotaWindow.Resolve(context, dateTimeProvider.GetUtcNow().UtcDateTime);
         AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(
             userId,
-            monthStartUtc,
-            monthEndUtc,
+            window.StartUtc,
+            window.EndUtc,
+            window.IsTrial,
             cancellationToken);
 
         return Result.Success(new UserAiUsageModel(
-            context.InputTokenLimit,
-            context.OutputTokenLimit,
+            window.InputLimit,
+            window.OutputLimit,
             totals.InputTokens,
             totals.OutputTokens,
-            monthEndUtc));
-    }
-    private static (DateTime StartUtc, DateTime EndUtc) GetMonthBoundsUtc(DateTime nowUtc) {
-        var start = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        return (start, start.AddMonths(1));
+            window.EndUtc));
     }
 }

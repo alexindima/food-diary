@@ -16,6 +16,8 @@ public sealed class AiUsage : Entity<AiUsageId> {
     public int InputTokens { get; private set; }
     public int OutputTokens { get; private set; }
     public int TotalTokens { get; private set; }
+    // Older usage predates separate trial accounting.
+    public bool? IsTrial { get; private set; }
 
     private AiUsage() {
     }
@@ -34,15 +36,15 @@ public sealed class AiUsage : Entity<AiUsageId> {
         return CreateCore(userId, normalizedOperation, normalizedModel, tokens);
     }
 
-    public static AiUsage CreateWithTokens(UserId userId, string operation, string model, AiTokenUsage tokens) {
+    public static AiUsage CreateWithTokens(UserId userId, string operation, string model, AiTokenUsage tokens, bool? isTrial = null) {
         EnsureUserId(userId);
         string normalizedOperation = NormalizeRequiredText(operation, OperationMaxLength, nameof(operation));
         string normalizedModel = NormalizeRequiredText(model, ModelMaxLength, nameof(model));
         ArgumentNullException.ThrowIfNull(tokens);
-        return CreateCore(userId, normalizedOperation, normalizedModel, tokens);
+        return CreateCore(userId, normalizedOperation, normalizedModel, tokens, isTrial);
     }
 
-    private static AiUsage CreateCore(UserId userId, string operation, string model, AiTokenUsage tokens) {
+    private static AiUsage CreateCore(UserId userId, string operation, string model, AiTokenUsage tokens, bool? isTrial = null) {
         var usage = new AiUsage {
             Id = AiUsageId.New(),
             UserId = userId,
@@ -51,6 +53,7 @@ public sealed class AiUsage : Entity<AiUsageId> {
             InputTokens = tokens.InputTokens,
             OutputTokens = tokens.OutputTokens,
             TotalTokens = tokens.TotalTokens,
+            IsTrial = isTrial,
         };
         usage.SetCreated();
         return usage;

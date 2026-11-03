@@ -65,4 +65,14 @@ public static class AiErrors {
         "Ai.QuotaExceeded",
         "AI token quota exceeded for the current month.",
         Kind: ErrorKind.RateLimited);
+
+    public static Error TrialQuotaExceeded() => new(
+        "Ai.TrialQuotaExceeded",
+        "AI token quota exceeded for the Premium trial.",
+        Kind: ErrorKind.RateLimited);
+
+    public static Error TrialEnded() => new(
+        "Ai.TrialEnded",
+        "The Premium trial has ended.",
+        Kind: ErrorKind.Forbidden);
 }

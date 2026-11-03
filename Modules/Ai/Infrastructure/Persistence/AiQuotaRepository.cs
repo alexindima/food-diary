@@ -117,7 +117,8 @@ public sealed class AiQuotaRepository(
                 reservation.UserId,
                 usage.Operation,
                 usage.Model,
-                usage.Tokens));
+                usage.Tokens,
+                isTrial: reservation.PeriodStartUtc == AiQuotaReservationRequest.TrialPeriodKeyUtc));
             await context.SaveChangesAsync(token);
         }, cancellationToken);
     }
@@ -180,7 +181,10 @@ public sealed class AiQuotaRepository(
             request.InputTokenLimit < 0 ||
             request.OutputTokenLimit < 0 ||
             request.PeriodStartUtc.Kind != DateTimeKind.Utc ||
-            request.PeriodStartUtc.Day != 1 ||
+            (request.TrialStartedAtUtc is { } trialStartedAt
+                ? request.PeriodStartUtc != AiQuotaReservationRequest.TrialPeriodKeyUtc ||
+                    trialStartedAt.Kind != DateTimeKind.Utc || trialStartedAt > nowUtc
+                : request.PeriodStartUtc.Day != 1) ||
             request.PeriodStartUtc.TimeOfDay != TimeSpan.Zero ||
             request.ExpiresOnUtc.Kind != DateTimeKind.Utc ||
             request.ExpiresOnUtc <= nowUtc) {
@@ -193,7 +197,9 @@ public sealed class AiQuotaRepository(
         AiQuotaReservationRequest request,
         DateTime nowUtc,
         CancellationToken cancellationToken) {
-        DateTime periodEndUtc = request.PeriodStartUtc.AddMonths(1);
+        bool isTrial = request.TrialStartedAtUtc is not null;
+        DateTime usageStartUtc = request.TrialStartedAtUtc ?? request.PeriodStartUtc;
+        DateTime usageEndUtc = isTrial ? nowUtc : request.PeriodStartUtc.AddMonths(1);
         await context.Database.ExecuteSqlInterpolatedAsync($"""
             INSERT INTO "AiQuotaPeriods"
                 ("UserId", "PeriodStartUtc", "ConsumedInputTokens", "ConsumedOutputTokens", "ReservedInputTokens", "ReservedOutputTokens", "UpdatedOnUtc")
@@ -207,8 +213,9 @@ public sealed class AiQuotaRepository(
                 {nowUtc}
             FROM "AiUsages"
             WHERE "UserId" = {request.UserId.Value}
-              AND "CreatedOnUtc" >= {request.PeriodStartUtc}
-              AND "CreatedOnUtc" < {periodEndUtc}
+              AND "CreatedOnUtc" >= {usageStartUtc}
+              AND "CreatedOnUtc" < {usageEndUtc}
+              AND ("IsTrial" IS NULL OR (NOT {isTrial} AND NOT "IsTrial"))
             ON CONFLICT ("UserId", "PeriodStartUtc") DO NOTHING
             """, cancellationToken);
     }

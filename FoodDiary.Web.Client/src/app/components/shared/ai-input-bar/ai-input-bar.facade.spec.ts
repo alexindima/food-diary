@@ -90,6 +90,23 @@ describe('AiInputBarFacade', () => {
 });
 
 describe('AiInputBarFacade saved photo results', () => {
+    it('explains trial quota exhaustion in both HTTP errors and saved recognition results', () => {
+        aiFoodFacade.parseFoodText.mockReturnValueOnce(
+            throwError(() => ({ status: HttpStatusCode.TooManyRequests, error: { error: 'Ai.TrialQuotaExceeded' } })),
+        );
+        const id = entityId<'food-recognition'>('trial-photo');
+        aiFoodFacade.resumeRecognition.mockReturnValueOnce(
+            of({ items: [item], recognition: { id, nutrition: null, errorCode: 'Ai.TrialQuotaExceeded' } }),
+        );
+
+        facade.analyzeText('apple');
+        facade.resumePhoto(id);
+
+        expect(facade.text.errorKey()).toBe('AI_RECOGNITION.ERROR_TRIAL_QUOTA');
+        expect(facade.photo.nutritionErrorKey()).toBe('AI_RECOGNITION.ERROR_TRIAL_QUOTA');
+        expect(facade.photo.results()).toEqual([item]);
+    });
+
     it('explains missing consent when a saved terminal job returns403 instead of showing a paywall', () => {
         aiFoodFacade.resumeRecognition.mockReturnValueOnce(
             throwError(() => ({ status: HttpStatusCode.Forbidden, error: { code: 'Ai.ConsentRequired', terminal: true } })),

@@ -402,6 +402,27 @@ public class AiValidatorsTests {
     }
 
     [Fact]
+    public async Task GetUserAiUsageSummaryQueryHandler_ReportsTrialBudgetThroughItsEndAcrossMonths() {
+        var userId = UserId.New();
+        var trialStart = new DateTime(2026, 3, 29, 15, 30, 0, DateTimeKind.Utc);
+        DateTime trialEnd = trialStart.AddDays(7);
+        IUserAiProfileReadService profiles = Substitute.For<IUserAiProfileReadService>();
+        profiles.GetAiProfileAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Success(new UserAiProfileModel(
+            userId, "ru", 5_000_000, 1_000_000, HasAcceptedAiConsent: true, PremiumTrialStartedAtUtc: trialStart, PremiumTrialEndsAtUtc: trialEnd)));
+        IAiUsageQuery usage = CreateAiUsageRepository();
+        var handler = new GetUserAiUsageSummaryQueryHandler(profiles, usage, new FixedDateTimeProvider(trialStart.AddDays(4)));
+
+        Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(userId.Value), CancellationToken.None);
+
+        UserAiUsageModel summary = ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Equal(500_000, summary.InputLimit),
+            () => Assert.Equal(100_000, summary.OutputLimit),
+            () => Assert.Equal(trialEnd, summary.ResetAtUtc));
+        await usage.Received(1).GetUserTotalsAsync(userId, trialStart, trialEnd, isTrial: true, CancellationToken.None);
+    }
+
+    [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai@example.com", "hash");
         user.Deactivate();
@@ -579,6 +600,7 @@ public class AiValidatorsTests {
                 Arg.Any<UserId>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime>(),
+                Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())
             .Returns(call => {
                 lastFromUtc = call.ArgAt<DateTime>(1);

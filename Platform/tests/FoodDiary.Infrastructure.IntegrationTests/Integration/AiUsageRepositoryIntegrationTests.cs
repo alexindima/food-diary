@@ -92,6 +92,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
             user.Id,
             new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            isTrial: false,
             CancellationToken.None);
 
         Assert.Equal(0, emptySummary.TotalTokens);

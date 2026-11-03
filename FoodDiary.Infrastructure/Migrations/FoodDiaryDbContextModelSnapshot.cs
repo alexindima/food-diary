@@ -271,6 +271,9 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<int>("InputTokens")
                         .HasColumnType("integer");
 
+                    b.Property<bool?>("IsTrial")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(64)

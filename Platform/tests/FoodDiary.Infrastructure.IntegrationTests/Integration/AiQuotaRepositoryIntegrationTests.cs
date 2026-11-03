@@ -1,4 +1,5 @@
 using FoodDiary.Modules.Ai.Domain.ValueObjects;
+using FoodDiary.Modules.Ai.Domain.Entities;
 using FoodDiary.Modules.Ai.Infrastructure.Persistence;
 using FoodDiary.Modules.Ai.PersistenceModel;
 using System.Globalization;
@@ -49,6 +50,35 @@ public sealed class AiQuotaRepositoryIntegrationTests(PostgresDatabaseFixture da
             () => Assert.Equal(0, period.ReservedInputTokens),
             () => Assert.Equal(0, period.ReservedOutputTokens),
             () => Assert.Empty(context.ChangeTracker.Entries()));
+    }
+
+    [RequiresDockerFact]
+    public async Task TrialQuota_CountsExistingUsageAndDoesNotChargeReconciledTrialUsageToPaidMonth() {
+        (DbContextOptions<AiDbContext> options, UserId userId) = await CreateDatabaseAsync();
+        DateTime now = DateTime.UtcNow;
+        var repository = new AiQuotaRepository(options, new MutableTimeProvider(now));
+        var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        await using var context = new AiDbContext(options);
+        var legacy = AiUsage.Create(userId, "nutrition", "fixture-model", 40, 10, 50);
+        context.AiUsages.Add(legacy);
+        context.Entry(legacy).Property(usage => usage.CreatedOnUtc).CurrentValue = now.AddSeconds(-1);
+        await context.SaveChangesAsync();
+        AiQuotaReservationRequest trial = CreateRequest(RequestIdFor(31), userId, 60, 40, 100, 50, now.AddMinutes(15)) with {
+            PeriodStartUtc = AiQuotaReservationRequest.TrialPeriodKeyUtc,
+            TrialStartedAtUtc = now.AddDays(-1),
+        };
+
+        Assert.Equal(AiQuotaReservationStatus.QuotaExceeded,
+            await repository.ReserveAsync(trial with { RequestId = RequestIdFor(34), InputTokens = 61 }));
+        Assert.Equal(AiQuotaReservationStatus.Acquired, await repository.ReserveAsync(trial));
+        await repository.ReconcileAsync(trial.RequestId, new AiQuotaUsage("nutrition", "fixture-model", AiTokenUsage.FromCounts(60, 40, 100)));
+        Assert.Equal(AiQuotaReservationStatus.QuotaExceeded, await repository.ReserveAsync(trial with { RequestId = RequestIdFor(32) }));
+
+        AiQuotaReservationRequest paid = CreateRequest(RequestIdFor(33), userId, 60, 40, 100, 50, now.AddMinutes(15)) with {
+            PeriodStartUtc = monthStart,
+        };
+        Assert.Equal(AiQuotaReservationStatus.Acquired, await repository.ReserveAsync(paid));
+        Assert.Single(await context.AiUsages.AsNoTracking().Where(usage => usage.IsTrial == true).ToListAsync());
     }
 
     [RequiresDockerFact]

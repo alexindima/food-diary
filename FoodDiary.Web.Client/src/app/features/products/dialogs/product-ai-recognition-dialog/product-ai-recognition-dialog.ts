@@ -12,6 +12,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { catchError, of, type Subscription } from 'rxjs';
 
 import { FoodRecognitionHistoryComponent } from '../../../../components/shared/food-recognition-history/food-recognition-history';
+import { getAiTrialQuotaErrorKey } from '../../../../shared/lib/ai-quota-error.utils';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse, ProductLabel } from '../../../../shared/models/ai.data';
 import type { FoodRecognitionJob } from '../../../../shared/models/food-recognition.data';
 import type { ImageSelection } from '../../../../shared/models/image-upload.data';
@@ -314,7 +315,10 @@ export class ProductAiRecognitionDialogComponent {
             if (nutrition !== null) {
                 this.resultFormModel.set(buildProductAiRecognitionModelFromNutrition(items, nutrition));
             }
-            this.nutritionErrorKey.set(response.recognition.errorCode === null ? null : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR');
+            this.nutritionErrorKey.set(
+                getAiTrialQuotaErrorKey(response.recognition.errorCode) ??
+                    (response.recognition.errorCode === null ? null : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR'),
+            );
         } else if (items.length > 0) {
             this.runNutrition(items);
         }

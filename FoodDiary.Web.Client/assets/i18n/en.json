@@ -5457,8 +5457,7 @@
         "VOICE_ERROR_PERMISSION": "Microphone access is blocked. Allow it in your browser or enter your meal as text.",
         "VOICE_ERROR_NETWORK": "Voice recognition could not connect. Try again or enter your meal as text.",
         "VOICE_ERROR_GENERIC": "Voice recognition failed. Try again or enter your meal as text.",
-        "TEXT_NUTRITION_ERROR": "Failed to calculate nutrition for the recognized items. Please try again.",
-        "PREMIUM_NOTICE": "AI recognition requires Premium. You can add products and recipes manually for free. Your text stays here if you cancel."
+        "TEXT_NUTRITION_ERROR": "Failed to calculate nutrition for the recognized items. Please try again."
     },
     "AI_CONSENT": {
         "TITLE": "AI Usage Consent",
@@ -7492,9 +7491,9 @@
     "AI": {
         "PREMIUM_DIALOG": {
             "TITLE": "AI access",
-            "MESSAGE": "AI features are available with Premium. Go Premium?",
+            "MESSAGE": "AI features require Premium. You can still add food manually for free.",
             "NOTE": "To get AI access, email",
-            "ACTION": "Go",
+            "ACTION": "View Premium",
             "CANCEL": "Close"
         },
         "PREMIUM_PAGE": {
@@ -8195,6 +8194,7 @@
         "ERROR_DECLINE": "Failed to decline the invitation."
     },
     "AI_RECOGNITION": {
+        "ERROR_TRIAL_QUOTA": "You’ve reached your AI trial limit. You can still add food manually for free.",
         "ERROR_CONSENT": "Consent to share data with the AI service was missing for this request. Confirm consent and start a new attempt.",
         "EMPTY_TITLE": "No photo recognitions yet",
         "EMPTY_DESCRIPTION": "Your recent recognition tasks and results will appear here.",

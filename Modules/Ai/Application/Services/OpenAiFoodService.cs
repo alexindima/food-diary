@@ -180,9 +180,13 @@ public sealed partial class OpenAiFoodService(
             return contextResult;
         }
 
-        return contextResult.Value.HasAcceptedAiConsent
-            ? contextResult
-            : Result.Failure<UserAiProfileModel>(AiErrors.ConsentRequired());
+        if (!contextResult.Value.HasAcceptedAiConsent) {
+            return Result.Failure<UserAiProfileModel>(AiErrors.ConsentRequired());
+        }
+
+        return AiQuotaWindow.HasExpiredTrialOnlyAccess(contextResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime)
+            ? Result.Failure<UserAiProfileModel>(AiErrors.TrialEnded())
+            : contextResult;
     }
 
     private async Task<Result> ReserveAsync(
@@ -193,18 +197,23 @@ public sealed partial class OpenAiFoodService(
         AiProviderTokenBudget budget,
         CancellationToken cancellationToken) {
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var window = AiQuotaWindow.Resolve(context, nowUtc);
+        if (AiQuotaWindow.HasExpiredTrialOnlyAccess(context, nowUtc)) {
+            return Result.Failure(AiErrors.TrialEnded());
+        }
+
         AiQuotaReservationStatus status = await aiQuotaRepository.ReserveAsync(
             new AiQuotaReservationRequest(
                 requestId,
                 userId,
-                monthStartUtc,
+                window.ReservationKeyUtc,
                 operation,
                 budget.InputTokens,
                 budget.MaximumOutputTokens,
-                context.InputTokenLimit,
-                context.OutputTokenLimit,
-                nowUtc.Add(ReservationLifetime)),
+                window.InputLimit,
+                window.OutputLimit,
+                nowUtc.Add(ReservationLifetime),
+                window.IsTrial ? window.StartUtc : null),
             cancellationToken);
         ApplicationAiTelemetry.RecordQuotaReservation(operation, status);
 
@@ -213,7 +222,9 @@ public sealed partial class OpenAiFoodService(
         }
 
         ApplicationAiTelemetry.RecordQuotaRejection(operation);
-        return Result.Failure(AiErrors.QuotaExceeded());
+        return Result.Failure(window.IsTrial && status == AiQuotaReservationStatus.QuotaExceeded
+            ? AiErrors.TrialQuotaExceeded()
+            : AiErrors.QuotaExceeded());
     }
 
     private async Task ReconcileAsync<T>(

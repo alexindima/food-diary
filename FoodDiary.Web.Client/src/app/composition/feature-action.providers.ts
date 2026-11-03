@@ -1,5 +1,7 @@
 import { inject, Injector, type Provider, type Type } from '@angular/core';
+import { map } from 'rxjs';
 
+import { PREMIUM_TRIAL_ACTIONS, type PremiumTrialActions } from '../components/shared/premium-required-dialog/premium-trial-actions';
 import {
     DIETOLOGIST_RELATIONSHIP_ACTIONS,
     type DietologistRelationshipActions,
@@ -12,6 +14,7 @@ import { HYDRATION_ACTIONS, type HydrationActions } from '../features/hydration/
 import type { FavoriteMealService } from '../features/meals/api/favorite-meal.service';
 import type { MealService } from '../features/meals/api/meal.service';
 import { FAVORITE_MEAL_ACTIONS, type FavoriteMealActions, MEAL_ACTIONS, type MealActions } from '../features/meals/contracts/meal-actions';
+import type { PremiumBillingService } from '../features/premium/api/premium-billing.service';
 import type { RecipeService } from '../features/recipes/api/recipe.service';
 import { RECIPE_LOOKUP, type RecipeLookup } from '../features/recipes/contracts/recipe-lookup';
 import type { UsdaService } from '../features/usda/api/usda.service';
@@ -21,6 +24,23 @@ import { lazyFeatureAction } from './lazy-feature-action';
 
 // Bind capabilities to their owning implementation only at the composition root.
 export const FEATURE_ACTION_PROVIDERS: Provider[] = [
+    {
+        provide: PREMIUM_TRIAL_ACTIONS,
+        useFactory: (): PremiumTrialActions => {
+            const injector = inject(Injector);
+            const loadAsync = async (): Promise<Type<PremiumBillingService>> => {
+                const { PremiumBillingService } = await import('../features/premium/api/premium-billing.service');
+                return PremiumBillingService;
+            };
+            return {
+                canStart: () =>
+                    lazyFeatureAction(injector, loadAsync, service =>
+                        service.getOverview().pipe(map(overview => overview.canStartPremiumTrial)),
+                    ),
+                start: () => lazyFeatureAction(injector, loadAsync, service => service.startPremiumTrial()),
+            };
+        },
+    },
     {
         provide: RECIPE_LOOKUP,
         useFactory: (): RecipeLookup => {

@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 
 import { AI_CONSENT_ERROR_KEY, isAiConsentRequiredError } from '../../../../../shared/lib/ai-consent-error.utils';
+import { getAiTrialQuotaErrorKey } from '../../../../../shared/lib/ai-quota-error.utils';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../../../shared/lib/nutrition.constants';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, ProductLabel } from '../../../../../shared/models/ai.data';
@@ -153,14 +154,17 @@ export function mapAiRecognitionErrorKey(error: unknown): string {
         return 'PRODUCT_AI_DIALOG.ERROR_PREMIUM';
     }
     if (status === HttpStatusCode.TooManyRequests) {
-        return 'PRODUCT_AI_DIALOG.ERROR_QUOTA';
+        return getAiTrialQuotaErrorKey(error) ?? 'PRODUCT_AI_DIALOG.ERROR_QUOTA';
     }
     return 'PRODUCT_AI_DIALOG.ERROR_GENERIC';
 }
 
 export function mapAiNutritionErrorKey(error: unknown): string {
     const status = getNumberProperty(error, 'status');
-    return status === HttpStatusCode.TooManyRequests ? 'PRODUCT_AI_DIALOG.ERROR_QUOTA' : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR';
+    return (
+        getAiTrialQuotaErrorKey(error) ??
+        (status === HttpStatusCode.TooManyRequests ? 'PRODUCT_AI_DIALOG.ERROR_QUOTA' : 'PRODUCT_AI_DIALOG.NUTRITION_ERROR')
+    );
 }
 
 export function capitalizeName(value: string): string {

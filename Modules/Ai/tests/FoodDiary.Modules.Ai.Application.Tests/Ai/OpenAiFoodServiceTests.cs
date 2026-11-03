@@ -84,6 +84,59 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Single(quotaRepository.Reservations);
     }
 
+    [Theory]
+    [InlineData(31, false)]
+    [InlineData(1, false)]
+    [InlineData(1, true)]
+    public async Task CalculateNutritionAsync_UsesTrialBudgetAcrossMonthBoundaryUntilPaid(int day, bool paid) {
+        var userId = UserId.New();
+        var start = new DateTime(2026, 8, 29, 12, 0, 0, DateTimeKind.Utc);
+        DateTime now = day == 31 ? start.AddDays(2) : start.AddDays(3);
+        IUserAiProfileReadService profiles = Substitute.For<IUserAiProfileReadService>();
+        profiles.GetAiProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(userId, "ru", 5_000_000, 1_000_000,
+                HasAcceptedAiConsent: true, HasAssignedPremium: paid, PremiumTrialStartedAtUtc: start, PremiumTrialEndsAtUtc: start.AddDays(7))));
+        var client = new RecordingOpenAiFoodClient();
+        var quota = new RecordingAiQuotaRepository { ReserveStatus = AiQuotaReservationStatus.QuotaExceeded };
+        var service = new OpenAiFoodService(client, quota, profiles, new TrialClock(now), CreateAiPromptProvider());
+
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(CreateItems(), userId, RequestId, CancellationToken.None);
+
+        AiQuotaReservationRequest request = Assert.Single(quota.Reservations);
+        ResultAssert.Failure(result, paid ? "Ai.QuotaExceeded" : "Ai.TrialQuotaExceeded");
+        Assert.Multiple(
+            () => Assert.Equal(paid ? 5_000_000 : 500_000, request.InputTokenLimit),
+            () => Assert.Equal(paid ? 1_000_000 : 100_000, request.OutputTokenLimit),
+            () => Assert.Equal(paid ? new DateTime(2026, 9, 1, 0, 0, 0, DateTimeKind.Utc) : AiQuotaReservationRequest.TrialPeriodKeyUtc, request.PeriodStartUtc),
+            () => Assert.Equal(paid ? null : start, request.TrialStartedAtUtc),
+            () => Assert.Equal(0, client.ProviderCalls));
+    }
+
+    [Fact]
+    public async Task CalculateNutritionAsync_WhenTrialEndsBeforeJobRuns_DoesNotContactProvider() {
+        var userId = UserId.New();
+        var start = new DateTime(2026, 8, 29, 12, 0, 0, DateTimeKind.Utc);
+        DateTime end = start.AddDays(7);
+        IUserAiProfileReadService profiles = Substitute.For<IUserAiProfileReadService>();
+        profiles.GetAiProfileAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(new UserAiProfileModel(userId, "ru", 5_000_000, 1_000_000, HasAcceptedAiConsent: true,
+                PremiumTrialStartedAtUtc: start, PremiumTrialEndsAtUtc: end)));
+        var client = new RecordingOpenAiFoodClient();
+        var quota = new RecordingAiQuotaRepository();
+        var service = new OpenAiFoodService(client, quota, profiles, new TrialClock(end), CreateAiPromptProvider());
+
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(CreateItems(), userId, RequestId, CancellationToken.None);
+
+        ResultAssert.Failure(result, "Ai.TrialEnded");
+        Assert.Equal(0, client.BudgetCalls);
+        Assert.Empty(quota.Reservations);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TrialClock(DateTime nowUtc) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(nowUtc);
+    }
+
     [Fact]
     public async Task CalculateNutritionAsync_WhenUserInactive_DoesNotCountOrReserveTokens() {
         var user = User.Create("inactive-ai-service@example.com", "hash");

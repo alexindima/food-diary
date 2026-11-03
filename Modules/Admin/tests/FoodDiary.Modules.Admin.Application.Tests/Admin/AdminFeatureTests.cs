@@ -691,6 +691,7 @@ public partial class AdminFeatureTests {
             UserId userId,
             DateTime fromUtc,
             DateTime toUtc,
+            bool isTrial,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }

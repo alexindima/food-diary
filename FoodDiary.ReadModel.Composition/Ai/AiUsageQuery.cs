@@ -140,10 +140,12 @@ public sealed class AiUsageQuery(ICompositionReadContext context) : IAiUsageQuer
         UserId userId,
         DateTime fromUtc,
         DateTime toUtc,
+        bool isTrial,
         CancellationToken cancellationToken = default) {
         AiUsageTotals? totals = await context.AiUsages
             .AsNoTracking()
-            .Where(x => x.UserId == userId && x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc)
+            .Where(x => x.UserId == userId && x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc &&
+                (x.IsTrial == null || x.IsTrial == isTrial))
             .GroupBy(_ => 1)
             .Select(group => new AiUsageTotals(
                 group.Sum(x => (long)x.InputTokens),

@@ -5,6 +5,7 @@ import { catchError, type Observable, of, type Subscription } from 'rxjs';
 
 import { AI_CONSENT_ERROR_KEY, isAiConsentRequiredError } from '../../../shared/lib/ai-consent-error.utils';
 import { AiFoodFacade } from '../../../shared/lib/ai-food.facade';
+import { getAiTrialQuotaErrorKey } from '../../../shared/lib/ai-quota-error.utils';
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { FoodNutritionResponse, FoodVisionItem, FoodVisionResponse } from '../../../shared/models/ai.data';
 import type { FoodRecognitionId, ImageAssetId } from '../../../shared/models/semantics/entity-id';
@@ -124,13 +125,14 @@ export class AiInputBarFacade {
                 catchError((error: unknown) => {
                     const status = getNumberProperty(error, 'status');
                     state.errorKey.set(
-                        isAiConsentRequiredError(error)
-                            ? AI_CONSENT_ERROR_KEY
-                            : status === HttpStatusCode.Forbidden
-                              ? errorKeys.premium
-                              : status === HttpStatusCode.TooManyRequests
-                                ? errorKeys.quota
-                                : errorKeys.generic,
+                        getAiTrialQuotaErrorKey(error) ??
+                            (isAiConsentRequiredError(error)
+                                ? AI_CONSENT_ERROR_KEY
+                                : status === HttpStatusCode.Forbidden
+                                  ? errorKeys.premium
+                                  : status === HttpStatusCode.TooManyRequests
+                                    ? errorKeys.quota
+                                    : errorKeys.generic),
                     );
                     return of(null);
                 }),
@@ -143,7 +145,8 @@ export class AiInputBarFacade {
                     if (response.recognition !== undefined) {
                         state.nutrition.set(response.recognition.nutrition);
                         state.nutritionErrorKey.set(
-                            response.recognition.errorCode === null ? null : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+                            getAiTrialQuotaErrorKey(response.recognition.errorCode) ??
+                                (response.recognition.errorCode === null ? null : 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR'),
                         );
                     } else if (response.items.length > 0) {
                         onItems(response.items);
@@ -167,7 +170,9 @@ export class AiInputBarFacade {
             .pipe(
                 catchError((error: unknown) => {
                     const status = getNumberProperty(error, 'status');
-                    state.nutritionErrorKey.set(status === HttpStatusCode.TooManyRequests ? errorKeys.quota : errorKeys.generic);
+                    state.nutritionErrorKey.set(
+                        getAiTrialQuotaErrorKey(error) ?? (status === HttpStatusCode.TooManyRequests ? errorKeys.quota : errorKeys.generic),
+                    );
                     return of(null);
                 }),
                 takeUntilDestroyed(this.destroyRef),

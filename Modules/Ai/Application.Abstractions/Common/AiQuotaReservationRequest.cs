@@ -11,4 +11,8 @@ public sealed record AiQuotaReservationRequest(
     long OutputTokens,
     long InputTokenLimit,
     long OutputTokenLimit,
-    DateTime ExpiresOnUtc);
+    DateTime ExpiresOnUtc,
+    DateTime? TrialStartedAtUtc = null) {
+    // A user can start only one trial. This reserved key cannot be a monthly boundary.
+    public static DateTime TrialPeriodKeyUtc { get; } = DateTime.UnixEpoch.AddDays(1);
+}

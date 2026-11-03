@@ -23,6 +23,7 @@ import {
 
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { AI_TRIAL_QUOTA_EXCEEDED } from '../lib/ai-quota-error.utils';
 import { buildRealtimeHubUrl } from '../lib/realtime-hub-url.utils';
 import type { FoodVisionRequest, FoodVisionResponse } from '../models/ai.data';
 import { type FoodRecognitionJob, RECOGNITION_PAGE_SIZE } from '../models/food-recognition.data';
@@ -142,9 +143,9 @@ export class FoodRecognitionService {
         }
         if (job.vision === null) {
             const status =
-                job.errorCode === 'Ai.QuotaExceeded'
+                job.errorCode === 'Ai.QuotaExceeded' || job.errorCode === AI_TRIAL_QUOTA_EXCEEDED
                     ? HttpStatusCode.TooManyRequests
-                    : job.errorCode === 'Ai.ConsentRequired'
+                    : job.errorCode === 'Ai.ConsentRequired' || job.errorCode === 'Ai.TrialEnded'
                       ? HttpStatusCode.Forbidden
                       : HttpStatusCode.BadGateway;
             return throwError(() => new HttpErrorResponse({ status, error: { code: job.errorCode, terminal: true } }));

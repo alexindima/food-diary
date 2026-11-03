@@ -51,7 +51,9 @@ public sealed partial class UserProfileProjectionService(DbSet<User> users, Func
             user.AiInputTokenLimit, user.AiOutputTokenLimit, user.AiConsentAcceptedAt != null &&
                 (user.AiConsentNoticeVersion == PrivacyNoticeVersions.Current
                  || (PrivacyNoticeVersions.Current == PrivacyNoticeVersions.LegacyCompatibleAiNotice &&
-                     (user.AiConsentNoticeVersion == null || user.AiConsentNoticeVersion == PrivacyNoticeVersions.LegacyUnversioned)))), cancellationToken);
+                     (user.AiConsentNoticeVersion == null || user.AiConsentNoticeVersion == PrivacyNoticeVersions.LegacyUnversioned))),
+            user.UserRoles.Any(role => role.Role.Name == RoleNames.Premium),
+            user.PremiumTrialStartedAtUtc, user.PremiumTrialEndsAtUtc), cancellationToken);
     }
 
     public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(UserId userId, CancellationToken cancellationToken = default,

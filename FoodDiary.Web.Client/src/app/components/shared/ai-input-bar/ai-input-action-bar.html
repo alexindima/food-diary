@@ -1,7 +1,4 @@
 <div class="ai-input-action-bar fd-stack fd-gap-card-profile">
-    @if (!isPremium()) {
-        <p class="fd-ui-body-sm fd-ui-text-muted">{{ 'AI_INPUT_BAR.PREMIUM_NOTICE' | translate }}</p>
-    }
     <fd-ai-input-bar
         [mode]="mode()"
         [mealType]="mealType()"

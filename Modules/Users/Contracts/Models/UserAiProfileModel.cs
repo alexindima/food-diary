@@ -7,4 +7,7 @@ public sealed record UserAiProfileModel(
     string? Language,
     long InputTokenLimit,
     long OutputTokenLimit,
-    bool HasAcceptedAiConsent);
+    bool HasAcceptedAiConsent,
+    bool HasAssignedPremium = false,
+    DateTime? PremiumTrialStartedAtUtc = null,
+    DateTime? PremiumTrialEndsAtUtc = null);
