@@ -20,6 +20,7 @@ import { utcInstant } from '../../../shared/models/semantics/date-value';
 import { entityId } from '../../../shared/models/semantics/entity-id';
 import { publicImageUrl } from '../../../shared/models/semantics/image-location';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
+import { PrivacyConsentFacade } from '../../../shared/privacy/privacy-consent.facade';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { AiInputBarComponent } from './ai-input-bar';
 import type { AiInputBarMealDetails, AiInputBarResult } from './ai-input-bar.types';
@@ -140,6 +141,7 @@ async function setupAiInputBarAsync(
         providers: [
             provideTranslateTesting(),
             { provide: AiFoodFacade, useValue: aiFoodService },
+            { provide: PrivacyConsentFacade, useValue: { ensureHealthConsentAsync: vi.fn().mockResolvedValue(true) } },
             {
                 provide: UserFacade,
                 useValue: userFacade,
@@ -326,7 +328,7 @@ describe('AiInputBarComponent speech ownership', () => {
         userFacade.getInfoSilently.mockReturnValueOnce(user);
         fixture.detectChanges();
         const recording = component['toggleMicAsync']();
-
+        await vi.waitUntil(() => userFacade.getInfoSilently.mock.calls.length === 1);
         fixture.componentRef.setInput('active', false);
         fixture.detectChanges();
         user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
@@ -345,6 +347,7 @@ describe('AiInputBarComponent speech ownership', () => {
         const returned = TestBed.createComponent(AiInputBarComponent);
         expect(returned.componentInstance['voiceText']()).toBe('  Два яйца и чай  ');
     });
+
     it('disables only another microphone and preserves the owner recording through unrelated cleanup', async () => {
         const { component, fixture, speechRecognition } = await setupAiInputBarAsync('emit', { speechSupported: true });
         const otherInput = TestBed.createComponent(AiInputBarComponent);
@@ -380,6 +383,7 @@ describe('AiInputBarComponent speech ownership', () => {
         userFacade.getInfoSilently.mockReturnValueOnce(user);
         fixture.detectChanges();
         const recording = component['toggleMicAsync']();
+        await vi.waitUntil(() => userFacade.getInfoSilently.mock.calls.length === 1);
 
         fixture.destroy();
         user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
@@ -654,6 +658,7 @@ describe('AiInputBarComponent saved photo reanalysis', () => {
         component['photoSelection'].set(imageSelection(RECENT_JOB.imageUrl, RECENT_JOB.imageAssetId));
         fixture.detectChanges();
         const reanalysis = component['onPhotoReanalyzeAsync']();
+        await vi.waitUntil(() => userFacade.getInfoSilently.mock.calls.length === 1);
         component['dismissPhotoResult']();
         user.next({ aiConsentAcceptedAt: '2026-05-17T00:00:00Z' });
         await reanalysis;

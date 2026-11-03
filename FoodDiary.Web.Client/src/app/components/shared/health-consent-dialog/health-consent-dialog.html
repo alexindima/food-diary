@@ -15,7 +15,7 @@
             [disabled]="!agreed()"
             [disabledReason]="'PRIVACY_CHOICES.HEALTH_AGREEMENT' | translate"
             (click)="close(true)"
-            >{{ 'PRIVACY_CHOICES.ACCEPT' | translate }}</fd-ui-button
+            >{{ (data?.acceptLabelKey ?? 'PRIVACY_CHOICES.ACCEPT') | translate }}</fd-ui-button
         >
     </div>
 </fd-ui-dialog>

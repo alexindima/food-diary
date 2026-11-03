@@ -30,6 +30,7 @@ import type { ImageSelection } from '../../../../shared/models/image-upload.data
 import { imageSelection } from '../../../../shared/models/image-upload.data';
 import type { MealAiSessionManageDto } from '../../../../shared/models/meal.data';
 import type { FoodRecognitionId, ImageAssetId } from '../../../../shared/models/semantics/entity-id';
+import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { MealPhotoEditListComponent } from './meal-photo-edit-list/meal-photo-edit-list';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary/meal-photo-nutrition-summary';
 import type {
@@ -99,6 +100,7 @@ export class MealPhotoRecognitionDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
     private analysisSubscription: Subscription | null = null;
     private nutritionSubscription: Subscription | null = null;
+    private readonly privacy = inject(PrivacyConsentFacade);
     private readonly dialogRef = inject(FdUiDialogRef<MealPhotoRecognitionDialogComponent, MealAiSessionManageDto | null>, {
         optional: true,
     });
@@ -208,7 +210,7 @@ export class MealPhotoRecognitionDialogComponent {
         return `${first.toLocaleUpperCase()}${rest.join('')}`;
     }
 
-    protected onImageChanged(selection: ImageSelection | null): void {
+    protected async onImageChangedAsync(selection: ImageSelection | null): Promise<void> {
         this.analysisSubscription?.unsubscribe();
         this.nutritionSubscription?.unsubscribe();
         this.isLoading.set(false);
@@ -226,10 +228,10 @@ export class MealPhotoRecognitionDialogComponent {
             return;
         }
 
-        this.runAnalysis(selection.assetId);
+        await this.runAnalysisAsync(selection.assetId);
     }
 
-    protected onReanalyze(): void {
+    protected async onReanalyzeAsync(): Promise<void> {
         const assetId = this.selection()?.assetId;
         if (assetId === null || assetId === undefined || this.isLoading() || this.isEditing()) {
             return;
@@ -242,7 +244,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.isNutritionLoading.set(false);
         this.nutrition.set(null);
         this.nutritionErrorKey.set(null);
-        this.runAnalysis(assetId);
+        await this.runAnalysisAsync(assetId);
     }
 
     protected toggleAnnotations(): void {
@@ -362,14 +364,26 @@ export class MealPhotoRecognitionDialogComponent {
         return (value ?? '').trim().toLowerCase();
     }
 
-    protected onResumeRecognition(job: FoodRecognitionJob): void {
+    protected async onResumeRecognitionAsync(job: FoodRecognitionJob): Promise<void> {
         const selection = imageSelection(job.imageUrl, job.imageAssetId);
         this.selection.set(selection);
-        this.runAnalysis(job.imageAssetId, job.id);
+        await this.runAnalysisAsync(job.imageAssetId, job.id);
     }
 
-    private runAnalysis(assetId: ImageAssetId, jobId?: FoodRecognitionId): void {
+    private async runAnalysisAsync(assetId: ImageAssetId, jobId?: FoodRecognitionId): Promise<void> {
         this.resetAnalysisState();
+        const selection = this.selection();
+        const allowed = await this.privacy.ensureHealthConsentAsync(true);
+        if (this.destroyRef.destroyed || this.selection() !== selection) {
+            return;
+        }
+        if (!allowed) {
+            this.isLoading.set(false);
+            if (this.privacy.failed()) {
+                this.errorKey.set(this.privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR');
+            }
+            return;
+        }
         this.subscribeToAnalysis(assetId, jobId);
     }
 

@@ -12,12 +12,15 @@ import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { environment } from '../../environments/environment';
+import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { SKIP_AUTH } from '../constants/http-context.tokens';
 import { AuthService } from '../services/auth.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
+import { PrivacyConsentFacade } from '../shared/privacy/privacy-consent.facade';
 import { AuthInterceptor } from './auth.interceptor';
 
 const root = environment.apiUrls.auth.replace(/\/auth$/, '');
+const privacy = { state: (): null => null, ensureHealthConsentAsync: vi.fn<(forceReview: boolean) => Promise<boolean>>() };
 let http: HttpClient;
 let requests: HttpTestingController;
 let auth: {
@@ -28,6 +31,7 @@ let auth: {
 };
 
 beforeEach(() => {
+    privacy.ensureHealthConsentAsync.mockReset();
     auth = {
         getToken: vi.fn(() => null),
         refreshSession: vi.fn(() => of(true)),
@@ -40,6 +44,7 @@ beforeEach(() => {
             provideHttpClientTesting(),
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             { provide: AuthService, useValue: auth },
+            { provide: PrivacyConsentFacade, useValue: privacy },
         ],
     });
     http = TestBed.inject(HttpClient);
@@ -188,4 +193,33 @@ describe('browser session revalidation', () => {
             expect(failed).toHaveBeenCalledOnce();
         },
     );
+});
+
+describe('health consent recovery', () => {
+    it.each([true, false])('only replays the rejected action after consent, granted=%s', async granted => {
+        const path = `${root}/hydration`;
+        const body = { amount: 250 };
+        const rejection = { error: 'Privacy.HealthConsentRequired' };
+        const forbidden = { status: HttpStatusCode.Forbidden, statusText: 'Forbidden' };
+        let completeReview: (allowed: boolean) => void = () => {};
+        privacy.ensureHealthConsentAsync.mockReturnValue(new Promise(resolve => (completeReview = resolve)));
+        const failed = vi.fn();
+        http.post(path, body).subscribe({ error: failed });
+
+        requests.expectOne(path).flush(rejection, forbidden);
+        requests.expectNone(path);
+        expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledOnce();
+
+        completeReview(granted);
+        await waitForAsyncTasksAsync();
+
+        if (granted) {
+            const retry = requests.expectOne(path);
+            expect(retry.request.body).toEqual(body);
+            retry.flush(rejection, forbidden);
+        }
+        requests.expectNone(path);
+        expect(privacy.ensureHealthConsentAsync).toHaveBeenCalledOnce();
+        expect(failed).toHaveBeenCalledOnce();
+    });
 });

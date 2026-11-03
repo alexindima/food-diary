@@ -80,6 +80,8 @@ import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card'
 const MANUAL_NUTRITION_FIELDS = ['manualCalories', 'manualProteins', 'manualFats', 'manualCarbs', 'manualFiber', 'manualAlcohol'] as const;
 const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType', 'comment'] as const;
 import type { UnsavedEditor } from '../../../../shared/forms/unsaved-editor';
+import { isHealthConsentRequiredError } from '../../../../shared/privacy/health-consent-error';
+import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 
 @Component({
     selector: 'fd-meal-manage-form',
@@ -112,6 +114,7 @@ export class MealManageFormComponent implements UnsavedEditor {
     private readonly injector = inject(Injector);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly privacy = inject(PrivacyConsentFacade);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly tourService = inject(FdTourService);
@@ -658,7 +661,7 @@ export class MealManageFormComponent implements UnsavedEditor {
         this.globalError.set(null);
         this.isSubmitting.set(true);
         try {
-            await (meal !== null ? this.updateMealAsync(mealData) : this.addMealAsync(mealData));
+            await this.saveWithConsentAsync(meal, mealData);
         } catch (error: unknown) {
             this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
         } finally {
@@ -832,7 +835,25 @@ export class MealManageFormComponent implements UnsavedEditor {
         }
     }
 
+    private async saveWithConsentAsync(meal: Meal | null, mealData: MealManageDto): Promise<void> {
+        const allowed = await this.privacy.ensureHealthConsentAsync(true, { acceptLabelKey: 'PRIVACY_CHOICES.ACCEPT_AND_SAVE' });
+        if (this.destroyRef.destroyed) {
+            return;
+        }
+        if (allowed) {
+            await (meal !== null ? this.updateMealAsync(mealData) : this.addMealAsync(mealData));
+        } else if (this.privacy.failed()) {
+            this.setGlobalError(this.privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR');
+        }
+    }
+
     private handleSubmitError(error?: HttpErrorResponse): void {
+        if (isHealthConsentRequiredError(error)) {
+            if (!Boolean(this.privacy.state()?.healthDeclinedAtUtc)) {
+                this.setGlobalError(this.privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR');
+            }
+            return;
+        }
         if (error?.status === 0) {
             this.setGlobalError('FORM_ERRORS.SAVE_CONNECTION');
             return;

@@ -8,6 +8,7 @@ import {
     effect,
     type ElementRef,
     inject,
+    Injector,
     input,
     model,
     output,
@@ -25,6 +26,7 @@ import { FrontendLoggerService } from '../../../services/frontend-logger.service
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import type { ImageSelection } from '../../../shared/models/image-upload.data';
 import { imageSelection } from '../../../shared/models/image-upload.data';
+import { PrivacyConsentFacade } from '../../../shared/privacy/privacy-consent.facade';
 import {
     calculateImageResizeDimensions,
     canResizeImageType,
@@ -70,6 +72,7 @@ type CropInteraction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploadFieldComponent implements FormValueControl<ImageSelection | null> {
+    private readonly injector = inject(Injector);
     private readonly imageUploadFacade = inject(ImageUploadFacade);
     private readonly translateService = inject(TranslateService);
     private readonly logger = inject(FrontendLoggerService);
@@ -78,6 +81,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
 
     public readonly label = input<string>('Image');
     public readonly description = input<string>();
+    public readonly requireHealthConsent = input(false);
     public readonly multiple = input(false);
     public readonly maxFiles = input(1);
     public readonly selectText = input<string>();
@@ -189,7 +193,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
         }
 
         const target = event.target;
-        this.handleFiles(Array.from(target.files ?? []));
+        void this.handleFilesAsync(Array.from(target.files ?? []));
         target.value = '';
     }
 
@@ -200,11 +204,14 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
         this.isDragging.set(false);
-        this.handleFiles(Array.from(event.dataTransfer?.files ?? []));
+        void this.handleFilesAsync(Array.from(event.dataTransfer?.files ?? []));
     }
 
-    private handleFiles(files: File[]): void {
+    private async handleFilesAsync(files: File[]): Promise<void> {
         if (this.disabled() || this.isUploading() || files.length === 0) {
+            return;
+        }
+        if (this.requireHealthConsent() && !(await this.confirmUploadConsentAsync())) {
             return;
         }
         if (!this.multiple() || this.cropEnabled()) {
@@ -216,6 +223,19 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
             return;
         }
         void this.uploadBatchAsync(files);
+    }
+
+    private async confirmUploadConsentAsync(): Promise<boolean> {
+        const revision = ++this.uploadRevision;
+        const privacy = this.injector.get(PrivacyConsentFacade);
+        const allowed = await privacy.ensureHealthConsentAsync(true);
+        if (!this.isCurrentUpload(revision) || this.disabled() || this.isUploading()) {
+            return false;
+        }
+        if (!allowed && privacy.failed()) {
+            this.error.set(this.translateService.instant(privacy.needsReload() ? 'PRIVACY_CHOICES.RELOAD' : 'PRIVACY_CHOICES.ERROR'));
+        }
+        return allowed;
     }
 
     private async uploadBatchAsync(files: File[]): Promise<void> {

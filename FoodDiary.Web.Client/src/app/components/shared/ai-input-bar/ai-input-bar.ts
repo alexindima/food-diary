@@ -32,6 +32,7 @@ import { imageSelection } from '../../../shared/models/image-upload.data';
 import type { ImageAssetId } from '../../../shared/models/semantics/entity-id';
 import { BrowserWindowService } from '../../../shared/platform/browser-window.service';
 import { type SpeechRecognitionFailure, SpeechRecognitionService } from '../../../shared/platform/speech-recognition.service';
+import { PrivacyConsentFacade } from '../../../shared/privacy/privacy-consent.facade';
 import { AiConsentDialogComponent } from '../ai-consent-dialog/ai-consent-dialog';
 import { FoodRecognitionHistoryDialogComponent } from '../food-recognition-history/food-recognition-history-dialog';
 import { ImageUploadFieldComponent } from '../image-upload-field/image-upload-field';
@@ -76,6 +77,7 @@ export class AiInputBarComponent {
     private readonly browserWindow = inject(BrowserWindowService);
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly privacy = inject(PrivacyConsentFacade);
     private readonly destroyRef = inject(DestroyRef);
     private readonly speechRecognition = inject(SpeechRecognitionService);
     private readonly speechOwner = {};
@@ -231,7 +233,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsentAsync())) {
+        if (!(await this.ensureRecognitionConsentAsync())) {
             return;
         }
 
@@ -256,7 +258,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsentAsync())) {
+        if (!(await this.ensureRecognitionConsentAsync())) {
             return;
         }
 
@@ -318,7 +320,7 @@ export class AiInputBarComponent {
             return;
         }
 
-        if (!(await this.ensureAiConsentAsync())) {
+        if (!(await this.ensureRecognitionConsentAsync())) {
             return;
         }
 
@@ -410,13 +412,15 @@ export class AiInputBarComponent {
         this.recognition.setEditResult(this.recognition.text, result.items, result.nutrition);
     }
 
-    protected onTextReanalyze(): void {
+    protected async onTextReanalyzeAsync(): Promise<void> {
         const query = this.textSubmittedQuery();
         if (query === null || query.length === 0 || this.textIsAnalyzing()) {
             return;
         }
 
-        this.runTextAnalysis(query);
+        if (await this.ensureRecognitionConsentAsync()) {
+            this.runTextAnalysis(query);
+        }
     }
 
     protected dismissPhotoResult(): void {
@@ -441,7 +445,7 @@ export class AiInputBarComponent {
         if (assetId === null || assetId === undefined || this.isDisabled() || !this.ensurePremium()) {
             return;
         }
-        if (!(await this.ensureAiConsentAsync()) || this.photoSelection()?.assetId !== assetId || this.isDisabled()) {
+        if (!(await this.ensureRecognitionConsentAsync()) || this.photoSelection()?.assetId !== assetId || this.isDisabled()) {
             return;
         }
 
@@ -545,6 +549,15 @@ export class AiInputBarComponent {
             });
 
         return false;
+    }
+
+    private async ensureRecognitionConsentAsync(): Promise<boolean> {
+        return (
+            (await this.privacy.ensureHealthConsentAsync(true)) &&
+            !this.destroyRef.destroyed &&
+            (await this.ensureAiConsentAsync()) &&
+            !this.destroyRef.destroyed
+        );
     }
 
     private async ensureAiConsentAsync(): Promise<boolean> {

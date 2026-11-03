@@ -7,6 +7,7 @@
         "HEALTH_AGREEMENT": "I explicitly consent to Food Diary storing and processing my health and tracking data for these personal diary and tracking features.",
         "WITHDRAWAL": "You can withdraw this consent in privacy settings. Tracking features will pause. You can still access account settings, request a copy of your data or delete your account. Withdrawal does not undo processing that was lawful before withdrawal.",
         "ACCEPT": "Consent and continue",
+        "ACCEPT_AND_SAVE": "Consent and save",
         "DECLINE": "Do not consent",
         "WITHDRAW": "Withdraw consent",
         "REVIEW": "Review consent",

@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +23,7 @@ import {
 import { utcInstant } from '../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../shared/models/semantics/entity-id';
 import { productQuantityFromStored, recipeServingsFromStored } from '../../../../shared/models/semantics/meal-quantity';
+import { PrivacyConsentFacade } from '../../../../shared/privacy/privacy-consent.facade';
 import { MEAL_DEVELOPMENT_TOOLS, type MealDevelopmentScreen, type MealDevelopmentTools } from '../../contracts/meal-development-tools';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import { MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
@@ -167,6 +169,45 @@ describe('MealManageFormComponent native submit behavior', () => {
         expect(wasNotCancelled).toBe(false);
         expect(submitEvent.defaultPrevented).toBe(true);
         expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
+    });
+});
+
+describe('MealManageFormComponent health consent', () => {
+    it.each([true, false])('waits for consent before sending a meal, granted=%s', async granted => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        mealManageFacade.submitMealAsync.mockResolvedValue(createMeal({ totalCalories: TOTAL_CALORIES }));
+        component['patchMealFormModel']({
+            date: '2026-04-05',
+            time: '10:30',
+            mealType: 'BREAKFAST',
+            comment: 'Lunch',
+        });
+        component['patchMealFormModel']({
+            items: [
+                createMealItemValue(
+                    { ...createEmptyProductSnapshot(), id: entityId<'product'>('product-1'), name: 'Apple' },
+                    null,
+                    PRODUCT_AMOUNT,
+                    MealSourceType.Product,
+                ),
+            ],
+        });
+
+        const privacy = TestBed.inject(PrivacyConsentFacade);
+        let grantConsent: (allowed: boolean) => void = () => {};
+        const review = vi.spyOn(privacy, 'ensureHealthConsentAsync');
+        review.mockReturnValueOnce(new Promise(resolve => {
+            grantConsent = resolve;
+        }));
+
+        const submission = component['onSubmitAsync']();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
+        expect(review).toHaveBeenCalledWith(true, { acceptLabelKey: 'PRIVACY_CHOICES.ACCEPT_AND_SAVE' });
+        grantConsent(granted);
+        await submission;
+
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledTimes(Number(granted));
+        expect(component['globalError']()).toBeNull();
     });
 });
 
@@ -581,6 +622,10 @@ async function setupComponentAsync(developmentTools?: MealDevelopmentTools): Pro
             ...(developmentTools === undefined ? [] : [{ provide: MEAL_DEVELOPMENT_TOOLS, useValue: developmentTools }]),
             provideTranslateTesting(),
             { provide: MealManageFacade, useValue: mealManageFacade },
+            {
+                provide: PrivacyConsentFacade,
+                useValue: { ensureHealthConsentAsync: vi.fn().mockResolvedValue(true), failed: signal(false), needsReload: signal(false) },
+            },
             { provide: NavigationService, useValue: navigationService },
             {
                 provide: FdUiDialogService,

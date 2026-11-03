@@ -58,6 +58,15 @@ beforeEach(() => {
 });
 
 describe('PrivacyConsentFacade', () => {
+    it('shares one dialog and one recorded consent across simultaneous health actions', async () => {
+        const first = service.ensureHealthConsentAsync(true);
+        const second = service.ensureHealthConsentAsync(true);
+
+        expect(await Promise.all([first, second])).toEqual([true, true]);
+        expect(dialogs.open).toHaveBeenCalledOnce();
+        expect(users.updatePrivacy).toHaveBeenCalledOnce();
+    });
+
     it('never records consent to a server notice the client has not shown', async () => {
         users.getPrivacy.mockReturnValue(of({ ...emptyState, noticeVersion: 'future-notice' }));
         expect(await service.ensureHealthConsentAsync()).toBe(false);

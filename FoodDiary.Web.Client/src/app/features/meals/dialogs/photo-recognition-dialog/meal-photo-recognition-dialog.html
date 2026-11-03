@@ -5,7 +5,7 @@
 >
     <div class="photo-ai-dialog fd-stack fd-gap-lg">
         <div [hidden]="isEditMode()">
-            <fd-food-recognition-history (recognitionSelected)="onResumeRecognition($event)" />
+            <fd-food-recognition-history (recognitionSelected)="onResumeRecognitionAsync($event)" />
         </div>
         <fd-meal-photo-upload-panel
             [initialSelection]="initialSelection()"
@@ -15,7 +15,7 @@
             [selection]="selection()"
             [annotations]="annotations()"
             [annotationsVisible]="annotationsVisible()"
-            (imageChanged)="onImageChanged($event)"
+            (imageChanged)="onImageChangedAsync($event)"
             (annotationsToggled)="toggleAnnotations()"
         />
 
@@ -30,7 +30,7 @@
                     <fd-meal-photo-result-actions
                         [hasSelectionAsset]="hasSelectionAsset()"
                         [isEditing]="isEditing()"
-                        (reanalyze)="onReanalyze()"
+                        (reanalyze)="onReanalyzeAsync()"
                         (editAction)="applyEditAction()"
                     />
 

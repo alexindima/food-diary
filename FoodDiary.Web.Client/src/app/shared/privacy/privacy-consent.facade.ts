@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiDialogService } from 'fd-ui-kit';
 import { concatMap, firstValueFrom, map } from 'rxjs';
 
+import type { HealthConsentDialogData } from '../../components/shared/health-consent-dialog/health-consent-dialog';
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../api/export.service';
 import { type UserPrivacyState, UserService } from '../api/user.service';
@@ -26,6 +27,7 @@ export class PrivacyConsentFacade {
     public readonly failed = signal(false);
     public readonly needsReload = signal(false);
     private sessionVersion = 0;
+    private healthReview: Promise<boolean> | null = null;
 
     public constructor() {
         this.marketing.changed
@@ -72,6 +74,7 @@ export class PrivacyConsentFacade {
 
     private reset(): void {
         this.sessionVersion++;
+        this.healthReview = null;
         this.state.set(null);
         this.failed.set(false);
         this.busy.set(false);
@@ -155,9 +158,25 @@ export class PrivacyConsentFacade {
         }
     }
 
-    public async ensureHealthConsentAsync(forceReview = false): Promise<boolean> {
+    public async ensureHealthConsentAsync(forceReview = false, data?: HealthConsentDialogData): Promise<boolean> {
+        if (this.healthReview !== null) {
+            return this.healthReview;
+        }
+        const review = this.checkHealthConsentAsync(forceReview, data);
+        this.healthReview = review;
+        try {
+            return await review;
+        } finally {
+            if (this.healthReview === review) {
+                this.healthReview = null;
+            }
+        }
+    }
+
+    private async checkHealthConsentAsync(forceReview: boolean, data?: HealthConsentDialogData): Promise<boolean> {
         const session = this.sessionVersion;
         try {
+            this.failed.set(false);
             const state = await this.loadAsync();
             if (session !== this.sessionVersion) {
                 return false;
@@ -171,7 +190,7 @@ export class PrivacyConsentFacade {
             if (!forceReview && state.healthDeclinedAtUtc !== null) {
                 return false;
             }
-            return await this.reviewHealthAsync(session);
+            return await this.reviewHealthAsync(session, data);
         } catch {
             if (session === this.sessionVersion) {
                 this.failed.set(true);
@@ -179,11 +198,12 @@ export class PrivacyConsentFacade {
             return false;
         }
     }
-    private async reviewHealthAsync(session: number): Promise<boolean> {
+    private async reviewHealthAsync(session: number, data?: HealthConsentDialogData): Promise<boolean> {
         const { HealthConsentDialogComponent } = await import('../../components/shared/health-consent-dialog/health-consent-dialog');
         const accepted = await firstValueFrom(
             this.dialogs
-                .open<InstanceType<typeof HealthConsentDialogComponent>, never, boolean>(HealthConsentDialogComponent, {
+                .open<InstanceType<typeof HealthConsentDialogComponent>, HealthConsentDialogData, boolean>(HealthConsentDialogComponent, {
+                    data,
                     size: 'lg',
                     disableClose: true,
                 })

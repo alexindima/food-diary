@@ -1,5 +1,5 @@
 import { type HttpEvent, type HttpHandler, type HttpInterceptor, type HttpRequest, HttpStatusCode } from '@angular/common/http';
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable, Injector } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, from, map, merge, type Observable, of, switchMap, throwError } from 'rxjs';
 
@@ -9,6 +9,8 @@ import { AuthService } from '../services/auth.service';
 import { BrowserSessionStateService } from '../shared/auth/browser-session-state.service';
 import { SessionEventsService } from '../shared/auth/session-events.service';
 import { getRecordProperty, getStringProperty } from '../shared/lib/unknown-value.utils';
+import { isHealthConsentRequiredError } from '../shared/privacy/health-consent-error';
+import { PrivacyConsentFacade } from '../shared/privacy/privacy-consent.facade';
 
 type RequestSession = {
     generation: number;
@@ -18,6 +20,7 @@ type RequestSession = {
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+    private readonly injector = inject(Injector);
     private readonly authService = inject(AuthService);
     private readonly browserSession = inject(BrowserSessionStateService);
     private sessionGeneration = 0;
@@ -80,6 +83,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: unknown) => {
+                if (isHealthConsentRequiredError(error) && this.isCurrentSession(session)) {
+                    const privacy = this.injector.get(PrivacyConsentFacade);
+                    const forceReview = req.method !== 'GET' || Boolean(privacy.state()?.healthAcceptedAtUtc);
+                    // This rejection happens before the action is applied. Replay the same request at most once.
+                    return from(privacy.ensureHealthConsentAsync(forceReview)).pipe(
+                        switchMap(allowed =>
+                            allowed && this.isCurrentSession(session) ? next.handle(request) : throwError(() => error),
+                        ),
+                    );
+                }
                 if (this.shouldRevalidatePermissions(error, req.url, session)) {
                     return this.authService.refreshSession().pipe(switchMap(() => throwError(() => error)));
                 }
