@@ -1,9 +1,18 @@
 @if (visible()) {
-    <section class="fd-stack fd-gap-sm" aria-labelledby="backup-email-title">
+    <section class="user-manage__email fd-stack fd-gap-xs" aria-labelledby="backup-email-title">
         <h3 id="backup-email-title">{{ 'USER_MANAGE.BACKUP_EMAIL_TITLE' | translate }}</h3>
         @if (accountEmail(); as address) {
-            <p>{{ address }}</p>
-            <p role="status">{{ (confirmed() ? 'USER_MANAGE.EMAIL_CONFIRMED' : 'USER_MANAGE.EMAIL_UNCONFIRMED') | translate }}</p>
+            <p class="user-manage__email-address">{{ address }}</p>
+            <p class="user-manage__login-method-description fd-ui-body-sm" role="status">
+                {{
+                    (confirmed()
+                        ? hasPassword()
+                            ? 'USER_MANAGE.EMAIL_PASSWORD_READY'
+                            : 'USER_MANAGE.EMAIL_PASSWORD_MISSING'
+                        : 'USER_MANAGE.EMAIL_UNCONFIRMED'
+                    ) | translate
+                }}
+            </p>
         } @else {
             <p>{{ 'USER_MANAGE.BACKUP_EMAIL_HINT' | translate }}</p>
             <fd-ui-input

@@ -308,6 +308,19 @@ export class AuthService {
         return this.telegram.client.postAuthTelegramUnlink({ version: this.telegram.version, telegramAuthHttpRequest: { initData } });
     }
 
+    public startTelegramUnlink(): Observable<{ authorizationUrl: string }> {
+        return this.telegram.client
+            .postAuthTelegramUnlinkOidcStart({ version: this.telegram.version })
+            .pipe(map(value => requireSdkFields(value, ['authorizationUrl'])));
+    }
+
+    public completeTelegramUnlink(code: TelegramOAuthCode, state: TelegramOAuthState): Observable<void> {
+        return this.telegram.client.postAuthTelegramUnlinkOidcComplete({
+            version: this.telegram.version,
+            exchangeTelegramOidcHttpRequest: { code, state },
+        });
+    }
+
     public requestTelegramBackupEmail(email: string, initData: string): Observable<void> {
         return this.telegram.client.postAuthTelegramBackupEmail({
             version: this.telegram.version,

@@ -5333,6 +5333,11 @@
           "name": "isUnlinkingTelegram",
           "type": "",
           "required": false
+        },
+        {
+          "name": "unlinkError",
+          "type": "string | null",
+          "required": false
         }
       ],
       "outputs": [

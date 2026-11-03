@@ -13,19 +13,19 @@ import { utcInstant } from '../../../../../shared/models/semantics/date-value';
 import { entityId } from '../../../../../shared/models/semantics/entity-id';
 import { UserManageSecurityCardComponent } from './user-manage-security-card';
 
+const originalClientId = environment.googleClientId;
+const googleIdentityService = {
+    initializeAsync: vi.fn(),
+    renderButton: vi.fn(),
+};
+
+beforeEach(() => {
+    environment.googleClientId = originalClientId;
+    googleIdentityService.initializeAsync.mockReset();
+    googleIdentityService.renderButton.mockReset();
+});
+
 describe('UserManageSecurityCardComponent', () => {
-    const originalClientId = environment.googleClientId;
-    const googleIdentityService = {
-        initializeAsync: vi.fn(),
-        renderButton: vi.fn(),
-    };
-
-    beforeEach(() => {
-        environment.googleClientId = originalClientId;
-        googleIdentityService.initializeAsync.mockReset();
-        googleIdentityService.renderButton.mockReset();
-    });
-
     it('shows the linked Google account without initializing another sign-in button', async () => {
         const fixture = await createFixtureAsync(true);
 
@@ -72,6 +72,30 @@ describe('UserManageSecurityCardComponent', () => {
         expect((fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-password-method button')).toBeNull();
     });
 
+    it('offers the configured bot link and emits disconnect from the Telegram card', async () => {
+        const fixture = await createFixtureAsync(true);
+        fixture.componentRef.setInput('hasTelegramIdentity', true);
+        fixture.componentRef.setInput('canUnlinkTelegram', true);
+        const disconnect = vi.fn();
+        fixture.componentInstance.telegramUnlink.subscribe(disconnect);
+        fixture.detectChanges();
+        const card = (fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-telegram-connection');
+        expect(card?.querySelector('a')?.getAttribute('href')).toBe(`https://t.me/${environment.telegramBotUsername}`);
+        card?.querySelector<HTMLButtonElement>('button')?.click();
+        expect(disconnect).toHaveBeenCalledOnce();
+    });
+
+    it('shows the last-login explanation and unlink error beside the disabled action', async () => {
+        const fixture = await createFixtureAsync(false);
+        fixture.componentRef.setInput('hasTelegramIdentity', true);
+        fixture.componentRef.setInput('telegramUnlinkError', 'USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+        fixture.detectChanges();
+        const card = (fixture.nativeElement as HTMLElement).querySelector('fd-user-manage-telegram-connection');
+        expect(card?.querySelector<HTMLButtonElement>('button')?.disabled).toBe(true);
+        expect(card?.textContent).toContain('USER_MANAGE.TELEGRAM_BACKUP_REQUIRED');
+        expect(card?.querySelector('[role="alert"]')?.textContent).toContain('USER_MANAGE.TELEGRAM_UNLINK_ERROR');
+    });
+
     it('formats session timestamps in the selected language and updates them when the language changes', async () => {
         await verifySessionDateLocalesAsync(await createFixtureAsync(true));
     });
@@ -79,26 +103,6 @@ describe('UserManageSecurityCardComponent', () => {
     it('keeps known sessions visible after an error and offers a guarded reload', async () => {
         verifySessionRecoveryUi(await createFixtureAsync(true));
     });
-
-    async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
-        await TestBed.configureTestingModule({
-            imports: [UserManageSecurityCardComponent],
-            providers: [provideTranslateTesting(), provideRouter([]), { provide: GoogleIdentityService, useValue: googleIdentityService }],
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(UserManageSecurityCardComponent);
-        fixture.componentRef.setInput('email', 'alex@example.com');
-        fixture.componentRef.setInput('hasGoogleIdentity', hasGoogleIdentity);
-        fixture.componentRef.setInput('isLinkingGoogle', false);
-        fixture.componentRef.setInput('passwordActionState', {
-            buttonLabelKey: 'USER_MANAGE.CHANGE_PASSWORD',
-            descriptionKey: 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION',
-        });
-        fixture.detectChanges();
-        await fixture.whenStable();
-        fixture.detectChanges();
-        return fixture;
-    }
 });
 
 async function verifySessionDateLocalesAsync(fixture: ComponentFixture<UserManageSecurityCardComponent>): Promise<void> {
@@ -163,4 +167,24 @@ function verifySessionRecoveryUi(fixture: ComponentFixture<UserManageSecurityCar
     fixture.detectChanges();
     expect(section?.querySelectorAll('.user-manage__login-method')).toHaveLength(2);
     expect(Array.from(section?.querySelectorAll('button') ?? []).every(button => button.disabled)).toBe(true);
+}
+
+async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
+    await TestBed.configureTestingModule({
+        imports: [UserManageSecurityCardComponent],
+        providers: [provideTranslateTesting(), provideRouter([]), { provide: GoogleIdentityService, useValue: googleIdentityService }],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(UserManageSecurityCardComponent);
+    fixture.componentRef.setInput('email', 'alex@example.com');
+    fixture.componentRef.setInput('hasGoogleIdentity', hasGoogleIdentity);
+    fixture.componentRef.setInput('isLinkingGoogle', false);
+    fixture.componentRef.setInput('passwordActionState', {
+        buttonLabelKey: 'USER_MANAGE.CHANGE_PASSWORD',
+        descriptionKey: 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION',
+    });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return fixture;
 }

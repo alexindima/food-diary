@@ -65,6 +65,7 @@ export class UserManageComparisonWidgetsComponent {
     public readonly activityLevelOptions = input.required<Array<FdUiSelectOption<ActivityLevelOption | null>>>();
     public readonly currentWeight = input.required<number | null>();
     public readonly currentWaist = input.required<number | null>();
+    public readonly securityExpanded = input(false);
 
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
     public readonly birthDateInputInvalidChange = output<boolean>();

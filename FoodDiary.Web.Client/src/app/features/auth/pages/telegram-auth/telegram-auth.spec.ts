@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -12,6 +13,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { TelegramBackupEmailFlowService } from '../../../../shared/auth/telegram-backup-email-flow.service';
 import { telegramLoginTicket } from '../../../../shared/auth/telegram-oidc-values';
+import { TelegramUnlinkFlowService } from '../../../../shared/auth/telegram-unlink-flow.service';
 import { TelegramWebAppService } from '../../../../shared/auth/telegram-web-app.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { UserFacade } from '../../../../shared/lib/user.facade';
@@ -69,11 +71,14 @@ class TelegramAuthDoubles {
         completeAsync: vi.fn<() => Promise<boolean>>().mockResolvedValue(true),
     };
     public readonly auth = {
+        onLogoutAsync: vi.fn().mockResolvedValue(undefined),
         isAuthenticated: signal(false),
         requiresEmailVerification: signal(false),
         mustChangePassword: signal(false),
     };
     public readonly users = { user: signal<User | null>(null), getInfo: vi.fn().mockReturnValue(of(USER)) };
+    public readonly unlink = { handleCallbackAsync: vi.fn().mockResolvedValue('unhandled') };
+    public readonly toast = { success: vi.fn() };
     public readonly navigation = {
         navigateToAuthAsync: vi.fn().mockResolvedValue(undefined),
         navigateToProfileAsync: vi.fn().mockResolvedValue(undefined),
@@ -100,6 +105,8 @@ function createHarness(query: Record<string, string | undefined> = {}, doubles =
         imports: [TelegramAuthComponent],
         providers: [
             provideTranslateTesting(),
+            { provide: TelegramUnlinkFlowService, useValue: doubles.unlink },
+            { provide: FdUiToastService, useValue: doubles.toast },
             { provide: AuthService, useValue: doubles.auth },
             { provide: UserFacade, useValue: doubles.users },
             { provide: NavigationService, useValue: doubles.navigation },
@@ -327,6 +334,25 @@ describe('Telegram authentication initialization', () => {
 });
 
 describe('Telegram OAuth callbacks', () => {
+    it.each(['completed', 'failed'])('handles unlink confirmation as %s without starting login or linking', async result => {
+        const doubles = new TelegramAuthDoubles();
+        doubles.unlink.handleCallbackAsync.mockResolvedValue(result);
+        const harness = createHarness({ code: 'unlink-code', state: 'unlink-state' }, doubles);
+        await settleAsync(harness);
+        expect(doubles.unlink.handleCallbackAsync).toHaveBeenCalledWith('unlink-code', 'unlink-state', false);
+        expect(doubles.backupEmail.handleCallbackAsync).not.toHaveBeenCalled();
+        expect(doubles.facade.exchangeAsync).not.toHaveBeenCalled();
+        expect(doubles.facade.beginAsync).not.toHaveBeenCalled();
+        if (result === 'completed') {
+            expect(doubles.toast.success).toHaveBeenCalledWith('USER_MANAGE.TELEGRAM_UNLINK_SUCCESS');
+            expect(doubles.auth.onLogoutAsync).toHaveBeenCalledWith(true);
+            expect(doubles.navigation.navigateToProfileAsync).not.toHaveBeenCalled();
+        } else {
+            expect(doubles.auth.onLogoutAsync).not.toHaveBeenCalled();
+            expect(doubles.navigation.navigateToProfileAsync).toHaveBeenCalledOnce();
+        }
+    });
+
     it('cleans callback parameters before exchanging the code and loads configuration after exchange', async () => {
         const harness = createHarness({ code: 'oauth-code', state: 'oauth-state' });
         await settleAsync(harness);
@@ -340,6 +366,7 @@ describe('Telegram OAuth callbacks', () => {
             harness.facade.loadConfigurationAsync.mock.invocationCallOrder[0],
         );
         expect(harness.facade.restoreIntent).not.toHaveBeenCalled();
+        await expectAutomaticSignInSettledAsync(harness);
         expect(harness.root.querySelector('[role="status"]')).toBeNull();
     });
 
@@ -356,6 +383,7 @@ describe('Telegram OAuth callbacks', () => {
     ])('renders cancellation and cleans the URL for an incomplete or denied callback: $query', async ({ query, code, state, denied }) => {
         const harness = createHarness(query);
         await settleAsync(harness);
+        await expectAutomaticSignInSettledAsync(harness);
         expect(harness.backupEmail.handleCallbackAsync).toHaveBeenCalledWith(code, state, denied);
         expect(harness.browser.replaceCurrentUrl).toHaveBeenCalledWith('/auth/telegram');
         expect(harness.root.querySelector('[role="alert"]')?.textContent).toContain('AUTH.TELEGRAM.CANCELLED');

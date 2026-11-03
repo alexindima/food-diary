@@ -1,33 +1,56 @@
-<div class="user-manage__login-method fd-row fd-gap-sm">
+<div class="user-manage__login-method user-manage__login-method--access fd-row fd-gap-sm">
     <fd-ui-icon class="user-manage__login-method-icon" name="send" />
-    <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
-        <div class="user-manage__login-method-title">Telegram</div>
+    <div class="user-manage__login-method-info fd-stack fd-gap-xs">
+        <div class="user-manage__method-heading">
+            <span class="user-manage__login-method-title">Telegram</span>
+            <span class="user-manage__connection-status" [class.user-manage__connection-status--connected]="hasTelegramIdentity()">
+                {{ (hasTelegramIdentity() ? 'USER_MANAGE.METHOD_CONNECTED' : 'USER_MANAGE.METHOD_NOT_CONNECTED') | translate }}
+            </span>
+        </div>
         <p class="user-manage__login-method-description fd-ui-body-sm">
-            {{ (hasTelegramIdentity() ? 'AUTH.TELEGRAM.CONNECTED' : 'AUTH.TELEGRAM.CONNECT_HINT') | translate }}
+            {{ (hasTelegramIdentity() ? 'USER_MANAGE.TELEGRAM_CONNECTED_HINT' : 'AUTH.TELEGRAM.CONNECT_HINT') | translate }}
         </p>
-    </div>
-    <div class="user-manage__login-method-action">
-        @if (!hasTelegramIdentity()) {
-            <fd-ui-button type="button" variant="secondary" routerLink="/auth/telegram">{{
-                'AUTH.TELEGRAM.LINK' | translate
-            }}</fd-ui-button>
-        } @else {
-            <fd-ui-button
-                type="button"
-                variant="secondary"
-                fill="outline"
-                [loading]="isUnlinkingTelegram()"
-                [disabled]="!canUnlinkTelegram() || isUnlinkingTelegram()"
-                [disabledReason]="
-                    (isUnlinkingTelegram() ? 'DISABLED_HINTS.OPERATION_BUSY' : 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED') | translate
-                "
-                (click)="telegramUnlink.emit()"
+        <div class="user-manage__method-actions">
+            @if (!hasTelegramIdentity()) {
+                <fd-ui-button type="button" variant="secondary" routerLink="/auth/telegram">{{
+                    'AUTH.TELEGRAM.LINK' | translate
+                }}</fd-ui-button>
+            } @else {
+                @if (botUrl; as url) {
+                    <a class="user-manage__bot-link" target="_blank" rel="noopener noreferrer" [href]="url">
+                        {{ 'USER_MANAGE.TELEGRAM_OPEN_BOT' | translate }}
+                        <fd-ui-icon name="open_in_new" />
+                    </a>
+                }
+                <fd-ui-button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    fill="outline"
+                    [loading]="isUnlinkingTelegram()"
+                    [disabled]="!canUnlinkTelegram() || isUnlinkingTelegram()"
+                    [disabledReason]="
+                        (isUnlinkingTelegram() ? 'DISABLED_HINTS.OPERATION_BUSY' : 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED') | translate
+                    "
+                    (click)="telegramUnlink.emit()"
+                >
+                    {{ 'USER_MANAGE.TELEGRAM_UNLINK' | translate }}
+                </fd-ui-button>
+            }
+        </div>
+        @if (hasTelegramIdentity() && !canUnlinkTelegram()) {
+            <p class="user-manage__login-method-description fd-ui-body-sm">{{ 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED' | translate }}</p>
+        }
+        @if (unlinkError(); as error) {
+            <p
+                class="user-manage__method-feedback fd-ui-body-sm"
+                tabindex="-1"
+                [class.user-manage__method-error]="error !== 'USER_MANAGE.TELEGRAM_UNLINK_CANCELLED'"
+                [attr.role]="error === 'USER_MANAGE.TELEGRAM_UNLINK_CANCELLED' ? 'status' : 'alert'"
+                [fdUiFocusWhen]="true"
             >
-                {{ 'USER_MANAGE.TELEGRAM_UNLINK' | translate }}
-            </fd-ui-button>
+                {{ error | translate }}
+            </p>
         }
     </div>
 </div>
-@if (hasTelegramIdentity() && !canUnlinkTelegram()) {
-    <p class="fd-ui-body-sm">{{ 'USER_MANAGE.TELEGRAM_BACKUP_REQUIRED' | translate }}</p>
-}

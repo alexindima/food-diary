@@ -59,6 +59,7 @@ export class UserManageSecurityCardComponent {
     public readonly hasTelegramIdentity = input(false);
     public readonly canUnlinkTelegram = input(false);
     public readonly isUnlinkingTelegram = input(false);
+    public readonly telegramUnlinkError = input<string | null>(null);
     public readonly telegramUnlink = output();
     public readonly isLinkingGoogle = input.required<boolean>();
     public readonly passwordActionState = input.required<PasswordActionState>();

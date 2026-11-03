@@ -35,6 +35,7 @@
                     [activityLevelOptions]="activityLevelOptions"
                     [currentWeight]="currentWeight()"
                     [currentWaist]="currentWaist()"
+                    [securityExpanded]="securityExpanded()"
                     (userFormPatch)="onUserFormPatch($event)"
                     (birthDateInputInvalidChange)="birthDateInputInvalid.set($event)"
                 >
@@ -47,6 +48,7 @@
                         [hasTelegramIdentity]="hasTelegramIdentity()"
                         [canUnlinkTelegram]="canUnlinkTelegram()"
                         [isUnlinkingTelegram]="isUnlinkingTelegram()"
+                        [telegramUnlinkError]="telegramUnlinkError()"
                         [isLinkingGoogle]="isLinkingGoogle()"
                         [passwordActionState]="passwordActionState()"
                         [canUsePassword]="canUsePassword()"
