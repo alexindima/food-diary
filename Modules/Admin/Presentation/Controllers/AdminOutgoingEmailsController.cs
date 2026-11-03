@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Admin.Presentation.Filters;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
@@ -15,6 +16,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/admin/outgoing-emails")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+[AdminMailDependencyFailure("Admin.OutgoingMailUnavailable")]
+[ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
 public sealed class AdminOutgoingEmailsController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet]
     [ProducesResponseType<AdminOutgoingEmailPageHttpResponse>(StatusCodes.Status200OK)]

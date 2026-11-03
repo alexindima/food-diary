@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Modules.Admin.Presentation.Filters;
 using FoodDiary.Modules.Admin.Presentation.Mappings;
 using FoodDiary.Modules.Admin.Presentation.Requests;
 using FoodDiary.Modules.Admin.Presentation.Responses;
@@ -14,6 +15,8 @@ namespace FoodDiary.Modules.Admin.Presentation.Controllers;
 [ApiController]
 [Route("api/v{version:apiVersion}/admin/mail-inbox/messages")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
+[AdminMailDependencyFailure("Admin.MailInboxUnavailable")]
+[ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
 public sealed class AdminMailInboxController(ISender mediator) : BaseApiController(mediator) {
     [HttpGet("page")]
     [ProducesResponseType<AdminMailInboxMessagePageHttpResponse>(StatusCodes.Status200OK)]
